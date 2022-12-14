@@ -1,14 +1,20 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
+import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
 class SlidingTab extends StatefulWidget {
-  SlidingTab({Key? key, required this.titles, required this.onChange,required this.weight}) : super(key: key);
+  SlidingTab({Key? key, required this.titles, required this.onChange,required this.weight, required this.controller}) : super(key: key);
 
   List<String> titles;
   Function onChange;
   double weight;
+  TabsController controller;
+
   @override
   State<SlidingTab> createState() => _SlidingTabState();
 }
@@ -16,11 +22,15 @@ class SlidingTab extends StatefulWidget {
 class _SlidingTabState extends State<SlidingTab> {
 
   int switcherIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return SlideSwitcher(
         children: BuildItems(),
-        onSelect: (int index) => setState(() => switcherIndex = index),
+        onSelect: (int index) {
+          setState(() => switcherIndex = index);
+          tabsController.index.value=index;
+        } ,
         containerColor: Colors.transparent,
         containerBorder: Border.all(color: Color_TextFieldBorder),
         slidersColors: [Color_AccentGreen],
@@ -32,6 +42,13 @@ class _SlidingTabState extends State<SlidingTab> {
 
       )
     ;
+  }
+
+
+  @override
+  void initState() {
+
+    widget.controller.index.value = 0;
   }
 
   List<Widget> BuildItems()

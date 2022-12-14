@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
@@ -9,6 +10,7 @@ import 'package:get/get.dart';
 void main() {
   Get.put(NavigationController());
   Get.put(PagesController());
+  Get.put(TabsController()) ;
   runApp(const MyApp());
 }
 

@@ -11,12 +11,16 @@ class PatientInfoModel{
   String? MaritalStatus;
   String? Address;
   String? City;
+  PatientInfoModel(this.ID,this.Name,this.Phone,this.MaritalStatus);
 
-  Future<_PatientDataSource> getDataSource(List<PatientInfoModel> data)
-  async {
-    _PatientDataSource instance = _PatientDataSource();
-    return await instance.create(patientData: data);
+  static List<PatientInfoModel> models = <PatientInfoModel>[];
+  static List<String> columns = ["ID","Name","Phone","Marital Stats"];
+  static _PatientDataSource getDataSource(List<PatientInfoModel> data)
+   {
+    models = data;
+    return  _PatientDataSource(patientData: data);
   }
+
 
 }
 
@@ -24,11 +28,15 @@ class PatientInfoModel{
 
 class _PatientDataSource extends DataGridSource {
   /// Creates the patient data source class with required details.
-  Future<_PatientDataSource> create({required List<PatientInfoModel> patientData}) async{
-    _patientData = await buildDataGridRow(patientData);
-    return this;
+  _PatientDataSource({required List<PatientInfoModel> patientData}) {
+    _patientData =  patientData.map<DataGridRow>((e) => DataGridRow(cells: [
+      DataGridCell<int>(columnName: 'ID', value: e.ID),
+      DataGridCell<String>(columnName: 'Name', value: e.Name),
+      DataGridCell<String>(columnName: 'Phone', value: e.Phone),
+      DataGridCell<String>(columnName: 'Marital Status', value: e.MaritalStatus),
+    ])).toList();
+
   }
-  List<String> columns = ["ID","Name","Phone","Marital Stats"];
   List<DataGridRow> _patientData = [];
 
   @override
@@ -42,19 +50,11 @@ class _PatientDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
           return Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(right: 50),
             child: Text(e.value.toString()),
           );
         }).toList());
   }
 
 
-  Future<List<DataGridRow>> buildDataGridRow(List<PatientInfoModel> data) async {
-    return data.map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'ID', value: e.ID),
-      DataGridCell<String>(columnName: 'Name', value: e.Name),
-      DataGridCell<String>(columnName: 'Phone', value: e.Phone),
-      DataGridCell<String>(columnName: 'Marital Status', value: e.MaritalStatus),
-    ])).toList();
-    }
 }
