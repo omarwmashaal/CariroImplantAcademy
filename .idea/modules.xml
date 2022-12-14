@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/cariro_implant_academy/cariro_implant_academy.iml" filepath="$PROJECT_DIR$/cariro_implant_academy/cariro_implant_academy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cariro_implant_academy/android/cariro_implant_academy_android.iml" filepath="$PROJECT_DIR$/cariro_implant_academy/android/cariro_implant_academy_android.iml" />
+    </modules>
+  </component>
+</project>
