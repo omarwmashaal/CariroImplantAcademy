@@ -10,5 +10,8 @@ class TabsController extends PageController{
   static TabsController instance = Get.find();
   RxInt index = 0.obs;
 
+}
+
+class InternalPagesController extends PageController{
 
 }

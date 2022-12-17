@@ -47,6 +47,7 @@ dependencies:
   slide_switcher: ^1.1.2
   syncfusion_flutter_datagrid: ^20.3.61
   loading_indicator: ^3.1.0
+  visibility_detector: ^0.3.3
 
 
 

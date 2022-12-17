@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../Constants/Colors.dart';
 import '../Constants/Controllers.dart';
+import '../Pages/CIA_Pages/CashFlowMainPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
 const String RegisterPageRoute = "RegisterPageRoute";
@@ -66,12 +67,7 @@ PageView MainPageRoutes()
       ),
       Container(
         color: Color_Background,
-        child: const Center(
-          child: Text(
-            'Cash Flow',
-            style: TextStyle(fontSize: 35),
-          ),
-        ),
+        child: CashFlowMainPage(),
       ),
 
     ],

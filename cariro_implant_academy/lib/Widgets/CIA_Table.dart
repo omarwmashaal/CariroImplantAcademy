@@ -1,94 +1,126 @@
+import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 /// The home page of the application which hosts the datagrid.
+late Function GlobalLoadFunction;
 class CIA_Table extends StatefulWidget {
   /// Creates the home page.
-  CIA_Table({Key? key, required this.dataSource, required this.columnNames, this.loadMoreFunction, this.onClick}) : super(key: key);
+  CIA_Table({Key? key, required this.loadFunction,
+    //required this.models,
+    required this.columnNames,
+    required this.dataSource}) : super(key: key);
 
-  DataGridSource dataSource;
+
   List<String> columnNames;
-  Function? loadMoreFunction;
-  Function? onClick;
-
+  DataGridSource dataSource;
+  Function loadFunction;
+ // List<Object> models;
   @override
   _CIA_TableState createState() => _CIA_TableState();
-
-
 }
 class _CIA_TableState extends State<CIA_Table> {
 
 
-
+  Future<int> wait() async
+  {
+    await Future.delayed(Duration(milliseconds: 500));
+    return 0;
+  }
+  @override
+  void initState() {
+    GlobalLoadFunction = widget.loadFunction;
+    super.initState();
+   // employees = getEmployeeData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SfDataGrid(
-      source: widget.dataSource,
-      loadMoreViewBuilder: (BuildContext context, LoadMoreRows loadMoreRows) {
-        Future loadRows() async {
-          await loadMoreRows();
-          return Future.value('Completed');
-        }
-        return FutureBuilder(
-          initialData: 'loading',
-          future: loadRows(),
-          builder: (context, snapShot) {
-            if (snapShot.data == 'loading') {
-              return Container(
-                  height: 98.0,
-                  color: Colors.white,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(Colors.deepPurple)));
-            } else {
-              return SizedBox.fromSize(size: Size.zero);
-            }
-          },
-        );
-      },
-      /*footer: Container(
-          color: Colors.grey[400],
-          child: MaterialButton(
-              onPressed: () async {
-                // Function Load by button
-                //await widget.dataSource.addMoreRows();
-              },
-              child: const Text(
-                'LoadMore',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ))),*/
+    return FutureBuilder(
+      future: wait(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot)
+      {
+        if(snapshot.hasData)
+          {
+            return SfDataGrid(
+              source: widget.dataSource,
+              /*loadMoreViewBuilder: (BuildContext context, LoadMoreRows loadMoreRows) {
+          Future loadRows() async {
+           // await loadMoreRows();
+            return Future.value('Completed');
+          }
 
-      columnWidthMode: ColumnWidthMode.fill,
-      allowFiltering: true,
-      navigationMode: GridNavigationMode.row,
-      onCellTap: (value) {
-        if(widget.onClick!=null) widget.onClick!(value.rowColumnIndex.rowIndex);
-        //if enable sorting addd tablecontroller and add to it while building rows
+          return FutureBuilder(
+            initialData: 'loading',
+            future: loadRows(),
+            builder: (context, snapShot) {
+              if (snapShot.data == 'loading') {
+                return Container(
+                    height: 98.0,
+                    color: Colors.white,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.deepPurple)));
+              } else {
+                return SizedBox.fromSize(size: Size.zero);
+              }
+            },
+          );
+        },*/
+              footer: Container(
+                  color: Colors.grey[400],
+                  child: MaterialButton(
+                      onPressed: () async {
+                        // Function Load by button
+                        await widget.loadFunction();
+                      },
+                      child: const Text(
+                        'LoadMore',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      ))),
+              columnWidthMode: ColumnWidthMode.fill,
+              allowFiltering: true,
+              allowSorting: true,
+              navigationMode: GridNavigationMode.row,
+              onCellTap: (value) {
+                print(value.rowColumnIndex.rowIndex);
+              },
+              columns: _buildColumns(),
+            );
+          }
+        else
+          return Center(
+            child: LoadingIndicator(
+              indicatorType: Indicator.ballClipRotateMultiple,
+              colors: [Color_AccentGreen],
+
+
+            ),
+          );
       },
-      columns: _buildColumns(),
+
     );
   }
-
   List<GridColumn> _buildColumns()
   {
+
     List<GridColumn> returnValue = <GridColumn>[];
     for(String name in widget.columnNames)
-      {
-        returnValue.add(GridColumn(
-            columnName: name,
-            label: Container(
-                //padding: EdgeInsets.all(16.0),
-                alignment: Alignment.center,
-                child: Text(
-                  name,
-                ))));
-      }
+    {
+      returnValue.add(GridColumn(
+          columnName: name,
+          label: Container(
+            //padding: EdgeInsets.all(16.0),
+              alignment: Alignment.center,
+              child: Text(
+                name,
+              ))));
+    }
     return returnValue;
   }
-
-
 }
+
 
 

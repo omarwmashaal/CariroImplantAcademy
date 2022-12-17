@@ -34,7 +34,7 @@ class _CIA_TextFieldState extends State<CIA_TextField> {
           print(focus);
         }),
         child: TextField(
-          onChanged: (value) {
+                    onChanged: (value) {
             if (widget.onChange != null) widget.onChange!(value);
           },
           obscureText: widget.isObscure == null ? false : true,
