@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
+import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class DrawerItems extends StatelessWidget {
         // backgroundColor: Colors.blueGrey[700]
       ),
 
+      footer: HorizontalRadioButtons(names: ["sec","admin","ins"]),
       items: [
 
         SideMenuItem(
@@ -97,6 +99,7 @@ class DrawerItems extends StatelessWidget {
           },
           
         ),
+
       ],
     );
   }

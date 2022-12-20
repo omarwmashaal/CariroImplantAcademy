@@ -29,7 +29,7 @@ class PatientDataSource extends DataGridSource {
 
   List<PatientInfoModel> models = <PatientInfoModel>[
     PatientInfoModel(5, "Omar", "1290447120", "Married"),
-    PatientInfoModel(21, "Omar", "1290447120", "Married"),/*
+    PatientInfoModel(21, "Omar", "1290447120", "Married"),
     PatientInfoModel(4, "Omar", "1290447120", "Married"),
     PatientInfoModel(8, "Omar", "1290447120", "Married"),
     PatientInfoModel(14, "Omar", "1290447120", "Married"),
@@ -51,7 +51,7 @@ class PatientDataSource extends DataGridSource {
     PatientInfoModel(9, "Omar", "1290447120", "Married"),
     PatientInfoModel(9, "Omar", "1290447120", "Married"),
     PatientInfoModel(9, "Omar", "1290447120", "Married"),
-    PatientInfoModel(9, "Omar", "1290447120", "Married"),*/
+    PatientInfoModel(9, "Omar", "1290447120", "Married"),
   ];
   /// Creates the patient data source class with required details.
   PatientDataSource() {
@@ -87,14 +87,14 @@ class PatientDataSource extends DataGridSource {
   @override
   Future<Function> handleLoadMoreRows() async {
     print("entered function");
-    models.add(PatientInfoModel(5, "Omar", "1290447120", "Married"));/*
+    models.add(PatientInfoModel(5, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(21, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(4, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(8, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(14, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(20, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(13, "Omar", "1290447120", "Married"));
-    models.add(PatientInfoModel(9, "Omar", "1290447120", "Married"));*/
+    models.add(PatientInfoModel(9, "Omar", "1290447120", "Married"));
 
     _patientData =  models.map<DataGridRow>((e) => DataGridRow(cells: [
       DataGridCell<int>(columnName: 'ID', value: e.ID),
@@ -112,14 +112,14 @@ class PatientDataSource extends DataGridSource {
   Future<bool> addMoreRows() async
   {
     print("entered bunction");
-    models.add(PatientInfoModel(5, "Omar", "1290447120", "Married"));/*
+    models.add(PatientInfoModel(5, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(21, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(4, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(8, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(14, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(20, "Omar", "1290447120", "Married"));
     models.add(PatientInfoModel(13, "Omar", "1290447120", "Married"));
-    models.add(PatientInfoModel(9, "Omar", "1290447120", "Married"));*/
+    models.add(PatientInfoModel(9, "Omar", "1290447120", "Married"));
 
     _patientData =  models.map<DataGridRow>((e) => DataGridRow(cells: [
       DataGridCell<int>(columnName: 'ID', value: e.ID),

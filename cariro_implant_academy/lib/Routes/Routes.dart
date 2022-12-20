@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../Constants/Colors.dart';
 import '../Constants/Controllers.dart';
+import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
+import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowMainPage.dart';
+import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
 const String RegisterPageRoute = "RegisterPageRoute";
@@ -21,34 +24,20 @@ PageView MainPageRoutes()
         child: PatientsSearchPage(),
       ),
       Container(
-        color: Color_Background,
         child: const Center(
-          child: Text(
-            'Assistants',
-            style: TextStyle(fontSize: 35),
+          child: AssistantsSearchPage(),
           ),
+        ),
+
+      Container(
+        child: const Center(
+          child: InstructorsSearchPage()
         ),
       ),
       Container(
-        color: Color_Background,
-        child: const Center(
-          child: Text(
-            'Instructors',
-            style: TextStyle(fontSize: 35),
-          ),
-        ),
+        child: CandidatesSearchPage()
       ),
       Container(
-        color: Color_Background,
-        child: const Center(
-          child: Text(
-            'Candidates',
-            style: TextStyle(fontSize: 35),
-          ),
-        ),
-      ),
-      Container(
-        color: Color_Background,
         child: const Center(
           child: Text(
             'Operations',
@@ -57,7 +46,6 @@ PageView MainPageRoutes()
         ),
       ),
       Container(
-        color: Color_Background,
         child: const Center(
           child: Text(
             'Stock',
@@ -66,7 +54,6 @@ PageView MainPageRoutes()
         ),
       ),
       Container(
-        color: Color_Background,
         child: CashFlowMainPage(),
       ),
 

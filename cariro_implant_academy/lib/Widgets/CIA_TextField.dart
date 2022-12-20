@@ -1,23 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../Constants/Colors.dart';
 
 class CIA_TextField extends StatefulWidget {
   CIA_TextField(
-      {Key? key, required this.label, this.isObscure, this.onChange, this.icon})
+      {Key? key,
+      required this.label,
+      this.isObscure,
+      this.onChange,
+      this.icon,
+      this.initialValue})
       : super(key: key);
 
   bool? isObscure = false;
   String label;
   Function? onChange;
   IconData? icon;
+  String? initialValue;
 
   @override
   State<CIA_TextField> createState() => _CIA_TextFieldState();
 }
 
 class _CIA_TextFieldState extends State<CIA_TextField> {
-
   bool hasFocus = true;
 
   @override
@@ -34,7 +40,7 @@ class _CIA_TextFieldState extends State<CIA_TextField> {
           print(focus);
         }),
         child: TextField(
-                    onChanged: (value) {
+          onChanged: (value) {
             if (widget.onChange != null) widget.onChange!(value);
           },
           obscureText: widget.isObscure == null ? false : true,

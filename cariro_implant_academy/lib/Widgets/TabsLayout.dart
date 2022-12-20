@@ -3,11 +3,13 @@ import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextField.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:cariro_implant_academy/Widgets/SlidingTab.dart';
+import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
+import '../Controllers/PagesController.dart';
 import '../Models/PatientInfo.dart';
 import 'CIA_Table.dart';
 String Search = "";
@@ -23,17 +25,19 @@ List<PatientInfoModel> models = <PatientInfoModel>[
   PatientInfoModel(9, "Omar", "1290447120", "Married"),
 ];
 class TabsLayout extends StatefulWidget {
-  TabsLayout({Key? key, required this.tabs, required this.pages}) : super(key: key);
+  TabsLayout({Key? key, required this.tabs, required this.pages, this.showBackButton = false}) : super(key: key);
   List<String> tabs ;
   List<Widget> pages;
+  bool showBackButton;
 
+  final tabsController = new TabsController();
   @override
   State<TabsLayout> createState() => _TabsLayoutState();
 }
 
 class _TabsLayoutState extends State<TabsLayout> {
 
-
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Widget>(
@@ -72,6 +76,9 @@ class _TabsLayoutState extends State<TabsLayout> {
                     child: SlidingTab(
                       onChange: ((value) {
                         tabsController.jumpToPage(value);
+                        setState(() {
+                          index = value;
+                        });
                       }),
                       titles: widget.tabs,
                       weight: 400,
@@ -82,17 +89,17 @@ class _TabsLayoutState extends State<TabsLayout> {
               ),
             ),
             Expanded(
-                child:Obx(()=>  Text(
-                  widget.tabs[tabsController.index.value],
-                  style: TextStyle(fontFamily: Inter_ExtraBold, fontSize: 40),
-                ))),
+                child:  TitleWidget(title: widget.tabs[index], showBackButton: widget.showBackButton,)),
            // Obx(() =>widget.pages[tabsController.index.value] ),
             Expanded(
-              flex:8,
-              child:PageView(
-                controller: tabsController,
-                children: widget.pages,
+              flex:10,
+              child:Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: PageView(
+                  controller: tabsController,
+                  children: widget.pages,
 
+                ),
               )
             )
 

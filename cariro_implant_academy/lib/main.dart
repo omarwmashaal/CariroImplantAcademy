@@ -1,16 +1,16 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void main() {
   Get.put(NavigationController());
   Get.put(PagesController());
-  Get.put(TabsController()) ;
+  Get.put(TabsController());
+  Get.put(InternalPagesController());
+  //Get.put(RolesController());
   runApp(const MyApp());
 }
 
@@ -45,8 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: AuthenticationPage(),
-      body: DashBoardPage(),
+      body: AuthenticationPage(),
+      //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
     );
