@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalRadioButtons extends StatefulWidget {
-  HorizontalRadioButtons({Key? key, required this.names}) : super(key: key);
+  HorizontalRadioButtons({Key? key, required this.names, this.onChange})
+      : super(key: key);
   List<String> names;
+  Function? onChange;
 
   @override
   State<HorizontalRadioButtons> createState() => _HorizontalRadioButtonsState();
@@ -28,6 +30,8 @@ class _HorizontalRadioButtonsState extends State<HorizontalRadioButtons> {
                 onChanged: (index) {
                   setState(() {
                     _groupValue = index as String;
+
+                    if (widget.onChange != null) widget.onChange!(index);
                   });
                 }),
             Expanded(

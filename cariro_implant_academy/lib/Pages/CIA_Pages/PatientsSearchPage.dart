@@ -1,10 +1,11 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../Models/PatientInfo.dart';
 
@@ -42,13 +43,17 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
             columnNames: PatientInfoModel.columns,
             onCellTab: (value) {
               print(dataSource.models[value - 1].ID);
-              internalPagesController.setPassedObject(dataSource.models[value - 1]);
+              internalPagesController
+                  .setPassedObject(dataSource.models[value - 1]);
               internalPagesController.jumpToPage(1);
             },
           ),
           Container()
         ]),
-        ViewPatientPage()
+        Obx(() => (rolesController.role == "Admin" ||
+                rolesController.role == "Instructor")
+            ? PatientMedicalInfoPage()
+            : ViewPatientPage())
       ],
     );
   }

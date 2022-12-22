@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CIA_SecondaryButton extends StatefulWidget {
-  CIA_SecondaryButton({Key? key, required this.label, required this.onTab}) : super(key: key);
+  CIA_SecondaryButton({Key? key, required this.label, required this.onTab})
+      : super(key: key);
   String label;
   Function onTab;
 
@@ -22,25 +23,19 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
           onPressed: () {
             widget.onTab();
           },
-
-
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(color: Color_TextFieldBorder)
-                )
-            )
-
-          ),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Color_Background),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(color: Color_TextFieldBorder)))),
           child: Text(
             widget.label,
             style: TextStyle(
-              color: Color_TextPrimary,
-              fontSize: 15 ,
-              fontWeight: FontWeight.w500
-            ),
+                color: Color_TextPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.w500),
           ),
         ),
       ),

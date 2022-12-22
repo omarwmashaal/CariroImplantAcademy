@@ -11,12 +11,19 @@ class SlidingTab extends StatefulWidget {
       required this.titles,
       required this.onChange,
       required this.weight,
+      this.height,
+      this.fontSize,
+      this.adapt,
       required this.controller})
       : super(key: key);
+
+  bool? adapt = false;
 
   List<String> titles;
   Function onChange;
   double weight;
+  double? height;
+  double? fontSize;
   TabsController controller;
   late List<Widget> ItemsWidget;
 
@@ -39,7 +46,7 @@ class _SlidingTabState extends State<SlidingTab> {
       containerColor: Colors.transparent,
       containerBorder: Border.all(color: Color_TextFieldBorder),
       slidersColors: [Color_AccentGreen],
-      containerHeight: 50,
+      containerHeight: widget.height == null ? 50 : widget.height as double,
       containerWight: widget.weight,
       containerBorderRadius: 8,
     );
@@ -49,7 +56,6 @@ class _SlidingTabState extends State<SlidingTab> {
   void initState() {
     widget.controller.index.value = 0;
   }
-
 
   List<Widget> BuildItems() {
     List<Widget> returnValue = <Widget>[];
@@ -64,9 +70,10 @@ class _SlidingTabState extends State<SlidingTab> {
               )
           )*/
         child: Text(
+          textAlign: TextAlign.center,
           title,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: widget.fontSize == null ? 20 : widget.fontSize as double,
             color: switcherIndex == index ? Colors.white : Color_TextSecondary,
             fontFamily: switcherIndex == index ? Inter_Bold : Inter_SemiBold,
           ),
@@ -77,4 +84,3 @@ class _SlidingTabState extends State<SlidingTab> {
     return returnValue;
   }
 }
-

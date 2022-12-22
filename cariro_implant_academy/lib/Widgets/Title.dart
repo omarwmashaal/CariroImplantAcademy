@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../Constants/Fonts.dart';
 
 class TitleWidget extends StatelessWidget {
-  TitleWidget({Key? key, required this.title, this.showBackButton= false}) : super(key: key);
+  TitleWidget({Key? key, required this.title, this.showBackButton = false})
+      : super(key: key);
 
   String title;
   bool showBackButton = false;
@@ -16,19 +17,21 @@ class TitleWidget extends StatelessWidget {
       children: [
         Visibility(
           visible: showBackButton!,
-          child: IconButton(onPressed: (){
-            onWillPop();
-          }, icon: Icon(Icons.arrow_back)),
+          child: IconButton(
+              onPressed: () {
+                onWillPop();
+              },
+              icon: Icon(Icons.arrow_back)),
         ),
         Text(
           title,
-          style: TextStyle(fontFamily: Inter_ExtraBold, fontSize: 40),
+          style: TextStyle(fontFamily: Inter_ExtraBold, fontSize: 30),
         ),
       ],
     );
   }
-  bool onWillPop()
-  {
+
+  bool onWillPop() {
     internalPagesController.jumpToPage(0);
     return false;
   }

@@ -14,27 +14,20 @@ class ViewPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () => Future.sync(onWillPop),
-        child: Column(
-          children: [
-            Expanded(
-              child: TabsLayout(
-                showBackButton: true,
-                tabs: ["Patient Data", "Visits Data"],
-                pages: [
-                  _PatientInfo(),
-                  _PatientVisits(),
-                ],
-              ),
-            ),
-          ],
-        ));
-  }
-
-  bool onWillPop() {
-    internalPagesController.jumpTo(0);
-    return false;
+    return Column(
+      children: [
+        Expanded(
+          child: TabsLayout(
+            showBackButton: true,
+            tabs: ["Patient Data", "Visits Data"],
+            pages: [
+              _PatientInfo(),
+              _PatientVisits(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -303,7 +296,6 @@ class _PatientInfoState extends State<_PatientInfo> {
                               onTab: () => setState(() => edit = false)),
                         ),
                         Expanded(child: SizedBox()),
-
                       ],
                     ),
                   )

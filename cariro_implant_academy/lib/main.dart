@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
@@ -5,12 +7,17 @@ import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'Controllers/RolesController.dart';
+
 void main() {
+  html.window.onUnload.listen((event) async {
+    print('Reloaded');
+  });
   Get.put(NavigationController());
   Get.put(PagesController());
   Get.put(TabsController());
   Get.put(InternalPagesController());
-  //Get.put(RolesController());
+  Get.put(RolesController());
   runApp(const MyApp());
 }
 

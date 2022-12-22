@@ -6,6 +6,8 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+List<String> roles = ["Secretary", "Admin", "Instructor"];
+
 class DrawerItems extends StatelessWidget {
   DrawerItems({Key? key}) : super(key: key);
 
@@ -25,31 +27,28 @@ class DrawerItems extends StatelessWidget {
         displayMode: SideMenuDisplayMode.open,
         hoverColor: Colors.blue[100],
         selectedColor: Color_SideMenuFocus,
-        unselectedTitleTextStyle: TextStyle(
-            fontSize: 16,
-            fontFamily: Inter_SemiBold
-        ),
-        selectedTitleTextStyle: TextStyle(
-          fontSize: 20,
-          fontFamily: Inter_Bold
-        ),
+        unselectedTitleTextStyle:
+            TextStyle(fontSize: 16, fontFamily: Inter_SemiBold),
+        selectedTitleTextStyle: TextStyle(fontSize: 20, fontFamily: Inter_Bold),
         selectedIconColor: Colors.red,
         // decoration: BoxDecoration(
         //   borderRadius: BorderRadius.all(Radius.circular(10)),
         // ),
         // backgroundColor: Colors.blueGrey[700]
       ),
-
-      footer: HorizontalRadioButtons(names: ["sec","admin","ins"]),
+      footer: HorizontalRadioButtons(
+        names: roles,
+        onChange: (index) {
+          rolesController.role.value = index;
+        },
+      ),
       items: [
-
         SideMenuItem(
           priority: 0,
           title: 'Patients',
           onTap: () {
             pagesController.jumpToPage(0);
           },
-          
         ),
         SideMenuItem(
           priority: 1,
@@ -57,7 +56,6 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(1);
           },
-          
         ),
         SideMenuItem(
           priority: 2,
@@ -65,7 +63,6 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(2);
           },
-          
         ),
         SideMenuItem(
           priority: 3,
@@ -73,7 +70,6 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(3);
           },
-          
         ),
         SideMenuItem(
           priority: 4,
@@ -81,7 +77,6 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(4);
           },
-          
         ),
         SideMenuItem(
           priority: 5,
@@ -89,7 +84,6 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(5);
           },
-          
         ),
         SideMenuItem(
           priority: 6,
@@ -97,9 +91,7 @@ class DrawerItems extends StatelessWidget {
           onTap: () {
             pagesController.jumpToPage(6);
           },
-          
         ),
-
       ],
     );
   }
