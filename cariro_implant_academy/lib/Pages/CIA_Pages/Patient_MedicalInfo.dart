@@ -1,11 +1,18 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
+import '../../Constants/Colors.dart';
 import '../../Constants/Controllers.dart';
 import '../../Models/PatientInfo.dart';
+import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/FormTextWidget.dart';
+import '../../Widgets/Horizontal_RadioButtons.dart';
+import '../../Widgets/MultiSelectChipWidget.dart';
 import '../../Widgets/SlidingTab.dart';
 
 class PatientMedicalInfoPage extends StatefulWidget {
@@ -84,24 +91,27 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 15,
+                    flex: 3,
                     child: Column(
                       children: [
                         Expanded(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              TitleWidget(
-                                title: "Patient Information",
-                                showBackButton: true,
+                              Expanded(
+                                child: TitleWidget(
+                                  title: "Patient Information",
+                                  showBackButton: true,
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Wrap(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Wrap(
+                                      children: [
+                                        Row(
                                           children: [
                                             FormTextKeyWidget(text: "ID"),
                                             SizedBox(
@@ -114,14 +124,12 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                                       : patient?.ID.toString(),
                                             )
                                           ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Wrap(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
+                                        )
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Row(
                                           children: [
                                             FormTextKeyWidget(text: "Name"),
                                             SizedBox(
@@ -132,14 +140,12 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                                     ? ""
                                                     : patient?.Name)
                                           ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Wrap(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
+                                        )
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Row(
                                           children: [
                                             FormTextKeyWidget(
                                                 text: "Phone Number"),
@@ -151,14 +157,12 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                                     ? ""
                                                     : patient?.Phone)
                                           ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Wrap(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
+                                        )
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Row(
                                           children: [
                                             FormTextKeyWidget(text: "Gender"),
                                             SizedBox(
@@ -169,14 +173,12 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                                     ? ""
                                                     : patient?.Gender)
                                           ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Wrap(
-                                    children: [
-                                      Flexible(
-                                        child: Row(
+                                        )
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        Row(
                                           children: [
                                             FormTextKeyWidget(
                                                 text: "Marital Status"),
@@ -189,13 +191,13 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                                     ? ""
                                                     : patient?.MaritalStatus)
                                           ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  CIA_SecondaryButton(
-                                      label: "View more info", onTab: () {})
-                                ],
+                                        )
+                                      ],
+                                    ),
+                                    CIA_SecondaryButton(
+                                        label: "View more info", onTab: () {})
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -218,11 +220,78 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                       ],
                     ),
                   ),
-                  Expanded(child: SizedBox()),
                   Expanded(
-                    flex: 4,
-                    child: Image(
-                      image: AssetImage("ProfileImage.png"),
+                    child: Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        Expanded(
+                          flex: 10,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Image(
+                                image: AssetImage("ProfileImage.png"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: FormTextKeyWidget(
+                                        text: "Operator Name:",
+                                        secondaryInfo: true,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: FormTextValueWidget(
+                                        text: "Omar Wael",
+                                        secondaryInfo: true,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: FormTextKeyWidget(
+                                        text: "Date:",
+                                        secondaryInfo: true,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: FormTextValueWidget(
+                                        text: "12/1/2022",
+                                        secondaryInfo: true,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_SecondaryButton(
+                                label: "Cancel",
+                                onTab: () {},
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_PrimaryButton(
+                                label: "Save",
+                                onTab: () {},
+                                isLong: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -245,9 +314,259 @@ class _PatientMedicalHistory extends StatefulWidget {
 }
 
 class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
+  bool otherField = false;
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return FutureBuilder(
+      future: _buildItems(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data;
+        } else {
+          return Center(
+            child: LoadingIndicator(
+              indicatorType: Indicator.ballClipRotateMultiple,
+              colors: [Color_AccentGreen],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  _buildItems() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return ListView(
+      shrinkWrap: false,
+      children: [
+        FocusTraversalGroup(
+          policy: OrderedTraversalPolicy(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 10,
+              ),
+              CIA_TextFormField(
+                  label: "General Health", controller: TextEditingController()),
+              SizedBox(height: 10),
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  Flexible(
+                      child: HorizontalRadioButtons(
+                          names: ["Pregnant", "Lactating"])),
+                ],
+              ),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Are you treated for anything now?",
+                  controller: TextEditingController()),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Recent Surgery", controller: TextEditingController()),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Comment", controller: TextEditingController()),
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Did you have ever?"),
+              SizedBox(height: 10),
+              CIA_MultiSelectChipWidget(
+                redFlags: true,
+                labels: [
+                  "Kidney Disease",
+                  "Liver Disease",
+                  "Asthma",
+                  "Psychological",
+                  "Rhemuatic",
+                  "Anemia",
+                  "Epilepsy",
+                  "Heart problem",
+                  "Thyroid",
+                  "Hepatitis",
+                  "Venereal Disease",
+                  "Other"
+                ],
+              ),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Other ", controller: TextEditingController()),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Comments ", controller: TextEditingController()),
+              SizedBox(height: 10),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: CIA_TextFormField(
+                          label: "Blood pressure ",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "Last Reading ",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "When? ", controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "Drug ", controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: CIA_TextFormField(
+                          label: "Reading in clinic ",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: CIA_TextFormField(
+                          label: "Glucose Level",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "Last Reading ",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "When? ", controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "Random in clinic ",
+                          controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: SizedBox(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: CIA_TextFormField(
+                          label: "HBA1c", controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          label: "Date", controller: TextEditingController()),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: SizedBox(),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Are you allergic to?"),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                        labels: ["Pencillin", "Sulfa", "Other"]),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: CIA_TextFormField(
+                        label: "Other Diseases",
+                        controller: TextEditingController()),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label:
+                      "Are you Subjected to prolonged bleeding or taking aspirin?",
+                  controller: TextEditingController()),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Do you have chronic problem with digestion?",
+                  controller: TextEditingController()),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child:
+                        CIA_MultiSelectChipWidget(labels: ["Illegal Drugs?"]),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                        label: "Drugs", controller: TextEditingController()),
+                  )
+                ],
+              ),
+              SizedBox(height: 10),
+              CIA_TextFormField(
+                  label: "Operator Comments",
+                  controller: TextEditingController()),
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Drugs Taken by patinet"),
+              SizedBox(height: 10),
+              CIA_IncrementalTextField(
+                label: "Drug Name",
+              ),
+              SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 

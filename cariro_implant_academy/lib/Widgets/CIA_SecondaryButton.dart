@@ -18,25 +18,22 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
     return SizedBox(
       width: 120,
       height: 30,
-      child: Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            widget.onTab();
-          },
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Color_Background),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(color: Color_TextFieldBorder)))),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-                color: Color_TextPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.w500),
-          ),
+      child: ElevatedButton(
+        onPressed: () {
+          widget.onTab();
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(color: Color_TextFieldBorder)))),
+        child: Text(
+          widget.label,
+          style: TextStyle(
+              color: Color_TextPrimary,
+              fontSize: 13,
+              fontWeight: FontWeight.w500),
         ),
       ),
     );
