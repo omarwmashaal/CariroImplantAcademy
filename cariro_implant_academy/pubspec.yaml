@@ -49,6 +49,8 @@ dependencies:
   loading_indicator: ^3.1.0
   visibility_detector: ^0.3.3
   flutter_multi_select_items: ^0.4.2
+  chips_input: ^0.1.0
+  flutter_tagging: ^3.0.0
 
 
 

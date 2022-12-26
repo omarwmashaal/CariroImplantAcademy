@@ -1,15 +1,15 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
-import '../../Constants/Colors.dart';
 import '../../Constants/Controllers.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
+import '../../Widgets/CIA_MedicalPageWidget.dart';
+import '../../Widgets/CIA_TagsInputWidget.dart';
+import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
@@ -315,258 +315,194 @@ class _PatientMedicalHistory extends StatefulWidget {
 
 class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   bool otherField = false;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _buildItems(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return snapshot.data;
-        } else {
-          return Center(
-            child: LoadingIndicator(
-              indicatorType: Indicator.ballClipRotateMultiple,
-              colors: [Color_AccentGreen],
+    return CIA_MedicalPagesWidget(children: [
+      CIA_TextFormField(
+          label: "General Health", controller: TextEditingController()),
+      Flex(
+        direction: Axis.horizontal,
+        children: [
+          Flexible(
+              child: HorizontalRadioButtons(names: ["Pregnant", "Lactating"])),
+        ],
+      ),
+      CIA_TextFormField(
+          label: "Are you treated for anything now?",
+          controller: TextEditingController()),
+      CIA_TextFormField(
+          label: "Recent Surgery", controller: TextEditingController()),
+      CIA_TextFormField(label: "Comment", controller: TextEditingController()),
+      FormTextKeyWidget(text: "Did you have ever?"),
+      CIA_MultiSelectChipWidget(
+        redFlags: true,
+        labels: [
+          "Kidney Disease",
+          "Liver Disease",
+          "Asthma",
+          "Psychological",
+          "Rhemuatic",
+          "Anemia",
+          "Epilepsy",
+          "Heart problem",
+          "Thyroid",
+          "Hepatitis",
+          "Venereal Disease",
+          "Other"
+        ],
+      ),
+      CIA_TextFormField(label: "Other ", controller: TextEditingController()),
+      CIA_TextFormField(
+          label: "Comments ", controller: TextEditingController()),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: CIA_TextFormField(
+                  label: "Blood pressure ",
+                  controller: TextEditingController()),
             ),
-          );
-        }
-      },
-    );
-  }
-
-  _buildItems() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    return ListView(
-      shrinkWrap: false,
-      children: [
-        FocusTraversalGroup(
-          policy: OrderedTraversalPolicy(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              CIA_TextFormField(
-                  label: "General Health", controller: TextEditingController()),
-              SizedBox(height: 10),
-              Flex(
-                direction: Axis.horizontal,
-                children: [
-                  Flexible(
-                      child: HorizontalRadioButtons(
-                          names: ["Pregnant", "Lactating"])),
-                ],
-              ),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Are you treated for anything now?",
-                  controller: TextEditingController()),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Recent Surgery", controller: TextEditingController()),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Comment", controller: TextEditingController()),
-              SizedBox(height: 10),
-              FormTextKeyWidget(text: "Did you have ever?"),
-              SizedBox(height: 10),
-              CIA_MultiSelectChipWidget(
-                redFlags: true,
-                labels: [
-                  "Kidney Disease",
-                  "Liver Disease",
-                  "Asthma",
-                  "Psychological",
-                  "Rhemuatic",
-                  "Anemia",
-                  "Epilepsy",
-                  "Heart problem",
-                  "Thyroid",
-                  "Hepatitis",
-                  "Venereal Disease",
-                  "Other"
-                ],
-              ),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Other ", controller: TextEditingController()),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Comments ", controller: TextEditingController()),
-              SizedBox(height: 10),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: CIA_TextFormField(
-                          label: "Blood pressure ",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "Last Reading ",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "When? ", controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "Drug ", controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: CIA_TextFormField(
-                          label: "Reading in clinic ",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: CIA_TextFormField(
-                          label: "Glucose Level",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "Last Reading ",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "When? ", controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "Random in clinic ",
-                          controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: SizedBox(),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: CIA_TextFormField(
-                          label: "HBA1c", controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
-                          label: "Date", controller: TextEditingController()),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: SizedBox(),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              FormTextKeyWidget(text: "Are you allergic to?"),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                        labels: ["Pencillin", "Sulfa", "Other"]),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: CIA_TextFormField(
-                        label: "Other Diseases",
-                        controller: TextEditingController()),
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label:
-                      "Are you Subjected to prolonged bleeding or taking aspirin?",
-                  controller: TextEditingController()),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Do you have chronic problem with digestion?",
-                  controller: TextEditingController()),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child:
-                        CIA_MultiSelectChipWidget(labels: ["Illegal Drugs?"]),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: CIA_TextFormField(
-                        label: "Drugs", controller: TextEditingController()),
-                  )
-                ],
-              ),
-              SizedBox(height: 10),
-              CIA_TextFormField(
-                  label: "Operator Comments",
-                  controller: TextEditingController()),
-              SizedBox(height: 10),
-              FormTextKeyWidget(text: "Drugs Taken by patinet"),
-              SizedBox(height: 10),
-              CIA_IncrementalTextField(
-                label: "Drug Name",
-              ),
-              SizedBox(height: 30),
-            ],
           ),
-        ),
-      ],
-    );
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "Last Reading ", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "When? ", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "Drug ", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: CIA_TextFormField(
+                  label: "Reading in clinic ",
+                  controller: TextEditingController()),
+            ),
+          ),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: CIA_TextFormField(
+                  label: "Glucose Level", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "Last Reading ", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "When? ", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "Random in clinic ",
+                  controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: SizedBox(),
+            ),
+          ),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: CIA_TextFormField(
+                  label: "HBA1c", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CIA_TextFormField(
+                  label: "Date", controller: TextEditingController()),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: SizedBox(),
+            ),
+          ),
+        ],
+      ),
+      FormTextKeyWidget(text: "Are you allergic to?"),
+      Row(
+        children: [
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+                labels: ["Pencillin", "Sulfa", "Other"]),
+          ),
+          Expanded(
+            flex: 2,
+            child: CIA_TextFormField(
+                label: "Other Diseases", controller: TextEditingController()),
+          )
+        ],
+      ),
+      CIA_TextFormField(
+          label: "Are you Subjected to prolonged bleeding or taking aspirin?",
+          controller: TextEditingController()),
+      CIA_TextFormField(
+          label: "Do you have chronic problem with digestion?",
+          controller: TextEditingController()),
+      Row(
+        children: [
+          Expanded(
+            child: CIA_MultiSelectChipWidget(labels: ["Illegal Drugs?"]),
+          ),
+          Expanded(
+            flex: 4,
+            child: CIA_TextFormField(
+                label: "Drugs", controller: TextEditingController()),
+          )
+        ],
+      ),
+      CIA_TextFormField(
+          label: "Operator Comments", controller: TextEditingController()),
+      FormTextKeyWidget(text: "Drugs Taken by patinet"),
+      CIA_IncrementalTextField(
+        label: "Drug Name",
+      ),
+    ]);
   }
 }
 
@@ -578,10 +514,53 @@ class _PatientDentalExamination extends StatefulWidget {
       _PatientDentalExaminationState();
 }
 
+class AppProfile {
+  final String name;
+  final String email;
+  final String imageUrl;
+
+  const AppProfile(this.name, this.email, this.imageUrl);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AppProfile &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
+
+  @override
+  String toString() {
+    return name;
+  }
+}
+
+const mockResults = ["Omar", "Wael", "Bayoumy", "Ali", "Mashaal"];
+
 class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_MedicalPagesWidget(children: [
+      CIA_TagsInputWidget(label: "Carious"),
+      CIA_TagsInputWidget(label: "Filled"),
+      CIA_TagsInputWidget(label: "Missed"),
+      CIA_TagsInputWidget(label: "Not Sure"),
+      CIA_TagsInputWidget(label: "Mobility"),
+      CIA_TagsInputWidget(label: "Hopeless teeth"),
+      Row(
+        children: [
+          Expanded(child: CIA_TagsInputWidget(label: "Inter arch space RT")),
+          SizedBox(width: 10),
+          Expanded(child: CIA_TagsInputWidget(label: "Inter arch space LT")),
+        ],
+      ),
+      CIA_TagsInputWidget(label: "Implant Placed"),
+      CIA_TagsInputWidget(label: "Implant Failed"),
+      CIA_TextFormField(
+          label: "Operator Implant Notes", controller: TextEditingController())
+    ]);
   }
 }
 
@@ -595,7 +574,9 @@ class _PatientDentalHistory extends StatefulWidget {
 class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_MedicalPagesWidget(
+      children: [],
+    );
   }
 }
 

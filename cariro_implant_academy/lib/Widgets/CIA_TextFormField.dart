@@ -19,15 +19,12 @@ class CIA_TextFormField extends StatefulWidget {
   IconData? icon;
   TextEditingController controller;
 
-
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
 }
 
 class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
-  bool hasFocus = false;
   FocusNode focus = FocusNode();
-
 
   @override
   void initState() {
@@ -38,7 +35,6 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(
@@ -46,6 +42,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             ),
       ),
       child: TextFormField(
+        cursorColor: Color_AccentGreen,
         focusNode: focus,
         controller: widget.controller,
         textInputAction: TextInputAction.next,
@@ -76,5 +73,4 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
       ),
     );
   }
-
 }
