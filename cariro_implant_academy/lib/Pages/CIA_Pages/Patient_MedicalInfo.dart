@@ -575,7 +575,61 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(
-      children: [],
+      children: [
+        Row(
+          children: [
+            Expanded(
+                child:
+                    FormTextKeyWidget(text: "Are your teeth sensitive to ?")),
+            Expanded(
+                flex: 2,
+                child: CIA_MultiSelectChipWidget(
+                    labels: ["Hot or cold", "sweets", "Biting or cheweing"]))
+          ],
+        ),
+        CIA_TextFormField(
+            label: "Do you clench or grind your teeth while awake or sleep?",
+            controller: TextEditingController()),
+        Row(
+          children: [
+            Expanded(
+                child: CIA_MultiSelectChipWidget(labels: ["Smoke tobacco?"])),
+            Expanded(
+                child: CIA_TextFormField(
+                    label: "per day", controller: TextEditingController())),
+            Expanded(flex: 3, child: SizedBox())
+          ],
+        ),
+        CIA_TextFormField(
+            label: "A serious injury to the mouth?",
+            controller: TextEditingController()),
+        CIA_TextFormField(
+            label: "Are you satisfied with your teeth's appearance?",
+            controller: TextEditingController()),
+        Row(
+          children: [
+            Expanded(
+                child: FormTextKeyWidget(text: "Patient Cooperation Score")),
+            Expanded(
+                child: CIA_TextFormField(
+                    label: "", controller: TextEditingController())),
+            Expanded(child: FormTextKeyWidget(text: "/10")),
+            Expanded(child: SizedBox())
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+                child: FormTextKeyWidget(
+                    text: "Patient willing for implant score")),
+            Expanded(
+                child: CIA_TextFormField(
+                    label: "", controller: TextEditingController())),
+            Expanded(child: FormTextKeyWidget(text: "/10")),
+            Expanded(child: SizedBox())
+          ],
+        ),
+      ],
     );
   }
 }
