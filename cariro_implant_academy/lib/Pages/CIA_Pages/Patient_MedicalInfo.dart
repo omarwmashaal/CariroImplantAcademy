@@ -1,13 +1,16 @@
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../Constants/Controllers.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/CIA_MedicalPageWidget.dart';
+import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/CIA_TagsInputWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
@@ -537,8 +540,6 @@ class AppProfile {
   }
 }
 
-const mockResults = ["Omar", "Wael", "Bayoumy", "Ali", "Mashaal"];
-
 class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   @override
   Widget build(BuildContext context) {
@@ -646,7 +647,48 @@ class _PatientNonSurgicalTreatmentState
     extends State<_PatientNonSurgicalTreatment> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_MedicalPagesWidget(children: [
+      CIA_TextFormField(
+        label: "Treatment",
+        controller: TextEditingController(),
+        maxLines: 5,
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: CIA_DropDown(label: "Supervisor", values: [
+              "Name1",
+              "Name2",
+              "Name3",
+              "Name4",
+              "Name5",
+              "Name6",
+              "Name7",
+              "Name8",
+              "Name9",
+              "Name10",
+            ]),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          CIA_SecondaryButton(label: "View History", onTab: () {}),
+          SizedBox(
+            width: 10,
+          ),
+          CIA_SecondaryButton(
+              label: "Schedule Next Visit",
+              width: 150,
+              onTab: () {
+                CIA_PopupDialog(
+                    context,
+                    SfDateRangePicker(
+                      view: DateRangePickerView.month,
+                    ));
+              }),
+        ],
+      ),
+    ]);
   }
 }
 

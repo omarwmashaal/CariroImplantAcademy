@@ -3,10 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CIA_SecondaryButton extends StatefulWidget {
-  CIA_SecondaryButton({Key? key, required this.label, required this.onTab})
+  CIA_SecondaryButton(
+      {Key? key, required this.label, required this.onTab, this.width = 120})
       : super(key: key);
   String label;
   Function onTab;
+  double width;
 
   @override
   State<CIA_SecondaryButton> createState() => _CIA_SecondaryButton();
@@ -16,7 +18,7 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 120,
+      width: widget.width,
       height: 30,
       child: ElevatedButton(
         onPressed: () {

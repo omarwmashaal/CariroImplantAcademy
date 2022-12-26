@@ -14,6 +14,7 @@ class TabsController extends PageController {
 class InternalPagesController extends PageController {
   static InternalPagesController instance = Get.find();
   late Object passedObject;
+
   setPassedObject(Object object) {
     passedObject = object;
   }

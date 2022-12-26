@@ -10,9 +10,11 @@ class CIA_TextFormField extends StatefulWidget {
     this.isObscure,
     this.onChange,
     this.icon,
+    this.maxLines = 1,
     required this.controller,
   }) : super(key: key);
 
+  int maxLines;
   bool? isObscure = false;
   String label;
   Function? onChange;
@@ -43,6 +45,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
       ),
       child: TextFormField(
         cursorColor: Color_AccentGreen,
+        maxLines: widget.maxLines,
         focusNode: focus,
         controller: widget.controller,
         textInputAction: TextInputAction.next,

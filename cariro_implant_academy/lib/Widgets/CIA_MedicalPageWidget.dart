@@ -33,9 +33,9 @@ class CIA_MedicalPagesWidget extends StatelessWidget {
     widgets.add(SizedBox(height: 10));
     for (Widget child in children) {
       widgets.add(child);
-      widgets.add(SizedBox(height: 10));
+      widgets.add(SizedBox(height: 20));
     }
-    widgets.add(SizedBox(height: 20));
+    widgets.add(SizedBox(height: 30));
     return ListView(
       shrinkWrap: false,
       children: [
