@@ -23,7 +23,7 @@ class _HorizontalRadioButtonsState extends State<HorizontalRadioButtons> {
         child: Row(
           children: [
             Radio(
-                activeColor: Color_AccentGreen,
+                activeColor: Color_Accent,
                 visualDensity: VisualDensity.compact,
                 value: name,
                 groupValue: _groupValue,

@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ void main() {
   Get.put(TabsController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
+  Get.put(SiteController());
   runApp(const MyApp());
 }
 
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'easy_sidemenu Demo',
       theme: ThemeData(
           primaryColor: Colors.red,
-          accentColor: Color_AccentGreen,
+          accentColor: Color_Accent,
           primarySwatch: Colors.lightGreen),
       home: const MyHomePage(title: 'easy_sidemenu Demo'),
       debugShowCheckedModeBanner: false,

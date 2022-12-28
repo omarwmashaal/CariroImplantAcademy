@@ -32,9 +32,8 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
         ),
         selectedDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border:
-                Border.all(color: redFlags ? Colors.red : Color_AccentGreen),
-            color: redFlags ? Colors.red : Color_AccentGreen),
+            border: Border.all(color: redFlags ? Colors.red : Color_Accent),
+            color: redFlags ? Colors.red : Color_Accent),
       ),
       items: _buildItems(),
       onChange: (List<Object?> selectedItems, Object? selectedItem) {

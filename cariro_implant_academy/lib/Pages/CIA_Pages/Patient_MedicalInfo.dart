@@ -105,6 +105,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                       children: [
                         Expanded(
                           child: TitleWidget(
+                            showBackButton: true,
                             title: tabs[index],
                           ),
                         ),
@@ -792,7 +793,9 @@ class _PatientTreatmentPlan extends StatefulWidget {
 class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
   @override
   Widget build(BuildContext context) {
-    return CIA_TeethTreatmentWidget();
+    return CIA_TeethTreatmentWidget(
+      controller: MasterController,
+    );
   }
 }
 

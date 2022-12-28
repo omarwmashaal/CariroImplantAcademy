@@ -50,7 +50,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(
-              primary: Color_AccentGreen,
+              primary: Color_Accent,
             ),
       ),
       child: TextFormField(
@@ -77,7 +77,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                 FilteringTextInputFormatter.allow(RegExp('[0-9]')),
               ]
             : null,
-        cursorColor: Color_AccentGreen,
+        cursorColor: Color_Accent,
         maxLines: widget.maxLines,
         focusNode: focus,
         controller: widget.controller,
@@ -91,11 +91,11 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color_AccentGreen),
+            borderSide: BorderSide(color: Color_Accent),
             borderRadius: BorderRadius.circular(8),
           ),
           floatingLabelStyle: TextStyle(
-              color: focus.hasFocus ? Color_AccentGreen : Color(0xff000000),
+              color: focus.hasFocus ? Color_Accent : Color(0xff000000),
               fontWeight: FontWeight.bold),
           filled: true,
           labelText: widget.label,

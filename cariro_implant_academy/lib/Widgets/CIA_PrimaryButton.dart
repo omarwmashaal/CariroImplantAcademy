@@ -20,23 +20,21 @@ class _CIA_PrimaryButtonState extends State<CIA_PrimaryButton> {
     return SizedBox(
       width: 120,
       height: widget.isLong! ? 30 : 40,
-      child: Expanded(
-        child: ElevatedButton(
-          onPressed: () {
-            widget.onTab();
-          },
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Color_AccentGreen),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      ),)),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-                color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
-          ),
+      child: ElevatedButton(
+        onPressed: () {
+          widget.onTab();
+        },
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color_Accent),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            )),
+        child: Text(
+          widget.label,
+          style: TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
         ),
       ),
     );

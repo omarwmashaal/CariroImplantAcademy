@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
 import '../Constants/Fonts.dart';
+import '../Controllers/PatientMedicalController.dart';
 import '../Models/TreatmentPlanModel.dart';
 import 'CIA_TextFormField.dart';
 import 'FormTextWidget.dart';
 import 'MultiSelectChipWidget.dart';
 
+// TODO: Listen to models and higlight chips
 class CIA_TeethTreatmentWidget extends StatefulWidget {
-  const CIA_TeethTreatmentWidget({Key? key}) : super(key: key);
+  CIA_TeethTreatmentWidget({Key? key, required this.controller})
+      : super(key: key);
 
+  PatientMedicalController controller;
   @override
   State<CIA_TeethTreatmentWidget> createState() =>
       _CIA_TeethTreatmentWidgetState();
@@ -136,6 +140,11 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
       returnValue.add(SizedBox(height: 20));
     }
     return returnValue;
+  }
+
+  @override
+  void initState() {
+    models = widget.controller.TreatmentPlan;
   }
 }
 

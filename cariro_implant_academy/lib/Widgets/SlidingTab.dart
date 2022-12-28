@@ -14,6 +14,7 @@ class SlidingTab extends StatefulWidget {
       this.height,
       this.fontSize,
       this.adapt,
+      this.selectedColor,
       required this.controller})
       : super(key: key);
 
@@ -24,6 +25,7 @@ class SlidingTab extends StatefulWidget {
   double weight;
   double? height;
   double? fontSize;
+  Color? selectedColor;
   TabsController controller;
   late List<Widget> ItemsWidget;
 
@@ -45,7 +47,11 @@ class _SlidingTabState extends State<SlidingTab> {
       },
       containerColor: Colors.transparent,
       containerBorder: Border.all(color: Color_TextFieldBorder),
-      slidersColors: [Color_AccentGreen],
+      slidersColors: [
+        (widget.selectedColor == null
+            ? Color_Accent
+            : widget.selectedColor as Color)
+      ],
       containerHeight: widget.height == null ? 50 : widget.height as double,
       containerWight: widget.weight,
       containerBorderRadius: 8,

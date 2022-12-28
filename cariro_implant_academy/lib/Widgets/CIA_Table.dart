@@ -72,7 +72,7 @@ class _CIA_TableState extends State<CIA_Table> {
             },
           );
         },*/
-           /* footer: Container(
+            /* footer: Container(
                 color: Colors.grey[400],
                 child: MaterialButton(
                     onPressed: () async {
@@ -88,11 +88,9 @@ class _CIA_TableState extends State<CIA_Table> {
             allowFiltering: true,
             navigationMode: GridNavigationMode.row,
             onCellTap: (value) {
-              if(widget.onCellClick!=null)
-                {
-                  widget.onCellClick!(value.rowColumnIndex.rowIndex);
-                }
-
+              if (widget.onCellClick != null) {
+                widget.onCellClick!(value.rowColumnIndex.rowIndex);
+              }
             },
             columns: _buildColumns(),
           );
@@ -100,7 +98,7 @@ class _CIA_TableState extends State<CIA_Table> {
           return Center(
             child: LoadingIndicator(
               indicatorType: Indicator.ballClipRotateMultiple,
-              colors: [Color_AccentGreen],
+              colors: [Color_Accent],
             ),
           );
       },

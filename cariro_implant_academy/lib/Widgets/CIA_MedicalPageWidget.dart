@@ -19,7 +19,7 @@ class CIA_MedicalPagesWidget extends StatelessWidget {
           return Center(
             child: LoadingIndicator(
               indicatorType: Indicator.ballClipRotateMultiple,
-              colors: [Color_AccentGreen],
+              colors: [Color_Accent],
             ),
           );
         }

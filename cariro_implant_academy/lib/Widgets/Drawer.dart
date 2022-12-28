@@ -42,57 +42,7 @@ class DrawerItems extends StatelessWidget {
           rolesController.role.value = index;
         },
       ),
-      items: [
-        SideMenuItem(
-          priority: 0,
-          title: 'Patients',
-          onTap: () {
-            pagesController.jumpToPage(0);
-          },
-        ),
-        SideMenuItem(
-          priority: 1,
-          title: 'Assistants',
-          onTap: () {
-            pagesController.jumpToPage(1);
-          },
-        ),
-        SideMenuItem(
-          priority: 2,
-          title: 'Instructors',
-          onTap: () {
-            pagesController.jumpToPage(2);
-          },
-        ),
-        SideMenuItem(
-          priority: 3,
-          title: 'Candidates',
-          onTap: () {
-            pagesController.jumpToPage(3);
-          },
-        ),
-        SideMenuItem(
-          priority: 4,
-          title: 'Operations',
-          onTap: () {
-            pagesController.jumpToPage(4);
-          },
-        ),
-        SideMenuItem(
-          priority: 5,
-          title: 'Stock',
-          onTap: () {
-            pagesController.jumpToPage(5);
-          },
-        ),
-        SideMenuItem(
-          priority: 6,
-          title: 'Cash Flow',
-          onTap: () {
-            pagesController.jumpToPage(6);
-          },
-        ),
-      ],
+      items: pagesController.DrawerItems(),
     );
   }
 }

@@ -31,7 +31,7 @@ class _CIA_TextFieldState extends State<CIA_TextField> {
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(
-              primary: Color_AccentGreen,
+              primary: Color_Accent,
             ),
       ),
       child: Focus(
@@ -52,11 +52,11 @@ class _CIA_TextFieldState extends State<CIA_TextField> {
               borderRadius: BorderRadius.circular(8),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color_AccentGreen),
+              borderSide: BorderSide(color: Color_Accent),
               borderRadius: BorderRadius.circular(8),
             ),
             floatingLabelStyle: TextStyle(
-                color: hasFocus ? Color_AccentGreen : Color(0xff000000),
+                color: hasFocus ? Color_Accent : Color(0xff000000),
                 fontWeight: FontWeight.bold),
             filled: true,
             labelText: widget.label,
