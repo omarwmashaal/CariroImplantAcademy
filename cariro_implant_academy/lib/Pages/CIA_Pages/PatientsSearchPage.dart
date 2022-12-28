@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
 
 class PatientsSearchPage extends StatefulWidget {
@@ -18,8 +19,10 @@ class PatientsSearchPage extends StatefulWidget {
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
   PatientDataSource dataSource = PatientDataSource();
+
   @override
   Widget build(BuildContext context) {
+    late PatientInfoModel selectedPatient;
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: internalPagesController,
@@ -43,8 +46,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
             columnNames: PatientInfoModel.columns,
             onCellTab: (value) {
               print(dataSource.models[value - 1].ID);
-              internalPagesController
-                  .setPassedObject(dataSource.models[value - 1]);
+              selectedPatient = dataSource.models[value - 1];
               internalPagesController.jumpToPage(1);
             },
           ),
@@ -52,7 +54,10 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
         ]),
         Obx(() => (rolesController.role == "Admin" ||
                 rolesController.role == "Instructor")
-            ? PatientMedicalInfoPage()
+            ? PatientMedicalInfoPage(
+                patientMedicalController:
+                    PatientMedicalController(selectedPatient),
+              )
             : ViewPatientPage())
       ],
     );

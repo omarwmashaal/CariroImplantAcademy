@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../Constants/Colors.dart';
 
@@ -8,13 +9,17 @@ class CIA_TextFormField extends StatefulWidget {
     Key? key,
     required this.label,
     this.isObscure,
-    this.onChange,
+    this.onChange = null,
     this.icon,
+    this.isMinutes = false,
+    this.isHours = false,
     this.maxLines = 1,
     required this.controller,
   }) : super(key: key);
 
   int maxLines;
+  bool isHours;
+  bool isMinutes;
   bool? isObscure = false;
   String label;
   Function? onChange;
@@ -31,6 +36,11 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
   @override
   void initState() {
     focus.addListener(() {
+      if (!focus.hasFocus) {
+        if (widget.onChange != null) {
+          widget.onChange!(widget.controller.text);
+        }
+      }
       setState(() {});
     });
   }
@@ -44,15 +54,34 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             ),
       ),
       child: TextFormField(
+        autovalidateMode: widget.isMinutes || widget.isHours
+            ? AutovalidateMode.onUserInteraction
+            : null,
+        validator: (value) {
+          if (widget.isHours) {
+            if (value != null && value.isNotEmpty) {
+              if (int.parse(value!) > 12) {
+                widget.controller.text = 12.toString();
+              }
+            }
+          } else if (widget.isMinutes) {
+            if (value != null && value.isNotEmpty) {
+              if (int.parse(value!) > 59) {
+                widget.controller.text = 59.toString();
+              }
+            }
+          }
+        },
+        inputFormatters: widget.isHours || widget.isMinutes
+            ? [
+                FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+              ]
+            : null,
         cursorColor: Color_AccentGreen,
         maxLines: widget.maxLines,
         focusNode: focus,
         controller: widget.controller,
         textInputAction: TextInputAction.next,
-        onChanged: (value) {
-          if (widget.onChange != null) widget.onChange!(value);
-          print(focus.hasFocus);
-        },
         obscureText: widget.isObscure == null ? false : true,
         decoration: InputDecoration(
           prefixIcon: widget.icon != null ? Icon(Icons.search) : null,

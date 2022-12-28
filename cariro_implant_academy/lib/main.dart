@@ -29,8 +29,9 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'easy_sidemenu Demo',
       theme: ThemeData(
-        primaryColor: Colors.red,
-      ),
+          primaryColor: Colors.red,
+          accentColor: Color_AccentGreen,
+          primarySwatch: Colors.lightGreen),
       home: const MyHomePage(title: 'easy_sidemenu Demo'),
       debugShowCheckedModeBanner: false,
     );

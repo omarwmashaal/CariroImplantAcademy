@@ -4,29 +4,40 @@ import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../Constants/Controllers.dart';
+import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/CIA_MedicalPageWidget.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/CIA_TagsInputWidget.dart';
+import '../../Widgets/CIA_TeethTreatmentWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
 import '../../Widgets/SlidingTab.dart';
 
+late PatientMedicalController MasterController;
+
 class PatientMedicalInfoPage extends StatefulWidget {
-  PatientMedicalInfoPage({Key? key}) : super(key: key);
+  PatientMedicalInfoPage({Key? key, required this.patientMedicalController})
+      : super(key: key);
+  PatientMedicalController patientMedicalController;
 
   @override
   State<PatientMedicalInfoPage> createState() => _PatientMedicalInfoPageState();
 }
 
 class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
-  PatientInfoModel? patient;
+  late PatientInfoModel patient;
+
+  @override
+  void initState() {
+    MasterController = widget.patientMedicalController;
+    patient = widget.patientMedicalController.patient;
+  }
 
   List<String> tabs = [
     "Medical Exmination",
@@ -52,11 +63,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is PatientInfoModel)
-      patient = internalPagesController.passedObject as PatientInfoModel;
-    else
-      patient = PatientInfoModel(0, "Name", "Phone", "MaritalStatus");
-
     patient?.Gender = "Male";
     return Container(
       child: Padding(
@@ -94,117 +100,9 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: Column(
                       children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: TitleWidget(
-                                  title: "Patient Information",
-                                  showBackButton: true,
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Wrap(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            FormTextKeyWidget(text: "ID"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            FormTextValueWidget(
-                                              text:
-                                                  patient?.ID.toString() == null
-                                                      ? ""
-                                                      : patient?.ID.toString(),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            FormTextKeyWidget(text: "Name"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            FormTextValueWidget(
-                                                text: patient?.Name == null
-                                                    ? ""
-                                                    : patient?.Name)
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            FormTextKeyWidget(
-                                                text: "Phone Number"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            FormTextValueWidget(
-                                                text: patient?.Phone == null
-                                                    ? ""
-                                                    : patient?.Phone)
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            FormTextKeyWidget(text: "Gender"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            FormTextValueWidget(
-                                                text: patient?.Gender == null
-                                                    ? ""
-                                                    : patient?.Gender)
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            FormTextKeyWidget(
-                                                text: "Marital Status"),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            FormTextValueWidget(
-                                                text: patient?.MaritalStatus ==
-                                                        null
-                                                    ? ""
-                                                    : patient?.MaritalStatus)
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    CIA_SecondaryButton(
-                                        label: "View more info", onTab: () {})
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Expanded(
                           child: TitleWidget(
                             title: tabs[index],
@@ -213,7 +111,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                         Expanded(
                           flex: 8,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 2),
                             child: PageView(
                               controller: tabsController,
                               children: pages,
@@ -235,46 +133,98 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                               Image(
                                 image: AssetImage("ProfileImage.png"),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: FormTextKeyWidget(
-                                        text: "Operator Name:",
-                                        secondaryInfo: true,
-                                      ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_SecondaryButton(
+                                  label: "View more info", onTab: () {}),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "ID")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: patient?.ID.toString() == null
+                                          ? ""
+                                          : patient?.ID.toString(),
                                     ),
-                                    Expanded(
-                                      child: FormTextValueWidget(
-                                        text: "Omar Wael",
-                                        secondaryInfo: true,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: FormTextKeyWidget(
-                                        text: "Date:",
-                                        secondaryInfo: true,
-                                      ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "Name")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                        text: patient?.Name == null
+                                            ? ""
+                                            : patient?.Name),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "Gender")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                        text: patient?.Gender == null
+                                            ? ""
+                                            : patient?.Gender),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormTextKeyWidget(
+                                      text: "Operator",
+                                      secondaryInfo: true,
                                     ),
-                                    Expanded(
-                                      child: FormTextValueWidget(
-                                        text: "12/1/2022",
-                                        secondaryInfo: true,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: "Omar Wael",
+                                      secondaryInfo: true,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormTextKeyWidget(
+                                      text: "Date:",
+                                      secondaryInfo: true,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: "12/1/2022",
+                                      secondaryInfo: true,
+                                    ),
+                                  )
+                                ],
                               ),
                               SizedBox(
                                 height: 10,
@@ -544,21 +494,85 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(children: [
-      CIA_TagsInputWidget(label: "Carious"),
-      CIA_TagsInputWidget(label: "Filled"),
-      CIA_TagsInputWidget(label: "Missed"),
-      CIA_TagsInputWidget(label: "Not Sure"),
-      CIA_TagsInputWidget(label: "Mobility"),
-      CIA_TagsInputWidget(label: "Hopeless teeth"),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Carious",
+        initalValue: (MasterController.getDentalExamindation())["Carious"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Carious", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Filled",
+        initalValue: MasterController.getDentalExamindation()["Filled"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Filled", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Missed",
+        initalValue: MasterController.getDentalExamindation()["Missed"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Missed", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Not Sure",
+        initalValue: MasterController.getDentalExamindation()["Not Sure"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Not Sure", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Mobility",
+        initalValue: MasterController.getDentalExamindation()["Mobility"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Mobility", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Hopeless teeth",
+        initalValue: MasterController.getDentalExamindation()["Hopeless teeth"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Hopeless teeth", value),
+      ),
       Row(
         children: [
-          Expanded(child: CIA_TagsInputWidget(label: "Inter arch space RT")),
+          Expanded(
+              child: CIA_TagsInputWidget(
+            patientController: MasterController,
+            label: "Inter arch space RT",
+            initalValue:
+                MasterController.getDentalExamindation()["Inter arch space RT"],
+            onChange: (value) => MasterController.updateDentalExamination(
+                "Inter arch space RT", value),
+          )),
           SizedBox(width: 10),
-          Expanded(child: CIA_TagsInputWidget(label: "Inter arch space LT")),
+          Expanded(
+              child: CIA_TagsInputWidget(
+            patientController: MasterController,
+            label: "Inter arch space LT",
+            initalValue:
+                MasterController.getDentalExamindation()["Inter arch space LT"],
+            onChange: (value) => MasterController.updateDentalExamination(
+                "Inter arch space LT", value),
+          )),
         ],
       ),
-      CIA_TagsInputWidget(label: "Implant Placed"),
-      CIA_TagsInputWidget(label: "Implant Failed"),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Implant Placed",
+        initalValue: MasterController.getDentalExamindation()["Implant Placed"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Implant Placed", value),
+      ),
+      CIA_TagsInputWidget(
+        patientController: MasterController,
+        label: "Implant Failed",
+        initalValue: MasterController.getDentalExamindation()["Implant Failed"],
+        onChange: (value) =>
+            MasterController.updateDentalExamination("Implant Failed", value),
+      ),
       CIA_TextFormField(
           label: "Operator Implant Notes", controller: TextEditingController())
     ]);
@@ -645,12 +659,36 @@ class _PatientNonSurgicalTreatment extends StatefulWidget {
 
 class _PatientNonSurgicalTreatmentState
     extends State<_PatientNonSurgicalTreatment> {
+  String date = "";
+  List<String> containedTeeth = <String>[];
+
+  @override
+  void initState() {
+    for (String tooth in MasterController.getTeeth()) {
+      if ((MasterController.nonSurgicalTreatment as String).contains(tooth)) {
+        containedTeeth.add(tooth);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(children: [
       CIA_TextFormField(
+        onChange: (value) async {
+          containedTeeth.clear();
+          MasterController.nonSurgicalTreatment = value;
+          for (String tooth in MasterController.getTeeth()) {
+            if ((value as String).contains(tooth)) {
+              containedTeeth.add(tooth);
+            }
+          }
+          setState(() {});
+          print(containedTeeth);
+        },
         label: "Treatment",
-        controller: TextEditingController(),
+        controller:
+            TextEditingController(text: MasterController.nonSurgicalTreatment),
         maxLines: 5,
       ),
       Row(
@@ -672,28 +710,80 @@ class _PatientNonSurgicalTreatmentState
           SizedBox(
             width: 10,
           ),
-          CIA_SecondaryButton(label: "View History", onTab: () {}),
+          CIA_SecondaryButton(
+              label: "View History",
+              onTab: () {
+                CIA_PopupDialog_Table(
+                    context, "View History Treatments", (value) {});
+              }),
           SizedBox(
             width: 10,
           ),
           CIA_SecondaryButton(
               label: "Schedule Next Visit",
-              width: 150,
+              width: 200,
               onTab: () {
-                CIA_PopupDialog(
-                    context,
-                    SfDateRangePicker(
-                      view: DateRangePickerView.month,
-                    ));
+                CIA_PopupDialog_DateTimePicker(
+                    context, "Schedule Next Visit", (value) {});
               }),
         ],
       ),
+      containedTeeth.isEmpty ? SizedBox() : _buildTeethSuggestion()
     ]);
+  }
+
+  _buildTeethSuggestion() {
+    List<Widget> uu = <Widget>[];
+    Map<String, bool> myMap = {
+      "Carious": false,
+      "Filled": false,
+      "Missed": false,
+      "Not Sure": false,
+      "Mobility": false,
+      "Hopeless teeth": false,
+      "Inter arch space RT": false,
+      "Inter arch space LT": false,
+      "Implant Placed": false,
+      "Implant Failed": false,
+    };
+
+    for (String tooth in containedTeeth) {
+      Map<String, bool> tempMap = Map();
+      tempMap.addEntries(myMap.entries);
+
+      String status = MasterController.getToothStatus(tooth);
+      for (String key in tempMap.keys) {
+        if (key == status) {
+          tempMap[key] = true;
+          break;
+        }
+      }
+
+      uu.add(FormTextKeyWidget(text: "Do you want to update tooth $tooth?"));
+      uu.add(CIA_MultiSelectChipWidget(
+        key: LabeledGlobalKey(tooth),
+        singleSelect: true,
+        labels: tempMap,
+        onChangeSpecificTooth: (selected, isSelected, key) {
+          String selectedTooth = (key.toString())
+              .substring((key.toString()).indexOf(" ") + 1)
+              .replaceAll("]", "");
+          if (isSelected)
+            MasterController.updateToothStatus(selectedTooth, selected);
+        },
+      ));
+      uu.add(SizedBox(height: 10));
+    }
+    Widget ss = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: uu,
+    );
+    return ss;
   }
 }
 
 class _PatientTreatmentPlan extends StatefulWidget {
-  const _PatientTreatmentPlan({Key? key}) : super(key: key);
+  _PatientTreatmentPlan({Key? key}) : super(key: key);
 
   @override
   State<_PatientTreatmentPlan> createState() => _PatientTreatmentPlanState();
@@ -702,7 +792,7 @@ class _PatientTreatmentPlan extends StatefulWidget {
 class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_TeethTreatmentWidget();
   }
 }
 
