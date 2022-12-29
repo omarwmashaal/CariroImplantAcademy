@@ -13,6 +13,13 @@ class SiteController extends GetxController {
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   String getSite() => _site;
   AssetImage getSiteLogo() => _siteLogo;
+  AssetImage getSiteLogoBySite(String site) {
+    if (site == "CIA")
+      return AssetImage("CIA_Logo3.png");
+    else
+      return AssetImage("LAB_Logo.png");
+  }
+
   setSite(String site) {
     switchTheme(site);
     _site = site;

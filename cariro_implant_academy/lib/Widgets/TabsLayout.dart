@@ -129,12 +129,9 @@ class _TabsLayoutState extends State<TabsLayout> {
             // Obx(() =>widget.pages[tabsController.index.value] ),
             Expanded(
                 flex: widget.beforeTitleWidget == null ? 10 : 8,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: PageView(
-                    controller: tabsController,
-                    children: widget.pages,
-                  ),
+                child: PageView(
+                  controller: tabsController,
+                  children: widget.pages,
                 ))
           ],
         ),

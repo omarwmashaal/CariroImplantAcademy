@@ -19,10 +19,10 @@ class PatientsSearchPage extends StatefulWidget {
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
   PatientDataSource dataSource = PatientDataSource();
-
+  late PatientInfoModel selectedPatient =
+      PatientInfoModel(1, "Name", "Phone", "MaritalStatus");
   @override
   Widget build(BuildContext context) {
-    late PatientInfoModel selectedPatient;
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: internalPagesController,
@@ -46,7 +46,9 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
             columnNames: PatientInfoModel.columns,
             onCellTab: (value) {
               print(dataSource.models[value - 1].ID);
-              selectedPatient = dataSource.models[value - 1];
+              setState(() {
+                selectedPatient = dataSource.models[value - 1];
+              });
               internalPagesController.jumpToPage(1);
             },
           ),
@@ -60,7 +62,10 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
               )
             : ViewPatientPage(
                 patient: selectedPatient,
-              ))
+              )),
+        ViewPatientPage(
+          patient: selectedPatient,
+        )
       ],
     );
   }

@@ -54,7 +54,7 @@ class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
             Expanded(
               flex: 10,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SearchLayout(
                   radioButtons: [
                     "Name",

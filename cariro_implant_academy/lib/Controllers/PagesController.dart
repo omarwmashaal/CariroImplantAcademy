@@ -9,7 +9,10 @@ import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 import '../Pages/CIA_Pages/PatientsSearchPage.dart';
+import '../Pages/CIA_Pages/StockPage.dart';
+import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_CustomersSearchPage.dart';
+import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 
 class PagesController extends PageController {
@@ -35,11 +38,8 @@ class PagesController extends PageController {
           ),
           Container(child: CandidatesSearchPage()),
           Container(
-            child: const Center(
-              child: Text(
-                'Stock',
-                style: TextStyle(fontSize: 35),
-              ),
+            child: Center(
+              child: StockSearchPage(),
             ),
           ),
           Container(
@@ -62,9 +62,9 @@ class PagesController extends PageController {
               ),
             ),
             Container(
-              child: const Center(child: InstructorsSearchPage()),
+              child: const Center(child: LAB_StockSearchPage()),
             ),
-            Container(child: CandidatesSearchPage()),
+            LAB_CashFlowsSearchPage(),
           ],
         );
       else if (role == "technician") {
@@ -87,13 +87,13 @@ class PagesController extends PageController {
           ),
           Container(
             child: const Center(
-              child: AssistantsSearchPage(),
+              child: LAB_CustomersSearchPage(),
             ),
           ),
           Container(
-            child: const Center(child: InstructorsSearchPage()),
+            child: const Center(child: LAB_StockSearchPage()),
           ),
-          Container(child: CandidatesSearchPage()),
+          LAB_CashFlowsSearchPage()
         ],
       );
     }
@@ -201,8 +201,20 @@ class TabsController extends PageController {
 class InternalPagesController extends PageController {
   static InternalPagesController instance = Get.find();
   late Object passedObject;
+  static int index = 0;
 
   setPassedObject(Object object) {
     passedObject = object;
+  }
+
+  @override
+  void jumpToPage(int page) {
+    index = page;
+    super.jumpToPage(page);
+  }
+
+  goBack() {
+    index--;
+    super.jumpToPage(index);
   }
 }

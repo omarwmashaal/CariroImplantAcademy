@@ -32,7 +32,7 @@ class TitleWidget extends StatelessWidget {
   }
 
   bool onWillPop() {
-    internalPagesController.jumpToPage(0);
+    internalPagesController.goBack();
     return false;
   }
 }

@@ -138,7 +138,10 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                 height: 10,
                               ),
                               CIA_SecondaryButton(
-                                  label: "View more info", onTab: () {}),
+                                  label: "View more info",
+                                  onTab: () {
+                                    internalPagesController.jumpToPage(2);
+                                  }),
                               SizedBox(
                                 height: 10,
                               ),
