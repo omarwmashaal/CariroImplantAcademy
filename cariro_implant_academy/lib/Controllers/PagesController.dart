@@ -6,7 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../Constants/Controllers.dart';
 import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
-import '../Pages/CIA_Pages/CashFlowMainPage.dart';
+import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 import '../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../Pages/LAB_Pages/LAB_CustomersSearchPage.dart';
@@ -37,21 +37,13 @@ class PagesController extends PageController {
           Container(
             child: const Center(
               child: Text(
-                'Operations',
-                style: TextStyle(fontSize: 35),
-              ),
-            ),
-          ),
-          Container(
-            child: const Center(
-              child: Text(
                 'Stock',
                 style: TextStyle(fontSize: 35),
               ),
             ),
           ),
           Container(
-            child: CashFlowMainPage(),
+            child: CashFlowsSearchPage(),
           ),
         ],
       );
@@ -141,23 +133,16 @@ class PagesController extends PageController {
         ),
         SideMenuItem(
           priority: 4,
-          title: 'Operations',
+          title: 'Stock',
           onTap: () {
             pagesController.jumpToPage(4);
           },
         ),
         SideMenuItem(
           priority: 5,
-          title: 'Stock',
-          onTap: () {
-            pagesController.jumpToPage(5);
-          },
-        ),
-        SideMenuItem(
-          priority: 6,
           title: 'Cash Flow',
           onTap: () {
-            pagesController.jumpToPage(6);
+            pagesController.jumpToPage(5);
           },
         ),
       ];

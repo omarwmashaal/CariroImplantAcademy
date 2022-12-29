@@ -1,4 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +34,21 @@ class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
             Expanded(
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: TitleWidget(
-                title: "Customers Data",
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TitleWidget(
+                      title: "Customers Data",
+                    ),
+                  ),
+                  CIA_PrimaryButton(
+                      label: "Add Customer",
+                      isLong: true,
+                      onTab: () {
+                        CIA_ShowPopUp(context, "Add new Customer", Text(""));
+                      }),
+                  SizedBox(width: 30)
+                ],
               ),
             )),
             Expanded(

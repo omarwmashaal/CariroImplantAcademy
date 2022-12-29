@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../Constants/Controllers.dart';
 import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
-import '../Pages/CIA_Pages/CashFlowMainPage.dart';
+import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
@@ -45,7 +45,7 @@ PageView MainPageRoutes() {
         ),
       ),
       Container(
-        child: CashFlowMainPage(),
+        child: CashFlowsSearchPage(),
       ),
     ],
   );

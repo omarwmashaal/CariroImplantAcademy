@@ -31,6 +31,7 @@ class TabsLayout extends StatefulWidget {
       this.weight,
       this.sideWidget,
       this.height,
+      this.onChange,
       this.beforeTitleWidget})
       : super(key: key);
   List<String> tabs;
@@ -41,6 +42,7 @@ class TabsLayout extends StatefulWidget {
   bool showBackButton;
   Widget? beforeTitleWidget;
   Widget? sideWidget;
+  Function? onChange;
 
   final tabsController = new TabsController();
 
@@ -88,6 +90,7 @@ class _TabsLayoutState extends State<TabsLayout> {
                   Container(
                     child: SlidingTab(
                       onChange: ((value) {
+                        if (widget.onChange != null) widget.onChange!(value);
                         tabsController.jumpToPage(value);
                         setState(() {
                           index = value;
