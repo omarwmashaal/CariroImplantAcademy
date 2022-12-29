@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
@@ -10,6 +11,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       required this.labels,
       this.redFlags = false,
       this.onChange,
+      this.verticalList = false,
       this.onChangeSpecificTooth,
       this.singleSelect = false})
       : super(key: key);
@@ -19,12 +21,23 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   Function? onChange;
   Function? onChangeSpecificTooth;
   bool singleSelect;
+  bool verticalList;
 
   @override
   Widget build(BuildContext context) {
     return MultiSelectContainer(
+      showInListView: verticalList,
+      alignments: MultiSelectAlignments(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start),
       singleSelectedItem: singleSelect,
-      listViewSettings: ListViewSettings(scrollDirection: Axis.horizontal),
+      textStyles: MultiSelectTextStyles(
+          selectedTextStyle: TextStyle(
+        color: Colors.white,
+        fontFamily: Inter_Bold,
+      )),
+      listViewSettings: ListViewSettings(
+          scrollDirection: verticalList ? Axis.vertical : Axis.horizontal),
       itemsDecoration: MultiSelectDecorations(
         decoration: BoxDecoration(
           border: Border.all(color: Color_TextFieldBorder),

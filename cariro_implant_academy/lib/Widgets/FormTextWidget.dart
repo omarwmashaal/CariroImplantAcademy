@@ -43,15 +43,16 @@ class FormTextKeyWidget extends StatelessWidget {
 
 class FormTextValueWidget extends StatelessWidget {
   FormTextValueWidget(
-      {Key? key, required this.text, this.secondaryInfo = false})
+      {Key? key, required this.text, this.secondaryInfo = false, this.suffix})
       : super(key: key);
   String? text;
   bool secondaryInfo;
+  String? suffix;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      text as String,
+      (text as String) + " " + (suffix != null ? (suffix as String) : ""),
       style: secondaryInfo
           ? TextStyle(
               fontSize: 14,

@@ -34,7 +34,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           largeScreen: CIA_LargeScreen(),
                         ),
                         duration: Duration(seconds: 0));
-                  else {}
+                  else {
+                    Get.off(
+                        SiteLayout(
+                          largeScreen: CIA_LargeScreen(),
+                        ),
+                        duration: Duration(seconds: 0));
+                  }
                 },
                 onRegister: () =>
                     setState(() => CurrentPage = RegisterPageRoute),

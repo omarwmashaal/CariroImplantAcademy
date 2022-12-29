@@ -52,13 +52,15 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
           ),
           Container()
         ]),
-        Obx(() => (rolesController.role == "Admin" ||
-                rolesController.role == "Instructor")
+        Obx(() => (siteController.getRole() == "Admin" ||
+                siteController.getRole() == "Instructor")
             ? PatientMedicalInfoPage(
                 patientMedicalController:
                     PatientMedicalController(selectedPatient),
               )
-            : ViewPatientPage())
+            : ViewPatientPage(
+                patient: selectedPatient,
+              ))
       ],
     );
   }

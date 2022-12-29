@@ -2,6 +2,13 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+        <entry key="another_stepper">
+          <value>
+            <list>
+              <option value="C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/another_stepper-1.1.6/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="async">
           <value>
             <list>
@@ -537,6 +544,7 @@
       </option>
     </properties>
     <CLASSES>
+      <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/another_stepper-1.1.6/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.9.0/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/badges-2.0.3/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />

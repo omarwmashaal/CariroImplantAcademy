@@ -10,7 +10,7 @@ class CIA_Table extends StatefulWidget {
   /// Creates the home page.
   CIA_Table({
     Key? key,
-    required this.loadFunction,
+    this.loadFunction,
     //required this.models,
     required this.columnNames,
     this.onCellClick,
@@ -19,7 +19,7 @@ class CIA_Table extends StatefulWidget {
 
   List<String> columnNames;
   DataGridSource dataSource;
-  Function loadFunction;
+  Function? loadFunction;
   Function? onCellClick;
 
   // List<Object> models;
@@ -35,7 +35,7 @@ class _CIA_TableState extends State<CIA_Table> {
 
   @override
   void initState() {
-    GlobalLoadFunction = widget.loadFunction;
+    if (widget.loadFunction != null) GlobalLoadFunction = widget.loadFunction!;
     super.initState();
     // employees = getEmployeeData();
   }

@@ -9,11 +9,14 @@ import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowMainPage.dart';
 import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 import '../Pages/CIA_Pages/PatientsSearchPage.dart';
+import '../Pages/LAB_Pages/LAB_CustomersSearchPage.dart';
+import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 
 class PagesController extends PageController {
   static PagesController instance = Get.find();
 
   static PageView MainPageRoutes() {
+    String role = siteController.getRole();
     if (siteController.getSite() == "CIA") {
       return PageView(
         physics: NeverScrollableScrollPhysics(),
@@ -53,12 +56,42 @@ class PagesController extends PageController {
         ],
       );
     } else {
+      if (role == "Secretary")
+        return PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: pagesController,
+          children: [
+            Container(
+              child: LabRequestsSearchPage(),
+            ),
+            Container(
+              child: const Center(
+                child: LAB_CustomersSearchPage(),
+              ),
+            ),
+            Container(
+              child: const Center(child: InstructorsSearchPage()),
+            ),
+            Container(child: CandidatesSearchPage()),
+          ],
+        );
+      else if (role == "technician") {
+        return PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: pagesController,
+          children: [
+            Container(
+              child: Container(),
+            ),
+          ],
+        );
+      }
       return PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: pagesController,
         children: [
           Container(
-            child: PatientsSearchPage(),
+            child: LabRequestsSearchPage(),
           ),
           Container(
             child: const Center(
@@ -69,31 +102,13 @@ class PagesController extends PageController {
             child: const Center(child: InstructorsSearchPage()),
           ),
           Container(child: CandidatesSearchPage()),
-          Container(
-            child: const Center(
-              child: Text(
-                'Operations',
-                style: TextStyle(fontSize: 35),
-              ),
-            ),
-          ),
-          Container(
-            child: const Center(
-              child: Text(
-                'Stock',
-                style: TextStyle(fontSize: 35),
-              ),
-            ),
-          ),
-          Container(
-            child: CashFlowMainPage(),
-          ),
         ],
       );
     }
   }
 
   static List<SideMenuItem> DrawerItems() {
+    String role = siteController.getRole();
     if (siteController.getSite() == "CIA") {
       return [
         SideMenuItem(
@@ -147,7 +162,47 @@ class PagesController extends PageController {
         ),
       ];
     } else {
-      return [];
+      if (role == "technician") {
+        return [
+          SideMenuItem(
+            priority: 0,
+            title: 'My Tasks',
+            onTap: () {
+              pagesController.jumpToPage(0);
+            },
+          ),
+        ];
+      }
+      return [
+        SideMenuItem(
+          priority: 0,
+          title: 'Lab Requests',
+          onTap: () {
+            pagesController.jumpToPage(0);
+          },
+        ),
+        SideMenuItem(
+          priority: 1,
+          title: 'Customers',
+          onTap: () {
+            pagesController.jumpToPage(1);
+          },
+        ),
+        SideMenuItem(
+          priority: 2,
+          title: 'Stock',
+          onTap: () {
+            pagesController.jumpToPage(2);
+          },
+        ),
+        SideMenuItem(
+          priority: 3,
+          title: 'Cash Flow',
+          onTap: () {
+            pagesController.jumpToPage(3);
+          },
+        ),
+      ];
     }
     return <SideMenuItem>[];
   }

@@ -9,6 +9,7 @@ import '../../Constants/Colors.dart';
 import '../../Controllers/Auth_NavigationController.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_TextField.dart';
+import '../../Widgets/Horizontal_RadioButtons.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, required this.onLogin, required this.onRegister})
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                             weight: 450,
                             controller: TabsController()),
                         Image(
-                          image: AssetImage("CIA_Logo3.png"),
+                          image: siteController.getSiteLogo(),
                           width: 150,
                           height: 80,
                           fit: BoxFit.fitHeight,
@@ -78,6 +79,12 @@ class _LoginPageState extends State<LoginPage> {
                             )),
                         CIA_PrimaryButton(
                             label: "Login", onTab: () => widget.onLogin()),
+                        HorizontalRadioButtons(
+                          names: siteController.getRoles(),
+                          onChange: (index) {
+                            siteController.setRole(index);
+                          },
+                        ),
                         GestureDetector(
                           onTap: () {
                             widget.onRegister();

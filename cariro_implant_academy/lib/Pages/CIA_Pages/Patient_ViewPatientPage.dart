@@ -1,4 +1,3 @@
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -9,11 +8,15 @@ import 'package:flutter/material.dart';
 
 import '../../Widgets/TabsLayout.dart';
 
-class ViewPatientPage extends StatelessWidget {
-  ViewPatientPage({Key? key}) : super(key: key);
+late PatientInfoModel masterPatient;
 
+class ViewPatientPage extends StatelessWidget {
+  ViewPatientPage({Key? key, required this.patient}) : super(key: key);
+
+  PatientInfoModel patient;
   @override
   Widget build(BuildContext context) {
+    masterPatient = patient;
     return Column(
       children: [
         Expanded(
@@ -39,15 +42,11 @@ class _PatientInfo extends StatefulWidget {
 }
 
 class _PatientInfoState extends State<_PatientInfo> {
-  PatientInfoModel? patient;
-
   bool edit = false;
   FocusNode next = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is PatientInfoModel)
-      patient = internalPagesController.passedObject as PatientInfoModel;
     return Padding(
       padding: EdgeInsets.only(top: 5),
       child: Column(
@@ -69,18 +68,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                             Expanded(child: FormTextKeyWidget(text: "ID")),
                             Expanded(
                                 child: FormTextValueWidget(
-                                    text: patient?.ID.toString() == null
+                                    text: masterPatient?.ID.toString() == null
                                         ? ""
-                                        : patient?.ID.toString()))
+                                        : masterPatient?.ID.toString()))
                           ],
                         ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Name",
                                 controller: TextEditingController(
-                                    text: patient?.Name == null
+                                    text: masterPatient?.Name == null
                                         ? ""
-                                        : patient?.Name),
+                                        : masterPatient?.Name),
                               )
                             : Row(
                                 children: [
@@ -88,18 +87,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                                       child: FormTextKeyWidget(text: "Name")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.Name == null
+                                          text: masterPatient?.Name == null
                                               ? ""
-                                              : patient?.Name))
+                                              : masterPatient?.Name))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Name",
                                 controller: TextEditingController(
-                                    text: patient?.Name == null
+                                    text: masterPatient?.Name == null
                                         ? ""
-                                        : patient?.Name),
+                                        : masterPatient?.Name),
                               )
                             : Row(
                                 children: [
@@ -107,18 +106,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                                       child: FormTextKeyWidget(text: "Gender")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.Gender == null
+                                          text: masterPatient?.Gender == null
                                               ? ""
-                                              : patient?.Gender))
+                                              : masterPatient?.Gender))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Phone Number",
                                 controller: TextEditingController(
-                                    text: patient?.Phone == null
+                                    text: masterPatient?.Phone == null
                                         ? ""
-                                        : patient?.Phone),
+                                        : masterPatient?.Phone),
                               )
                             : Row(
                                 children: [
@@ -127,18 +126,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                                           text: "Phone Number")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.Phone == null
+                                          text: masterPatient?.Phone == null
                                               ? ""
-                                              : patient?.Phone))
+                                              : masterPatient?.Phone))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Another Phone Number",
                                 controller: TextEditingController(
-                                    text: patient?.Phone2 == null
+                                    text: masterPatient?.Phone2 == null
                                         ? ""
-                                        : patient?.Phone2),
+                                        : masterPatient?.Phone2),
                               )
                             : Row(
                                 children: [
@@ -147,18 +146,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                                           text: "Another Phone Number")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.Phone2 == null
+                                          text: masterPatient?.Phone2 == null
                                               ? ""
-                                              : patient?.Phone2))
+                                              : masterPatient?.Phone2))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Date Of Birth",
                                 controller: TextEditingController(
-                                    text: patient?.DateOfBirth == null
+                                    text: masterPatient?.DateOfBirth == null
                                         ? ""
-                                        : patient?.DateOfBirth),
+                                        : masterPatient?.DateOfBirth),
                               )
                             : Row(
                                 children: [
@@ -167,18 +166,19 @@ class _PatientInfoState extends State<_PatientInfo> {
                                           text: "Date Of Birth")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.DateOfBirth == null
-                                              ? ""
-                                              : patient?.DateOfBirth))
+                                          text:
+                                              masterPatient?.DateOfBirth == null
+                                                  ? ""
+                                                  : masterPatient?.DateOfBirth))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "MaritalStatus",
                                 controller: TextEditingController(
-                                    text: patient?.MaritalStatus == null
+                                    text: masterPatient?.MaritalStatus == null
                                         ? ""
-                                        : patient?.MaritalStatus),
+                                        : masterPatient?.MaritalStatus),
                               )
                             : Row(
                                 children: [
@@ -187,18 +187,19 @@ class _PatientInfoState extends State<_PatientInfo> {
                                           text: "Marital Status")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.MaritalStatus == null
+                                          text: masterPatient?.MaritalStatus ==
+                                                  null
                                               ? ""
-                                              : patient?.MaritalStatus))
+                                              : masterPatient?.MaritalStatus))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "Address",
                                 controller: TextEditingController(
-                                    text: patient?.Address == null
+                                    text: masterPatient?.Address == null
                                         ? ""
-                                        : patient?.Address),
+                                        : masterPatient?.Address),
                               )
                             : Row(
                                 children: [
@@ -207,18 +208,18 @@ class _PatientInfoState extends State<_PatientInfo> {
                                           FormTextKeyWidget(text: "Address")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.Address == null
+                                          text: masterPatient?.Address == null
                                               ? ""
-                                              : patient?.Address))
+                                              : masterPatient?.Address))
                                 ],
                               ),
                         edit
                             ? CIA_TextFormField(
                                 label: "City",
                                 controller: TextEditingController(
-                                    text: patient?.City == null
+                                    text: masterPatient?.City == null
                                         ? ""
-                                        : patient?.City),
+                                        : masterPatient?.City),
                               )
                             : Row(
                                 children: [
@@ -226,9 +227,9 @@ class _PatientInfoState extends State<_PatientInfo> {
                                       child: FormTextKeyWidget(text: "City")),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                          text: patient?.City == null
+                                          text: masterPatient?.City == null
                                               ? ""
-                                              : patient?.City))
+                                              : masterPatient?.City))
                                 ],
                               ),
                         Row(
@@ -236,9 +237,9 @@ class _PatientInfoState extends State<_PatientInfo> {
                             Expanded(
                                 child: FormTextKeyWidget(
                               text: "Registration: " +
-                                  (patient?.Name == null
+                                  (masterPatient?.Name == null
                                       ? ""
-                                      : patient?.Name as String),
+                                      : masterPatient?.Name as String),
                               secondaryInfo: true,
                             )),
                             Expanded(
@@ -322,8 +323,6 @@ class _PatientVisits extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is PatientInfoModel)
-      patient = internalPagesController.passedObject as PatientInfoModel;
     return Container();
   }
 }

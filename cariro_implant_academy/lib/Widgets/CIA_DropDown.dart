@@ -29,6 +29,8 @@ class _CIA_DropDownState extends State<CIA_DropDown> {
     return TextDropdownFormField(
       options: widget.values,
       decoration: InputDecoration(
+        suffixIcon: Icon(Icons.arrow_drop_down),
+        suffixIconColor: focus.hasFocus ? Color_Accent : Color_TextFieldBorder,
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color_TextFieldBorder, width: 0.0),
           borderRadius: BorderRadius.circular(8),

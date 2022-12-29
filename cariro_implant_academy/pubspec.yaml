@@ -55,7 +55,7 @@ dependencies:
   rflutter_alert: ^2.0.4
   syncfusion_flutter_datepicker: ^20.4.38
   flutter_time_picker_spinner: ^2.0.0
-
+  another_stepper: ^1.1.6
 
 
 

@@ -7,18 +7,18 @@ import 'CIA_TextField.dart';
 import 'Horizontal_RadioButtons.dart';
 
 class SearchLayout extends StatefulWidget {
-  SearchLayout({
-    Key? key,
-    required this.radioButtons,
-    required this.dataSource,
-    required this.loadMoreFuntcion,
-    required this.columnNames,
-    this.onCellTab
-  }) : super(key: key);
+  SearchLayout(
+      {Key? key,
+      required this.radioButtons,
+      required this.dataSource,
+      this.loadMoreFuntcion,
+      required this.columnNames,
+      this.onCellTab})
+      : super(key: key);
 
   List<String> radioButtons;
   DataGridSource dataSource;
-  Function loadMoreFuntcion;
+  Function? loadMoreFuntcion;
   List<String> columnNames;
   Function? onCellTab;
 

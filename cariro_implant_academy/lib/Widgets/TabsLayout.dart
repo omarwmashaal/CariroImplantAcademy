@@ -29,6 +29,7 @@ class TabsLayout extends StatefulWidget {
       this.showBackButton = false,
       this.fontSize,
       this.weight,
+      this.sideWidget,
       this.height,
       this.beforeTitleWidget})
       : super(key: key);
@@ -39,6 +40,7 @@ class TabsLayout extends StatefulWidget {
   List<Widget> pages;
   bool showBackButton;
   Widget? beforeTitleWidget;
+  Widget? sideWidget;
 
   final tabsController = new TabsController();
 
@@ -99,6 +101,16 @@ class _TabsLayoutState extends State<TabsLayout> {
                       controller: tabsController,
                     ),
                   ),
+                  widget.sideWidget == null
+                      ? SizedBox()
+                      : Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              widget.sideWidget as Widget,
+                            ],
+                          ),
+                        )
                 ],
               ),
             ),
@@ -107,11 +119,10 @@ class _TabsLayoutState extends State<TabsLayout> {
                     height: 0,
                   )
                 : Expanded(child: widget.beforeTitleWidget as Widget),
-            Expanded(
-                child: TitleWidget(
+            TitleWidget(
               title: widget.tabs[index],
               showBackButton: widget.showBackButton,
-            )),
+            ),
             // Obx(() =>widget.pages[tabsController.index.value] ),
             Expanded(
                 flex: widget.beforeTitleWidget == null ? 10 : 8,

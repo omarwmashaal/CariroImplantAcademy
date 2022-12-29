@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
-import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
+import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +9,15 @@ import 'package:flutter/material.dart';
 List<String> roles = ["Secretary", "Admin", "Instructor"];
 
 class DrawerItems extends StatelessWidget {
-  DrawerItems({Key? key}) : super(key: key);
+  DrawerItems({Key? key, this.onRoleChange}) : super(key: key);
 
+  Function? onRoleChange;
   @override
   Widget build(BuildContext context) {
     return SideMenu(
       controller: pagesController,
       title: Image(
-        image: AssetImage("CIA_Logo3.png"),
+        image: siteController.getSiteLogo(),
         width: 100,
         height: 100,
         fit: BoxFit.contain,
@@ -25,7 +26,7 @@ class DrawerItems extends StatelessWidget {
         backgroundColor: Colors.white,
         // showTooltip: false,
         displayMode: SideMenuDisplayMode.open,
-        hoverColor: Colors.blue[100],
+        hoverColor: Color_DrawerHover,
         selectedColor: Color_SideMenuFocus,
         unselectedTitleTextStyle:
             TextStyle(fontSize: 16, fontFamily: Inter_SemiBold),
@@ -36,13 +37,7 @@ class DrawerItems extends StatelessWidget {
         // ),
         // backgroundColor: Colors.blueGrey[700]
       ),
-      footer: HorizontalRadioButtons(
-        names: roles,
-        onChange: (index) {
-          rolesController.role.value = index;
-        },
-      ),
-      items: pagesController.DrawerItems(),
+      items: PagesController.DrawerItems(),
     );
   }
 }
