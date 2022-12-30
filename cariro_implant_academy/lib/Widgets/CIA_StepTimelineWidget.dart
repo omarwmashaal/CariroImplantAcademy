@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CIA_StepTimelineWidget extends StatelessWidget {
-  CIA_StepTimelineWidget({Key? key, required this.steps}) : super(key: key);
+  CIA_StepTimelineWidget({Key? key, required this.steps, this.isTask = false})
+      : super(key: key);
   List<LAB_StepModel> steps;
+  bool isTask;
 
   List<StepperData> _stepperData = <StepperData>[];
 
@@ -23,7 +25,9 @@ class CIA_StepTimelineWidget extends StatelessWidget {
             step.stepStatus == StepStatus.Done
                 ? step.name + " by: " + (step.assigendTo as String)
                 : (step.stepStatus == StepStatus.InProgress
-                    ? step.name + " assigned to: " + (step.assigendTo as String)
+                    ? step.name +
+                        " assigned to" +
+                        (isTask ? " you" : ": " + (step.assigendTo as String))
                     : step.name),
           ),
           subtitle: StepperText(step.stepStatus == StepStatus.Done

@@ -8,6 +8,7 @@ import '../Constants/Colors.dart';
 class CIA_MultiSelectChipWidget extends StatelessWidget {
   CIA_MultiSelectChipWidget(
       {Key? key,
+      this.disabled = false,
       required this.labels,
       this.redFlags = false,
       this.onChange,
@@ -22,6 +23,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   Function? onChangeSpecificTooth;
   bool singleSelect;
   bool verticalList;
+  bool disabled;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +34,13 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start),
       singleSelectedItem: singleSelect,
       textStyles: MultiSelectTextStyles(
-          selectedTextStyle: TextStyle(
-        color: Colors.white,
-        fontFamily: Inter_Bold,
-      )),
+        selectedTextStyle: disabled
+            ? null
+            : TextStyle(
+                color: Colors.white,
+                fontFamily: Inter_Bold,
+              ),
+      ),
       listViewSettings: ListViewSettings(
           scrollDirection: verticalList ? Axis.vertical : Axis.horizontal),
       itemsDecoration: MultiSelectDecorations(
@@ -43,10 +48,15 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
           border: Border.all(color: Color_TextFieldBorder),
           borderRadius: BorderRadius.circular(20),
         ),
-        selectedDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: redFlags ? Colors.red : Color_Accent),
-            color: redFlags ? Colors.red : Color_Accent),
+        selectedDecoration: disabled
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Color_TextFieldBorder),
+              )
+            : BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: redFlags ? Colors.red : Color_Accent),
+                color: redFlags ? Colors.red : Color_Accent),
       ),
       items: _buildItems(),
       onChange: (List<Object?> selectedItems, Object? selectedItem) {

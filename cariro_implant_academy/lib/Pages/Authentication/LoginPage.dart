@@ -55,6 +55,10 @@ class _LoginPageState extends State<LoginPage> {
                               } else if (value == 1) {
                                 selectedTab = "LAB";
                                 setState(() => siteController.setSite("LAB"));
+                              } else {
+                                selectedTab = "Clinic";
+                                setState(
+                                    () => siteController.setSite("Clinic"));
                               }
                             },
                             weight: 450,

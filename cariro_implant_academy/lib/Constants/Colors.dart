@@ -42,6 +42,15 @@ switchTheme(String site) {
       }
     case "Clinic":
       {
+        Color_Background = Colors.white;
+        Color_Accent = Color(0xFF2278f9);
+        Color_DrawerHover = Color_Accent.withAlpha(50);
+        Color_TextSecondary = Color(0xFF6D6F74);
+        Color_TextHint = Color(0xFFAEAEAE);
+        Color_TextFieldBorder = Color(0xFFA1A2A6);
+        Color_TextWhite = Color(0xFFFFFFFF);
+        Color_TextPrimary = Color(0xFF000000);
+        Color_SideMenuFocus = Colors.white;
         break;
       }
   }

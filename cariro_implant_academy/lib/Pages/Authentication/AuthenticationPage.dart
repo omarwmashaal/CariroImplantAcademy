@@ -1,4 +1,3 @@
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/Auth_NavigationController.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/LoginPage.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/RegsiterPage.dart';
@@ -28,19 +27,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         child: CurrentPage == LoginPageRoute
             ? LoginPage(
                 onLogin: () {
-                  if (siteController.getSite() == "CIA")
-                    Get.off(
-                        SiteLayout(
-                          largeScreen: CIA_LargeScreen(),
-                        ),
-                        duration: Duration(seconds: 0));
-                  else {
-                    Get.off(
-                        SiteLayout(
-                          largeScreen: CIA_LargeScreen(),
-                        ),
-                        duration: Duration(seconds: 0));
-                  }
+                  Get.off(
+                      SiteLayout(
+                        largeScreen: CIA_LargeScreen(),
+                      ),
+                      duration: Duration(seconds: 0));
                 },
                 onRegister: () =>
                     setState(() => CurrentPage = RegisterPageRoute),

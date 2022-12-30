@@ -132,7 +132,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Image(
-                                image: AssetImage("ProfileImage.png"),
+                                image: AssetImage("assets/ProfileImage.png"),
                               ),
                               SizedBox(
                                 height: 10,

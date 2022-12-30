@@ -11,22 +11,30 @@ class SiteController extends GetxController {
   RxString _currentRole = "".obs;
   List<String> _CIA_Roles = ["Admin", "Instructor", "Secretary", "Assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
+  List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
+
   String getSite() => _site;
+
   AssetImage getSiteLogo() => _siteLogo;
+
   AssetImage getSiteLogoBySite(String site) {
     if (site == "CIA")
-      return AssetImage("CIA_Logo3.png");
+      return AssetImage("assets/CIA_Logo3.png");
+    else if (site == "LAB")
+      return AssetImage("assets/LAB_Logo.png");
     else
-      return AssetImage("LAB_Logo.png");
+      return AssetImage("assets/CIA_Logo3.png");
   }
 
   setSite(String site) {
     switchTheme(site);
     _site = site;
     if (site == "CIA")
-      _siteLogo = AssetImage("CIA_Logo3.png");
+      _siteLogo = AssetImage("assets/CIA_Logo3.png");
+    else if (site == "LAB")
+      _siteLogo = AssetImage("assets/LAB_Logo.png");
     else
-      _siteLogo = AssetImage("LAB_Logo.png");
+      _siteLogo = AssetImage("assets/CIA_Logo3.png");
   }
 
   setRole(String Role) {
@@ -34,10 +42,13 @@ class SiteController extends GetxController {
   }
 
   String getRole() => _currentRole.value;
+
   List<String> getRoles() {
     if (_site == "CIA")
       return _CIA_Roles;
-    else
+    else if (_site == "LAB")
       return _Lab_Roles;
+    else
+      return _Clinic_Roles;
   }
 }
