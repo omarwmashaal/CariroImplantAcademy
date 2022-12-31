@@ -41,37 +41,6 @@ class DrawerItems extends StatelessWidget {
         // backgroundColor: Colors.blueGrey[700]
       ),
       items: PagesController.DrawerItems(),
-      footer: siteController.getRole() != "Admin"
-          ? null
-          : Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    siteController.setSite("CIA");
-                    onSiteChange();
-                  },
-                  child: Image(
-                    image: siteController.getSiteLogoBySite("CIA"),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    siteController.setSite("LAB");
-                    onSiteChange();
-                  },
-                  child: Image(
-                    image: siteController.getSiteLogoBySite("LAB"),
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ],
-            ),
     );
   }
 }

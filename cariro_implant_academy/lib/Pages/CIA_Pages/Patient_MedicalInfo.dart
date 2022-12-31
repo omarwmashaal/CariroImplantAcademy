@@ -295,18 +295,18 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
       CIA_MultiSelectChipWidget(
         redFlags: true,
         labels: [
-          "Kidney Disease",
-          "Liver Disease",
-          "Asthma",
-          "Psychological",
-          "Rhemuatic",
-          "Anemia",
-          "Epilepsy",
-          "Heart problem",
-          "Thyroid",
-          "Hepatitis",
-          "Venereal Disease",
-          "Other"
+          CIA_MultiSelectChipWidgeModel(label: "Kidney Disease"),
+          CIA_MultiSelectChipWidgeModel(label: "Liver Disease"),
+          CIA_MultiSelectChipWidgeModel(label: "Asthma"),
+          CIA_MultiSelectChipWidgeModel(label: "Psychological"),
+          CIA_MultiSelectChipWidgeModel(label: "Rhemuatic"),
+          CIA_MultiSelectChipWidgeModel(label: "Anemia"),
+          CIA_MultiSelectChipWidgeModel(label: "Epilepsy"),
+          CIA_MultiSelectChipWidgeModel(label: "Heart problem"),
+          CIA_MultiSelectChipWidgeModel(label: "Thyroid"),
+          CIA_MultiSelectChipWidgeModel(label: "Hepatitis"),
+          CIA_MultiSelectChipWidgeModel(label: "Venereal Disease"),
+          CIA_MultiSelectChipWidgeModel(label: "Other")
         ],
       ),
       CIA_TextFormField(label: "Other ", controller: TextEditingController()),
@@ -425,8 +425,11 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
       Row(
         children: [
           Expanded(
-            child: CIA_MultiSelectChipWidget(
-                labels: ["Pencillin", "Sulfa", "Other"]),
+            child: CIA_MultiSelectChipWidget(labels: [
+              CIA_MultiSelectChipWidgeModel(label: "Pencillin"),
+              CIA_MultiSelectChipWidgeModel(label: "Sulfa"),
+              CIA_MultiSelectChipWidgeModel(label: "Other"),
+            ]),
           ),
           Expanded(
             flex: 2,
@@ -444,7 +447,9 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
       Row(
         children: [
           Expanded(
-            child: CIA_MultiSelectChipWidget(labels: ["Illegal Drugs?"]),
+            child: CIA_MultiSelectChipWidget(labels: [
+              CIA_MultiSelectChipWidgeModel(label: "Illegal Drugs?"),
+            ]),
           ),
           Expanded(
             flex: 4,
@@ -602,8 +607,11 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                     FormTextKeyWidget(text: "Are your teeth sensitive to ?")),
             Expanded(
                 flex: 2,
-                child: CIA_MultiSelectChipWidget(
-                    labels: ["Hot or cold", "sweets", "Biting or cheweing"]))
+                child: CIA_MultiSelectChipWidget(labels: [
+                  CIA_MultiSelectChipWidgeModel(label: "Hot or cold"),
+                  CIA_MultiSelectChipWidgeModel(label: "sweets"),
+                  CIA_MultiSelectChipWidgeModel(label: "Biting or cheweing"),
+                ]))
           ],
         ),
         CIA_TextFormField(
@@ -612,7 +620,9 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
         Row(
           children: [
             Expanded(
-                child: CIA_MultiSelectChipWidget(labels: ["Smoke tobacco?"])),
+                child: CIA_MultiSelectChipWidget(labels: [
+              CIA_MultiSelectChipWidgeModel(label: "Smoke tobacco?")
+            ])),
             Expanded(
                 child: CIA_TextFormField(
                     label: "per day", controller: TextEditingController())),
@@ -738,27 +748,30 @@ class _PatientNonSurgicalTreatmentState
 
   _buildTeethSuggestion() {
     List<Widget> uu = <Widget>[];
-    Map<String, bool> myMap = {
-      "Carious": false,
-      "Filled": false,
-      "Missed": false,
-      "Not Sure": false,
-      "Mobility": false,
-      "Hopeless teeth": false,
-      "Inter arch space RT": false,
-      "Inter arch space LT": false,
-      "Implant Placed": false,
-      "Implant Failed": false,
-    };
 
     for (String tooth in containedTeeth) {
-      Map<String, bool> tempMap = Map();
-      tempMap.addEntries(myMap.entries);
+      List<CIA_MultiSelectChipWidgeModel> tempModel = [
+        CIA_MultiSelectChipWidgeModel(label: "Carious", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Filled", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Missed", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Not Sure", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Mobility", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Hopeless teeth", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Inter arch space RT", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Inter arch space LT", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Implant Placed", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Implant Failed", isSelected: false),
+      ];
 
       String status = MasterController.getToothStatus(tooth);
-      for (String key in tempMap.keys) {
-        if (key == status) {
-          tempMap[key] = true;
+      for (CIA_MultiSelectChipWidgeModel temp in tempModel) {
+        if (temp.label == status) {
+          temp.isSelected = true;
           break;
         }
       }
@@ -767,7 +780,7 @@ class _PatientNonSurgicalTreatmentState
       uu.add(CIA_MultiSelectChipWidget(
         key: LabeledGlobalKey(tooth),
         singleSelect: true,
-        labels: tempMap,
+        labels: tempModel,
         onChangeSpecificTooth: (selected, isSelected, key) {
           String selectedTooth = (key.toString())
               .substring((key.toString()).indexOf(" ") + 1)

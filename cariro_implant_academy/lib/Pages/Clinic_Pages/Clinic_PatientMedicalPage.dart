@@ -137,15 +137,15 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                     setState(() {});
                   },
                   labels: [
-                    "11",
-                    "12",
-                    "13",
-                    "14",
-                    "15",
-                    "16",
-                    "17",
-                    "18",
-                    "19"
+                    CIA_MultiSelectChipWidgeModel(label: "11"),
+                    CIA_MultiSelectChipWidgeModel(label: "12"),
+                    CIA_MultiSelectChipWidgeModel(label: "13"),
+                    CIA_MultiSelectChipWidgeModel(label: "14"),
+                    CIA_MultiSelectChipWidgeModel(label: "15"),
+                    CIA_MultiSelectChipWidgeModel(label: "16"),
+                    CIA_MultiSelectChipWidgeModel(label: "17"),
+                    CIA_MultiSelectChipWidgeModel(label: "18"),
+                    CIA_MultiSelectChipWidgeModel(label: "19")
                   ],
                 ),
               ),
@@ -160,15 +160,15 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                     setState(() {});
                   },
                   labels: [
-                    "21",
-                    "22",
-                    "23",
-                    "24",
-                    "25",
-                    "26",
-                    "27",
-                    "28",
-                    "29"
+                    CIA_MultiSelectChipWidgeModel(label: "21"),
+                    CIA_MultiSelectChipWidgeModel(label: "22"),
+                    CIA_MultiSelectChipWidgeModel(label: "23"),
+                    CIA_MultiSelectChipWidgeModel(label: "24"),
+                    CIA_MultiSelectChipWidgeModel(label: "25"),
+                    CIA_MultiSelectChipWidgeModel(label: "26"),
+                    CIA_MultiSelectChipWidgeModel(label: "27"),
+                    CIA_MultiSelectChipWidgeModel(label: "28"),
+                    CIA_MultiSelectChipWidgeModel(label: "29")
                   ],
                 ),
               ),
@@ -187,15 +187,15 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                     setState(() {});
                   },
                   labels: [
-                    "31",
-                    "32",
-                    "33",
-                    "34",
-                    "35",
-                    "36",
-                    "37",
-                    "38",
-                    "39"
+                    CIA_MultiSelectChipWidgeModel(label: "31"),
+                    CIA_MultiSelectChipWidgeModel(label: "32"),
+                    CIA_MultiSelectChipWidgeModel(label: "33"),
+                    CIA_MultiSelectChipWidgeModel(label: "34"),
+                    CIA_MultiSelectChipWidgeModel(label: "35"),
+                    CIA_MultiSelectChipWidgeModel(label: "36"),
+                    CIA_MultiSelectChipWidgeModel(label: "37"),
+                    CIA_MultiSelectChipWidgeModel(label: "38"),
+                    CIA_MultiSelectChipWidgeModel(label: "39")
                   ],
                 ),
               ),
@@ -209,15 +209,15 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                     setState(() {});
                   },
                   labels: [
-                    "41",
-                    "42",
-                    "43",
-                    "44",
-                    "45",
-                    "46",
-                    "47",
-                    "48",
-                    "49"
+                    CIA_MultiSelectChipWidgeModel(label: "41"),
+                    CIA_MultiSelectChipWidgeModel(label: "42"),
+                    CIA_MultiSelectChipWidgeModel(label: "43"),
+                    CIA_MultiSelectChipWidgeModel(label: "44"),
+                    CIA_MultiSelectChipWidgeModel(label: "45"),
+                    CIA_MultiSelectChipWidgeModel(label: "46"),
+                    CIA_MultiSelectChipWidgeModel(label: "47"),
+                    CIA_MultiSelectChipWidgeModel(label: "48"),
+                    CIA_MultiSelectChipWidgeModel(label: "49")
                   ],
                 ),
               ),

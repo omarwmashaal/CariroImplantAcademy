@@ -5,6 +5,18 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 
 import '../Constants/Colors.dart';
 
+class CIA_MultiSelectChipWidgeModel {
+  CIA_MultiSelectChipWidgeModel({
+    required this.label,
+    this.value,
+    this.isSelected = false,
+  });
+
+  String label;
+  String? value;
+  bool isSelected = false;
+}
+
 class CIA_MultiSelectChipWidget extends StatelessWidget {
   CIA_MultiSelectChipWidget(
       {Key? key,
@@ -17,7 +29,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       this.singleSelect = false})
       : super(key: key);
 
-  Object labels;
+  List<CIA_MultiSelectChipWidgeModel> labels;
   bool redFlags;
   Function? onChange;
   Function? onChangeSpecificTooth;
@@ -70,27 +82,11 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
 
   List<MultiSelectCard> _buildItems() {
     List<MultiSelectCard> returnValue = <MultiSelectCard>[];
-    if (labels is List<String>) {
-      for (String label in labels as List<String>) {
-        returnValue.add(MultiSelectCard(
-          value: label,
-          label: label,
-        ));
-      }
-    } else if (labels is Map<String, String>) {
-      for (String key in (labels as Map<String, String>).keys) {
-        returnValue.add(MultiSelectCard(
-          value: (labels as Map<String, String>)[key],
-          label: key,
-        ));
-      }
-    } else if (labels is Map<String, bool>) {
-      for (String key in (labels as Map<String, bool>).keys) {
-        returnValue.add(MultiSelectCard(
-            value: key,
-            label: key,
-            selected: (labels as Map<String, bool>)[key] as bool));
-      }
+    for (CIA_MultiSelectChipWidgeModel label in labels) {
+      returnValue.add(MultiSelectCard(
+          value: label.value == null ? label.label : label.value,
+          label: label.label,
+          selected: label.isSelected));
     }
 
     return returnValue;

@@ -43,6 +43,7 @@ class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
                   ),
                   CIA_PrimaryButton(
                       label: "Add Customer",
+                      width: 150,
                       isLong: true,
                       onTab: () {
                         CIA_ShowPopUp(context, "Add new Customer", Text(""));

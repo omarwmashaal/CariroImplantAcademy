@@ -23,7 +23,7 @@ class SiteController extends GetxController {
     else if (site == "LAB")
       return AssetImage("assets/LAB_Logo.png");
     else
-      return AssetImage("assets/CIA_Logo3.png");
+      return AssetImage("assets/Clinic_logo.png");
   }
 
   setSite(String site) {
@@ -34,7 +34,7 @@ class SiteController extends GetxController {
     else if (site == "LAB")
       _siteLogo = AssetImage("assets/LAB_Logo.png");
     else
-      _siteLogo = AssetImage("assets/CIA_Logo3.png");
+      _siteLogo = AssetImage("assets/Clinic_logo.png");
   }
 
   setRole(String Role) {

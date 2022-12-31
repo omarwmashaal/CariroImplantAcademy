@@ -38,15 +38,24 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
                     setState(() {});
                   },
                   labels: [
-                    "11",
-                    "12",
-                    "13",
-                    "14",
-                    "15",
-                    "16",
-                    "17",
-                    "18",
-                    "19"
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "11", isSelected: models["11"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "12", isSelected: models["12"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "13", isSelected: models["13"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "14", isSelected: models["14"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "15", isSelected: models["15"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "16", isSelected: models["16"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "17", isSelected: models["17"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "18", isSelected: models["18"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "19", isSelected: models["19"] != null)
                   ],
                 ),
               ),
@@ -60,15 +69,24 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
                     setState(() {});
                   },
                   labels: [
-                    "21",
-                    "22",
-                    "23",
-                    "24",
-                    "25",
-                    "26",
-                    "27",
-                    "28",
-                    "29"
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "21", isSelected: models["21"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "22", isSelected: models["22"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "23", isSelected: models["23"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "24", isSelected: models["24"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "25", isSelected: models["25"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "26", isSelected: models["26"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "27", isSelected: models["27"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "28", isSelected: models["28"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "29", isSelected: models["29"] != null)
                   ],
                 ),
               ),
@@ -86,15 +104,24 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
                     setState(() {});
                   },
                   labels: [
-                    "31",
-                    "32",
-                    "33",
-                    "34",
-                    "35",
-                    "36",
-                    "37",
-                    "38",
-                    "39"
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "31", isSelected: models["31"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "32", isSelected: models["32"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "33", isSelected: models["33"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "34", isSelected: models["34"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "35", isSelected: models["35"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "36", isSelected: models["36"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "37", isSelected: models["37"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "38", isSelected: models["38"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "39", isSelected: models["39"] != null)
                   ],
                 ),
               ),
@@ -108,15 +135,24 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
                     setState(() {});
                   },
                   labels: [
-                    "41",
-                    "42",
-                    "43",
-                    "44",
-                    "45",
-                    "46",
-                    "47",
-                    "48",
-                    "49"
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "41", isSelected: models["41"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "42", isSelected: models["42"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "43", isSelected: models["43"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "44", isSelected: models["44"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "45", isSelected: models["45"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "46", isSelected: models["46"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "47", isSelected: models["47"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "48", isSelected: models["48"] != null),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "49", isSelected: models["49"] != null)
                   ],
                 ),
               ),
@@ -136,7 +172,11 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
   _buildTeethWidgets() {
     List<Widget> returnValue = <Widget>[];
     for (String tooth in models.keys) {
-      returnValue.add(_ToothWidget(toothID: tooth));
+      returnValue.add(new _ToothWidget(
+        key: GlobalKey(),
+        toothID: tooth,
+        onChange: () => setState(() {}),
+      ));
       returnValue.add(SizedBox(height: 20));
     }
     return returnValue;
@@ -148,24 +188,20 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
   }
 }
 
-class _ToothWidget extends StatefulWidget {
-  _ToothWidget({Key? key, required this.toothID}) : super(key: key);
+class _ToothWidget extends StatelessWidget {
+  _ToothWidget({Key? key, required this.toothID, required this.onChange})
+      : super(key: key);
 
   String toothID;
-
-  @override
-  State<_ToothWidget> createState() => _ToothWidgetState();
-}
-
-class _ToothWidgetState extends State<_ToothWidget> {
+  Function onChange;
   Map<String, dynamic> myModel = Map<String, dynamic>();
   @override
   Widget build(BuildContext context) {
-    myModel = (models[widget.toothID] as TreatmentPlanModel).toJson();
-    return Column(children: _buildWidgets());
+    myModel = (models[toothID] as TreatmentPlanModel).toJson();
+    return Column(children: _buildWidgets(myModel));
   }
 
-  List<Widget> _buildWidgets() {
+  List<Widget> _buildWidgets(Map<String, dynamic> myModel) {
     List<Widget> returnValue = <Widget>[];
     returnValue.addAll([
       Row(
@@ -175,38 +211,72 @@ class _ToothWidgetState extends State<_ToothWidget> {
             style: TextStyle(fontFamily: Inter_Bold, fontSize: 25),
           ),
           SizedBox(width: 30),
-          FormTextValueWidget(text: widget.toothID),
+          FormTextValueWidget(text: toothID),
         ],
       ),
       SizedBox(height: 10),
       CIA_MultiSelectChipWidget(
           onChange: (value, isSelected) {
-            myModel = (models[widget.toothID] as TreatmentPlanModel).toJson();
+            myModel = (models[toothID] as TreatmentPlanModel).toJson();
             if (isSelected) {
               myModel[value] = "";
             } else {
               myModel[value] = null;
             }
 
-            var temp = models[widget.toothID];
+            var temp = models[toothID];
             temp?.fromJson(myModel);
-            models[widget.toothID] = temp!;
-            setState(() {});
+            models[toothID] = temp!;
+            onChange();
           },
-          labels: const <String, String>{
-            "Extraction": "extraction",
-            "Flap": "flap",
-            "Simple Implant": "simpleImplant",
-            "Immediate Implant": "immediateImplant",
-            "Expansion": "expansion",
-            "Splitting": "splitting",
-            "GBR": "gbr",
-            "Open Sinus": "openSinus",
-            "Closed Sinus": "closedSinus",
-            "Guided Implant": "guidedImplant",
-            "Implant Diameter": "implantDiameter",
-            "Implant Type": "implantType"
-          })
+          labels: [
+            CIA_MultiSelectChipWidgeModel(
+                label: "Extraction",
+                value: "extraction",
+                isSelected: myModel["extraction"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Flap",
+                value: "flap",
+                isSelected: myModel["flap"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Simple Implant",
+                value: "simpleImplant",
+                isSelected: myModel["simpleImplant"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Immediate Implant",
+                value: "immediateImplant",
+                isSelected: myModel["immediateImplant"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Expansion",
+                value: "expansion",
+                isSelected: myModel["expansion"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Splitting",
+                value: "splitting",
+                isSelected: myModel["splitting"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "GBR", value: "gbr", isSelected: myModel["gbr"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Open Sinus",
+                value: "openSinus",
+                isSelected: myModel["openSinus"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Closed Sinus",
+                value: "closedSinus",
+                isSelected: myModel["closedSinus"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Guided Implant",
+                value: "guidedImplant",
+                isSelected: myModel["guidedImplant"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Implant Diameter",
+                value: "implantDiameter",
+                isSelected: myModel["implantDiameter"] != null),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Implant Type",
+                value: "implantType",
+                isSelected: myModel["implantType"] != null),
+          ])
     ]);
     for (String key in myModel.keys) {
       if (myModel[key] != null) {
@@ -217,7 +287,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.extraction = value;
+                    models[toothID]?.extraction = value;
                   },
                   label: 'Extraction',
                   controller: TextEditingController(
@@ -232,7 +302,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.flap = value;
+                    models[toothID]?.flap = value;
                   },
                   label: 'Flap',
                   controller: TextEditingController(
@@ -247,7 +317,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.simpleImplant = value;
+                    models[toothID]?.simpleImplant = value;
                   },
                   label: 'Simple Implant',
                   controller: TextEditingController(
@@ -262,7 +332,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.immediateImplant = value;
+                    models[toothID]?.immediateImplant = value;
                   },
                   label: 'Immediate Implant',
                   controller: TextEditingController(
@@ -277,7 +347,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.expansion = value;
+                    models[toothID]?.expansion = value;
                   },
                   label: 'Expansion',
                   controller: TextEditingController(
@@ -292,7 +362,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.splitting = value;
+                    models[toothID]?.splitting = value;
                   },
                   label: 'Splitting',
                   controller: TextEditingController(
@@ -307,7 +377,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.gbr = value;
+                    models[toothID]?.gbr = value;
                   },
                   label: 'GBR',
                   controller: TextEditingController(
@@ -322,7 +392,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.openSinus = value;
+                    models[toothID]?.openSinus = value;
                   },
                   label: 'Open Sinus',
                   controller: TextEditingController(
@@ -337,7 +407,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.closedSinus = value;
+                    models[toothID]?.closedSinus = value;
                   },
                   label: 'Closed Sinus',
                   controller: TextEditingController(
@@ -352,7 +422,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.guidedImplant = value;
+                    models[toothID]?.guidedImplant = value;
                   },
                   label: 'Guided Implant',
                   controller: TextEditingController(
@@ -367,7 +437,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.implantDiameter = value;
+                    models[toothID]?.implantDiameter = value;
                   },
                   label: 'Implant Diameter',
                   controller: TextEditingController(
@@ -382,7 +452,7 @@ class _ToothWidgetState extends State<_ToothWidget> {
               returnValue.add(
                 CIA_TextFormField(
                   onChange: (value) {
-                    models[widget.toothID]?.implantType = value;
+                    models[toothID]?.implantType = value;
                   },
                   label: 'Implant Type',
                   controller: TextEditingController(
