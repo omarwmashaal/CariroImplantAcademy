@@ -1,15 +1,20 @@
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Models/VisitsModel.dart';
+import '../Widgets/CIA_PopUp.dart';
+
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patient}) : super(key: key);
 
   PatientInfoModel patient;
+
   @override
   State<PatientInfo_SharedPage> createState() => _PatientInfo_SharedPageState();
 }
@@ -292,12 +297,111 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
   }
 }
 
-class PatientVisits_SharedPage extends StatelessWidget {
+class PatientVisits_SharedPage extends StatefulWidget {
   PatientVisits_SharedPage({Key? key, required this.patient}) : super(key: key);
   PatientInfoModel patient;
 
   @override
+  State<PatientVisits_SharedPage> createState() =>
+      _PatientVisits_SharedPageState();
+}
+
+class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
+  bool edit = false;
+
+  VisitDataSource dataSource = VisitDataSource();
+  FocusNode next = FocusNode();
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 10),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      FormTextKeyWidget(text: "ID: "),
+                      SizedBox(width: 10),
+                      FormTextValueWidget(text: widget.patient.ID.toString()),
+                      SizedBox(width: 30),
+                      FormTextKeyWidget(text: "Name: "),
+                      SizedBox(width: 10),
+                      FormTextValueWidget(text: widget.patient.Name),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: FormTextKeyWidget(
+                        text: "Patient Visit Procedures",
+                      ),
+                    )),
+                Expanded(child: SizedBox()),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      FormTextKeyWidget(text: "Next Visit: "),
+                      SizedBox(width: 10),
+                      FormTextValueWidget(text: widget.patient.Name),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CIA_SecondaryButton(
+                            label: "Patient Arrive", onTab: () {}),
+                        CIA_SecondaryButton(
+                            label: "Patient Arrive", onTab: () {}),
+                        CIA_SecondaryButton(
+                            label: "Patient Arrive", onTab: () {}),
+                      ],
+                    )),
+                Expanded(
+                    child: Row(
+                  children: [
+                    Expanded(child: SizedBox()),
+                    CIA_PrimaryButton(
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      width: 180,
+                      label: "Schedule new visit",
+                      onTab: () {
+                        CIA_PopupDialog_DateTimePicker(
+                            context, "Schedule Next Visit", (value) {});
+                      },
+                      isLong: true,
+                    )
+                  ],
+                )),
+              ],
+            ),
+          ),
+          Expanded(
+              flex: 12,
+              child: CIA_Table(
+                  columnNames: VisitsModel.columns,
+                  dataSource: dataSource,
+                  onCellClick: (value) {
+                    //print(dataSource.models[value - 1].);
+                  }))
+        ],
+      ),
+    );
   }
 }

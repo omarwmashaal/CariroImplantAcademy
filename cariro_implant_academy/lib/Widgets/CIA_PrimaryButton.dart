@@ -8,6 +8,7 @@ class CIA_PrimaryButton extends StatelessWidget {
       this.isLong = false,
       this.width = 120,
       this.color,
+      this.icon,
       required this.label,
       required this.onTab})
       : super(key: key);
@@ -16,6 +17,7 @@ class CIA_PrimaryButton extends StatelessWidget {
   bool? isLong;
   double? width;
   Color? color;
+  Icon? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,21 @@ class CIA_PrimaryButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ),
             )),
-        child: Text(
-          label,
-          style: TextStyle(
-              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900),
+        child: Row(
+          children: [
+            icon != null ? icon! : Container(),
+            Expanded(
+              child: Center(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

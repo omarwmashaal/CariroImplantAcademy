@@ -16,7 +16,7 @@ class ViewPatientPage extends StatelessWidget {
         Expanded(
           child: TabsLayout(
             showBackButton: true,
-            tabs: ["Patient Data", "Visits Data"],
+            tabs: ["Patient Data", "Patient Visits"],
             pages: [
               PatientInfo_SharedPage(
                 patient: patient,

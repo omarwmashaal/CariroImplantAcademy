@@ -145,6 +145,13 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                               SizedBox(
                                 height: 10,
                               ),
+                              CIA_SecondaryButton(
+                                  label: "LAB Request",
+                                  icon: Icon(Icons.document_scanner_outlined),
+                                  onTab: () {}),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Row(
                                 children: [
                                   Expanded(

@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 
 class CIA_SecondaryButton extends StatefulWidget {
   CIA_SecondaryButton(
-      {Key? key, required this.label, required this.onTab, this.width = 120})
+      {Key? key,
+      required this.label,
+      required this.onTab,
+      this.width = 120,
+      this.icon})
       : super(key: key);
   String label;
   Function onTab;
   double width;
+  Icon? icon;
 
   @override
   State<CIA_SecondaryButton> createState() => _CIA_SecondaryButton();
@@ -30,12 +35,21 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     side: BorderSide(color: Color_TextFieldBorder)))),
-        child: Text(
-          widget.label,
-          style: TextStyle(
-              color: Color_TextPrimary,
-              fontSize: 13,
-              fontWeight: FontWeight.w500),
+        child: Row(
+          children: [
+            widget.icon != null ? widget.icon! : Container(),
+            Expanded(
+              child: Center(
+                child: Text(
+                  widget.label,
+                  style: TextStyle(
+                      color: Color_TextPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

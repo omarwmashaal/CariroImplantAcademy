@@ -105,7 +105,7 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                   label: "As",
                   values: [
                     "Planned",
-                    "In progress",
+                    "In Progress",
                     "Completed",
                     "Completed by other",
                     "Condition",
