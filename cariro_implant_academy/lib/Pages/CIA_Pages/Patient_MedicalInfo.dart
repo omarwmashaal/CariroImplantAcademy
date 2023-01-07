@@ -558,6 +558,8 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   Map<String, bool> _teeth = Map<String, bool>();
   Map<String, bool> _status = Map<String, bool>();
   String selectedTooth = "";
+  String selectedStatus = "";
+  bool mobilityDegrees = false;
 
   @override
   void initState() {
@@ -781,15 +783,24 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
       CIA_MultiSelectChipWidget(
         key: GlobalKey(),
         onChange: (value, isSelected) {
-          if (isSelected)
-            MasterController.updateToothStatus(selectedTooth, value);
-          for (String ss in _status.keys) {
-            _status[ss] = false;
+          if (isSelected) {
+            if (value == "Mobility") {
+              setState(() {
+                mobilityDegrees = true;
+                _status["Mobility"] = true;
+              });
+            } else {
+              if (isSelected)
+                MasterController.updateToothStatus(selectedTooth, value);
+              for (String ss in _status.keys) {
+                _status[ss] = false;
+              }
+              for (String tooth in _teeth.keys) {
+                _teeth[tooth] = false;
+              }
+              setState(() {});
+            }
           }
-          for (String tooth in _teeth.keys) {
-            _teeth[tooth] = false;
-          }
-          setState(() {});
         },
         singleSelect: true,
         labels: [
@@ -813,6 +824,33 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
               label: "Implant Failed",
               isSelected: _status["Implant Failed"] as bool),
         ],
+      ),
+      Visibility(
+        visible: mobilityDegrees,
+        child: CIA_MultiSelectChipWidget(
+          key: GlobalKey(),
+          onChange: (value, isSelected) {
+            if (isSelected) {
+              MasterController.updateToothStatus(
+                  selectedTooth, "Mobility " + value);
+              for (String ss in _status.keys) {
+                _status[ss] = false;
+              }
+              for (String tooth in _teeth.keys) {
+                _teeth[tooth] = false;
+              }
+              setState(() {
+                mobilityDegrees = false;
+              });
+            }
+          },
+          singleSelect: true,
+          labels: [
+            CIA_MultiSelectChipWidgeModel(label: "I", isSelected: false),
+            CIA_MultiSelectChipWidgeModel(label: "II", isSelected: false),
+            CIA_MultiSelectChipWidgeModel(label: "III", isSelected: false),
+          ],
+        ),
       ),
       CIA_TagsInputWidget(
         key: GlobalKey(),
@@ -846,13 +884,47 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
         onChange: (value) =>
             MasterController.updateDentalExamination("Not Sure", value),
       ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Mobility",
-        initalValue: MasterController.getDentalExamindation()["Mobility"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Mobility", value),
+      Row(
+        children: [
+          Expanded(
+            key: GlobalKey(),
+            child: CIA_TagsInputWidget(
+              key: GlobalKey(),
+              patientController: MasterController,
+              label: "Mobility I",
+              initalValue:
+                  MasterController.getDentalExamindation()["Mobility I"],
+              onChange: (value) =>
+                  MasterController.updateDentalExamination("Mobility I", value),
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            key: GlobalKey(),
+            child: CIA_TagsInputWidget(
+              key: GlobalKey(),
+              patientController: MasterController,
+              label: "Mobility II",
+              initalValue:
+                  MasterController.getDentalExamindation()["Mobility II"],
+              onChange: (value) => MasterController.updateDentalExamination(
+                  "Mobility II", value),
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            key: GlobalKey(),
+            child: CIA_TagsInputWidget(
+              key: GlobalKey(),
+              patientController: MasterController,
+              label: "Mobility III",
+              initalValue:
+                  MasterController.getDentalExamindation()["Mobility III"],
+              onChange: (value) => MasterController.updateDentalExamination(
+                  "Mobility III", value),
+            ),
+          ),
+        ],
       ),
       CIA_TagsInputWidget(
         key: GlobalKey(),
@@ -1107,7 +1179,9 @@ class _PatientNonSurgicalTreatmentState
         CIA_MultiSelectChipWidgeModel(label: "Filled", isSelected: false),
         CIA_MultiSelectChipWidgeModel(label: "Missed", isSelected: false),
         CIA_MultiSelectChipWidgeModel(label: "Not Sure", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Mobility", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Mobility I", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Mobility II", isSelected: false),
+        CIA_MultiSelectChipWidgeModel(label: "Mobility III", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
             label: "Hopeless teeth", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
