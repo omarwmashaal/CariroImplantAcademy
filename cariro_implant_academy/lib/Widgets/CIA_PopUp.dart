@@ -165,20 +165,26 @@ CIA_PopupDialog_Table(
   ).show();
 }
 
-CIA_ShowPopUp(BuildContext context, String title, Widget child) {
+CIA_ShowPopUp(
+    {required BuildContext context,
+    String? title,
+    Widget? child,
+    String? buttonText,
+    double? size}) {
   Alert(
     context: context,
     title: title,
     content: SizedBox(
-      width: 400,
+      width: size == null ? 400 : size,
       child: child,
     ),
     buttons: [
       DialogButton(
+        color: Color_Accent,
         width: 150,
         onPressed: () => Navigator.pop(context),
         child: Text(
-          "Ok",
+          buttonText == null ? "Ok" : buttonText,
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),

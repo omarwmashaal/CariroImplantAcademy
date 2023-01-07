@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widgets/TabsLayout.dart';
-import '../PatientSharedPages.dart';
+import '../SharedPages/PatientSharedPages.dart';
 
 class ViewPatientPage extends StatelessWidget {
   ViewPatientPage({Key? key, required this.patient}) : super(key: key);

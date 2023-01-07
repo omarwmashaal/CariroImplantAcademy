@@ -7,7 +7,7 @@ import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_DropDown.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
 import '../../Widgets/TabsLayout.dart';
-import '../PatientSharedPages.dart';
+import '../SharedPages/PatientSharedPages.dart';
 
 class Clinic_PatientMedicalPage extends StatelessWidget {
   Clinic_PatientMedicalPage({Key? key, required this.patient})

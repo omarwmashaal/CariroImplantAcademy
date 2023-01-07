@@ -7,8 +7,8 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/VisitsModel.dart';
-import '../Widgets/CIA_PopUp.dart';
+import '../../Models/VisitsModel.dart';
+import '../../Widgets/CIA_PopUp.dart';
 
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patient}) : super(key: key);

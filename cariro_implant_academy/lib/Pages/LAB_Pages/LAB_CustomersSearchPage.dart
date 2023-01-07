@@ -46,7 +46,10 @@ class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
                       width: 150,
                       isLong: true,
                       onTab: () {
-                        CIA_ShowPopUp(context, "Add new Customer", Text(""));
+                        CIA_ShowPopUp(
+                            context: context,
+                            title: "Add new Customer",
+                            child: Text(""));
                       }),
                   SizedBox(width: 30)
                 ],
