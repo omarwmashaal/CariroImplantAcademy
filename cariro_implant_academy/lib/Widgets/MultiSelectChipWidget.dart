@@ -6,15 +6,16 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import '../Constants/Colors.dart';
 
 class CIA_MultiSelectChipWidgeModel {
-  CIA_MultiSelectChipWidgeModel({
-    required this.label,
-    this.value,
-    this.isSelected = false,
-  });
+  CIA_MultiSelectChipWidgeModel(
+      {required this.label,
+      this.value,
+      this.isSelected = false,
+      this.selectedColor});
 
   String label;
   String? value;
   bool isSelected = false;
+  Color? selectedColor = Color_Accent;
 }
 
 class CIA_MultiSelectChipWidget extends StatelessWidget {
@@ -24,6 +25,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       required this.labels,
       this.redFlags = false,
       this.onChange,
+      this.onChangeList,
       this.verticalList = false,
       this.onChangeSpecificTooth,
       this.singleSelect = false})
@@ -32,6 +34,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   List<CIA_MultiSelectChipWidgeModel> labels;
   bool redFlags;
   Function? onChange;
+  Function? onChangeList;
   Function? onChangeSpecificTooth;
   bool singleSelect;
   bool verticalList;
@@ -74,6 +77,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       onChange: (List<Object?> selectedItems, Object? selectedItem) {
         bool isSelected = selectedItems.contains(selectedItem);
         if (onChange != null) onChange!(selectedItem as String, isSelected);
+        if (onChangeList != null) onChangeList!(selectedItems);
         if (onChangeSpecificTooth != null)
           onChangeSpecificTooth!(selectedItem as String, isSelected, key);
       },
@@ -86,6 +90,30 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       returnValue.add(MultiSelectCard(
           value: label.value == null ? label.label : label.value,
           label: label.label,
+          decorations: MultiSelectItemDecorations(
+            decoration: BoxDecoration(
+              border: Border.all(color: Color_TextFieldBorder),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            selectedDecoration: disabled
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color_TextFieldBorder),
+                  )
+                : BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: redFlags
+                            ? Colors.red
+                            : label.selectedColor == null
+                                ? Color_Accent
+                                : label.selectedColor!),
+                    color: redFlags
+                        ? Colors.red
+                        : label.selectedColor == null
+                            ? Color_Accent
+                            : label.selectedColor!),
+          ),
           selected: label.isSelected));
     }
 

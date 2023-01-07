@@ -11,9 +11,11 @@ class CIA_TextFormField extends StatefulWidget {
     this.isObscure,
     this.onChange = null,
     this.icon,
+    this.isNumber = false,
     this.isMinutes = false,
     this.isHours = false,
     this.maxLines = 1,
+    this.borderColor,
     required this.controller,
   }) : super(key: key);
 
@@ -24,7 +26,9 @@ class CIA_TextFormField extends StatefulWidget {
   String label;
   Function? onChange;
   IconData? icon;
+  Color? borderColor;
   TextEditingController controller;
+  bool isNumber;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -72,7 +76,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             }
           }
         },
-        inputFormatters: widget.isHours || widget.isMinutes
+        inputFormatters: widget.isHours || widget.isMinutes || widget.isNumber
             ? [
                 FilteringTextInputFormatter.allow(RegExp('[0-9]')),
               ]
@@ -87,7 +91,11 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           prefixIcon: widget.icon != null ? Icon(Icons.search) : null,
           prefixIconColor: focus.hasFocus ? Colors.red : null,
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color_TextFieldBorder, width: 0.0),
+            borderSide: BorderSide(
+                color: widget.borderColor == null
+                    ? Color_TextFieldBorder
+                    : widget.borderColor!,
+                width: 0.0),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(

@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
+import '../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/CIA_MedicalPageWidget.dart';
 import '../../Widgets/CIA_PopUp.dart';
@@ -279,17 +281,36 @@ class _PatientMedicalHistory extends StatefulWidget {
 
 class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   bool otherField = false;
+  bool diseases = false;
+  Color illegalDrugs = Color_TextFieldBorder;
 
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(children: [
-      CIA_TextFormField(
-          label: "General Health", controller: TextEditingController()),
+      FormTextKeyWidget(text: "General Health"),
+      CIA_MultiSelectChipWidget(
+        labels: [
+          CIA_MultiSelectChipWidgeModel(
+              label: "Excellent", selectedColor: Colors.green),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Very good", selectedColor: Colors.green),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Good", selectedColor: Colors.orange),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Fair", selectedColor: Colors.orange),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Fail", selectedColor: Colors.red),
+        ],
+        singleSelect: true,
+      ),
       Flex(
         direction: Axis.horizontal,
         children: [
           Flexible(
-              child: HorizontalRadioButtons(names: ["Pregnant", "Lactating"])),
+              child: HorizontalRadioButtons(
+            names: ["Pregnant", "Lactating"],
+            selectionColor: Colors.red,
+          )),
         ],
       ),
       CIA_TextFormField(
@@ -300,36 +321,61 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
       CIA_TextFormField(label: "Comment", controller: TextEditingController()),
       FormTextKeyWidget(text: "Did you have ever?"),
       CIA_MultiSelectChipWidget(
+        onChange: (value, isSelected) {
+          if (value == "Other") {
+            setState(() {
+              diseases = isSelected as bool;
+            });
+          }
+        },
         redFlags: true,
         labels: [
-          CIA_MultiSelectChipWidgeModel(label: "Kidney Disease"),
-          CIA_MultiSelectChipWidgeModel(label: "Liver Disease"),
-          CIA_MultiSelectChipWidgeModel(label: "Asthma"),
-          CIA_MultiSelectChipWidgeModel(label: "Psychological"),
-          CIA_MultiSelectChipWidgeModel(label: "Rhemuatic"),
-          CIA_MultiSelectChipWidgeModel(label: "Anemia"),
-          CIA_MultiSelectChipWidgeModel(label: "Epilepsy"),
-          CIA_MultiSelectChipWidgeModel(label: "Heart problem"),
-          CIA_MultiSelectChipWidgeModel(label: "Thyroid"),
-          CIA_MultiSelectChipWidgeModel(label: "Hepatitis"),
-          CIA_MultiSelectChipWidgeModel(label: "Venereal Disease"),
-          CIA_MultiSelectChipWidgeModel(label: "Other")
+          CIA_MultiSelectChipWidgeModel(
+              label: "Kidney Disease", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Liver Disease", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Asthma", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Psychological", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Rhemuatic", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Anemia", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Epilepsy", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Heart problem", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Thyroid", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Hepatitis", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Venereal Disease", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Other", selectedColor: Colors.red)
         ],
       ),
-      CIA_TextFormField(label: "Other ", controller: TextEditingController()),
-      CIA_TextFormField(
-          label: "Comments ", controller: TextEditingController()),
+      Visibility(
+          visible: diseases,
+          child: CIA_TextFormField(
+              label: "Other ", controller: TextEditingController())),
+      FormTextKeyWidget(text: "Blood Pressure"),
+      CIA_MultiSelectChipWidget(
+        singleSelect: true,
+        labels: [
+          CIA_MultiSelectChipWidgeModel(label: "Normal"),
+          CIA_MultiSelectChipWidgeModel(label: "Hypertensive controller"),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Hypertensive uncontroller", selectedColor: Colors.red),
+          CIA_MultiSelectChipWidgeModel(label: "Hypotensive controller"),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Hypotensive uncontroller", selectedColor: Colors.red),
+        ],
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: CIA_TextFormField(
-                  label: "Blood pressure ",
-                  controller: TextEditingController()),
-            ),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -361,14 +407,23 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
           ),
         ],
       ),
+      FormTextKeyWidget(text: "Glucose Status"),
+      CIA_MultiSelectChipWidget(
+        singleSelect: true,
+        labels: [
+          CIA_MultiSelectChipWidgeModel(label: "Non diabetic"),
+          CIA_MultiSelectChipWidgeModel(label: "Diabetic controller"),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Diabetic uncontroller", selectedColor: Colors.red),
+        ],
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(right: 5),
-              child: CIA_TextFormField(
-                  label: "Glucose Level", controller: TextEditingController()),
+              child: CIA_DropDown(label: 'Type', values: ["Random", "Fasting"]),
             ),
           ),
           Expanded(
@@ -393,47 +448,17 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   controller: TextEditingController()),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: SizedBox(),
-            ),
-          ),
         ],
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: CIA_TextFormField(
-                  label: "HBA1c", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "Date", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: SizedBox(),
-            ),
-          ),
-        ],
-      ),
+      FormTextKeyWidget(text: "HBA1c"),
+      CIA_IncrementalHBA1CTextField(),
       FormTextKeyWidget(text: "Are you allergic to?"),
       Row(
         children: [
           Expanded(
             child: CIA_MultiSelectChipWidget(labels: [
-              CIA_MultiSelectChipWidgeModel(label: "Pencillin"),
+              CIA_MultiSelectChipWidgeModel(
+                  label: "Penicillin", selectedColor: Colors.red),
               CIA_MultiSelectChipWidgeModel(label: "Sulfa"),
               CIA_MultiSelectChipWidgeModel(label: "Other"),
             ]),
@@ -445,25 +470,48 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
           )
         ],
       ),
-      CIA_TextFormField(
-          label: "Are you Subjected to prolonged bleeding or taking aspirin?",
-          controller: TextEditingController()),
-      CIA_TextFormField(
-          label: "Do you have chronic problem with digestion?",
-          controller: TextEditingController()),
       Row(
         children: [
-          Expanded(
-            child: CIA_MultiSelectChipWidget(labels: [
-              CIA_MultiSelectChipWidgeModel(label: "Illegal Drugs?"),
-            ]),
+          FormTextKeyWidget(
+              text:
+                  "Are you Subjected to prolonged bleeding or taking aspirin?"),
+          SizedBox(
+            width: 10,
           ),
-          Expanded(
-            flex: 4,
-            child: CIA_TextFormField(
-                label: "Drugs", controller: TextEditingController()),
-          )
+          CIA_MultiSelectChipWidget(singleSelect: true, labels: [
+            CIA_MultiSelectChipWidgeModel(label: "Yes"),
+            CIA_MultiSelectChipWidgeModel(label: "No"),
+          ]),
         ],
+      ),
+      Row(
+        children: [
+          FormTextKeyWidget(
+              text: "Do you have chronic problem with digestion?"),
+          SizedBox(
+            width: 10,
+          ),
+          CIA_MultiSelectChipWidget(singleSelect: true, labels: [
+            CIA_MultiSelectChipWidgeModel(label: "Yes"),
+            CIA_MultiSelectChipWidgeModel(label: "No"),
+          ]),
+        ],
+      ),
+      CIA_TextFormField(
+        borderColor: illegalDrugs,
+        label: "Illegal Drugs",
+        controller: TextEditingController(),
+        onChange: (value) {
+          if (value != null && value != "") {
+            setState(() {
+              illegalDrugs = Colors.red;
+            });
+          } else {
+            setState(() {
+              illegalDrugs = Color_TextFieldBorder;
+            });
+          }
+        },
       ),
       CIA_TextFormField(
           label: "Operator Comments", controller: TextEditingController()),
@@ -507,10 +555,267 @@ class AppProfile {
 }
 
 class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
+  Map<String, bool> _teeth = Map<String, bool>();
+  Map<String, bool> _status = Map<String, bool>();
+  String selectedTooth = "";
+
+  @override
+  void initState() {
+    _status["Carious"] = false;
+    _status["Filled"] = false;
+    _status["Missed"] = false;
+    _status["Not Sure"] = false;
+    _status["Mobility"] = false;
+    _status["Hopeless teeth"] = false;
+    _status["Implant Placed"] = false;
+    _status["Implant Failed"] = false;
+    _teeth["11"] = false;
+    _teeth["12"] = false;
+    _teeth["13"] = false;
+    _teeth["14"] = false;
+    _teeth["15"] = false;
+    _teeth["16"] = false;
+    _teeth["17"] = false;
+    _teeth["18"] = false;
+    _teeth["19"] = false;
+    _teeth["20"] = false;
+    _teeth["21"] = false;
+    _teeth["22"] = false;
+    _teeth["23"] = false;
+    _teeth["24"] = false;
+    _teeth["25"] = false;
+    _teeth["26"] = false;
+    _teeth["27"] = false;
+    _teeth["28"] = false;
+    _teeth["29"] = false;
+    _teeth["30"] = false;
+    _teeth["31"] = false;
+    _teeth["32"] = false;
+    _teeth["33"] = false;
+    _teeth["34"] = false;
+    _teeth["35"] = false;
+    _teeth["36"] = false;
+    _teeth["37"] = false;
+    _teeth["38"] = false;
+    _teeth["39"] = false;
+    _teeth["40"] = false;
+    _teeth["41"] = false;
+    _teeth["42"] = false;
+    _teeth["43"] = false;
+    _teeth["44"] = false;
+    _teeth["45"] = false;
+    _teeth["46"] = false;
+    _teeth["47"] = false;
+    _teeth["48"] = false;
+    _teeth["49"] = false;
+    for (String tooth in _teeth.keys) {
+      _teeth[tooth] = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(children: [
+      Row(
+        children: [
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+              singleSelect: true,
+              key: GlobalKey(),
+              onChange: (selectedValue, isSelected) {
+                if (isSelected) {
+                  for (String tooth in _teeth.keys) {
+                    _teeth[tooth] = false;
+                  }
+                  _teeth[selectedValue] = true;
+                  selectedTooth = selectedValue;
+                  setState(() {});
+                } else {
+                  selectedTooth = "";
+                }
+              },
+              labels: [
+                CIA_MultiSelectChipWidgeModel(
+                    label: "11", isSelected: _teeth["11"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "12", isSelected: _teeth["12"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "13", isSelected: _teeth["13"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "14", isSelected: _teeth["14"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "15", isSelected: _teeth["15"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "16", isSelected: _teeth["16"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "17", isSelected: _teeth["17"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "18", isSelected: _teeth["18"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "19", isSelected: _teeth["19"] as bool)
+              ],
+            ),
+          ),
+          SizedBox(),
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+              singleSelect: true,
+              key: GlobalKey(),
+              onChange: (selectedValue, isSelected) {
+                if (isSelected) {
+                  for (String tooth in _teeth.keys) {
+                    _teeth[tooth] = false;
+                  }
+                  _teeth[selectedValue] = true;
+                  selectedTooth = selectedValue;
+                  setState(() {});
+                } else {
+                  selectedTooth = "";
+                }
+              },
+              labels: [
+                CIA_MultiSelectChipWidgeModel(
+                    label: "21", isSelected: _teeth["21"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "22", isSelected: _teeth["22"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "23", isSelected: _teeth["23"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "24", isSelected: _teeth["24"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "25", isSelected: _teeth["25"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "26", isSelected: _teeth["26"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "27", isSelected: _teeth["27"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "28", isSelected: _teeth["28"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "29", isSelected: _teeth["29"] as bool)
+              ],
+            ),
+          ),
+        ],
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+              singleSelect: true,
+              key: GlobalKey(),
+              onChange: (selectedValue, isSelected) {
+                if (isSelected) {
+                  for (String tooth in _teeth.keys) {
+                    _teeth[tooth] = false;
+                  }
+                  _teeth[selectedValue] = true;
+                  selectedTooth = selectedValue;
+                  setState(() {});
+                } else {
+                  selectedTooth = "";
+                }
+              },
+              labels: [
+                CIA_MultiSelectChipWidgeModel(
+                    label: "31", isSelected: _teeth["31"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "32", isSelected: _teeth["32"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "33", isSelected: _teeth["33"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "34", isSelected: _teeth["34"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "35", isSelected: _teeth["35"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "36", isSelected: _teeth["36"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "37", isSelected: _teeth["37"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "38", isSelected: _teeth["38"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "39", isSelected: _teeth["39"] as bool)
+              ],
+            ),
+          ),
+          SizedBox(),
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+              singleSelect: true,
+              key: GlobalKey(),
+              onChange: (selectedValue, isSelected) {
+                if (isSelected) {
+                  for (String tooth in _teeth.keys) {
+                    _teeth[tooth] = false;
+                  }
+                  _teeth[selectedValue] = true;
+                  selectedTooth = selectedValue;
+                  setState(() {});
+                } else {
+                  selectedTooth = "";
+                }
+              },
+              labels: [
+                CIA_MultiSelectChipWidgeModel(
+                    label: "41", isSelected: _teeth["41"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "42", isSelected: _teeth["42"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "43", isSelected: _teeth["43"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "44", isSelected: _teeth["44"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "45", isSelected: _teeth["45"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "46", isSelected: _teeth["46"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "47", isSelected: _teeth["47"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "48", isSelected: _teeth["48"] as bool),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "49", isSelected: _teeth["49"] as bool)
+              ],
+            ),
+          ),
+        ],
+      ),
+      CIA_MultiSelectChipWidget(
+        key: GlobalKey(),
+        onChange: (value, isSelected) {
+          if (isSelected)
+            MasterController.updateToothStatus(selectedTooth, value);
+          for (String ss in _status.keys) {
+            _status[ss] = false;
+          }
+          for (String tooth in _teeth.keys) {
+            _teeth[tooth] = false;
+          }
+          setState(() {});
+        },
+        singleSelect: true,
+        labels: [
+          CIA_MultiSelectChipWidgeModel(
+              label: "Carious", isSelected: _status["Carious"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Filled", isSelected: _status["Filled"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Missed", isSelected: _status["Missed"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Not Sure", isSelected: _status["Not Sure"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Mobility", isSelected: _status["Mobility"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Hopeless teeth",
+              isSelected: _status["Hopeless teeth"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Implant Placed",
+              isSelected: _status["Implant Placed"] as bool),
+          CIA_MultiSelectChipWidgeModel(
+              label: "Implant Failed",
+              isSelected: _status["Implant Failed"] as bool),
+        ],
+      ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Carious",
         initalValue: (MasterController.getDentalExamindation())["Carious"],
@@ -518,6 +823,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Carious", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Filled",
         initalValue: MasterController.getDentalExamindation()["Filled"],
@@ -525,6 +831,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Filled", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Missed",
         initalValue: MasterController.getDentalExamindation()["Missed"],
@@ -532,6 +839,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Missed", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Not Sure",
         initalValue: MasterController.getDentalExamindation()["Not Sure"],
@@ -539,6 +847,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Not Sure", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Mobility",
         initalValue: MasterController.getDentalExamindation()["Mobility"],
@@ -546,6 +855,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Mobility", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Hopeless teeth",
         initalValue: MasterController.getDentalExamindation()["Hopeless teeth"],
@@ -555,27 +865,22 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
       Row(
         children: [
           Expanded(
-              child: CIA_TagsInputWidget(
-            patientController: MasterController,
-            label: "Inter arch space RT",
-            initalValue:
-                MasterController.getDentalExamindation()["Inter arch space RT"],
-            onChange: (value) => MasterController.updateDentalExamination(
-                "Inter arch space RT", value),
-          )),
+            key: GlobalKey(),
+            child: CIA_TextFormField(
+                label: "Inter arch space RT",
+                controller: TextEditingController()),
+          ),
           SizedBox(width: 10),
           Expanded(
-              child: CIA_TagsInputWidget(
-            patientController: MasterController,
-            label: "Inter arch space LT",
-            initalValue:
-                MasterController.getDentalExamindation()["Inter arch space LT"],
-            onChange: (value) => MasterController.updateDentalExamination(
-                "Inter arch space LT", value),
-          )),
+            key: GlobalKey(),
+            child: CIA_TextFormField(
+                label: "Inter arch space LT",
+                controller: TextEditingController()),
+          ),
         ],
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Implant Placed",
         initalValue: MasterController.getDentalExamindation()["Implant Placed"],
@@ -583,6 +888,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             MasterController.updateDentalExamination("Implant Placed", value),
       ),
       CIA_TagsInputWidget(
+        key: GlobalKey(),
         patientController: MasterController,
         label: "Implant Failed",
         initalValue: MasterController.getDentalExamindation()["Implant Failed"],
@@ -603,6 +909,9 @@ class _PatientDentalHistory extends StatefulWidget {
 }
 
 class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
+  Color clench = Color_TextFieldBorder;
+  String tobacco = "0";
+
   @override
   Widget build(BuildContext context) {
     return CIA_MedicalPagesWidget(
@@ -622,17 +931,49 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
           ],
         ),
         CIA_TextFormField(
+            borderColor: clench,
+            onChange: (value) {
+              if (value != null && value != "") {
+                setState(() {
+                  clench = Colors.orange;
+                });
+              } else {
+                setState(() {
+                  clench = Color_TextFieldBorder;
+                });
+              }
+            },
             label: "Do you clench or grind your teeth while awake or sleep?",
             controller: TextEditingController()),
         Row(
           children: [
             Expanded(
-                child: CIA_MultiSelectChipWidget(labels: [
-              CIA_MultiSelectChipWidgeModel(label: "Smoke tobacco?")
-            ])),
+                child: FormTextKeyWidget(
+              text: "Smoke Tobacco?",
+            )),
             Expanded(
                 child: CIA_TextFormField(
-                    label: "per day", controller: TextEditingController())),
+                    onChange: (value) {
+                      setState(() {
+                        tobacco = value;
+                      });
+                    },
+                    label: "Cigarette per day",
+                    controller: TextEditingController(text: tobacco))),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: FormTextValueWidget(
+                text: int.parse(tobacco) == 0
+                    ? "Non Smoker"
+                    : (int.parse(tobacco) < 10
+                        ? "Light Smoker"
+                        : (int.parse(tobacco) < 20
+                            ? "Medium Smoker"
+                            : "Heavy Smoker")),
+              ),
+            ),
             Expanded(flex: 3, child: SizedBox())
           ],
         ),
@@ -793,7 +1134,8 @@ class _PatientNonSurgicalTreatmentState
               .substring((key.toString()).indexOf(" ") + 1)
               .replaceAll("]", "");
           if (isSelected)
-            MasterController.updateToothStatus(selectedTooth, selected);
+            MasterController.updateToothTreatmentStatus(
+                selectedTooth, selected);
         },
       ));
       uu.add(SizedBox(height: 10));

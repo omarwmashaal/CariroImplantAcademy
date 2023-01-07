@@ -71,6 +71,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
   @override
   Widget build(BuildContext context) {
     return ChipsInput(
+      readOnly: true,
       initialValue: widget.initalValue as List<String>,
       controller: _controller,
       focusNode: focus,
@@ -79,6 +80,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
       ],
       showCursor: true,
+
       cursorColor: Color_Accent,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
@@ -123,7 +125,14 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
       chipBuilder: (context, state, String teeth) {
         return InputChip(
           key: ObjectKey(teeth),
-          label: Text(teeth),
+          label: Text(
+            teeth.replaceAll("strike", ""),
+            style: TextStyle(
+                decoration: teeth.contains("strike")
+                    ? TextDecoration.lineThrough
+                    : null,
+                color: teeth.contains("strike") ? Colors.red : Colors.black),
+          ),
           onDeleted: () {
             focus.requestFocus();
             widget.patientController.addTooth(teeth);
@@ -133,6 +142,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
         );
       },
       suggestionBuilder: (context, String teeth) {
+        return Container();
         if (!widget.patientController.getSuggestionTeeth().contains(teeth))
           return Container();
         return ListTile(

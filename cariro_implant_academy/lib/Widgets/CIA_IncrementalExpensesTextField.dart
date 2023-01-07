@@ -61,13 +61,15 @@ class _CIA_IncrementalExpensesTextFieldState
                       icon: Icon(Icons.add))
                   : SizedBox()),
           Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      items.remove(item);
-                    });
-                  },
-                  icon: Icon(Icons.delete))),
+              child: item == items.first
+                  ? SizedBox()
+                  : IconButton(
+                      onPressed: () {
+                        setState(() {
+                          items.remove(item);
+                        });
+                      },
+                      icon: Icon(Icons.delete))),
         ],
       ));
       index++;
