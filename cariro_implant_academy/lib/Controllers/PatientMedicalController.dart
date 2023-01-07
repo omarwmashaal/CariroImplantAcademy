@@ -46,15 +46,37 @@ class PatientMedicalController extends GetxController {
       temp = _DentalExamination[_status]!;
       if (temp.contains(tooth)) {
         if (_status != status) {
-          List<String> ss = List<String>.of(_DentalExamination[_status]!);
-          ss.remove(tooth);
-          _DentalExamination[_status] = ss!;
+          if (((status == "Carious" ||
+                      status == "Missed" ||
+                      status == "Filled" ||
+                      status == "Implant Placed") &&
+                  (_status == "Carious" ||
+                      _status == "Missed" ||
+                      _status == "Filled" ||
+                      _status == "Implant Placed")) ||
+              (status == "Missed") ||
+              (status == "Implant Placed") ||
+              (status == "Implant Failed") ||
+              (_status == "Missed")) {
+            List<String> ss = List<String>.of(_DentalExamination[_status]!);
+            ss.remove(tooth);
+            _DentalExamination[_status] = ss!;
+          }
         }
       } else {
         if (_status == status) {
-          var ss = List<String>.of(_DentalExamination[_status]!);
-          ss.add(tooth);
-          _DentalExamination[_status] = ss!;
+          if (status == "Implant Failed") {
+            var ss = List<String>.of(_DentalExamination[_status]!);
+            ss.add(tooth);
+            _DentalExamination[_status] = ss!;
+            ss = List<String>.of(_DentalExamination["Missed"]!);
+            ss.add(tooth);
+            _DentalExamination["Missed"] = ss!;
+          } else {
+            var ss = List<String>.of(_DentalExamination[_status]!);
+            ss.add(tooth);
+            _DentalExamination[_status] = ss!;
+          }
         }
       }
     }
@@ -64,6 +86,13 @@ class PatientMedicalController extends GetxController {
     List<String> temp = <String>[];
     for (String _status in _DentalExamination.keys) {
       temp = _DentalExamination[_status]!;
+      if (temp.contains("strike" + tooth)) {
+        if (_status != status) {
+          List<String> ss = List<String>.of(_DentalExamination[_status]!);
+          ss.remove("strike" + tooth);
+          _DentalExamination[_status] = ss!;
+        }
+      }
       if (temp.contains(tooth)) {
         if (_status != status) {
           List<String> ss = List<String>.of(_DentalExamination[_status]!);
@@ -95,6 +124,7 @@ class PatientMedicalController extends GetxController {
   }
 
   List<String> getSuggestionTeeth() => this._DetnalExaminationSuggestionTeeth;
+
   List<String> getTeeth() => this._DetnalExaminationTeeth;
 
   Map<String, List<String>> getDentalExamindation() => this._DentalExamination;

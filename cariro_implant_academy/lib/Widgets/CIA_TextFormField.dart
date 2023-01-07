@@ -16,6 +16,7 @@ class CIA_TextFormField extends StatefulWidget {
     this.isHours = false,
     this.maxLines = 1,
     this.borderColor,
+    this.suffix,
     required this.controller,
   }) : super(key: key);
 
@@ -29,6 +30,7 @@ class CIA_TextFormField extends StatefulWidget {
   Color? borderColor;
   TextEditingController controller;
   bool isNumber;
+  String? suffix;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -88,6 +90,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
         textInputAction: TextInputAction.next,
         obscureText: widget.isObscure == null ? false : true,
         decoration: InputDecoration(
+          suffixText: widget.suffix,
           prefixIcon: widget.icon != null ? Icon(Icons.search) : null,
           prefixIconColor: focus.hasFocus ? Colors.red : null,
           enabledBorder: OutlineInputBorder(

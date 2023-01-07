@@ -867,6 +867,8 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           Expanded(
             key: GlobalKey(),
             child: CIA_TextFormField(
+                suffix: "mm",
+                isNumber: true,
                 label: "Inter arch space RT",
                 controller: TextEditingController()),
           ),
@@ -874,6 +876,8 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           Expanded(
             key: GlobalKey(),
             child: CIA_TextFormField(
+                suffix: "mm",
+                isNumber: true,
                 label: "Inter arch space LT",
                 controller: TextEditingController()),
           ),
