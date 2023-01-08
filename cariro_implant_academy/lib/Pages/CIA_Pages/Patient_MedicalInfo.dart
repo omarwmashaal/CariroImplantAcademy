@@ -14,6 +14,7 @@ import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/CIA_MedicalPageWidget.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/CIA_TagsInputWidget.dart';
+import '../../Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import '../../Widgets/CIA_TeethTreatmentWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
@@ -1205,7 +1206,7 @@ class _PatientTreatmentPlan extends StatefulWidget {
 class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
   @override
   Widget build(BuildContext context) {
-    return CIA_TeethTreatmentWidget(
+    return CIA_TeethTreatmentPlanWidget(
       controller: MasterController,
     );
   }
@@ -1222,7 +1223,9 @@ class _PatientSurgicalTreatment extends StatefulWidget {
 class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_TeethSurgicalTreatmentWidget(
+      controller: MasterController,
+    );
   }
 }
 

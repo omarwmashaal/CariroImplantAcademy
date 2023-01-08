@@ -8,36 +8,39 @@ import '../Controllers/PatientMedicalController.dart';
 import '../Models/TreatmentPlanModel.dart';
 import 'CIA_TextFormField.dart';
 import 'FormTextWidget.dart';
-import 'MultiSelectChipWidget.dart';
 
 // TODO: Listen to models and higlight chips
-class CIA_TeethTreatmentPlanWidget extends StatefulWidget {
-  CIA_TeethTreatmentPlanWidget({Key? key, required this.controller})
+class CIA_TeethSurgicalTreatmentWidget extends StatefulWidget {
+  CIA_TeethSurgicalTreatmentWidget({Key? key, required this.controller})
       : super(key: key);
 
   PatientMedicalController controller;
 
   @override
-  State<CIA_TeethTreatmentPlanWidget> createState() =>
-      _CIA_TeethTreatmentPlanWidgetState();
+  State<CIA_TeethSurgicalTreatmentWidget> createState() =>
+      _CIA_TeethSurgicalTreatmentWidgetState();
 }
 
 Map<String, TreatmentPlanModel> models = Map<String, TreatmentPlanModel>();
 
-class _CIA_TeethTreatmentPlanWidgetState
-    extends State<CIA_TeethTreatmentPlanWidget> {
+class _CIA_TeethSurgicalTreatmentWidgetState
+    extends State<CIA_TeethSurgicalTreatmentWidget> {
   List<String> selectedTeeth = [];
   List<String> selectedStatus = [];
   bool tickVisible = false;
+  @override
+  void initState() {
+    models = widget.controller.TreatmentPlan;
+  }
 
-  _updateTeethStatus(List<String> teeth, String status) {
+  /*_updateTeethStatus(List<String> teeth, String status) {
     for (String tooth in teeth) {
       if (models[tooth] == null) models[tooth] = new TreatmentPlanModel();
       switch (status) {
         case "extraction":
           {
             models[tooth]?.extraction = models[tooth]?.extraction == null
-                ? Extraction()
+                ? ""
                 : models[tooth]?.extraction;
             break;
           }
@@ -45,7 +48,7 @@ class _CIA_TeethTreatmentPlanWidgetState
         case "simpleImplant":
           {
             models[tooth]?.simpleImplant = models[tooth]?.simpleImplant == null
-                ? SimpleImplant()
+                ? ""
                 : models[tooth]?.simpleImplant;
 
             break;
@@ -54,57 +57,56 @@ class _CIA_TeethTreatmentPlanWidgetState
           {
             models[tooth]?.immediateImplant =
                 models[tooth]?.immediateImplant == null
-                    ? ImmediateImplant()
+                    ? ""
                     : models[tooth]?.immediateImplant;
             break;
           }
         case "expansion":
           {
             models[tooth]?.expansion = models[tooth]?.expansion == null
-                ? Expansion()
+                ? ""
                 : models[tooth]?.expansion;
             break;
           }
         case "splitting":
           {
             models[tooth]?.splitting = models[tooth]?.splitting == null
-                ? Splitting()
+                ? ""
                 : models[tooth]?.splitting;
             break;
           }
         case "gbr":
           {
             models[tooth]?.gbr =
-                models[tooth]?.gbr == null ? Gbr() : models[tooth]?.gbr;
+                models[tooth]?.gbr == null ? "" : models[tooth]?.gbr;
             break;
           }
         case "openSinus":
           {
             models[tooth]?.openSinus = models[tooth]?.openSinus == null
-                ? OpenSinus()
+                ? ""
                 : models[tooth]?.openSinus;
             break;
           }
         case "closedSinus":
           {
             models[tooth]?.closedSinus = models[tooth]?.closedSinus == null
-                ? ClosedSinus()
+                ? ""
                 : models[tooth]?.closedSinus;
             break;
           }
         case "guidedImplant":
           {
             models[tooth]?.guidedImplant = models[tooth]?.guidedImplant == null
-                ? GuidedImplant()
+                ? ""
                 : models[tooth]?.guidedImplant;
             break;
           }
 
         case "bontic":
           {
-            models[tooth]?.bontic = models[tooth]?.bontic == null
-                ? Bontic()
-                : models[tooth]?.bontic;
+            models[tooth]?.bontic =
+                models[tooth]?.bontic == null ? "" : models[tooth]?.bontic;
             break;
           }
       }
@@ -475,9 +477,14 @@ class _CIA_TeethTreatmentPlanWidgetState
         ],
       ),
     );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 
-  _buildTeethWidgets() {
+  /*_buildTeethWidgets() {
     List<Widget> returnValue = <Widget>[];
     for (String tooth in models.keys) {
       returnValue.add(new _ToothWidget(
@@ -488,12 +495,7 @@ class _CIA_TeethTreatmentPlanWidgetState
       returnValue.add(SizedBox(height: 20));
     }
     return returnValue;
-  }
-
-  @override
-  void initState() {
-    models = widget.controller.TreatmentPlan;
-  }
+  }*/
 }
 
 class _ToothWidget extends StatelessWidget {
@@ -538,11 +540,11 @@ class _ToothWidget extends StatelessWidget {
                       flex: 62,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.extraction?.value = value;
+                          models[toothID]?.extraction = value;
                         },
                         label: 'Extraction',
                         controller: TextEditingController(
-                          text: (myModel[stat]["value"]),
+                          text: myModel[stat],
                         ),
                       ),
                     ),
@@ -557,13 +559,7 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
-                    Expanded(
-                        flex: 5,
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        ))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
                   ],
                 ),
               );
@@ -579,11 +575,11 @@ class _ToothWidget extends StatelessWidget {
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.simpleImplant?.value = value;
+                          models[toothID]?.simpleImplant = value;
                         },
                         label: 'Simple Implant',
                         controller: TextEditingController(
-                          text: (myModel[stat]["value"]),
+                          text: myModel[stat],
                         ),
                       ),
                     ),
@@ -629,11 +625,11 @@ class _ToothWidget extends StatelessWidget {
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.immediateImplant?.value = value;
+                          models[toothID]?.immediateImplant = value;
                         },
                         label: 'Immediate Implant',
                         controller: TextEditingController(
-                          text: (myModel[stat]["value"]),
+                          text: myModel[stat],
                         ),
                       ),
                     ),
@@ -679,11 +675,11 @@ class _ToothWidget extends StatelessWidget {
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.guidedImplant?.value = value;
+                          models[toothID]?.guidedImplant = value;
                         },
                         label: 'Guided Implant',
                         controller: TextEditingController(
-                          text: (myModel[stat]["value"]),
+                          text: myModel[stat],
                         ),
                       ),
                     ),
@@ -728,11 +724,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.expansion?.value = value;
+                        models[toothID]?.expansion = value;
                       },
                       label: 'Expansion',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
@@ -759,11 +755,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.splitting?.value = value;
+                        models[toothID]?.splitting = value;
                       },
                       label: 'Splitting',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
@@ -790,11 +786,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.gbr?.value = value;
+                        models[toothID]?.gbr = value;
                       },
                       label: 'GBR',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
@@ -821,11 +817,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.openSinus?.value = value;
+                        models[toothID]?.openSinus = value;
                       },
                       label: 'Open Sinus',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
@@ -852,11 +848,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.closedSinus?.value = value;
+                        models[toothID]?.closedSinus = value;
                       },
                       label: 'Closed Sinus',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
@@ -884,11 +880,11 @@ class _ToothWidget extends StatelessWidget {
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.bontic?.value = value;
+                        models[toothID]?.bontic = value;
                       },
                       label: 'Bontic',
                       controller: TextEditingController(
-                        text: (myModel[stat]["value"]),
+                        text: myModel[stat],
                       ),
                     ),
                   ),
