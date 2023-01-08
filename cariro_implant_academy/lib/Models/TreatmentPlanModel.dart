@@ -10,8 +10,7 @@ class TreatmentPlanModel {
   String? openSinus = null;
   String? closedSinus = null;
   String? guidedImplant = null;
-  String? implantDiameter = null;
-  String? implantType = null;
+  String? bontic = null;
 
   fromJson(Map<String, dynamic> json) {
     extraction = json['extraction'];
@@ -25,8 +24,7 @@ class TreatmentPlanModel {
     openSinus = json['openSinus'];
     closedSinus = json['closedSinus'];
     guidedImplant = json['guidedImplant'];
-    implantDiameter = json['implantDiameter'];
-    implantType = json['implantType'];
+    bontic = json['bontic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,8 +40,7 @@ class TreatmentPlanModel {
     data['openSinus'] = openSinus;
     data['closedSinus'] = closedSinus;
     data['guidedImplant'] = guidedImplant;
-    data['implantDiameter'] = implantDiameter;
-    data['implantType'] = implantType;
+    data['bontic'] = bontic;
     return data;
   }
 }
