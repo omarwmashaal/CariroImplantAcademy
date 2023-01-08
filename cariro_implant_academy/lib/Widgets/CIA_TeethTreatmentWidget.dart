@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../Constants/Fonts.dart';
 import '../Controllers/PatientMedicalController.dart';
@@ -13,6 +14,7 @@ class CIA_TeethTreatmentWidget extends StatefulWidget {
       : super(key: key);
 
   PatientMedicalController controller;
+
   @override
   State<CIA_TeethTreatmentWidget> createState() =>
       _CIA_TeethTreatmentWidgetState();
@@ -21,8 +23,154 @@ class CIA_TeethTreatmentWidget extends StatefulWidget {
 Map<String, TreatmentPlanModel> models = Map<String, TreatmentPlanModel>();
 
 class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
+  List<String> selectedTeeth = [];
+  List<String> selectedStatus = [];
+  bool tickVisible = false;
+
+  _updateTeethStatus(List<String> teeth, String status) {
+    for (String tooth in teeth) {
+      if (models[tooth] == null) models[tooth] = new TreatmentPlanModel();
+      switch (status) {
+        case "extraction":
+          {
+            models[tooth]?.extraction = "";
+            break;
+          }
+
+        case "simpleImplant":
+          {
+            models[tooth]?.simpleImplant = "";
+
+            break;
+          }
+        case "immediateImplant":
+          {
+            models[tooth]?.immediateImplant = "";
+            break;
+          }
+        case "expansion":
+          {
+            models[tooth]?.expansion = "";
+            break;
+          }
+        case "splitting":
+          {
+            models[tooth]?.splitting = "";
+            break;
+          }
+        case "gbr":
+          {
+            models[tooth]?.extraction = "";
+            break;
+          }
+        case "openSinus":
+          {
+            models[tooth]?.openSinus = "";
+            break;
+          }
+        case "closedSinus":
+          {
+            models[tooth]?.closedSinus = "";
+            break;
+          }
+        case "guidedImplant":
+          {
+            models[tooth]?.guidedImplant = "";
+            break;
+          }
+        case "implantDiameter":
+          {
+            models[tooth]?.implantDiameter = "";
+            break;
+          }
+        case "implantType":
+          {
+            models[tooth]?.implantType = "";
+            break;
+          }
+      }
+    }
+  }
+
+  _updateTeethMultiStatus(List<String> teeth, List<String> status) {
+    for (String s in status) {
+      _updateTeethStatus(teeth, s);
+    }
+  }
+
+  _removeTeethStatus(List<String> teeth, String status) {
+    for (String tooth in teeth) {
+      if (models[tooth] != null) {
+        switch (status) {
+          case "extraction":
+            {
+              models[tooth]?.extraction = null;
+              break;
+            }
+
+          case "simpleImplant":
+            {
+              models[tooth]?.simpleImplant = null;
+
+              break;
+            }
+          case "immediateImplant":
+            {
+              models[tooth]?.immediateImplant = null;
+              break;
+            }
+          case "expansion":
+            {
+              models[tooth]?.expansion = null;
+              break;
+            }
+          case "splitting":
+            {
+              models[tooth]?.splitting = null;
+              break;
+            }
+          case "gbr":
+            {
+              models[tooth]?.extraction = null;
+              break;
+            }
+          case "openSinus":
+            {
+              models[tooth]?.openSinus = null;
+              break;
+            }
+          case "closedSinus":
+            {
+              models[tooth]?.closedSinus = null;
+              break;
+            }
+          case "guidedImplant":
+            {
+              models[tooth]?.guidedImplant = null;
+              break;
+            }
+          case "implantDiameter":
+            {
+              models[tooth]?.implantDiameter = null;
+              break;
+            }
+          case "implantType":
+            {
+              models[tooth]?.implantType = null;
+              break;
+            }
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (selectedTeeth.isEmpty) {
+      selectedStatus.clear();
+      tickVisible = false;
+      setState(() {});
+    }
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
       child: Column(
@@ -31,62 +179,65 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
             children: [
               Expanded(
                 child: CIA_MultiSelectChipWidget(
-                  onChange: (selectedValue, isSelected) {
-                    isSelected
-                        ? models[selectedValue] = TreatmentPlanModel()
-                        : models.remove(selectedValue);
+                  key: GlobalKey(),
+                  onChangeList: (selectedItems) {
+                    selectedTeeth = selectedItems;
+                    setState(() {
+                      tickVisible = true;
+                    });
                     setState(() {});
                   },
                   labels: [
                     CIA_MultiSelectChipWidgeModel(
-                        label: "11", isSelected: models["11"] != null),
+                        label: "11", isSelected: selectedTeeth.contains("11")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "12", isSelected: models["12"] != null),
+                        label: "12", isSelected: selectedTeeth.contains("12")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "13", isSelected: models["13"] != null),
+                        label: "13", isSelected: selectedTeeth.contains("13")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "14", isSelected: models["14"] != null),
+                        label: "14", isSelected: selectedTeeth.contains("14")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "15", isSelected: models["15"] != null),
+                        label: "15", isSelected: selectedTeeth.contains("15")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "16", isSelected: models["16"] != null),
+                        label: "16", isSelected: selectedTeeth.contains("16")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "17", isSelected: models["17"] != null),
+                        label: "17", isSelected: selectedTeeth.contains("17")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "18", isSelected: models["18"] != null),
+                        label: "18", isSelected: selectedTeeth.contains("18")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "19", isSelected: models["19"] != null)
+                        label: "19", isSelected: selectedTeeth.contains("19"))
                   ],
                 ),
               ),
               SizedBox(),
               Expanded(
                 child: CIA_MultiSelectChipWidget(
-                  onChange: (selectedValue, isSelected) {
-                    isSelected
-                        ? models[selectedValue] = TreatmentPlanModel()
-                        : models.remove(selectedValue);
-                    setState(() {});
+                  key: GlobalKey(),
+                  onChangeList: (selectedItems) {
+                    selectedTeeth = selectedItems;
+                    setState(() {
+                      tickVisible = true;
+                    });
                   },
                   labels: [
                     CIA_MultiSelectChipWidgeModel(
-                        label: "21", isSelected: models["21"] != null),
+                        label: "21", isSelected: selectedTeeth.contains("21")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "22", isSelected: models["22"] != null),
+                        label: "22", isSelected: selectedTeeth.contains("22")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "23", isSelected: models["23"] != null),
+                        label: "23", isSelected: selectedTeeth.contains("23")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "24", isSelected: models["24"] != null),
+                        label: "24", isSelected: selectedTeeth.contains("24")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "25", isSelected: models["25"] != null),
+                        label: "25", isSelected: selectedTeeth.contains("25")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "26", isSelected: models["26"] != null),
+                        label: "26", isSelected: selectedTeeth.contains("26")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "27", isSelected: models["27"] != null),
+                        label: "27", isSelected: selectedTeeth.contains("27")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "28", isSelected: models["28"] != null),
+                        label: "28", isSelected: selectedTeeth.contains("28")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "29", isSelected: models["29"] != null)
+                        label: "29", isSelected: selectedTeeth.contains("29"))
                   ],
                 ),
               ),
@@ -97,66 +248,209 @@ class _CIA_TeethTreatmentWidgetState extends State<CIA_TeethTreatmentWidget> {
             children: [
               Expanded(
                 child: CIA_MultiSelectChipWidget(
-                  onChange: (selectedValue, isSelected) {
-                    isSelected
-                        ? models[selectedValue] = TreatmentPlanModel()
-                        : models.remove(selectedValue);
-                    setState(() {});
+                  key: GlobalKey(),
+                  onChangeList: (selectedItems) {
+                    selectedTeeth = selectedItems;
+                    setState(() {
+                      tickVisible = true;
+                    });
                   },
                   labels: [
                     CIA_MultiSelectChipWidgeModel(
-                        label: "31", isSelected: models["31"] != null),
+                        label: "31", isSelected: selectedTeeth.contains("31")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "32", isSelected: models["32"] != null),
+                        label: "32", isSelected: selectedTeeth.contains("32")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "33", isSelected: models["33"] != null),
+                        label: "33", isSelected: selectedTeeth.contains("33")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "34", isSelected: models["34"] != null),
+                        label: "34", isSelected: selectedTeeth.contains("34")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "35", isSelected: models["35"] != null),
+                        label: "35", isSelected: selectedTeeth.contains("35")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "36", isSelected: models["36"] != null),
+                        label: "36", isSelected: selectedTeeth.contains("36")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "37", isSelected: models["37"] != null),
+                        label: "37", isSelected: selectedTeeth.contains("37")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "38", isSelected: models["38"] != null),
+                        label: "38", isSelected: selectedTeeth.contains("38")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "39", isSelected: models["39"] != null)
+                        label: "39", isSelected: selectedTeeth.contains("39"))
                   ],
                 ),
               ),
               SizedBox(),
               Expanded(
                 child: CIA_MultiSelectChipWidget(
-                  onChange: (selectedValue, isSelected) {
-                    isSelected
-                        ? models[selectedValue] = TreatmentPlanModel()
-                        : models.remove(selectedValue);
-                    setState(() {});
+                  key: GlobalKey(),
+                  onChangeList: (selectedItems) {
+                    selectedTeeth = selectedItems;
+                    setState(() {
+                      tickVisible = true;
+                    });
                   },
                   labels: [
                     CIA_MultiSelectChipWidgeModel(
-                        label: "41", isSelected: models["41"] != null),
+                        label: "41", isSelected: selectedTeeth.contains("41")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "42", isSelected: models["42"] != null),
+                        label: "42", isSelected: selectedTeeth.contains("42")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "43", isSelected: models["43"] != null),
+                        label: "43", isSelected: selectedTeeth.contains("43")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "44", isSelected: models["44"] != null),
+                        label: "44", isSelected: selectedTeeth.contains("44")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "45", isSelected: models["45"] != null),
+                        label: "45", isSelected: selectedTeeth.contains("45")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "46", isSelected: models["46"] != null),
+                        label: "46", isSelected: selectedTeeth.contains("46")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "47", isSelected: models["47"] != null),
+                        label: "47", isSelected: selectedTeeth.contains("47")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "48", isSelected: models["48"] != null),
+                        label: "48", isSelected: selectedTeeth.contains("48")),
                     CIA_MultiSelectChipWidgeModel(
-                        label: "49", isSelected: models["49"] != null)
+                        label: "49", isSelected: selectedTeeth.contains("49"))
                   ],
                 ),
               ),
             ],
+          ),
+          SizedBox(height: 10),
+          CIA_MultiSelectChipWidget(
+              key: GlobalKey(),
+              onChangeList: (selectedItems) {
+                selectedStatus = selectedItems;
+              },
+              labels: [
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Extraction",
+                    value: "extraction",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.extraction != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Simple Implant",
+                    value: "simpleImplant",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.simpleImplant != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Immediate Implant",
+                    value: "immediateImplant",
+                    isSelected: models.isNotEmpty &&
+                            selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.immediateImplant != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Expansion",
+                    value: "expansion",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.expansion != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Splitting",
+                    value: "splitting",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.splitting != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "GBR",
+                    value: "gbr",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.gbr != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Open Sinus",
+                    value: "openSinus",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.openSinus != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Closed Sinus",
+                    value: "closedSinus",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.closedSinus != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Guided Implant",
+                    value: "guidedImplant",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.guidedImplant != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Implant Diameter",
+                    value: "implantDiameter",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.implantDiameter != null
+                        : false),
+                CIA_MultiSelectChipWidgeModel(
+                    label: "Implant Type",
+                    value: "implantType",
+                    isSelected: models.isNotEmpty &&
+                        selectedTeeth.length == 1 &&
+                            selectedTeeth.isNotEmpty &&
+                            models.containsKey(selectedTeeth[0])
+                        ? models[selectedTeeth[0]]?.implantType != null
+                        : false),
+              ]),
+          Visibility(
+            visible: tickVisible,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _updateTeethMultiStatus(selectedTeeth, selectedStatus);
+                    tickVisible = false;
+                    selectedStatus.clear();
+                    selectedTeeth.clear();
+                    setState(() {});
+                  },
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.green,
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    tickVisible = false;
+                    selectedTeeth.clear();
+                    selectedStatus.clear();
+                    setState(() {});
+                  },
+                  child: Icon(
+                    Icons.highlight_remove,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 10),
           Expanded(
@@ -195,6 +489,7 @@ class _ToothWidget extends StatelessWidget {
   String toothID;
   Function onChange;
   Map<String, dynamic> myModel = Map<String, dynamic>();
+
   @override
   Widget build(BuildContext context) {
     myModel = (models[toothID] as TreatmentPlanModel).toJson();
@@ -215,68 +510,6 @@ class _ToothWidget extends StatelessWidget {
         ],
       ),
       SizedBox(height: 10),
-      CIA_MultiSelectChipWidget(
-          onChange: (value, isSelected) {
-            myModel = (models[toothID] as TreatmentPlanModel).toJson();
-            if (isSelected) {
-              myModel[value] = "";
-            } else {
-              myModel[value] = null;
-            }
-
-            var temp = models[toothID];
-            temp?.fromJson(myModel);
-            models[toothID] = temp!;
-            onChange();
-          },
-          labels: [
-            CIA_MultiSelectChipWidgeModel(
-                label: "Extraction",
-                value: "extraction",
-                isSelected: myModel["extraction"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Flap",
-                value: "flap",
-                isSelected: myModel["flap"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Simple Implant",
-                value: "simpleImplant",
-                isSelected: myModel["simpleImplant"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Immediate Implant",
-                value: "immediateImplant",
-                isSelected: myModel["immediateImplant"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Expansion",
-                value: "expansion",
-                isSelected: myModel["expansion"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Splitting",
-                value: "splitting",
-                isSelected: myModel["splitting"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "GBR", value: "gbr", isSelected: myModel["gbr"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Open Sinus",
-                value: "openSinus",
-                isSelected: myModel["openSinus"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Closed Sinus",
-                value: "closedSinus",
-                isSelected: myModel["closedSinus"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Guided Implant",
-                value: "guidedImplant",
-                isSelected: myModel["guidedImplant"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Implant Diameter",
-                value: "implantDiameter",
-                isSelected: myModel["implantDiameter"] != null),
-            CIA_MultiSelectChipWidgeModel(
-                label: "Implant Type",
-                value: "implantType",
-                isSelected: myModel["implantType"] != null),
-          ])
     ]);
     for (String key in myModel.keys) {
       if (myModel[key] != null) {

@@ -84,6 +84,12 @@ class PatientMedicalController extends GetxController {
     }
   }
 
+  updateTeethStatus(List<String> teeth, String status) {
+    for (String tooth in teeth) {
+      updateToothStatus(tooth, status);
+    }
+  }
+
   updateToothTreatmentStatus(String tooth, String status) {
     List<String> temp = <String>[];
     for (String _status in _DentalExamination.keys) {

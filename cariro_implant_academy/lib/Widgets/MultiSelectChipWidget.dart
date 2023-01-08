@@ -77,7 +77,10 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       onChange: (List<Object?> selectedItems, Object? selectedItem) {
         bool isSelected = selectedItems.contains(selectedItem);
         if (onChange != null) onChange!(selectedItem as String, isSelected);
-        if (onChangeList != null) onChangeList!(selectedItems);
+        if (onChangeList != null) {
+
+          onChangeList!(selectedItems.map((e) => e as String).toList());
+        }
         if (onChangeSpecificTooth != null)
           onChangeSpecificTooth!(selectedItem as String, isSelected, key);
       },

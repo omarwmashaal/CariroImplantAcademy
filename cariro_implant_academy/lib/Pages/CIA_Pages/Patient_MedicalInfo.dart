@@ -558,6 +558,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   Map<String, bool> _teeth = Map<String, bool>();
   Map<String, bool> _status = Map<String, bool>();
   String selectedTooth = "";
+  List<String> selectedTeeth = [];
   String selectedStatus = "";
   bool mobilityDegrees = false;
 
@@ -622,18 +623,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
         children: [
           Expanded(
             child: CIA_MultiSelectChipWidget(
-              singleSelect: true,
               key: GlobalKey(),
-              onChange: (selectedValue, isSelected) {
-                if (isSelected) {
-                  for (String tooth in _teeth.keys) {
-                    _teeth[tooth] = false;
-                  }
-                  _teeth[selectedValue] = true;
-                  selectedTooth = selectedValue;
-                  setState(() {});
-                } else {
-                  selectedTooth = "";
+              onChangeList: (selectedItems) {
+                selectedTeeth = selectedItems;
+                for (String tooth in selectedTeeth) {
+                  _teeth[tooth] = true;
                 }
               },
               labels: [
@@ -661,18 +655,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           SizedBox(),
           Expanded(
             child: CIA_MultiSelectChipWidget(
-              singleSelect: true,
               key: GlobalKey(),
-              onChange: (selectedValue, isSelected) {
-                if (isSelected) {
-                  for (String tooth in _teeth.keys) {
-                    _teeth[tooth] = false;
-                  }
-                  _teeth[selectedValue] = true;
-                  selectedTooth = selectedValue;
-                  setState(() {});
-                } else {
-                  selectedTooth = "";
+              onChangeList: (selectedItems) {
+                selectedTeeth = selectedItems;
+                for (String tooth in selectedTeeth) {
+                  _teeth[tooth] = true;
                 }
               },
               labels: [
@@ -703,18 +690,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
         children: [
           Expanded(
             child: CIA_MultiSelectChipWidget(
-              singleSelect: true,
               key: GlobalKey(),
-              onChange: (selectedValue, isSelected) {
-                if (isSelected) {
-                  for (String tooth in _teeth.keys) {
-                    _teeth[tooth] = false;
-                  }
-                  _teeth[selectedValue] = true;
-                  selectedTooth = selectedValue;
-                  setState(() {});
-                } else {
-                  selectedTooth = "";
+              onChangeList: (selectedItems) {
+                selectedTeeth = selectedItems;
+                for (String tooth in selectedTeeth) {
+                  _teeth[tooth] = true;
                 }
               },
               labels: [
@@ -742,18 +722,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           SizedBox(),
           Expanded(
             child: CIA_MultiSelectChipWidget(
-              singleSelect: true,
               key: GlobalKey(),
-              onChange: (selectedValue, isSelected) {
-                if (isSelected) {
-                  for (String tooth in _teeth.keys) {
-                    _teeth[tooth] = false;
-                  }
-                  _teeth[selectedValue] = true;
-                  selectedTooth = selectedValue;
-                  setState(() {});
-                } else {
-                  selectedTooth = "";
+              onChangeList: (selectedItems) {
+                selectedTeeth = selectedItems;
+                for (String tooth in selectedTeeth) {
+                  _teeth[tooth] = true;
                 }
               },
               labels: [
@@ -791,7 +764,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
               });
             } else {
               if (isSelected)
-                MasterController.updateToothStatus(selectedTooth, value);
+                MasterController.updateTeethStatus(selectedTeeth, value);
               for (String ss in _status.keys) {
                 _status[ss] = false;
               }
@@ -831,8 +804,8 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           key: GlobalKey(),
           onChange: (value, isSelected) {
             if (isSelected) {
-              MasterController.updateToothStatus(
-                  selectedTooth, "Mobility " + value);
+              MasterController.updateTeethStatus(
+                  selectedTeeth, "Mobility " + value);
               for (String ss in _status.keys) {
                 _status[ss] = false;
               }
@@ -1184,10 +1157,6 @@ class _PatientNonSurgicalTreatmentState
         CIA_MultiSelectChipWidgeModel(label: "Mobility III", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
             label: "Hopeless teeth", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(
-            label: "Inter arch space RT", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(
-            label: "Inter arch space LT", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
             label: "Implant Placed", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
