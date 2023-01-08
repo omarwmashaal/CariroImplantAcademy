@@ -120,9 +120,10 @@ CIA_PopupDialog_Table(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              width: 900,
+              width: 1000,
               height: 400,
               child: CIA_Table(
+                  isTreatment: true,
                   loadFunction: () {},
                   onCellClick: (value) {
                     Alert(

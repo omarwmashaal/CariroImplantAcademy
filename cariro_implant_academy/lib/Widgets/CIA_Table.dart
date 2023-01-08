@@ -14,6 +14,7 @@ class CIA_Table extends StatefulWidget {
     //required this.models,
     required this.columnNames,
     this.onCellClick,
+    this.isTreatment = false,
     required this.dataSource,
   }) : super(key: key);
 
@@ -21,6 +22,7 @@ class CIA_Table extends StatefulWidget {
   DataGridSource dataSource;
   Function? loadFunction;
   Function? onCellClick;
+  bool? isTreatment;
 
   // List<Object> models;
   @override
@@ -84,7 +86,9 @@ class _CIA_TableState extends State<CIA_Table> {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ))),*/
-            columnWidthMode: ColumnWidthMode.fill,
+            columnWidthMode: widget.isTreatment!
+                ? ColumnWidthMode.lastColumnFill
+                : ColumnWidthMode.fill,
             allowFiltering: true,
             navigationMode: GridNavigationMode.row,
             onCellTap: (value) {
@@ -110,6 +114,9 @@ class _CIA_TableState extends State<CIA_Table> {
     for (String name in widget.columnNames) {
       returnValue.add(GridColumn(
           columnName: name,
+          columnWidthMode: name == "Treatment"
+              ? ColumnWidthMode.lastColumnFill
+              : ColumnWidthMode.none,
           label: Container(
               //padding: EdgeInsets.all(16.0),
               alignment: Alignment.center,
