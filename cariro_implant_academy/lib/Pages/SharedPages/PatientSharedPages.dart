@@ -1,11 +1,14 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Models/VisitsModel.dart';
 import '../../Widgets/CIA_PopUp.dart';
@@ -29,6 +32,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
       padding: EdgeInsets.only(top: 5),
       child: Column(
         children: [
+          Obx(() => TitleWidget(
+              title: siteController.title.value, showBackButton: true)),
           Expanded(
             flex: 4,
             child: Row(
@@ -318,6 +323,10 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
       padding: EdgeInsets.only(top: 5, left: 10),
       child: Column(
         children: [
+          Obx(() => TitleWidget(
+                title: siteController.title.value,
+                showBackButton: true,
+              )),
           Expanded(
             child: Row(
               children: [

@@ -485,6 +485,13 @@
             </list>
           </value>
         </entry>
+        <entry key="roundcheckbox">
+          <value>
+            <list>
+              <option value="C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/roundcheckbox-2.0.5/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="sky_engine">
           <value>
             <list>
@@ -666,6 +673,7 @@
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-2.1.3/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/process-4.2.4/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/rflutter_alert-2.0.4/lib" />
+      <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/roundcheckbox-2.0.5/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/slide_switcher-1.1.2/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.0/lib" />
       <root url="file://C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />

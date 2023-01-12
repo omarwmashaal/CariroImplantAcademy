@@ -535,6 +535,16 @@ class _ToothWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
+                        flex: 5,
+                        child: myModel[stat]["status"]
+                            ? Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                            : Icon(
+                          Icons.remove,
+                          color: Colors.red,
+                        )), Expanded(
                       flex: 62,
                       child: CIA_TextFormField(
                         onChange: (value) {
@@ -558,12 +568,7 @@ class _ToothWidget extends StatelessWidget {
                         flex: 20,
                         child:
                             CIA_SecondaryButton(label: "Assign", onTab: () {})),
-                    Expanded(
-                        flex: 5,
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        ))
+
                   ],
                 ),
               );
@@ -576,6 +581,16 @@ class _ToothWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
+                        flex: 5,
+                        child: myModel[stat]["status"]
+                            ? Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                            : Icon(
+                          Icons.remove,
+                          color: Colors.red,
+                        )),   Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
@@ -614,7 +629,8 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                   ],
                 ),
               );
@@ -626,6 +642,16 @@ class _ToothWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
+                        flex: 5,
+                        child: myModel[stat]["status"]
+                            ? Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                            : Icon(
+                          Icons.remove,
+                          color: Colors.red,
+                        )),  Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
@@ -664,7 +690,8 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                   ],
                 ),
               );
@@ -676,6 +703,16 @@ class _ToothWidget extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
+                        flex: 5,
+                        child: myModel[stat]["status"]
+                            ? Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                            : Icon(
+                          Icons.remove,
+                          color: Colors.red,
+                        )),     Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
@@ -714,7 +751,8 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                   ],
                 ),
               );
@@ -725,6 +763,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )), Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -746,7 +794,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;
@@ -756,6 +806,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )),  Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -777,7 +837,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;
@@ -787,6 +849,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )), Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -808,7 +880,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;
@@ -818,6 +892,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )), Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -839,7 +923,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;
@@ -849,6 +935,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )),  Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -870,7 +966,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;
@@ -881,6 +979,16 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(Row(
                 children: [
                   Expanded(
+                      flex: 5,
+                      child: myModel[stat]["status"]
+                          ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                          : Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      )),Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
@@ -902,7 +1010,9 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
+
                 ],
               ));
               break;

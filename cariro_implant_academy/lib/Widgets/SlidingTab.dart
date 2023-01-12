@@ -9,7 +9,7 @@ class SlidingTab extends StatefulWidget {
   SlidingTab(
       {Key? key,
       required this.titles,
-      required this.onChange,
+      this.onChange,
       required this.weight,
       this.height,
       this.fontSize,
@@ -21,7 +21,7 @@ class SlidingTab extends StatefulWidget {
   bool? adapt = false;
 
   List<String> titles;
-  Function onChange;
+  Function? onChange;
   double weight;
   double? height;
   double? fontSize;
@@ -43,7 +43,7 @@ class _SlidingTabState extends State<SlidingTab> {
       onSelect: (int index) {
         setState(() => switcherIndex = index);
         tabsController.index.value = index;
-        widget.onChange(index);
+        if (widget.onChange != null) widget.onChange!(index);
       },
       containerColor: Colors.transparent,
       containerBorder: Border.all(color: Color_TextFieldBorder),

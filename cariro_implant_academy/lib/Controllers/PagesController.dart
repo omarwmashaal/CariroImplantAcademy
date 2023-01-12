@@ -23,7 +23,7 @@ import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 class PagesController extends PageController {
   static PagesController instance = Get.find();
 
-  static PageView MainPageRoutes() {
+  PageView MainPageRoutes() {
     String role = siteController.getRole();
     switch (siteController.getSite()) {
       case "CIA":
@@ -288,6 +288,7 @@ class InternalPagesController extends PageController {
     passedObject = object;
   }
 
+  @override
   @override
   void jumpToPage(int page) {
     index = page;

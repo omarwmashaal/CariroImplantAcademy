@@ -1,9 +1,10 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../Constants/Colors.dart';
 
@@ -103,10 +104,27 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
           ],
         )),
         Expanded(
-            flex: 5,
-            child: Container(
-              color: Color_Background,
-              child: PagesController.MainPageRoutes(),
+            flex: 7,
+            child: Column(
+              children: [
+                GetBuilder<SiteController>(
+                    builder: (siteController) => Container(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              siteController.appBarWidget,
+                              Container()
+                            ],
+                          ),
+                        )),
+                Expanded(
+                  child: Container(
+                    color: Color_Background,
+                    child: pagesController.MainPageRoutes(),
+                  ),
+                ),
+              ],
             ))
       ],
     );

@@ -478,6 +478,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
+  roundcheckbox:
+    dependency: "direct main"
+    description:
+      name: roundcheckbox
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   sky_engine:
     dependency: transitive
     description: flutter

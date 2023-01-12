@@ -2,12 +2,14 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
 
 import '../Constants/Fonts.dart';
 import '../Controllers/PatientMedicalController.dart';
 import '../Models/TreatmentPlanModel.dart';
 import 'CIA_TextFormField.dart';
 import 'FormTextWidget.dart';
+import 'MultiSelectChipWidget.dart';
 
 // TODO: Listen to models and higlight chips
 class CIA_TeethSurgicalTreatmentWidget extends StatefulWidget {
@@ -28,19 +30,15 @@ class _CIA_TeethSurgicalTreatmentWidgetState
   List<String> selectedTeeth = [];
   List<String> selectedStatus = [];
   bool tickVisible = false;
-  @override
-  void initState() {
-    models = widget.controller.TreatmentPlan;
-  }
 
-  /*_updateTeethStatus(List<String> teeth, String status) {
+  _updateTeethStatus(List<String> teeth, String status) {
     for (String tooth in teeth) {
       if (models[tooth] == null) models[tooth] = new TreatmentPlanModel();
       switch (status) {
         case "extraction":
           {
             models[tooth]?.extraction = models[tooth]?.extraction == null
-                ? ""
+                ? Extraction()
                 : models[tooth]?.extraction;
             break;
           }
@@ -48,7 +46,7 @@ class _CIA_TeethSurgicalTreatmentWidgetState
         case "simpleImplant":
           {
             models[tooth]?.simpleImplant = models[tooth]?.simpleImplant == null
-                ? ""
+                ? SimpleImplant()
                 : models[tooth]?.simpleImplant;
 
             break;
@@ -57,56 +55,57 @@ class _CIA_TeethSurgicalTreatmentWidgetState
           {
             models[tooth]?.immediateImplant =
                 models[tooth]?.immediateImplant == null
-                    ? ""
+                    ? ImmediateImplant()
                     : models[tooth]?.immediateImplant;
             break;
           }
         case "expansion":
           {
             models[tooth]?.expansion = models[tooth]?.expansion == null
-                ? ""
+                ? Expansion()
                 : models[tooth]?.expansion;
             break;
           }
         case "splitting":
           {
             models[tooth]?.splitting = models[tooth]?.splitting == null
-                ? ""
+                ? Splitting()
                 : models[tooth]?.splitting;
             break;
           }
         case "gbr":
           {
             models[tooth]?.gbr =
-                models[tooth]?.gbr == null ? "" : models[tooth]?.gbr;
+                models[tooth]?.gbr == null ? Gbr() : models[tooth]?.gbr;
             break;
           }
         case "openSinus":
           {
             models[tooth]?.openSinus = models[tooth]?.openSinus == null
-                ? ""
+                ? OpenSinus()
                 : models[tooth]?.openSinus;
             break;
           }
         case "closedSinus":
           {
             models[tooth]?.closedSinus = models[tooth]?.closedSinus == null
-                ? ""
+                ? ClosedSinus()
                 : models[tooth]?.closedSinus;
             break;
           }
         case "guidedImplant":
           {
             models[tooth]?.guidedImplant = models[tooth]?.guidedImplant == null
-                ? ""
+                ? GuidedImplant()
                 : models[tooth]?.guidedImplant;
             break;
           }
 
         case "bontic":
           {
-            models[tooth]?.bontic =
-                models[tooth]?.bontic == null ? "" : models[tooth]?.bontic;
+            models[tooth]?.bontic = models[tooth]?.bontic == null
+                ? Bontic()
+                : models[tooth]?.bontic;
             break;
           }
       }
@@ -477,14 +476,9 @@ class _CIA_TeethSurgicalTreatmentWidgetState
         ],
       ),
     );
-  }*/
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 
-  /*_buildTeethWidgets() {
+  _buildTeethWidgets() {
     List<Widget> returnValue = <Widget>[];
     for (String tooth in models.keys) {
       returnValue.add(new _ToothWidget(
@@ -495,7 +489,12 @@ class _CIA_TeethSurgicalTreatmentWidgetState
       returnValue.add(SizedBox(height: 20));
     }
     return returnValue;
-  }*/
+  }
+
+  @override
+  void initState() {
+    models = widget.controller.TreatmentPlan;
+  }
 }
 
 class _ToothWidget extends StatelessWidget {
@@ -536,15 +535,29 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(
                 Row(
                   children: [
+                    RoundCheckBox(
+                      isChecked: myModel[stat]["status"],
+                      onTap: (selected) {
+                        models[toothID]?.extraction?.status = selected;
+                      },
+                      border: null,
+                      borderColor: Colors.transparent,
+                      uncheckedWidget: Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      ),
+                      size: 30,
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
                     Expanded(
                       flex: 62,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.extraction = value;
+                          models[toothID]?.extraction?.value = value;
                         },
                         label: 'Extraction',
                         controller: TextEditingController(
-                          text: myModel[stat],
+                          text: (myModel[stat]["value"]),
                         ),
                       ),
                     ),
@@ -559,7 +572,7 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
                   ],
                 ),
               );
@@ -571,15 +584,29 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(
                 Row(
                   children: [
+                    RoundCheckBox(
+                      isChecked: myModel[stat]["status"],
+                      onTap: (selected) {
+                        models[toothID]?.simpleImplant?.status = selected;
+                      },
+                      border: null,
+                      borderColor: Colors.transparent,
+                      uncheckedWidget: Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      ),
+                      size: 30,
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
                     Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.simpleImplant = value;
+                          models[toothID]?.simpleImplant?.value = value;
                         },
                         label: 'Simple Implant',
                         controller: TextEditingController(
-                          text: myModel[stat],
+                          text: (myModel[stat]["value"]),
                         ),
                       ),
                     ),
@@ -610,7 +637,7 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
                   ],
                 ),
               );
@@ -621,15 +648,29 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(
                 Row(
                   children: [
+                    RoundCheckBox(
+                      isChecked: myModel[stat]["status"],
+                      onTap: (selected) {
+                        models[toothID]?.immediateImplant?.status = selected;
+                      },
+                      border: null,
+                      borderColor: Colors.transparent,
+                      uncheckedWidget: Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      ),
+                      size: 30,
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
                     Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.immediateImplant = value;
+                          models[toothID]?.immediateImplant?.value = value;
                         },
                         label: 'Immediate Implant',
                         controller: TextEditingController(
-                          text: myModel[stat],
+                          text: (myModel[stat]["value"]),
                         ),
                       ),
                     ),
@@ -660,7 +701,7 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
                   ],
                 ),
               );
@@ -671,15 +712,29 @@ class _ToothWidget extends StatelessWidget {
               returnValue.add(
                 Row(
                   children: [
+                    RoundCheckBox(
+                      isChecked: myModel[stat]["status"],
+                      onTap: (selected) {
+                        models[toothID]?.guidedImplant?.status = selected;
+                      },
+                      border: null,
+                      borderColor: Colors.transparent,
+                      uncheckedWidget: Icon(
+                        Icons.remove,
+                        color: Colors.red,
+                      ),
+                      size: 30,
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
                     Expanded(
                       flex: 20,
                       child: CIA_TextFormField(
                         onChange: (value) {
-                          models[toothID]?.guidedImplant = value;
+                          models[toothID]?.guidedImplant?.value = value;
                         },
                         label: 'Guided Implant',
                         controller: TextEditingController(
-                          text: myModel[stat],
+                          text: (myModel[stat]["value"]),
                         ),
                       ),
                     ),
@@ -710,7 +765,7 @@ class _ToothWidget extends StatelessWidget {
                     Expanded(
                         flex: 20,
                         child:
-                            CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                            CIA_SecondaryButton(label: "Assign", onTab: () {})),
                   ],
                 ),
               );
@@ -720,15 +775,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.expansion?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.expansion = value;
+                        models[toothID]?.expansion?.value = value;
                       },
                       label: 'Expansion',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -742,7 +811,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;
@@ -751,15 +821,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.splitting?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.splitting = value;
+                        models[toothID]?.splitting?.value = value;
                       },
                       label: 'Splitting',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -773,7 +857,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;
@@ -782,15 +867,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.gbr?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.gbr = value;
+                        models[toothID]?.gbr?.value = value;
                       },
                       label: 'GBR',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -804,7 +903,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;
@@ -813,15 +913,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.openSinus?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.openSinus = value;
+                        models[toothID]?.openSinus?.value = value;
                       },
                       label: 'Open Sinus',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -835,7 +949,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;
@@ -844,15 +959,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.closedSinus?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.closedSinus = value;
+                        models[toothID]?.closedSinus?.value = value;
                       },
                       label: 'Closed Sinus',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -866,7 +995,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;
@@ -876,15 +1006,29 @@ class _ToothWidget extends StatelessWidget {
             {
               returnValue.add(Row(
                 children: [
+                  RoundCheckBox(
+                    isChecked: myModel[stat]["status"],
+                    onTap: (selected) {
+                      models[toothID]?.bontic?.status = selected;
+                    },
+                    border: null,
+                    borderColor: Colors.transparent,
+                    uncheckedWidget: Icon(
+                      Icons.remove,
+                      color: Colors.red,
+                    ),
+                    size: 30,
+                  ),
+                  Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                     flex: 62,
                     child: CIA_TextFormField(
                       onChange: (value) {
-                        models[toothID]?.bontic = value;
+                        models[toothID]?.bontic?.value = value;
                       },
                       label: 'Bontic',
                       controller: TextEditingController(
-                        text: myModel[stat],
+                        text: (myModel[stat]["value"]),
                       ),
                     ),
                   ),
@@ -898,7 +1042,8 @@ class _ToothWidget extends StatelessWidget {
                   Expanded(flex: 1, child: SizedBox()),
                   Expanded(
                       flex: 20,
-                      child: CIA_SecondaryButton(label: "Assign", onTab: () {}))
+                      child:
+                          CIA_SecondaryButton(label: "Assign", onTab: () {})),
                 ],
               ));
               break;

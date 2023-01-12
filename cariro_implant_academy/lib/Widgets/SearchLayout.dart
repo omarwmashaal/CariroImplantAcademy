@@ -31,50 +31,52 @@ class _SearchLayoutState extends State<SearchLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 10),
-            child: Column(
-              children: [
-                Expanded(
-                  child: CIA_TextField(
-                    label: "Search",
-                    icon: Icons.search,
-                    onChange: (value) {
-                      Search = value;
-                    },
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: CIA_TextField(
+                      label: "Search",
+                      icon: Icons.search,
+                      onChange: (value) {
+                        Search = value;
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 8,
-                        child: HorizontalRadioButtons(
-                          names: widget.radioButtons,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 8,
+                          child: HorizontalRadioButtons(
+                            names: widget.radioButtons,
+                          ),
                         ),
-                      ),
-                      Expanded(child: SizedBox())
-                    ],
+                        Expanded(child: SizedBox())
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 5,
-          child: CIA_Table(
-            columnNames: widget.columnNames,
-            loadFunction: widget.loadMoreFuntcion,
-            dataSource: widget.dataSource,
-            onCellClick: widget.onCellTab,
+          Expanded(
+            flex: 5,
+            child: CIA_Table(
+              columnNames: widget.columnNames,
+              loadFunction: widget.loadMoreFuntcion,
+              dataSource: widget.dataSource,
+              onCellClick: widget.onCellTab,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

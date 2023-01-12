@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
@@ -20,7 +21,6 @@ import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
-import '../../Widgets/SlidingTab.dart';
 
 late PatientMedicalController MasterController;
 
@@ -66,197 +66,290 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    siteController.setAppBarWidget(
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: MediaQuery.of(context).size.width * 0.04,
+      fontSize: MediaQuery.of(context).size.width * 0.01,
+      tabs: [
+        "Medical Examination",
+        "Dental History",
+        "Dental Examination",
+        "Non Surgical Treatment",
+        "Treatment Plan",
+        "Surgical Treatment",
+        "Prosthetic Treatment",
+        "Photos and CBCTs"
+      ],
+    );
     patient?.Gender = "Male";
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+      child: Expanded(
+        flex: 11,
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              flex: 4,
+              child: Column(
                 children: [
-                  Container(
-                    child: SlidingTab(
-                      onChange: ((value) {
-                        tabsController.jumpToPage(value);
-                        setState(() {
-                          index = value;
-                        });
-                      }),
-                      titles: tabs,
-                      weight: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.width * 0.04,
-                      fontSize: MediaQuery.of(context).size.width * 0.01,
-                      controller: tabsController,
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Obx(() => TitleWidget(
+                              showBackButton: true,
+                              title: siteController.title.value,
+                            )),
+                        tabsController.page == 5
+                            ? CIA_SecondaryButton(
+                                label: "Colored Page",
+                                onTab: () {
+                                  CIA_ShowPopUp(
+                                    size: 500,
+                                    context: context,
+                                    title: "Colored Page",
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          FormTextKeyWidget(
+                                              text: "Guided Bone Regeneration"),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_MultiSelectChipWidget(
+                                            labels: [
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Block Graft"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Chin"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Ramus"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Tuberosity"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Disc"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Piezo"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Bone Particle"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "100% Autogenous"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "100% Xenograft"),
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "ACM Bur"),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              suffix: "%",
+                                              label: "Auto Xeno %",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              label: "Tuberosity Other Specify",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              label: "Cut by",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              label: "No of Screws",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              label: "Area",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_TextFormField(
+                                              label: "Notes",
+                                              controller:
+                                                  TextEditingController()),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          FormTextKeyWidget(
+                                              text: "Open Sinus Lift"),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          CIA_MultiSelectChipWidget(
+                                            labels: [
+                                              CIA_MultiSelectChipWidgeModel(
+                                                  label: "Approach"),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )
+                            : SizedBox()
+                      ],
                     ),
                   ),
+                  Expanded(
+                    flex: 10,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: PageView(
+                        controller: tabsController,
+                        children: pages,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
             Expanded(
-              flex: 11,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Expanded(child: SizedBox()),
                   Expanded(
-                    flex: 4,
+                    flex: 10,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(
-                          child: TitleWidget(
-                            showBackButton: true,
-                            title: tabs[index],
-                          ),
+                        SizedBox(
+                          height: 10,
                         ),
-                        Expanded(
-                          flex: 8,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
-                            child: PageView(
-                              controller: tabsController,
-                              children: pages,
+                        Image(
+                          image: AssetImage("assets/ProfileImage.png"),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "View more info",
+                            onTab: () {
+                              internalPagesController.jumpToPage(2);
+                            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "LAB Request",
+                            icon: Icon(Icons.document_scanner_outlined),
+                            onTab: () {}),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "ID")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                text: patient?.ID.toString() == null
+                                    ? ""
+                                    : patient?.ID.toString(),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Name")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                  text: patient?.Name == null
+                                      ? ""
+                                      : patient?.Name),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Gender")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                  text: patient?.Gender == null
+                                      ? ""
+                                      : patient?.Gender),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextKeyWidget(
+                                text: "Operator",
+                                secondaryInfo: true,
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        Expanded(
-                          flex: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Image(
-                                image: AssetImage("assets/ProfileImage.png"),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                text: "Omar Wael",
+                                secondaryInfo: true,
                               ),
-                              SizedBox(
-                                height: 10,
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FormTextKeyWidget(
+                                text: "Date:",
+                                secondaryInfo: true,
                               ),
-                              CIA_SecondaryButton(
-                                  label: "View more info",
-                                  onTab: () {
-                                    internalPagesController.jumpToPage(2);
-                                  }),
-                              SizedBox(
-                                height: 10,
+                            ),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                text: "12/1/2022",
+                                secondaryInfo: true,
                               ),
-                              CIA_SecondaryButton(
-                                  label: "LAB Request",
-                                  icon: Icon(Icons.document_scanner_outlined),
-                                  onTab: () {}),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "ID")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: patient?.ID.toString() == null
-                                          ? ""
-                                          : patient?.ID.toString(),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "Name")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                        text: patient?.Name == null
-                                            ? ""
-                                            : patient?.Name),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "Gender")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                        text: patient?.Gender == null
-                                            ? ""
-                                            : patient?.Gender),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Divider(),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: FormTextKeyWidget(
-                                      text: "Operator",
-                                      secondaryInfo: true,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: "Omar Wael",
-                                      secondaryInfo: true,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: FormTextKeyWidget(
-                                      text: "Date:",
-                                      secondaryInfo: true,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: "12/1/2022",
-                                      secondaryInfo: true,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_SecondaryButton(
-                                label: "Cancel",
-                                onTab: () {},
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_PrimaryButton(
-                                label: "Save",
-                                onTab: () {},
-                                isLong: true,
-                              ),
-                            ],
-                          ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                          label: "Cancel",
+                          onTab: () {},
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_PrimaryButton(
+                          label: "Save",
+                          onTab: () {},
+                          isLong: true,
                         ),
                       ],
                     ),
@@ -264,8 +357,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                 ],
               ),
             ),
-
-            // Obx(() =>widget.pages[tabsController.index.value] ),
           ],
         ),
       ),

@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
+import '../Constants/Controllers.dart';
+import '../Widgets/SlidingTab.dart';
+
 class SiteController extends GetxController {
   static SiteController instance = Get.find();
   String _site = "CIA";
@@ -12,6 +15,39 @@ class SiteController extends GetxController {
   List<String> _CIA_Roles = ["Admin", "Instructor", "Secretary", "Assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
+
+  Widget appBarWidget = Container();
+  RxString title = "".obs;
+
+  setAppBarWidget(
+      {List<String>? tabs,
+      double? width,
+      double? height,
+      double? fontSize}) async {
+    if (tabs != null) {
+      appBarWidget = Container(
+        key: GlobalKey(),
+        child: SlidingTab(
+            key: GlobalKey(),
+            titles: tabs,
+            weight: width == null ? 400 : width,
+            height: height,
+            fontSize: fontSize,
+            controller: tabsController,
+            onChange: ((value) {
+              tabsController.jumpToPage(value);
+              title.value = tabs[value];
+            })),
+      );
+      //title.value = tabs[0];
+      await Future.delayed(Duration(microseconds: 1));
+      title.value = tabs[0];
+    } else {
+      appBarWidget = Container();
+      await Future.delayed(Duration(microseconds: 1));
+    }
+    update();
+  }
 
   String getSite() => _site;
 
