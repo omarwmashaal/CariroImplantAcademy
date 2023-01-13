@@ -114,7 +114,11 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               siteController.appBarWidget,
-                              Container()
+                              Expanded(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [Image.asset("assets/user.png")],
+                              ))
                             ],
                           ),
                         )),
