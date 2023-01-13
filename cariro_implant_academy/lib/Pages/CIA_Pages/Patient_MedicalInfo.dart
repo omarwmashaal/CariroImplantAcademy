@@ -97,7 +97,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                             showBackButton: true,
                             title: siteController.title.value,
                           )),
-                      tabsController.page == 5
+                      Obx(() => tabsController.index.value == 5
                           ? CIA_SecondaryButton(
                               label: "Colored Page",
                               onTab: () {
@@ -202,7 +202,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                 );
                               },
                             )
-                          : SizedBox()
+                          : SizedBox())
                     ],
                   ),
                 ),

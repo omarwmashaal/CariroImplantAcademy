@@ -277,6 +277,11 @@ class PagesController extends PageController {
 class TabsController extends PageController {
   static TabsController instance = Get.find();
   RxInt index = 0.obs;
+  @override
+  void jumpToPage(int page) {
+    index.value = page;
+    super.jumpToPage(page);
+  }
 }
 
 class InternalPagesController extends PageController {

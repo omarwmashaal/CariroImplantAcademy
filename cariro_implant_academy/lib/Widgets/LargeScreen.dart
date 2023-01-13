@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Constants/Colors.dart';
+import '../Models/NotificationModel.dart';
+import 'CIA_DropDown2.dart';
 
 //TODO: Return to stateless
 class CIA_LargeScreen extends StatefulWidget {
@@ -117,7 +119,43 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               Expanded(
                                   child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [Image.asset("assets/user.png")],
+                                children: [
+                                  CIA_DropDown2(
+                                    iconButton: Icon(Icons.notifications),
+                                    notifications: [
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content:
+                                              "akdhaasdasdasdasdasdasdasdasdasdasdsadsadssl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghasadasdaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                      NotificationModel(
+                                          title: "title 1",
+                                          content: "akdhasl;fghaskljf"),
+                                    ],
+                                  ),
+                                  SizedBox(width: 30),
+                                  Image.asset("assets/user.png"),
+                                  SizedBox(
+                                    width: 20,
+                                  )
+                                ],
                               ))
                             ],
                           ),

@@ -24,6 +24,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
       PatientInfoModel(1, "Name", "Phone", "MaritalStatus");
   List<Widget> myPages = [];
   ValueNotifier<int> buildCount = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
@@ -39,7 +40,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
       },
     );
 
-    PageView(
+    /* PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: internalPagesController,
       onPageChanged: (value) {},
@@ -99,53 +100,16 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
           patient: selectedPatient,
         )
       ],
-    );
+    );*/
   }
 
   @override
   void initState() {
-    siteController
-        .setAppBarWidget(tabs: ["Patients Data", "My Patients", "Visits Log"]);
     myPages = [
-      PageView(
-        controller: tabsController,
-        children: [
-          Column(
-            children: [
-              Obx(
-                () => TitleWidget(
-                  title: siteController.title.value,
-                  showBackButton: false,
-                ),
-              ),
-              SearchLayout(
-                radioButtons: [
-                  "Name",
-                  "Phone",
-                  "ID",
-                  "Instructor",
-                  "Assistant",
-                  "Candidate",
-                  "Operation",
-                ],
-                loadMoreFuntcion: dataSource.addMoreRows,
-                dataSource: dataSource,
-                columnNames: PatientInfoModel.columns,
-                onCellTab: (value) {
-                  print(dataSource.models[value - 1].ID);
-                  setState(() {
-                    selectedPatient = dataSource.models[value - 1];
-                  });
-
-                  internalPagesController.jumpToPage(1);
-                },
-              ),
-            ],
-          ),
-          Container(),
-          Container()
-        ],
-      ),
+      _PatientSearch(
+          key: GlobalKey(),
+          dataSource: dataSource,
+          selectedPatient: selectedPatient),
       (siteController.getRole() == "Admin" ||
               siteController.getRole() == "Instructor")
           ? PatientMedicalInfoPage(
@@ -162,5 +126,69 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
         patient: selectedPatient,
       )
     ];
+  }
+}
+
+class _PatientSearch extends StatefulWidget {
+  _PatientSearch(
+      {Key? key, required this.dataSource, required this.selectedPatient})
+      : super(key: key);
+
+  PatientInfoModel selectedPatient;
+  PatientDataSource dataSource;
+
+  @override
+  State<_PatientSearch> createState() => _PatientSearchState();
+}
+
+class _PatientSearchState extends State<_PatientSearch> {
+  @override
+  void initState() {
+    siteController
+        .setAppBarWidget(tabs: ["Patients Data", "My Patients", "Visits Log"]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      key: GlobalKey(),
+      controller: tabsController,
+      children: [
+        Column(
+          children: [
+            Obx(
+              () => TitleWidget(
+                title: siteController.title.value,
+                showBackButton: false,
+              ),
+            ),
+            SearchLayout(
+              radioButtons: [
+                "Name",
+                "Phone",
+                "ID",
+                "Instructor",
+                "Assistant",
+                "Candidate",
+                "Operation",
+              ],
+              loadMoreFuntcion: widget.dataSource.addMoreRows,
+              dataSource: widget.dataSource,
+              columnNames: PatientInfoModel.columns,
+              onCellTab: (value) {
+                print(widget.dataSource.models[value - 1].ID);
+                setState(() {
+                  widget.selectedPatient = widget.dataSource.models[value - 1];
+                });
+
+                internalPagesController.jumpToPage(1);
+              },
+            ),
+          ],
+        ),
+        Container(),
+        Container()
+      ],
+    );
   }
 }
