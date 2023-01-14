@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,13 @@ class CIA_DropDown2 extends StatefulWidget {
   CIA_DropDown2({
     Key? key,
     this.hint,
-    this.iconButton,
+    this.customButton,
     this.childrenString,
     this.notifications,
   }) : super(key: key);
 
   String? hint;
-  Icon? iconButton;
+  Widget? customButton;
   List<String>? childrenString;
   List<NotificationModel>? notifications;
 
@@ -32,7 +33,7 @@ class _CIA_DropDown2State extends State<CIA_DropDown2> {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         isExpanded: true,
-        customButton: widget.iconButton,
+        customButton: widget.customButton,
         hint: widget.hint != null
             ? Row(
                 children: [
@@ -105,7 +106,10 @@ class _CIA_DropDown2State extends State<CIA_DropDown2> {
                     ))
                 .toList(),
         value: widget.childrenString != null ? selectedValue : selectedValueNot,
-        onChanged: (value) {
+        onChanged: (value) async {
+          pagesController.jumpToPage(0);
+          await Future.delayed(Duration(milliseconds: 5));
+          internalPagesController.jumpToPage(1);
           setState(() {
             if (widget.childrenString != null)
               selectedValue = value as String;

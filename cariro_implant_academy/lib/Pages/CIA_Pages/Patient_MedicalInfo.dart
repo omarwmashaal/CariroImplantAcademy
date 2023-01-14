@@ -60,7 +60,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientTreatmentPlan(),
     _PatientSurgicalTreatment(),
     Container(),
-    Container(),
+    _Patient_CBCTandPhotos(),
   ];
   int index = 0;
 
@@ -91,120 +91,10 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Row(
-                    children: [
-                      Obx(() => TitleWidget(
-                            showBackButton: true,
-                            title: siteController.title.value,
-                          )),
-                      Obx(() => tabsController.index.value == 5
-                          ? CIA_SecondaryButton(
-                              label: "Colored Page",
-                              onTab: () {
-                                CIA_ShowPopUp(
-                                  size: 500,
-                                  context: context,
-                                  title: "Colored Page",
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        FormTextKeyWidget(
-                                            text: "Guided Bone Regeneration"),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_MultiSelectChipWidget(
-                                          labels: [
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Block Graft"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Chin"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Ramus"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Tuberosity"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Disc"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Piezo"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Bone Particle"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "100% Autogenous"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "100% Xenograft"),
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "ACM Bur"),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            suffix: "%",
-                                            label: "Auto Xeno %",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            label: "Tuberosity Other Specify",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            label: "Cut by",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            label: "No of Screws",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            label: "Area",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_TextFormField(
-                                            label: "Notes",
-                                            controller:
-                                                TextEditingController()),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        FormTextKeyWidget(
-                                            text: "Open Sinus Lift"),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        CIA_MultiSelectChipWidget(
-                                          labels: [
-                                            CIA_MultiSelectChipWidgeModel(
-                                                label: "Approach"),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            )
-                          : SizedBox())
-                    ],
-                  ),
+                  child: Obx(() => TitleWidget(
+                        showBackButton: true,
+                        title: siteController.title.value,
+                      )),
                 ),
                 Expanded(
                   flex: 10,
@@ -1329,5 +1219,92 @@ class _PatientProstheticTreatmentState
   @override
   Widget build(BuildContext context) {
     return Container();
+  }
+}
+
+class _Patient_CBCTandPhotos extends StatefulWidget {
+  const _Patient_CBCTandPhotos({Key? key}) : super(key: key);
+
+  @override
+  State<_Patient_CBCTandPhotos> createState() => _Patient_CBCTandPhotosState();
+}
+
+class _Patient_CBCTandPhotosState extends State<_Patient_CBCTandPhotos> {
+  bool? done;
+  String reason = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return CIA_MedicalPagesWidget(
+      children: [
+        Row(
+          children: [
+            FormTextKeyWidget(text: "Status"),
+            SizedBox(width: 10),
+            CIA_MultiSelectChipWidget(
+                singleSelect: true,
+                onChange: (item, isSelected) {
+                  if (item == "done") {
+                    done = true;
+                  } else if (item == "notDone") {
+                    done = false;
+                  }
+                  setState(() {});
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(label: "Done", value: "done"),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Not Done", value: "notDone"),
+                ]),
+            SizedBox(width: 10),
+            Visibility(
+              visible: done != null && !done!,
+              child: Expanded(
+                child: CIA_DropDown(
+                  selectedValue: reason,
+                  onSelect: (value) {
+                    reason = value;
+                    setState(() {});
+                  },
+                  label: "Reason",
+                  values: [
+                    "Patient's Desire",
+                    "Waiting for scan applicance",
+                    "Work required before CBCT",
+                    "Other"
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            done != null && !done! && reason == "Other"
+                ? Expanded(
+                    child: CIA_TextFormField(
+                        label: "Other", controller: TextEditingController()),
+                  )
+                : Expanded(child: SizedBox())
+          ],
+        ),
+        Wrap(
+          children: [
+            Visibility(
+                visible: done != null && done!,
+                child: Container(
+                  width:300,
+                  child: CIA_TextFormField(
+                      label: "Date", controller: TextEditingController()),
+                )),
+          ],
+        ),
+        Wrap(
+          children: [
+            Container(
+                width: 150,
+                child: CIA_SecondaryButton(
+                    label: "Request new CBCT", onTab: () {})),
+          ],
+        )
+      ],
+    );
   }
 }

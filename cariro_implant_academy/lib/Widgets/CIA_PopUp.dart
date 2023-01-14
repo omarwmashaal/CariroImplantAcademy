@@ -175,10 +175,13 @@ CIA_ShowPopUp(
   Alert(
     context: context,
     title: title,
-    content: SizedBox(
-      width: size == null ? 400 : size,
-      child: child,
-    ),
+    content: StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      return SizedBox(
+        width: size == null ? 400 : size,
+        child: child,
+      );
+    }),
     buttons: [
       DialogButton(
         color: Color_Accent,

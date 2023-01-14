@@ -6,12 +6,17 @@ import '../Constants/Colors.dart';
 
 class CIA_DropDown extends StatefulWidget {
   CIA_DropDown(
-      {Key? key, this.onSelect, required this.label, required this.values})
+      {Key? key,
+      this.onSelect,
+      required this.label,
+      this.selectedValue,
+      required this.values})
       : super(key: key);
 
   String label;
   List<String> values;
   Function? onSelect;
+  String? selectedValue;
   @override
   State<CIA_DropDown> createState() => _CIA_DropDownState();
 }
@@ -29,6 +34,8 @@ class _CIA_DropDownState extends State<CIA_DropDown> {
   @override
   Widget build(BuildContext context) {
     return TextDropdownFormField(
+      controller: DropdownEditingController(
+          value: widget.selectedValue == null ? "" : widget.selectedValue),
       onChanged: (dynamic value) {
         if (widget.onSelect != null) {
           widget.onSelect!(value);

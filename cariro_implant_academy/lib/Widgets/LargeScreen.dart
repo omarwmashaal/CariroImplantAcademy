@@ -109,57 +109,63 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
             flex: 7,
             child: Column(
               children: [
-                GetBuilder<SiteController>(
-                    builder: (siteController) => Container(
-                          height: 50,
+                Container(
+                  color: Color_Background,
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      GetBuilder<SiteController>(
+                          builder: (siteController) =>
+                              siteController.appBarWidget),
+                      Expanded(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              siteController.appBarWidget,
-                              Expanded(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  CIA_DropDown2(
-                                    iconButton: Icon(Icons.notifications),
-                                    notifications: [
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content:
-                                              "akdhaasdasdasdasdasdasdasdasdasdasdsadsadssl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghasadasdaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                      NotificationModel(
-                                          title: "title 1",
-                                          content: "akdhasl;fghaskljf"),
-                                    ],
-                                  ),
-                                  SizedBox(width: 30),
-                                  Image.asset("assets/user.png"),
-                                  SizedBox(
-                                    width: 20,
-                                  )
-                                ],
-                              ))
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CIA_DropDown2(
+                            customButton: Icon(Icons.notifications),
+                            notifications: [
+                              NotificationModel(
+                                  title: "title 1",
+                                  content:
+                                      "akdhaasdasdasdasdasdasdasdasdasdasdsadsadssl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghasadasdaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
+                              NotificationModel(
+                                  title: "title 1",
+                                  content: "akdhasl;fghaskljf"),
                             ],
                           ),
-                        )),
+                          SizedBox(width: 30),
+                          GestureDetector(
+                              onTap: () {
+                                pagesController.jumpToPage(6);
+                              },
+                              child: Image.asset("assets/user.png")),
+                          SizedBox(
+                            width: 20,
+                          )
+                        ],
+                      ))
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: Container(
                     color: Color_Background,

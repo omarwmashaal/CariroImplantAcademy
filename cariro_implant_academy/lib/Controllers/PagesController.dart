@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../Constants/Controllers.dart';
 import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
+import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
@@ -51,6 +52,9 @@ class PagesController extends PageController {
               ),
               Container(
                 child: CashFlowsSearchPage(),
+              ),
+              Container(
+                child: CIA_MyProfilePage(),
               ),
             ],
           );
