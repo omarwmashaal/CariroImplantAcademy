@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../../Widgets/CIA_StepTimelineWidget.dart';
+import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 
@@ -304,7 +304,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                   ),
                   Expanded(child: SizedBox()),
                   Expanded(
-                    child: CIA_StepTimelineWidget(steps: request.Steps),
+                    child: CIA_LAB_StepTimelineWidget(steps: request.Steps),
                   )
                 ],
               ),

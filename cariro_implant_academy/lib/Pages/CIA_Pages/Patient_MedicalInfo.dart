@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
     _PatientSurgicalTreatment(),
-    Container(),
+    _PatientProstheticTreatment(),
     _Patient_CBCTandPhotos(),
   ];
   int index = 0;
@@ -1218,7 +1219,118 @@ class _PatientProstheticTreatmentState
     extends State<_PatientProstheticTreatment> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_MedicalPagesWidget(
+      children: [
+        Column(
+          children: _buildWidgets(),
+        )
+      ],
+    );
+  }
+
+  _buildWidgets() {
+    List<Widget> r = [];
+    List<String> teeth = [];
+    for (String key in MasterController.TreatmentPlan.keys) {
+      if (MasterController.TreatmentPlan[key] != null) {
+        if ((MasterController.TreatmentPlan[key]?.guidedImplant != null &&
+            MasterController.TreatmentPlan[key]?.guidedImplant?.status
+                as bool)) {
+          teeth.add(key);
+        } else if (MasterController.TreatmentPlan[key]?.immediateImplant !=
+                null &&
+            MasterController.TreatmentPlan[key]?.immediateImplant?.status
+                as bool) {
+          teeth.add(key);
+        } else if (MasterController.TreatmentPlan[key]?.simpleImplant != null &&
+            MasterController.TreatmentPlan[key]?.simpleImplant?.status
+                as bool) {
+          teeth.add(key);
+        }
+      }
+    }
+    for (String tooth in teeth) {
+      r.add(_ProstheticWidget(
+        tooth: tooth,
+      ));
+    }
+    return r;
+  }
+}
+
+class _ProstheticWidget extends StatefulWidget {
+  _ProstheticWidget({Key? key, required this.tooth}) : super(key: key);
+  String tooth;
+  @override
+  State<_ProstheticWidget> createState() => _ProstheticWidgetState();
+}
+
+class _ProstheticWidgetState extends State<_ProstheticWidget> {
+  int? myActiveIndex = null;
+  List<StepModel> stepModels = [
+    StepModel(name: "Exposure", stepStatus: StepStatus_.Done),
+    StepModel(name: "Impression", stepStatus: StepStatus_.InProgress),
+    StepModel(name: "Follow Up", stepStatus: StepStatus_.NotYet),
+    StepModel(name: "Try In", stepStatus: StepStatus_.NotYet),
+    StepModel(name: "Verification Jig", stepStatus: StepStatus_.NotYet),
+    StepModel(name: "Delivery", stepStatus: StepStatus_.NotYet),
+  ];
+  bool leftEnabled = true;
+  bool rightEnabled = true;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 20,
+        ),
+        Row(
+          children: [
+            Text(
+              "Tooth: " + widget.tooth,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
+            ),
+            SizedBox(width: 10),
+            GestureDetector(
+                onTap: () {
+                  try {
+                    if (myActiveIndex! != 0)
+                      myActiveIndex = (myActiveIndex as int) - 1;
+                    setState(() {});
+                  } catch (e) {}
+                },
+                child: Icon(Icons.keyboard_arrow_left)),
+            SizedBox(width: 10),
+            GestureDetector(
+                onTap: () {
+                  try {
+                    if (myActiveIndex! !=
+                        stepModels.indexWhere((element) =>
+                            element.stepStatus == StepStatus_.InProgress))
+                      myActiveIndex = (myActiveIndex as int) + 1;
+
+                    setState(() {});
+                  } catch (e) {}
+                },
+                child: Icon(Icons.keyboard_arrow_right)),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        myActiveIndex != null
+            ? Text(stepModels[myActiveIndex!].name)
+            : Text(""),
+        CIA_StepTimelineWidget(activeIndex_: myActiveIndex, steps: stepModels),
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    myActiveIndex = stepModels
+        .indexWhere((element) => element.stepStatus == StepStatus_.InProgress);
   }
 }
 
@@ -1290,7 +1402,7 @@ class _Patient_CBCTandPhotosState extends State<_Patient_CBCTandPhotos> {
             Visibility(
                 visible: done != null && done!,
                 child: Container(
-                  width:300,
+                  width: 300,
                   child: CIA_TextFormField(
                       label: "Date", controller: TextEditingController()),
                 )),

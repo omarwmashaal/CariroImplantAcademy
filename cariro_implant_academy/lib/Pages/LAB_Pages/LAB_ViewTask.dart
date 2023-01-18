@@ -7,8 +7,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../Models/LAB_RequestModel.dart';
 import '../../Widgets/CIA_DropDown.dart';
+import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
-import '../../Widgets/CIA_StepTimelineWidget.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 
@@ -229,7 +229,7 @@ class LAB_ViewTaskPage extends StatelessWidget {
                   ),
                   Expanded(child: SizedBox()),
                   Expanded(
-                    child: CIA_StepTimelineWidget(
+                    child: CIA_LAB_StepTimelineWidget(
                       steps: task.Steps,
                       isTask: true,
                     ),
