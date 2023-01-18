@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../Constants/Fonts.dart';
+import '../../Models/CashFlowCategorySumamryModel.dart';
 import '../../Models/CashFlowSumamryModel.dart';
 import '../../Models/ExpensesModel.dart';
 import '../../Widgets/CIA_IncrementalExpensesTextField.dart';
@@ -44,6 +46,9 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
   bool weekSelected = false;
   bool monthSelected = true;
   bool yearSelected = false;
+  String selectedCategory = "";
+
+  PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -228,119 +233,374 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                   columnNames: IncomeInfoModel.columns,
                   dataSource: widget.e_dataSource,
                   onCellClick: (value) {
-                    if (widget.onExpenseRowClick != null)
-                      widget.onExpenseRowClick!(value);
+                    selectedCategory =
+                        CashFlowSummaryDataSource().models[value - 2].Category!;
+                    _controller.jumpToPage(1);
                   }),
             ),
           ],
         ),
-        Column(
+        PageView.builder(
+            controller: _controller,
+            itemBuilder: (BuildContext context, int index) {
+              var pages = [
+                Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        weekSelected
+                            ? CIA_PrimaryButton(
+                                label: "This Week", isLong: true, onTab: () {})
+                            : CIA_SecondaryButton(
+                                label: "This Week",
+                                onTab: () {
+                                  setState(() {
+                                    weekSelected = true;
+                                    monthSelected = false;
+                                    yearSelected = false;
+                                  });
+                                }),
+                        SizedBox(width: 10),
+                        monthSelected
+                            ? CIA_PrimaryButton(
+                                label: "This Month", isLong: true, onTab: () {})
+                            : CIA_SecondaryButton(
+                                label: "This Month",
+                                onTab: () {
+                                  setState(() {
+                                    weekSelected = false;
+                                    monthSelected = true;
+                                    yearSelected = false;
+                                  });
+                                }),
+                        SizedBox(width: 10),
+                        yearSelected
+                            ? CIA_PrimaryButton(
+                                label: "This Year", isLong: true, onTab: () {})
+                            : CIA_SecondaryButton(
+                                label: "This Year",
+                                onTab: () {
+                                  setState(() {
+                                    weekSelected = false;
+                                    monthSelected = false;
+                                    yearSelected = true;
+                                  });
+                                }),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CIA_Table(
+                                showGridLines: true,
+                                showSum: true,
+                                title: "Expenses Summary",
+                                columnNames: CashFlowSummaryModel.columns,
+                                dataSource: widget.eS_dataSource == null
+                                    ? CashFlowSummaryDataSource()
+                                    : widget.eS_dataSource
+                                        as CashFlowSummaryDataSource,
+                                onCellClick: (value) {
+                                  selectedCategory = CashFlowSummaryDataSource()
+                                      .models[value - 2]
+                                      .Category!;
+                                  _controller.jumpToPage(1);
+                                }),
+                          ),
+                          SizedBox(width: 30),
+                          Expanded(
+                              child: Column(
+                            children: [
+                              Expanded(
+                                child: CIA_Table(
+                                    showSum: true,
+                                    showGridLines: true,
+                                    title: "Income Summary",
+                                    columnNames: CashFlowSummaryModel.columns,
+                                    dataSource: widget.iS_dataSource == null
+                                        ? CashFlowSummaryDataSource()
+                                        : widget.iS_dataSource
+                                            as CashFlowSummaryDataSource,
+                                    onCellClick: (value) {
+                                      try {
+                                        selectedCategory =
+                                            CashFlowSummaryDataSource()
+                                                .models[value - 2]
+                                                .Category!;
+                                        _controller.jumpToPage(1);
+                                      } catch (e) {}
+                                    }),
+                              ),
+                              SizedBox(height: 30),
+                              Expanded(
+                                child: CIA_Table(
+                                    showSum: true,
+                                    showGridLines: true,
+                                    title: "Doctors Income Summary",
+                                    columnNames: CashFlowSummaryModel.columns,
+                                    dataSource: widget.diS_dataSource == null
+                                        ? CashFlowSummaryDataSource()
+                                        : widget.diS_dataSource
+                                            as CashFlowSummaryDataSource,
+                                    onCellClick: (value) {
+                                      selectedCategory =
+                                          CashFlowSummaryDataSource()
+                                              .models[value - 2]
+                                              .Category!;
+                                      _controller.jumpToPage(1);
+                                    }),
+                              )
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              _controller.jumpToPage(0);
+                            },
+                            icon: Icon(Icons.arrow_back)),
+                        Expanded(
+                            child: Center(
+                                child: Text(
+                          selectedCategory,
+                          style: TextStyle(
+                              fontFamily: Inter_ExtraBold, fontSize: 20),
+                        )))
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: CIA_Table(
+                          columnNames: CashFlowCategorySummaryModel.columns,
+                          dataSource: CashFlowCategorySummaryDataSource(),
+                          onCellClick: (value) {}),
+                    ),
+                  ],
+                ),
+              ];
+              return pages[index];
+            })
+        /*PageView(
+          controller: _controller,
           children: [
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                weekSelected
-                    ? CIA_PrimaryButton(
-                        label: "This Week", isLong: true, onTab: () {})
-                    : CIA_SecondaryButton(
-                        label: "This Week",
-                        onTab: () {
-                          setState(() {
-                            weekSelected = true;
-                            monthSelected = false;
-                            yearSelected = false;
-                          });
-                        }),
-                SizedBox(width: 10),
-                monthSelected
-                    ? CIA_PrimaryButton(
-                        label: "This Month", isLong: true, onTab: () {})
-                    : CIA_SecondaryButton(
-                        label: "This Month",
-                        onTab: () {
-                          setState(() {
-                            weekSelected = false;
-                            monthSelected = true;
-                            yearSelected = false;
-                          });
-                        }),
-                SizedBox(width: 10),
-                yearSelected
-                    ? CIA_PrimaryButton(
-                        label: "This Year", isLong: true, onTab: () {})
-                    : CIA_SecondaryButton(
-                        label: "This Year",
-                        onTab: () {
-                          setState(() {
-                            weekSelected = false;
-                            monthSelected = false;
-                            yearSelected = true;
-                          });
-                        }),
-              ],
-            ),
-            SizedBox(height: 10),
-            Expanded(
-              flex: 5,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CIA_Table(
-                        showGridLines: true,
-                        showSum: true,
-                        title: "Expenses Summary",
-                        columnNames: CashFlowSummaryModel.columns,
-                        dataSource: widget.eS_dataSource == null
-                            ? CashFlowSummaryDataSource()
-                            : widget.eS_dataSource as CashFlowSummaryDataSource,
-                        onCellClick: (value) {
-                          if (widget.onExpenseRowClick != null)
-                            widget.onExpenseRowClick!(value);
-                        }),
-                  ),
-                  SizedBox(width: 30),
-                  Expanded(
-                      child: Column(
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    weekSelected
+                        ? CIA_PrimaryButton(
+                            label: "This Week", isLong: true, onTab: () {})
+                        : CIA_SecondaryButton(
+                            label: "This Week",
+                            onTab: () {
+                              setState(() {
+                                weekSelected = true;
+                                monthSelected = false;
+                                yearSelected = false;
+                              });
+                            }),
+                    SizedBox(width: 10),
+                    monthSelected
+                        ? CIA_PrimaryButton(
+                            label: "This Month", isLong: true, onTab: () {})
+                        : CIA_SecondaryButton(
+                            label: "This Month",
+                            onTab: () {
+                              setState(() {
+                                weekSelected = false;
+                                monthSelected = true;
+                                yearSelected = false;
+                              });
+                            }),
+                    SizedBox(width: 10),
+                    yearSelected
+                        ? CIA_PrimaryButton(
+                            label: "This Year", isLong: true, onTab: () {})
+                        : CIA_SecondaryButton(
+                            label: "This Year",
+                            onTab: () {
+                              setState(() {
+                                weekSelected = false;
+                                monthSelected = false;
+                                yearSelected = true;
+                              });
+                            }),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  flex: 5,
+                  child: Row(
                     children: [
                       Expanded(
                         child: CIA_Table(
-                            showSum: true,
                             showGridLines: true,
-                            title: "Income Summary",
+                            showSum: true,
+                            title: "Expenses Summary",
                             columnNames: CashFlowSummaryModel.columns,
-                            dataSource: widget.iS_dataSource == null
+                            dataSource: widget.eS_dataSource == null
                                 ? CashFlowSummaryDataSource()
-                                : widget.iS_dataSource
+                                : widget.eS_dataSource
                                     as CashFlowSummaryDataSource,
                             onCellClick: (value) {
                               if (widget.onExpenseRowClick != null)
                                 widget.onExpenseRowClick!(value);
                             }),
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(width: 30),
+                      Expanded(
+                          child: Column(
+                        children: [
+                          Expanded(
+                            child: CIA_Table(
+                                showSum: true,
+                                showGridLines: true,
+                                title: "Income Summary",
+                                columnNames: CashFlowSummaryModel.columns,
+                                dataSource: widget.iS_dataSource == null
+                                    ? CashFlowSummaryDataSource()
+                                    : widget.iS_dataSource
+                                        as CashFlowSummaryDataSource,
+                                onCellClick: (value) {
+                                  try {
+                                    selectedCategory =
+                                        CashFlowSummaryDataSource()
+                                            .models[value - 2]
+                                            .Category!;
+                                    _controller.jumpToPage(1);
+                                  } catch (e) {}
+                                }),
+                          ),
+                          SizedBox(height: 30),
+                          Expanded(
+                            child: CIA_Table(
+                                showSum: true,
+                                showGridLines: true,
+                                title: "Doctors Income Summary",
+                                columnNames: CashFlowSummaryModel.columns,
+                                dataSource: widget.diS_dataSource == null
+                                    ? CashFlowSummaryDataSource()
+                                    : widget.diS_dataSource
+                                        as CashFlowSummaryDataSource,
+                                onCellClick: (value) {
+                                  selectedCategory = CashFlowSummaryDataSource()
+                                      .models[value - 2]
+                                      .Category!;
+                                  _controller.jumpToPage(1);
+                                }),
+                          )
+                        ],
+                      ))
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          _controller.jumpToPage(0);
+                        },
+                        icon: Icon(Icons.arrow_back)),
+                    Expanded(
+                        child: Center(
+                            child: Text(
+                      selectedCategory,
+                      style:
+                          TextStyle(fontFamily: Inter_ExtraBold, fontSize: 20),
+                    )))
+                  ],
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    children: [
                       Expanded(
                         child: CIA_Table(
-                            showSum: true,
                             showGridLines: true,
-                            title: "Doctors Income Summary",
+                            showSum: true,
+                            title: "Expenses Summary",
                             columnNames: CashFlowSummaryModel.columns,
-                            dataSource: widget.diS_dataSource == null
+                            dataSource: widget.eS_dataSource == null
                                 ? CashFlowSummaryDataSource()
-                                : widget.diS_dataSource
+                                : widget.eS_dataSource
                                     as CashFlowSummaryDataSource,
                             onCellClick: (value) {
                               if (widget.onExpenseRowClick != null)
                                 widget.onExpenseRowClick!(value);
                             }),
-                      )
+                      ),
+                      SizedBox(width: 30),
+                      Expanded(
+                          child: Column(
+                        children: [
+                          Expanded(
+                            child: CIA_Table(
+                                showSum: true,
+                                showGridLines: true,
+                                title: "Income Summary",
+                                columnNames: CashFlowSummaryModel.columns,
+                                dataSource: widget.iS_dataSource == null
+                                    ? CashFlowSummaryDataSource()
+                                    : widget.iS_dataSource
+                                        as CashFlowSummaryDataSource,
+                                onCellClick: (value) {
+                                  try {
+                                    selectedCategory =
+                                        CashFlowSummaryDataSource()
+                                            .models[value - 2]
+                                            .Category!;
+                                    _controller.jumpToPage(1);
+                                  } catch (e) {}
+                                }),
+                          ),
+                          SizedBox(height: 30),
+                          Expanded(
+                            child: CIA_Table(
+                                showSum: true,
+                                showGridLines: true,
+                                title: "Doctors Income Summary",
+                                columnNames: CashFlowSummaryModel.columns,
+                                dataSource: widget.diS_dataSource == null
+                                    ? CashFlowSummaryDataSource()
+                                    : widget.diS_dataSource
+                                        as CashFlowSummaryDataSource,
+                                onCellClick: (value) {
+                                  selectedCategory = CashFlowSummaryDataSource()
+                                      .models[value - 2]
+                                      .Category!;
+                                  _controller.jumpToPage(1);
+                                }),
+                          )
+                        ],
+                      ))
                     ],
-                  ))
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
           ],
-        )
+        )*/
       ],
     );
 
