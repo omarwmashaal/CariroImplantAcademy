@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class CIA_PrimaryButton extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
-                      fontWeight: FontWeight.w900),
+                      fontFamily: Inter_SemiBold),
                 ),
               ),
             ),

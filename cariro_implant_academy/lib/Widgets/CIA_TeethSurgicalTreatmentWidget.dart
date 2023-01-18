@@ -1784,7 +1784,8 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
           },
           child: Align(
               alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_upward_rounded, color: Color_Accent)),
+              child:
+                  Icon(Icons.keyboard_arrow_up_rounded, color: Color_Accent)),
         )
       ],
     );

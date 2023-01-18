@@ -8,21 +8,27 @@ late Function GlobalLoadFunction;
 
 class CIA_Table extends StatefulWidget {
   /// Creates the home page.
-  CIA_Table({
-    Key? key,
-    this.loadFunction,
-    //required this.models,
-    required this.columnNames,
-    this.onCellClick,
-    this.isTreatment = false,
-    required this.dataSource,
-  }) : super(key: key);
+  CIA_Table(
+      {Key? key,
+      this.loadFunction,
+      //required this.models,
+      required this.columnNames,
+      this.onCellClick,
+      this.isTreatment = false,
+      required this.dataSource,
+      this.title,
+      this.showSum = false,
+      this.showGridLines = false})
+      : super(key: key);
 
   List<String> columnNames;
   DataGridSource dataSource;
   Function? loadFunction;
   Function? onCellClick;
   bool? isTreatment;
+  String? title;
+  bool showGridLines;
+  bool showSum;
 
   // List<Object> models;
   @override
@@ -49,6 +55,39 @@ class _CIA_TableState extends State<CIA_Table> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return SfDataGrid(
+            highlightRowOnHover: true,
+            gridLinesVisibility: widget.showGridLines
+                ? GridLinesVisibility.both
+                : GridLinesVisibility.horizontal,
+            headerGridLinesVisibility: widget.showGridLines
+                ? GridLinesVisibility.both
+                : GridLinesVisibility.horizontal,
+            tableSummaryRows: widget.showSum
+                ? [
+                    GridTableSummaryRow(
+                        showSummaryInRow: true,
+                        title: '{Sum}',
+                        columns: [
+                          GridSummaryColumn(
+                              name: 'Sum',
+                              columnName: 'Amount',
+                              summaryType: GridSummaryType.sum),
+                        ],
+                        position: GridTableSummaryRowPosition.bottom),
+                  ]
+                : [],
+            stackedHeaderRows: widget.title != null
+                ? [
+                    StackedHeaderRow(cells: [
+                      StackedHeaderCell(
+                          columnNames: widget.columnNames,
+                          child: Container(
+                              alignment: Alignment.center,
+                              color: Color_Accent,
+                              child: Text(widget.title as String)))
+                    ])
+                  ]
+                : [],
             source: widget.dataSource,
             /*loadMoreViewBuilder: (BuildContext context, LoadMoreRows loadMoreRows) {
           Future loadRows() async {
@@ -89,7 +128,7 @@ class _CIA_TableState extends State<CIA_Table> {
             columnWidthMode: widget.isTreatment!
                 ? ColumnWidthMode.lastColumnFill
                 : ColumnWidthMode.fill,
-            allowFiltering: true,
+            // allowFiltering: true,
             navigationMode: GridNavigationMode.row,
             onCellTap: (value) {
               if (widget.onCellClick != null) {
@@ -122,6 +161,7 @@ class _CIA_TableState extends State<CIA_Table> {
               alignment: Alignment.center,
               child: Text(
                 name,
+                style: TextStyle(fontWeight: FontWeight.w900),
               ))));
     }
     return returnValue;

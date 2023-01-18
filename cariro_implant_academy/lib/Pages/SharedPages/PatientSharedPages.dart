@@ -372,11 +372,13 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CIA_SecondaryButton(
-                            label: "Patient Arrive", onTab: () {}),
+                            width: 150, label: "Patient Arrive", onTab: () {}),
                         CIA_SecondaryButton(
-                            label: "Patient Arrive", onTab: () {}),
+                            width: 180,
+                            label: "Patient Enters Clinic",
+                            onTab: () {}),
                         CIA_SecondaryButton(
-                            label: "Patient Arrive", onTab: () {}),
+                            width: 150, label: "Patient Leaves", onTab: () {}),
                       ],
                     )),
                 Expanded(
@@ -388,7 +390,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                         Icons.add,
                         color: Colors.white,
                       ),
-                      width: 180,
+                      width: 200,
                       label: "Schedule new visit",
                       onTab: () {
                         CIA_PopupDialog_DateTimePicker(

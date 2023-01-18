@@ -2,11 +2,13 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/IncomeModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../Models/CashFlowSumamryModel.dart';
 import '../../Models/ExpensesModel.dart';
 import '../../Widgets/CIA_IncrementalExpensesTextField.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
@@ -18,11 +20,17 @@ class CashFlowSharedPage extends StatefulWidget {
     Key? key,
     required this.i_dataSource,
     required this.e_dataSource,
+    this.eS_dataSource,
+    this.iS_dataSource,
+    this.diS_dataSource,
     this.onIncomeRowClick,
     this.onExpenseRowClick,
   }) : super(key: key);
   IncomeDataSource i_dataSource;
   ExpensesDataSource e_dataSource;
+  CashFlowSummaryDataSource? eS_dataSource;
+  CashFlowSummaryDataSource? iS_dataSource;
+  CashFlowSummaryDataSource? diS_dataSource;
   Function? onIncomeRowClick;
   Function? onExpenseRowClick;
 
@@ -32,6 +40,10 @@ class CashFlowSharedPage extends StatefulWidget {
 
 class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
   int selectedPage = 0;
+
+  bool weekSelected = false;
+  bool monthSelected = true;
+  bool yearSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +234,113 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
             ),
           ],
         ),
+        Column(
+          children: [
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                weekSelected
+                    ? CIA_PrimaryButton(
+                        label: "This Week", isLong: true, onTab: () {})
+                    : CIA_SecondaryButton(
+                        label: "This Week",
+                        onTab: () {
+                          setState(() {
+                            weekSelected = true;
+                            monthSelected = false;
+                            yearSelected = false;
+                          });
+                        }),
+                SizedBox(width: 10),
+                monthSelected
+                    ? CIA_PrimaryButton(
+                        label: "This Month", isLong: true, onTab: () {})
+                    : CIA_SecondaryButton(
+                        label: "This Month",
+                        onTab: () {
+                          setState(() {
+                            weekSelected = false;
+                            monthSelected = true;
+                            yearSelected = false;
+                          });
+                        }),
+                SizedBox(width: 10),
+                yearSelected
+                    ? CIA_PrimaryButton(
+                        label: "This Year", isLong: true, onTab: () {})
+                    : CIA_SecondaryButton(
+                        label: "This Year",
+                        onTab: () {
+                          setState(() {
+                            weekSelected = false;
+                            monthSelected = false;
+                            yearSelected = true;
+                          });
+                        }),
+              ],
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              flex: 5,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CIA_Table(
+                        showGridLines: true,
+                        showSum: true,
+                        title: "Expenses Summary",
+                        columnNames: CashFlowSummaryModel.columns,
+                        dataSource: widget.eS_dataSource == null
+                            ? CashFlowSummaryDataSource()
+                            : widget.eS_dataSource as CashFlowSummaryDataSource,
+                        onCellClick: (value) {
+                          if (widget.onExpenseRowClick != null)
+                            widget.onExpenseRowClick!(value);
+                        }),
+                  ),
+                  SizedBox(width: 30),
+                  Expanded(
+                      child: Column(
+                    children: [
+                      Expanded(
+                        child: CIA_Table(
+                            showSum: true,
+                            showGridLines: true,
+                            title: "Income Summary",
+                            columnNames: CashFlowSummaryModel.columns,
+                            dataSource: widget.iS_dataSource == null
+                                ? CashFlowSummaryDataSource()
+                                : widget.iS_dataSource
+                                    as CashFlowSummaryDataSource,
+                            onCellClick: (value) {
+                              if (widget.onExpenseRowClick != null)
+                                widget.onExpenseRowClick!(value);
+                            }),
+                      ),
+                      SizedBox(height: 30),
+                      Expanded(
+                        child: CIA_Table(
+                            showSum: true,
+                            showGridLines: true,
+                            title: "Doctors Income Summary",
+                            columnNames: CashFlowSummaryModel.columns,
+                            dataSource: widget.diS_dataSource == null
+                                ? CashFlowSummaryDataSource()
+                                : widget.diS_dataSource
+                                    as CashFlowSummaryDataSource,
+                            onCellClick: (value) {
+                              if (widget.onExpenseRowClick != null)
+                                widget.onExpenseRowClick!(value);
+                            }),
+                      )
+                    ],
+                  ))
+                ],
+              ),
+            ),
+          ],
+        )
       ],
     );
 
@@ -402,6 +521,6 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["Income", "Expenses"]);
+    siteController.setAppBarWidget(tabs: ["Income", "Expenses", "Summary"]);
   }
 }

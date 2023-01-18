@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -43,9 +44,10 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
                 child: Text(
                   widget.label,
                   style: TextStyle(
-                      color: Color_TextPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
+                    color: Color_TextPrimary,
+                    fontFamily: Inter_Regular,
+                    fontSize: 13,
+                  ),
                 ),
               ),
             ),
