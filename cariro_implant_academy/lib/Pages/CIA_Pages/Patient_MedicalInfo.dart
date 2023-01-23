@@ -1319,9 +1319,18 @@ class _ProstheticWidgetState extends State<_ProstheticWidget> {
         SizedBox(
           height: 20,
         ),
-        myActiveIndex != null
-            ? Text(stepModels[myActiveIndex!].name)
-            : Text(""),
+        Row(
+          children: [
+            FormTextKeyWidget(text: "Current Selected State"),
+            SizedBox(width: 10),
+            myActiveIndex != null
+                ? FormTextValueWidget(text: stepModels[myActiveIndex!].name)
+                : Text(""),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
         CIA_StepTimelineWidget(activeIndex_: myActiveIndex, steps: stepModels),
       ],
     );
