@@ -17,6 +17,8 @@ class CIA_TextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.borderColor,
     this.suffix,
+    this.borderColorOnChange,
+    this.changeColorIfFilled = false,
     required this.controller,
   }) : super(key: key);
 
@@ -31,6 +33,8 @@ class CIA_TextFormField extends StatefulWidget {
   TextEditingController controller;
   bool isNumber;
   String? suffix;
+  bool changeColorIfFilled;
+  Color? borderColorOnChange;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -95,9 +99,13 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           prefixIconColor: focus.hasFocus ? Colors.red : null,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-                color: widget.borderColor == null
-                    ? Color_TextFieldBorder
-                    : widget.borderColor!,
+                color: widget.changeColorIfFilled &&
+                        widget.controller.text != "" &&
+                        widget.borderColorOnChange != null
+                    ? widget.borderColorOnChange!
+                    : widget.borderColor == null
+                        ? Color_TextFieldBorder
+                        : widget.borderColor!,
                 width: 0.0),
             borderRadius: BorderRadius.circular(8),
           ),

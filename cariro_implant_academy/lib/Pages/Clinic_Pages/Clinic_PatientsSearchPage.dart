@@ -19,8 +19,7 @@ class Clinic_PatientsSearchPage extends StatefulWidget {
 
 class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
   PatientDataSource dataSource = PatientDataSource();
-  late PatientInfoModel selectedPatient =
-      PatientInfoModel(1, "Name", "Phone", "MaritalStatus");
+  int patientID = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +42,9 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
             dataSource: dataSource,
             columnNames: PatientInfoModel.columns,
             onCellTab: (value) {
-              print(dataSource.models[value - 1].ID);
+              print(dataSource.models[value - 1].id);
               setState(() {
-                selectedPatient = dataSource.models[value - 1];
+                patientID = dataSource.models[value - 1].id!;
               });
               internalPagesController.jumpToPage(1);
             },
@@ -54,13 +53,13 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
         ]),
         Obx(() => (siteController.getRole() == "Secretary")
             ? ViewPatientPage(
-                patient: selectedPatient,
+                patientID: patientID,
               )
             : Clinic_PatientMedicalPage(
-                patient: selectedPatient,
+                patientID: patientID,
               )),
         ViewPatientPage(
-          patient: selectedPatient,
+          patientID: patientID,
         )
       ],
     );

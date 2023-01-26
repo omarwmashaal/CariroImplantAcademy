@@ -2,9 +2,12 @@ import 'package:cariro_implant_academy/Controllers/Auth_NavigationController.dar
 import 'package:cariro_implant_academy/Pages/Authentication/LoginPage.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/RegsiterPage.dart';
 import 'package:cariro_implant_academy/Routes/Routes.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../API/Authentication.dart';
 import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
 
@@ -26,12 +29,20 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     return Container(
         child: CurrentPage == LoginPageRoute
             ? LoginPage(
-                onLogin: () {
-                  Get.off(
-                      SiteLayout(
-                        largeScreen: CIA_LargeScreen(),
-                      ),
-                      duration: Duration(seconds: 0));
+                onLogin: (email, password) async {
+                  var login = await Authentication.Login(email, password);
+                  if (login.statusCode == 200) {
+                    Get.off(
+                        SiteLayout(
+                          largeScreen: CIA_LargeScreen(),
+                        ),
+                        duration: Duration(seconds: 0));
+                  } else {
+                    ShowSnackBar(
+                        isSuccess: false,
+                        title: "Login Failed",
+                        message: login.errorMessage!);
+                  }
                 },
                 onRegister: () =>
                     setState(() => CurrentPage = RegisterPageRoute),

@@ -1,15 +1,14 @@
+import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Widgets/TabsLayout.dart';
 import '../SharedPages/PatientSharedPages.dart';
 
 class ViewPatientPage extends StatefulWidget {
-  ViewPatientPage({Key? key, required this.patient}) : super(key: key);
+  ViewPatientPage({Key? key, required this.patientID}) : super(key: key);
 
-  PatientInfoModel patient;
+  int patientID;
 
   @override
   State<ViewPatientPage> createState() => _ViewPatientPageState();
@@ -22,12 +21,16 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
       controller: tabsController,
       children: [
         PatientInfo_SharedPage(
-          patient: widget.patient,
+          loadFunction: PatientAPI.GetPatientData,
+          patientID: widget.patientID,
         ),
-        PatientVisits_SharedPage(patient: widget.patient),
+        PatientVisits_SharedPage(
+          patientID: widget.patientID,
+          loadFunction: PatientAPI.GetVisitsLogs,
+        ),
       ],
     );
-    Column(
+    /*Column(
       children: [
         Expanded(
           child: TabsLayout(
@@ -42,7 +45,7 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
           ),
         ),
       ],
-    );
+    );*/
   }
 
   @override

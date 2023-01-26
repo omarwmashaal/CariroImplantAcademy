@@ -10,10 +10,10 @@ import '../../Widgets/TabsLayout.dart';
 import '../SharedPages/PatientSharedPages.dart';
 
 class Clinic_PatientMedicalPage extends StatelessWidget {
-  Clinic_PatientMedicalPage({Key? key, required this.patient})
+  Clinic_PatientMedicalPage({Key? key, required this.patientID})
       : super(key: key);
 
-  PatientInfoModel patient;
+  int patientID;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +26,14 @@ class Clinic_PatientMedicalPage extends StatelessWidget {
             tabs: ["Patient Data", "Visits Data", "Medical Treatment"],
             pages: [
               PatientInfo_SharedPage(
-                patient: patient,
+                patientID: patientID,
               ),
               PatientVisits_SharedPage(
-                patient: patient,
+                patientID: patientID,
               ),
-              _MedicalTreatment(
-                patient: patient,
-              ),
+              /*_MedicalTreatment(
+                patient: patientID,
+              ),*/
             ],
           ),
         ),
@@ -118,7 +118,7 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
                   children: [
                     FormTextKeyWidget(text: "for"),
                     SizedBox(width: 10),
-                    FormTextValueWidget(text: widget.patient.Name),
+                    FormTextValueWidget(text: widget.patient.name),
                   ],
                 ),
               )

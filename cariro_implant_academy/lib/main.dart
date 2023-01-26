@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 
 void main() {
@@ -60,5 +61,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
       backgroundColor: Color_Background,
     );
+  }
+
+  @override
+  void initState() {
+    TempPatientAPI.GetMedicalExamination(5);
   }
 }

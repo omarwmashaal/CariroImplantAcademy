@@ -1,5 +1,4 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +9,9 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/Title.dart';
+import 'Patient_MedicalInfo.dart';
+
+int selectedPatientID = 0;
 
 class PatientsSearchPage extends StatefulWidget {
   const PatientsSearchPage({Key? key}) : super(key: key);
@@ -20,8 +22,6 @@ class PatientsSearchPage extends StatefulWidget {
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
   PatientDataSource dataSource = PatientDataSource();
-  late PatientInfoModel selectedPatient =
-      PatientInfoModel(1, "Name", "Phone", "MaritalStatus");
   List<Widget> myPages = [];
   ValueNotifier<int> buildCount = ValueNotifier<int>(0);
 
@@ -34,6 +34,28 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
         return ValueListenableBuilder(
           valueListenable: buildCount,
           builder: (context, bldcnt, child) {
+            myPages = [
+              _PatientSearch(
+                key: GlobalKey(),
+                dataSource: dataSource,
+              ),
+              (siteController.getRole() == "Admin" ||
+                      siteController.getRole() == "Instructor")
+                  ? PatientMedicalInfoPage(
+                      key: GlobalKey(),
+                      patientMedicalController: PatientMedicalController(
+                          PatientInfoModel(1, "", "", "")),
+                      patientID: selectedPatientID,
+                    )
+                  : ViewPatientPage(
+                      key: GlobalKey(),
+                      patientID: selectedPatientID,
+                    ),
+              ViewPatientPage(
+                key: GlobalKey(),
+                patientID: selectedPatientID,
+              )
+            ];
             return myPages[i];
           },
         );
@@ -107,34 +129,31 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   void initState() {
     myPages = [
       _PatientSearch(
-          key: GlobalKey(),
-          dataSource: dataSource,
-          selectedPatient: selectedPatient),
-      (siteController.getRole() == "Admin" ||
+        key: GlobalKey(),
+        dataSource: dataSource,
+      ),
+      /*(siteController.getRole() == "Admin" ||
               siteController.getRole() == "Instructor")
           ? PatientMedicalInfoPage(
               key: GlobalKey(),
               patientMedicalController:
-                  PatientMedicalController(selectedPatient),
+                  PatientMedicalController(selectedPatientID),
             )
           : ViewPatientPage(
               key: GlobalKey(),
-              patient: selectedPatient,
-            ),
+              patient: selectedPatientID,
+            ),*/
       ViewPatientPage(
         key: GlobalKey(),
-        patient: selectedPatient,
+        patientID: selectedPatientID,
       )
     ];
   }
 }
 
 class _PatientSearch extends StatefulWidget {
-  _PatientSearch(
-      {Key? key, required this.dataSource, required this.selectedPatient})
-      : super(key: key);
+  _PatientSearch({Key? key, required this.dataSource}) : super(key: key);
 
-  PatientInfoModel selectedPatient;
   PatientDataSource dataSource;
 
   @override
@@ -176,9 +195,10 @@ class _PatientSearchState extends State<_PatientSearch> {
               dataSource: widget.dataSource,
               columnNames: PatientInfoModel.columns,
               onCellTab: (value) {
-                print(widget.dataSource.models[value - 1].ID);
+                print(widget.dataSource.models[value - 1].id);
                 setState(() {
-                  widget.selectedPatient = widget.dataSource.models[value - 1];
+                  selectedPatientID = widget.dataSource.models[value - 1].id!;
+                  print("");
                 });
 
                 internalPagesController.jumpToPage(1);

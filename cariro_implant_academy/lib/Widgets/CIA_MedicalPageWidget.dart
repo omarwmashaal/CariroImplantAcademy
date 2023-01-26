@@ -28,7 +28,7 @@ class CIA_MedicalPagesWidget extends StatelessWidget {
   }
 
   _buildItems() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    //await Future.delayed(Duration(milliseconds: 500));
     List<Widget> widgets = <Widget>[];
     widgets.add(SizedBox(height: 10));
     for (Widget child in children) {

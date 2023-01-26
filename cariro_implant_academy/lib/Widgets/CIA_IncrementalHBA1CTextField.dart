@@ -1,11 +1,14 @@
+import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/HBA1C_Model.dart';
-
 class CIA_IncrementalHBA1CTextField extends StatefulWidget {
-  CIA_IncrementalHBA1CTextField({Key? key}) : super(key: key);
+  CIA_IncrementalHBA1CTextField({Key? key, required this.model, this.onChange})
+      : super(key: key);
+
+  List<HbA1c> model;
+  Function? onChange;
 
   @override
   State<CIA_IncrementalHBA1CTextField> createState() =>
@@ -14,7 +17,8 @@ class CIA_IncrementalHBA1CTextField extends StatefulWidget {
 
 class _CIA_IncrementalHBA1CTextFieldState
     extends State<CIA_IncrementalHBA1CTextField> {
-  List<HBA1C_Model> items = [];
+  List<HbA1c> items = [];
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = _buildColumn();
@@ -26,48 +30,64 @@ class _CIA_IncrementalHBA1CTextFieldState
   List<Widget> _buildColumn() {
     List<Widget> returnValue = [];
     int index = 1;
-    for (HBA1C_Model item in items) {
-      returnValue.add(SizedBox(height: 10));
+    for (HbA1c item in items) {
+      returnValue.add(const SizedBox(height: 10));
       returnValue.add(Row(
         key: GlobalKey(),
         children: [
           Expanded(child: Text(index.toString())),
           Expanded(
               flex: 2,
-              child: new CIA_TextFormField(
-                onChange: (value) => item.reading = value,
+              child: CIA_TextFormField(
+                onChange: (value) {
+                  item.reading = value;
+                  if (widget.onChange != null) {
+                    widget.onChange!(items);
+                  }
+                },
                 label: "Reading",
-                controller: new TextEditingController(text: item.reading),
+                controller: TextEditingController(text: item.reading),
               )),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
               flex: 2,
-              child: new CIA_TextFormField(
-                onChange: (value) => item.date = value,
+              child: CIA_TextFormField(
+                onChange: (value) {
+                  item.date = value;
+                  if (widget.onChange != null) {
+                    widget.onChange!(items);
+                  }
+                },
                 label: "Date",
-                controller: new TextEditingController(text: item.date),
+                controller: TextEditingController(text: item.date),
               )),
           Expanded(
               child: items.last == item
                   ? IconButton(
                       onPressed: () {
+                        if (widget.onChange != null) {
+                          widget.onChange!(items);
+                        }
                         setState(() {
-                          items.add(HBA1C_Model(date: "", reading: ""));
+                          items.add(HbA1c(date: "", reading: ""));
                         });
                       },
                       icon: Icon(Icons.add))
-                  : SizedBox()),
+                  : const SizedBox()),
           Expanded(
               child: items.length == 1
                   ? SizedBox()
                   : IconButton(
                       onPressed: () {
+                        if (widget.onChange != null) {
+                          widget.onChange!(items);
+                        }
                         setState(() {
                           items.remove(item);
                         });
                       },
                       icon: Icon(Icons.delete))),
-          Expanded(child: SizedBox())
+          const Expanded(child: SizedBox())
         ],
       ));
       index++;
@@ -78,6 +98,8 @@ class _CIA_IncrementalHBA1CTextFieldState
 
   @override
   void initState() {
-    items.add(HBA1C_Model(reading: "", date: ""));
+    items = widget.model;
+    if (items == null || items.length == 0)
+      items.add(HbA1c(reading: "", date: ""));
   }
 }

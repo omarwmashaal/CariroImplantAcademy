@@ -51,7 +51,7 @@ class _CIA_TableState extends State<CIA_Table> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: wait(),
+      future: widget.loadFunction != null ? widget.loadFunction!() : wait(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return SfDataGrid(

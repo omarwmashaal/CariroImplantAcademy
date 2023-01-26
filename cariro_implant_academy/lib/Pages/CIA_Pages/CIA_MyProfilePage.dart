@@ -51,18 +51,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                               Expanded(child: FormTextKeyWidget(text: "ID")),
                               Expanded(
                                   child: FormTextValueWidget(
-                                      text: widget.user?.ID.toString() == null
+                                      text: widget.user?.id.toString() == null
                                           ? ""
-                                          : widget.user?.ID.toString()))
+                                          : widget.user?.id.toString()))
                             ],
                           ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Name",
                                   controller: TextEditingController(
-                                      text: widget.user?.Name == null
+                                      text: widget.user?.name == null
                                           ? ""
-                                          : widget.user?.Name),
+                                          : widget.user?.name),
                                 )
                               : Row(
                                   children: [
@@ -70,18 +70,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                         child: FormTextKeyWidget(text: "Name")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.Name == null
+                                            text: widget.user?.name == null
                                                 ? ""
-                                                : widget.user?.Name))
+                                                : widget.user?.name))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Name",
                                   controller: TextEditingController(
-                                      text: widget.user?.Name == null
+                                      text: widget.user?.name == null
                                           ? ""
-                                          : widget.user?.Name),
+                                          : widget.user?.name),
                                 )
                               : Row(
                                   children: [
@@ -90,18 +90,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                             FormTextKeyWidget(text: "Gender")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.Gender == null
+                                            text: widget.user?.gender == null
                                                 ? ""
-                                                : widget.user?.Gender))
+                                                : widget.user?.gender))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Phone Number",
                                   controller: TextEditingController(
-                                      text: widget.user?.Phone == null
+                                      text: widget.user?.phone == null
                                           ? ""
-                                          : widget.user?.Phone),
+                                          : widget.user?.phone),
                                 )
                               : Row(
                                   children: [
@@ -110,18 +110,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                             text: "Phone Number")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.Phone == null
+                                            text: widget.user?.phone == null
                                                 ? ""
-                                                : widget.user?.Phone))
+                                                : widget.user?.phone))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Another Phone Number",
                                   controller: TextEditingController(
-                                      text: widget.user?.Phone2 == null
+                                      text: widget.user?.phone2 == null
                                           ? ""
-                                          : widget.user?.Phone2),
+                                          : widget.user?.phone2),
                                 )
                               : Row(
                                   children: [
@@ -130,18 +130,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                             text: "Another Phone Number")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.Phone2 == null
+                                            text: widget.user?.phone2 == null
                                                 ? ""
-                                                : widget.user?.Phone2))
+                                                : widget.user?.phone2))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Date Of Birth",
                                   controller: TextEditingController(
-                                      text: widget.user?.DateOfBirth == null
+                                      text: widget.user?.dateOfBirth == null
                                           ? ""
-                                          : widget.user?.DateOfBirth),
+                                          : widget.user?.dateOfBirth),
                                 )
                               : Row(
                                   children: [
@@ -151,18 +151,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                     Expanded(
                                         child: FormTextValueWidget(
                                             text:
-                                                widget.user?.DateOfBirth == null
+                                                widget.user?.dateOfBirth == null
                                                     ? ""
-                                                    : widget.user?.DateOfBirth))
+                                                    : widget.user?.dateOfBirth))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "MaritalStatus",
                                   controller: TextEditingController(
-                                      text: widget.user?.MaritalStatus == null
+                                      text: widget.user?.maritalStatus == null
                                           ? ""
-                                          : widget.user?.MaritalStatus),
+                                          : widget.user?.maritalStatus),
                                 )
                               : Row(
                                   children: [
@@ -171,19 +171,19 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                             text: "Marital Status")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.MaritalStatus ==
+                                            text: widget.user?.maritalStatus ==
                                                     null
                                                 ? ""
-                                                : widget.user?.MaritalStatus))
+                                                : widget.user?.maritalStatus))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "Address",
                                   controller: TextEditingController(
-                                      text: widget.user?.Address == null
+                                      text: widget.user?.address == null
                                           ? ""
-                                          : widget.user?.Address),
+                                          : widget.user?.address),
                                 )
                               : Row(
                                   children: [
@@ -192,18 +192,18 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                             FormTextKeyWidget(text: "Address")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.Address == null
+                                            text: widget.user?.address == null
                                                 ? ""
-                                                : widget.user?.Address))
+                                                : widget.user?.address))
                                   ],
                                 ),
                           edit
                               ? CIA_TextFormField(
                                   label: "City",
                                   controller: TextEditingController(
-                                      text: widget.user?.City == null
+                                      text: widget.user?.city == null
                                           ? ""
-                                          : widget.user?.City),
+                                          : widget.user?.city),
                                 )
                               : Row(
                                   children: [
@@ -211,9 +211,9 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                                         child: FormTextKeyWidget(text: "City")),
                                     Expanded(
                                         child: FormTextValueWidget(
-                                            text: widget.user?.City == null
+                                            text: widget.user?.city == null
                                                 ? ""
-                                                : widget.user?.City))
+                                                : widget.user?.city))
                                   ],
                                 ),
                           Row(
@@ -221,9 +221,9 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
                               Expanded(
                                   child: FormTextKeyWidget(
                                 text: "Registration: " +
-                                    (widget.user?.Name == null
+                                    (widget.user?.name == null
                                         ? ""
-                                        : widget.user?.Name as String),
+                                        : widget.user?.name as String),
                                 secondaryInfo: true,
                               )),
                               Expanded(
@@ -455,7 +455,7 @@ class _EventWidgetState extends State<_EventWidget> {
               desc = value;
             },
             selectedValue:
-                widget.event != null ? widget.event?.patient.Name : "",
+                widget.event != null ? widget.event?.patient.name : "",
             label: "Patient",
             values: [
               "Patient1",

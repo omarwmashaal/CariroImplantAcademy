@@ -63,6 +63,7 @@ dependencies:
   calendar_view: ^1.0.2
   intl: ^0.18.0
   expansion_tile_card: ^2.0.0
+  http: ^0.13.5
 
 
 

@@ -25,6 +25,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   Color selectedTabColor = Color_Accent;
   String selectedTab = "CIA";
+  String email = "";
+  String password = "";
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,17 +74,20 @@ class _LoginPageState extends State<LoginPage> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: CIA_TextField(
+                            onChange: (value) => email = value,
                             label: "Email",
                           ),
                         ),
                         Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
                             child: CIA_TextField(
+                              onChange: (value) => password = value,
                               label: "Password",
                               isObscure: true,
                             )),
                         CIA_PrimaryButton(
-                            label: "Login", onTab: () => widget.onLogin()),
+                            label: "Login",
+                            onTab: () => widget.onLogin(email, password)),
                         HorizontalRadioButtons(
                           names: siteController.getRoles(),
                           onChange: (index) {

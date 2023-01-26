@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -7,9 +8,12 @@ import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
+import '../../API/TempPatientAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
+import '../../Models/API_Response.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
@@ -24,11 +28,17 @@ import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
 
 late PatientMedicalController MasterController;
+late int patientID;
+late MedicalExaminationModel medicalExaminationModel;
 
 class PatientMedicalInfoPage extends StatefulWidget {
-  PatientMedicalInfoPage({Key? key, required this.patientMedicalController})
+  PatientMedicalInfoPage(
+      {Key? key,
+      required this.patientMedicalController,
+      required this.patientID})
       : super(key: key);
   PatientMedicalController patientMedicalController;
+  int patientID;
 
   @override
   State<PatientMedicalInfoPage> createState() => _PatientMedicalInfoPageState();
@@ -41,6 +51,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   void initState() {
     MasterController = widget.patientMedicalController;
     patient = widget.patientMedicalController.patient;
+    patientID = widget.patientID;
   }
 
   List<String> tabs = [
@@ -55,19 +66,24 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   ];
   List<Widget> pages = [
     _PatientMedicalHistory(),
-    _PatientDentalHistory(),
-    _PatientDentalExamination(),
-    _PatientNonSurgicalTreatment(),
-    _PatientTreatmentPlan(),
-    _PatientSurgicalTreatment(),
-    _PatientProstheticTreatment(),
-    _Patient_CBCTandPhotos(),
+    // _PatientDentalHistory(),
+    // _PatientDentalExamination(),
+    //_PatientNonSurgicalTreatment(),
+    //_PatientTreatmentPlan(),
+    // _PatientSurgicalTreatment(),
+    // _PatientProstheticTreatment(),
+    //_Patient_CBCTandPhotos(),
   ];
   int index = 0;
 
   @override
   Widget build(BuildContext context) {
     siteController.setAppBarWidget(
+      onChange: (value) {
+        if (value == 0)
+          TempPatientAPI.UpdateMedicalExamination(
+              patientID, medicalExaminationModel);
+      },
       width: MediaQuery.of(context).size.width * 0.75,
       height: MediaQuery.of(context).size.width * 0.04,
       fontSize: MediaQuery.of(context).size.width * 0.01,
@@ -82,172 +98,189 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
         "Photos and CBCTs"
       ],
     );
-    patient?.Gender = "Male";
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Obx(() => TitleWidget(
-                        showBackButton: true,
-                        title: siteController.title.value,
-                      )),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: PageView(
-                      controller: tabsController,
-                      children: pages,
+    patient?.gender = "Male";
+    return FutureBuilder(
+        future: TempPatientAPI.CreateTempPatient(patientID),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData)
+            return Container(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Obx(() => TitleWidget(
+                                showBackButton: true,
+                                title: siteController.title.value,
+                              )),
+                        ),
+                        Expanded(
+                          flex: 10,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2),
+                            child: PageView(
+                              controller: tabsController,
+                              children: pages,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: SizedBox()),
-                Expanded(
-                  flex: 10,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image(
-                        image: AssetImage("assets/ProfileImage.png"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                          label: "View more info",
-                          onTab: () {
-                            internalPagesController.jumpToPage(2);
-                          }),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                          label: "LAB Request",
-                          icon: Icon(Icons.document_scanner_outlined),
-                          onTab: () {}),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "ID")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: patient?.ID.toString() == null
-                                  ? ""
-                                  : patient?.ID.toString(),
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "Name")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                                text:
-                                    patient?.Name == null ? "" : patient?.Name),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "Gender")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                                text: patient?.Gender == null
-                                    ? ""
-                                    : patient?.Gender),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FormTextKeyWidget(
-                              text: "Operator",
-                              secondaryInfo: true,
-                            ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        Expanded(
+                          flex: 10,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Image(
+                                image: AssetImage("assets/ProfileImage.png"),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_SecondaryButton(
+                                  label: "View more info",
+                                  onTab: () {
+                                    internalPagesController.jumpToPage(2);
+                                  }),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_SecondaryButton(
+                                  label: "LAB Request",
+                                  icon: Icon(Icons.document_scanner_outlined),
+                                  onTab: () {}),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "ID")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: patient?.id.toString() == null
+                                          ? ""
+                                          : patient?.id.toString(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "Name")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                        text: patient?.name == null
+                                            ? ""
+                                            : patient?.name),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: FormTextKeyWidget(text: "Gender")),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                        text: patient?.gender == null
+                                            ? ""
+                                            : patient?.gender),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormTextKeyWidget(
+                                      text: "Operator",
+                                      secondaryInfo: true,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: "Omar Wael",
+                                      secondaryInfo: true,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: FormTextKeyWidget(
+                                      text: "Date:",
+                                      secondaryInfo: true,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: "12/1/2022",
+                                      secondaryInfo: true,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_SecondaryButton(
+                                label: "Cancel",
+                                onTab: () {},
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CIA_PrimaryButton(
+                                label: "Save",
+                                onTab: () {},
+                                isLong: true,
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: "Omar Wael",
-                              secondaryInfo: true,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FormTextKeyWidget(
-                              text: "Date:",
-                              secondaryInfo: true,
-                            ),
-                          ),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: "12/1/2022",
-                              secondaryInfo: true,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                        label: "Cancel",
-                        onTab: () {},
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_PrimaryButton(
-                        label: "Save",
-                        onTab: () {},
-                        isLong: true,
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                ],
+              ),
+            );
+          else {
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
+              ),
+            );
+          }
+        });
   }
 }
 
@@ -265,240 +298,654 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return CIA_MedicalPagesWidget(children: [
-      FormTextKeyWidget(text: "General Health"),
-      CIA_MultiSelectChipWidget(
-        labels: [
-          CIA_MultiSelectChipWidgeModel(
-              label: "Excellent", selectedColor: Colors.green),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Very good", selectedColor: Colors.green),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Good", selectedColor: Colors.orange),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Fair", selectedColor: Colors.orange),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Fail", selectedColor: Colors.red),
-        ],
-        singleSelect: true,
-      ),
-      Flex(
-        direction: Axis.horizontal,
-        children: [
-          Flexible(
-              child: HorizontalRadioButtons(
-            names: ["Pregnant", "Lactating"],
-            selectionColor: Colors.red,
-          )),
-        ],
-      ),
-      CIA_TextFormField(
-          label: "Are you treated for anything now?",
-          controller: TextEditingController()),
-      CIA_TextFormField(
-          label: "Recent Surgery", controller: TextEditingController()),
-      CIA_TextFormField(label: "Comment", controller: TextEditingController()),
-      FormTextKeyWidget(text: "Did you have ever?"),
-      CIA_MultiSelectChipWidget(
-        onChange: (value, isSelected) {
-          if (value == "Other") {
-            setState(() {
-              diseases = isSelected as bool;
-            });
-          }
-        },
-        redFlags: true,
-        labels: [
-          CIA_MultiSelectChipWidgeModel(
-              label: "Kidney Disease", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Liver Disease", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Asthma", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Psychological", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Rhemuatic", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Anemia", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Epilepsy", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Heart problem", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Thyroid", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Hepatitis", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Venereal Disease", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Other", selectedColor: Colors.red)
-        ],
-      ),
-      Visibility(
-          visible: diseases,
-          child: CIA_TextFormField(
-              label: "Other ", controller: TextEditingController())),
-      FormTextKeyWidget(text: "Blood Pressure"),
-      CIA_MultiSelectChipWidget(
-        singleSelect: true,
-        labels: [
-          CIA_MultiSelectChipWidgeModel(label: "Normal"),
-          CIA_MultiSelectChipWidgeModel(label: "Hypertensive controller"),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Hypertensive uncontroller", selectedColor: Colors.red),
-          CIA_MultiSelectChipWidgeModel(label: "Hypotensive controller"),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Hypotensive uncontroller", selectedColor: Colors.red),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "Last Reading ", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "When? ", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "Drug ", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: CIA_TextFormField(
-                  label: "Reading in clinic ",
-                  controller: TextEditingController()),
-            ),
-          ),
-        ],
-      ),
-      FormTextKeyWidget(text: "Glucose Status"),
-      CIA_MultiSelectChipWidget(
-        singleSelect: true,
-        labels: [
-          CIA_MultiSelectChipWidgeModel(label: "Non diabetic"),
-          CIA_MultiSelectChipWidgeModel(label: "Diabetic controller"),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Diabetic uncontroller", selectedColor: Colors.red),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: CIA_DropDown(label: 'Type', values: ["Random", "Fasting"]),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "Last Reading ", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "When? ", controller: TextEditingController()),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CIA_TextFormField(
-                  label: "Random in clinic ",
-                  controller: TextEditingController()),
-            ),
-          ),
-        ],
-      ),
-      FormTextKeyWidget(text: "HBA1c"),
-      CIA_IncrementalHBA1CTextField(),
-      FormTextKeyWidget(text: "Are you allergic to?"),
-      Row(
-        children: [
-          Expanded(
-            child: CIA_MultiSelectChipWidget(labels: [
-              CIA_MultiSelectChipWidgeModel(
-                  label: "Penicillin", selectedColor: Colors.red),
-              CIA_MultiSelectChipWidgeModel(label: "Sulfa"),
-              CIA_MultiSelectChipWidgeModel(label: "Other"),
-            ]),
-          ),
-          Expanded(
-            flex: 2,
-            child: CIA_TextFormField(
-                label: "Other Diseases", controller: TextEditingController()),
-          )
-        ],
-      ),
-      Row(
-        children: [
-          FormTextKeyWidget(
-              text:
-                  "Are you Subjected to prolonged bleeding or taking aspirin?"),
-          SizedBox(
-            width: 10,
-          ),
-          CIA_MultiSelectChipWidget(singleSelect: true, labels: [
-            CIA_MultiSelectChipWidgeModel(label: "Yes"),
-            CIA_MultiSelectChipWidgeModel(label: "No"),
-          ]),
-        ],
-      ),
-      Row(
-        children: [
-          FormTextKeyWidget(
-              text: "Do you have chronic problem with digestion?"),
-          SizedBox(
-            width: 10,
-          ),
-          CIA_MultiSelectChipWidget(singleSelect: true, labels: [
-            CIA_MultiSelectChipWidgeModel(label: "Yes"),
-            CIA_MultiSelectChipWidgeModel(label: "No"),
-          ]),
-        ],
-      ),
-      CIA_TextFormField(
-        borderColor: illegalDrugs,
-        label: "Illegal Drugs",
-        controller: TextEditingController(),
-        onChange: (value) {
-          if (value != null && value != "") {
-            setState(() {
-              illegalDrugs = Colors.red;
-            });
+    return FutureBuilder(
+        future: TempPatientAPI.GetMedicalExamination(patientID),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            var resp = snapshot.data as API_Response;
+            if (resp.statusCode == 200)
+              medicalExaminationModel = resp.result as MedicalExaminationModel;
+            return CIA_MedicalPagesWidget(children: [
+              FormTextKeyWidget(text: "General Health"),
+              CIA_MultiSelectChipWidget(
+                singleSelect: true,
+                onChange: (value, isSelected) {
+                  GeneralHealthEnum? generalHealth;
+                  switch (value) {
+                    case "Excellent":
+                      generalHealth = GeneralHealthEnum.Excellent;
+                      break;
+                    case "Very good":
+                      generalHealth = GeneralHealthEnum.VeryGood;
+                      break;
+                    case "Good":
+                      generalHealth = GeneralHealthEnum.Good;
+                      break;
+                    case "Fair":
+                      generalHealth = GeneralHealthEnum.Fair;
+                      break;
+                    case "Fail":
+                      generalHealth = GeneralHealthEnum.Fail;
+                      break;
+                  }
+                  if (isSelected) {
+                    medicalExaminationModel.generalHealth = generalHealth;
+                  }
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Excellent",
+                      selectedColor: Colors.green,
+                      isSelected: medicalExaminationModel.generalHealth ==
+                          GeneralHealthEnum.Excellent),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Very good",
+                      selectedColor: Colors.green,
+                      isSelected: medicalExaminationModel.generalHealth ==
+                          GeneralHealthEnum.VeryGood),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Good",
+                      selectedColor: Colors.orange,
+                      isSelected: medicalExaminationModel.generalHealth ==
+                          GeneralHealthEnum.Good),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Fair",
+                      selectedColor: Colors.orange,
+                      isSelected: medicalExaminationModel.generalHealth ==
+                          GeneralHealthEnum.Fair),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Fail",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.generalHealth ==
+                          GeneralHealthEnum.Fail),
+                ],
+              ),
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  Flexible(
+                      child: HorizontalRadioButtons(
+                    names: ["Pregnant", "Lactating"],
+                    selectionColor: Colors.red,
+                    onChange: (value) {
+                      if (value.toString().toLowerCase() == "pregnant") {
+                        medicalExaminationModel.pregnant = true;
+                        medicalExaminationModel.lactating = false;
+                      } else if (value.toString().toLowerCase() ==
+                          "lactating") {
+                        medicalExaminationModel.lactating = true;
+                        medicalExaminationModel.pregnant = false;
+                      }
+                    },
+                    groupValue: medicalExaminationModel.pregnant != null &&
+                            medicalExaminationModel.pregnant!
+                        ? "Pregnant"
+                        : medicalExaminationModel.lactating != null &&
+                                medicalExaminationModel.lactating!
+                            ? "Lactating"
+                            : "",
+                  )),
+                ],
+              ),
+              CIA_TextFormField(
+                  label: "Are you treated for anything now?",
+                  onChange: (value) =>
+                      medicalExaminationModel.areYouTreatedFromAnyThing = value,
+                  controller: TextEditingController(
+                      text: medicalExaminationModel.areYouTreatedFromAnyThing)),
+              CIA_TextFormField(
+                  onChange: (value) =>
+                      medicalExaminationModel.recentSurgery = value,
+                  label: "Recent Surgery",
+                  controller: TextEditingController(
+                      text: medicalExaminationModel.recentSurgery)),
+              CIA_TextFormField(
+                  onChange: (value) => medicalExaminationModel.comment = value,
+                  label: "Comment",
+                  controller: TextEditingController(
+                      text: medicalExaminationModel.comment)),
+              FormTextKeyWidget(text: "Did you have ever?"),
+              CIA_MultiSelectChipWidget(
+                onChange: (value, isSelected) {
+                  if (value == "Other") {
+                    setState(() {
+                      diseases = isSelected as bool;
+                    });
+                  }
+                  DiseasesEnum? disease;
+                  switch (value) {
+                    case "Kidney Disease":
+                      disease = DiseasesEnum.KidneyDisease;
+                      break;
+                    case "Liver Disease":
+                      disease = DiseasesEnum.LiverDisease;
+                      break;
+                    case "Asthma":
+                      disease = DiseasesEnum.Asthma;
+                      break;
+                    case "Psychological":
+                      disease = DiseasesEnum.Psychological;
+                      break;
+                    case "Rhemuatic":
+                      disease = DiseasesEnum.Rhemuatic;
+                      break;
+                    case "Anemia":
+                      disease = DiseasesEnum.Anemia;
+                      break;
+                    case "Epilepsy":
+                      disease = DiseasesEnum.Epilepsy;
+                      break;
+                    case "Heart problem":
+                      disease = DiseasesEnum.HeartProblem;
+                      break;
+                    case "Thyroid":
+                      disease = DiseasesEnum.Thyroid;
+                      break;
+                    case "Hepatitis":
+                      disease = DiseasesEnum.Hepatitis;
+                      break;
+                    case "Venereal Disease":
+                      disease = DiseasesEnum.VenerealDisease;
+                      break;
+                    case "Other":
+                      disease = DiseasesEnum.Other;
+                      break;
+                  }
+                  if (isSelected) {
+                    if (medicalExaminationModel.diseases == null) {
+                      medicalExaminationModel.diseases = [];
+                    }
+                    medicalExaminationModel.diseases?.add(disease);
+                  } else {
+                    if (medicalExaminationModel.diseases == null) {
+                      medicalExaminationModel.diseases = [];
+                    } else {
+                      medicalExaminationModel.diseases?.remove(disease);
+                    }
+                  }
+                },
+                redFlags: true,
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Kidney Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.KidneyDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Liver Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.LiverDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Asthma",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Asthma)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Psychological",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Psychological)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Rhemuatic",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Rhemuatic)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Anemia",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Anemia)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Epilepsy",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Epilepsy)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Heart problem",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.HeartProblem)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Thyroid",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Thyroid)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hepatitis",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Hepatitis)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Venereal Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.VenerealDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Other",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Other))
+                ],
+              ),
+              Visibility(
+                  visible: diseases,
+                  child: CIA_TextFormField(
+                      onChange: (value) =>
+                          medicalExaminationModel.otherDiseases = value,
+                      label: "Other ",
+                      controller: TextEditingController(
+                          text: medicalExaminationModel.otherDiseases))),
+              FormTextKeyWidget(text: "Blood Pressure"),
+              CIA_MultiSelectChipWidget(
+                onChange: (value, isSelected) {
+                  BloodPressureEnum? bloodPressure;
+
+                  switch (value) {
+                    case "Normal":
+                      bloodPressure = BloodPressureEnum.Normal;
+                      break;
+                    case "Hypertensive controller":
+                      bloodPressure = BloodPressureEnum.HypertensiveControlled;
+                      break;
+                    case "Hypertensive uncontroller":
+                      bloodPressure =
+                          BloodPressureEnum.HypertensiveUncontrolled;
+                      break;
+                    case "Hypotensive controller":
+                      bloodPressure = BloodPressureEnum.HypotensiveControlled;
+                      break;
+                    case "Hypotensive uncontroller":
+                      bloodPressure = BloodPressureEnum.HypotensiveUncontrolled;
+                      break;
+                  }
+                  if (isSelected) {
+                    if (medicalExaminationModel.bloodPressure == null)
+                      medicalExaminationModel.bloodPressure = BloodPressure();
+                    medicalExaminationModel.bloodPressure?.status =
+                        bloodPressure;
+                  }
+                },
+                singleSelect: true,
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Normal",
+                      isSelected:
+                          medicalExaminationModel.bloodPressure != null &&
+                              medicalExaminationModel.bloodPressure?.status ==
+                                  BloodPressureEnum.Normal),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hypertensive controller",
+                      isSelected:
+                          medicalExaminationModel.bloodPressure != null &&
+                              medicalExaminationModel.bloodPressure?.status ==
+                                  BloodPressureEnum.HypertensiveControlled),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hypertensive uncontroller",
+                      selectedColor: Colors.red,
+                      isSelected:
+                          medicalExaminationModel.bloodPressure != null &&
+                              medicalExaminationModel.bloodPressure?.status ==
+                                  BloodPressureEnum.HypertensiveUncontrolled),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hypotensive controller",
+                      isSelected:
+                          medicalExaminationModel.bloodPressure != null &&
+                              medicalExaminationModel.bloodPressure?.status ==
+                                  BloodPressureEnum.HypotensiveControlled),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hypotensive uncontroller",
+                      selectedColor: Colors.red,
+                      isSelected:
+                          medicalExaminationModel.bloodPressure != null &&
+                              medicalExaminationModel.bloodPressure?.status ==
+                                  BloodPressureEnum.HypotensiveUncontrolled),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.bloodPressure == null) {
+                              medicalExaminationModel.bloodPressure =
+                                  BloodPressure();
+                            }
+                            medicalExaminationModel.bloodPressure?.lastReading =
+                                value;
+                          },
+                          label: "Last Reading ",
+                          controller: TextEditingController(
+                              text: medicalExaminationModel
+                                  .bloodPressure?.lastReading)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.bloodPressure == null) {
+                              medicalExaminationModel.bloodPressure =
+                                  BloodPressure();
+                            }
+                            medicalExaminationModel.bloodPressure?.when = value;
+                          },
+                          label: "When? ",
+                          controller: TextEditingController(
+                              text:
+                                  medicalExaminationModel.bloodPressure?.when)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.bloodPressure == null) {
+                              medicalExaminationModel.bloodPressure =
+                                  BloodPressure();
+                            }
+                            medicalExaminationModel.bloodPressure?.drug = value;
+                          },
+                          label: "Drug ",
+                          controller: TextEditingController(
+                              text:
+                                  medicalExaminationModel.bloodPressure?.drug)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.bloodPressure == null) {
+                              medicalExaminationModel.bloodPressure =
+                                  BloodPressure();
+                            }
+                            medicalExaminationModel
+                                .bloodPressure?.readingInClinic = value;
+                          },
+                          label: "Reading in clinic ",
+                          controller: TextEditingController(
+                              text: medicalExaminationModel
+                                  .bloodPressure?.readingInClinic)),
+                    ),
+                  ),
+                ],
+              ),
+              FormTextKeyWidget(text: "Glucose Status"),
+              CIA_MultiSelectChipWidget(
+                onChange: (value, isSelected) {
+                  DiabetesEnum? diabetese;
+                  switch (value) {
+                    case "Non diabetic":
+                      diabetese = DiabetesEnum.Normal;
+                      break;
+                    case "Diabetic controller":
+                      diabetese = DiabetesEnum.DiabeticControlled;
+                      break;
+                    case "Diabetic uncontroller":
+                      diabetese = DiabetesEnum.DiabeticUncontrolled;
+                      break;
+                  }
+                  if (isSelected) {
+                    if (medicalExaminationModel.diabetic == null)
+                      medicalExaminationModel.diabetic = new Diabetic();
+                    medicalExaminationModel.diabetic?.status = diabetese;
+                  }
+                },
+                singleSelect: true,
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Non diabetic",
+                      isSelected: medicalExaminationModel.diabetic != null &&
+                          medicalExaminationModel.diabetic?.status ==
+                              DiabetesEnum.Normal),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Diabetic controller",
+                      isSelected: medicalExaminationModel.diabetic != null &&
+                          medicalExaminationModel.diabetic?.status ==
+                              DiabetesEnum.DiabeticControlled),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Diabetic uncontroller",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diabetic != null &&
+                          medicalExaminationModel.diabetic?.status ==
+                              DiabetesEnum.DiabeticUncontrolled),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: CIA_DropDown(
+                        onSelect: (value) {
+                          if (medicalExaminationModel.diabetic == null)
+                            medicalExaminationModel.diabetic = Diabetic();
+                          if (value.toString().toLowerCase() == "random")
+                            medicalExaminationModel.diabetic?.type =
+                                DiabetesMeasureType.Random;
+                          else if (value.toString().toLowerCase() == "fasting")
+                            medicalExaminationModel.diabetic?.type =
+                                DiabetesMeasureType.Fasting;
+                        },
+                        label: 'Type',
+                        values: ["Random", "Fasting"],
+                        selectedValue: medicalExaminationModel.diabetic != null
+                            ? medicalExaminationModel.diabetic?.type.toString()
+                            : "",
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.diabetic == null) {
+                              medicalExaminationModel.diabetic = Diabetic();
+                            }
+                            medicalExaminationModel.diabetic?.lastReading =
+                                value;
+                          },
+                          label: "Last Reading ",
+                          controller: TextEditingController(
+                              text: medicalExaminationModel
+                                  .diabetic?.lastReading)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.diabetic == null) {
+                              medicalExaminationModel.diabetic = Diabetic();
+                            }
+                            medicalExaminationModel.diabetic?.when = value;
+                          },
+                          label: "When? ",
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.diabetic?.when)),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: CIA_TextFormField(
+                          onChange: (value) {
+                            if (medicalExaminationModel.diabetic == null) {
+                              medicalExaminationModel.diabetic = Diabetic();
+                            }
+                            medicalExaminationModel.diabetic?.randomInClinic =
+                                value;
+                          },
+                          label: "Random in clinic ",
+                          controller: TextEditingController(
+                              text: medicalExaminationModel
+                                  .diabetic?.randomInClinic)),
+                    ),
+                  ),
+                ],
+              ),
+              FormTextKeyWidget(text: "HBA1c"),
+              CIA_IncrementalHBA1CTextField(
+                  onChange: (value) {
+                    medicalExaminationModel.hbA1c = value;
+                  },
+                  model: medicalExaminationModel.hbA1c != null
+                      ? medicalExaminationModel.hbA1c as List<HbA1c>
+                      : []),
+              FormTextKeyWidget(text: "Are you allergic to?"),
+              Row(
+                children: [
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                        onChange: (value, isSelected) {
+                          if (value == "Penicillin")
+                            medicalExaminationModel.penicillin = isSelected;
+                          else if (value == "Sulfa")
+                            medicalExaminationModel.sulfa = isSelected;
+                          else if (value == "Other")
+                            medicalExaminationModel.otherAllergy = isSelected;
+                        },
+                        labels: [
+                          CIA_MultiSelectChipWidgeModel(
+                              label: "Penicillin",
+                              selectedColor: Colors.red,
+                              isSelected: medicalExaminationModel.penicillin !=
+                                      null
+                                  ? medicalExaminationModel.penicillin as bool
+                                  : false),
+                          CIA_MultiSelectChipWidgeModel(
+                              label: "Sulfa",
+                              isSelected: medicalExaminationModel.sulfa != null
+                                  ? medicalExaminationModel.sulfa as bool
+                                  : false),
+                          CIA_MultiSelectChipWidgeModel(
+                              label: "Other",
+                              isSelected:
+                                  medicalExaminationModel.otherAllergy != null
+                                      ? medicalExaminationModel.otherAllergy
+                                          as bool
+                                      : false),
+                        ]),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: CIA_TextFormField(
+                        label: "Other Diseases",
+                        controller: TextEditingController()),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  FormTextKeyWidget(
+                      text:
+                          "Are you Subjected to prolonged bleeding or taking aspirin?"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CIA_MultiSelectChipWidget(
+                      onChange: (value, isSelected) {
+                        if (value == "Yes")
+                          medicalExaminationModel.prolongedBleedingOrAspirin =
+                              isSelected;
+                        else if (value == "No")
+                          medicalExaminationModel.prolongedBleedingOrAspirin =
+                              !isSelected;
+                      },
+                      singleSelect: true,
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Yes",
+                            isSelected: medicalExaminationModel
+                                .prolongedBleedingOrAspirin as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "No",
+                            isSelected: !(medicalExaminationModel
+                                .prolongedBleedingOrAspirin as bool)),
+                      ]),
+                ],
+              ),
+              Row(
+                children: [
+                  FormTextKeyWidget(
+                      text: "Do you have chronic problem with digestion?"),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CIA_MultiSelectChipWidget(
+                      onChange: (value, isSelected) {
+                        if (value == "Yes")
+                          medicalExaminationModel.chronicDigestion = isSelected;
+                        else if (value == "No")
+                          medicalExaminationModel.chronicDigestion =
+                              !isSelected;
+                      },
+                      singleSelect: true,
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Yes",
+                            isSelected: medicalExaminationModel.chronicDigestion
+                                as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "No",
+                            isSelected: !(medicalExaminationModel
+                                .chronicDigestion as bool)),
+                      ]),
+                ],
+              ),
+              CIA_TextFormField(
+                changeColorIfFilled: true,
+                borderColorOnChange: Colors.red,
+                borderColor: illegalDrugs,
+                label: "Illegal Drugs",
+                controller: TextEditingController(
+                    text: medicalExaminationModel.illegalDrugs),
+                onChange: (value) {
+                  medicalExaminationModel.illegalDrugs = value;
+                },
+              ),
+              CIA_TextFormField(
+                  onChange: (value) =>
+                      medicalExaminationModel.operatorComments = value,
+                  label: "Operator Comments",
+                  controller: TextEditingController(
+                      text: medicalExaminationModel.operatorComments)),
+              FormTextKeyWidget(text: "Drugs Taken by patinet"),
+              CIA_IncrementalTextField(
+                label: "Drug Name",
+              ),
+            ]);
           } else {
-            setState(() {
-              illegalDrugs = Color_TextFieldBorder;
-            });
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
+              ),
+            );
           }
-        },
-      ),
-      CIA_TextFormField(
-          label: "Operator Comments", controller: TextEditingController()),
-      FormTextKeyWidget(text: "Drugs Taken by patinet"),
-      CIA_IncrementalTextField(
-        label: "Drug Name",
-      ),
-    ]);
+        });
   }
 }
 
@@ -1261,6 +1708,7 @@ class _PatientProstheticTreatmentState
 class _ProstheticWidget extends StatefulWidget {
   _ProstheticWidget({Key? key, required this.tooth}) : super(key: key);
   String tooth;
+
   @override
   State<_ProstheticWidget> createState() => _ProstheticWidgetState();
 }
@@ -1277,6 +1725,7 @@ class _ProstheticWidgetState extends State<_ProstheticWidget> {
   ];
   bool leftEnabled = true;
   bool rightEnabled = true;
+
   @override
   Widget build(BuildContext context) {
     return Column(

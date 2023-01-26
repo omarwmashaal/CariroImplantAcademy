@@ -21,6 +21,7 @@ class SiteController extends GetxController {
 
   setAppBarWidget(
       {List<String>? tabs,
+      Function? onChange,
       double? width,
       double? height,
       double? fontSize}) async {
@@ -35,8 +36,12 @@ class SiteController extends GetxController {
             fontSize: fontSize,
             controller: tabsController,
             onChange: ((value) {
+              print(tabsController.page.toString() + " => $value");
               tabsController.jumpToPage(value);
               title.value = tabs[value];
+              if (onChange != null) {
+                onChange(tabsController.page);
+              }
             })),
       );
       //title.value = tabs[0];
