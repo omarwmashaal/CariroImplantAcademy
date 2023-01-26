@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/API/HTTP.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 
+import '../Models/MedicalModels/DentalHistory.dart';
 import '../Models/MedicalModels/MedicalExaminationModel.dart';
 
 class TempPatientAPI {
@@ -22,6 +23,17 @@ class TempPatientAPI {
     return response;
   }
 
+  static Future<API_Response> GetDentalHistory(int id) async {
+    var response =
+        await HTTPRequest.Get("TempPatient/GetPatientDentalHistory?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result =
+          DentalHistoryModel.fromJson(response.result as Map<String, dynamic>);
+    }
+    return response;
+  }
+
   static Future<API_Response> UpdateMedicalExamination(
       int id, MedicalExaminationModel medicalExamination) async {
     var response = await HTTPRequest.Put(
@@ -31,6 +43,19 @@ class TempPatientAPI {
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = MedicalExaminationModel.fromJson(
           response.result as Map<String, dynamic>);
+    }
+    return response;
+  }
+
+  static Future<API_Response> UpdateDentalHistory(
+      int id, DentalHistoryModel dentalHistory) async {
+    var response = await HTTPRequest.Put(
+        "TempPatient/UpdatePatientDentalHistory?id=$id",
+        dentalHistory.toJson());
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result =
+          DentalHistoryModel.fromJson(response.result as Map<String, dynamic>);
     }
     return response;
   }

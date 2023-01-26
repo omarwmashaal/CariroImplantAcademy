@@ -36,11 +36,12 @@ class SiteController extends GetxController {
             fontSize: fontSize,
             controller: tabsController,
             onChange: ((value) {
+              var from = tabsController.page;
               print(tabsController.page.toString() + " => $value");
               tabsController.jumpToPage(value);
               title.value = tabs[value];
               if (onChange != null) {
-                onChange(tabsController.page);
+                onChange(from);
               }
             })),
       );

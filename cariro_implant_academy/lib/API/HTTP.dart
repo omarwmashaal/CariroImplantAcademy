@@ -22,7 +22,13 @@ class HTTPRequest {
     }).timeout(Duration(seconds: 20), onTimeout: () {
       return Response("body", 408);
     });
-
+    if (response.statusCode != 200) {
+      MicrosoftAPI_Response r =
+          MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
+      apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      apiResponse.statusCode = response.statusCode;
+      return apiResponse;
+    }
     try {
       apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
@@ -58,7 +64,13 @@ class HTTPRequest {
     }).timeout(Duration(seconds: 20), onTimeout: () {
       return Response("body", 408);
     });
-
+    if (response.statusCode != 200) {
+      MicrosoftAPI_Response r =
+          MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
+      apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      apiResponse.statusCode = response.statusCode;
+      return apiResponse;
+    }
     try {
       apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
@@ -95,14 +107,11 @@ class HTTPRequest {
     }).timeout(Duration(seconds: 20), onTimeout: () {
       return Response("body", 408);
     });
+
     try {
-      MicrosoftAPI_Response r =
-          MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
       apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
     } catch (e) {
-      MicrosoftAPI_Response r =
-          MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
       apiResponse = API_Response(
           errorMessage: "Internal Server Error",
           statusCode: response.statusCode);

@@ -14,6 +14,7 @@ import '../../API/TempPatientAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/API_Response.dart';
+import '../../Models/MedicalModels/DentalHistory.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
@@ -30,6 +31,7 @@ import '../../Widgets/MultiSelectChipWidget.dart';
 late PatientMedicalController MasterController;
 late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
+late DentalHistoryModel dentalHistoryModel;
 
 class PatientMedicalInfoPage extends StatefulWidget {
   PatientMedicalInfoPage(
@@ -66,7 +68,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   ];
   List<Widget> pages = [
     _PatientMedicalHistory(),
-    // _PatientDentalHistory(),
+    _PatientDentalHistory(),
     // _PatientDentalExamination(),
     //_PatientNonSurgicalTreatment(),
     //_PatientTreatmentPlan(),
@@ -79,11 +81,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   @override
   Widget build(BuildContext context) {
     siteController.setAppBarWidget(
-      onChange: (value) {
-        if (value == 0)
-          TempPatientAPI.UpdateMedicalExamination(
-              patientID, medicalExaminationModel);
-      },
       width: MediaQuery.of(context).size.width * 0.75,
       height: MediaQuery.of(context).size.width * 0.04,
       fontSize: MediaQuery.of(context).size.width * 0.01,
@@ -295,6 +292,11 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   bool otherField = false;
   bool diseases = false;
   Color illegalDrugs = Color_TextFieldBorder;
+
+  @override
+  void dispose() {
+    TempPatientAPI.UpdateMedicalExamination(patientID, medicalExaminationModel);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1388,101 +1390,174 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   String tobacco = "0";
 
   @override
+  void dispose() {
+    TempPatientAPI.UpdateDentalHistory(patientID, dentalHistoryModel);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CIA_MedicalPagesWidget(
-      children: [
-        Row(
-          children: [
-            Expanded(
-                child:
-                    FormTextKeyWidget(text: "Are your teeth sensitive to ?")),
-            Expanded(
-                flex: 2,
-                child: CIA_MultiSelectChipWidget(labels: [
-                  CIA_MultiSelectChipWidgeModel(label: "Hot or cold"),
-                  CIA_MultiSelectChipWidgeModel(label: "sweets"),
-                  CIA_MultiSelectChipWidgeModel(label: "Biting or cheweing"),
-                ]))
-          ],
-        ),
-        CIA_TextFormField(
-            borderColor: clench,
-            onChange: (value) {
-              if (value != null && value != "") {
-                setState(() {
-                  clench = Colors.orange;
-                });
-              } else {
-                setState(() {
-                  clench = Color_TextFieldBorder;
-                });
-              }
-            },
-            label: "Do you clench or grind your teeth while awake or sleep?",
-            controller: TextEditingController()),
-        Row(
-          children: [
-            Expanded(
-                child: FormTextKeyWidget(
-              text: "Smoke Tobacco?",
-            )),
-            Expanded(
-                child: CIA_TextFormField(
-                    onChange: (value) {
-                      setState(() {
-                        tobacco = value;
-                      });
-                    },
-                    label: "Cigarette per day",
-                    controller: TextEditingController(text: tobacco))),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: FormTextValueWidget(
-                text: int.parse(tobacco) == 0
-                    ? "Non Smoker"
-                    : (int.parse(tobacco) < 10
-                        ? "Light Smoker"
-                        : (int.parse(tobacco) < 20
-                            ? "Medium Smoker"
-                            : "Heavy Smoker")),
+    return FutureBuilder(
+        future: TempPatientAPI.GetDentalHistory(patientID),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            var res = snapshot.data as API_Response;
+            if (res.statusCode == 200) {
+              dentalHistoryModel = res.result as DentalHistoryModel;
+              return CIA_MedicalPagesWidget(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Are your teeth sensitive to ?")),
+                      Expanded(
+                          flex: 2,
+                          child: CIA_MultiSelectChipWidget(
+                              onChange: (value, isSelected) {
+                                if (value.toString() == "Hot or cold")
+                                  dentalHistoryModel.senstiveHotCold =
+                                      isSelected;
+                                else if (value.toString() == "sweets")
+                                  dentalHistoryModel.senstiveSweets =
+                                      isSelected;
+                                else if (value.toString() ==
+                                    "Biting or chewing")
+                                  dentalHistoryModel.bittingCheweing =
+                                      isSelected;
+                              },
+                              labels: [
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "Hot or cold",
+                                    isSelected:
+                                        dentalHistoryModel.senstiveHotCold ??
+                                            false),
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "sweets",
+                                    isSelected:
+                                        dentalHistoryModel.senstiveSweets ??
+                                            false),
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "Biting or chewing",
+                                    isSelected:
+                                        dentalHistoryModel.bittingCheweing ??
+                                            false),
+                              ]))
+                    ],
+                  ),
+                  CIA_TextFormField(
+                      borderColor: clench,
+                      borderColorOnChange: Colors.orange,
+                      changeColorIfFilled: true,
+                      onChange: (value) {
+                        dentalHistoryModel.clench = value;
+                      },
+                      label:
+                          "Do you clench or grind your teeth while awake or sleep?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.clench)),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                        text: "Smoke Tobacco?",
+                      )),
+                      Expanded(
+                          child: CIA_TextFormField(
+                              onChange: (value) {
+                                dentalHistoryModel.smoke = int.parse(value);
+                                /*setState(() {
+                                    tobacco = value;
+                                  });*/
+                              },
+                              label: "Cigarette per day",
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel.smoke == null
+                                      ? null
+                                      : dentalHistoryModel.smoke.toString()))),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: FormTextValueWidget(
+                              text: dentalHistoryModel.smoke != null &&
+                                      (dentalHistoryModel.smoke!) == 0
+                                  ? "Non Smoker"
+                                  : dentalHistoryModel.smoke != null &&
+                                          (dentalHistoryModel.smoke!) < 10
+                                      ? "Light Smoker"
+                                      : dentalHistoryModel.smoke != null &&
+                                              (dentalHistoryModel.smoke!) < 20
+                                          ? "Medium Smoker"
+                                          : "Heavy Smoker")),
+                      Expanded(flex: 3, child: SizedBox())
+                    ],
+                  ),
+                  CIA_TextFormField(
+                      onChange: (value) =>
+                          dentalHistoryModel.seriousInjury = value,
+                      label: "A serious injury to the mouth?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.seriousInjury)),
+                  CIA_TextFormField(
+                      onChange: (value) => dentalHistoryModel.satisfied = value,
+                      label: "Are you satisfied with your teeth's appearance?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.satisfied)),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Patient Cooperation Score")),
+                      Expanded(
+                          child: CIA_TextFormField(
+                              onChange: (value) => dentalHistoryModel
+                                  .cooperationScore = int.parse(value),
+                              label: "",
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel.cooperationScore !=
+                                          null
+                                      ? dentalHistoryModel.cooperationScore
+                                          .toString()
+                                      : null))),
+                      Expanded(child: FormTextKeyWidget(text: "/10")),
+                      Expanded(child: SizedBox())
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Patient willing for implant score")),
+                      Expanded(
+                          child: CIA_TextFormField(
+                              onChange: (value) => dentalHistoryModel
+                                  .willingForImplantScore = int.parse(value),
+                              label: "",
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel
+                                              .willingForImplantScore !=
+                                          null
+                                      ? dentalHistoryModel
+                                          .willingForImplantScore
+                                          .toString()
+                                      : null))),
+                      Expanded(child: FormTextKeyWidget(text: "/10")),
+                      Expanded(child: SizedBox())
+                    ],
+                  ),
+                ],
+              );
+            }
+            return Container();
+          } else {
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
               ),
-            ),
-            Expanded(flex: 3, child: SizedBox())
-          ],
-        ),
-        CIA_TextFormField(
-            label: "A serious injury to the mouth?",
-            controller: TextEditingController()),
-        CIA_TextFormField(
-            label: "Are you satisfied with your teeth's appearance?",
-            controller: TextEditingController()),
-        Row(
-          children: [
-            Expanded(
-                child: FormTextKeyWidget(text: "Patient Cooperation Score")),
-            Expanded(
-                child: CIA_TextFormField(
-                    label: "", controller: TextEditingController())),
-            Expanded(child: FormTextKeyWidget(text: "/10")),
-            Expanded(child: SizedBox())
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-                child: FormTextKeyWidget(
-                    text: "Patient willing for implant score")),
-            Expanded(
-                child: CIA_TextFormField(
-                    label: "", controller: TextEditingController())),
-            Expanded(child: FormTextKeyWidget(text: "/10")),
-            Expanded(child: SizedBox())
-          ],
-        ),
-      ],
-    );
+            );
+          }
+        });
   }
 }
 
