@@ -11,11 +11,13 @@ class CIA_TagsInputWidget extends StatefulWidget {
       {Key? key,
       required this.label,
       this.initalValue,
+      this.onDelete,
       this.onChange = null,
       required this.patientController})
       : super(key: key);
   String label;
-  Function? onChange;
+  Function(List<String>)? onChange;
+  Function(String)? onDelete;
   List<String>? initalValue;
   PatientMedicalController patientController;
 
@@ -137,6 +139,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
             focus.requestFocus();
             widget.patientController.addTooth(teeth);
             state.deleteChip(teeth);
+            if (widget.onDelete != null) widget.onDelete!(teeth);
           },
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );

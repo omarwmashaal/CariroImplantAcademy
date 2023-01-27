@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -7,6 +8,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -32,6 +34,7 @@ late PatientMedicalController MasterController;
 late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
+late List<DentalExaminationModel> dentalExaminationModel;
 
 class PatientMedicalInfoPage extends StatefulWidget {
   PatientMedicalInfoPage(
@@ -69,7 +72,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   List<Widget> pages = [
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
-    // _PatientDentalExamination(),
+    _PatientDentalExamination(),
     //_PatientNonSurgicalTreatment(),
     //_PatientTreatmentPlan(),
     // _PatientSurgicalTreatment(),
@@ -296,6 +299,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   @override
   void dispose() {
     TempPatientAPI.UpdateMedicalExamination(patientID, medicalExaminationModel);
+    super.dispose();
   }
 
   @override
@@ -407,6 +411,141 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   controller: TextEditingController(
                       text: medicalExaminationModel.comment)),
               FormTextKeyWidget(text: "Did you have ever?"),
+              CIA_MultiSelectChipWidget(
+                onChange: (value, isSelected) {
+                  if (value == "Other") {
+                    setState(() {
+                      diseases = isSelected as bool;
+                    });
+                  }
+                  DiseasesEnum? disease;
+                  switch (value) {
+                    case "Kidney Disease":
+                      disease = DiseasesEnum.KidneyDisease;
+                      break;
+                    case "Liver Disease":
+                      disease = DiseasesEnum.LiverDisease;
+                      break;
+                    case "Asthma":
+                      disease = DiseasesEnum.Asthma;
+                      break;
+                    case "Psychological":
+                      disease = DiseasesEnum.Psychological;
+                      break;
+                    case "Rhemuatic":
+                      disease = DiseasesEnum.Rhemuatic;
+                      break;
+                    case "Anemia":
+                      disease = DiseasesEnum.Anemia;
+                      break;
+                    case "Epilepsy":
+                      disease = DiseasesEnum.Epilepsy;
+                      break;
+                    case "Heart problem":
+                      disease = DiseasesEnum.HeartProblem;
+                      break;
+                    case "Thyroid":
+                      disease = DiseasesEnum.Thyroid;
+                      break;
+                    case "Hepatitis":
+                      disease = DiseasesEnum.Hepatitis;
+                      break;
+                    case "Venereal Disease":
+                      disease = DiseasesEnum.VenerealDisease;
+                      break;
+                    case "Other":
+                      disease = DiseasesEnum.Other;
+                      break;
+                  }
+                  if (isSelected) {
+                    if (medicalExaminationModel.diseases == null) {
+                      medicalExaminationModel.diseases = [];
+                    }
+                    medicalExaminationModel.diseases?.add(disease);
+                  } else {
+                    if (medicalExaminationModel.diseases == null) {
+                      medicalExaminationModel.diseases = [];
+                    } else {
+                      medicalExaminationModel.diseases?.remove(disease);
+                    }
+                  }
+                },
+                redFlags: true,
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Kidney Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.KidneyDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Liver Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.LiverDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Asthma",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Asthma)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Psychological",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Psychological)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Rhemuatic",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Rhemuatic)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Anemia",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Anemia)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Epilepsy",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Epilepsy)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Heart problem",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.HeartProblem)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Thyroid",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Thyroid)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hepatitis",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Hepatitis)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Venereal Disease",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.VenerealDisease)),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Other",
+                      selectedColor: Colors.red,
+                      isSelected: medicalExaminationModel.diseases != null &&
+                          medicalExaminationModel.diseases!
+                              .contains(DiseasesEnum.Other))
+                ],
+              ),
               CIA_MultiSelectChipWidget(
                 onChange: (value, isSelected) {
                   if (value == "Other") {
@@ -989,9 +1128,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   List<String> selectedTeeth = [];
   String selectedStatus = "";
   bool mobilityDegrees = false;
+  late Future<API_Response> load;
 
   @override
   void initState() {
+    load = TempPatientAPI.GetDentalExamination(patientID);
     _status["Carious"] = false;
     _status["Filled"] = false;
     _status["Missed"] = false;
@@ -1042,339 +1183,695 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
     for (String tooth in _teeth.keys) {
       _teeth[tooth] = false;
     }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    TempPatientAPI.UpdateDentalExamination(patientID, dentalExaminationModel);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CIA_MedicalPagesWidget(children: [
-      Row(
-        children: [
-          Expanded(
-            child: CIA_MultiSelectChipWidget(
-              key: GlobalKey(),
-              onChangeList: (selectedItems) {
-                selectedTeeth = selectedItems;
-                for (String tooth in selectedTeeth) {
-                  _teeth[tooth] = true;
-                }
-              },
-              labels: [
-                CIA_MultiSelectChipWidgeModel(
-                    label: "11", isSelected: _teeth["11"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "12", isSelected: _teeth["12"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "13", isSelected: _teeth["13"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "14", isSelected: _teeth["14"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "15", isSelected: _teeth["15"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "16", isSelected: _teeth["16"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "17", isSelected: _teeth["17"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "18", isSelected: _teeth["18"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "19", isSelected: _teeth["19"] as bool)
-              ],
-            ),
-          ),
-          SizedBox(),
-          Expanded(
-            child: CIA_MultiSelectChipWidget(
-              key: GlobalKey(),
-              onChangeList: (selectedItems) {
-                selectedTeeth = selectedItems;
-                for (String tooth in selectedTeeth) {
-                  _teeth[tooth] = true;
-                }
-              },
-              labels: [
-                CIA_MultiSelectChipWidgeModel(
-                    label: "21", isSelected: _teeth["21"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "22", isSelected: _teeth["22"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "23", isSelected: _teeth["23"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "24", isSelected: _teeth["24"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "25", isSelected: _teeth["25"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "26", isSelected: _teeth["26"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "27", isSelected: _teeth["27"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "28", isSelected: _teeth["28"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "29", isSelected: _teeth["29"] as bool)
-              ],
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          Expanded(
-            child: CIA_MultiSelectChipWidget(
-              key: GlobalKey(),
-              onChangeList: (selectedItems) {
-                selectedTeeth = selectedItems;
-                for (String tooth in selectedTeeth) {
-                  _teeth[tooth] = true;
-                }
-              },
-              labels: [
-                CIA_MultiSelectChipWidgeModel(
-                    label: "31", isSelected: _teeth["31"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "32", isSelected: _teeth["32"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "33", isSelected: _teeth["33"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "34", isSelected: _teeth["34"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "35", isSelected: _teeth["35"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "36", isSelected: _teeth["36"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "37", isSelected: _teeth["37"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "38", isSelected: _teeth["38"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "39", isSelected: _teeth["39"] as bool)
-              ],
-            ),
-          ),
-          SizedBox(),
-          Expanded(
-            child: CIA_MultiSelectChipWidget(
-              key: GlobalKey(),
-              onChangeList: (selectedItems) {
-                selectedTeeth = selectedItems;
-                for (String tooth in selectedTeeth) {
-                  _teeth[tooth] = true;
-                }
-              },
-              labels: [
-                CIA_MultiSelectChipWidgeModel(
-                    label: "41", isSelected: _teeth["41"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "42", isSelected: _teeth["42"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "43", isSelected: _teeth["43"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "44", isSelected: _teeth["44"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "45", isSelected: _teeth["45"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "46", isSelected: _teeth["46"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "47", isSelected: _teeth["47"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "48", isSelected: _teeth["48"] as bool),
-                CIA_MultiSelectChipWidgeModel(
-                    label: "49", isSelected: _teeth["49"] as bool)
-              ],
-            ),
-          ),
-        ],
-      ),
-      CIA_MultiSelectChipWidget(
-        key: GlobalKey(),
-        onChange: (value, isSelected) {
-          if (isSelected) {
-            if (value == "Mobility") {
-              setState(() {
-                mobilityDegrees = true;
-                _status["Mobility"] = true;
-              });
-            } else {
-              if (isSelected)
-                MasterController.updateTeethStatus(selectedTeeth, value);
-              for (String ss in _status.keys) {
-                _status[ss] = false;
-              }
-              for (String tooth in _teeth.keys) {
-                _teeth[tooth] = false;
-              }
-              setState(() {});
-            }
+    return FutureBuilder(
+        future: load,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            var res = snapshot.data as API_Response;
+            if (res.statusCode == 200)
+              dentalExaminationModel =
+                  res.result as List<DentalExaminationModel>;
+            return CIA_MedicalPagesWidget(children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                      key: GlobalKey(),
+                      onChangeList: (selectedItems) {
+                        selectedTeeth = selectedItems;
+                        for (String tooth in selectedTeeth) {
+                          _teeth[tooth] = true;
+                        }
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "11", isSelected: _teeth["11"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "12", isSelected: _teeth["12"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "13", isSelected: _teeth["13"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "14", isSelected: _teeth["14"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "15", isSelected: _teeth["15"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "16", isSelected: _teeth["16"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "17", isSelected: _teeth["17"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "18", isSelected: _teeth["18"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "19", isSelected: _teeth["19"] as bool)
+                      ],
+                    ),
+                  ),
+                  SizedBox(),
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                      key: GlobalKey(),
+                      onChangeList: (selectedItems) {
+                        selectedTeeth = selectedItems;
+                        for (String tooth in selectedTeeth) {
+                          _teeth[tooth] = true;
+                        }
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "21", isSelected: _teeth["21"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "22", isSelected: _teeth["22"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "23", isSelected: _teeth["23"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "24", isSelected: _teeth["24"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "25", isSelected: _teeth["25"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "26", isSelected: _teeth["26"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "27", isSelected: _teeth["27"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "28", isSelected: _teeth["28"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "29", isSelected: _teeth["29"] as bool)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                      key: GlobalKey(),
+                      onChangeList: (selectedItems) {
+                        selectedTeeth = selectedItems;
+                        for (String tooth in selectedTeeth) {
+                          _teeth[tooth] = true;
+                        }
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "31", isSelected: _teeth["31"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "32", isSelected: _teeth["32"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "33", isSelected: _teeth["33"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "34", isSelected: _teeth["34"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "35", isSelected: _teeth["35"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "36", isSelected: _teeth["36"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "37", isSelected: _teeth["37"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "38", isSelected: _teeth["38"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "39", isSelected: _teeth["39"] as bool)
+                      ],
+                    ),
+                  ),
+                  SizedBox(),
+                  Expanded(
+                    child: CIA_MultiSelectChipWidget(
+                      key: GlobalKey(),
+                      onChangeList: (selectedItems) {
+                        selectedTeeth = selectedItems;
+                        for (String tooth in selectedTeeth) {
+                          _teeth[tooth] = true;
+                        }
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "41", isSelected: _teeth["41"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "42", isSelected: _teeth["42"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "43", isSelected: _teeth["43"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "44", isSelected: _teeth["44"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "45", isSelected: _teeth["45"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "46", isSelected: _teeth["46"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "47", isSelected: _teeth["47"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "48", isSelected: _teeth["48"] as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "49", isSelected: _teeth["49"] as bool)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              CIA_MultiSelectChipWidget(
+                key: GlobalKey(),
+                onChange: (value, isSelected) {
+                  for (var tooth in selectedTeeth) {
+                    var t = dentalExaminationModel.firstWhereOrNull(
+                        (element) => element.tooth.toString() == tooth);
+                    if (t == null) {
+                      dentalExaminationModel
+                          .add(DentalExaminationModel(tooth: int.parse(tooth)));
+                    }
+                  }
+                  if (isSelected) {
+                    if (value == "Mobility") {
+                      setState(() {
+                        mobilityDegrees = true;
+                        _status["Mobility"] = true;
+                      });
+                    } else {
+                      switch (value) {
+                        case "Carious":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .carious = true;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .missed = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .filled = false;
+                            });
+                            break;
+                          }
+                        case "Filled":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .carious = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .missed = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .filled = true;
+                            });
+                            break;
+                          }
+                        case "Missed":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .carious = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .missed = true;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .filled = false;
+                            });
+                            break;
+                          }
+                        case "Not Sure":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .notSure = true;
+                            });
+                            break;
+                          }
+
+                        case "Hopeless teeth":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .hopelessteeth = true;
+                            });
+                            break;
+                          }
+                        case "Implant Placed":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .implantPlaced = true;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .carious = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .missed = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .filled = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .notSure = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityII = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityI = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityIII = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .implantFailed = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .hopelessteeth = false;
+                            });
+                            break;
+                          }
+                        case "Implant Failed":
+                          {
+                            selectedTeeth.forEach((element) {
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .implantFailed = true;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .implantPlaced = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .carious = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .missed = true;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .filled = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .notSure = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityII = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityI = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .mobilityIII = false;
+                              dentalExaminationModel
+                                  .firstWhere(
+                                      (x) => x.tooth == int.parse(element))
+                                  .hopelessteeth = false;
+                            });
+                            break;
+                          }
+                      }
+                      /*if (isSelected)
+                        MasterController.updateTeethStatus(
+                            selectedTeeth, value);*/
+                      // _status.forEach((key, value) => value = false);
+                      //_teeth.forEach((key, value) =>value = false);
+                      for (String ss in _status.keys) {
+                        _status[ss] = false;
+                      }
+                      for (String tooth in _teeth.keys) {
+                        _teeth[tooth] = false;
+                      }
+                      selectedTeeth.clear();
+                      setState(() {});
+                    }
+                  }
+                },
+                singleSelect: true,
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Carious", isSelected: _status["Carious"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Filled", isSelected: _status["Filled"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Missed", isSelected: _status["Missed"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Not Sure",
+                      isSelected: _status["Not Sure"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Mobility",
+                      isSelected: _status["Mobility"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Hopeless teeth",
+                      isSelected: _status["Hopeless teeth"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Implant Placed",
+                      isSelected: _status["Implant Placed"] as bool),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Implant Failed",
+                      isSelected: _status["Implant Failed"] as bool),
+                ],
+              ),
+              Visibility(
+                visible: mobilityDegrees,
+                child: CIA_MultiSelectChipWidget(
+                  key: GlobalKey(),
+                  onChange: (value, isSelected) {
+                    if (isSelected) {
+                      if (value == "I")
+                        selectedTeeth.forEach((element) =>
+                            dentalExaminationModel
+                                .firstWhere(
+                                    (e) => e.tooth.toString() == element)
+                                .mobilityI = true);
+                      else if (value == "II")
+                        selectedTeeth.forEach((element) =>
+                            dentalExaminationModel
+                                .firstWhere(
+                                    (e) => e.tooth.toString() == element)
+                                .mobilityII = true);
+                      else if (value == "III")
+                        selectedTeeth.forEach((element) =>
+                            dentalExaminationModel
+                                .firstWhere(
+                                    (e) => e.tooth.toString() == element)
+                                .mobilityIII = true);
+                      for (String ss in _status.keys) {
+                        _status[ss] = false;
+                      }
+                      for (String tooth in _teeth.keys) {
+                        _teeth[tooth] = false;
+                      }
+                      setState(() {
+                        mobilityDegrees = false;
+                      });
+                    }
+                  },
+                  singleSelect: true,
+                  labels: [
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "I", isSelected: false),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "II", isSelected: false),
+                    CIA_MultiSelectChipWidgeModel(
+                        label: "III", isSelected: false),
+                  ],
+                ),
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Carious",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.carious == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) {
+                  MasterController.updateDentalExamination("Carious", value);
+                },
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .carious = false;
+                },
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Filled",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.filled == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) =>
+                    MasterController.updateDentalExamination("Filled", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .filled = false;
+                },
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Missed",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.missed == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) =>
+                    MasterController.updateDentalExamination("Missed", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .missed = false;
+                },
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Not Sure",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.notSure == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) =>
+                    MasterController.updateDentalExamination("Not Sure", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .notSure = false;
+                },
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    key: GlobalKey(),
+                    child: CIA_TagsInputWidget(
+                      key: GlobalKey(),
+                      patientController: MasterController,
+                      label: "Mobility I",
+                      initalValue: dentalExaminationModel
+                          .where((element) => element.mobilityI == true)
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList(),
+                      onChange: (value) =>
+                          MasterController.updateDentalExamination(
+                              "Mobility I", value),
+                      onDelete: (value) {
+                        dentalExaminationModel
+                            .firstWhere(
+                                (element) => element.tooth.toString() == value)
+                            .mobilityI = false;
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    key: GlobalKey(),
+                    child: CIA_TagsInputWidget(
+                      key: GlobalKey(),
+                      patientController: MasterController,
+                      label: "Mobility II",
+                      initalValue: dentalExaminationModel
+                          .where((element) => element.mobilityII == true)
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList(),
+                      onChange: (value) =>
+                          MasterController.updateDentalExamination(
+                              "Mobility II", value),
+                      onDelete: (value) {
+                        dentalExaminationModel
+                            .firstWhere(
+                                (element) => element.tooth.toString() == value)
+                            .mobilityII = false;
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    key: GlobalKey(),
+                    child: CIA_TagsInputWidget(
+                      key: GlobalKey(),
+                      patientController: MasterController,
+                      label: "Mobility III",
+                      initalValue: dentalExaminationModel
+                          .where((element) => element.mobilityIII == true)
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList(),
+                      onChange: (value) =>
+                          MasterController.updateDentalExamination(
+                              "Mobility III", value),
+                      onDelete: (value) {
+                        dentalExaminationModel
+                            .firstWhere(
+                                (element) => element.tooth.toString() == value)
+                            .mobilityIII = false;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Hopeless teeth",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.hopelessteeth == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) => MasterController.updateDentalExamination(
+                    "Hopeless teeth", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .hopelessteeth = false;
+                },
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    key: GlobalKey(),
+                    child: CIA_TextFormField(
+                        suffix: "mm",
+                        isNumber: true,
+                        label: "Inter arch space RT",
+                        onChange: (value) {
+                          dentalExaminationModel.forEach((element) {
+                            element.interarchspaceRT = int.parse(value);
+                          });
+                        },
+                        controller: TextEditingController(
+                            text: dentalExaminationModel.isNotEmpty
+                                ? dentalExaminationModel[0]
+                                    .interarchspaceRT
+                                    .toString()
+                                : 0.toString())),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    key: GlobalKey(),
+                    child: CIA_TextFormField(
+                        suffix: "mm",
+                        isNumber: true,
+                        label: "Inter arch space LT",
+                        onChange: (value) {
+                          dentalExaminationModel.forEach((element) {
+                            element.interarchspaceLT = int.parse(value);
+                          });
+                        },
+                        controller: TextEditingController(
+                            text: dentalExaminationModel.isNotEmpty
+                                ? dentalExaminationModel[0]
+                                    .interarchspaceLT
+                                    .toString()
+                                : "0")),
+                  ),
+                ],
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Implant Placed",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.implantPlaced == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) => MasterController.updateDentalExamination(
+                    "Implant Placed", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .implantPlaced = false;
+                },
+              ),
+              CIA_TagsInputWidget(
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Implant Failed",
+                initalValue: dentalExaminationModel
+                    .where((element) => element.implantFailed == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                onChange: (value) => MasterController.updateDentalExamination(
+                    "Implant Failed", value),
+                onDelete: (value) {
+                  dentalExaminationModel
+                      .firstWhere(
+                          (element) => element.tooth.toString() == value)
+                      .implantFailed = false;
+                },
+              ),
+              CIA_TextFormField(
+                  label: "Operator Implant Notes",
+                  onChange: (value) {
+                    dentalExaminationModel.forEach((element) {
+                      element.operatorImplantNotes = value;
+                    });
+                  },
+                  controller: TextEditingController(
+                      text: dentalExaminationModel.isEmpty
+                          ? null
+                          : dentalExaminationModel[0].operatorImplantNotes))
+            ]);
+          } else {
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
+              ),
+            );
           }
-        },
-        singleSelect: true,
-        labels: [
-          CIA_MultiSelectChipWidgeModel(
-              label: "Carious", isSelected: _status["Carious"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Filled", isSelected: _status["Filled"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Missed", isSelected: _status["Missed"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Not Sure", isSelected: _status["Not Sure"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Mobility", isSelected: _status["Mobility"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Hopeless teeth",
-              isSelected: _status["Hopeless teeth"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Implant Placed",
-              isSelected: _status["Implant Placed"] as bool),
-          CIA_MultiSelectChipWidgeModel(
-              label: "Implant Failed",
-              isSelected: _status["Implant Failed"] as bool),
-        ],
-      ),
-      Visibility(
-        visible: mobilityDegrees,
-        child: CIA_MultiSelectChipWidget(
-          key: GlobalKey(),
-          onChange: (value, isSelected) {
-            if (isSelected) {
-              MasterController.updateTeethStatus(
-                  selectedTeeth, "Mobility " + value);
-              for (String ss in _status.keys) {
-                _status[ss] = false;
-              }
-              for (String tooth in _teeth.keys) {
-                _teeth[tooth] = false;
-              }
-              setState(() {
-                mobilityDegrees = false;
-              });
-            }
-          },
-          singleSelect: true,
-          labels: [
-            CIA_MultiSelectChipWidgeModel(label: "I", isSelected: false),
-            CIA_MultiSelectChipWidgeModel(label: "II", isSelected: false),
-            CIA_MultiSelectChipWidgeModel(label: "III", isSelected: false),
-          ],
-        ),
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Carious",
-        initalValue: (MasterController.getDentalExamindation())["Carious"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Carious", value),
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Filled",
-        initalValue: MasterController.getDentalExamindation()["Filled"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Filled", value),
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Missed",
-        initalValue: MasterController.getDentalExamindation()["Missed"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Missed", value),
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Not Sure",
-        initalValue: MasterController.getDentalExamindation()["Not Sure"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Not Sure", value),
-      ),
-      Row(
-        children: [
-          Expanded(
-            key: GlobalKey(),
-            child: CIA_TagsInputWidget(
-              key: GlobalKey(),
-              patientController: MasterController,
-              label: "Mobility I",
-              initalValue:
-                  MasterController.getDentalExamindation()["Mobility I"],
-              onChange: (value) =>
-                  MasterController.updateDentalExamination("Mobility I", value),
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            key: GlobalKey(),
-            child: CIA_TagsInputWidget(
-              key: GlobalKey(),
-              patientController: MasterController,
-              label: "Mobility II",
-              initalValue:
-                  MasterController.getDentalExamindation()["Mobility II"],
-              onChange: (value) => MasterController.updateDentalExamination(
-                  "Mobility II", value),
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            key: GlobalKey(),
-            child: CIA_TagsInputWidget(
-              key: GlobalKey(),
-              patientController: MasterController,
-              label: "Mobility III",
-              initalValue:
-                  MasterController.getDentalExamindation()["Mobility III"],
-              onChange: (value) => MasterController.updateDentalExamination(
-                  "Mobility III", value),
-            ),
-          ),
-        ],
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Hopeless teeth",
-        initalValue: MasterController.getDentalExamindation()["Hopeless teeth"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Hopeless teeth", value),
-      ),
-      Row(
-        children: [
-          Expanded(
-            key: GlobalKey(),
-            child: CIA_TextFormField(
-                suffix: "mm",
-                isNumber: true,
-                label: "Inter arch space RT",
-                controller: TextEditingController()),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            key: GlobalKey(),
-            child: CIA_TextFormField(
-                suffix: "mm",
-                isNumber: true,
-                label: "Inter arch space LT",
-                controller: TextEditingController()),
-          ),
-        ],
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Implant Placed",
-        initalValue: MasterController.getDentalExamindation()["Implant Placed"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Implant Placed", value),
-      ),
-      CIA_TagsInputWidget(
-        key: GlobalKey(),
-        patientController: MasterController,
-        label: "Implant Failed",
-        initalValue: MasterController.getDentalExamindation()["Implant Failed"],
-        onChange: (value) =>
-            MasterController.updateDentalExamination("Implant Failed", value),
-      ),
-      CIA_TextFormField(
-          label: "Operator Implant Notes", controller: TextEditingController())
-    ]);
+        });
   }
 }
 
@@ -1388,16 +1885,24 @@ class _PatientDentalHistory extends StatefulWidget {
 class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   Color clench = Color_TextFieldBorder;
   String tobacco = "0";
+  late Future<API_Response> load;
+
+  @override
+  void initState() {
+    load = TempPatientAPI.GetDentalHistory(patientID);
+    super.initState();
+  }
 
   @override
   void dispose() {
     TempPatientAPI.UpdateDentalHistory(patientID, dentalHistoryModel);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: TempPatientAPI.GetDentalHistory(patientID),
+        future: load,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             var res = snapshot.data as API_Response;
@@ -1465,9 +1970,9 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                           child: CIA_TextFormField(
                               onChange: (value) {
                                 dentalHistoryModel.smoke = int.parse(value);
-                                /*setState(() {
-                                    tobacco = value;
-                                  });*/
+                                setState(() {
+                                  tobacco = value;
+                                });
                               },
                               label: "Cigarette per day",
                               controller: TextEditingController(

@@ -25,7 +25,10 @@ class HTTPRequest {
     if (response.statusCode != 200) {
       MicrosoftAPI_Response r =
           MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
-      apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      if (r.title != null || r.errors != null)
+        apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      else
+        apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
       return apiResponse;
     }
@@ -67,7 +70,10 @@ class HTTPRequest {
     if (response.statusCode != 200) {
       MicrosoftAPI_Response r =
           MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
-      apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      if (r.title != null || r.errors != null)
+        apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      else
+        apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
       return apiResponse;
     }
@@ -83,8 +89,7 @@ class HTTPRequest {
     return apiResponse;
   }
 
-  static Future<API_Response> Put(
-      String url, Map<String, dynamic>? body) async {
+  static Future<API_Response> Put(String url, Object? body) async {
     API_Response apiResponse = API_Response();
     Response response = await put(
       Uri.parse("$host/$url"),
@@ -107,7 +112,16 @@ class HTTPRequest {
     }).timeout(Duration(seconds: 20), onTimeout: () {
       return Response("body", 408);
     });
-
+    if (response.statusCode != 200) {
+      MicrosoftAPI_Response r =
+          MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
+      if (r.title != null || r.errors != null)
+        apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      else
+        apiResponse = API_Response.fromJson(jsonDecode(response.body));
+      apiResponse.statusCode = response.statusCode;
+      return apiResponse;
+    }
     try {
       apiResponse = API_Response.fromJson(jsonDecode(response.body));
       apiResponse.statusCode = response.statusCode;
