@@ -10,7 +10,8 @@ class CIA_TagsInputWidget extends StatefulWidget {
   CIA_TagsInputWidget(
       {Key? key,
       required this.label,
-      this.initalValue,
+      this.initialValue,
+      this.strikeValues,
       this.onDelete,
       this.onChange = null,
       required this.patientController})
@@ -18,7 +19,8 @@ class CIA_TagsInputWidget extends StatefulWidget {
   String label;
   Function(List<String>)? onChange;
   Function(String)? onDelete;
-  List<String>? initalValue;
+  List<String>? initialValue;
+  List<String>? strikeValues;
   PatientMedicalController patientController;
 
   @override
@@ -33,6 +35,15 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
 
   @override
   void initState() {
+    if (widget.strikeValues != null) {
+      for (int i = 0; i < widget.strikeValues!.length; i++) {
+        widget.strikeValues![i] = "strike" + widget.strikeValues![i];
+      }
+
+      if (widget.initialValue != null)
+        widget.initialValue?.addAll(widget.strikeValues!);
+    }
+
     focus.addListener(() {
       if ((!focus.hasFocus)) {
         if (widget.onChange != null) {
@@ -74,7 +85,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
   Widget build(BuildContext context) {
     return ChipsInput(
       readOnly: true,
-      initialValue: widget.initalValue as List<String>,
+      initialValue: widget.initialValue as List<String>,
       controller: _controller,
       focusNode: focus,
       autocorrect: true,

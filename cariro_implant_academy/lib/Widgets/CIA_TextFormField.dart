@@ -10,6 +10,7 @@ class CIA_TextFormField extends StatefulWidget {
     required this.label,
     this.isObscure,
     this.onChange = null,
+    this.onInstantChange = null,
     this.icon,
     this.isNumber = false,
     this.isMinutes = false,
@@ -28,6 +29,7 @@ class CIA_TextFormField extends StatefulWidget {
   bool? isObscure = false;
   String label;
   Function? onChange;
+  Function? onInstantChange;
   IconData? icon;
   Color? borderColor;
   TextEditingController controller;
@@ -64,6 +66,9 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             ),
       ),
       child: TextFormField(
+        onChanged: (value) {
+          if (widget.onInstantChange != null) widget.onInstantChange!(value);
+        },
         autovalidateMode: widget.isMinutes || widget.isHours
             ? AutovalidateMode.onUserInteraction
             : null,

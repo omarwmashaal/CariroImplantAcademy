@@ -17,6 +17,7 @@ import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/API_Response.dart';
 import '../../Models/MedicalModels/DentalHistory.dart';
+import '../../Models/MedicalModels/NonSurgicalTreatment.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
@@ -35,6 +36,7 @@ late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
 late List<DentalExaminationModel> dentalExaminationModel;
+late NonSurgicalTreatmentModel nonSurgicalTreatment;
 
 class PatientMedicalInfoPage extends StatefulWidget {
   PatientMedicalInfoPage(
@@ -73,7 +75,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
     _PatientDentalExamination(),
-    //_PatientNonSurgicalTreatment(),
+    _PatientNonSurgicalTreatment(),
     //_PatientTreatmentPlan(),
     // _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
@@ -1355,175 +1357,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                         _status["Mobility"] = true;
                       });
                     } else {
-                      switch (value) {
-                        case "Carious":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .carious = true;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .missed = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .filled = false;
-                            });
-                            break;
-                          }
-                        case "Filled":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .carious = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .missed = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .filled = true;
-                            });
-                            break;
-                          }
-                        case "Missed":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .carious = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .missed = true;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .filled = false;
-                            });
-                            break;
-                          }
-                        case "Not Sure":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .notSure = true;
-                            });
-                            break;
-                          }
-
-                        case "Hopeless teeth":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .hopelessteeth = true;
-                            });
-                            break;
-                          }
-                        case "Implant Placed":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .implantPlaced = true;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .carious = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .missed = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .filled = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .notSure = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityII = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityI = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityIII = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .implantFailed = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .hopelessteeth = false;
-                            });
-                            break;
-                          }
-                        case "Implant Failed":
-                          {
-                            selectedTeeth.forEach((element) {
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .implantFailed = true;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .implantPlaced = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .carious = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .missed = true;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .filled = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .notSure = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityII = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityI = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .mobilityIII = false;
-                              dentalExaminationModel
-                                  .firstWhere(
-                                      (x) => x.tooth == int.parse(element))
-                                  .hopelessteeth = false;
-                            });
-                            break;
-                          }
-                      }
+                      selectedTeeth.forEach((element) {
+                        dentalExaminationModel
+                            .firstWhere((x) => x.tooth == int.parse(element))
+                            .updateToothStatus(value);
+                      });
                       /*if (isSelected)
                         MasterController.updateTeethStatus(
                             selectedTeeth, value);*/
@@ -1572,23 +1410,24 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                   onChange: (value, isSelected) {
                     if (isSelected) {
                       if (value == "I")
-                        selectedTeeth.forEach((element) =>
-                            dentalExaminationModel
-                                .firstWhere(
-                                    (e) => e.tooth.toString() == element)
-                                .mobilityI = true);
+                        selectedTeeth.forEach((element) {
+                          dentalExaminationModel
+                              .firstWhere((x) => x.tooth == int.parse(element))
+                              .updateToothStatus("mobilityI");
+                        });
                       else if (value == "II")
-                        selectedTeeth.forEach((element) =>
-                            dentalExaminationModel
-                                .firstWhere(
-                                    (e) => e.tooth.toString() == element)
-                                .mobilityII = true);
+                        selectedTeeth.forEach((element) {
+                          dentalExaminationModel
+                              .firstWhere((x) => x.tooth == int.parse(element))
+                              .updateToothStatus("mobilityII");
+                        });
                       else if (value == "III")
-                        selectedTeeth.forEach((element) =>
-                            dentalExaminationModel
-                                .firstWhere(
-                                    (e) => e.tooth.toString() == element)
-                                .mobilityIII = true);
+                        selectedTeeth.forEach((element) {
+                          dentalExaminationModel
+                              .firstWhere((x) => x.tooth == int.parse(element))
+                              .updateToothStatus("mobilityIII");
+                        });
+
                       for (String ss in _status.keys) {
                         _status[ss] = false;
                       }
@@ -1615,11 +1454,20 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Carious",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.carious == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where(
+                            (element) => element.previousState! == "carious") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) => element.previousState! == "carious")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) {
                   MasterController.updateDentalExamination("Carious", value);
                 },
@@ -1634,11 +1482,20 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Filled",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.filled == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where(
+                            (element) => element.previousState! == "filled") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) => element.previousState! == "filled")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Filled", value),
                 onDelete: (value) {
@@ -1652,11 +1509,20 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Missed",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.missed == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where(
+                            (element) => element.previousState! == "missed") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) => element.previousState! == "missed")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Missed", value),
                 onDelete: (value) {
@@ -1670,11 +1536,20 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Not Sure",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.notSure == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where(
+                            (element) => element.previousState! == "notSure") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) => element.previousState! == "notSure")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Not Sure", value),
                 onDelete: (value) {
@@ -1692,11 +1567,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility I",
-                      initalValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel
                           .where((element) => element.mobilityI == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
+                      strikeValues: dentalExaminationModel.where((element) =>
+                                  element.previousState! == "mobilityI") !=
+                              null
+                          ? dentalExaminationModel
+                              .where((element) =>
+                                  element.previousState! == "mobilityI")
+                              .toList()
+                              .map((e) => e.tooth.toString())
+                              .toList()
+                          : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility I", value),
@@ -1715,11 +1600,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility II",
-                      initalValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel
                           .where((element) => element.mobilityII == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
+                      strikeValues: dentalExaminationModel.where((element) =>
+                                  element.previousState! == "mobilityII") !=
+                              null
+                          ? dentalExaminationModel
+                              .where((element) =>
+                                  element.previousState! == "mobilityII")
+                              .toList()
+                              .map((e) => e.tooth.toString())
+                              .toList()
+                          : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility II", value),
@@ -1738,11 +1633,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility III",
-                      initalValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel
                           .where((element) => element.mobilityIII == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
+                      strikeValues: dentalExaminationModel.where((element) =>
+                                  element.previousState! == "mobilityIII") !=
+                              null
+                          ? dentalExaminationModel
+                              .where((element) =>
+                                  element.previousState! == "mobilityIII")
+                              .toList()
+                              .map((e) => e.tooth.toString())
+                              .toList()
+                          : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility III", value),
@@ -1760,11 +1665,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Hopeless teeth",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.hopelessteeth == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where((element) =>
+                            element.previousState! == "hopelessteeth") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) =>
+                            element.previousState! == "hopelessteeth")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Hopeless teeth", value),
                 onDelete: (value) {
@@ -1819,11 +1734,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Implant Placed",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.implantPlaced == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where((element) =>
+                            element.previousState! == "implantPlaced") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) =>
+                            element.previousState! == "implantPlaced")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Implant Placed", value),
                 onDelete: (value) {
@@ -1837,11 +1762,21 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Implant Failed",
-                initalValue: dentalExaminationModel
+                initialValue: dentalExaminationModel
                     .where((element) => element.implantFailed == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
+                strikeValues: dentalExaminationModel.where((element) =>
+                            element.previousState! == "implantFailed") !=
+                        null
+                    ? dentalExaminationModel
+                        .where((element) =>
+                            element.previousState! == "implantFailed")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Implant Failed", value),
                 onDelete: (value) {
@@ -2078,9 +2013,20 @@ class _PatientNonSurgicalTreatmentState
     extends State<_PatientNonSurgicalTreatment> {
   String date = "";
   List<String> containedTeeth = <String>[];
+  late List<DentalExaminationModel> tempDentalExamination;
+  late Future load;
+
+  @override
+  void dispose() {
+    TempPatientAPI.UpdateDentalExamination(patientID, tempDentalExamination);
+    TempPatientAPI.UpdatePatientNonSurgicalTreatment(
+        patientID, nonSurgicalTreatment);
+    super.dispose();
+  }
 
   @override
   void initState() {
+    load = loadFuntionc();
     for (String tooth in MasterController.getTeeth()) {
       if ((MasterController.nonSurgicalTreatment as String).contains(tooth)) {
         containedTeeth.add(tooth);
@@ -2088,111 +2034,194 @@ class _PatientNonSurgicalTreatmentState
     }
   }
 
+  loadFuntionc() async {
+    var r = await TempPatientAPI.GetPatientNonSurgicalTreatment(patientID);
+    if (r.statusCode == 200) {
+      nonSurgicalTreatment = r.result as NonSurgicalTreatmentModel;
+    }
+    await Future.delayed(Duration(milliseconds: 600));
+    r = await TempPatientAPI.GetDentalExamination(patientID);
+    if (r.statusCode == 200) {
+      tempDentalExamination = r.result as List<DentalExaminationModel>;
+    }
+    textController.text = nonSurgicalTreatment.treatment ?? "";
+    return Future.value(r);
+  }
+
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return CIA_MedicalPagesWidget(children: [
-      CIA_TextFormField(
-        onChange: (value) async {
-          containedTeeth.clear();
-          MasterController.nonSurgicalTreatment = value;
-          for (String tooth in MasterController.getTeeth()) {
-            if ((value as String).contains(tooth)) {
-              containedTeeth.add(tooth);
-            }
+    return FutureBuilder(
+        future: load,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CIA_MedicalPagesWidget(children: [
+              CIA_TextFormField(
+                onInstantChange: (value) async {
+                  nonSurgicalTreatment.treatment = value;
+                  containedTeeth.clear();
+                  MasterController.getTeeth().forEach((element) {
+                    if ((value as String).contains(element)) {
+                      containedTeeth.add(element);
+                    }
+                  });
+                  setState(() {});
+                },
+                label: "Treatment",
+                controller: textController,
+                maxLines: 5,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: CIA_DropDown(
+                        onSelect: (value) {
+                          nonSurgicalTreatment.supervisorName = value;
+                        },
+                        selectedValue: nonSurgicalTreatment.supervisorName,
+                        label: "Supervisor",
+                        values: [
+                          "Name1",
+                          "Name2",
+                          "Name3",
+                          "Name4",
+                          "Name5",
+                          "Name6",
+                          "Name7",
+                          "Name8",
+                          "Name9",
+                          "Name10",
+                        ]),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CIA_SecondaryButton(
+                      label: "View History",
+                      onTab: () {
+                        CIA_PopupDialog_Table(patientID, context,
+                            "View History Treatments", (value) {});
+                      }),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CIA_SecondaryButton(
+                      label: "Schedule Next Visit",
+                      width: 200,
+                      onTab: () {
+                        CIA_PopupDialog_DateTimePicker(
+                            context, "Schedule Next Visit", (value) {});
+                      }),
+                ],
+              ),
+              containedTeeth.isEmpty ? SizedBox() : _buildTeethSuggestion()
+            ]);
+          } else {
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
+              ),
+            );
           }
-          setState(() {});
-          print(containedTeeth);
-        },
-        label: "Treatment",
-        controller:
-            TextEditingController(text: MasterController.nonSurgicalTreatment),
-        maxLines: 5,
-      ),
-      Row(
-        children: [
-          Expanded(
-            child: CIA_DropDown(label: "Supervisor", values: [
-              "Name1",
-              "Name2",
-              "Name3",
-              "Name4",
-              "Name5",
-              "Name6",
-              "Name7",
-              "Name8",
-              "Name9",
-              "Name10",
-            ]),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          CIA_SecondaryButton(
-              label: "View History",
-              onTab: () {
-                CIA_PopupDialog_Table(
-                    context, "View History Treatments", (value) {});
-              }),
-          SizedBox(
-            width: 10,
-          ),
-          CIA_SecondaryButton(
-              label: "Schedule Next Visit",
-              width: 200,
-              onTab: () {
-                CIA_PopupDialog_DateTimePicker(
-                    context, "Schedule Next Visit", (value) {});
-              }),
-        ],
-      ),
-      containedTeeth.isEmpty ? SizedBox() : _buildTeethSuggestion()
-    ]);
+        });
   }
 
   _buildTeethSuggestion() {
     List<Widget> uu = <Widget>[];
-
-    for (String tooth in containedTeeth) {
+    containedTeeth.forEach((tooth) {
+      var m = tempDentalExamination
+          .firstWhereOrNull((element) => element.tooth.toString() == tooth);
+      if (m == null) m = DentalExaminationModel(tooth: int.parse(tooth));
       List<CIA_MultiSelectChipWidgeModel> tempModel = [
-        CIA_MultiSelectChipWidgeModel(label: "Carious", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Filled", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Missed", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Not Sure", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Mobility I", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Mobility II", isSelected: false),
-        CIA_MultiSelectChipWidgeModel(label: "Mobility III", isSelected: false),
         CIA_MultiSelectChipWidgeModel(
-            label: "Hopeless teeth", isSelected: false),
+            label: "Carious",
+            isSelected: m != null ? (m.carious) as bool : false),
         CIA_MultiSelectChipWidgeModel(
-            label: "Implant Placed", isSelected: false),
+            label: "Filled",
+            isSelected: m != null ? (m.filled) as bool : false),
         CIA_MultiSelectChipWidgeModel(
-            label: "Implant Failed", isSelected: false),
+            label: "Missed",
+            isSelected: m != null ? (m.missed) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Not Sure",
+            isSelected: m != null ? (m.notSure) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Mobility I",
+            isSelected: m != null ? (m.mobilityI) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Mobility II",
+            isSelected: m != null ? (m.mobilityII) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Mobility III",
+            isSelected: m != null ? (m.mobilityIII) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Hopeless teeth",
+            isSelected: m != null ? (m.hopelessteeth) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Implant Placed",
+            isSelected: m != null ? (m.implantPlaced) as bool : false),
+        CIA_MultiSelectChipWidgeModel(
+            label: "Implant Failed",
+            isSelected: m != null ? (m.implantFailed) as bool : false),
       ];
-
-      String status = MasterController.getToothStatus(tooth);
-      for (CIA_MultiSelectChipWidgeModel temp in tempModel) {
-        if (temp.label == status) {
-          temp.isSelected = true;
-          break;
-        }
-      }
 
       uu.add(FormTextKeyWidget(text: "Do you want to update tooth $tooth?"));
       uu.add(CIA_MultiSelectChipWidget(
         key: LabeledGlobalKey(tooth),
         singleSelect: true,
         labels: tempModel,
-        onChangeSpecificTooth: (selected, isSelected, key) {
-          String selectedTooth = (key.toString())
-              .substring((key.toString()).indexOf(" ") + 1)
-              .replaceAll("]", "");
-          if (isSelected)
-            MasterController.updateToothTreatmentStatus(
-                selectedTooth, selected);
+        onChange: (value, isSelected) {
+          var m = tempDentalExamination
+              .firstWhereOrNull((element) => element.tooth.toString() == tooth);
+
+          if (m!.carious!) {
+            m!.previousState = "carious";
+            m.carious = false;
+          }
+          if (m!.missed!) {
+            m!.previousState = "missed";
+            m.missed = false;
+          }
+          if (m!.filled!) {
+            m!.previousState = "filled";
+            m.filled = false;
+          }
+          if (m!.notSure!) {
+            m!.previousState = "notSure";
+            m.notSure = false;
+          }
+          if (m!.mobilityIII!) {
+            m!.previousState = "mobilityIII";
+            m.mobilityIII = false;
+          }
+          if (m!.mobilityII!) {
+            m!.previousState = "mobilityII";
+            m.mobilityII = false;
+          }
+          if (m!.mobilityI!) {
+            m!.previousState = "mobilityI";
+            m.mobilityI = false;
+          }
+          if (m!.hopelessteeth!) {
+            m!.previousState = "hopelessteeth";
+            m.hopelessteeth = false;
+          }
+          if (m!.implantFailed!) {
+            m!.previousState = "implantFailed";
+            m.implantFailed = false;
+          }
+          if (m!.implantPlaced!) {
+            m!.previousState = "implantPlaced";
+            m.implantPlaced = false;
+          }
+          if (isSelected) m.updateToothStatus(value);
         },
       ));
       uu.add(SizedBox(height: 10));
-    }
+    });
+
     Widget ss = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: uu,

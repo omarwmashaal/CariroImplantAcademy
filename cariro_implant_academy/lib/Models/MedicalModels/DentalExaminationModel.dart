@@ -13,21 +13,23 @@ class DentalExaminationModel {
   bool? implantPlaced;
   bool? implantFailed;
   String? operatorImplantNotes;
+  String? previousState = "";
 
   DentalExaminationModel(
-      {this.interarchspaceRT,
-      this.interarchspaceLT,
+      {this.interarchspaceRT = 0,
+      this.interarchspaceLT = 0,
       this.tooth,
-      this.carious,
-      this.filled,
-      this.missed,
-      this.notSure,
-      this.mobilityI,
-      this.mobilityII,
-      this.mobilityIII,
-      this.hopelessteeth,
-      this.implantPlaced,
-      this.implantFailed,
+      this.carious = false,
+      this.filled = false,
+      this.missed = false,
+      this.notSure = false,
+      this.mobilityI = false,
+      this.mobilityII = false,
+      this.mobilityIII = false,
+      this.hopelessteeth = false,
+      this.implantPlaced = false,
+      this.implantFailed = false,
+      this.previousState,
       this.operatorImplantNotes});
 
   DentalExaminationModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class DentalExaminationModel {
     mobilityI = json['mobilityI'] ?? false;
     mobilityII = json['mobilityII'] ?? false;
     mobilityIII = json['mobilityIII'] ?? false;
+    previousState = json['previousState'] ?? "";
     hopelessteeth = json['hopelessteeth'] ?? false;
     implantPlaced = json['implantPlaced'] ?? false;
     implantFailed = json['implantFailed'] ?? false;
@@ -63,6 +66,125 @@ class DentalExaminationModel {
     data['implantPlaced'] = this.implantPlaced;
     data['implantFailed'] = this.implantFailed;
     data['operatorImplantNotes'] = this.operatorImplantNotes;
+    data['previousState'] = this.previousState;
     return data;
+  }
+
+  updateToothStatus(String value) {
+    switch (value) {
+      case "Carious":
+        {
+          carious = true;
+          missed = false;
+          filled = false;
+          implantPlaced = false;
+
+          break;
+        }
+      case "Filled":
+        {
+          carious = false;
+          missed = false;
+          filled = true;
+          implantPlaced = false;
+
+          break;
+        }
+      case "Missed":
+        {
+          carious = false;
+          implantPlaced = false;
+          carious = false;
+          missed = true;
+          filled = false;
+          notSure = false;
+          mobilityII = false;
+          mobilityI = false;
+          mobilityIII = false;
+          implantFailed = false;
+          hopelessteeth = false;
+
+          break;
+        }
+      case "Not Sure":
+        {
+          notSure = true;
+          missed = false;
+          implantPlaced = false;
+
+          break;
+        }
+
+      case "Mobility I":
+        {
+          mobilityI = true;
+          mobilityII = false;
+          mobilityIII = false;
+          missed = false;
+          implantPlaced = false;
+
+          break;
+        }
+
+      case "Mobility II":
+        {
+          mobilityII = true;
+          mobilityI = false;
+          mobilityIII = false;
+          missed = false;
+          implantPlaced = false;
+
+          break;
+        }
+
+      case "Mobility III":
+        {
+          mobilityIII = true;
+          mobilityII = false;
+          mobilityI = false;
+          missed = false;
+          implantPlaced = false;
+
+          break;
+        }
+
+      case "Hopeless teeth":
+        {
+          hopelessteeth = true;
+          missed = false;
+
+          break;
+        }
+      case "Implant Placed":
+        {
+          implantPlaced = true;
+          carious = false;
+          missed = false;
+          filled = false;
+          notSure = false;
+          mobilityII = false;
+          mobilityI = false;
+          mobilityIII = false;
+          implantFailed = false;
+          hopelessteeth = false;
+
+          break;
+        }
+      case "Implant Failed":
+        {
+          implantFailed = true;
+          implantPlaced = false;
+          carious = false;
+          missed = true;
+          filled = false;
+          notSure = false;
+          mobilityII = false;
+          mobilityI = false;
+          mobilityIII = false;
+          hopelessteeth = false;
+
+          break;
+        }
+    }
   }
 }

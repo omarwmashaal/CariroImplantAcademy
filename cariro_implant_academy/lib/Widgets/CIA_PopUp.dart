@@ -1,8 +1,10 @@
-import 'package:cariro_implant_academy/Models/NonSurgicalTreatmentModel.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -107,8 +109,8 @@ CIA_PopupDialog_DateTimePicker(
   ).show();
 }
 
-CIA_PopupDialog_Table(
-    BuildContext context, String title, Function onChange) async {
+CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
+    Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
 
   Alert(
@@ -122,32 +124,46 @@ CIA_PopupDialog_Table(
             Container(
               width: 1000,
               height: 400,
-              child: CIA_Table(
-                  isTreatment: true,
-                  loadFunction: () {},
-                  onCellClick: (value) {
-                    Alert(
-                      context: context,
-                      title: "Treatment Notes",
-                      content: SizedBox(
-                        width: 400,
-                        child: Text(
-                            dataSource.models[value - 1].Treatment.toString()),
-                      ),
-                      buttons: [
-                        DialogButton(
-                          width: 150,
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(
-                            "Ok",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
+              child: FutureBuilder(
+                  future: dataSource.loadData(patientID),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return CIA_Table(
+                          isTreatment: true,
+                          onCellClick: (value) {
+                            Alert(
+                              context: context,
+                              title: "Treatment Notes",
+                              content: SizedBox(
+                                width: 400,
+                                child: Text(dataSource
+                                    .models[value - 1].treatment
+                                    .toString()),
+                              ),
+                              buttons: [
+                                DialogButton(
+                                  width: 150,
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    "Ok",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ).show();
+                          },
+                          columnNames: NonSurgicalTreatmentModel.columns,
+                          dataSource: dataSource);
+                    } else {
+                      return Center(
+                        child: LoadingIndicator(
+                          indicatorType: Indicator.ballClipRotateMultiple,
+                          colors: [Color_Accent],
                         ),
-                      ],
-                    ).show();
-                  },
-                  columnNames: NonSurgicalTreatmentModel.columns,
-                  dataSource: dataSource),
+                      );
+                    }
+                  }),
             ),
           ],
         );
