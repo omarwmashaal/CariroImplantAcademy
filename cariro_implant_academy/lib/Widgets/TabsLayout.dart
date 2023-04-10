@@ -11,14 +11,6 @@ import '../Models/PatientInfo.dart';
 String Search = "";
 String SearchFilter = "";
 List<PatientInfoModel> models = <PatientInfoModel>[
-  PatientInfoModel(5, "Omar", "1290447120", "Married"),
-  PatientInfoModel(21, "Omar", "1290447120", "Married"),
-  PatientInfoModel(4, "Omar", "1290447120", "Married"),
-  PatientInfoModel(8, "Omar", "1290447120", "Married"),
-  PatientInfoModel(14, "Omar", "1290447120", "Married"),
-  PatientInfoModel(20, "Omar", "1290447120", "Married"),
-  PatientInfoModel(13, "Omar", "1290447120", "Married"),
-  PatientInfoModel(9, "Omar", "1290447120", "Married"),
 ];
 
 class TabsLayout extends StatefulWidget {

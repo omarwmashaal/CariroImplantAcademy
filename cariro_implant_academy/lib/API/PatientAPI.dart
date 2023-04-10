@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/API/HTTP.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 
 import '../Models/VisitsModel.dart';
@@ -81,4 +82,27 @@ class PatientAPI {
     }
     return response;
   }
+
+  static Future<API_Response> CreatePatient(PatientInfoModel patient) async {
+    var response =
+        await HTTPRequest.Post("PatientInfo/CreatePatient", patient.toJson());
+
+
+    return response;
+  }
+static Future<API_Response> CompareDuplicateNumber(String number) async {
+    var response =
+        await HTTPRequest.Post("PatientInfo/CompareDuplicateNumber?number=$number", null);
+
+    if(response.statusCode==200)
+      {
+        if(response.result!=null)
+        response.result= PatientInfoModel.fromJson(response.result as Map<String,dynamic>);
+        else
+          response.result = PatientInfoModel();
+      }
+
+    return response;
+  }
+
 }

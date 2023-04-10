@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,10 @@ import '../../Models/API_Response.dart';
 import '../../Models/VisitsModel.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/SnackBar.dart';
+
+class _getxController extends GetxController {
+  static Rx<PatientInfoModel> duplicateFound = PatientInfoModel().obs;
+}
 
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction})
@@ -31,16 +36,25 @@ class PatientInfo_SharedPage extends StatefulWidget {
 
 class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
   bool edit = false;
+  bool addNew = false;
   FocusNode next = FocusNode();
 
-  PatientInfoModel patient =
-      PatientInfoModel(1, "name", "phone", "maritalStatus ");
+  @override
+  void initState() {
+    addNew = widget.patientID == 0;
+    if (addNew) {
+      patient.maritalStatus = "Married";
+      patient.gender = "Male";
+    }
+  }
+
+  PatientInfoModel patient = PatientInfoModel();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: widget.loadFunction != null
-          ? widget.loadFunction!(widget.patientID)
+          ? widget.loadFunction!(widget.patientID ?? 0)
           : null,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
@@ -66,18 +80,21 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "ID")),
-                                  Expanded(
-                                      child: FormTextValueWidget(
-                                          text: patient?.id.toString() == null
-                                              ? ""
-                                              : patient?.id.toString()))
-                                ],
-                              ),
-                              edit
+                              Visibility(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: FormTextKeyWidget(text: "ID")),
+                                      Expanded(
+                                          child: FormTextValueWidget(
+                                              text:
+                                                  patient?.id.toString() == null
+                                                      ? ""
+                                                      : patient?.id.toString()))
+                                    ],
+                                  ),
+                                  visible: !addNew),
+                              addNew
                                   ? CIA_TextFormField(
                                       onChange: (value) {
                                         patient.name = value;
@@ -100,16 +117,13 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.name))
                                       ],
                                     ),
-                              edit
-                                  ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.name = value;
+                              addNew
+                                  ? HorizontalRadioButtons(
+                                      names: ["Male", "Female"],
+                                      groupValue: "Male",
+                                      onChange: (p0) {
+                                        patient.gender = p0;
                                       },
-                                      label: "Name",
-                                      controller: TextEditingController(
-                                          text: patient?.name == null
-                                              ? ""
-                                              : patient?.name),
                                     )
                                   : Row(
                                       children: [
@@ -123,9 +137,21 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.gender))
                                       ],
                                     ),
-                              edit
+                              edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
+                                      onChange: (value) async {
+                                        var res = await PatientAPI
+                                            .CompareDuplicateNumber(
+                                                value ?? "");
+                                        if (res.statusCode == 200) {
+                                          if (res.result != null)
+                                            _getxController
+                                                    .duplicateFound.value =
+                                                res.result as PatientInfoModel;
+                                          else
+                                            _getxController
+                                                .duplicateFound.value = PatientInfoModel();
+                                        }
                                         patient.phone = value;
                                       },
                                       label: "Phone Number",
@@ -146,7 +172,15 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.phone))
                                       ],
                                     ),
-                              edit
+                              Obx(() => Visibility(
+                                  visible:
+                                      _getxController.duplicateFound.value.name !=
+                                          null,
+                                  child: FormTextKeyWidget(
+                                      color: Colors.red,
+                                      text:
+                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name!=null?_getxController.duplicateFound.value!.name!:""}"))),
+                              edit || addNew
                                   ? CIA_TextFormField(
                                       onChange: (value) {
                                         patient.phone2 = value;
@@ -169,8 +203,15 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.phone2))
                                       ],
                                     ),
-                              edit
+                              addNew
                                   ? CIA_TextFormField(
+                                      onTap: () {
+                                        CIA_PopupDialog_DateOnlyPicker(
+                                            context, "Date of birth", (date) {
+                                          patient.dateOfBirth = date;
+                                          setState(() {});
+                                        });
+                                      },
                                       onChange: (value) {
                                         patient.dateOfBirth = value;
                                       },
@@ -193,16 +234,14 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                         : patient?.dateOfBirth))
                                       ],
                                     ),
-                              edit
-                                  ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.maritalStatus = value;
+                              edit || addNew
+                                  ? HorizontalRadioButtons(
+                                      names: ["Married", "Single"],
+                                      onChange: (v) {
+                                        patient.maritalStatus = v;
                                       },
-                                      label: "MaritalStatus",
-                                      controller: TextEditingController(
-                                          text: patient?.maritalStatus == null
-                                              ? ""
-                                              : patient?.maritalStatus),
+                                      groupValue:
+                                          patient.maritalStatus ?? "Married",
                                     )
                                   : Row(
                                       children: [
@@ -217,7 +256,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.maritalStatus))
                                       ],
                                     ),
-                              edit
+                              edit || addNew
                                   ? CIA_TextFormField(
                                       onChange: (value) {
                                         patient.address = value;
@@ -240,7 +279,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     : patient?.address))
                                       ],
                                     ),
-                              edit
+                              edit || addNew
                                   ? CIA_TextFormField(
                                       onChange: (value) {
                                         patient.city = value;
@@ -268,14 +307,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   Expanded(
                                       child: FormTextKeyWidget(
                                     text: "Registration: " +
-                                        (patient?.name == null
-                                            ? ""
-                                            : patient?.name as String),
+                                        siteController.getUser().name!,
                                     secondaryInfo: true,
                                   )),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                    text: "12/10/2022",
+                                    text: DateTime.now().toLocal().toString(),
                                     secondaryInfo: true,
                                   ))
                                 ],
@@ -313,57 +350,81 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                   ),
                 ),
                 Expanded(
-                  child: edit
+                  child: addNew
                       ? Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(child: SizedBox()),
-                              Flexible(
-                                child: CIA_SecondaryButton(
-                                    label: "Cancel",
-                                    onTab: () => setState(() => edit = false)),
-                              ),
-                              Flexible(
-                                child: CIA_PrimaryButton(
-                                    label: "Save",
-                                    isLong: true,
-                                    onTab: () async {
-                                      var response =
-                                          await PatientAPI.UpdatePatientDate(
-                                              patient);
+                          child: CIA_PrimaryButton(
+                              label: "Save",
+                              isLong: true,
+                              onTab: () async {
+                                var response =
+                                    await PatientAPI.CreatePatient(patient);
 
-                                      if (response.statusCode == 200)
-                                        ShowSnackBar(
-                                            isSuccess: true,
-                                            title: "Succeed!",
-                                            message:
-                                                "Patient data has been saved successfully!");
-                                      else
-                                        ShowSnackBar(
-                                            isSuccess: false,
-                                            title: "Failed!",
-                                            message: response.errorMessage!);
-
-                                      setState(() {
-                                        edit = false;
-                                      });
-                                    }),
-                              ),
-                              Expanded(child: SizedBox()),
-                            ],
-                          ),
+                                if (response.statusCode == 200)
+                                  ShowSnackBar(
+                                      isSuccess: true,
+                                      title: "Succeed!",
+                                      message:
+                                          "Patient has been added successfully!");
+                                else
+                                  ShowSnackBar(
+                                      isSuccess: false,
+                                      title: "Failed!",
+                                      message: response.errorMessage!);
+                              }),
                         )
-                      : Center(
-                          child: CIA_SecondaryButton(
-                            onTab: () {
-                              setState(() {
-                                edit = true;
-                              });
-                            },
-                            label: "Edit Info",
-                          ),
-                        ),
+                      : edit
+                          ? Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: SizedBox()),
+                                  Flexible(
+                                    child: CIA_SecondaryButton(
+                                        label: "Cancel",
+                                        onTab: () =>
+                                            setState(() => edit = false)),
+                                  ),
+                                  Flexible(
+                                    child: CIA_PrimaryButton(
+                                        label: "Save",
+                                        isLong: true,
+                                        onTab: () async {
+                                          var response = await PatientAPI
+                                              .UpdatePatientDate(patient);
+
+                                          if (response.statusCode == 200)
+                                            ShowSnackBar(
+                                                isSuccess: true,
+                                                title: "Succeed!",
+                                                message:
+                                                    "Patient data has been saved successfully!");
+                                          else
+                                            ShowSnackBar(
+                                                isSuccess: false,
+                                                title: "Failed!",
+                                                message:
+                                                    response.errorMessage!);
+
+                                          setState(() {
+                                            edit = false;
+                                          });
+                                        }),
+                                  ),
+                                  Expanded(child: SizedBox()),
+                                ],
+                              ),
+                            )
+                          : Center(
+                              child: CIA_SecondaryButton(
+                                onTab: () {
+                                  setState(() {
+                                    edit = true;
+                                  });
+                                },
+                                label: "Edit Info",
+                              ),
+                            ),
                 )
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -16,7 +17,10 @@ class SiteController extends GetxController {
   List<String> _CIA_Roles = ["admin", "instructor", "secretary", "assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
+  ApplicationUserModel _applicationUser = ApplicationUserModel();
 
+  ApplicationUserModel getUser()=>_applicationUser;
+  setUser(ApplicationUserModel user)=>_applicationUser = user;
   Widget appBarWidget = Container();
   RxString title = "".obs;
 
@@ -52,6 +56,7 @@ class SiteController extends GetxController {
     update();
   }
 
+
   String getSite() => _site;
 
   AssetImage getSiteLogo() => _siteLogo;
@@ -80,7 +85,7 @@ class SiteController extends GetxController {
     _currentRole.value = role;
   }
   setToken(String token)=>_token=token;
-  getToken()=>_token;
+  String getToken()=>_token;
 
   String getRole() => _currentRole.value;
 

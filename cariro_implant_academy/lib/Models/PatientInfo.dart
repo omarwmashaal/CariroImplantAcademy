@@ -13,7 +13,7 @@ class PatientInfoModel {
   String? address;
   String? city;
 
-  PatientInfoModel(this.id, this.name, this.phone, this.maritalStatus);
+  PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus});
 
   PatientInfoModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];

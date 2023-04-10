@@ -1,15 +1,18 @@
 import 'dart:html' as html;
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
+import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 
 void main() {
   html.window.onUnload.listen((event) async {
@@ -55,8 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    siteController.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MTE1NjQ1MywiZXhwIjoxNjgxNzYxMjUzLCJpYXQiOjE2ODExNTY0NTN9.wHIpjqueWWN8xL5dm7FlcrShwIRjUfJKiNaB4yxdkZg");
+   siteController.setRole("admin");
+   siteController.setUser(ApplicationUserModel(name: "Admin"));
     return Scaffold(
-      body: AuthenticationPage(),
+      body:ViewPatientPage(
+        key: GlobalKey(),
+        patientID: 0,
+      ), //AuthenticationPage(),
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,

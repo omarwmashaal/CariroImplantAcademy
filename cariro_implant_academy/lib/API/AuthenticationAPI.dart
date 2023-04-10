@@ -17,6 +17,7 @@ class AuthenticationAPI {
       LoginResponseDTO loginResponse = LoginResponseDTO.fromJson(response.result as Map<String,dynamic>);
       siteController.setRole(loginResponse.role!);
       siteController.setToken(loginResponse.token!);
+      siteController.setUser(loginResponse.user!);
     }
     return response;
   }

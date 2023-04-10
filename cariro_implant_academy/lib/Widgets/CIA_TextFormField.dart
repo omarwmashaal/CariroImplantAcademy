@@ -20,6 +20,7 @@ class CIA_TextFormField extends StatefulWidget {
     this.suffix,
     this.borderColorOnChange,
     this.changeColorIfFilled = false,
+    this.onTap,
     required this.controller,
   }) : super(key: key);
 
@@ -30,6 +31,7 @@ class CIA_TextFormField extends StatefulWidget {
   String label;
   Function? onChange;
   Function? onInstantChange;
+  Function? onTap;
   IconData? icon;
   Color? borderColor;
   TextEditingController controller;
@@ -53,6 +55,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           widget.onChange!(widget.controller.text);
         }
       }
+
       setState(() {});
     });
   }
@@ -66,8 +69,12 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             ),
       ),
       child: TextFormField(
+        onTap: (){
+          if(widget.onTap!=null) widget.onTap!();
+        },
         onChanged: (value) {
           if (widget.onInstantChange != null) widget.onInstantChange!(value);
+          if (widget.onChange != null) widget.onChange!(value);
         },
         autovalidateMode: widget.isMinutes || widget.isHours
             ? AutovalidateMode.onUserInteraction

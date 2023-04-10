@@ -11,7 +11,7 @@ class HorizontalRadioButtons extends StatefulWidget {
       this.groupValue = ""})
       : super(key: key);
   List<String> names;
-  Function? onChange;
+  Function(String)? onChange;
   Color? selectionColor;
   String groupValue;
 
@@ -35,11 +35,11 @@ class _HorizontalRadioButtonsState extends State<HorizontalRadioButtons> {
                 visualDensity: VisualDensity.compact,
                 value: name,
                 groupValue: widget.groupValue,
-                onChanged: (index) {
+                onChanged: (value) {
                   setState(() {
-                    widget.groupValue = index as String;
+                    widget.groupValue = value as String;
 
-                    if (widget.onChange != null) widget.onChange!(index);
+                    if (widget.onChange != null) widget.onChange!(value);
                   });
                 }),
             Expanded(

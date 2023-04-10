@@ -17,7 +17,7 @@ import '../../Widgets/Title.dart';
 class CIA_MyProfilePage extends StatefulWidget {
   CIA_MyProfilePage({Key? key}) : super(key: key);
 
-  PatientInfoModel user = PatientInfoModel(1, "Name", "Phone", "MaritalStatus");
+  PatientInfoModel user = PatientInfoModel();
 
   @override
   State<CIA_MyProfilePage> createState() => _CIA_MyProfilePageState();
@@ -491,7 +491,7 @@ List<CalendarEventData<Event>> _events = [
     date: _now,
     event: Event(
         title: "sadasdsa",
-        patient: PatientInfoModel(1, "Name", "Phone", "MaritalStatus")),
+        patient: PatientInfoModel()),
     title: "Project meeting",
     description: "Today is project meeting.",
     startTime: DateTime(_now.year, _now.month, _now.day, 18, 30),
@@ -502,7 +502,7 @@ List<CalendarEventData<Event>> _events = [
     event: Event(
         title: "127419824612986512",
         patient:
-            PatientInfoModel(1, "12515151", "51515125Phone", "MaritalStatus")),
+            PatientInfoModel()),
     title: "adadasdasdadasdasng",
     description: "Toafasfafafafsang.",
     startTime: DateTime(_now.year, _now.month, _now.day, 18, 30),

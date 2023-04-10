@@ -109,6 +109,58 @@ CIA_PopupDialog_DateTimePicker(
   ).show();
 }
 
+CIA_PopupDialog_DateOnlyPicker(
+    BuildContext context, String title, Function onChange) async {
+  String date = "";
+  Alert(
+    context: context,
+    title: title,
+    content: StatefulBuilder(
+      builder: (BuildContext context, void Function(void Function()) setState) {
+        return Container(
+          width: 350,
+          height: 350,
+          child: SfDateRangePicker(
+            view: DateRangePickerView.month,
+            enablePastDates: true,
+            showNavigationArrow: true,
+            selectionColor: Color_Accent,
+            todayHighlightColor: Color_Accent,
+            selectionMode: DateRangePickerSelectionMode.single,
+            showTodayButton: true,
+            navigationMode: DateRangePickerNavigationMode.snap,
+            onSelectionChanged: (value) {
+              setState(() {
+                date =
+                    value.value.toString().replaceAll(" 00:00:00.000", "");
+                onChange(date);
+              });
+            },
+          ),
+        );
+      },
+    ),
+    buttons: [
+      DialogButton(
+        width: 150,
+        onPressed: () => Navigator.pop(context),
+        color: Color_Background,
+        child: Text(
+          "Cancel",
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+      ),
+      DialogButton(
+        width: 150,
+        onPressed: () => Navigator.pop(context),
+        child: Text(
+          "Save",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+    ],
+  ).show();
+}
 CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
     Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
