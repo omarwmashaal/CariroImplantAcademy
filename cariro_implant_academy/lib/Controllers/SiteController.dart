@@ -12,7 +12,8 @@ class SiteController extends GetxController {
   String _site = "CIA";
   AssetImage _siteLogo = AssetImage("CIA_Logo3.png");
   RxString _currentRole = "".obs;
-  List<String> _CIA_Roles = ["Admin", "Instructor", "Secretary", "Assistant"];
+  String _token = "";
+  List<String> _CIA_Roles = ["admin", "instructor", "secretary", "assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
 
@@ -75,9 +76,11 @@ class SiteController extends GetxController {
       _siteLogo = AssetImage("assets/Clinic_logo.png");
   }
 
-  setRole(String Role) {
-    _currentRole.value = Role;
+  setRole(String role) {
+    _currentRole.value = role;
   }
+  setToken(String token)=>_token=token;
+  getToken()=>_token;
 
   String getRole() => _currentRole.value;
 

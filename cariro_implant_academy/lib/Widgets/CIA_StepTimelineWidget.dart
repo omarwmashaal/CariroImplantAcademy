@@ -51,7 +51,7 @@ class CIA_StepTimelineWidget extends StatelessWidget {
       index++;
     }
     return AnotherStepper(
-      gap: 20,
+     // gap: 20,
       stepperList: _stepperData,
       stepperDirection: Axis.horizontal,
       activeIndex: activeIndex,

@@ -151,42 +151,42 @@ class PagesController extends PageController {
             SideMenuItem(
               priority: 0,
               title: 'Patients',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(0);
               },
             ),
             SideMenuItem(
               priority: 1,
               title: 'Assistants',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(1);
               },
             ),
             SideMenuItem(
               priority: 2,
               title: 'Instructors',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(2);
               },
             ),
             SideMenuItem(
               priority: 3,
               title: 'Candidates',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(3);
               },
             ),
             SideMenuItem(
               priority: 4,
               title: 'Stock',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(4);
               },
             ),
             SideMenuItem(
               priority: 5,
               title: 'Cash Flow',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(5);
               },
             ),
@@ -199,7 +199,7 @@ class PagesController extends PageController {
               SideMenuItem(
                 priority: 0,
                 title: 'My Tasks',
-                onTap: () {
+                onTap: (x,y) {
                   pagesController.jumpToPage(0);
                 },
               ),
@@ -209,28 +209,28 @@ class PagesController extends PageController {
             SideMenuItem(
               priority: 0,
               title: 'Lab Requests',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(0);
               },
             ),
             SideMenuItem(
               priority: 1,
               title: 'Customers',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(1);
               },
             ),
             SideMenuItem(
               priority: 2,
               title: 'Stock',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(2);
               },
             ),
             SideMenuItem(
               priority: 3,
               title: 'Cash Flow',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(3);
               },
             ),
@@ -242,28 +242,28 @@ class PagesController extends PageController {
             SideMenuItem(
               priority: 0,
               title: 'Patients',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(0);
               },
             ),
             SideMenuItem(
               priority: 1,
               title: 'Doctors',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(1);
               },
             ),
             SideMenuItem(
               priority: 2,
               title: 'Stock',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(2);
               },
             ),
             SideMenuItem(
               priority: 3,
               title: 'Cash Flow',
-              onTap: () {
+              onTap: (x,y) {
                 pagesController.jumpToPage(3);
               },
             ),

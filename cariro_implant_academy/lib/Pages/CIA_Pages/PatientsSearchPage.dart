@@ -62,67 +62,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
       },
     );
 
-    /* PageView(
-      physics: NeverScrollableScrollPhysics(),
-      controller: internalPagesController,
-      onPageChanged: (value) {},
-      children: [
-        PageView(
-          controller: tabsController,
-          children: [
-            Column(
-              children: [
-                Obx(
-                  () => TitleWidget(
-                    title: siteController.title.value,
-                    showBackButton: false,
-                  ),
-                ),
-                SearchLayout(
-                  radioButtons: [
-                    "Name",
-                    "Phone",
-                    "ID",
-                    "Instructor",
-                    "Assistant",
-                    "Candidate",
-                    "Operation",
-                  ],
-                  loadMoreFuntcion: dataSource.addMoreRows,
-                  dataSource: dataSource,
-                  columnNames: PatientInfoModel.columns,
-                  onCellTab: (value) {
-                    print(dataSource.models[value - 1].ID);
-                    setState(() {
-                      selectedPatient = dataSource.models[value - 1];
-                    });
 
-                    internalPagesController.jumpToPage(1);
-                  },
-                ),
-              ],
-            ),
-            Container(),
-            Container()
-          ],
-        ),
-        (siteController.getRole() == "Admin" ||
-                siteController.getRole() == "Instructor")
-            ? PatientMedicalInfoPage(
-                key: GlobalKey(),
-                patientMedicalController:
-                    PatientMedicalController(selectedPatient),
-              )
-            : ViewPatientPage(
-                key: GlobalKey(),
-                patient: selectedPatient,
-              ),
-        ViewPatientPage(
-          key: GlobalKey(),
-          patient: selectedPatient,
-        )
-      ],
-    );*/
   }
 
   @override

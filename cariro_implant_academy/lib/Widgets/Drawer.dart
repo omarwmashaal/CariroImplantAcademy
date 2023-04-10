@@ -29,7 +29,7 @@ class DrawerItems extends StatelessWidget {
         ],
       ),
       child: SideMenu(
-        controller: pagesController,
+        controller: SideMenuController(),
         title: Image(
           image: siteController.getSiteLogo(),
           width: 100,

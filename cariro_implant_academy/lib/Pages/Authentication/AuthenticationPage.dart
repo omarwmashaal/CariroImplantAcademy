@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../API/Authentication.dart';
+import '../../API/AuthenticationAPI.dart';
 import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
 
@@ -30,7 +30,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         child: CurrentPage == LoginPageRoute
             ? LoginPage(
                 onLogin: (email, password) async {
-                  var login = await Authentication.Login(email, password);
+                  var login = await AuthenticationAPI.Login(email, password);
                   if (login.statusCode == 200) {
                     Get.off(
                         SiteLayout(
