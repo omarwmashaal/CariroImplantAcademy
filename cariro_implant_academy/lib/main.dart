@@ -62,10 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
    siteController.setRole("admin");
    siteController.setUser(ApplicationUserModel(name: "Admin"));
     return Scaffold(
-      body:ViewPatientPage(
-        key: GlobalKey(),
-        patientID: 0,
-      ), //AuthenticationPage(),
+      body:AuthenticationPage(),
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,

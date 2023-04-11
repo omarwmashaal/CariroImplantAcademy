@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
@@ -15,12 +16,14 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 import '../../Constants/Colors.dart';
 import '../../Models/API_Response.dart';
+import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Models/VisitsModel.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/SnackBar.dart';
 
 class _getxController extends GetxController {
   static Rx<PatientInfoModel> duplicateFound = PatientInfoModel().obs;
+  static RxList<DropDownDTO> searchList = <DropDownDTO>[].obs;
 }
 
 class PatientInfo_SharedPage extends StatefulWidget {
@@ -45,6 +48,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
     if (addNew) {
       patient.maritalStatus = "Married";
       patient.gender = "Male";
+      _getxController.searchList.value = [];
+      _getxController.duplicateFound.value = PatientInfoModel();
     }
   }
 
@@ -149,8 +154,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                     .duplicateFound.value =
                                                 res.result as PatientInfoModel;
                                           else
-                                            _getxController
-                                                .duplicateFound.value = PatientInfoModel();
+                                            _getxController.duplicateFound
+                                                .value = PatientInfoModel();
                                         }
                                         patient.phone = value;
                                       },
@@ -173,13 +178,13 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       ],
                                     ),
                               Obx(() => Visibility(
-                                  visible:
-                                      _getxController.duplicateFound.value.name !=
-                                          null,
+                                  visible: _getxController
+                                          .duplicateFound.value.name !=
+                                      null && _getxController.duplicateFound.value.id!=widget.patientID,
                                   child: FormTextKeyWidget(
                                       color: Colors.red,
                                       text:
-                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name!=null?_getxController.duplicateFound.value!.name!:""}"))),
+                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name != null ? _getxController.duplicateFound.value!.name! : ""}"))),
                               edit || addNew
                                   ? CIA_TextFormField(
                                       onChange: (value) {
@@ -300,6 +305,100 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                 text: patient?.city == null
                                                     ? ""
                                                     : patient?.city))
+                                      ],
+                                    ),
+                              addNew
+                                  ? CIA_TextFormField(
+                                      onTap: () {
+                                        _getxController.searchList.value = [];
+                                        CIA_ShowPopUp(
+                                            context: context,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .stretch,
+                                              children: [
+                                                CIA_TextFormField(
+                                                  label: "Search",
+                                                  controller:
+                                                      TextEditingController(),
+                                                  onChange: (value) async {
+                                                    var res =
+                                                        await PatientAPI
+                                                            .QuickSearch(
+                                                                value);
+                                                    if (res.statusCode ==
+                                                        200) {
+                                                      _getxController
+                                                          .searchList
+                                                          .value = res
+                                                              .result
+                                                          as List<
+                                                              DropDownDTO>;
+                                                    } else
+                                                      _getxController
+                                                          .searchList
+                                                          .value = [];
+                                                  },
+                                                ),
+                                                SizedBox(
+                                                  height: 400,
+                                                  child: Obx(
+                                                      () =>
+                                                          ListView.builder(
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return ListTile(
+                                                                onTap:
+                                                                    () {
+                                                                    patient.relativePatient = DropDownDTO(id: _getxController.searchList.value[index].id,name:_getxController.searchList.value[index].name);
+                                                                    patient.relativePatientId = _getxController.searchList.value[index].id;
+                                                                    setState(() {
+
+                                                                    });
+                                                                    },
+                                                                title:
+                                                                    Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      _getxController
+                                                                          .searchList
+                                                                          .value[index]
+                                                                          .name!,
+                                                                      textAlign:
+                                                                          TextAlign.start,
+                                                                    ),
+                                                                    Divider()
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                            itemCount:
+                                                                _getxController
+                                                                    .searchList
+                                                                    .value
+                                                                    .length,
+                                                          )),
+                                                )
+                                              ],
+                                            ));
+                                      },
+                                      label: "Relative",
+                                      controller: TextEditingController(
+                                          text:patient.relativePatient!=null? patient.relativePatient!.name!:""),
+                                    )
+                                  : Row(
+                                      children: [
+                                        Expanded(
+                                            child: FormTextKeyWidget(
+                                                text: "Relative")),
+                                        Expanded(
+                                            child: FormTextValueWidget(
+                                                text: patient.relativePatient!=null? patient.relativePatient!.name!:""))
                                       ],
                                     ),
                               Row(

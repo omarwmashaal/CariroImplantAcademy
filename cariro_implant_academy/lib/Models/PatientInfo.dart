@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -12,6 +13,8 @@ class PatientInfoModel {
   String? maritalStatus;
   String? address;
   String? city;
+  DropDownDTO? relativePatient;
+  int? relativePatientId;
 
   PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus});
 
@@ -25,6 +28,8 @@ class PatientInfoModel {
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
+    relativePatient = json['relativePatient']!=null? DropDownDTO.fromJson(json['relativePatient']):null;
+    relativePatientId = json['relativePatientId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +43,7 @@ class PatientInfoModel {
     data['maritalStatus'] = this.maritalStatus;
     data['address'] = this.address;
     data['city'] = this.city;
+    data['relativePatientId'] = this.relativePatientId;
     return data;
   }
 
