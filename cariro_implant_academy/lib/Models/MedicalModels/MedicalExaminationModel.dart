@@ -1,112 +1,138 @@
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+
+import '../Enum.dart';
+
 class MedicalExaminationModel {
+  int? id;
+  int? patientId;
   GeneralHealthEnum? generalHealth;
-  bool? pregnant = false;
-  bool? lactating = false;
+  PregnancyEnum? pregnancyStatus;
   String? areYouTreatedFromAnyThing;
   String? recentSurgery;
   String? comment;
-  List<DiseasesEnum?>? diseases;
+  List<DiseasesEnum>? diseases;
   String? otherDiseases;
   BloodPressure? bloodPressure;
   Diabetic? diabetic;
-  List<HbA1c?>? hbA1c;
-  bool? penicillin = false;
-  bool? sulfa = false;
-  bool? otherAllergy = false;
-  bool? prolongedBleedingOrAspirin = false;
-  bool? chronicDigestion = false;
+  List<HbA1c>? hbA1c;
+  bool? penicillin;
+  bool? sulfa;
+  bool? otherAllergy;
+  String? otherAllergyComment;
+  bool? prolongedBleedingOrAspirin;
+  bool? chronicDigestion;
   String? illegalDrugs;
   String? operatorComments;
-  List<String?>? drugsTaken;
+  List<String>? drugsTaken;
+  int? operatorId;
+  DropDownDTO? operator;
+  String? date;
 
-  MedicalExaminationModel(
-      {this.generalHealth,
-      this.pregnant,
-      this.lactating,
-      this.areYouTreatedFromAnyThing,
-      this.recentSurgery,
-      this.comment,
-      this.diseases,
-      this.otherDiseases,
-      this.bloodPressure,
-      this.diabetic,
-      this.hbA1c,
-      this.penicillin,
-      this.sulfa,
-      this.otherAllergy,
-      this.prolongedBleedingOrAspirin,
-      this.chronicDigestion,
-      this.illegalDrugs,
-      this.operatorComments,
-      this.drugsTaken});
+  MedicalExaminationModel({
+    this.id,
+    this.patientId,
+    this.generalHealth,
+    this.pregnancyStatus,
+    this.areYouTreatedFromAnyThing,
+    this.recentSurgery,
+    this.comment,
+    this.diseases,
+    this.otherDiseases,
+    this.bloodPressure,
+    this.diabetic,
+    this.hbA1c,
+    this.penicillin,
+    this.sulfa,
+    this.otherAllergy,
+    this.otherAllergyComment,
+    this.prolongedBleedingOrAspirin,
+    this.chronicDigestion,
+    this.illegalDrugs,
+    this.operatorComments,
+    this.drugsTaken,
+    this.operatorId,
+    this.operator,
+    this.date,
+  });
 
   MedicalExaminationModel.fromJson(Map<String, dynamic> json) {
-    generalHealth = json['generalHealth'] != null
-        ? GeneralHealthEnum.values[json['generalHealth']]
-        : null;
-    pregnant = json['pregnant'] ?? false;
-    lactating = json['lactating'] ?? false;
-    areYouTreatedFromAnyThing = json['areYouTreatedFromAnyThing'];
-    recentSurgery = json['recentSurgery'];
-    comment = json['comment'];
-    if (json['diseases'] != null) {
-      diseases = [];
-      json['diseases'].forEach((v) {
-        diseases!.add(DiseasesEnum.values[v as int]);
-      });
-    }
-    otherDiseases = json['otherDiseases'];
+    id = json['id'];
+    patientId = json['patientId'];
+    generalHealth = GeneralHealthEnum.values[json['generalHealth'] ?? 0];
+    pregnancyStatus = PregnancyEnum.values[json['pregnancyStatus'] ?? 0];
+    areYouTreatedFromAnyThing = json['areYouTreatedFromAnyThing'] ?? "";
+    recentSurgery = json['recentSurgery'] ?? "";
+    comment = json['comment'] ?? "";
+    diseases = json['diseases']!=null?
+    (json['diseases'] as List<dynamic>).map((e) => DiseasesEnum.values[e as int]).toList():[];
+    otherDiseases = json['otherDiseases'] ?? "";
     bloodPressure = json['bloodPressure'] != null
-        ? BloodPressure?.fromJson(json['bloodPressure'])
-        : null;
-    diabetic =
-        json['diabetic'] != null ? Diabetic?.fromJson(json['diabetic']) : null;
+        ? new BloodPressure.fromJson(json['bloodPressure'])
+        : BloodPressure();
+    diabetic = json['diabetic'] != null
+        ? new Diabetic.fromJson(json['diabetic'])
+        : Diabetic();
     if (json['hbA1c'] != null) {
       hbA1c = <HbA1c>[];
       json['hbA1c'].forEach((v) {
-        hbA1c!.add(HbA1c.fromJson(v));
+        hbA1c!.add(new HbA1c.fromJson(v));
       });
+    } else {
+      hbA1c = [];
     }
     penicillin = json['penicillin'] ?? false;
     sulfa = json['sulfa'] ?? false;
     otherAllergy = json['otherAllergy'] ?? false;
+    otherAllergyComment = json['otherAllergyComment'] ?? "";
     prolongedBleedingOrAspirin = json['prolongedBleedingOrAspirin'] ?? false;
     chronicDigestion = json['chronicDigestion'] ?? false;
-    illegalDrugs = json['illegalDrugs'];
-    operatorComments = json['operatorComments'];
-    if (json['drugsTaken'] != null) {
-      drugsTaken = [];
-      json['drugsTaken'].forEach((v) {
-        drugsTaken!.add(v as String);
-      });
-    }
+    illegalDrugs = json['illegalDrugs'] ?? "";
+    operatorComments = json['operatorComments'] ?? "";
+    drugsTaken = json['drugsTaken']!=null?
+    (json['drugsTaken'] as List<dynamic>).map((e) => e as String).toList():
+        []
+    ;
+    operatorId = json['operatorId'];
+    operator = json['operator'] != null
+        ? new DropDownDTO.fromJson(json['operator'])
+        : DropDownDTO();
+    date = json['date'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['generalHealth'] = generalHealth != null ? generalHealth!.index : null;
-    data['pregnant'] = pregnant;
-    data['lactating'] = lactating;
-    data['areYouTreatedFromAnyThing'] = areYouTreatedFromAnyThing;
-    data['recentSurgery'] = recentSurgery;
-    data['comment'] = comment;
-    data['diseases'] =
-        diseases != null ? diseases!.map((v) => v!.index).toList() : null;
-    data['otherDiseases'] = otherDiseases;
-    data['bloodPressure'] =
-        bloodPressure == null ? null : bloodPressure!.toJson();
-    data['diabetic'] = diabetic == null ? null : diabetic!.toJson();
-    data['hbA1c'] =
-        hbA1c != null ? hbA1c!.map((v) => v?.toJson()).toList() : null;
-    data['penicillin'] = penicillin;
-    data['sulfa'] = sulfa;
-    data['otherAllergy'] = otherAllergy;
-    data['prolongedBleedingOrAspirin'] = prolongedBleedingOrAspirin;
-    data['chronicDigestion'] = chronicDigestion;
-    data['illegalDrugs'] = illegalDrugs;
-    data['operatorComments'] = operatorComments;
-    data['drugsTaken'] =
-        drugsTaken != null ? drugsTaken!.map((v) => v).toList() : null;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['patientId'] = this.patientId;
+    data['generalHealth'] = this.generalHealth;
+    data['pregnancyStatus'] = this.pregnancyStatus;
+    data['areYouTreatedFromAnyThing'] = this.areYouTreatedFromAnyThing;
+    data['recentSurgery'] = this.recentSurgery;
+    data['comment'] = this.comment;
+    data['diseases'] = this.diseases;
+    data['otherDiseases'] = this.otherDiseases;
+    if (this.bloodPressure != null) {
+      data['bloodPressure'] = this.bloodPressure!.toJson();
+    }
+    if (this.diabetic != null) {
+      data['diabetic'] = this.diabetic!.toJson();
+    }
+    if (this.hbA1c != null) {
+      data['hbA1c'] = this.hbA1c!.map((v) => v.toJson()).toList();
+    }
+    data['penicillin'] = this.penicillin;
+    data['sulfa'] = this.sulfa;
+    data['otherAllergy'] = this.otherAllergy;
+    data['otherAllergyComment'] = this.otherAllergyComment;
+    data['prolongedBleedingOrAspirin'] = this.prolongedBleedingOrAspirin;
+    data['chronicDigestion'] = this.chronicDigestion;
+    data['illegalDrugs'] = this.illegalDrugs;
+    data['operatorComments'] = this.operatorComments;
+    data['drugsTaken'] = this.drugsTaken;
+    data['operatorId'] = this.operatorId;
+    if (this.operator != null) {
+      data['operator'] = this.operator!.toJson();
+    }
+    data['date'] = this.date;
     return data;
   }
 }
@@ -119,27 +145,27 @@ class BloodPressure {
   BloodPressureEnum? status;
 
   BloodPressure(
-      {this.lastReading,
-      this.when,
-      this.drug,
-      this.readingInClinic,
-      this.status});
+      {this.lastReading = "",
+      this.when = "",
+      this.drug = "",
+      this.readingInClinic = "",
+      this.status = BloodPressureEnum.Normal});
 
   BloodPressure.fromJson(Map<String, dynamic> json) {
-    lastReading = json['lastReading'];
-    when = json["when"] == null ? null : json['when'];
-    drug = json['drug'];
-    readingInClinic = json['readingInClinic'];
-    status = BloodPressureEnum.values[json['status']];
+    lastReading = json['lastReading'] ?? "";
+    when = json['when'] ?? "";
+    drug = json['drug'] ?? "";
+    readingInClinic = json['readingInClinic'] ?? "";
+    status = BloodPressureEnum.values[json['status'] ?? 0];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['lastReading'] = lastReading;
-    data['when'] = when == null || when == "" ? null : when;
-    data['drug'] = drug;
-    data['readingInClinic'] = readingInClinic;
-    data['status'] = status != null ? status!.index : null;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['lastReading'] = this.lastReading;
+    data['when'] = this.when;
+    data['drug'] = this.drug;
+    data['readingInClinic'] = this.readingInClinic;
+    data['status'] = this.status;
     return data;
   }
 }
@@ -152,27 +178,27 @@ class Diabetic {
   DiabetesMeasureType? type;
 
   Diabetic(
-      {this.lastReading,
-      this.when,
-      this.randomInClinic,
-      this.status,
-      this.type});
+      {this.lastReading = "",
+      this.when = "",
+      this.randomInClinic = "",
+      this.status = DiabetesEnum.Normal,
+      this.type = DiabetesMeasureType.Random});
 
   Diabetic.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'];
-    when = json["when"] == null ? null : json['when'];
-    randomInClinic = json['randomInClinic'];
-    status = DiabetesEnum.values[json['status']];
-    type = DiabetesMeasureType.values[json['type']];
+    when = json['when'] ?? "";
+    randomInClinic = json['randomInClinic'] ?? "";
+    status = DiabetesEnum.values[json["status"] ?? 0];
+    type = DiabetesMeasureType.values[json['type'] ?? 0];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['lastReading'] = lastReading;
-    data['when'] = when;
-    data['randomInClinic'] = randomInClinic;
-    data['status'] = status != null ? status!.index : null;
-    data['type'] = type != null ? type!.index : null;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['lastReading'] = this.lastReading;
+    data['when'] = this.when;
+    data['randomInClinic'] = this.randomInClinic;
+    data['status'] = this.status;
+    data['type'] = this.type;
     return data;
   }
 }
@@ -181,50 +207,17 @@ class HbA1c {
   String? date;
   String? reading;
 
-  HbA1c({this.date, this.reading});
+  HbA1c({this.date = "", this.reading = ""});
 
   HbA1c.fromJson(Map<String, dynamic> json) {
-    date = json["date"];
-    reading = json['reading'];
+    date = json['date'] ?? "";
+    reading = json['reading'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['date'] = date == null || date == "" ? null : date;
-    data['reading'] = reading;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['date'] = this.date;
+    data['reading'] = this.reading;
     return data;
   }
 }
-
-enum DiabetesEnum {
-  Normal,
-  DiabeticControlled,
-  DiabeticUncontrolled,
-}
-
-enum DiabetesMeasureType { Fasting, Random }
-
-enum BloodPressureEnum {
-  Normal,
-  HypertensiveControlled,
-  HypertensiveUncontrolled,
-  HypotensiveControlled,
-  HypotensiveUncontrolled
-}
-
-enum DiseasesEnum {
-  KidneyDisease,
-  LiverDisease,
-  Asthma,
-  Psychological,
-  Rhemuatic,
-  Anemia,
-  Epilepsy,
-  HeartProblem,
-  Thyroid,
-  Hepatitis,
-  VenerealDisease,
-  Other,
-}
-
-enum GeneralHealthEnum { Excellent, VeryGood, Good, Fair, Fail }

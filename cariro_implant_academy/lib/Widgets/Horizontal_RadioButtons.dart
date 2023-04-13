@@ -8,12 +8,14 @@ class HorizontalRadioButtons extends StatefulWidget {
       required this.names,
       this.onChange,
       this.selectionColor,
+        this.notColoredWord,
       this.groupValue = ""})
       : super(key: key);
   List<String> names;
   Function(String)? onChange;
   Color? selectionColor;
   String groupValue;
+  String? notColoredWord;
 
   @override
   State<HorizontalRadioButtons> createState() => _HorizontalRadioButtonsState();
@@ -29,7 +31,7 @@ class _HorizontalRadioButtonsState extends State<HorizontalRadioButtons> {
         child: Row(
           children: [
             Radio(
-                activeColor: widget.selectionColor == null
+                activeColor: widget.selectionColor == null ||(widget.notColoredWord!=null && name==widget.notColoredWord)
                     ? Color_Accent
                     : widget.selectionColor,
                 visualDensity: VisualDensity.compact,

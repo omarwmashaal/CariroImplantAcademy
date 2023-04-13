@@ -48,8 +48,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                 key: GlobalKey(),
                 dataSource: dataSource,
               ),
-              (siteController.getRole() == "Admin" ||
-                      siteController.getRole() == "Instructor")
+              (siteController.getRole() == "admin" ||
+                      siteController.getRole() == "instructor")
                   ? PatientMedicalInfoPage(
                       key: GlobalKey(),
                       patientMedicalController: PatientMedicalController(

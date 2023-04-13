@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
@@ -16,6 +17,7 @@ import '../../API/TempPatientAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/API_Response.dart';
+import '../../Models/Enum.dart';
 import '../../Models/MedicalModels/DentalHistory.dart';
 import '../../Models/MedicalModels/NonSurgicalTreatment.dart';
 import '../../Models/PatientInfo.dart';
@@ -62,7 +64,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   }
 
   List<String> tabs = [
-    "Medical Exmination",
+    "Medical Examination",
     "Dental History",
     "Dental Examination",
     "Non Surgical Treatment",
@@ -101,188 +103,175 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
       ],
     );
     patient?.gender = "Male";
-    return FutureBuilder(
-        future: TempPatientAPI.CreateTempPatient(patientID),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData)
-            return Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Obx(() => TitleWidget(
-                                showBackButton: true,
-                                title: siteController.title.value,
-                              )),
-                        ),
-                        Expanded(
-                          flex: 10,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 2),
-                            child: PageView(
-                              controller: tabsController,
-                              children: pages,
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 4,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Obx(() => TitleWidget(
+                    showBackButton: true,
+                    title: siteController.title.value,
+                  )),
+                ),
+                Expanded(
+                  flex: 10,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: PageView(
+                      controller: tabsController,
+                      children: pages,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: SizedBox()),
+                Expanded(
+                  flex: 10,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Image(
+                        image: AssetImage("assets/ProfileImage.png"),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CIA_SecondaryButton(
+                          label: "View more info",
+                          onTab: () {
+                            internalPagesController.jumpToPage(2);
+                          }),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CIA_SecondaryButton(
+                          label: "LAB Request",
+                          icon: Icon(Icons.document_scanner_outlined),
+                          onTab: () {}),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(text: "ID")),
+                          Expanded(
+                            child: FormTextValueWidget(
+                              text: patient?.id.toString() == null
+                                  ? ""
+                                  : patient?.id.toString(),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(text: "Name")),
+                          Expanded(
+                            child: FormTextValueWidget(
+                                text: patient?.name == null
+                                    ? ""
+                                    : patient?.name),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(text: "Gender")),
+                          Expanded(
+                            child: FormTextValueWidget(
+                                text: patient?.gender == null
+                                    ? ""
+                                    : patient?.gender),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FormTextKeyWidget(
+                              text: "Operator",
+                              secondaryInfo: true,
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        Expanded(
-                          flex: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Image(
-                                image: AssetImage("assets/ProfileImage.png"),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_SecondaryButton(
-                                  label: "View more info",
-                                  onTab: () {
-                                    internalPagesController.jumpToPage(2);
-                                  }),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_SecondaryButton(
-                                  label: "LAB Request",
-                                  icon: Icon(Icons.document_scanner_outlined),
-                                  onTab: () {}),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "ID")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: patient?.id.toString() == null
-                                          ? ""
-                                          : patient?.id.toString(),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "Name")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                        text: patient?.name == null
-                                            ? ""
-                                            : patient?.name),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(text: "Gender")),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                        text: patient?.gender == null
-                                            ? ""
-                                            : patient?.gender),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Divider(),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: FormTextKeyWidget(
-                                      text: "Operator",
-                                      secondaryInfo: true,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: "Omar Wael",
-                                      secondaryInfo: true,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: FormTextKeyWidget(
-                                      text: "Date:",
-                                      secondaryInfo: true,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: FormTextValueWidget(
-                                      text: "12/1/2022",
-                                      secondaryInfo: true,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_SecondaryButton(
-                                label: "Cancel",
-                                onTab: () {},
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CIA_PrimaryButton(
-                                label: "Save",
-                                onTab: () {},
-                                isLong: true,
-                              ),
-                            ],
+                          Expanded(
+                            child: FormTextValueWidget(
+                              text: "Omar Wael",
+                              secondaryInfo: true,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FormTextKeyWidget(
+                              text: "Date:",
+                              secondaryInfo: true,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                          Expanded(
+                            child: FormTextValueWidget(
+                              text: "12/1/2022",
+                              secondaryInfo: true,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CIA_SecondaryButton(
+                        label: "Cancel",
+                        onTab: () {},
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CIA_PrimaryButton(
+                        label: "Save",
+                        onTab: () {},
+                        isLong: true,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          else {
-            return Center(
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballClipRotateMultiple,
-                colors: [Color_Accent],
-              ),
-            );
-          }
-        });
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -307,7 +296,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: TempPatientAPI.GetMedicalExamination(patientID),
+        future: MedicalAPI.GetPatientMedicalExamination(patientID),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             var resp = snapshot.data as API_Response;
@@ -318,27 +307,29 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
               CIA_MultiSelectChipWidget(
                 singleSelect: true,
                 onChange: (value, isSelected) {
-                  GeneralHealthEnum? generalHealth;
                   switch (value) {
                     case "Excellent":
-                      generalHealth = GeneralHealthEnum.Excellent;
+                      medicalExaminationModel.generalHealth =
+                          GeneralHealthEnum.Excellent;
                       break;
                     case "Very good":
-                      generalHealth = GeneralHealthEnum.VeryGood;
+                      medicalExaminationModel.generalHealth =
+                          GeneralHealthEnum.VeryGood;
                       break;
                     case "Good":
-                      generalHealth = GeneralHealthEnum.Good;
+                      medicalExaminationModel.generalHealth =
+                          GeneralHealthEnum.Good;
                       break;
                     case "Fair":
-                      generalHealth = GeneralHealthEnum.Fair;
+                      medicalExaminationModel.generalHealth =
+                          GeneralHealthEnum.Fair;
                       break;
                     case "Fail":
-                      generalHealth = GeneralHealthEnum.Fail;
+                      medicalExaminationModel.generalHealth =
+                          GeneralHealthEnum.Fail;
                       break;
                   }
-                  if (isSelected) {
-                    medicalExaminationModel.generalHealth = generalHealth;
-                  }
+
                 },
                 labels: [
                   CIA_MultiSelectChipWidgeModel(
@@ -373,25 +364,28 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                 children: [
                   Flexible(
                       child: HorizontalRadioButtons(
-                    names: ["Pregnant", "Lactating"],
+                    names: ["None","Pregnant", "Lactating"],
                     selectionColor: Colors.red,
+                    notColoredWord: "None",
                     onChange: (value) {
                       if (value.toString().toLowerCase() == "pregnant") {
-                        medicalExaminationModel.pregnant = true;
-                        medicalExaminationModel.lactating = false;
+                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.Pregnant;
                       } else if (value.toString().toLowerCase() ==
                           "lactating") {
-                        medicalExaminationModel.lactating = true;
-                        medicalExaminationModel.pregnant = false;
+                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.Lactating;
+
+                      }
+                      else if (value.toString().toLowerCase() ==
+                          "none") {
+                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.None;
+
                       }
                     },
-                    groupValue: medicalExaminationModel.pregnant != null &&
-                            medicalExaminationModel.pregnant!
+                    groupValue: medicalExaminationModel.pregnancyStatus  == PregnancyEnum.Pregnant
                         ? "Pregnant"
-                        : medicalExaminationModel.lactating != null &&
-                                medicalExaminationModel.lactating!
+                        : medicalExaminationModel.pregnancyStatus  == PregnancyEnum.Lactating
                             ? "Lactating"
-                            : "",
+                            : "None",
                   )),
                 ],
               ),
@@ -463,142 +457,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     if (medicalExaminationModel.diseases == null) {
                       medicalExaminationModel.diseases = [];
                     }
-                    medicalExaminationModel.diseases?.add(disease);
-                  } else {
-                    if (medicalExaminationModel.diseases == null) {
-                      medicalExaminationModel.diseases = [];
-                    } else {
-                      medicalExaminationModel.diseases?.remove(disease);
-                    }
-                  }
-                },
-                redFlags: true,
-                labels: [
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Kidney Disease",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.KidneyDisease)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Liver Disease",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.LiverDisease)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Asthma",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Asthma)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Psychological",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Psychological)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Rhemuatic",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Rhemuatic)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Anemia",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Anemia)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Epilepsy",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Epilepsy)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Heart problem",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.HeartProblem)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Thyroid",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Thyroid)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Hepatitis",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Hepatitis)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Venereal Disease",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.VenerealDisease)),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "Other",
-                      selectedColor: Colors.red,
-                      isSelected: medicalExaminationModel.diseases != null &&
-                          medicalExaminationModel.diseases!
-                              .contains(DiseasesEnum.Other))
-                ],
-              ),
-              CIA_MultiSelectChipWidget(
-                onChange: (value, isSelected) {
-                  if (value == "Other") {
-                    setState(() {
-                      diseases = isSelected as bool;
-                    });
-                  }
-                  DiseasesEnum? disease;
-                  switch (value) {
-                    case "Kidney Disease":
-                      disease = DiseasesEnum.KidneyDisease;
-                      break;
-                    case "Liver Disease":
-                      disease = DiseasesEnum.LiverDisease;
-                      break;
-                    case "Asthma":
-                      disease = DiseasesEnum.Asthma;
-                      break;
-                    case "Psychological":
-                      disease = DiseasesEnum.Psychological;
-                      break;
-                    case "Rhemuatic":
-                      disease = DiseasesEnum.Rhemuatic;
-                      break;
-                    case "Anemia":
-                      disease = DiseasesEnum.Anemia;
-                      break;
-                    case "Epilepsy":
-                      disease = DiseasesEnum.Epilepsy;
-                      break;
-                    case "Heart problem":
-                      disease = DiseasesEnum.HeartProblem;
-                      break;
-                    case "Thyroid":
-                      disease = DiseasesEnum.Thyroid;
-                      break;
-                    case "Hepatitis":
-                      disease = DiseasesEnum.Hepatitis;
-                      break;
-                    case "Venereal Disease":
-                      disease = DiseasesEnum.VenerealDisease;
-                      break;
-                    case "Other":
-                      disease = DiseasesEnum.Other;
-                      break;
-                  }
-                  if (isSelected) {
-                    if (medicalExaminationModel.diseases == null) {
-                      medicalExaminationModel.diseases = [];
-                    }
-                    medicalExaminationModel.diseases?.add(disease);
+                    medicalExaminationModel.diseases?.add(disease!);
                   } else {
                     if (medicalExaminationModel.diseases == null) {
                       medicalExaminationModel.diseases = [];

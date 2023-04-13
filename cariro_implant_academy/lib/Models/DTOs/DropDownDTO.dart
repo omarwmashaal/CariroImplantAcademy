@@ -2,7 +2,7 @@ class DropDownDTO {
   int? id;
   String? name;
 
-  DropDownDTO({this.id, this.name});
+  DropDownDTO({this.id=0, this.name=""});
 
   DropDownDTO.fromJson(Map<String, dynamic> json) {
     id = json['id'];
