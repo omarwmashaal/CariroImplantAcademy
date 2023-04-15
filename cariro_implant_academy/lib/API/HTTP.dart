@@ -11,11 +11,9 @@ String host = "https://localhost:7128/api";
 class HTTPRequest {
   static Future<API_Response> Get(String url) async {
     API_Response apiResponse = API_Response();
-    Response response =
-        await get(Uri.parse("$host/$url"),headers: {
-
-        "Authorization": "Bearer ${siteController.getToken()}"
-        }).onError((error, stackTrace) {
+    Response response = await get(Uri.parse("$host/$url"),
+            headers: {"Authorization": "Bearer ${siteController.getToken()}"})
+        .onError((error, stackTrace) {
       apiResponse = API_Response(
           errorMessage: error.toString() + " or server is unreachable",
           statusCode: 500);
@@ -103,7 +101,8 @@ class HTTPRequest {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
         "Access-Control-Allow-Headers":
-            "Origin, X-Requested-With, Content-Type, Accept"
+            "Origin, X-Requested-With, Content-Type, Accept",
+        "Authorization": "Bearer ${siteController.getToken()}"
       },
       body: body == null ? jsonEncode("") : jsonEncode(body),
     ).onError((error, stackTrace) {

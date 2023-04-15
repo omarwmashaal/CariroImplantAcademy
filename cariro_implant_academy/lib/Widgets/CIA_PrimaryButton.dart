@@ -8,6 +8,7 @@ class CIA_PrimaryButton extends StatelessWidget {
       {Key? key,
       this.isLong = false,
       this.width = 120,
+        this.height,
       this.color,
       this.icon,
       required this.label,
@@ -15,6 +16,7 @@ class CIA_PrimaryButton extends StatelessWidget {
       : super(key: key);
   String label;
   Function onTab;
+  double? height;
   bool? isLong;
   double? width;
   Color? color;
@@ -24,7 +26,7 @@ class CIA_PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: isLong! ? 30 : 40,
+      height: height?? (isLong! ? 30 : 40),
       child: ElevatedButton(
         onPressed: () {
           onTab();

@@ -9,11 +9,13 @@ class CIA_SecondaryButton extends StatefulWidget {
       required this.label,
       required this.onTab,
       this.width = 120,
+        this.height,
       this.icon})
       : super(key: key);
   String label;
   Function onTab;
   double width;
+  double? height;
   Icon? icon;
 
   @override
@@ -25,7 +27,7 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.width,
-      height: 30,
+      height: widget.height??30,
       child: ElevatedButton(
         onPressed: () {
           widget.onTab();

@@ -7,12 +7,16 @@ import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
+import 'Widgets/CIA_PopUp.dart';
 
 void main() {
   html.window.onUnload.listen((event) async {
@@ -58,11 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MTE1NjQ1MywiZXhwIjoxNjgxNzYxMjUzLCJpYXQiOjE2ODExNTY0NTN9.wHIpjqueWWN8xL5dm7FlcrShwIRjUfJKiNaB4yxdkZg");
-   siteController.setRole("admin");
-   siteController.setUser(ApplicationUserModel(name: "Admin"));
+    siteController.setToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MTE1NjQ1MywiZXhwIjoxNjgxNzYxMjUzLCJpYXQiOjE2ODExNTY0NTN9.wHIpjqueWWN8xL5dm7FlcrShwIRjUfJKiNaB4yxdkZg");
+    siteController.setRole("admin");
+    siteController.setUser(ApplicationUserModel(name: "Admin"));
     return Scaffold(
-      body:AuthenticationPage(),
+      body: AuthenticationPage(),
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
@@ -71,6 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    TempPatientAPI.GetMedicalExamination(5);
+  //  TempPatientAPI.GetMedicalExamination(5);
   }
 }

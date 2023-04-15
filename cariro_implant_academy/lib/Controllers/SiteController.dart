@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -19,14 +20,16 @@ class SiteController extends GetxController {
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
   ApplicationUserModel _applicationUser = ApplicationUserModel();
 
-  ApplicationUserModel getUser()=>_applicationUser;
-  setUser(ApplicationUserModel user)=>_applicationUser = user;
+  ApplicationUserModel getUser() => _applicationUser;
+
+  setUser(ApplicationUserModel user) => _applicationUser = user;
   Widget appBarWidget = Container();
   RxString title = "".obs;
 
   setAppBarWidget(
       {List<String>? tabs,
       Function? onChange,
+      Future<bool> Function()? popUp,
       double? width,
       double? height,
       double? fontSize}) async {
@@ -40,7 +43,11 @@ class SiteController extends GetxController {
             height: height,
             fontSize: fontSize,
             controller: tabsController,
-            onChange: ((value) {
+            onChange: ((value) async {
+              if (popUp != null) {
+                bool changePage = await popUp();
+                if(!changePage) return;
+              }
               print(tabsController.page.toString() + " => $value");
               tabsController.jumpToPage(value);
               title.value = tabs[value];
@@ -56,6 +63,12 @@ class SiteController extends GetxController {
     update();
   }
 
+  setMedicalAppBar({required MedicalSlidingBar bar}) async
+  {
+    appBarWidget = bar;
+    await Future.delayed(Duration(microseconds: 1));
+    update();
+  }
 
   String getSite() => _site;
 
@@ -84,8 +97,10 @@ class SiteController extends GetxController {
   setRole(String role) {
     _currentRole.value = role;
   }
-  setToken(String token)=>_token=token;
-  String getToken()=>_token;
+
+  setToken(String token) => _token = token;
+
+  String getToken() => _token;
 
   String getRole() => _currentRole.value;
 

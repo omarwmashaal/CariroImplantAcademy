@@ -15,6 +15,10 @@ class MedicalAPI {
     }
     return response;
   }
+  static Future<API_Response> UpdatePatientMedicalExamination(int id,MedicalExaminationModel model) async {
+    var response = await HTTPRequest.Put("Medical/UpdatePatientMedicalExamination?id=$id",model.toJson());
+    return response;
+  }
 static Future<API_Response> GetPatientDentalExamination(int id) async {
     var response = await HTTPRequest.Get("Medical/GetPatientDentalExamination?id=$id");
 

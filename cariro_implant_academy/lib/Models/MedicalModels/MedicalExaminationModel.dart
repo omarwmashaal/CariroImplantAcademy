@@ -11,7 +11,6 @@ class MedicalExaminationModel {
   String? recentSurgery;
   String? comment;
   List<DiseasesEnum>? diseases;
-  String? otherDiseases;
   BloodPressure? bloodPressure;
   Diabetic? diabetic;
   List<HbA1c>? hbA1c;
@@ -37,7 +36,6 @@ class MedicalExaminationModel {
     this.recentSurgery,
     this.comment,
     this.diseases,
-    this.otherDiseases,
     this.bloodPressure,
     this.diabetic,
     this.hbA1c,
@@ -65,7 +63,6 @@ class MedicalExaminationModel {
     comment = json['comment'] ?? "";
     diseases = json['diseases']!=null?
     (json['diseases'] as List<dynamic>).map((e) => DiseasesEnum.values[e as int]).toList():[];
-    otherDiseases = json['otherDiseases'] ?? "";
     bloodPressure = json['bloodPressure'] != null
         ? new BloodPressure.fromJson(json['bloodPressure'])
         : BloodPressure();
@@ -103,13 +100,12 @@ class MedicalExaminationModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['patientId'] = this.patientId;
-    data['generalHealth'] = this.generalHealth;
-    data['pregnancyStatus'] = this.pregnancyStatus;
+    data['generalHealth'] = this.generalHealth!.index;
+    data['pregnancyStatus'] = this.pregnancyStatus!.index;
     data['areYouTreatedFromAnyThing'] = this.areYouTreatedFromAnyThing;
     data['recentSurgery'] = this.recentSurgery;
     data['comment'] = this.comment;
-    data['diseases'] = this.diseases;
-    data['otherDiseases'] = this.otherDiseases;
+    data['diseases'] = this.diseases!.map((e) => e.index).toList();
     if (this.bloodPressure != null) {
       data['bloodPressure'] = this.bloodPressure!.toJson();
     }
@@ -128,11 +124,6 @@ class MedicalExaminationModel {
     data['illegalDrugs'] = this.illegalDrugs;
     data['operatorComments'] = this.operatorComments;
     data['drugsTaken'] = this.drugsTaken;
-    data['operatorId'] = this.operatorId;
-    if (this.operator != null) {
-      data['operator'] = this.operator!.toJson();
-    }
-    data['date'] = this.date;
     return data;
   }
 }
@@ -162,10 +153,10 @@ class BloodPressure {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = this.when;
+    data['when'] = this.when==""?null:this.when;
     data['drug'] = this.drug;
     data['readingInClinic'] = this.readingInClinic;
-    data['status'] = this.status;
+    data['status'] = this.status!.index;
     return data;
   }
 }
@@ -195,10 +186,10 @@ class Diabetic {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = this.when;
+    data['when'] = this.when==""?null:this.when;
     data['randomInClinic'] = this.randomInClinic;
-    data['status'] = this.status;
-    data['type'] = this.type;
+    data['status'] = this.status!.index;
+    data['type'] = this.type!.index;
     return data;
   }
 }
@@ -216,7 +207,7 @@ class HbA1c {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
+    data['date'] = this.date==""?null:this.date;
     data['reading'] = this.reading;
     return data;
   }
