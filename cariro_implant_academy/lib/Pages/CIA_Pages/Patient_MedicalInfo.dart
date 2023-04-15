@@ -32,19 +32,20 @@ import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
+import 'package:collection/collection.dart';
 
 late PatientMedicalController MasterController;
 late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
-late List<DentalExaminationModel> dentalExaminationModel;
+late DentalExaminationModel dentalExaminationModel;
 late NonSurgicalTreatmentModel nonSurgicalTreatment;
 
 class PatientMedicalInfoPage extends StatefulWidget {
   PatientMedicalInfoPage(
       {Key? key,
-      required this.patientMedicalController,
-      required this.patientID})
+        required this.patientMedicalController,
+        required this.patientID})
       : super(key: key);
   PatientMedicalController patientMedicalController;
   int patientID;
@@ -165,8 +166,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                       ),
                       Row(
                         children: [
-                          Expanded(
-                              child: FormTextKeyWidget(text: "ID")),
+                          Expanded(child: FormTextKeyWidget(text: "ID")),
                           Expanded(
                             child: FormTextValueWidget(
                               text: patient?.id.toString() == null
@@ -181,13 +181,11 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                       ),
                       Row(
                         children: [
-                          Expanded(
-                              child: FormTextKeyWidget(text: "Name")),
+                          Expanded(child: FormTextKeyWidget(text: "Name")),
                           Expanded(
                             child: FormTextValueWidget(
-                                text: patient?.name == null
-                                    ? ""
-                                    : patient?.name),
+                                text:
+                                patient?.name == null ? "" : patient?.name),
                           )
                         ],
                       ),
@@ -196,8 +194,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                       ),
                       Row(
                         children: [
-                          Expanded(
-                              child: FormTextKeyWidget(text: "Gender")),
+                          Expanded(child: FormTextKeyWidget(text: "Gender")),
                           Expanded(
                             child: FormTextValueWidget(
                                 text: patient?.gender == null
@@ -329,7 +326,6 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           GeneralHealthEnum.Fail;
                       break;
                   }
-
                 },
                 labels: [
                   CIA_MultiSelectChipWidgeModel(
@@ -364,40 +360,41 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                 children: [
                   Flexible(
                       child: HorizontalRadioButtons(
-                    names: ["None","Pregnant", "Lactating"],
-                    selectionColor: Colors.red,
-                    notColoredWord: "None",
-                    onChange: (value) {
-                      if (value.toString().toLowerCase() == "pregnant") {
-                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.Pregnant;
-                      } else if (value.toString().toLowerCase() ==
-                          "lactating") {
-                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.Lactating;
-
-                      }
-                      else if (value.toString().toLowerCase() ==
-                          "none") {
-                        medicalExaminationModel.pregnancyStatus = PregnancyEnum.None;
-
-                      }
-                    },
-                    groupValue: medicalExaminationModel.pregnancyStatus  == PregnancyEnum.Pregnant
-                        ? "Pregnant"
-                        : medicalExaminationModel.pregnancyStatus  == PregnancyEnum.Lactating
+                        names: ["None", "Pregnant", "Lactating"],
+                        selectionColor: Colors.red,
+                        notColoredWord: "None",
+                        onChange: (value) {
+                          if (value.toString().toLowerCase() == "pregnant") {
+                            medicalExaminationModel.pregnancyStatus =
+                                PregnancyEnum.Pregnant;
+                          } else if (value.toString().toLowerCase() ==
+                              "lactating") {
+                            medicalExaminationModel.pregnancyStatus =
+                                PregnancyEnum.Lactating;
+                          } else if (value.toString().toLowerCase() == "none") {
+                            medicalExaminationModel.pregnancyStatus =
+                                PregnancyEnum.None;
+                          }
+                        },
+                        groupValue: medicalExaminationModel.pregnancyStatus ==
+                            PregnancyEnum.Pregnant
+                            ? "Pregnant"
+                            : medicalExaminationModel.pregnancyStatus ==
+                            PregnancyEnum.Lactating
                             ? "Lactating"
                             : "None",
-                  )),
+                      )),
                 ],
               ),
               CIA_TextFormField(
                   label: "Are you treated for anything now?",
                   onChange: (value) =>
-                      medicalExaminationModel.areYouTreatedFromAnyThing = value,
+                  medicalExaminationModel.areYouTreatedFromAnyThing = value,
                   controller: TextEditingController(
                       text: medicalExaminationModel.areYouTreatedFromAnyThing)),
               CIA_TextFormField(
                   onChange: (value) =>
-                      medicalExaminationModel.recentSurgery = value,
+                  medicalExaminationModel.recentSurgery = value,
                   label: "Recent Surgery",
                   controller: TextEditingController(
                       text: medicalExaminationModel.recentSurgery)),
@@ -546,7 +543,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   visible: diseases,
                   child: CIA_TextFormField(
                       onChange: (value) =>
-                          medicalExaminationModel.otherDiseases = value,
+                      medicalExaminationModel.otherDiseases = value,
                       label: "Other ",
                       controller: TextEditingController(
                           text: medicalExaminationModel.otherDiseases))),
@@ -585,35 +582,35 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   CIA_MultiSelectChipWidgeModel(
                       label: "Normal",
                       isSelected:
-                          medicalExaminationModel.bloodPressure != null &&
-                              medicalExaminationModel.bloodPressure?.status ==
-                                  BloodPressureEnum.Normal),
+                      medicalExaminationModel.bloodPressure != null &&
+                          medicalExaminationModel.bloodPressure?.status ==
+                              BloodPressureEnum.Normal),
                   CIA_MultiSelectChipWidgeModel(
                       label: "Hypertensive controller",
                       isSelected:
-                          medicalExaminationModel.bloodPressure != null &&
-                              medicalExaminationModel.bloodPressure?.status ==
-                                  BloodPressureEnum.HypertensiveControlled),
+                      medicalExaminationModel.bloodPressure != null &&
+                          medicalExaminationModel.bloodPressure?.status ==
+                              BloodPressureEnum.HypertensiveControlled),
                   CIA_MultiSelectChipWidgeModel(
                       label: "Hypertensive uncontroller",
                       selectedColor: Colors.red,
                       isSelected:
-                          medicalExaminationModel.bloodPressure != null &&
-                              medicalExaminationModel.bloodPressure?.status ==
-                                  BloodPressureEnum.HypertensiveUncontrolled),
+                      medicalExaminationModel.bloodPressure != null &&
+                          medicalExaminationModel.bloodPressure?.status ==
+                              BloodPressureEnum.HypertensiveUncontrolled),
                   CIA_MultiSelectChipWidgeModel(
                       label: "Hypotensive controller",
                       isSelected:
-                          medicalExaminationModel.bloodPressure != null &&
-                              medicalExaminationModel.bloodPressure?.status ==
-                                  BloodPressureEnum.HypotensiveControlled),
+                      medicalExaminationModel.bloodPressure != null &&
+                          medicalExaminationModel.bloodPressure?.status ==
+                              BloodPressureEnum.HypotensiveControlled),
                   CIA_MultiSelectChipWidgeModel(
                       label: "Hypotensive uncontroller",
                       selectedColor: Colors.red,
                       isSelected:
-                          medicalExaminationModel.bloodPressure != null &&
-                              medicalExaminationModel.bloodPressure?.status ==
-                                  BloodPressureEnum.HypotensiveUncontrolled),
+                      medicalExaminationModel.bloodPressure != null &&
+                          medicalExaminationModel.bloodPressure?.status ==
+                              BloodPressureEnum.HypotensiveUncontrolled),
                 ],
               ),
               Row(
@@ -651,7 +648,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           label: "When? ",
                           controller: TextEditingController(
                               text:
-                                  medicalExaminationModel.bloodPressure?.when)),
+                              medicalExaminationModel.bloodPressure?.when)),
                     ),
                   ),
                   Expanded(
@@ -668,7 +665,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           label: "Drug ",
                           controller: TextEditingController(
                               text:
-                                  medicalExaminationModel.bloodPressure?.drug)),
+                              medicalExaminationModel.bloodPressure?.drug)),
                     ),
                   ),
                   Expanded(
@@ -834,7 +831,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                               label: "Penicillin",
                               selectedColor: Colors.red,
                               isSelected: medicalExaminationModel.penicillin !=
-                                      null
+                                  null
                                   ? medicalExaminationModel.penicillin as bool
                                   : false),
                           CIA_MultiSelectChipWidgeModel(
@@ -845,10 +842,10 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           CIA_MultiSelectChipWidgeModel(
                               label: "Other",
                               isSelected:
-                                  medicalExaminationModel.otherAllergy != null
-                                      ? medicalExaminationModel.otherAllergy
-                                          as bool
-                                      : false),
+                              medicalExaminationModel.otherAllergy != null
+                                  ? medicalExaminationModel.otherAllergy
+                              as bool
+                                  : false),
                         ]),
                   ),
                   Expanded(
@@ -863,7 +860,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                 children: [
                   FormTextKeyWidget(
                       text:
-                          "Are you Subjected to prolonged bleeding or taking aspirin?"),
+                      "Are you Subjected to prolonged bleeding or taking aspirin?"),
                   SizedBox(
                     width: 10,
                   ),
@@ -874,7 +871,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                               isSelected;
                         else if (value == "No")
                           medicalExaminationModel.prolongedBleedingOrAspirin =
-                              !isSelected;
+                          !isSelected;
                       },
                       singleSelect: true,
                       labels: [
@@ -902,14 +899,14 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           medicalExaminationModel.chronicDigestion = isSelected;
                         else if (value == "No")
                           medicalExaminationModel.chronicDigestion =
-                              !isSelected;
+                          !isSelected;
                       },
                       singleSelect: true,
                       labels: [
                         CIA_MultiSelectChipWidgeModel(
                             label: "Yes",
                             isSelected: medicalExaminationModel.chronicDigestion
-                                as bool),
+                            as bool),
                         CIA_MultiSelectChipWidgeModel(
                             label: "No",
                             isSelected: !(medicalExaminationModel
@@ -930,7 +927,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
               ),
               CIA_TextFormField(
                   onChange: (value) =>
-                      medicalExaminationModel.operatorComments = value,
+                  medicalExaminationModel.operatorComments = value,
                   label: "Operator Comments",
                   controller: TextEditingController(
                       text: medicalExaminationModel.operatorComments)),
@@ -969,9 +966,9 @@ class AppProfile {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppProfile &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
+          other is AppProfile &&
+              runtimeType == other.runtimeType &&
+              name == other.name;
 
   @override
   int get hashCode => name.hashCode;
@@ -983,74 +980,16 @@ class AppProfile {
 }
 
 class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
-  Map<String, bool> _teeth = Map<String, bool>();
-  Map<String, bool> _status = Map<String, bool>();
+  List<int> selectedTeeth = [];
   String selectedTooth = "";
-  List<String> selectedTeeth = [];
   String selectedStatus = "";
   bool mobilityDegrees = false;
-  late Future<API_Response> load;
+  late Future load;
+
 
   @override
   void initState() {
-    load = TempPatientAPI.GetDentalExamination(patientID);
-    _status["Carious"] = false;
-    _status["Filled"] = false;
-    _status["Missed"] = false;
-    _status["Not Sure"] = false;
-    _status["Mobility"] = false;
-    _status["Hopeless teeth"] = false;
-    _status["Implant Placed"] = false;
-    _status["Implant Failed"] = false;
-    _teeth["11"] = false;
-    _teeth["12"] = false;
-    _teeth["13"] = false;
-    _teeth["14"] = false;
-    _teeth["15"] = false;
-    _teeth["16"] = false;
-    _teeth["17"] = false;
-    _teeth["18"] = false;
-    _teeth["19"] = false;
-    _teeth["20"] = false;
-    _teeth["21"] = false;
-    _teeth["22"] = false;
-    _teeth["23"] = false;
-    _teeth["24"] = false;
-    _teeth["25"] = false;
-    _teeth["26"] = false;
-    _teeth["27"] = false;
-    _teeth["28"] = false;
-    _teeth["29"] = false;
-    _teeth["30"] = false;
-    _teeth["31"] = false;
-    _teeth["32"] = false;
-    _teeth["33"] = false;
-    _teeth["34"] = false;
-    _teeth["35"] = false;
-    _teeth["36"] = false;
-    _teeth["37"] = false;
-    _teeth["38"] = false;
-    _teeth["39"] = false;
-    _teeth["40"] = false;
-    _teeth["41"] = false;
-    _teeth["42"] = false;
-    _teeth["43"] = false;
-    _teeth["44"] = false;
-    _teeth["45"] = false;
-    _teeth["46"] = false;
-    _teeth["47"] = false;
-    _teeth["48"] = false;
-    _teeth["49"] = false;
-    for (String tooth in _teeth.keys) {
-      _teeth[tooth] = false;
-    }
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    TempPatientAPI.UpdateDentalExamination(patientID, dentalExaminationModel);
-    super.dispose();
+    load = MedicalAPI.GetPatientDentalExamination(patientID);
   }
 
   @override
@@ -1061,8 +1000,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
           if (snapshot.hasData) {
             var res = snapshot.data as API_Response;
             if (res.statusCode == 200)
-              dentalExaminationModel =
-                  res.result as List<DentalExaminationModel>;
+              dentalExaminationModel = res.result as DentalExaminationModel;
             return CIA_MedicalPagesWidget(children: [
               Row(
                 children: [
@@ -1070,30 +1008,37 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                     child: CIA_MultiSelectChipWidget(
                       key: GlobalKey(),
                       onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        for (String tooth in selectedTeeth) {
-                          _teeth[tooth] = true;
-                        }
+                        selectedTeeth =
+                            selectedItems.map((e) => int.parse(e)).toList();
                       },
                       labels: [
                         CIA_MultiSelectChipWidgeModel(
-                            label: "11", isSelected: _teeth["11"] as bool),
+                          label: "11",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "12", isSelected: _teeth["12"] as bool),
+                          label: "12",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "13", isSelected: _teeth["13"] as bool),
+                          label: "13",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "14", isSelected: _teeth["14"] as bool),
+                          label: "14",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "15", isSelected: _teeth["15"] as bool),
+                          label: "15",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "16", isSelected: _teeth["16"] as bool),
+                          label: "16",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "17", isSelected: _teeth["17"] as bool),
+                          label: "17",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "18", isSelected: _teeth["18"] as bool),
+                          label: "18",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "19", isSelected: _teeth["19"] as bool)
+                          label: "19",
+                        )
                       ],
                     ),
                   ),
@@ -1102,30 +1047,37 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                     child: CIA_MultiSelectChipWidget(
                       key: GlobalKey(),
                       onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        for (String tooth in selectedTeeth) {
-                          _teeth[tooth] = true;
-                        }
+                        selectedTeeth =
+                            selectedItems.map((e) => int.parse(e)).toList();
                       },
                       labels: [
                         CIA_MultiSelectChipWidgeModel(
-                            label: "21", isSelected: _teeth["21"] as bool),
+                          label: "21",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "22", isSelected: _teeth["22"] as bool),
+                          label: "22",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "23", isSelected: _teeth["23"] as bool),
+                          label: "23",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "24", isSelected: _teeth["24"] as bool),
+                          label: "24",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "25", isSelected: _teeth["25"] as bool),
+                          label: "25",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "26", isSelected: _teeth["26"] as bool),
+                          label: "26",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "27", isSelected: _teeth["27"] as bool),
+                          label: "27",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "28", isSelected: _teeth["28"] as bool),
+                          label: "28",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "29", isSelected: _teeth["29"] as bool)
+                          label: "29",
+                        )
                       ],
                     ),
                   ),
@@ -1137,30 +1089,37 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                     child: CIA_MultiSelectChipWidget(
                       key: GlobalKey(),
                       onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        for (String tooth in selectedTeeth) {
-                          _teeth[tooth] = true;
-                        }
+                        selectedTeeth =
+                            selectedItems.map((e) => int.parse(e)).toList();
                       },
                       labels: [
                         CIA_MultiSelectChipWidgeModel(
-                            label: "31", isSelected: _teeth["31"] as bool),
+                          label: "31",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "32", isSelected: _teeth["32"] as bool),
+                          label: "32",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "33", isSelected: _teeth["33"] as bool),
+                          label: "33",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "34", isSelected: _teeth["34"] as bool),
+                          label: "34",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "35", isSelected: _teeth["35"] as bool),
+                          label: "35",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "36", isSelected: _teeth["36"] as bool),
+                          label: "36",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "37", isSelected: _teeth["37"] as bool),
+                          label: "37",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "38", isSelected: _teeth["38"] as bool),
+                          label: "38",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "39", isSelected: _teeth["39"] as bool)
+                          label: "39",
+                        )
                       ],
                     ),
                   ),
@@ -1169,30 +1128,37 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                     child: CIA_MultiSelectChipWidget(
                       key: GlobalKey(),
                       onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        for (String tooth in selectedTeeth) {
-                          _teeth[tooth] = true;
-                        }
+                        selectedTeeth =
+                            selectedItems.map((e) => int.parse(e)).toList();
                       },
                       labels: [
                         CIA_MultiSelectChipWidgeModel(
-                            label: "41", isSelected: _teeth["41"] as bool),
+                          label: "41",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "42", isSelected: _teeth["42"] as bool),
+                          label: "42",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "43", isSelected: _teeth["43"] as bool),
+                          label: "43",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "44", isSelected: _teeth["44"] as bool),
+                          label: "44",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "45", isSelected: _teeth["45"] as bool),
+                          label: "45",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "46", isSelected: _teeth["46"] as bool),
+                          label: "46",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "47", isSelected: _teeth["47"] as bool),
+                          label: "47",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "48", isSelected: _teeth["48"] as bool),
+                          label: "48",
+                        ),
                         CIA_MultiSelectChipWidgeModel(
-                            label: "49", isSelected: _teeth["49"] as bool)
+                          label: "49",
+                        )
                       ],
                     ),
                   ),
@@ -1202,36 +1168,25 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 onChange: (value, isSelected) {
                   for (var tooth in selectedTeeth) {
-                    var t = dentalExaminationModel.firstWhereOrNull(
-                        (element) => element.tooth.toString() == tooth);
+                    var t = dentalExaminationModel.dentalExaminations
+                        .firstWhereOrNull(
+                            (element) => element.tooth.toString() == tooth);
                     if (t == null) {
-                      dentalExaminationModel
-                          .add(DentalExaminationModel(tooth: int.parse(tooth)));
+                      dentalExaminationModel.dentalExaminations
+                          .add(DentalExaminations(tooth: tooth));
                     }
                   }
                   if (isSelected) {
                     if (value == "Mobility") {
                       setState(() {
                         mobilityDegrees = true;
-                        _status["Mobility"] = true;
                       });
                     } else {
                       selectedTeeth.forEach((element) {
-                        dentalExaminationModel
-                            .firstWhere((x) => x.tooth == int.parse(element))
+                        dentalExaminationModel.dentalExaminations
+                            .firstWhere((x) => x.tooth == element)
                             .updateToothStatus(value);
                       });
-                      /*if (isSelected)
-                        MasterController.updateTeethStatus(
-                            selectedTeeth, value);*/
-                      // _status.forEach((key, value) => value = false);
-                      //_teeth.forEach((key, value) =>value = false);
-                      for (String ss in _status.keys) {
-                        _status[ss] = false;
-                      }
-                      for (String tooth in _teeth.keys) {
-                        _teeth[tooth] = false;
-                      }
                       selectedTeeth.clear();
                       setState(() {});
                     }
@@ -1240,26 +1195,29 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 singleSelect: true,
                 labels: [
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Carious", isSelected: _status["Carious"] as bool),
+                    label: "Carious",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Filled", isSelected: _status["Filled"] as bool),
+                    label: "Filled",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Missed", isSelected: _status["Missed"] as bool),
+                    label: "Missed",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Not Sure",
-                      isSelected: _status["Not Sure"] as bool),
+                    label: "Not Sure",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Mobility",
-                      isSelected: _status["Mobility"] as bool),
+                    label: "Mobility",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Hopeless teeth",
-                      isSelected: _status["Hopeless teeth"] as bool),
+                    label: "Hopeless teeth",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Implant Placed",
-                      isSelected: _status["Implant Placed"] as bool),
+                    label: "Implant Placed",
+                  ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Implant Failed",
-                      isSelected: _status["Implant Failed"] as bool),
+                    label: "Implant Failed",
+                  ),
                 ],
               ),
               Visibility(
@@ -1270,29 +1228,23 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                     if (isSelected) {
                       if (value == "I")
                         selectedTeeth.forEach((element) {
-                          dentalExaminationModel
-                              .firstWhere((x) => x.tooth == int.parse(element))
-                              .updateToothStatus("mobilityI");
+                          dentalExaminationModel.dentalExaminations
+                              .firstWhere((x) => x.tooth == element)
+                              .updateToothStatus("Mobility I");
                         });
                       else if (value == "II")
                         selectedTeeth.forEach((element) {
-                          dentalExaminationModel
-                              .firstWhere((x) => x.tooth == int.parse(element))
-                              .updateToothStatus("mobilityII");
+                          dentalExaminationModel.dentalExaminations
+                              .firstWhere((x) => x.tooth == element)
+                              .updateToothStatus("Mobility II");
                         });
                       else if (value == "III")
                         selectedTeeth.forEach((element) {
-                          dentalExaminationModel
-                              .firstWhere((x) => x.tooth == int.parse(element))
-                              .updateToothStatus("mobilityIII");
+                          dentalExaminationModel.dentalExaminations
+                              .firstWhere((x) => x.tooth == element)
+                              .updateToothStatus("Mobility III");
                         });
 
-                      for (String ss in _status.keys) {
-                        _status[ss] = false;
-                      }
-                      for (String tooth in _teeth.keys) {
-                        _teeth[tooth] = false;
-                      }
                       setState(() {
                         mobilityDegrees = false;
                       });
@@ -1313,25 +1265,25 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Carious",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.carious == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where(
-                            (element) => element.previousState! == "carious") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) => element.previousState! == "carious")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) => element.previousState! == "carious") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) => element.previousState! == "carious")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) {
                   MasterController.updateDentalExamination("Carious", value);
                 },
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .carious = false;
@@ -1341,24 +1293,24 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Filled",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.filled == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where(
-                            (element) => element.previousState! == "filled") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) => element.previousState! == "filled")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) => element.previousState! == "filled") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) => element.previousState! == "filled")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Filled", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .filled = false;
@@ -1368,24 +1320,24 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Missed",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.missed == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where(
-                            (element) => element.previousState! == "missed") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) => element.previousState! == "missed")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) => element.previousState! == "missed") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) => element.previousState! == "missed")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Missed", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .missed = false;
@@ -1395,24 +1347,24 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Not Sure",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.notSure == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where(
-                            (element) => element.previousState! == "notSure") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) => element.previousState! == "notSure")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) => element.previousState! == "notSure") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) => element.previousState! == "notSure")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) =>
                     MasterController.updateDentalExamination("Not Sure", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .notSure = false;
@@ -1426,26 +1378,27 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility I",
-                      initialValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityI == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
-                      strikeValues: dentalExaminationModel.where((element) =>
-                                  element.previousState! == "mobilityI") !=
-                              null
-                          ? dentalExaminationModel
-                              .where((element) =>
-                                  element.previousState! == "mobilityI")
-                              .toList()
-                              .map((e) => e.tooth.toString())
-                              .toList()
+                      strikeValues: dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! == "mobilityI") !=
+                          null
+                          ? dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! == "mobilityI")
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList()
                           : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility I", value),
                       onDelete: (value) {
-                        dentalExaminationModel
+                        dentalExaminationModel.dentalExaminations
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityI = false;
@@ -1459,26 +1412,27 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility II",
-                      initialValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityII == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
-                      strikeValues: dentalExaminationModel.where((element) =>
-                                  element.previousState! == "mobilityII") !=
-                              null
-                          ? dentalExaminationModel
-                              .where((element) =>
-                                  element.previousState! == "mobilityII")
-                              .toList()
-                              .map((e) => e.tooth.toString())
-                              .toList()
+                      strikeValues: dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! == "mobilityII") !=
+                          null
+                          ? dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! == "mobilityII")
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList()
                           : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility II", value),
                       onDelete: (value) {
-                        dentalExaminationModel
+                        dentalExaminationModel.dentalExaminations
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityII = false;
@@ -1492,26 +1446,28 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility III",
-                      initialValue: dentalExaminationModel
+                      initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityIII == true)
                           .toList()
                           .map((e) => e.tooth.toString())
                           .toList(),
-                      strikeValues: dentalExaminationModel.where((element) =>
-                                  element.previousState! == "mobilityIII") !=
-                              null
-                          ? dentalExaminationModel
-                              .where((element) =>
-                                  element.previousState! == "mobilityIII")
-                              .toList()
-                              .map((e) => e.tooth.toString())
-                              .toList()
+                      strikeValues: dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! ==
+                          "mobilityIII") !=
+                          null
+                          ? dentalExaminationModel.dentalExaminations
+                          .where((element) =>
+                      element.previousState! == "mobilityIII")
+                          .toList()
+                          .map((e) => e.tooth.toString())
+                          .toList()
                           : null,
                       onChange: (value) =>
                           MasterController.updateDentalExamination(
                               "Mobility III", value),
                       onDelete: (value) {
-                        dentalExaminationModel
+                        dentalExaminationModel.dentalExaminations
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityIII = false;
@@ -1524,25 +1480,26 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Hopeless teeth",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.hopelessteeth == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where((element) =>
-                            element.previousState! == "hopelessteeth") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) =>
-                            element.previousState! == "hopelessteeth")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) =>
+                    element.previousState! == "hopelessteeth") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) =>
+                element.previousState! == "hopelessteeth")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Hopeless teeth", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .hopelessteeth = false;
@@ -1553,20 +1510,18 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                   Expanded(
                     key: GlobalKey(),
                     child: CIA_TextFormField(
-                        suffix: "mm",
-                        isNumber: true,
-                        label: "Inter arch space RT",
-                        onChange: (value) {
-                          dentalExaminationModel.forEach((element) {
-                            element.interarchspaceRT = int.parse(value);
-                          });
-                        },
-                        controller: TextEditingController(
-                            text: dentalExaminationModel.isNotEmpty
-                                ? dentalExaminationModel[0]
-                                    .interarchspaceRT
-                                    .toString()
-                                : 0.toString())),
+                      suffix: "mm",
+                      isNumber: true,
+                      label: "Inter arch space RT",
+                      onChange: (value) {
+                        dentalExaminationModel.interarchspaceRT =
+                            int.parse(value);
+                      },
+                      controller: TextEditingController(
+                        text: (dentalExaminationModel.interarchspaceRT ?? 0)
+                            .toString(),
+                      ),
+                    ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
@@ -1576,16 +1531,13 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                         isNumber: true,
                         label: "Inter arch space LT",
                         onChange: (value) {
-                          dentalExaminationModel.forEach((element) {
-                            element.interarchspaceLT = int.parse(value);
-                          });
+                          dentalExaminationModel.interarchspaceLT =
+                              int.parse(value);
                         },
                         controller: TextEditingController(
-                            text: dentalExaminationModel.isNotEmpty
-                                ? dentalExaminationModel[0]
-                                    .interarchspaceLT
-                                    .toString()
-                                : "0")),
+                          text: (dentalExaminationModel.interarchspaceLT ?? 0)
+                              .toString(),
+                        )),
                   ),
                 ],
               ),
@@ -1593,25 +1545,26 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Implant Placed",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.implantPlaced == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where((element) =>
-                            element.previousState! == "implantPlaced") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) =>
-                            element.previousState! == "implantPlaced")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) =>
+                    element.previousState! == "implantPlaced") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) =>
+                element.previousState! == "implantPlaced")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Implant Placed", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .implantPlaced = false;
@@ -1621,25 +1574,26 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Implant Failed",
-                initialValue: dentalExaminationModel
+                initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.implantFailed == true)
                     .toList()
                     .map((e) => e.tooth.toString())
                     .toList(),
-                strikeValues: dentalExaminationModel.where((element) =>
-                            element.previousState! == "implantFailed") !=
-                        null
-                    ? dentalExaminationModel
-                        .where((element) =>
-                            element.previousState! == "implantFailed")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
+                strikeValues: dentalExaminationModel.dentalExaminations.where(
+                        (element) =>
+                    element.previousState! == "implantFailed") !=
+                    null
+                    ? dentalExaminationModel.dentalExaminations
+                    .where((element) =>
+                element.previousState! == "implantFailed")
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList()
                     : null,
                 onChange: (value) => MasterController.updateDentalExamination(
                     "Implant Failed", value),
                 onDelete: (value) {
-                  dentalExaminationModel
+                  dentalExaminationModel.dentalExaminations
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .implantFailed = false;
@@ -1648,14 +1602,11 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
               CIA_TextFormField(
                   label: "Operator Implant Notes",
                   onChange: (value) {
-                    dentalExaminationModel.forEach((element) {
-                      element.operatorImplantNotes = value;
-                    });
+                    dentalExaminationModel.operatorImplantNotes = value;
+
                   },
                   controller: TextEditingController(
-                      text: dentalExaminationModel.isEmpty
-                          ? null
-                          : dentalExaminationModel[0].operatorImplantNotes))
+                      text: dentalExaminationModel.operatorImplantNotes??""))
             ]);
           } else {
             return Center(
@@ -1728,18 +1679,18 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                                 CIA_MultiSelectChipWidgeModel(
                                     label: "Hot or cold",
                                     isSelected:
-                                        dentalHistoryModel.senstiveHotCold ??
-                                            false),
+                                    dentalHistoryModel.senstiveHotCold ??
+                                        false),
                                 CIA_MultiSelectChipWidgeModel(
                                     label: "sweets",
                                     isSelected:
-                                        dentalHistoryModel.senstiveSweets ??
-                                            false),
+                                    dentalHistoryModel.senstiveSweets ??
+                                        false),
                                 CIA_MultiSelectChipWidgeModel(
                                     label: "Biting or chewing",
                                     isSelected:
-                                        dentalHistoryModel.bittingCheweing ??
-                                            false),
+                                    dentalHistoryModel.bittingCheweing ??
+                                        false),
                               ]))
                     ],
                   ),
@@ -1751,15 +1702,15 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                         dentalHistoryModel.clench = value;
                       },
                       label:
-                          "Do you clench or grind your teeth while awake or sleep?",
+                      "Do you clench or grind your teeth while awake or sleep?",
                       controller: TextEditingController(
                           text: dentalHistoryModel.clench)),
                   Row(
                     children: [
                       Expanded(
                           child: FormTextKeyWidget(
-                        text: "Smoke Tobacco?",
-                      )),
+                            text: "Smoke Tobacco?",
+                          )),
                       Expanded(
                           child: CIA_TextFormField(
                               onChange: (value) {
@@ -1779,21 +1730,21 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                       Expanded(
                           child: FormTextValueWidget(
                               text: dentalHistoryModel.smoke != null &&
-                                      (dentalHistoryModel.smoke!) == 0
+                                  (dentalHistoryModel.smoke!) == 0
                                   ? "Non Smoker"
                                   : dentalHistoryModel.smoke != null &&
-                                          (dentalHistoryModel.smoke!) < 10
-                                      ? "Light Smoker"
-                                      : dentalHistoryModel.smoke != null &&
-                                              (dentalHistoryModel.smoke!) < 20
-                                          ? "Medium Smoker"
-                                          : "Heavy Smoker")),
+                                  (dentalHistoryModel.smoke!) < 10
+                                  ? "Light Smoker"
+                                  : dentalHistoryModel.smoke != null &&
+                                  (dentalHistoryModel.smoke!) < 20
+                                  ? "Medium Smoker"
+                                  : "Heavy Smoker")),
                       Expanded(flex: 3, child: SizedBox())
                     ],
                   ),
                   CIA_TextFormField(
                       onChange: (value) =>
-                          dentalHistoryModel.seriousInjury = value,
+                      dentalHistoryModel.seriousInjury = value,
                       label: "A serious injury to the mouth?",
                       controller: TextEditingController(
                           text: dentalHistoryModel.seriousInjury)),
@@ -1814,9 +1765,9 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                               label: "",
                               controller: TextEditingController(
                                   text: dentalHistoryModel.cooperationScore !=
-                                          null
+                                      null
                                       ? dentalHistoryModel.cooperationScore
-                                          .toString()
+                                      .toString()
                                       : null))),
                       Expanded(child: FormTextKeyWidget(text: "/10")),
                       Expanded(child: SizedBox())
@@ -1834,11 +1785,11 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                               label: "",
                               controller: TextEditingController(
                                   text: dentalHistoryModel
-                                              .willingForImplantScore !=
-                                          null
+                                      .willingForImplantScore !=
+                                      null
                                       ? dentalHistoryModel
-                                          .willingForImplantScore
-                                          .toString()
+                                      .willingForImplantScore
+                                      .toString()
                                       : null))),
                       Expanded(child: FormTextKeyWidget(text: "/10")),
                       Expanded(child: SizedBox())
@@ -1989,7 +1940,7 @@ class _PatientNonSurgicalTreatmentState
 
   _buildTeethSuggestion() {
     List<Widget> uu = <Widget>[];
-    containedTeeth.forEach((tooth) {
+    /*containedTeeth.forEach((tooth) {
       var m = tempDentalExamination
           .firstWhereOrNull((element) => element.tooth.toString() == tooth);
       if (m == null) m = DentalExaminationModel(tooth: int.parse(tooth));
@@ -2079,7 +2030,7 @@ class _PatientNonSurgicalTreatmentState
         },
       ));
       uu.add(SizedBox(height: 10));
-    });
+    });*/
 
     Widget ss = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2150,16 +2101,16 @@ class _PatientProstheticTreatmentState
       if (MasterController.TreatmentPlan[key] != null) {
         if ((MasterController.TreatmentPlan[key]?.guidedImplant != null &&
             MasterController.TreatmentPlan[key]?.guidedImplant?.status
-                as bool)) {
+            as bool)) {
           teeth.add(key);
         } else if (MasterController.TreatmentPlan[key]?.immediateImplant !=
-                null &&
+            null &&
             MasterController.TreatmentPlan[key]?.immediateImplant?.status
-                as bool) {
+            as bool) {
           teeth.add(key);
         } else if (MasterController.TreatmentPlan[key]?.simpleImplant != null &&
             MasterController.TreatmentPlan[key]?.simpleImplant?.status
-                as bool) {
+            as bool) {
           teeth.add(key);
         }
       }
@@ -2224,7 +2175,7 @@ class _ProstheticWidgetState extends State<_ProstheticWidget> {
                   try {
                     if (myActiveIndex! !=
                         stepModels.indexWhere((element) =>
-                            element.stepStatus == StepStatus_.InProgress))
+                        element.stepStatus == StepStatus_.InProgress))
                       myActiveIndex = (myActiveIndex as int) + 1;
 
                     setState(() {});
@@ -2317,9 +2268,9 @@ class _Patient_CBCTandPhotosState extends State<_Patient_CBCTandPhotos> {
             SizedBox(width: 10),
             done != null && !done! && reason == "Other"
                 ? Expanded(
-                    child: CIA_TextFormField(
-                        label: "Other", controller: TextEditingController()),
-                  )
+              child: CIA_TextFormField(
+                  label: "Other", controller: TextEditingController()),
+            )
                 : Expanded(child: SizedBox())
           ],
         ),

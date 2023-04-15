@@ -34,7 +34,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   List<CIA_MultiSelectChipWidgeModel> labels;
   bool redFlags;
   Function? onChange;
-  Function? onChangeList;
+  Function(List<String>)? onChangeList;
   Function? onChangeSpecificTooth;
   bool singleSelect;
   bool verticalList;

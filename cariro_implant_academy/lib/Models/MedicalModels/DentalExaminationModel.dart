@@ -1,6 +1,72 @@
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:get/get.dart';
+
 class DentalExaminationModel {
+  int? id;
+  int? patientId;
+  List<DentalExaminations> dentalExaminations=[];
   int? interarchspaceRT;
   int? interarchspaceLT;
+  String? date;
+  String? operatorImplantNotes;
+  int? operatorId;
+  DropDownDTO? operator;
+
+  DentalExaminationModel(
+      {this.id,
+        this.patientId,
+        this.dentalExaminations=const [],
+        this.interarchspaceRT=0,
+        this.interarchspaceLT=0,
+        this.date="",
+        this.operatorImplantNotes="",
+        this.operatorId,
+        this.operator});
+
+  DentalExaminationModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    patientId = json['patientId'];
+    if (json['dentalExaminations'] != null) {
+      dentalExaminations = <DentalExaminations>[];
+      json['dentalExaminations'].forEach((v) {
+        dentalExaminations!.add(new DentalExaminations.fromJson(v));
+      });
+    }
+    else dentalExaminations = [];
+    interarchspaceRT = json['interarchspaceRT']??0;
+    interarchspaceLT = json['interarchspaceLT']??0;
+    date = json['date']??"";
+    operatorImplantNotes = json['operatorImplantNotes']??"";
+    operatorId = json['operatorId'];
+    operator = json['operator'] != null
+        ? new DropDownDTO.fromJson(json['operator'])
+        : DropDownDTO();
+
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['patientId'] = this.patientId;
+    if (this.dentalExaminations != null) {
+      data['dentalExaminations'] =
+          this.dentalExaminations!.map((v) => v.toJson()).toList();
+    }
+    data['interarchspaceRT'] = this.interarchspaceRT;
+    data['interarchspaceLT'] = this.interarchspaceLT;
+    data['date'] = this.date;
+    data['operatorImplantNotes'] = this.operatorImplantNotes;
+    data['operatorId'] = this.operatorId;
+    if (this.operator != null) {
+      data['operator'] = this.operator!.toJson();
+    }
+    return data;
+  }
+
+}
+
+class DentalExaminations {
   int? tooth;
   bool? carious;
   bool? filled;
@@ -12,48 +78,39 @@ class DentalExaminationModel {
   bool? hopelessteeth;
   bool? implantPlaced;
   bool? implantFailed;
-  String? operatorImplantNotes;
-  String? previousState = "";
+  String? previousState;
 
-  DentalExaminationModel(
-      {this.interarchspaceRT = 0,
-      this.interarchspaceLT = 0,
-      this.tooth,
-      this.carious = false,
-      this.filled = false,
-      this.missed = false,
-      this.notSure = false,
-      this.mobilityI = false,
-      this.mobilityII = false,
-      this.mobilityIII = false,
-      this.hopelessteeth = false,
-      this.implantPlaced = false,
-      this.implantFailed = false,
-      this.previousState,
-      this.operatorImplantNotes});
+  DentalExaminations(
+      {this.tooth,
+        this.carious=false,
+        this.filled=false,
+        this.missed=false,
+        this.notSure=false,
+        this.mobilityI=false,
+        this.mobilityII=false,
+        this.mobilityIII=false,
+        this.hopelessteeth=false,
+        this.implantPlaced=false,
+        this.implantFailed=false,
+        this.previousState=""});
 
-  DentalExaminationModel.fromJson(Map<String, dynamic> json) {
-    interarchspaceRT = json['interarchspaceRT'] ?? 0;
-    interarchspaceLT = json['interarchspaceLT'] ?? 0;
+  DentalExaminations.fromJson(Map<String, dynamic> json) {
     tooth = json['tooth'];
-    carious = json['carious'] ?? false;
-    filled = json['filled'] ?? false;
-    missed = json['missed'] ?? false;
-    notSure = json['notSure'] ?? false;
-    mobilityI = json['mobilityI'] ?? false;
-    mobilityII = json['mobilityII'] ?? false;
-    mobilityIII = json['mobilityIII'] ?? false;
-    previousState = json['previousState'] ?? "";
-    hopelessteeth = json['hopelessteeth'] ?? false;
-    implantPlaced = json['implantPlaced'] ?? false;
-    implantFailed = json['implantFailed'] ?? false;
-    operatorImplantNotes = json['operatorImplantNotes'];
+    carious = json['carious']??false;
+    filled = json['filled']??false;
+    missed = json['missed']??false;
+    notSure = json['notSure']??false;
+    mobilityI = json['mobilityI']??false;
+    mobilityII = json['mobilityII']??false;
+    mobilityIII = json['mobilityIII']??false;
+    hopelessteeth = json['hopelessteeth']??false;
+    implantPlaced = json['implantPlaced']??false;
+    implantFailed = json['implantFailed']??false;
+    previousState = json['previousState']??"";
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['interarchspaceRT'] = this.interarchspaceRT ?? 0;
-    data['interarchspaceLT'] = this.interarchspaceLT ?? 0;
     data['tooth'] = this.tooth;
     data['carious'] = this.carious;
     data['filled'] = this.filled;
@@ -65,12 +122,13 @@ class DentalExaminationModel {
     data['hopelessteeth'] = this.hopelessteeth;
     data['implantPlaced'] = this.implantPlaced;
     data['implantFailed'] = this.implantFailed;
-    data['operatorImplantNotes'] = this.operatorImplantNotes;
     data['previousState'] = this.previousState;
     return data;
   }
 
   updateToothStatus(String value) {
+
+
     switch (value) {
       case "Carious":
         {
@@ -133,7 +191,6 @@ class DentalExaminationModel {
           mobilityIII = false;
           missed = false;
           implantPlaced = false;
-
           break;
         }
 
@@ -144,7 +201,6 @@ class DentalExaminationModel {
           mobilityI = false;
           missed = false;
           implantPlaced = false;
-
           break;
         }
 
@@ -152,7 +208,6 @@ class DentalExaminationModel {
         {
           hopelessteeth = true;
           missed = false;
-
           break;
         }
       case "Implant Placed":
@@ -187,4 +242,7 @@ class DentalExaminationModel {
         }
     }
   }
+
+
 }
+
