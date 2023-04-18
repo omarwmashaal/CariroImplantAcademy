@@ -1821,6 +1821,7 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                       Expanded(flex: 3, child: SizedBox())
                     ],
                   ),
+
                   CIA_TextFormField(
                       onChange: (value) =>
                           dentalHistoryModel.seriousInjury = value,
