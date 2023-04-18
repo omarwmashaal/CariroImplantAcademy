@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationMod
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 
+import '../Models/MedicalModels/DentalHistory.dart';
+
 
 class MedicalAPI {
   static Future<API_Response> GetPatientMedicalExamination(int id) async {
@@ -28,5 +30,24 @@ static Future<API_Response> GetPatientDentalExamination(int id) async {
     }
     return response;
   }
+  static Future<API_Response> UpdatePatientDentalExamination(int id,DentalExaminationModel model) async {
+    var response = await HTTPRequest.Put("Medical/UpdatePatientDentalExamination?id=$id",model.toJson());
+    return response;
+  }
+
+static Future<API_Response> GetPatientDentalHistory(int id) async {
+    var response = await HTTPRequest.Get("Medical/GetPatientDentalHistory?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result =
+          DentalHistoryModel.fromJson(response.result as Map<String, dynamic>);
+    }
+    return response;
+  }
+  static Future<API_Response> UpdatePatientDentalHistory(int id,DentalHistoryModel model) async {
+    var response = await HTTPRequest.Put("Medical/UpdatePatientDentalHistory?id=$id",model.toJson());
+    return response;
+  }
+
 
 }

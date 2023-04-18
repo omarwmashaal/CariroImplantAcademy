@@ -38,3 +38,11 @@ enum PregnancyEnum
   Pregnant,
   Lactating
 }
+
+enum SmokingStatus
+{
+  NoneSmoker,
+  LightSmoker,
+  MediumSmoker,
+  HeavySmoker
+}

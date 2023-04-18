@@ -55,12 +55,8 @@ class DentalExaminationModel {
     }
     data['interarchspaceRT'] = this.interarchspaceRT;
     data['interarchspaceLT'] = this.interarchspaceLT;
-    data['date'] = this.date;
     data['operatorImplantNotes'] = this.operatorImplantNotes;
-    data['operatorId'] = this.operatorId;
-    if (this.operator != null) {
-      data['operator'] = this.operator!.toJson();
-    }
+    
     return data;
   }
 

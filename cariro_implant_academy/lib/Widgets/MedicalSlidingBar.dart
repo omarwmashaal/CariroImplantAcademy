@@ -36,18 +36,20 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
               label: e.name,
               height: 50,
               onTab: () async {
-                bool changePage = true;
+                bool changePage = false;
                 await CIA_ShowPopUpSaveRequest(
                     context: context,
                     onSave: () {
                       widget.pages
                           .firstWhere((element) => element.isSelected == true)
                           .onSave!();
+                      changePage = true;
                     },
                     onCancel: () {
                       changePage = false;
                     },
                     onDontSave: () {
+                      changePage = true;
                     });
                 if(!changePage) return;
                 tabsController.jumpToPage(e.getIndex());

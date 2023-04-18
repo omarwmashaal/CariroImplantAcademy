@@ -1,10 +1,12 @@
+import 'package:cariro_implant_academy/Models/Enum.dart';
+
 class DentalHistoryModel {
   bool? senstiveHotCold;
   bool? senstiveSweets;
   bool? bittingCheweing;
   String? clench;
   int? smoke;
-  String? smokingStatus;
+  SmokingStatus? smokingStatus;
   String? seriousInjury;
   String? satisfied;
   int? cooperationScore;
@@ -23,16 +25,16 @@ class DentalHistoryModel {
       this.willingForImplantScore});
 
   DentalHistoryModel.fromJson(Map<String, dynamic> json) {
-    senstiveHotCold = json['senstiveHotCold'];
-    senstiveSweets = json['senstiveSweets'];
-    bittingCheweing = json['bittingCheweing'];
-    clench = json['clench'];
-    smoke = json['smoke'];
-    smokingStatus = json['smokingStatus'];
-    seriousInjury = json['seriousInjury'];
-    satisfied = json['satisfied'];
-    cooperationScore = json['cooperationScore'];
-    willingForImplantScore = json['willingForImplantScore'];
+    senstiveHotCold = json['senstiveHotCold']??false;
+    senstiveSweets = json['senstiveSweets']??false;
+    bittingCheweing = json['bittingCheweing']??false;
+    clench = json['clench']??"";
+    smoke = json['smoke']??0;
+    smokingStatus = SmokingStatus.values[json['smokingStatus']??0];
+    seriousInjury = json['seriousInjury']??"";
+    satisfied = json['satisfied']??"";
+    cooperationScore = json['cooperationScore']??0;
+    willingForImplantScore = json['willingForImplantScore']??0;
   }
 
   Map<String, dynamic> toJson() {
@@ -42,7 +44,7 @@ class DentalHistoryModel {
     data['bittingCheweing'] = this.bittingCheweing;
     data['clench'] = this.clench;
     data['smoke'] = this.smoke;
-    data['smokingStatus'] = this.smokingStatus;
+    data['smokingStatus'] = this.smokingStatus!.index;
     data['seriousInjury'] = this.seriousInjury;
     data['satisfied'] = this.satisfied;
     data['cooperationScore'] = this.cooperationScore;

@@ -42,6 +42,10 @@ late DentalHistoryModel dentalHistoryModel;
 late DentalExaminationModel dentalExaminationModel;
 late NonSurgicalTreatmentModel nonSurgicalTreatment;
 
+class _getxClass extends GetxController {
+  static RxInt tobacco = 0.obs;
+}
+
 class PatientMedicalInfoPage extends StatefulWidget {
   PatientMedicalInfoPage(
       {Key? key,
@@ -65,7 +69,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     patientID = widget.patientID;
   }
 
-
   List<Widget> pages = [
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
@@ -80,16 +83,53 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setMedicalAppBar(bar: MedicalSlidingBar(pages: [
-      MedicalSlidingModel(name: "Medical Examination", onSave: () {MedicalAPI.UpdatePatientMedicalExamination(patientID,medicalExaminationModel);}),
-      MedicalSlidingModel(name: "Dental History", onSave: () {print("2");}),
-      MedicalSlidingModel(name: "Dental Examination", onSave: () {print("3");}),
-      MedicalSlidingModel(name: "Non Surgical Treatment", onSave: () {print("3");}),
-      MedicalSlidingModel(name: "Treatment Plan", onSave: () {print("3");}),
-      MedicalSlidingModel(name: "Surgical Treatment", onSave: () {print("3");}),
-      MedicalSlidingModel(name: "Prosthetic Treatment", onSave: () {print("3");}),
-      MedicalSlidingModel(name: "Photos and CBCTs", onSave: () {print("4");}),
-    ]),);
+    siteController.setMedicalAppBar(
+      bar: MedicalSlidingBar(pages: [
+        MedicalSlidingModel(
+            name: "Medical Examination",
+            onSave: () {
+              MedicalAPI.UpdatePatientMedicalExamination(
+                  patientID, medicalExaminationModel);
+            }),
+        MedicalSlidingModel(
+            name: "Dental History",
+            onSave: () {
+              MedicalAPI.UpdatePatientDentalHistory(
+                  patientID, dentalHistoryModel);
+            }),
+        MedicalSlidingModel(
+            name: "Dental Examination",
+            onSave: () {
+              MedicalAPI.UpdatePatientDentalExamination(
+                  patientID, dentalExaminationModel);
+            }),
+        MedicalSlidingModel(
+            name: "Non Surgical Treatment",
+            onSave: () {
+              print("3");
+            }),
+        MedicalSlidingModel(
+            name: "Treatment Plan",
+            onSave: () {
+              print("3");
+            }),
+        MedicalSlidingModel(
+            name: "Surgical Treatment",
+            onSave: () {
+              print("3");
+            }),
+        MedicalSlidingModel(
+            name: "Prosthetic Treatment",
+            onSave: () {
+              print("3");
+            }),
+        MedicalSlidingModel(
+            name: "Photos and CBCTs",
+            onSave: () {
+              print("4");
+            }),
+      ]),
+    );
     /*siteController.setAppBarWidget(
       width: MediaQuery.of(context).size.width * 0.75,
       height: MediaQuery.of(context).size.width * 0.04,
@@ -337,7 +377,6 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   Color illegalDrugs = Color_TextFieldBorder;
   late Future load;
 
-
   @override
   void initState() {
     load = MedicalAPI.GetPatientMedicalExamination(patientID);
@@ -459,7 +498,6 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
               FormTextKeyWidget(text: "Did you have ever?"),
               CIA_MultiSelectChipWidget(
                 onChange: (value, isSelected) {
-
                   DiseasesEnum? disease;
                   switch (value) {
                     case "Kidney Disease":
@@ -505,13 +543,10 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   if (isSelected) {
                     medicalExaminationModel.diseases?.add(disease!);
                     print(medicalExaminationModel.diseases.toString());
+                  } else {
+                    medicalExaminationModel.diseases?.remove(disease);
+                    print(medicalExaminationModel.diseases.toString());
                   }
-                  else {
-                      medicalExaminationModel.diseases?.remove(disease);
-                      print(medicalExaminationModel.diseases.toString());
-
-                  }
-
                 },
                 redFlags: true,
                 labels: [
@@ -589,7 +624,6 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                               .contains(DiseasesEnum.Other))
                 ],
               ),
-
               FormTextKeyWidget(text: "Blood Pressure"),
               CIA_MultiSelectChipWidget(
                 onChange: (value, isSelected) {
@@ -895,8 +929,11 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     flex: 2,
                     child: CIA_TextFormField(
                         label: "Other Allergy",
-                        onChange: (value)=>medicalExaminationModel.otherAllergyComment = value,
-                        controller: TextEditingController(text:medicalExaminationModel.otherAllergyComment??"")),
+                        onChange: (value) =>
+                            medicalExaminationModel.otherAllergyComment = value,
+                        controller: TextEditingController(
+                            text: medicalExaminationModel.otherAllergyComment ??
+                                "")),
                   )
                 ],
               ),
@@ -1676,14 +1713,8 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
 
   @override
   void initState() {
-    load = TempPatientAPI.GetDentalHistory(patientID);
+    load = MedicalAPI.GetPatientDentalHistory(patientID);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    TempPatientAPI.UpdateDentalHistory(patientID, dentalHistoryModel);
-    super.dispose();
   }
 
   @override
@@ -1695,6 +1726,7 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
             var res = snapshot.data as API_Response;
             if (res.statusCode == 200) {
               dentalHistoryModel = res.result as DentalHistoryModel;
+              _getxClass.tobacco.value = dentalHistoryModel.smoke ?? 0;
               return CIA_MedicalPagesWidget(
                 children: [
                   Row(
@@ -1757,11 +1789,10 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                           child: CIA_TextFormField(
                               onChange: (value) {
                                 dentalHistoryModel.smoke = int.parse(value);
-                                setState(() {
-                                  tobacco = value;
-                                });
+                                _getxClass.tobacco.value = int.parse(value);
                               },
                               label: "Cigarette per day",
+                              isNumber: true,
                               controller: TextEditingController(
                                   text: dentalHistoryModel.smoke == null
                                       ? null
@@ -1770,17 +1801,23 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                         width: 10,
                       ),
                       Expanded(
-                          child: FormTextValueWidget(
-                              text: dentalHistoryModel.smoke != null &&
-                                      (dentalHistoryModel.smoke!) == 0
-                                  ? "Non Smoker"
-                                  : dentalHistoryModel.smoke != null &&
-                                          (dentalHistoryModel.smoke!) < 10
-                                      ? "Light Smoker"
-                                      : dentalHistoryModel.smoke != null &&
-                                              (dentalHistoryModel.smoke!) < 20
-                                          ? "Medium Smoker"
-                                          : "Heavy Smoker")),
+                          child: Obx(() => FormTextValueWidget(text: () {
+                                var returnValue = "";
+                                if ((_getxClass.tobacco.value) == 0) {
+                                  returnValue = "Non Smoker";
+                                  dentalHistoryModel.smokingStatus = SmokingStatus.NoneSmoker;
+                                } else if ((_getxClass.tobacco.value) < 10) {
+                                  returnValue = "Light Smoker";
+                                  dentalHistoryModel.smokingStatus = SmokingStatus.LightSmoker;
+                                } else if ((_getxClass.tobacco.value) < 20) {
+                                  returnValue = "Medium Smoker";
+                                  dentalHistoryModel.smokingStatus = SmokingStatus.MediumSmoker;
+                                } else {
+                                  returnValue = "Heavy Smoker";
+                                  dentalHistoryModel.smokingStatus = SmokingStatus.HeavySmoker;
+                                }
+                                return returnValue;
+                              }()))),
                       Expanded(flex: 3, child: SizedBox())
                     ],
                   ),
@@ -1802,6 +1839,7 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                               text: "Patient Cooperation Score")),
                       Expanded(
                           child: CIA_TextFormField(
+                              isNumber: true,
                               onChange: (value) => dentalHistoryModel
                                   .cooperationScore = int.parse(value),
                               label: "",
@@ -1825,6 +1863,7 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                               onChange: (value) => dentalHistoryModel
                                   .willingForImplantScore = int.parse(value),
                               label: "",
+                              isNumber: true,
                               controller: TextEditingController(
                                   text: dentalHistoryModel
                                               .willingForImplantScore !=

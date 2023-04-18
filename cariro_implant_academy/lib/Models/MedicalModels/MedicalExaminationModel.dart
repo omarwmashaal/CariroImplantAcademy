@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 
 import '../Enum.dart';
@@ -93,7 +94,7 @@ class MedicalExaminationModel {
     operator = json['operator'] != null
         ? new DropDownDTO.fromJson(json['operator'])
         : DropDownDTO();
-    date = json['date'];
+    date = CIA_DateConverters.fromBackendToDateTime(json['date']);
   }
 
   Map<String, dynamic> toJson() {
@@ -144,7 +145,7 @@ class BloodPressure {
 
   BloodPressure.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'] ?? "";
-    when = json['when'] ?? "";
+    when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
     drug = json['drug'] ?? "";
     readingInClinic = json['readingInClinic'] ?? "";
     status = BloodPressureEnum.values[json['status'] ?? 0];
@@ -153,7 +154,7 @@ class BloodPressure {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = this.when==""?null:this.when;
+    data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
     data['drug'] = this.drug;
     data['readingInClinic'] = this.readingInClinic;
     data['status'] = this.status!.index;
@@ -177,7 +178,7 @@ class Diabetic {
 
   Diabetic.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'];
-    when = json['when'] ?? "";
+    when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
     randomInClinic = json['randomInClinic'] ?? "";
     status = DiabetesEnum.values[json["status"] ?? 0];
     type = DiabetesMeasureType.values[json['type'] ?? 0];
@@ -186,7 +187,7 @@ class Diabetic {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = this.when==""?null:this.when;
+    data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
     data['randomInClinic'] = this.randomInClinic;
     data['status'] = this.status!.index;
     data['type'] = this.type!.index;
@@ -201,13 +202,13 @@ class HbA1c {
   HbA1c({this.date = "", this.reading = ""});
 
   HbA1c.fromJson(Map<String, dynamic> json) {
-    date = json['date'] ?? "";
+    date =  CIA_DateConverters.fromBackendToDateOnly(json['date']);
     reading = json['reading'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date==""?null:this.date;
+    data['date'] = CIA_DateConverters.fromDateOnlyToBackend(this.date);
     data['reading'] = this.reading;
     return data;
   }
