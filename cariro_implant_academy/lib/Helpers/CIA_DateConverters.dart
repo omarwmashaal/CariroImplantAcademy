@@ -36,16 +36,25 @@ class CIA_DateConverters {
 
   static fromDateTimeToBackend(String? dateTime) {
     if (dateTime == null || dateTime == "") return null;
-    final DateTime formatedDateTime =
-        DateFormat("dd-MM-yyy hh:mm a").parse(dateTime!);
-    final DateFormat formatter = DateFormat('yyyy-MM-ddTH:mm:SS');
+    late DateTime formatedDateTime;
+    try{
+      formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
+    }catch(e){
+      formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+    }
+    final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm');
     final String formatted = formatter.format(formatedDateTime);
     return formatted;
   }
 
   static fromDateOnlyToBackend(String? dateTime) {
     if (dateTime == null || dateTime == "") return null;
-    final DateTime formatedDateTime = DateFormat("dd-MM-yyy").parse(dateTime!);
+    late DateTime formatedDateTime;
+    try{
+      formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
+    }catch(e){
+      formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+    }
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(formatedDateTime);
     return formatted;
@@ -53,9 +62,47 @@ class CIA_DateConverters {
 
   static fromTimeOnlyToBackend(String? dateTime) {
     if (dateTime == null || dateTime == "") return null;
-    final DateTime formatedDateTime = DateFormat("hh:mm a").parse(dateTime!);
-    final DateFormat formatter = DateFormat('yyyy-MM-ddTH:mm:SS');
+    late DateTime formatedDateTime;
+    try{
+      formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
+    }catch(e){
+      formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+    }    final DateFormat formatter = DateFormat('yyyy-MM-ddTH:mm');
     final String formatted = formatter.format(formatedDateTime);
     return formatted;
+  }
+
+  static simpleFormatDateTime(dynamic dateTime) {
+    if (dateTime is String) {
+      return DateFormat("dd-MM-yyyy hh:mm a")
+          .parse(dateTime as String)
+          .toString();
+    } else if (dateTime is DateTime) {
+      return DateFormat("dd-MM-yyyy hh:mm a")
+          .format(dateTime as DateTime)
+          .toString();
+    }
+    return dateTime.toString();
+  }
+
+  static simpleFormatTimeOnly(dynamic dateTime) {
+    if (dateTime is String) {
+
+       return DateFormat("hh:mm a").format(DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime as String)).toString();
+
+
+    } else if (dateTime is DateTime) {
+      return DateFormat("hh:mm a").format(dateTime as DateTime).toString();
+    }
+    return dateTime.toString();
+  }
+
+  static simpleFormatDateOnly(dynamic dateTime) {
+    if (dateTime is String) {
+      return DateFormat("dd-MM-yyyy").format(DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime as String)).toString();
+    } else if (dateTime is DateTime) {
+      return DateFormat("dd-MM-yyyy").format(dateTime as DateTime).toString();
+    }
+    return dateTime.toString();
   }
 }

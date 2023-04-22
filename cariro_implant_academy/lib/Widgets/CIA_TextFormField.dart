@@ -17,6 +17,7 @@ class CIA_TextFormField extends StatefulWidget {
     this.isHours = false,
     this.maxLines = 1,
     this.borderColor,
+    this.enabled = true,
     this.suffix,
     this.borderColorOnChange,
     this.changeColorIfFilled = false,
@@ -29,7 +30,7 @@ class CIA_TextFormField extends StatefulWidget {
   bool isMinutes;
   bool? isObscure = false;
   String label;
-  Function? onChange;
+  Function(String value)? onChange;
   Function? onInstantChange;
   Function? onTap;
   IconData? icon;
@@ -39,6 +40,7 @@ class CIA_TextFormField extends StatefulWidget {
   String? suffix;
   bool changeColorIfFilled;
   Color? borderColorOnChange;
+  bool enabled;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -69,6 +71,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             ),
       ),
       child: TextFormField(
+        enabled: widget.enabled,
         onTap: (){
           if(widget.onTap!=null) widget.onTap!();
         },

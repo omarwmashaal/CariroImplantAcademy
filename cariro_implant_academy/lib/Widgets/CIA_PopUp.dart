@@ -1,3 +1,5 @@
+import 'package:cariro_implant_academy/Models/API_Response.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
@@ -131,8 +133,7 @@ CIA_PopupDialog_DateOnlyPicker(
             navigationMode: DateRangePickerNavigationMode.snap,
             onSelectionChanged: (value) {
               setState(() {
-                date =
-                    value.value.toString().replaceAll(" 00:00:00.000", "");
+                date = value.value.toString().replaceAll(" 00:00:00.000", "");
                 onChange(date);
               });
             },
@@ -161,6 +162,7 @@ CIA_PopupDialog_DateOnlyPicker(
     ],
   ).show();
 }
+
 CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
     Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
@@ -237,6 +239,7 @@ CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
 CIA_ShowPopUp(
     {required BuildContext context,
     String? title,
+    Function? onSave,
     Widget? child,
     String? buttonText,
     double? size}) {
@@ -254,7 +257,10 @@ CIA_ShowPopUp(
       DialogButton(
         color: Color_Accent,
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (onSave != null) onSave!();
+          Navigator.pop(context);
+        },
         child: Text(
           buttonText == null ? "Ok" : buttonText,
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -264,15 +270,14 @@ CIA_ShowPopUp(
   ).show();
 }
 
-
 CIA_ShowPopUpSaveRequest(
     {required BuildContext context,
-      String? title,
-      required Function onSave,
-      Function? onDontSave,
-      Function? onCancel,
-      String? buttonText,
-      double? size}) async{
+    String? title,
+    required Function onSave,
+    Function? onDontSave,
+    Function? onCancel,
+    String? buttonText,
+    double? size}) async {
   await Alert(
     context: context,
     title: title,
@@ -280,16 +285,16 @@ CIA_ShowPopUpSaveRequest(
         (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
         width: size == null ? 400 : size,
-        child: Text(title??"Do you want to save changes?"),
+        child: Text(title ?? "Do you want to save changes?"),
       );
     }),
     buttons: [
       DialogButton(
         color: Color_Background,
         width: 150,
-        onPressed: (){
-          if(onCancel!=null)onCancel();
-           Navigator.pop(context);
+        onPressed: () {
+          if (onCancel != null) onCancel();
+          Navigator.pop(context);
         },
         child: Text(
           buttonText == null ? "Cancel" : buttonText,
@@ -299,8 +304,8 @@ CIA_ShowPopUpSaveRequest(
       DialogButton(
         color: Color_Background,
         width: 150,
-        onPressed: ()async{
-          if(onDontSave!=null)onDontSave();
+        onPressed: () async {
+          if (onDontSave != null) onDontSave();
           Navigator.pop(context);
         },
         child: Text(
@@ -311,12 +316,90 @@ CIA_ShowPopUpSaveRequest(
       DialogButton(
         color: Color_Accent,
         width: 150,
-        onPressed: (){
-          if(onSave!=null)onSave();
+        onPressed: () {
+          if (onSave != null) onSave();
           Navigator.pop(context);
         },
         child: Text(
           buttonText == null ? "Save" : buttonText,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+    ],
+  ).show();
+}
+
+CIA_PopUpSearch(
+    {required BuildContext context,
+    String? title,
+    Function(DropDownDTO selected)? onChoose,
+    required Future<API_Response> searchFunction(String),
+    String? buttonText,
+    double? size}) {
+  String search = "";
+  List<DropDownDTO> results = [];
+  TextEditingController controller = TextEditingController();
+  Alert(
+    context: context,
+    title: title,
+    content: StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      controller.text = search;
+      controller.selection =
+          TextSelection(baseOffset: search.length, extentOffset: search.length);
+      return SizedBox(
+        width: size == null ? 400 : size,
+        height: 400,
+        child: Column(
+          children: [
+            Expanded(
+              child: CIA_TextFormField(
+                label: "Search",
+                controller: controller,
+                onChange: (value) async {
+                  if (value == "" || value == null) {
+                    search = "";
+                    results = [];
+                    setState(() {});
+                    return;
+                  }
+                  var res = await searchFunction(value);
+                  if (res.statusCode == 200)
+                    results = res.result as List<DropDownDTO>;
+                  setState(() {
+                    search = value;
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              flex: 10,
+              child: ListView.builder(
+                itemCount: results.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(results[index].name!),
+                    onTap: () {
+                      if (onChoose != null) onChoose!(results[index]);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }),
+    buttons: [
+      DialogButton(
+        color: Color_Accent,
+        width: 150,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text(
+          buttonText == null ? "Ok" : buttonText,
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),

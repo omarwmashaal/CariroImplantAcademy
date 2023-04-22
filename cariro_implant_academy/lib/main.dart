@@ -1,19 +1,32 @@
 import 'dart:html' as html;
 
+import 'package:cariro_implant_academy/API/LoadinAPI.dart';
+import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
+import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
@@ -68,44 +81,91 @@ class _MyHomePageState extends State<MyHomePage> {
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MTE1NjQ1MywiZXhwIjoxNjgxNzYxMjUzLCJpYXQiOjE2ODExNTY0NTN9.wHIpjqueWWN8xL5dm7FlcrShwIRjUfJKiNaB4yxdkZg");
     siteController.setRole("admin");
     siteController.setUser(ApplicationUserModel(name: "Admin"));
-    bool _error = true;
+
     return Scaffold(
-      body:  AuthenticationPage(),
+      body:AuthenticationPage(),
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
     );
   }
 
-  @override
-  void initState() {
-    //  TempPatientAPI.GetMedicalExamination(5);
+  List<Meeting> _getDataSource() {
+    final List<Meeting> meetings = <Meeting>[];
+    final DateTime today = DateTime.now();
+    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
+    final DateTime endTime = startTime.add(const Duration(hours: 2));
+    meetings.add(Meeting(
+        'Conference', startTime, endTime, const Color(0xFF0F8644), false));
+    meetings.add(Meeting('Conference', startTime.add(Duration(minutes: 10)),
+        endTime, const Color(0xFFAA8612), false));
+    meetings.add(Meeting('Conference', startTime.add(Duration(minutes: 30)),
+        endTime, const Color(0xFF0F8644), false));
+    return meetings;
   }
 }
 
-class myChip extends StatelessWidget {
-  const myChip({
-    required this.label,
-    required this.onDeleted,
-    required this.index,
-  });
-
-  final String label;
-  final ValueChanged<int> onDeleted;
-  final int index;
+class MeetingDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Chip(
-      labelPadding: const EdgeInsets.only(left: 8.0),
-      label: Text(label),
-      deleteIcon: Icon(
-        Icons.close,
-        size: 18,
-      ),
-      onDeleted: () {
-        onDeleted(index);
-      },
-    );
+  DateTime getStartTime(int index) {
+    return _getMeetingData(index).from;
   }
+
+  @override
+  DateTime getEndTime(int index) {
+    return _getMeetingData(index).to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return _getMeetingData(index).eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return _getMeetingData(index).background;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return _getMeetingData(index).isAllDay;
+  }
+
+  Meeting _getMeetingData(int index) {
+    final dynamic meeting = appointments![index];
+    late final Meeting meetingData;
+    if (meeting is Meeting) {
+      meetingData = meeting;
+    }
+
+    return meetingData;
+  }
+}
+
+/// Custom business object class which contains properties to hold the detailed
+/// information about the event data which will be rendered in calendar.
+class Meeting {
+  /// Creates a meeting class with required details.
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  /// Event name which is equivalent to subject property of [Appointment].
+  String eventName;
+
+  /// From which is equivalent to start time property of [Appointment].
+  DateTime from;
+
+  /// To which is equivalent to end time property of [Appointment].
+  DateTime to;
+
+  /// Background which is equivalent to color property of [Appointment].
+  Color background;
+
+  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
+  bool isAllDay;
 }

@@ -713,7 +713,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                   Expanded(
                       flex: 12,
                       child: CIA_Table(
-                          columnNames: VisitsModel.columns,
+                          columnNames: dataSource.columns,
                           dataSource: dataSource,
                           onCellClick: (value) {
                             //print(dataSource.models[value - 1].);

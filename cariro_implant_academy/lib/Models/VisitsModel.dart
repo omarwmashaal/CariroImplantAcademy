@@ -1,8 +1,11 @@
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/PatientAPI.dart';
+import 'CIA_RoomModel.dart';
 
 class VisitsModel {
   int? id;
@@ -11,59 +14,79 @@ class VisitsModel {
   String? realVisitTime;
   String? entersClinicTime;
   String? leaveTime;
+  String? from;
+  String? to;
+  String? title;
+  CIA_RoomModel? room;
+  int? roomId;
   String? doctorName;
-  String? Treatment;
+  int? doctorId;
+  String? treatment;
+  int? patientId;
   String? patientName;
 
   VisitsModel(
-      {this.id,
+      {this.id,this.from,this.title,
+        this.to, this.roomId,
       this.status,
       this.reservationTime,
       this.realVisitTime,
       this.entersClinicTime,
       this.leaveTime,
       this.doctorName,
+      this.doctorId,
+      this.patientId,
+      this.room,
       this.patientName});
 
   VisitsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     status = json['status'];
-    reservationTime = json['reservationTime'] == null
-        ? null
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['reservationTime']));
-    realVisitTime = json['realVisitTime'] == null
-        ? null
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['realVisitTime']));
-    entersClinicTime = json['entersClinicTime'] == null
-        ? null
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['entersClinicTime']));
-    leaveTime = json['leaveTime'] == null
-        ? null
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['leaveTime']));
+    reservationTime =
+        CIA_DateConverters.fromBackendToDateTime(json['reservationTime']);
+    realVisitTime =
+        CIA_DateConverters.fromBackendToDateTime(json['realVisitTime']);
+    entersClinicTime =
+        CIA_DateConverters.fromBackendToDateTime(json['entersClinicTime']);
+    leaveTime = CIA_DateConverters.fromBackendToDateTime(json['leaveTime']);
     doctorName = json['doctorName'];
+    doctorId = json['doctorId'];
     patientName = json['patientName'];
-    //doctorName = json['doctorName'];
+    from = json['from'];
+    to = json['to'];
+    title = json['title'];
+    roomId = json['roomId']??0;
+    patientId = json['patientId']??0;
+    room = json['room'] != null
+        ? CIA_RoomModel.fromJson(json['room'] as Map<String, dynamic>)
+        : CIA_RoomModel();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['status'] = status;
-    data['reservationTime'] = reservationTime;
-    data['realVisitTime'] = realVisitTime;
-    data['entersClinicTime'] = entersClinicTime;
-    data['leaveTime'] = leaveTime;
+    data['reservationTime'] = CIA_DateConverters.fromDateTimeToBackend(reservationTime);
+    data['realVisitTime'] = CIA_DateConverters.fromDateTimeToBackend(realVisitTime);
+    data['entersClinicTime'] = CIA_DateConverters.fromDateTimeToBackend(entersClinicTime);
+    data['leaveTime'] = CIA_DateConverters.fromDateTimeToBackend(leaveTime);
     data['doctorName'] = doctorName;
+    data['doctorId'] = doctorId;
     data['patientName'] = patientName;
+    data['roomId'] = roomId;
+    data['from'] = CIA_DateConverters.fromDateTimeToBackend(from);
+    data['to'] = CIA_DateConverters.fromDateTimeToBackend(to);
+    data['title'] = title;
+    data['patientId'] = patientId;
     return data;
   }
 
-  static List<VisitsModel> models = <VisitsModel>[];
-  static List<String> columns = [
+
+}
+
+class VisitDataSource extends DataGridSource {
+  List<VisitsModel> models = <VisitsModel>[];
+  List<String> columns = [
     "id",
     "Status",
     "Reservation Time",
@@ -73,12 +96,6 @@ class VisitsModel {
     "Doctor Name",
     //"Treatment",
   ];
-//VisitDataSource dataSource = VisitDataSource();
-
-}
-
-class VisitDataSource extends DataGridSource {
-  List<VisitsModel> models = <VisitsModel>[];
 
   /// Creates the visit data source class with required details.
   VisitDataSource() {
@@ -168,3 +185,35 @@ class VisitDataSource extends DataGridSource {
     return true;
   }
 }
+
+class VisitsCalendarDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  VisitsCalendarDataSource(List<VisitsModel> source) {
+    appointments = (source??[]) as List<VisitsModel>;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return appointments![index].from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return appointments![index].to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments![index].eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return (appointments![index] as VisitsModel).room!.color!;
+  }
+
+
+
+}
+

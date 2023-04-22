@@ -106,6 +106,13 @@ class PatientAPI {
     return response;
   }
 
+  static Future<API_Response> ScheduleVisit(VisitsModel model) async {
+    var response = await HTTPRequest.Post(
+        "PatientInfo/ScheduleVisit", model.toJson());
+
+    return response;
+  }
+
   static Future<API_Response> QuickSearch(String name) async {
     var response = await HTTPRequest.Get("PatientInfo/QuickSearch?name=$name");
 
