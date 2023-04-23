@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationMo
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 
 import '../Models/MedicalModels/DentalHistory.dart';
+import '../Models/MedicalModels/NonSurgicalTreatment.dart';
 
 
 class MedicalAPI {
@@ -46,6 +47,38 @@ static Future<API_Response> GetPatientDentalHistory(int id) async {
   }
   static Future<API_Response> UpdatePatientDentalHistory(int id,DentalHistoryModel model) async {
     var response = await HTTPRequest.Put("Medical/UpdatePatientDentalHistory?id=$id",model.toJson());
+    return response;
+  }
+
+static Future<API_Response> GetPatientNonSurgicalTreatment(int id) async {
+    var response = await HTTPRequest.Get("Medical/GetPatientNonSurgicalTreatment?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result =
+          NonSurgicalTreatmentModel.fromJson((response.result??Map<String,dynamic>()) as Map<String, dynamic>);
+    }
+    return response;
+  }
+
+static Future<API_Response> GetPatientAllNonSurgicalTreatments(int id) async {
+    var response = await HTTPRequest.Get("Medical/GetPatientAllNonSurgicalTreatments?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) =>NonSurgicalTreatmentModel.fromJson ( (e??Map<String,dynamic>) as Map<String,dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> CheckNonSurgicalTreatementTeethStatus(String value) async {
+    var response = await HTTPRequest.Get("Medical/CheckNonSurgicalTreatementTeethStatus?treatment=$value");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => e as int).toList();
+    }
+    return response;
+  }
+  static Future<API_Response> AddPatientNonSurgicalTreatment(int id,NonSurgicalTreatmentModel model) async {
+    var response = await HTTPRequest.Put("Medical/AddPatientNonSurgicalTreatment?id=$id",model.toJson());
     return response;
   }
 

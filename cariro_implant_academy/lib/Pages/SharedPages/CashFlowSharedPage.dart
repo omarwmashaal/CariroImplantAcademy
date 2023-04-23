@@ -158,7 +158,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       onTab: () {
                         CIA_ShowPopUp(
                           buttonText: "Save",
-                          size: 600,
+                          width: 600,
                           context: context,
                           title: "Add new Expense",
                           child: Column(
@@ -626,7 +626,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                     onTab: () {
                       CIA_ShowPopUp(
                         buttonText: "Save",
-                        size: 600,
+                        width: 600,
                         context: context,
                         title: "Add new Expense",
                         child: Column(

@@ -1,7 +1,14 @@
+import 'dart:math';
+
+import 'package:cariro_implant_academy/API/LoadinAPI.dart';
 import 'package:cariro_implant_academy/API/MedicalAPI.dart';
+import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
+import 'package:cariro_implant_academy/Models/VisitsModel.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_Calendar.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -40,10 +47,12 @@ late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
 late DentalExaminationModel dentalExaminationModel;
+late DentalExaminationModel tempDentalExamination;
 late NonSurgicalTreatmentModel nonSurgicalTreatment;
 
 class _getxClass extends GetxController {
   static RxInt tobacco = 0.obs;
+  static RxList<int> containedTeeth = <int>[].obs;
 }
 
 class PatientMedicalInfoPage extends StatefulWidget {
@@ -106,7 +115,8 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
         MedicalSlidingModel(
             name: "Non Surgical Treatment",
             onSave: () {
-              print("3");
+               MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
+               MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
             }),
         MedicalSlidingModel(
             name: "Treatment Plan",
@@ -1805,23 +1815,26 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
                                 var returnValue = "";
                                 if ((_getxClass.tobacco.value) == 0) {
                                   returnValue = "Non Smoker";
-                                  dentalHistoryModel.smokingStatus = SmokingStatus.NoneSmoker;
+                                  dentalHistoryModel.smokingStatus =
+                                      SmokingStatus.NoneSmoker;
                                 } else if ((_getxClass.tobacco.value) < 10) {
                                   returnValue = "Light Smoker";
-                                  dentalHistoryModel.smokingStatus = SmokingStatus.LightSmoker;
+                                  dentalHistoryModel.smokingStatus =
+                                      SmokingStatus.LightSmoker;
                                 } else if ((_getxClass.tobacco.value) < 20) {
                                   returnValue = "Medium Smoker";
-                                  dentalHistoryModel.smokingStatus = SmokingStatus.MediumSmoker;
+                                  dentalHistoryModel.smokingStatus =
+                                      SmokingStatus.MediumSmoker;
                                 } else {
                                   returnValue = "Heavy Smoker";
-                                  dentalHistoryModel.smokingStatus = SmokingStatus.HeavySmoker;
+                                  dentalHistoryModel.smokingStatus =
+                                      SmokingStatus.HeavySmoker;
                                 }
                                 return returnValue;
                               }()))),
                       Expanded(flex: 3, child: SizedBox())
                     ],
                   ),
-
                   CIA_TextFormField(
                       onChange: (value) =>
                           dentalHistoryModel.seriousInjury = value,
@@ -1904,38 +1917,33 @@ class _PatientNonSurgicalTreatment extends StatefulWidget {
 class _PatientNonSurgicalTreatmentState
     extends State<_PatientNonSurgicalTreatment> {
   String date = "";
-  List<String> containedTeeth = <String>[];
-  late List<DentalExaminationModel> tempDentalExamination;
-  late Future load;
 
-  @override
-  void dispose() {
-    TempPatientAPI.UpdateDentalExamination(patientID, tempDentalExamination);
-    TempPatientAPI.UpdatePatientNonSurgicalTreatment(
-        patientID, nonSurgicalTreatment);
-    super.dispose();
-  }
+  late Future load;
 
   @override
   void initState() {
     load = loadFuntionc();
-    for (String tooth in MasterController.getTeeth()) {
-      if ((MasterController.nonSurgicalTreatment as String).contains(tooth)) {
-        containedTeeth.add(tooth);
-      }
-    }
+
   }
 
   loadFuntionc() async {
-    var r = await TempPatientAPI.GetPatientNonSurgicalTreatment(patientID);
+    var r = await MedicalAPI.GetPatientNonSurgicalTreatment(patientID);
     if (r.statusCode == 200) {
       nonSurgicalTreatment = r.result as NonSurgicalTreatmentModel;
     }
     await Future.delayed(Duration(milliseconds: 600));
-    r = await TempPatientAPI.GetDentalExamination(patientID);
+    r = await MedicalAPI.GetPatientDentalExamination(patientID);
     if (r.statusCode == 200) {
-      tempDentalExamination = r.result as List<DentalExaminationModel>;
+      tempDentalExamination = r.result as DentalExaminationModel;
     }
+    MedicalAPI.CheckNonSurgicalTreatementTeethStatus(nonSurgicalTreatment.treatment??"")
+        .then((value) {
+      if(value.statusCode ==200)
+      {
+          _getxClass.containedTeeth.value =
+          value.result as List<int>;
+      }
+    });
     textController.text = nonSurgicalTreatment.treatment ?? "";
     return Future.value(r);
   }
@@ -1949,16 +1957,20 @@ class _PatientNonSurgicalTreatmentState
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return CIA_MedicalPagesWidget(children: [
+
               CIA_TextFormField(
-                onInstantChange: (value) async {
+                onChange: (value) async {
                   nonSurgicalTreatment.treatment = value;
-                  containedTeeth.clear();
-                  MasterController.getTeeth().forEach((element) {
-                    if ((value as String).contains(element)) {
-                      containedTeeth.add(element);
-                    }
+                  await MedicalAPI.CheckNonSurgicalTreatementTeethStatus(value)
+                      .then((value) {
+                   if(value.statusCode ==200)
+                     {
+                       if (_getxClass.containedTeeth.value !=
+                           value.result as List<int>)
+                         _getxClass.containedTeeth.value =
+                         value.result as List<int>;
+                     }
                   });
-                  setState(() {});
                 },
                 label: "Treatment",
                 controller: textController,
@@ -1967,24 +1979,16 @@ class _PatientNonSurgicalTreatmentState
               Row(
                 children: [
                   Expanded(
-                    child: CIA_DropDown(
-                        onSelect: (value) {
-                          nonSurgicalTreatment.supervisorName = value;
-                        },
-                        selectedValue: nonSurgicalTreatment.supervisorName,
-                        label: "Supervisor",
-                        values: [
-                          "Name1",
-                          "Name2",
-                          "Name3",
-                          "Name4",
-                          "Name5",
-                          "Name6",
-                          "Name7",
-                          "Name8",
-                          "Name9",
-                          "Name10",
-                        ]),
+                    child: CIA_DropDownSearch(
+                      asyncItems: LoadinAPI.LoadSupervisors,
+                      onSelect: (value) {
+                        nonSurgicalTreatment.supervisorID = value.id;
+                      },
+                      selectedItem: DropDownDTO(
+                          name: nonSurgicalTreatment.supervisor!.name! ?? "",
+                          id: nonSurgicalTreatment.supervisorID ?? 0),
+                      label: "Supervisor",
+                    ),
                   ),
                   SizedBox(
                     width: 10,
@@ -2000,14 +2004,28 @@ class _PatientNonSurgicalTreatmentState
                   ),
                   CIA_SecondaryButton(
                       label: "Schedule Next Visit",
-                      width: 200,
-                      onTab: () {
-                        CIA_PopupDialog_DateTimePicker(
-                            context, "Schedule Next Visit", (value) {});
+                      width: 600,
+                      onTab: () async {
+                        VisitsCalendarDataSource dataSource =
+                            VisitsCalendarDataSource();
+                        CIA_ShowPopUp(
+                          context: context,
+                          width: 900,
+                          height: 600,
+                          title: "Schedule Next Visit",
+                          child: CIA_Calendar(
+                            dataSource: dataSource,
+                            getForDoctor: true,
+                            patientID: patientID,
+                            onNewVisit: (newVisit) {
+                              nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
+                            },
+                          ),
+                        );
                       }),
                 ],
               ),
-              containedTeeth.isEmpty ? SizedBox() : _buildTeethSuggestion()
+              Obx(() => _buildTeethSuggestion())
             ]);
           } else {
             return Center(
@@ -2021,98 +2039,124 @@ class _PatientNonSurgicalTreatmentState
   }
 
   _buildTeethSuggestion() {
+
     List<Widget> uu = <Widget>[];
-    /*containedTeeth.forEach((tooth) {
-      var m = tempDentalExamination
-          .firstWhereOrNull((element) => element.tooth.toString() == tooth);
-      if (m == null) m = DentalExaminationModel(tooth: int.parse(tooth));
-      List<CIA_MultiSelectChipWidgeModel> tempModel = [
+    _getxClass.containedTeeth.value.forEach((tooth) {
+      var currentToothDentalExamination = tempDentalExamination
+          .dentalExaminations
+          .firstWhereOrNull((element) => element.tooth == tooth);
+      if (currentToothDentalExamination == null)
+        {
+          currentToothDentalExamination = DentalExaminations(tooth: tooth);
+          tempDentalExamination.dentalExaminations.add(currentToothDentalExamination);
+        }
+      List<CIA_MultiSelectChipWidgeModel> tempSelectionModel = [
         CIA_MultiSelectChipWidgeModel(
             label: "Carious",
-            isSelected: m != null ? (m.carious) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.carious) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Filled",
-            isSelected: m != null ? (m.filled) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.filled) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Missed",
-            isSelected: m != null ? (m.missed) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.missed) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Not Sure",
-            isSelected: m != null ? (m.notSure) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.notSure) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Mobility I",
-            isSelected: m != null ? (m.mobilityI) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.mobilityI) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Mobility II",
-            isSelected: m != null ? (m.mobilityII) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.mobilityII) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Mobility III",
-            isSelected: m != null ? (m.mobilityIII) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.mobilityIII) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Hopeless teeth",
-            isSelected: m != null ? (m.hopelessteeth) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.hopelessteeth) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Implant Placed",
-            isSelected: m != null ? (m.implantPlaced) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.implantPlaced) as bool
+                : false),
         CIA_MultiSelectChipWidgeModel(
             label: "Implant Failed",
-            isSelected: m != null ? (m.implantFailed) as bool : false),
+            isSelected: currentToothDentalExamination != null
+                ? (currentToothDentalExamination.implantFailed) as bool
+                : false),
       ];
 
       uu.add(FormTextKeyWidget(text: "Do you want to update tooth $tooth?"));
       uu.add(CIA_MultiSelectChipWidget(
-        key: LabeledGlobalKey(tooth),
+        key: LabeledGlobalKey(tooth.toString()),
         singleSelect: true,
-        labels: tempModel,
+        labels: tempSelectionModel,
         onChange: (value, isSelected) {
-          var m = tempDentalExamination
-              .firstWhereOrNull((element) => element.tooth.toString() == tooth);
+          if (currentToothDentalExamination!.carious!) {
+            currentToothDentalExamination!.previousState = "carious";
+            currentToothDentalExamination.carious = false;
+          }
+          if (currentToothDentalExamination!.missed!) {
+            currentToothDentalExamination!.previousState = "missed";
+            currentToothDentalExamination.missed = false;
+          }
+          if (currentToothDentalExamination!.filled!) {
+            currentToothDentalExamination!.previousState = "filled";
+            currentToothDentalExamination.filled = false;
+          }
+          if (currentToothDentalExamination!.notSure!) {
+            currentToothDentalExamination!.previousState = "notSure";
+            currentToothDentalExamination.notSure = false;
+          }
+          if (currentToothDentalExamination!.mobilityIII!) {
+            currentToothDentalExamination!.previousState = "mobilityIII";
+            currentToothDentalExamination.mobilityIII = false;
+          }
+          if (currentToothDentalExamination!.mobilityII!) {
+            currentToothDentalExamination!.previousState = "mobilityII";
+            currentToothDentalExamination.mobilityII = false;
+          }
+          if (currentToothDentalExamination!.mobilityI!) {
+            currentToothDentalExamination!.previousState = "mobilityI";
+            currentToothDentalExamination.mobilityI = false;
+          }
+          if (currentToothDentalExamination!.hopelessteeth!) {
+            currentToothDentalExamination!.previousState = "hopelessteeth";
+            currentToothDentalExamination.hopelessteeth = false;
+          }
+          if (currentToothDentalExamination!.implantFailed!) {
+            currentToothDentalExamination!.previousState = "implantFailed";
+            currentToothDentalExamination.implantFailed = false;
+          }
+          if (currentToothDentalExamination!.implantPlaced!) {
+            currentToothDentalExamination!.previousState = "implantPlaced";
+            currentToothDentalExamination.implantPlaced = false;
+          }
+          if (isSelected) currentToothDentalExamination.updateToothStatus(value);
+          var s = tempDentalExamination;
+          print("s");
 
-          if (m!.carious!) {
-            m!.previousState = "carious";
-            m.carious = false;
-          }
-          if (m!.missed!) {
-            m!.previousState = "missed";
-            m.missed = false;
-          }
-          if (m!.filled!) {
-            m!.previousState = "filled";
-            m.filled = false;
-          }
-          if (m!.notSure!) {
-            m!.previousState = "notSure";
-            m.notSure = false;
-          }
-          if (m!.mobilityIII!) {
-            m!.previousState = "mobilityIII";
-            m.mobilityIII = false;
-          }
-          if (m!.mobilityII!) {
-            m!.previousState = "mobilityII";
-            m.mobilityII = false;
-          }
-          if (m!.mobilityI!) {
-            m!.previousState = "mobilityI";
-            m.mobilityI = false;
-          }
-          if (m!.hopelessteeth!) {
-            m!.previousState = "hopelessteeth";
-            m.hopelessteeth = false;
-          }
-          if (m!.implantFailed!) {
-            m!.previousState = "implantFailed";
-            m.implantFailed = false;
-          }
-          if (m!.implantPlaced!) {
-            m!.previousState = "implantPlaced";
-            m.implantPlaced = false;
-          }
-          if (isSelected) m.updateToothStatus(value);
         },
       ));
       uu.add(SizedBox(height: 10));
-    });*/
+    });
 
     Widget ss = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

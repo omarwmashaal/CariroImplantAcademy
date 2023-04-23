@@ -113,6 +113,36 @@ class PatientAPI {
     return response;
   }
 
+  static Future<API_Response> GetAllSchedules() async {
+    var response = await HTTPRequest.Get("PatientInfo/GetAllSchedules");
+
+    if (response.statusCode == 200) {
+      if (response.result == null)
+        response.result = <VisitsModel>[];
+      else {
+        response.result = (response.result as List<dynamic>)
+            .map((e) => VisitsModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+    }
+    return response;
+  }
+ static Future<API_Response> GetScheduleForDoctor() async {
+    var response = await HTTPRequest.Get("PatientInfo/GetScheduleForDoctor");
+
+    if (response.statusCode == 200) {
+      if (response.result == null)
+        response.result = <VisitsModel>[];
+      else {
+        response.result = (response.result as List<dynamic>)
+            .map((e) => VisitsModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+    }
+    return response;
+  }
+
+
   static Future<API_Response> QuickSearch(String name) async {
     var response = await HTTPRequest.Get("PatientInfo/QuickSearch?name=$name");
 

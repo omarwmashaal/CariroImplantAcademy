@@ -1,10 +1,12 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/PatientAPI.dart';
+import 'API_Response.dart';
 import 'CIA_RoomModel.dart';
 
 class VisitsModel {
@@ -26,8 +28,11 @@ class VisitsModel {
   String? patientName;
 
   VisitsModel(
-      {this.id,this.from,this.title,
-        this.to, this.roomId,
+      {this.id,
+      this.from,
+      this.title,
+      this.to,
+      this.roomId,
       this.status,
       this.reservationTime,
       this.realVisitTime,
@@ -40,6 +45,7 @@ class VisitsModel {
       this.patientName});
 
   VisitsModel.fromJson(Map<String, dynamic> json) {
+
     id = json['id'];
     status = json['status'];
     reservationTime =
@@ -51,12 +57,11 @@ class VisitsModel {
     leaveTime = CIA_DateConverters.fromBackendToDateTime(json['leaveTime']);
     doctorName = json['doctorName'];
     doctorId = json['doctorId'];
-    patientName = json['patientName'];
     from = json['from'];
     to = json['to'];
     title = json['title'];
-    roomId = json['roomId']??0;
-    patientId = json['patientId']??0;
+    roomId = json['roomId'] ?? 0;
+    patientId = json['patientId'] ?? 0;
     room = json['room'] != null
         ? CIA_RoomModel.fromJson(json['room'] as Map<String, dynamic>)
         : CIA_RoomModel();
@@ -66,22 +71,22 @@ class VisitsModel {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['status'] = status;
-    data['reservationTime'] = CIA_DateConverters.fromDateTimeToBackend(reservationTime);
-    data['realVisitTime'] = CIA_DateConverters.fromDateTimeToBackend(realVisitTime);
-    data['entersClinicTime'] = CIA_DateConverters.fromDateTimeToBackend(entersClinicTime);
+    data['reservationTime'] =
+        CIA_DateConverters.fromDateTimeToBackend(reservationTime);
+    data['realVisitTime'] =
+        CIA_DateConverters.fromDateTimeToBackend(realVisitTime);
+    data['entersClinicTime'] =
+        CIA_DateConverters.fromDateTimeToBackend(entersClinicTime);
     data['leaveTime'] = CIA_DateConverters.fromDateTimeToBackend(leaveTime);
     data['doctorName'] = doctorName;
     data['doctorId'] = doctorId;
-    data['patientName'] = patientName;
-    data['roomId'] = roomId;
+    data['roomId'] = roomId??1;
     data['from'] = CIA_DateConverters.fromDateTimeToBackend(from);
     data['to'] = CIA_DateConverters.fromDateTimeToBackend(to);
-    data['title'] = title;
+    data['title'] = "Patient: $patientName || "+(title==null||title==""?("No Subject"):title!);
     data['patientId'] = patientId;
     return data;
   }
-
-
 }
 
 class VisitDataSource extends DataGridSource {
@@ -189,31 +194,40 @@ class VisitDataSource extends DataGridSource {
 class VisitsCalendarDataSource extends CalendarDataSource {
   /// Creates a meeting data source, which used to set the appointment
   /// collection to the calendar
-  VisitsCalendarDataSource(List<VisitsModel> source) {
-    appointments = (source??[]) as List<VisitsModel>;
+  VisitsCalendarDataSource({List<VisitsModel>? source}) {
+    appointments = (source ?? []) as List<VisitsModel>;
   }
 
   @override
   DateTime getStartTime(int index) {
-    return appointments![index].from;
+    return DateTime.parse(appointments![index].from!).toLocal();
   }
 
   @override
   DateTime getEndTime(int index) {
-    return appointments![index].to;
+    return DateTime.parse(appointments![index].to!).toLocal();
   }
 
   @override
   String getSubject(int index) {
-    return appointments![index].eventName;
+    return appointments![index].title??"";
   }
 
   @override
   Color getColor(int index) {
+
     return (appointments![index] as VisitsModel).room!.color!;
   }
 
-
-
+  loadData({bool forDoctor = false}) async {
+    API_Response res = API_Response();
+    if (forDoctor)
+      res = await PatientAPI.GetScheduleForDoctor();
+    else
+      res = await PatientAPI.GetAllSchedules();
+    notifyListeners(CalendarDataSourceAction.reset, res.result as List<VisitsModel>);
+    appointments = res.result as List<VisitsModel>;
+    notifyListeners(CalendarDataSourceAction.add, res.result as List<VisitsModel>);
+    return true;
+  }
 }
-

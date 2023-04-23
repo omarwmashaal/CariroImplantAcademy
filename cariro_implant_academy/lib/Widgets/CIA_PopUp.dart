@@ -242,14 +242,16 @@ CIA_ShowPopUp(
     Function? onSave,
     Widget? child,
     String? buttonText,
-    double? size}) {
+      double? height,
+    double? width}) {
   Alert(
     context: context,
     title: title,
     content: StatefulBuilder(builder:
         (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
-        width: size == null ? 400 : size,
+        width: width ?? 400 ,
+        height: height??400,
         child: child,
       );
     }),

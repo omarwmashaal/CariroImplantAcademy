@@ -1,22 +1,26 @@
+import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/API/TempPatientAPI.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../Helpers/CIA_DateConverters.dart';
+import '../DTOs/DropDownDTO.dart';
+
 class NonSurgicalTreatmentModel {
   String? treatment;
-  String? supervisorID;
-  String? supervisorName;
+  int? supervisorID;
+  DropDownDTO? supervisor;
   String? operatorID;
-  String? operatorName;
+  DropDownDTO? operator;
   String? date;
   String? nextVisit;
 
   NonSurgicalTreatmentModel(
       {this.treatment,
       this.supervisorID,
-      this.supervisorName,
-      this.operatorName,
+      this.supervisor,
+      this.operator,
       this.operatorID,
       this.date,
       this.nextVisit});
@@ -24,28 +28,19 @@ class NonSurgicalTreatmentModel {
   NonSurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
     treatment = json['treatment'];
     supervisorID = json['supervisorID'];
-    supervisorName = json['supervisorName'] ?? "";
-    operatorID = json['supervisorID'];
-    operatorName = json['operatorName'] ?? "";
-    date = json['date'] == null
-        ? ""
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['date']))
-            .toString();
-    nextVisit = json['nextVisit'] == null
-        ? ""
-        : DateFormat("d MMM yyyy h:mm a")
-            .format(DateTime.parse(json['nextVisit']))
-            .toString();
+    supervisor = DropDownDTO.fromJson(json['supervisor']??Map<String,dynamic>());
+    operatorID = json['operatorID'];
+    operator = DropDownDTO.fromJson(json['operator']??Map<String,dynamic>());
+    date = CIA_DateConverters.fromBackendToDateTime(json['date'] );
+    nextVisit = CIA_DateConverters.fromBackendToDateTime(json['nextVisit'] );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['treatment'] = this.treatment;
     data['supervisorID'] = this.supervisorID;
-    data['supervisorName'] = this.supervisorName;
     data['operatorID'] = this.operatorID;
-    data['operatorName'] = this.operatorName;
+    data['nextVisit'] = CIA_DateConverters.fromDateTimeToBackend(nextVisit);
     return data;
   }
 
@@ -67,9 +62,9 @@ class NonSurgicalTreatmentDataSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Treatment', value: e.treatment),
               DataGridCell<String>(
-                  columnName: 'Operator', value: e.operatorName),
+                  columnName: 'Operator', value: e.operator!.name!),
               DataGridCell<String>(
-                  columnName: 'Supervisor', value: e.supervisorName),
+                  columnName: 'Supervisor', value: e.supervisor!.name!),
               DataGridCell<String>(
                   columnName: 'Next Visit', value: e.nextVisit),
             ]))
@@ -94,7 +89,7 @@ class NonSurgicalTreatmentDataSource extends DataGridSource {
   }
 
   Future<bool> loadData(int id) async {
-    var response = await TempPatientAPI.GetPatientAllNonSurgicalTreatments(id);
+    var response = await MedicalAPI.GetPatientAllNonSurgicalTreatments(id);
     if (response.statusCode == 200) {
       models = response.result as List<NonSurgicalTreatmentModel>;
     }
@@ -103,9 +98,9 @@ class NonSurgicalTreatmentDataSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Treatment', value: e.treatment),
               DataGridCell<String>(
-                  columnName: 'Operator', value: e.operatorName),
+                  columnName: 'Operator', value: e.operator!.name!),
               DataGridCell<String>(
-                  columnName: 'Supervisor', value: e.supervisorName),
+                  columnName: 'Supervisor', value: e.supervisor!.name!),
               DataGridCell<String>(
                   columnName: 'Next Visit', value: e.nextVisit),
             ]))

@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
@@ -78,9 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MTE1NjQ1MywiZXhwIjoxNjgxNzYxMjUzLCJpYXQiOjE2ODExNTY0NTN9.wHIpjqueWWN8xL5dm7FlcrShwIRjUfJKiNaB4yxdkZg");
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MjI3NTAxNCwiZXhwIjoxNjgyODc5ODE0LCJpYXQiOjE2ODIyNzUwMTR9.zttj4kGuIxc4w8xpcsQv30G9nSRybiGeXErafBDLIxE"
+    );
     siteController.setRole("admin");
-    siteController.setUser(ApplicationUserModel(name: "Admin"));
+    siteController.setUser(ApplicationUserModel(name: "Admin",idInt: 1));
+    patientID = 2;
+    MasterController = PatientMedicalController(PatientInfoModel(id: 2));
 
     return Scaffold(
       body:AuthenticationPage(),

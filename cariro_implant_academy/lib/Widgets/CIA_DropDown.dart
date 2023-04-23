@@ -71,13 +71,14 @@ class _CIA_DropDownState extends State<CIA_DropDown> {
 }
 
 class CIA_DropDownSearch extends StatefulWidget {
-  CIA_DropDownSearch({Key? key, this.items, this.asyncItems,this.label, this.selectedItem, this.enabled=true, this.emptyString="No results found"}) : super(key: key);
+  CIA_DropDownSearch({Key? key, this.items, this.asyncItems,this.label, this.selectedItem, this.enabled=true, this.emptyString="No results found", this.onSelect}) : super(key: key);
   List<DropDownDTO>? items;
   Future<API_Response> Function()? asyncItems;
   String? label;
   DropDownDTO? selectedItem;
   bool enabled;
   String emptyString;
+  Function(DropDownDTO)? onSelect;
 
   @override
   State<CIA_DropDownSearch> createState() => _CIA_DropDownSearchState();
@@ -108,7 +109,9 @@ class _CIA_DropDownSearchState extends State<CIA_DropDownSearch> {
       filterFn: (item, filter) =>item.name!.contains(filter),
       itemAsString: (DropDownDTO u) => u.name!,
       items: widget.items ?? [],
-      onChanged: (DropDownDTO) {},
+      onChanged: (DropDownDTO) {
+        if(widget.onSelect!=null) widget.onSelect!(DropDownDTO!);
+      },
       dropdownDecoratorProps: DropDownDecoratorProps(
         textAlign: TextAlign.start,
         dropdownSearchDecoration:  InputDecoration(

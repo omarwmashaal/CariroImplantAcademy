@@ -5,9 +5,9 @@ class CIA_DateConverters {
     if (dateTime == null || dateTime == "") return null;
     late DateTime formatedDateTime;
     if (dateTime!.contains("T"))
-      formatedDateTime = DateFormat("yyyy-MM-ddTH:mm:SS").parse(dateTime!);
+      formatedDateTime = DateTime.parse(dateTime!).toLocal();
     else
-      formatedDateTime = DateFormat("yyyy-MM-dd").parse(dateTime!);
+      formatedDateTime = DateFormat("yyyy-MM-dd").parse(dateTime!).toLocal();
     final DateFormat formatter = DateFormat('dd-MM-yyy hh:mm a');
     final String formatted = formatter.format(formatedDateTime);
     return formatted; // something like 2013-04-20
@@ -17,7 +17,7 @@ class CIA_DateConverters {
     if (dateTime == null || dateTime == "") return null;
     late DateTime formatedDateTime;
     if (dateTime!.contains("T"))
-      formatedDateTime = DateFormat("yyyy-MM-ddTH:mm:SS").parse(dateTime!);
+      formatedDateTime = DateTime.parse(dateTime!).toLocal();
     else
       formatedDateTime = DateFormat("yyyy-MM-dd").parse(dateTime!);
     final DateFormat formatter = DateFormat('dd-MM-yyy');
@@ -28,7 +28,7 @@ class CIA_DateConverters {
   static fromBackendToTimeOnly(String? dateTime) {
     if (dateTime == null || dateTime == "") return null;
     final DateTime formatedDateTime =
-        DateFormat("yyyy-MM-ddTH:mm:SS").parse(dateTime!);
+    DateTime.parse(dateTime!).toLocal();
     final DateFormat formatter = DateFormat('hh:mm a');
     final String formatted = formatter.format(formatedDateTime);
     return formatted;

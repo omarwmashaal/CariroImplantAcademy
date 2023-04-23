@@ -53,6 +53,27 @@ class LoadinAPI {
     return response;
   }
 
+static Future<API_Response> LoadAdmins() async {
+    var response = await HTTPRequest.Get("User/LoadAdmins");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
+
+static Future<API_Response> LoadSupervisors() async {
+    var response = await HTTPRequest.Get("User/LoadSupervisors");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
+
+
   static Future<API_Response> LoadRooms() async {
     var response = await HTTPRequest.Get("Settings/LoadRooms");
 

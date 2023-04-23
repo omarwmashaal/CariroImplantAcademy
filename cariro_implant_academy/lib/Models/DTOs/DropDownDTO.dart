@@ -6,12 +6,12 @@ class DropDownDTO {
 
   DropDownDTO.fromJson(Map<String, dynamic> json) {
     try{
-      id = json['id'];
+      id = json['id']??0;
     }
     catch(e){
-      id = json['idInt'];
+      id = json['idInt']??0;
     }
-    name = json['name'];
+    name = json['name']??"";
   }
 
   Map<String, dynamic> toJson() {
