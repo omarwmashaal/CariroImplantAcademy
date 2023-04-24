@@ -10,12 +10,14 @@ class CIA_MultiSelectChipWidgeModel {
       {required this.label,
       this.value,
       this.isSelected = false,
+      this.borderColor,
       this.selectedColor});
 
   String label;
   String? value;
   bool isSelected = false;
   Color? selectedColor = Color_Accent;
+  Color? borderColor;
 }
 
 class CIA_MultiSelectChipWidget extends StatelessWidget {
@@ -78,7 +80,6 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
         bool isSelected = selectedItems.contains(selectedItem);
         if (onChange != null) onChange!(selectedItem as String, isSelected);
         if (onChangeList != null) {
-
           onChangeList!(selectedItems.map((e) => e as String).toList());
         }
         if (onChangeSpecificTooth != null)
@@ -95,13 +96,15 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
           label: label.label,
           decorations: MultiSelectItemDecorations(
             decoration: BoxDecoration(
-              border: Border.all(color: Color_TextFieldBorder),
+              border:
+                  Border.all(color: label.borderColor ?? Color_TextFieldBorder),
               borderRadius: BorderRadius.circular(20),
             ),
             selectedDecoration: disabled
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Color_TextFieldBorder),
+                    border: Border.all(
+                        color: label.borderColor ?? Color_TextFieldBorder),
                   )
                 : BoxDecoration(
                     borderRadius: BorderRadius.circular(20),

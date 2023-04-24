@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -132,5 +133,37 @@ class StockLogsDataSource extends DataGridSource {
         ),
       );
     }).toList());
+  }
+}
+
+class StockItem {
+  int? id;
+  String? name;
+  int? count;
+  int? categoryID;
+  DropDownDTO? category;
+
+  StockItem({this.id, this.name, this.count, this.categoryID, this.category});
+
+  StockItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    count = json['count'];
+    categoryID = json['categoryID'];
+    category = json['category'] != null
+        ? new DropDownDTO.fromJson(json['category'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['count'] = this.count;
+    data['categoryID'] = this.categoryID;
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    return data;
   }
 }

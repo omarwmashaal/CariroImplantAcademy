@@ -1,282 +1,294 @@
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+
+import 'ImplantModel.dart';
 class TreatmentPlanModel {
-  Extraction? extraction;
-  Flap? flap;
-  SimpleImplant? simpleImplant;
-  ImmediateImplant? immediateImplant;
-  Expansion? expansion;
-  Splitting? splitting;
-  Gbr? gbr;
-  OpenSinus? openSinus;
-  ClosedSinus? closedSinus;
-  GuidedImplant? guidedImplant;
-  Bontic? bontic;
+  int? id;
+  int? patientId;
+  int? operatorId;
+  DropDownDTO? operator;
+  String? date;
+  List<TreatmentPlanSubModel>? treatmentPlan;
 
   TreatmentPlanModel(
-      {this.extraction,
-      this.flap,
-      this.simpleImplant,
-      this.immediateImplant,
-      this.expansion,
-      this.splitting,
-      this.gbr,
-      this.openSinus,
-      this.closedSinus,
-      this.guidedImplant,
-      this.bontic});
+      {this.id,
+        this.patientId,
+        this.operatorId,
+        this.operator,
+        this.date,
+        this.treatmentPlan});
 
   TreatmentPlanModel.fromJson(Map<String, dynamic> json) {
-    extraction = json['extraction'] != null
-        ? Extraction?.fromJson(json['extraction'])
+    id = json['id'];
+    patientId = json['patientId'];
+    operatorId = json['operatorId'];
+    operator = json['operator'] != null
+        ? new DropDownDTO.fromJson(json['operator'])
         : null;
-    flap = json['flap'] != null ? Flap?.fromJson(json['flap']) : null;
+    date = json['date'];
+    treatmentPlan = ((json['treatmentPlan']??[]) as List<dynamic>).map((e) => TreatmentPlanSubModel.fromJson(e)).toList();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['patientId'] = this.patientId;
+   // data['operatorId'] = this.operatorId;
+    if (this.operator != null) {
+      //data['operator'] = this.operator!.toJson();
+    }
+    data['date'] = this.date;
+    data['treatmentPlan'] = (this.treatmentPlan??<TreatmentPlanSubModel>[]).map((e) => e.toJson()).toList();
+    return data;
+  }
+}
+
+class TreatmentPlanSubModel {
+  int? id;
+  int? patientId;
+  DropDownDTO? patient;
+  int? tooth;
+  TreatmentPlanFieldsModel? rootCanalTreatment;
+  TreatmentPlanFieldsModel? restoration;
+  TreatmentPlanFieldsModel? pontic;
+  TreatmentPlanFieldsModel? extraction;
+  TreatmentPlanFieldsModel? simpleImplant;
+  TreatmentPlanFieldsModel? immediateImplant;
+  TreatmentPlanFieldsModel? expansionWithImplant;
+  TreatmentPlanFieldsModel? splittingWithImplant;
+  TreatmentPlanFieldsModel? gbrWithImplant;
+  TreatmentPlanFieldsModel? openSinusWithImplant;
+  TreatmentPlanFieldsModel? closedSinusWithImplant;
+  TreatmentPlanFieldsModel? guidedImplant;
+  TreatmentPlanFieldsModel? expansionWithoutImplant;
+  TreatmentPlanFieldsModel? splittingWithoutImplant;
+  TreatmentPlanFieldsModel? gbrWithoutImplant;
+  TreatmentPlanFieldsModel? openSinusWithoutImplant;
+  TreatmentPlanFieldsModel? closedSinusWithoutImplant;
+
+  TreatmentPlanSubModel(
+      {this.id,
+        this.patientId,
+        this.patient,
+        this.tooth,
+        this.rootCanalTreatment,
+        this.restoration,
+        this.pontic,
+        this.extraction,
+        this.simpleImplant,
+        this.immediateImplant,
+        this.expansionWithImplant,
+        this.splittingWithImplant,
+        this.gbrWithImplant,
+        this.openSinusWithImplant,
+        this.closedSinusWithImplant,
+        this.guidedImplant,
+        this.expansionWithoutImplant,
+        this.splittingWithoutImplant,
+        this.gbrWithoutImplant,
+        this.openSinusWithoutImplant,
+        this.closedSinusWithoutImplant});
+
+  TreatmentPlanSubModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    patientId = json['patientId'];
+    patient =
+    json['patient'] != null ? new DropDownDTO.fromJson(json['patient']) : null;
+    tooth = json['tooth'];
+    rootCanalTreatment = json['rootCanalTreatment'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['rootCanalTreatment'])
+        : null;
+    restoration = json['restoration'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['restoration'])
+        : null;
+    pontic = json['pontic'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['pontic'])
+        : null;
+    extraction = json['extraction'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['extraction'])
+        : null;
     simpleImplant = json['simpleImplant'] != null
-        ? SimpleImplant?.fromJson(json['simpleImplant'])
+        ? new TreatmentPlanFieldsModel.fromJson(json['simpleImplant'])
         : null;
     immediateImplant = json['immediateImplant'] != null
-        ? ImmediateImplant?.fromJson(json['immediateImplant'])
+        ? new TreatmentPlanFieldsModel.fromJson(json['immediateImplant'])
         : null;
-    expansion = json['expansion'] != null
-        ? Expansion?.fromJson(json['expansion'])
+    expansionWithImplant = json['expansionWithImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['expansionWithImplant'])
         : null;
-    splitting = json['splitting'] != null
-        ? Splitting?.fromJson(json['splitting'])
+    splittingWithImplant = json['splittingWithImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['splittingWithImplant'])
         : null;
-    gbr = json['gbr'] != null ? Gbr?.fromJson(json['gbr']) : null;
-    openSinus = json['openSinus'] != null
-        ? OpenSinus?.fromJson(json['openSinus'])
+    gbrWithImplant = json['gbrWithImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['gbrWithImplant'])
         : null;
-    closedSinus = json['closedSinus'] != null
-        ? ClosedSinus?.fromJson(json['closedSinus'])
+    openSinusWithImplant = json['openSinusWithImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['openSinusWithImplant'])
+        : null;
+    closedSinusWithImplant = json['closedSinusWithImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['closedSinusWithImplant'])
         : null;
     guidedImplant = json['guidedImplant'] != null
-        ? GuidedImplant?.fromJson(json['guidedImplant'])
+        ? new TreatmentPlanFieldsModel.fromJson(json['guidedImplant'])
         : null;
-    bontic = json['bontic'] != null ? Bontic?.fromJson(json['bontic']) : null;
+    expansionWithoutImplant = json['expansionWithoutImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['expansionWithoutImplant'])
+        : null;
+    splittingWithoutImplant = json['splittingWithoutImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['splittingWithoutImplant'])
+        : null;
+    gbrWithoutImplant = json['gbrWithoutImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['gbrWithoutImplant'])
+        : null;
+    openSinusWithoutImplant = json['openSinusWithoutImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['openSinusWithoutImplant'])
+        : null;
+    closedSinusWithoutImplant = json['closedSinusWithoutImplant'] != null
+        ? new TreatmentPlanFieldsModel.fromJson(json['closedSinusWithoutImplant'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (extraction != null) data['extraction'] = extraction!.toJson();
-    if (flap != null) data['flap'] = flap!.toJson();
-    if (simpleImplant != null) data['simpleImplant'] = simpleImplant!.toJson();
-    if (immediateImplant != null)
-      data['immediateImplant'] = immediateImplant!.toJson();
-    if (expansion != null) data['expansion'] = expansion!.toJson();
-    if (splitting != null) data['splitting'] = splitting!.toJson();
-    if (gbr != null) data['gbr'] = gbr!.toJson();
-    if (openSinus != null) data['openSinus'] = openSinus!.toJson();
-    if (closedSinus != null) data['closedSinus'] = closedSinus!.toJson();
-    if (guidedImplant != null) data['guidedImplant'] = guidedImplant!.toJson();
-    if (bontic != null) data['bontic'] = bontic!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+   // data['id'] = this.id;
+    data['patientId'] = this.patientId;
+    data['tooth'] = this.tooth;
+    if (this.rootCanalTreatment != null) {
+      data['rootCanalTreatment'] = this.rootCanalTreatment!.toJson();
+    }
+    if (this.restoration != null) {
+      data['restoration'] = this.restoration!.toJson();
+    }
+    if (this.pontic != null) {
+      data['pontic'] = this.pontic!.toJson();
+    }
+    if (this.extraction != null) {
+      data['extraction'] = this.extraction!.toJson();
+    }
+    if (this.simpleImplant != null) {
+      data['simpleImplant'] = this.simpleImplant!.toJson();
+    }
+    if (this.immediateImplant != null) {
+      data['immediateImplant'] = this.immediateImplant!.toJson();
+    }
+    if (this.expansionWithImplant != null) {
+      data['expansionWithImplant'] = this.expansionWithImplant!.toJson();
+    }
+    if (this.splittingWithImplant != null) {
+      data['splittingWithImplant'] = this.splittingWithImplant!.toJson();
+    }
+    if (this.gbrWithImplant != null) {
+      data['gbrWithImplant'] = this.gbrWithImplant!.toJson();
+    }
+    if (this.openSinusWithImplant != null) {
+      data['openSinusWithImplant'] = this.openSinusWithImplant!.toJson();
+    }
+    if (this.closedSinusWithImplant != null) {
+      data['closedSinusWithImplant'] = this.closedSinusWithImplant!.toJson();
+    }
+    if (this.guidedImplant != null) {
+      data['guidedImplant'] = this.guidedImplant!.toJson();
+    }
+    if (this.expansionWithoutImplant != null) {
+      data['expansionWithoutImplant'] = this.expansionWithoutImplant!.toJson();
+    }
+    if (this.splittingWithoutImplant != null) {
+      data['splittingWithoutImplant'] = this.splittingWithoutImplant!.toJson();
+    }
+    if (this.gbrWithoutImplant != null) {
+      data['gbrWithoutImplant'] = this.gbrWithoutImplant!.toJson();
+    }
+    if (this.openSinusWithoutImplant != null) {
+      data['openSinusWithoutImplant'] = this.openSinusWithoutImplant!.toJson();
+    }
+    if (this.closedSinusWithoutImplant != null) {
+      data['closedSinusWithoutImplant'] =
+          this.closedSinusWithoutImplant!.toJson();
+    }
     return data;
   }
 }
 
-class Bontic {
-  String? value = "";
-  bool? status = false;
+class TreatmentPlanFieldsModel {
+  String? value;
+  bool? status;
+  int? assignedToID;
+  DropDownDTO? assignedTo;
+  String? date;
+  int? doneByAssistantID;
+  DropDownDTO? doneByAssistant;
+  int? doneBySupervisorID;
+  DropDownDTO? doneBySupervisor;
+  int? doneByCandidateID;
+  DropDownDTO? doneByCandidate;
+  int? doneByCandidateBatchID;
+  DropDownDTO? doneByCandidateBatch;
+  int? implantID;
+  ImplantModel? implant;
 
-  Bontic({this.value = "", this.status = false});
+  TreatmentPlanFieldsModel(
+      {this.value="",
+        this.status=false,
+        this.assignedToID,
+        this.assignedTo,
+        this.date,
+        this.doneByAssistantID,
+        this.doneByAssistant,
+        this.doneBySupervisorID,
+        this.doneBySupervisor,
+        this.doneByCandidateID,
+        this.doneByCandidate,
+        this.doneByCandidateBatchID,
+        this.doneByCandidateBatch,
+        this.implantID,
+        this.implant});
 
-  Bontic.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
+  TreatmentPlanFieldsModel.fromJson(Map<String, dynamic> json) {
+    value = json['value']??"";
+    status = json['status']??false;
+    assignedToID = json['assignedToID'];
+    assignedTo = json['assignedTo'] != null
+        ? new DropDownDTO.fromJson(json['assignedTo'])
+        : null;
+    date = json['date'];
+    doneByAssistantID = json['doneByAssistantID'];
+    doneByAssistant = json['doneByAssistant'] != null
+        ? new DropDownDTO.fromJson(json['doneByAssistant'])
+        : null;
+    doneBySupervisorID = json['doneBySupervisorID'];
+    doneBySupervisor = json['doneBySupervisor'] != null
+        ? new DropDownDTO.fromJson(json['doneBySupervisor'])
+        : null;
+    doneByCandidateID = json['doneByCandidateID'];
+    doneByCandidate = json['doneByCandidate'] != null
+        ? new DropDownDTO.fromJson(json['doneByCandidate'])
+        : null;
+    doneByCandidateBatchID = json['doneByCandidateBatchID'];
+    doneByCandidateBatch = json['doneByCandidateBatch'] != null
+        ? new DropDownDTO.fromJson(
+        json['doneByCandidateBatch'])
+        : null;
+    implantID = json['implantID'];
+    implant =
+    json['implant'] != null ? new ImplantModel.fromJson(json['implant']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['value'] = this.value;
+    data['status'] = this.status;
+    data['assignedToID'] = this.assignedToID;
 
-class ClosedSinus {
-  String? value = "";
-  bool? status = false;
+    data['date'] = this.date;
+    data['doneByAssistantID'] = this.doneByAssistantID;
 
-  ClosedSinus({this.value = "", this.status = false});
+    data['doneBySupervisorID'] = this.doneBySupervisorID;
 
-  ClosedSinus.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
+    data['doneByCandidateID'] = this.doneByCandidateID;
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
+    data['doneByCandidateBatchID'] = this.doneByCandidateBatchID;
 
-class Expansion {
-  String? value = "";
-  bool? status = false;
+    data['implantID'] = this.implantID;
 
-  Expansion({this.value = "", this.status = false});
-
-  Expansion.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class Extraction {
-  String? value = "";
-  bool? status = false;
-
-  Extraction({this.value = "", this.status = false});
-
-  Extraction.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class Flap {
-  String? value = "";
-  bool? status = false;
-
-  Flap({this.value = "", this.status = false});
-
-  Flap.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class Gbr {
-  String? value = "";
-  bool? status = false;
-
-  Gbr({this.value = "", this.status = false});
-
-  Gbr.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class GuidedImplant {
-  String? value = "";
-  bool? status = false;
-
-  GuidedImplant({this.value = "", this.status = false});
-
-  GuidedImplant.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class ImmediateImplant {
-  String? value = "";
-  bool? status = false;
-
-  ImmediateImplant({this.value = "", this.status = false});
-
-  ImmediateImplant.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class OpenSinus {
-  String? value = "";
-  bool? status = false;
-
-  OpenSinus({this.value = "", this.status = false});
-
-  OpenSinus.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class SimpleImplant {
-  String? value = "";
-  bool? status = false;
-
-  SimpleImplant({this.value = "", this.status = false});
-
-  SimpleImplant.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class Splitting {
-  String? value = "";
-  bool? status = false;
-
-  Splitting({this.value = "", this.status = false});
-
-  Splitting.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = value;
-    data['status'] = status;
     return data;
   }
 }

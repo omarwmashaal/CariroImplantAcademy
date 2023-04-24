@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
+import 'package:cariro_implant_academy/Models/TreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Calendar.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
@@ -49,6 +50,7 @@ late DentalHistoryModel dentalHistoryModel;
 late DentalExaminationModel dentalExaminationModel;
 late DentalExaminationModel tempDentalExamination;
 late NonSurgicalTreatmentModel nonSurgicalTreatment;
+late TreatmentPlanModel treatmentPlanModel;
 
 class _getxClass extends GetxController {
   static RxInt tobacco = 0.obs;
@@ -83,7 +85,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientDentalHistory(),
     _PatientDentalExamination(),
     _PatientNonSurgicalTreatment(),
-    //_PatientTreatmentPlan(),
+    _PatientTreatmentPlan(),
     // _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
     //_Patient_CBCTandPhotos(),
@@ -121,7 +123,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
         MedicalSlidingModel(
             name: "Treatment Plan",
             onSave: () {
-              print("3");
+              MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
             }),
         MedicalSlidingModel(
             name: "Surgical Treatment",
@@ -2177,7 +2179,7 @@ class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
   @override
   Widget build(BuildContext context) {
     return CIA_TeethTreatmentPlanWidget(
-      controller: MasterController,
+      patientID: patientID,
     );
   }
 }
@@ -2193,9 +2195,7 @@ class _PatientSurgicalTreatment extends StatefulWidget {
 class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
   @override
   Widget build(BuildContext context) {
-    return CIA_TeethSurgicalTreatmentWidget(
-      controller: MasterController,
-    );
+    return Container();
   }
 }
 
@@ -2223,7 +2223,7 @@ class _PatientProstheticTreatmentState
   _buildWidgets() {
     List<Widget> r = [];
     List<String> teeth = [];
-    for (String key in MasterController.TreatmentPlan.keys) {
+    /*for (String key in MasterController.TreatmentPlan.keys) {
       if (MasterController.TreatmentPlan[key] != null) {
         if ((MasterController.TreatmentPlan[key]?.guidedImplant != null &&
             MasterController.TreatmentPlan[key]?.guidedImplant?.status
@@ -2240,7 +2240,7 @@ class _PatientProstheticTreatmentState
           teeth.add(key);
         }
       }
-    }
+    }*/
     for (String tooth in teeth) {
       r.add(_ProstheticWidget(
         tooth: tooth,

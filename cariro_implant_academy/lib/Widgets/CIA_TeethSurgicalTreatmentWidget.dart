@@ -8,16 +8,16 @@ import '../Constants/Colors.dart';
 import '../Constants/Fonts.dart';
 import '../Controllers/PatientMedicalController.dart';
 import '../Models/TreatmentPlanModel.dart';
+import 'CIA_PrimaryButton.dart';
 import 'CIA_TextFormField.dart';
 import 'FormTextWidget.dart';
 import 'MultiSelectChipWidget.dart';
 
 // TODO: Listen to models and higlight chips
 class CIA_TeethSurgicalTreatmentWidget extends StatefulWidget {
-  CIA_TeethSurgicalTreatmentWidget({Key? key, required this.controller})
+  CIA_TeethSurgicalTreatmentWidget({Key? key})
       : super(key: key);
 
-  PatientMedicalController controller;
 
   @override
   State<CIA_TeethSurgicalTreatmentWidget> createState() =>
@@ -32,7 +32,7 @@ class _CIA_TeethSurgicalTreatmentWidgetState
   List<String> selectedStatus = [];
   bool tickVisible = false;
   final GlobalKey<ExpansionTileCardState> cardB = new GlobalKey();
-
+/*
   _updateTeethStatus(List<String> teeth, String status) {
     for (String tooth in teeth) {
       if (models[tooth] == null) models[tooth] = new TreatmentPlanModel();
@@ -180,7 +180,7 @@ class _CIA_TeethSurgicalTreatmentWidgetState
       }
     }
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     if (selectedTeeth.isEmpty) {
@@ -188,10 +188,11 @@ class _CIA_TeethSurgicalTreatmentWidgetState
       tickVisible = false;
       setState(() {});
     }
-    return FocusTraversalGroup(
+    /*return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
       child: Column(
         children: [
+          CIA_PrimaryButton(label: "Save",onTab: (){},),
           Row(
             children: [
               Expanded(
@@ -477,9 +478,10 @@ class _CIA_TeethSurgicalTreatmentWidgetState
           )
         ],
       ),
-    );
+    );*/
+    return Container();
   }
-
+/*
   _buildTeethWidgets() {
     List<Widget> returnValue = <Widget>[];
     returnValue.add(_PostSurgeryWidget());
@@ -497,9 +499,9 @@ class _CIA_TeethSurgicalTreatmentWidgetState
   @override
   void initState() {
     models = widget.controller.TreatmentPlan;
-  }
+  }*/
 }
-
+/*
 class _ToothWidget extends StatelessWidget {
   _ToothWidget({Key? key, required this.toothID, required this.onChange})
       : super(key: key);
@@ -1791,3 +1793,4 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
     );
   }
 }
+*/
