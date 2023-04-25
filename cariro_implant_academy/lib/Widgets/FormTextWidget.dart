@@ -25,43 +25,47 @@ class FormTextWidget extends StatelessWidget {
 }
 
 class FormTextKeyWidget extends StatelessWidget {
-  FormTextKeyWidget({Key? key, required this.text,this.color, this.secondaryInfo = false})
+  FormTextKeyWidget({Key? key, this.smallFont = false,required this.text,this.color, this.secondaryInfo = false})
       : super(key: key);
   String text;
   bool secondaryInfo;
   Color? color;
+  bool smallFont;
 
   @override
   Widget build(BuildContext context) {
+    double fontSize = smallFont?10: 14;
     return Text(
       text,
       style: secondaryInfo
           ? TextStyle(
-              fontSize: 14, fontFamily: Inter_Bold, color: Color_TextSecondary)
-          : TextStyle(fontSize: 14, fontFamily: Inter_Bold, color: color??Colors.black),
+              fontSize: fontSize, fontFamily: Inter_Bold, color: Color_TextSecondary)
+          : TextStyle(fontSize: fontSize, fontFamily: Inter_Bold, color: color??Colors.black),
     );
   }
 }
 
 class FormTextValueWidget extends StatelessWidget {
   FormTextValueWidget(
-      {Key? key, required this.text, this.secondaryInfo = false, this.suffix})
+      {Key? key, required this.text, this.secondaryInfo = false, this.suffix, this.smallFont = false})
       : super(key: key);
   String? text;
   bool secondaryInfo;
   String? suffix;
+  bool smallFont;
 
   @override
   Widget build(BuildContext context) {
+    double fontSize = smallFont?10: 14;
     return Text(
       (text as String) + " " + (suffix != null ? (suffix as String) : ""),
       style: secondaryInfo
           ? TextStyle(
-              fontSize: 14,
+              fontSize: fontSize,
               fontFamily: Inter_Regular,
               color: Color_TextSecondary)
           : TextStyle(
-              fontSize: 14,
+              fontSize: fontSize,
               fontFamily: Inter_Regular,
             ),
     );

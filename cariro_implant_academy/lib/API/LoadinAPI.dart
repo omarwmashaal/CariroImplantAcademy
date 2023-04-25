@@ -52,6 +52,45 @@ class LoadinAPI {
     }
     return response;
   }
+static Future<API_Response> LoadCandidatesByBatchID(int id) async {
+    var response = await HTTPRequest.Get("User/LoadCandidatesByBatchID?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
+
+static Future<API_Response> LoadImplantCompanies() async {
+    var response = await HTTPRequest.Get("Settings/GetImplantCompanies");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
+
+static Future<API_Response> LoadImplantLines(int id) async {
+    var response = await HTTPRequest.Get("Settings/GetImplantLines?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
+
+static Future<API_Response> LoadImplants(int id) async {
+    var response = await HTTPRequest.Get("Settings/GetImplants?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String,dynamic>)).toList();
+
+    }
+    return response;
+  }
 
 static Future<API_Response> LoadAdmins() async {
     var response = await HTTPRequest.Get("User/LoadAdmins");

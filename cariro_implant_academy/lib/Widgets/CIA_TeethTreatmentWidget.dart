@@ -1,154 +1,294 @@
+import 'package:cariro_implant_academy/API/LoadinAPI.dart';
 import 'package:cariro_implant_academy/API/MedicalAPI.dart';
+import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/SurgicalTreatmentModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_IncrementalTextField.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
 
 import '../Constants/Fonts.dart';
 import '../Controllers/PatientMedicalController.dart';
 import '../Models/API_Response.dart';
-import '../Models/TreatmentPlanModel.dart';
+import '../Models/MedicalModels/TreatmentPlanModel.dart';
 import 'CIA_TextFormField.dart';
 import 'FormTextWidget.dart';
 import 'MultiSelectChipWidget.dart';
 
+bool isSurgical = false;
+
 // TODO: Listen to models and higlight chips
 class CIA_TeethTreatmentPlanWidget extends StatefulWidget {
-  CIA_TeethTreatmentPlanWidget({Key? key, required this.patientID})
-      : super(key: key);
+  CIA_TeethTreatmentPlanWidget({Key? key, required this.patientID, this.surgical = false}) : super(key: key);
 
   int patientID;
+  bool surgical;
 
   @override
-  State<CIA_TeethTreatmentPlanWidget> createState() =>
-      _CIA_TeethTreatmentPlanWidgetState();
+  State<CIA_TeethTreatmentPlanWidget> createState() => _CIA_TeethTreatmentPlanWidgetState();
 }
 
 late List<TreatmentPlanSubModel> models;
 
-class _CIA_TeethTreatmentPlanWidgetState
-    extends State<CIA_TeethTreatmentPlanWidget> {
+class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWidget> {
   List<String> selectedTeeth = [];
   List<String> selectedStatus = [];
   bool tickVisible = false;
 
   _updateTeethStatus(List<int> teeth, String status) {
     for (int tooth in teeth) {
-      var currentTooth =
-          models.firstWhereOrNull((element) => element.tooth == tooth);
+      var currentTooth = models.firstWhereOrNull((element) => element.tooth == tooth);
       if (currentTooth == null) {
-        currentTooth =
-            new TreatmentPlanSubModel(tooth: tooth, patientId: patientID);
+        currentTooth = new TreatmentPlanSubModel(tooth: tooth, patientId: patientID);
         models.add(currentTooth);
       }
       switch (status) {
         case "Simple Implant":
           {
-            if (currentTooth.simpleImplant == null)
-              currentTooth.simpleImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.simpleImplant == null) currentTooth.simpleImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.simpleImplant!.status = true;
+              currentTooth.simpleImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.simpleImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
             break;
           }
 
         case "Immediate Implant":
           {
-            if (currentTooth.immediateImplant == null)
-              currentTooth.immediateImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Expansion With Implant":
-          {
-            if (currentTooth.expansionWithImplant == null)
-              currentTooth.expansionWithImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Splitting With Implant":
-          {
-            if (currentTooth.splittingWithImplant == null)
-              currentTooth.splittingWithImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "GBR With Implant":
-          {
-            if (currentTooth.gbrWithImplant == null)
-              currentTooth.gbrWithImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Open Sinus With Implant":
-          {
-            if (currentTooth.openSinusWithImplant == null)
-              currentTooth.openSinusWithImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Closed Sinus With Implant":
-          {
-            if (currentTooth.closedSinusWithImplant == null)
-              currentTooth.closedSinusWithImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Expansion Without Implant":
-          {
-            if (currentTooth.expansionWithoutImplant == null)
-              currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Splitting Without Implant":
-          {
-            if (currentTooth.splittingWithoutImplant == null)
-              currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "GBR Without Implant":
-          {
-            if (currentTooth.gbrWithoutImplant == null)
-              currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Open Sinus Without Implant":
-          {
-            if (currentTooth.openSinusWithoutImplant == null)
-              currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Closed Sinus Without Implant":
-          {
-            if (currentTooth.closedSinusWithoutImplant == null)
-              currentTooth.closedSinusWithoutImplant =
-                  TreatmentPlanFieldsModel();
+            if (currentTooth.immediateImplant == null) currentTooth.immediateImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.immediateImplant!.status = true;
+              currentTooth.immediateImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.immediateImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
             break;
           }
         case "Guided Implant":
           {
-            if (currentTooth.guidedImplant == null)
-              currentTooth.guidedImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.guidedImplant == null) currentTooth.guidedImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.guidedImplant!.status = true;
+              currentTooth.guidedImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.guidedImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
+            break;
+          }
+        case "Expansion With Implant":
+          {
+            if (currentTooth.expansionWithImplant == null) currentTooth.expansionWithImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.expansionWithImplant!.status = true;
+              currentTooth.expansionWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.expansionWithImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            break;
+          }
+        case "Splitting With Implant":
+          {
+            if (currentTooth.splittingWithImplant == null) currentTooth.splittingWithImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.splittingWithImplant!.status = true;
+              currentTooth.splittingWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.splittingWithImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.expansionWithImplant = null;
+            break;
+          }
+        case "GBR With Implant":
+          {
+            if (currentTooth.gbrWithImplant == null) currentTooth.gbrWithImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.gbrWithImplant!.status = true;
+              currentTooth.gbrWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.gbrWithImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
+            break;
+          }
+        case "Open Sinus With Implant":
+          {
+            if (currentTooth.openSinusWithImplant == null) currentTooth.openSinusWithImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.openSinusWithImplant!.status = true;
+              currentTooth.openSinusWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.openSinusWithImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
+            break;
+          }
+        case "Closed Sinus With Implant":
+          {
+            if (currentTooth.closedSinusWithImplant == null) currentTooth.closedSinusWithImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.closedSinusWithImplant!.status = true;
+              currentTooth.closedSinusWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.closedSinusWithImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            currentTooth.expansionWithImplant = null;
+            break;
+          }
+        case "Expansion Without Implant":
+          {
+            if (currentTooth.expansionWithoutImplant == null) currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.expansionWithoutImplant!.status = true;
+              currentTooth.expansionWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.expansionWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            currentTooth.immediateImplant = null;
+            currentTooth.simpleImplant = null;
+            currentTooth.guidedImplant = null;
+            currentTooth.closedSinusWithImplant = null;
+            currentTooth.openSinusWithImplant = null;
+            currentTooth.gbrWithImplant = null;
+            currentTooth.splittingWithImplant = null;
+            break;
+          }
+        case "Splitting Without Implant":
+          {
+            if (currentTooth.splittingWithoutImplant == null) currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.splittingWithoutImplant!.status = true;
+              currentTooth.splittingWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+
+              currentTooth.splittingWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            break;
+          }
+        case "GBR Without Implant":
+          {
+            if (currentTooth.gbrWithoutImplant == null) currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.gbrWithoutImplant!.status = true;
+              currentTooth.gbrWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.gbrWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            break;
+          }
+        case "Open Sinus Without Implant":
+          {
+            if (currentTooth.openSinusWithoutImplant == null) currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.openSinusWithoutImplant!.status = true;
+              currentTooth.openSinusWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.openSinusWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            break;
+          }
+        case "Closed Sinus Without Implant":
+          {
+            if (currentTooth.closedSinusWithoutImplant == null) currentTooth.closedSinusWithoutImplant = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.closedSinusWithoutImplant!.status = true;
+              currentTooth.closedSinusWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.closedSinusWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
+            }
             break;
           }
 
+
         case "Pontic":
           {
-            if (currentTooth.pontic == null)
-              currentTooth.pontic = TreatmentPlanFieldsModel();
+            if (currentTooth.pontic == null) currentTooth.pontic = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.pontic!.status = true;
+              currentTooth.pontic!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.pontic!.doneByAssistantID = siteController.getUser().idInt;
+            }
             break;
           }
         case "Extraction":
           {
-            if (currentTooth.extraction == null)
-              currentTooth.extraction = TreatmentPlanFieldsModel();
+            if (currentTooth.extraction == null) currentTooth.extraction = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.extraction!.status = true;
+              currentTooth.extraction!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.extraction!.doneByAssistantID = siteController.getUser().idInt;
+            }
             break;
           }
         case "Restoration":
           {
-            if (currentTooth.restoration == null)
-              currentTooth.restoration = TreatmentPlanFieldsModel();
+            if (currentTooth.restoration == null) currentTooth.restoration = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.restoration!.status = true;
+              currentTooth.restoration!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.restoration!.doneByAssistantID = siteController.getUser().idInt;
+            }
             break;
           }
         case "Root Canal Treatment":
           {
-            if (currentTooth.rootCanalTreatment == null)
-              currentTooth.rootCanalTreatment = TreatmentPlanFieldsModel();
+            if (currentTooth.rootCanalTreatment == null) currentTooth.rootCanalTreatment = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.rootCanalTreatment!.status = true;
+              currentTooth.rootCanalTreatment!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.rootCanalTreatment!.doneByAssistantID = siteController.getUser().idInt;
+            }
             break;
           }
       }
@@ -163,8 +303,7 @@ class _CIA_TeethTreatmentPlanWidgetState
 
   _removeTeethStatus(List<int> teeth, String status) {
     for (int tooth in teeth) {
-      var currentTooth =
-          models.firstWhereOrNull((element) => element.tooth == tooth);
+      var currentTooth = models.firstWhereOrNull((element) => element.tooth == tooth);
       if (currentTooth == null) {
         currentTooth = new TreatmentPlanSubModel();
         models.add(currentTooth);
@@ -172,67 +311,56 @@ class _CIA_TeethTreatmentPlanWidgetState
       switch (status) {
         case "Extraction":
           {
-            if (currentTooth.extraction == null)
-              currentTooth.extraction = TreatmentPlanFieldsModel();
+            if (currentTooth.extraction == null) currentTooth.extraction = TreatmentPlanFieldsModel();
             break;
           }
 
         case "SimpleImplant":
           {
-            if (currentTooth.simpleImplant == null)
-              currentTooth.simpleImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.simpleImplant == null) currentTooth.simpleImplant = TreatmentPlanFieldsModel();
             break;
 
             break;
           }
         case "Immediate Implant":
           {
-            if (currentTooth.immediateImplant == null)
-              currentTooth.immediateImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.immediateImplant == null) currentTooth.immediateImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "Expansion":
           {
-            if (currentTooth.expansionWithoutImplant == null)
-              currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.expansionWithoutImplant == null) currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "Splitting":
           {
-            if (currentTooth.splittingWithoutImplant == null)
-              currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.splittingWithoutImplant == null) currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "GBR":
           {
-            if (currentTooth.gbrWithoutImplant == null)
-              currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.gbrWithoutImplant == null) currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "Open Sinus":
           {
-            if (currentTooth.openSinusWithoutImplant == null)
-              currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.openSinusWithoutImplant == null) currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "Closed Sinus":
           {
-            if (currentTooth.closedSinusWithoutImplant == null)
-              currentTooth.closedSinusWithoutImplant =
-                  TreatmentPlanFieldsModel();
+            if (currentTooth.closedSinusWithoutImplant == null) currentTooth.closedSinusWithoutImplant = TreatmentPlanFieldsModel();
             break;
           }
         case "Guided Implant":
           {
-            if (currentTooth.guidedImplant == null)
-              currentTooth.guidedImplant = TreatmentPlanFieldsModel();
+            if (currentTooth.guidedImplant == null) currentTooth.guidedImplant = TreatmentPlanFieldsModel();
             break;
           }
 
         case "Pontic":
           {
-            if (currentTooth.pontic == null)
-              currentTooth.pontic = TreatmentPlanFieldsModel();
+            if (currentTooth.pontic == null) currentTooth.pontic = TreatmentPlanFieldsModel();
             break;
           }
       }
@@ -249,8 +377,12 @@ class _CIA_TeethTreatmentPlanWidgetState
     return CIA_FutureBuilder(
       loadFunction: loadFucntion,
       onSuccess: (data) {
-        treatmentPlanModel = data as TreatmentPlanModel;
-        models = treatmentPlanModel.treatmentPlan ?? [];
+        if (isSurgical)
+          surgicalTreatmentModel = data as SurgicalTreatmentModel;
+        else
+          treatmentPlanModel = data as TreatmentPlanModel;
+
+        models = isSurgical ? surgicalTreatmentModel.surgicalTreatment ?? [] : treatmentPlanModel.treatmentPlan ?? [];
         return FocusTraversalGroup(
           policy: OrderedTraversalPolicy(),
           child: Column(
@@ -268,33 +400,15 @@ class _CIA_TeethTreatmentPlanWidgetState
                         setState(() {});
                       },
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "11",
-                            isSelected: selectedTeeth.contains("11")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "12",
-                            isSelected: selectedTeeth.contains("12")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "13",
-                            isSelected: selectedTeeth.contains("13")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "14",
-                            isSelected: selectedTeeth.contains("14")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "15",
-                            isSelected: selectedTeeth.contains("15")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "16",
-                            isSelected: selectedTeeth.contains("16")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "17",
-                            isSelected: selectedTeeth.contains("17")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "18",
-                            isSelected: selectedTeeth.contains("18")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "19",
-                            isSelected: selectedTeeth.contains("19"))
+                        CIA_MultiSelectChipWidgeModel(label: "11", isSelected: selectedTeeth.contains("11")),
+                        CIA_MultiSelectChipWidgeModel(label: "12", isSelected: selectedTeeth.contains("12")),
+                        CIA_MultiSelectChipWidgeModel(label: "13", isSelected: selectedTeeth.contains("13")),
+                        CIA_MultiSelectChipWidgeModel(label: "14", isSelected: selectedTeeth.contains("14")),
+                        CIA_MultiSelectChipWidgeModel(label: "15", isSelected: selectedTeeth.contains("15")),
+                        CIA_MultiSelectChipWidgeModel(label: "16", isSelected: selectedTeeth.contains("16")),
+                        CIA_MultiSelectChipWidgeModel(label: "17", isSelected: selectedTeeth.contains("17")),
+                        CIA_MultiSelectChipWidgeModel(label: "18", isSelected: selectedTeeth.contains("18")),
+                        CIA_MultiSelectChipWidgeModel(label: "19", isSelected: selectedTeeth.contains("19"))
                       ],
                     ),
                   ),
@@ -309,33 +423,15 @@ class _CIA_TeethTreatmentPlanWidgetState
                         });
                       },
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "21",
-                            isSelected: selectedTeeth.contains("21")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "22",
-                            isSelected: selectedTeeth.contains("22")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "23",
-                            isSelected: selectedTeeth.contains("23")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "24",
-                            isSelected: selectedTeeth.contains("24")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "25",
-                            isSelected: selectedTeeth.contains("25")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "26",
-                            isSelected: selectedTeeth.contains("26")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "27",
-                            isSelected: selectedTeeth.contains("27")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "28",
-                            isSelected: selectedTeeth.contains("28")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "29",
-                            isSelected: selectedTeeth.contains("29"))
+                        CIA_MultiSelectChipWidgeModel(label: "21", isSelected: selectedTeeth.contains("21")),
+                        CIA_MultiSelectChipWidgeModel(label: "22", isSelected: selectedTeeth.contains("22")),
+                        CIA_MultiSelectChipWidgeModel(label: "23", isSelected: selectedTeeth.contains("23")),
+                        CIA_MultiSelectChipWidgeModel(label: "24", isSelected: selectedTeeth.contains("24")),
+                        CIA_MultiSelectChipWidgeModel(label: "25", isSelected: selectedTeeth.contains("25")),
+                        CIA_MultiSelectChipWidgeModel(label: "26", isSelected: selectedTeeth.contains("26")),
+                        CIA_MultiSelectChipWidgeModel(label: "27", isSelected: selectedTeeth.contains("27")),
+                        CIA_MultiSelectChipWidgeModel(label: "28", isSelected: selectedTeeth.contains("28")),
+                        CIA_MultiSelectChipWidgeModel(label: "29", isSelected: selectedTeeth.contains("29"))
                       ],
                     ),
                   ),
@@ -354,33 +450,15 @@ class _CIA_TeethTreatmentPlanWidgetState
                         });
                       },
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "31",
-                            isSelected: selectedTeeth.contains("31")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "32",
-                            isSelected: selectedTeeth.contains("32")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "33",
-                            isSelected: selectedTeeth.contains("33")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "34",
-                            isSelected: selectedTeeth.contains("34")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "35",
-                            isSelected: selectedTeeth.contains("35")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "36",
-                            isSelected: selectedTeeth.contains("36")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "37",
-                            isSelected: selectedTeeth.contains("37")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "38",
-                            isSelected: selectedTeeth.contains("38")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "39",
-                            isSelected: selectedTeeth.contains("39"))
+                        CIA_MultiSelectChipWidgeModel(label: "31", isSelected: selectedTeeth.contains("31")),
+                        CIA_MultiSelectChipWidgeModel(label: "32", isSelected: selectedTeeth.contains("32")),
+                        CIA_MultiSelectChipWidgeModel(label: "33", isSelected: selectedTeeth.contains("33")),
+                        CIA_MultiSelectChipWidgeModel(label: "34", isSelected: selectedTeeth.contains("34")),
+                        CIA_MultiSelectChipWidgeModel(label: "35", isSelected: selectedTeeth.contains("35")),
+                        CIA_MultiSelectChipWidgeModel(label: "36", isSelected: selectedTeeth.contains("36")),
+                        CIA_MultiSelectChipWidgeModel(label: "37", isSelected: selectedTeeth.contains("37")),
+                        CIA_MultiSelectChipWidgeModel(label: "38", isSelected: selectedTeeth.contains("38")),
+                        CIA_MultiSelectChipWidgeModel(label: "39", isSelected: selectedTeeth.contains("39"))
                       ],
                     ),
                   ),
@@ -395,33 +473,15 @@ class _CIA_TeethTreatmentPlanWidgetState
                         });
                       },
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "41",
-                            isSelected: selectedTeeth.contains("41")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "42",
-                            isSelected: selectedTeeth.contains("42")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "43",
-                            isSelected: selectedTeeth.contains("43")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "44",
-                            isSelected: selectedTeeth.contains("44")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "45",
-                            isSelected: selectedTeeth.contains("45")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "46",
-                            isSelected: selectedTeeth.contains("46")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "47",
-                            isSelected: selectedTeeth.contains("47")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "48",
-                            isSelected: selectedTeeth.contains("48")),
-                        CIA_MultiSelectChipWidgeModel(
-                            label: "49",
-                            isSelected: selectedTeeth.contains("49"))
+                        CIA_MultiSelectChipWidgeModel(label: "41", isSelected: selectedTeeth.contains("41")),
+                        CIA_MultiSelectChipWidgeModel(label: "42", isSelected: selectedTeeth.contains("42")),
+                        CIA_MultiSelectChipWidgeModel(label: "43", isSelected: selectedTeeth.contains("43")),
+                        CIA_MultiSelectChipWidgeModel(label: "44", isSelected: selectedTeeth.contains("44")),
+                        CIA_MultiSelectChipWidgeModel(label: "45", isSelected: selectedTeeth.contains("45")),
+                        CIA_MultiSelectChipWidgeModel(label: "46", isSelected: selectedTeeth.contains("46")),
+                        CIA_MultiSelectChipWidgeModel(label: "47", isSelected: selectedTeeth.contains("47")),
+                        CIA_MultiSelectChipWidgeModel(label: "48", isSelected: selectedTeeth.contains("48")),
+                        CIA_MultiSelectChipWidgeModel(label: "49", isSelected: selectedTeeth.contains("49"))
                       ],
                     ),
                   ),
@@ -553,7 +613,7 @@ class _CIA_TeethTreatmentPlanWidgetState
   }
 
   _buildTeethWidgets() {
-    List<Widget> returnValue = <Widget>[];
+    List<Widget> returnValue = isSurgical ? <Widget>[_PostSurgeryWidget()] : [];
     for (var model in models) {
       returnValue.add(new _ToothWidget(
         key: GlobalKey(),
@@ -569,13 +629,13 @@ class _CIA_TeethTreatmentPlanWidgetState
 
   @override
   void initState() {
-    loadFucntion = MedicalAPI.GetPatientTreatmentPlan(widget.patientID);
+    isSurgical = widget.surgical;
+    loadFucntion = isSurgical ? MedicalAPI.GetPatientSurgicalTreatment(widget.patientID) : MedicalAPI.GetPatientTreatmentPlan(widget.patientID);
   }
 }
 
 class _ToothWidget extends StatelessWidget {
-  _ToothWidget({Key? key, required this.toothID, required this.onChange})
-      : super(key: key);
+  _ToothWidget({Key? key, required this.toothID, required this.onChange}) : super(key: key);
 
   int toothID;
   Function onChange;
@@ -588,8 +648,7 @@ class _ToothWidget extends StatelessWidget {
   List<Widget> _buildWidgets() {
     List<Widget> returnValue = <Widget>[];
 
-    var currentTooth =
-        models.firstWhereOrNull((element) => element.tooth == toothID);
+    var currentTooth = models.firstWhereOrNull((element) => element.tooth == toothID);
     if (currentTooth != null) {
       if (currentTooth!.simpleImplant != null) {
         returnValue.add(SizedBox(height: 10));
@@ -804,21 +863,19 @@ class _ToothWidget extends StatelessWidget {
   }
 }
 
-class _StatusWidget extends StatelessWidget {
-  _StatusWidget(
-      {Key? key,
-      required this.fieldModel,
-      required this.title,
-      this.onDelete,
-      this.assignButton = false,
-      this.isImplant = false})
-      : super(key: key);
+class _StatusWidget extends StatefulWidget {
+  _StatusWidget({Key? key, required this.fieldModel, required this.title, this.onDelete, this.assignButton = false, this.isImplant = false}) : super(key: key);
   TreatmentPlanFieldsModel fieldModel;
   String title;
   bool isImplant;
   bool assignButton;
   Function? onDelete;
 
+  @override
+  State<_StatusWidget> createState() => _StatusWidgetState();
+}
+
+class _StatusWidgetState extends State<_StatusWidget> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -827,60 +884,1084 @@ class _StatusWidget extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                  flex: 5,
                   child: IconButton(
-                    onPressed: () {
-                      if (onDelete != null) onDelete!();
-                    },
-                    icon: Icon(Icons.delete_forever),
-                    color: Colors.red,
-                  )),
+                onPressed: () {
+                  if (widget.onDelete != null) widget.onDelete!();
+                },
+                icon: Icon(Icons.delete_forever),
+                color: Colors.red,
+              )),
               Expanded(
-                  flex: 5,
-                  child: fieldModel.status!
-                      ? Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      : Icon(
+                child: isSurgical
+                    ? RoundCheckBox(
+                        isChecked: widget.fieldModel.status,
+                        onTap: siteController.getRole() != "assistant"
+                            ? null
+                            : (selected) {
+                                widget.fieldModel.status = selected;
+                                if (selected!) {
+                                  widget.fieldModel.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+                                  widget.fieldModel.doneByAssistantID = siteController.getUser().idInt;
+                                } else {
+                                  widget.fieldModel.doneByAssistant = DropDownDTO();
+                                  widget.fieldModel.doneByAssistantID = null;
+                                }
+                                setState(() {});
+                              },
+                        border: null,
+                        borderColor: Colors.transparent,
+                        uncheckedWidget: Icon(
                           Icons.remove,
                           color: Colors.red,
-                        )),
+                        ),
+                        size: 30,
+                      )
+                    : widget.fieldModel.status!
+                        ? Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          )
+                        : Icon(
+                            Icons.remove,
+                            color: Colors.red,
+                          ),
+              ),
             ],
           ),
         ),
         Expanded(
-          flex:19,
+          flex: 18,
           child: Row(
             children: [
               Expanded(
-                flex: 3,
+                flex: isSurgical ? 7 : 3,
                 child: CIA_TextFormField(
                   onChange: (value) {
-                    fieldModel.value = value;
+                    widget.fieldModel.value = value;
                   },
-                  label: title,
+                  label: widget.title,
                   controller: TextEditingController(
-                    text: (fieldModel.value),
+                    text: (widget.fieldModel.value),
                   ),
                 ),
               ),
-              assignButton?Expanded(
-                  child: Row(
-                    children: [
-                      SizedBox(width:10),
-                      Expanded(
-                        child: CIA_DropDown(
-                          label: "Assign to",
-                          values: ["Name", "Name"],
+              SizedBox(width: 10),
+              isSurgical
+                  ? Expanded(
+                      flex: 9,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          List<DropDownDTO> companies = [];
+                          int? companyID;
+                          List<DropDownDTO> lines = [];
+                          int? lineID;
+                          List<DropDownDTO> implants = [];
+
+                          CIA_ShowPopUp(
+                              context: context,
+                              title: "${widget.title} Data",
+                              onSave: () => setState(() {}),
+                              width: 900,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_DropDownSearch(
+                                          label: "Implant Company",
+                                          asyncItems: () async {
+                                            var res = await LoadinAPI.LoadImplantCompanies();
+                                            if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
+                                            return res;
+                                          },
+                                          onSelect: (value) {
+                                            companyID = value!.id!;
+                                            widget.fieldModel.implant!.name = value.name;
+                                            widget.fieldModel.implantID = value.id;
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CIA_DropDownSearch(
+                                          label: "Implant Lines",
+                                          asyncItems: companyID == null
+                                              ? null
+                                              : () async {
+                                                  var res = await LoadinAPI.LoadImplantLines(companyID!);
+                                                  if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
+                                                  return res;
+                                                },
+                                          onSelect: (value) {
+                                            lineID = value!.id!;
+                                            widget.fieldModel.implant!.name = value.name;
+                                            widget.fieldModel.implantID = value.id;
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: CIA_DropDownSearch(
+                                          selectedItem: widget.fieldModel.implant,
+                                          label: "Size",
+                                          asyncItems: lineID == null
+                                              ? null
+                                              : () async {
+                                                  var res = await LoadinAPI.LoadImplants(lineID!);
+                                                  if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
+                                                  return res;
+                                                },
+                                          onSelect: (value) {
+                                            widget.fieldModel.implant!.name = value.name;
+                                            widget.fieldModel.implantID = value.id;
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  CIA_DropDownSearch(
+                                    selectedItem: widget.fieldModel.doneBySupervisor,
+                                    label: "Supervisor",
+                                    asyncItems: LoadinAPI.LoadSupervisors,
+                                    onSelect: (value) {
+                                      widget.fieldModel.doneBySupervisor = value;
+                                      widget.fieldModel.doneBySupervisorID = value.id;
+                                    },
+                                  ),
+                                  CIA_DropDownSearch(
+                                    selectedItem: widget.fieldModel.doneByCandidateBatch,
+                                    label: "Candidate Batch",
+                                    asyncItems: LoadinAPI.LoadCandidatesBatches,
+                                    onSelect: (value) {
+                                      widget.fieldModel.doneByCandidateBatch = value;
+                                      widget.fieldModel.doneByCandidateBatchID = value.id;
+                                    },
+                                  ),
+                                  CIA_DropDownSearch(
+                                    selectedItem: widget.fieldModel.doneByCandidate,
+                                    label: "Candidate",
+                                    asyncItems: widget.fieldModel.doneByCandidateBatchID == null
+                                        ? null
+                                        : () async {
+                                            return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
+                                          },
+                                    onSelect: (value) {
+                                      widget.fieldModel.doneByCandidate = value;
+                                      widget.fieldModel.doneByCandidateID = value.id;
+                                    },
+                                  ),
+                                ],
+                              ));
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
                         ),
-                      ),
-                    ],
-                  )):SizedBox(),
-              SizedBox(width:10)
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Implant",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Assistant",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneByAssistant!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Supervisor",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneBySupervisor!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Candidate",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneByCandidate!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Batch",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneByCandidateBatch!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(child: SizedBox())
+                              ],
+                            ),
+                          ],
+                        ),
+                      ))
+                  : widget.assignButton
+                      ? Expanded(
+                          child: Row(
+                          children: [
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Assign to assistant",
+                                onSelect: (value) {
+                                  widget.fieldModel.assignedTo = value;
+                                  widget.fieldModel.assignedToID = value.id;
+                                },
+                                selectedItem: widget.fieldModel.assignedTo,
+                                asyncItems: LoadinAPI.LoadAssistants,
+                              ),
+                            ),
+                            SizedBox(width: 10)
+                          ],
+                        ))
+                      : SizedBox(),
+              //SizedBox(width: 10)
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _PostSurgeryWidget extends StatefulWidget {
+  const _PostSurgeryWidget({Key? key}) : super(key: key);
+
+  @override
+  State<_PostSurgeryWidget> createState() => _PostSurgeryWidgetState();
+}
+
+class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
+  final GlobalKey<ExpansionTileCardState> cardA = new GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTileCard(
+      key: cardA,
+      elevation: 8,
+      initialElevation: 8,
+      title: Text('Post Surgery'),
+      subtitle: Text('Tab to expand'),
+      children: <Widget>[
+        Divider(
+          thickness: 1.0,
+          height: 1.0,
+        ),
+        CIA_MultiSelectChipWidget(
+          onChange: (item, isSelected) {
+            switch (item) {
+              case "gbr":
+                surgicalTreatmentModel.guidedBoneRegeneration = isSelected;
+                break;
+              case "osl":
+                surgicalTreatmentModel.openSinusLift = isSelected;
+                break;
+              case "stg":
+                surgicalTreatmentModel.softTissueGraft = isSelected;
+                break;
+              case "stx":
+                surgicalTreatmentModel.sutureAndTemporizationAndXRay = isSelected;
+                break;
+            }
+            setState(() {});
+          },
+          labels: [
+            CIA_MultiSelectChipWidgeModel(label: "Guided Bone Regeneration", isSelected: surgicalTreatmentModel.guidedBoneRegeneration!, value: "gbr"),
+            CIA_MultiSelectChipWidgeModel(label: "Open Sinus Lift", isSelected: surgicalTreatmentModel.openSinusLift!, value: "osl"),
+            CIA_MultiSelectChipWidgeModel(label: "Soft Tissue Graft", isSelected: surgicalTreatmentModel.softTissueGraft!, value: "stg"),
+            CIA_MultiSelectChipWidgeModel(
+                label: "Suture & Temporization & X-ray", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRay!, value: "stx"),
+          ],
+        ),
+        Visibility(
+          visible: surgicalTreatmentModel.guidedBoneRegeneration!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Guided Bone Regeneration"),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Block Graft")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_MultiSelectChipWidget(
+                            onChange: (item, isSelected) {
+                              switch (item) {
+                                case "Chin":
+                                  surgicalTreatmentModel.guidedBoneRegenerationBlockGraftChin = isSelected;
+                                  break;
+                                case "Ramus":
+                                  surgicalTreatmentModel.guidedBoneRegenerationBlockGraftRamus = isSelected;
+                                  break;
+                                case "Tuberosity":
+                                  surgicalTreatmentModel.guidedBoneRegenerationBlockGraftTuberosity = isSelected;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            labels: [
+                              CIA_MultiSelectChipWidgeModel(label: "Chin", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBlockGraftChin!),
+                              CIA_MultiSelectChipWidgeModel(label: "Ramus", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBlockGraftRamus!),
+                              CIA_MultiSelectChipWidgeModel(
+                                  label: "Tuberosity", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBlockGraftTuberosity!),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Other Specify",
+                            onChange: (value) {
+                              surgicalTreatmentModel.guidedBoneRegenerationBlockGraftOther = value;
+                            },
+                            controller: TextEditingController(text: surgicalTreatmentModel.guidedBoneRegenerationBlockGraftOther ?? ""),
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Cut By")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_MultiSelectChipWidget(
+                            onChange: (item, isSelected) {
+                              switch (item) {
+                                case "Disc":
+                                  surgicalTreatmentModel.guidedBoneRegenerationCutByDisc = isSelected;
+                                  break;
+                                case "Piezo":
+                                  surgicalTreatmentModel.guidedBoneRegenerationCutByPiezo = isSelected;
+                                  break;
+                                case "Screws":
+                                  surgicalTreatmentModel.guidedBoneRegenerationCutByScrews = isSelected;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            labels: [
+                              CIA_MultiSelectChipWidgeModel(label: "Disc", isSelected: surgicalTreatmentModel.guidedBoneRegenerationCutByDisc!),
+                              CIA_MultiSelectChipWidgeModel(label: "Piezo", isSelected: surgicalTreatmentModel.guidedBoneRegenerationCutByPiezo!),
+                              CIA_MultiSelectChipWidgeModel(label: "Screws", isSelected: surgicalTreatmentModel.guidedBoneRegenerationCutByScrews!),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "No of screws",
+                            onChange: (value) {
+                              surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Bone Particle")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: CIA_MultiSelectChipWidget(
+                            onChange: (item, isSelected) {
+                              switch (item) {
+                                case "100% Autogenous":
+                                  surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous = isSelected;
+                                  break;
+                                case "100% Xenograft":
+                                  surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft = isSelected;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            labels: [
+                              CIA_MultiSelectChipWidgeModel(
+                                  label: "100% Autogenous", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous!),
+                              CIA_MultiSelectChipWidgeModel(
+                                  label: "100% Xenograft", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft!),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Auto Xeno %",
+                            suffix: "%",
+                            onChange: (value) {
+                              surgicalTreatmentModel.guidedBoneRegenerationBoneParticleXenograftPercent = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.guidedBoneRegenerationBoneParticleXenograftPercent ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "ACM Bur")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Area",
+                            onChange: (value) {
+                              surgicalTreatmentModel.guidedBoneRegenerationACMBurArea = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.guidedBoneRegenerationACMBurArea ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Notes",
+                            onChange: (value) {
+                              surgicalTreatmentModel.guidedBoneRegenerationACMBurNotes = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.guidedBoneRegenerationACMBurNotes ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: surgicalTreatmentModel.openSinusLift!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Open Sinus Lift"),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Approach")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "",
+                      onChange: (value) {
+                        surgicalTreatmentModel.openSinusLiftApproachString = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.openSinusLiftApproachString ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Fill Material")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "",
+                      onChange: (value) {
+                        surgicalTreatmentModel.openSinusLiftFillMaterialString = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.openSinusLiftFillMaterialString ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Membrane")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        FormTextKeyWidget(text: "Size"),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "",
+                            onChange: (value) {
+                              surgicalTreatmentModel.openSinusLiftMembraneSize1 = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.openSinusLiftMembraneSize1 ?? "",
+                            ),
+                          ),
+                        ),
+                        Center(child: FormTextValueWidget(text: "X")),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "",
+                            onChange: (value) {
+                              surgicalTreatmentModel.openSinusLiftMembraneSize2 = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.openSinusLiftMembraneSize2 ?? "",
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                            child: CIA_DropDown(
+                          label: 'Material',
+                          values: ["sss", "sss"],
+                        )),
+                        SizedBox(width: 10),
+                        Expanded(
+                            child: CIA_DropDown(
+                          label: 'Company',
+                          values: ["sss", "sss"],
+                        )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Tacs")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Number",
+                            onChange: (value) {
+                              surgicalTreatmentModel.openSinusLiftTacsNumber = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.openSinusLiftTacsNumber ?? "",
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                            child: CIA_DropDown(
+                          label: 'Material',
+                          values: ["sss", "sss"],
+                        )),
+                        SizedBox(width: 10),
+                        Expanded(
+                            child: CIA_DropDown(
+                          label: 'Company',
+                          values: ["sss", "sss"],
+                        )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: surgicalTreatmentModel.softTissueGraft!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Soft Tissue Graft"),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Surgery Type")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_MultiSelectChipWidget(
+                            key: GlobalKey(),
+                            onChange: (item, isSelected) {
+                              switch (item) {
+                                case "stg":
+                                  surgicalTreatmentModel.softTissueGraftSurgeryTypeSoftTissueGraft = isSelected;
+                                  surgicalTreatmentModel.softTissueGraftSurgeryTypeAdvanced = !isSelected;
+                                  break;
+                                case "advanced":
+                                  surgicalTreatmentModel.softTissueGraftSurgeryTypeAdvanced = isSelected;
+                                  surgicalTreatmentModel.softTissueGraftSurgeryTypeSoftTissueGraft = !isSelected;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            singleSelect: true,
+                            labels: [
+                              CIA_MultiSelectChipWidgeModel(
+                                  label: "Soft Tissue Graft", value: "stg", isSelected: surgicalTreatmentModel.softTissueGraftSurgeryTypeSoftTissueGraft!),
+                              CIA_MultiSelectChipWidgeModel(
+                                  label: "Advanced", value: "advanced", isSelected: surgicalTreatmentModel.softTissueGraftSurgeryTypeAdvanced!),
+                            ],
+                          ),
+                        ),
+                        surgicalTreatmentModel.softTissueGraftSurgeryTypeSoftTissueGraft!
+                            ? Expanded(
+                                child: CIA_MultiSelectChipWidget(
+                                    onChange: (item, isSelected) {
+                                      switch (item) {
+                                        case "Free Gingival Graft":
+                                          surgicalTreatmentModel.softTissueGraftSurgeryTypeFreeGinivalGraft = isSelected;
+                                          break;
+                                        case "Connective Tissue Graft":
+                                          surgicalTreatmentModel.softTissueGraftSurgeryTypeConnectiveTissueGraft = isSelected;
+                                          break;
+                                      }
+                                      setState(() {});
+                                    },
+                                    labels: [
+                                      CIA_MultiSelectChipWidgeModel(
+                                          label: "Free Gingival Graft", isSelected: surgicalTreatmentModel.softTissueGraftSurgeryTypeFreeGinivalGraft!),
+                                      CIA_MultiSelectChipWidgeModel(
+                                          label: "Connective Tissue Graft",
+                                          isSelected: surgicalTreatmentModel.softTissueGraftSurgeryTypeConnectiveTissueGraft!),
+                                    ]),
+                              )
+                            : (surgicalTreatmentModel.softTissueGraftSurgeryTypeAdvanced!
+                                ? Expanded(
+                                    child: CIA_TextFormField(
+                                      label: "Surgery Technique",
+                                      onChange: (value) {
+                                        surgicalTreatmentModel.softTissueGraftSurgeryTypeSurgeryTechnique = value;
+                                      },
+                                      controller: TextEditingController(
+                                        text: surgicalTreatmentModel.softTissueGraftSurgeryTypeSurgeryTechnique ?? "",
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Exposure")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "Customized Healing Collar teeth numher",
+                      onChange: (value) {
+                        surgicalTreatmentModel.softTissueGraftExposureCustomizedHealingCollarTeethNumber = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.softTissueGraftExposureCustomizedHealingCollarTeethNumber ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Donor Site")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "Notes",
+                      onChange: (value) {
+                        surgicalTreatmentModel.softTissueGraftDonorSiteNotes = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.softTissueGraftDonorSiteNotes ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Stuture")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Material",
+                            onChange: (value) {
+                              surgicalTreatmentModel.softTissueGraftSutureMaterial = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.softTissueGraftSutureMaterial ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Technique",
+                            onChange: (value) {
+                              surgicalTreatmentModel.softTissueGraftSutureTechnique = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.softTissueGraftSutureTechnique ?? "",
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Pack Type",
+                            onChange: (value) {
+                              surgicalTreatmentModel.softTissueGraftSuturePackType = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.softTissueGraftSuturePackType ?? "",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Recipient Site")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "Area",
+                      onChange: (value) {
+                        surgicalTreatmentModel.softTissueGraftRecipientSiteArea = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.softTissueGraftRecipientSiteArea ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Augmentation Site")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_MultiSelectChipWidget(
+                      onChange: (item, isSelected) {
+                        switch (item) {
+                          case "Buccal":
+                            surgicalTreatmentModel.softTissueGraftAugmentationBuccal = isSelected;
+                            break;
+                          case "Crestal":
+                            surgicalTreatmentModel.softTissueGraftAugmentationCrestal = isSelected;
+                            break;
+                          case "Lingual":
+                            surgicalTreatmentModel.softTissueGraftAugmentationLingual = isSelected;
+                            break;
+                          case "Mesial":
+                            surgicalTreatmentModel.softTissueGraftAugmentationMesial = isSelected;
+                            break;
+                          case "Distal":
+                            surgicalTreatmentModel.softTissueGraftAugmentationDistal = isSelected;
+                            break;
+                        }
+                        setState(() {});
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(label: "Buccal", isSelected: surgicalTreatmentModel.softTissueGraftAugmentationBuccal!),
+                        CIA_MultiSelectChipWidgeModel(label: "Crestal", isSelected: surgicalTreatmentModel.softTissueGraftAugmentationCrestal!),
+                        CIA_MultiSelectChipWidgeModel(label: "Lingual", isSelected: surgicalTreatmentModel.softTissueGraftAugmentationLingual!),
+                        CIA_MultiSelectChipWidgeModel(label: "Mesial", isSelected: surgicalTreatmentModel.softTissueGraftAugmentationMesial!),
+                        CIA_MultiSelectChipWidgeModel(label: "Distal", isSelected: surgicalTreatmentModel.softTissueGraftAugmentationDistal!),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Frenectomy")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "",
+                      onChange: (value) {
+                        surgicalTreatmentModel.softTissueGraftFrenectomyNotes = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.softTissueGraftFrenectomyNotes ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Bone Graft")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_TextFormField(
+                      label: "Type & Site",
+                      onChange: (value) {
+                        surgicalTreatmentModel.softTissueGraftBoneGraftNotes = value;
+                      },
+                      controller: TextEditingController(
+                        text: surgicalTreatmentModel.softTissueGraftBoneGraftNotes ?? "",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: surgicalTreatmentModel.sutureAndTemporizationAndXRay!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              FormTextKeyWidget(text: "Suture & Temporization & X-ray"),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Suture Size")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_MultiSelectChipWidget(
+                      onChange: (item, isSelected) {
+                        switch (item) {
+                          case "3-0":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize30 = isSelected;
+                            break;
+                          case "4-0":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize40 = isSelected;
+                            break;
+                          case "5-0":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize50 = isSelected;
+                            break;
+                          case "6-0":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize60 = isSelected;
+                            break;
+                          case "7-0":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize70 = isSelected;
+                            break;
+                          case "Implant Subcrestal":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal = isSelected;
+                            break;
+                        }
+                        setState(() {});
+                      },
+                      singleSelect: true,
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(label: "3-0", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize30!),
+                        CIA_MultiSelectChipWidgeModel(label: "4-0", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize40!),
+                        CIA_MultiSelectChipWidgeModel(label: "5-0", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize50!),
+                        CIA_MultiSelectChipWidgeModel(label: "6-0", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize60!),
+                        CIA_MultiSelectChipWidgeModel(label: "7-0", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSize70!),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Implant Subcrestal", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal!),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Suture Material")),
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_MultiSelectChipWidget(
+                            onChange: (item, isSelected) {
+                              switch (item) {
+                                case "Vicryl":
+                                  surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialVicryl = isSelected;
+                                  break;
+                                case "Proline":
+                                  surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialProline = isSelected;
+                                  break;
+                                case "X-ray":
+                                  surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialXRay = isSelected;
+                                  break;
+                              }
+                              setState(() {});
+                            },
+                            singleSelect: true,
+                            labels: [
+                              CIA_MultiSelectChipWidgeModel(label: "Vicryl", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialVicryl!),
+                              CIA_MultiSelectChipWidgeModel(label: "Proline", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialProline!),
+                              CIA_MultiSelectChipWidgeModel(label: "X-ray", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialXRay!),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "Suture Technique",
+                            onChange: (value) {
+                              surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialSutureTechnique = value;
+                            },
+                            controller: TextEditingController(
+                              text: surgicalTreatmentModel.sutureAndTemporizationAndXRayMaterialSutureTechnique ?? "",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: FormTextValueWidget(text: "Temporary")),
+                  Expanded(
+                    flex: 4,
+                    child: CIA_MultiSelectChipWidget(
+                      onChange: (item, isSelected) {
+                        switch (item) {
+                          case "Healing Collar":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryHealingCollar = isSelected;
+                            break;
+                          case "Customized Healling Collar":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar = isSelected;
+                            break;
+                          case "Crown":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryCrown = isSelected;
+                            break;
+                          case "Maryland Bridge":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryMarylandBridge = isSelected;
+                            break;
+                          case "Bridge on teeth":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth = isSelected;
+                            break;
+                          case "Denture with glass fiber":
+                            surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber = isSelected;
+                            break;
+                        }
+                        setState(() {});
+                      },
+                      labels: [
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Healing Collar", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryHealingCollar!),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Customized Healling Collar",
+                            isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar!),
+                        CIA_MultiSelectChipWidgeModel(label: "Crown", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryCrown!),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Maryland Bridge", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryMarylandBridge!),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Bridge on teeth", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth!),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Denture with glass fiber", isSelected: surgicalTreatmentModel.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber!),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            cardA.currentState?.collapse();
+          },
+          child: Align(alignment: Alignment.bottomRight, child: Icon(Icons.keyboard_arrow_up_rounded, color: Color_Accent)),
+        )
       ],
     );
   }

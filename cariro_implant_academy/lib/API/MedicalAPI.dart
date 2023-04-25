@@ -2,8 +2,9 @@ import 'package:cariro_implant_academy/API/HTTP.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/SurgicalTreatmentModel.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
-import 'package:cariro_implant_academy/Models/TreatmentPlanModel.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/TreatmentPlanModel.dart';
 
 import '../Models/MedicalModels/DentalHistory.dart';
 import '../Models/MedicalModels/NonSurgicalTreatment.dart';
@@ -94,6 +95,20 @@ static Future<API_Response> GetPatientAllNonSurgicalTreatments(int id) async {
   }
   static Future<API_Response> UpdatePatientTreatmentPlan(int id,List<TreatmentPlanSubModel> model) async {
     var response = await HTTPRequest.Put("Medical/UpdatePatientTreatmentPlan?id=$id",model.map((e) => e.toJson()).toList());
+    return response;
+  }
+
+  static Future<API_Response> GetPatientSurgicalTreatment(int id) async {
+    var response = await HTTPRequest.Get("Medical/GetPatientSurgicalTreatment?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result =
+          SurgicalTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String, dynamic>);
+    }
+    return response;
+  }
+  static Future<API_Response> UpdatePatientSurgicalTreatment(int id,SurgicalTreatmentModel  model) async {
+    var response = await HTTPRequest.Put("Medical/UpdatePatientSurgicalTreatment?id=$id",model.toJson());
     return response;
   }
 

@@ -10,7 +10,7 @@ class ImplantModel {
 
   ImplantModel(
       {this.id,
-        this.name,
+        this.name="",
         this.size,
         this.count,
         this.stockItemId,
@@ -18,7 +18,7 @@ class ImplantModel {
 
   ImplantModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    name = json['name']??"";
     size = json['size'];
     count = json['count'];
     stockItemId = json['stockItemId'];

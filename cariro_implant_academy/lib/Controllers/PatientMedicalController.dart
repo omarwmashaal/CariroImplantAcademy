@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:get/get.dart';
 
-import '../Models/TreatmentPlanModel.dart';
+import '../Models/MedicalModels/TreatmentPlanModel.dart';
 
 class PatientMedicalController extends GetxController {
   late PatientInfoModel patient;

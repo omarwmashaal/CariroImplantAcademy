@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 
-import 'ImplantModel.dart';
+import '../ImplantModel.dart';
 class TreatmentPlanModel {
   int? id;
   int? patientId;
@@ -223,7 +223,7 @@ class TreatmentPlanFieldsModel {
   int? doneByCandidateBatchID;
   DropDownDTO? doneByCandidateBatch;
   int? implantID;
-  ImplantModel? implant;
+  DropDownDTO? implant;
 
   TreatmentPlanFieldsModel(
       {this.value="",
@@ -240,7 +240,13 @@ class TreatmentPlanFieldsModel {
         this.doneByCandidateBatchID,
         this.doneByCandidateBatch,
         this.implantID,
-        this.implant});
+        this.implant}){
+    doneByAssistant = DropDownDTO();
+    doneByCandidate = DropDownDTO();
+    doneByCandidateBatch = DropDownDTO();
+    doneBySupervisor = DropDownDTO();
+    implant = DropDownDTO();
+  }
 
   TreatmentPlanFieldsModel.fromJson(Map<String, dynamic> json) {
     value = json['value']??"";
@@ -253,23 +259,23 @@ class TreatmentPlanFieldsModel {
     doneByAssistantID = json['doneByAssistantID'];
     doneByAssistant = json['doneByAssistant'] != null
         ? new DropDownDTO.fromJson(json['doneByAssistant'])
-        : null;
+        : DropDownDTO();
     doneBySupervisorID = json['doneBySupervisorID'];
     doneBySupervisor = json['doneBySupervisor'] != null
         ? new DropDownDTO.fromJson(json['doneBySupervisor'])
-        : null;
+        : DropDownDTO();
     doneByCandidateID = json['doneByCandidateID'];
     doneByCandidate = json['doneByCandidate'] != null
         ? new DropDownDTO.fromJson(json['doneByCandidate'])
-        : null;
+        : DropDownDTO();
     doneByCandidateBatchID = json['doneByCandidateBatchID'];
     doneByCandidateBatch = json['doneByCandidateBatch'] != null
         ? new DropDownDTO.fromJson(
         json['doneByCandidateBatch'])
-        : null;
+        : DropDownDTO();
     implantID = json['implantID'];
     implant =
-    json['implant'] != null ? new ImplantModel.fromJson(json['implant']) : null;
+    json['implant'] != null ? new DropDownDTO.fromJson(json['implant']) : DropDownDTO();
   }
 
   Map<String, dynamic> toJson() {

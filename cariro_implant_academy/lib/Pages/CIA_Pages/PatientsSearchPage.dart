@@ -49,7 +49,9 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                 dataSource: dataSource,
               ),
               (siteController.getRole() == "admin" ||
-                      siteController.getRole() == "instructor")
+                      siteController.getRole() == "instructor"||
+                      siteController.getRole() == "assistant"
+              )
                   ? PatientMedicalInfoPage(
                       key: GlobalKey(),
                       patientMedicalController: PatientMedicalController(
@@ -83,7 +85,9 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
         dataSource: dataSource,
       ),
       (siteController.getRole() == "admin" ||
-              siteController.getRole() == "instructor")
+              siteController.getRole() == "instructor" ||
+              siteController.getRole() == "assistant"
+      )
           ? PatientMedicalInfoPage(
               key: GlobalKey(),
               patientMedicalController:

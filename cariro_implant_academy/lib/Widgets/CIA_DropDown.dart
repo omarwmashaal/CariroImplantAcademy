@@ -78,7 +78,7 @@ class CIA_DropDownSearch extends StatefulWidget {
   DropDownDTO? selectedItem;
   bool enabled;
   String emptyString;
-  Function(DropDownDTO)? onSelect;
+  Function(DropDownDTO value)? onSelect;
 
   @override
   State<CIA_DropDownSearch> createState() => _CIA_DropDownSearchState();

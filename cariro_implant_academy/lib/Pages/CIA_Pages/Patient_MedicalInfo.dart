@@ -7,7 +7,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
-import 'package:cariro_implant_academy/Models/TreatmentPlanModel.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/TreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Calendar.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
@@ -28,6 +28,7 @@ import '../../Models/API_Response.dart';
 import '../../Models/Enum.dart';
 import '../../Models/MedicalModels/DentalHistory.dart';
 import '../../Models/MedicalModels/NonSurgicalTreatment.dart';
+import '../../Models/MedicalModels/SurgicalTreatmentModel.dart';
 import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../Widgets/CIA_IncrementalTextField.dart';
@@ -51,6 +52,7 @@ late DentalExaminationModel dentalExaminationModel;
 late DentalExaminationModel tempDentalExamination;
 late NonSurgicalTreatmentModel nonSurgicalTreatment;
 late TreatmentPlanModel treatmentPlanModel;
+late SurgicalTreatmentModel surgicalTreatmentModel;
 
 class _getxClass extends GetxController {
   static RxInt tobacco = 0.obs;
@@ -86,7 +88,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientDentalExamination(),
     _PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
-    // _PatientSurgicalTreatment(),
+   _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
     //_Patient_CBCTandPhotos(),
   ];
@@ -128,7 +130,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
         MedicalSlidingModel(
             name: "Surgical Treatment",
             onSave: () {
-              print("3");
+              MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
             }),
         MedicalSlidingModel(
             name: "Prosthetic Treatment",
@@ -2195,7 +2197,7 @@ class _PatientSurgicalTreatment extends StatefulWidget {
 class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return CIA_TeethTreatmentPlanWidget(patientID: patientID,surgical: true,);
   }
 }
 

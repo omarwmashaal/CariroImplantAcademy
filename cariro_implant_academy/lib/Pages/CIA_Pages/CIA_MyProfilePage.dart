@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../Constants/Controllers.dart';
-import '../../Models/TreatmentPlanModel.dart';
+import '../../Models/MedicalModels/TreatmentPlanModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
 import '../../Widgets/CIA_TextFormField.dart';

@@ -33,6 +33,8 @@ import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'Widgets/CIA_PopUp.dart';
+import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
+import 'Widgets/CIA_TeethTreatmentWidget.dart';
 
 void main() {
   html.window.onUnload.listen((event) async {
@@ -81,16 +83,17 @@ class _MyHomePageState extends State<MyHomePage> {
     siteController.setToken(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MjI3NTAxNCwiZXhwIjoxNjgyODc5ODE0LCJpYXQiOjE2ODIyNzUwMTR9.zttj4kGuIxc4w8xpcsQv30G9nSRybiGeXErafBDLIxE"
     );
-    siteController.setRole("admin");
-    siteController.setUser(ApplicationUserModel(name: "Admin",idInt: 1));
+    siteController.setRole("assistant");
+    siteController.setUser(ApplicationUserModel(name: "A1",idInt: 1));
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
 
     return Scaffold(
-      body:AuthenticationPage(),
+
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
+      body:AuthenticationPage()
     );
   }
 

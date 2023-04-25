@@ -260,8 +260,9 @@ CIA_ShowPopUp(
         color: Color_Accent,
         width: 150,
         onPressed: () {
-          if (onSave != null) onSave!();
+
           Navigator.pop(context);
+          if (onSave != null) onSave!();
         },
         child: Text(
           buttonText == null ? "Ok" : buttonText,
