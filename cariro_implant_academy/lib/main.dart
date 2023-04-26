@@ -15,6 +15,7 @@ import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     siteController.setToken(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MjI3NTAxNCwiZXhwIjoxNjgyODc5ODE0LCJpYXQiOjE2ODIyNzUwMTR9.zttj4kGuIxc4w8xpcsQv30G9nSRybiGeXErafBDLIxE"
     );
-    siteController.setRole("assistant");
+    siteController.setRole("admin");
     siteController.setUser(ApplicationUserModel(name: "A1",idInt: 1));
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body:AuthenticationPage()
+      body:CIA_SettingsPage()
     );
   }
 

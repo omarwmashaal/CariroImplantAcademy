@@ -68,7 +68,8 @@ dependencies:
   syncfusion_flutter_calendar: ^20.3.61
   dropdown_search: ^5.0.6
   dio: ^5.1.1
-
+  sidebarx: ^0.15.0
+  popover: ^0.2.8+2
 
 
 

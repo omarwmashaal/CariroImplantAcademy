@@ -45,10 +45,11 @@ class _CIA_SecondaryButton extends State<CIA_SecondaryButton> {
               child: Center(
                 child: Text(
                   widget.label,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color_TextPrimary,
                     fontFamily: Inter_Regular,
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
               ),

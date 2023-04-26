@@ -46,9 +46,10 @@ class CIA_PrimaryButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   label,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15,
+                      fontSize: 12,
                       fontFamily: Inter_SemiBold),
                 ),
               ),

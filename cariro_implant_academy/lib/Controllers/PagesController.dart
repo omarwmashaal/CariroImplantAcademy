@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -54,7 +55,7 @@ class PagesController extends PageController {
                 child: CashFlowsSearchPage(),
               ),
               Container(
-                child: CIA_MyProfilePage(),
+                child: CIA_SettingsPage(),
               ),
             ],
           );
