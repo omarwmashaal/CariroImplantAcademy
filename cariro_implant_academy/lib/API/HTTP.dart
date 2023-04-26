@@ -137,4 +137,41 @@ class HTTPRequest {
 
     return apiResponse;
   }
+
+  static Future<API_Response> Delete(String url) async {
+    API_Response apiResponse = API_Response();
+    Response response = await delete(Uri.parse("$host/$url"),
+        headers: {"Authorization": "Bearer ${siteController.getToken()}"})
+        .onError((error, stackTrace) {
+      apiResponse = API_Response(
+          errorMessage: error.toString() + " or server is unreachable",
+          statusCode: 500);
+      return Response("body", 500);
+    }).catchError((value) {
+      apiResponse =
+          API_Response(errorMessage: value.toString(), statusCode: 500);
+    }).timeout(Duration(seconds: 20), onTimeout: () {
+      return Response("body", 408);
+    });
+    if (response.statusCode != 200) {
+      MicrosoftAPI_Response r =
+      MicrosoftAPI_Response.fromJson(jsonDecode(response.body));
+      if (r.title != null || r.errors != null)
+        apiResponse.errorMessage = r.title! + " " + r.errors.toString();
+      else
+        apiResponse = API_Response.fromJson(jsonDecode(response.body));
+      apiResponse.statusCode = response.statusCode;
+      return apiResponse;
+    }
+    try {
+      apiResponse = API_Response.fromJson(jsonDecode(response.body));
+      apiResponse.statusCode = response.statusCode;
+    } catch (e) {
+      apiResponse = API_Response(
+          errorMessage: "Internal Server Error",
+          statusCode: response.statusCode);
+    }
+    return apiResponse;
+  }
+
 }

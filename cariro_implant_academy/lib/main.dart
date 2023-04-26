@@ -82,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjFkYTEyZGViLTBlOGMtNGQzMC05NDQxLTNiNDRhNDViMGNlMSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MjI3NTAxNCwiZXhwIjoxNjgyODc5ODE0LCJpYXQiOjE2ODIyNzUwMTR9.zttj4kGuIxc4w8xpcsQv30G9nSRybiGeXErafBDLIxE"
-    );
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MjU1MDM4NywiZXhwIjoxNjgzMTU1MTg3LCJpYXQiOjE2ODI1NTAzODd9.Sqa-EAUde5PIHjlWhM5Uo0BByopmNQd9tFOzDgPeckI"    );
     siteController.setRole("admin");
     siteController.setUser(ApplicationUserModel(name: "A1",idInt: 1));
     patientID = 2;

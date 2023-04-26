@@ -43,7 +43,7 @@ class _SlidingTabState extends State<SlidingTab> {
       onSelect: (int index) {
         setState(() => switcherIndex = index);
         if (widget.onChange != null) widget.onChange!(index);
-        else tabsController.index.value = index;
+        else widget.controller.index.value = index;
       },
       containerColor: Colors.transparent,
       containerBorder: Border.all(color: Color_TextFieldBorder),
