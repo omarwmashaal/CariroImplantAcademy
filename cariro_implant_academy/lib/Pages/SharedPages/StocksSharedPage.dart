@@ -43,7 +43,159 @@ class _StockSharedPageState extends State<StockSharedPage> {
     return PageView(
       controller: tabsController,
       children: [
+        Column(
+          children: [
+            Row(
+              children: [
+                Obx(
+                  () => TitleWidget(
+                    title: siteController.title.value,
+                    showBackButton: false,
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CIA_PrimaryButton(
+                        onTab: () {},
+                        label: "Remove Item",
+                        isLong: true,
+                        color: Colors.red,
+                      ),
+                      SizedBox(width: 10),
+                      CIA_PrimaryButton(
+                        onTab: () {
+                          bool newItem = false;
+                          bool newCategory = false;
+                          StockModel newStock = StockModel();
+                          CIA_ShowPopUp(
+                            context: context,
+                            onSave: () async {
+                              var res = await StockAPI.AddItem(newStock);
+                              if (res.statusCode == 200)
+                                ShowSnackBar(isSuccess: true, title: "Success", message: "Added Succesffuly");
+                              else
+                                ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                              await widget.stock_dataSource.loadData();
+                              },
+                            child: StatefulBuilder(builder: (context, setState) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_MultiSelectChipWidget(
+                                            onChange: (item, isSelected) {
+                                              newItem = isSelected;
 
+                                              setState(() {});
+                                            },
+                                            labels: [CIA_MultiSelectChipWidgeModel(label: "New Item")]),
+                                      ),
+                                      newItem
+                                          ? Expanded(
+                                              flex: 2,
+                                              child: CIA_TextFormField(
+                                                label: "Name",
+                                                controller: TextEditingController(text:newStock.name??""),
+                                                onChange: (value) => newStock.name = value,
+                                              ),
+                                            )
+                                          : Expanded(
+                                              flex: 2,
+                                              child: CIA_DropDownSearch(
+                                                label: "Name",
+                                                asyncItems: () async {
+                                                  var res = await StockAPI.GetAllStock();
+                                                  if (res.statusCode == 200) {
+                                                    res.result = (res.result as List<StockModel>).map((e) => DropDownDTO(name: e.name, id: e.id)).toList();
+                                                    return res;
+                                                  }
+                                                  return API_Response();
+                                                },
+                                                onSelect: (value) async{
+                                                  newStock.name = value.name;
+                                                  var res = await StockAPI.GetStockById(value.id!);
+                                                  if(res.statusCode == 200)
+                                                    {
+                                                      newStock.category = (res.result as StockModel).category;
+                                                    }
+                                                  setState((){});
+                                                },
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_MultiSelectChipWidget(
+                                            onChange: (item, isSelected) {
+                                              newCategory = isSelected;
+                                              setState(() {});
+                                            },
+                                            labels: [CIA_MultiSelectChipWidgeModel(label: "New Category")]),
+                                      ),
+                                      newCategory
+                                          ? Expanded(
+                                              flex: 2,
+                                              child: CIA_TextFormField(
+                                                label: "Category",
+                                                controller: TextEditingController(text: (newStock.category ?? DropDownDTO()).name),
+                                                onChange: (value) => newStock.category = DropDownDTO(name: value),
+                                              ),
+                                            )
+                                          : Expanded(
+                                              flex: 2,
+                                              child: CIA_DropDownSearch(
+                                                label: "Category",
+                                                selectedItem: newStock.category,
+                                                asyncItems: SettingsAPI.GetStockCategories,
+                                                onSelect: (value) => newStock.category = value,
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_TextFormField(
+                                    label: "Count",
+                                    isNumber: true,
+                                    onChange: (value) => newStock.count = int.parse(value),
+                                    controller: TextEditingController(
+                                      text: (newStock.count ?? 0).toString(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          );
+                        },
+                        label: "Add Item",
+                        isLong: true,
+                        color: Colors.green,
+                      ),
+                      SizedBox(width: 30),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SearchLayout(
+              radioButtons: [
+                "ID",
+                "Name",
+              ],
+              dataSource: widget.stock_dataSource,
+              columnNames: widget.stock_dataSource.columns,
+              loadMoreFuntcion: widget.stock_dataSource.loadData,
+              onCellTab: (value) {
+                if (widget.onChange != null) widget.onChange!(value);
+              },
+            ),
+          ],
+        ),
         Column(
           children: [
             Obx(
