@@ -38,7 +38,7 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
               "Phone",
               "Operation",
             ],
-            loadMoreFuntcion: dataSource.addMoreRows,
+            loadMoreFuntcion: dataSource.loadData,
             dataSource: dataSource,
             columnNames: PatientInfoModel.columns,
             onCellTab: (value) {

@@ -28,7 +28,7 @@ class PatientInfoModel {
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
-    relativePatient = json['relativePatient']!=null? DropDownDTO.fromJson(json['relativePatient']):null;
+    relativePatient = json['relativePatient']!=null? DropDownDTO.fromJson(json['relativePatient']):DropDownDTO();
     relativePatientId = json['relativePatientId'];
   }
 
@@ -48,7 +48,7 @@ class PatientInfoModel {
   }
 
   static List<PatientInfoModel> models = <PatientInfoModel>[];
-  static List<String> columns = ["ID", "Name", "Phone", "Marital Stats"];
+  static List<String> columns = ["ID", "Name", "Phone", "Gender","Marital Stats","Relative"];
 //PatientDataSource dataSource = PatientDataSource();
 
 }
@@ -58,14 +58,20 @@ class PatientDataSource extends DataGridSource {
 
   /// Creates the patient data source class with required details.
   PatientDataSource() {
+   init();
+  }
+  init(){
     _patientData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Name', value: e.name),
-              DataGridCell<String>(columnName: 'Phone', value: e.phone),
-              DataGridCell<String>(
-                  columnName: 'Marital Status', value: e.maritalStatus),
-            ]))
+      DataGridCell<int>(columnName: 'ID', value: e.id),
+      DataGridCell<String>(columnName: 'Name', value: e.name),
+      DataGridCell<String>(columnName: 'Phone', value: e.phone),
+      DataGridCell<String>(columnName: 'Gender', value: e.gender),
+      DataGridCell<String>(
+          columnName: 'Marital Status', value: e.maritalStatus),
+      DataGridCell<String>(
+          columnName: 'Relative', value: e.relativePatient!.name!),
+    ]))
         .toList();
   }
 
@@ -86,21 +92,13 @@ class PatientDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> addMoreRows() async {
-    var res = await PatientAPI.ListPatients();
+  Future<bool> loadData({String? search,String? filter}) async {
+    var res = await PatientAPI.ListPatients(search: search,filter: filter);
     if (res.statusCode! > 199 && res.statusCode! < 300) {
       models = res.result as List<PatientInfoModel>;
     }
 
-    _patientData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Name', value: e.name),
-              DataGridCell<String>(columnName: 'Phone', value: e.phone),
-              DataGridCell<String>(
-                  columnName: 'Marital Status', value: e.maritalStatus),
-            ]))
-        .toList();
+   init();
     notifyListeners();
     return true;
   }

@@ -169,15 +169,18 @@ class ApplicationUserDataSource extends DataGridSource {
         ]))
             .toList();
       }
-      else
-        {
-          columns = ["ID", "Name", "Email", "Phone", "Role", "Remove"];
+      else if(type== UserDataSourceType.Assistant || type == UserDataSourceType.Instructor)
+      {
+          columns = ["ID", "Name", "Email", "Phone","Graduated","Class Year","Speciality", "Role", "Remove"];
           _userData = models
               .map<DataGridRow>((e) => DataGridRow(cells: [
             DataGridCell<int>(columnName: 'ID', value: e.idInt),
             DataGridCell<String>(columnName: 'Name', value: e.name),
             DataGridCell<String>(columnName: 'Email', value: e.email),
             DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
+            DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
+            DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
             DataGridCell<Widget>(
               columnName: 'Role',
               value: HorizontalRadioButtons(
@@ -210,6 +213,47 @@ class ApplicationUserDataSource extends DataGridSource {
           ]))
               .toList();
         }
+      else
+      {
+        columns = ["ID", "Name", "Email", "Phone", "Role", "Remove"];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.idInt),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Email', value: e.email),
+          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+          DataGridCell<Widget>(
+            columnName: 'Role',
+            value: HorizontalRadioButtons(
+              names: ["Admin", "Instructor", "Assistant"],
+              groupValue: type == UserDataSourceType.Admin
+                  ? "Admin"
+                  : type == UserDataSourceType.Assistant
+                  ? "Assistant"
+                  : type == UserDataSourceType.Instructor
+                  ? "Instructor"
+                  : type == UserDataSourceType.Secretary
+                  ? "Secretary"
+                  : "",
+              onChange: (value) async {
+                await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
+                await loadData();
+              },
+            ),
+          ),
+          DataGridCell<Widget>(
+              columnName: 'Remove',
+              value: IconButton(
+                icon: Icon(Icons.delete_forever),
+                onPressed: () async{
+                  await UserAPI.RemoveUser(e.idInt!);
+                  await loadData();
+
+                },
+              )),
+        ]))
+            .toList();
+      }
 
 
 
@@ -227,6 +271,35 @@ class ApplicationUserDataSource extends DataGridSource {
           ]))
               .toList();
         }
+      else if(type == UserDataSourceType.Secretary)
+      {
+        columns = ["ID", "Name", "Email", "Phone"];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.idInt),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Email', value: e.email),
+          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+
+        ]))
+            .toList();
+      }
+      else if(type== UserDataSourceType.Assistant || type == UserDataSourceType.Instructor)
+      {
+        columns = ["ID", "Name", "Email", "Phone","Graduated","Class Year","Speciality"];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.idInt),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Email', value: e.email),
+          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+          DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
+          DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
+          DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
+
+        ]))
+            .toList();
+      }
       else
         {
           columns = ["ID", "Name", "Email", "Phone"];

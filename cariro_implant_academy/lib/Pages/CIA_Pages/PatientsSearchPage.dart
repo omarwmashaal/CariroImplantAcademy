@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -161,6 +162,7 @@ class _PatientSearchState extends State<_PatientSearch> {
                               icon: Icons.search,
                               onChange: (value) {
                                 _getXController.search.value = value;
+                                widget.dataSource.loadData(search: value,filter:_getXController.searchFilter.value );
                               },
                             ),
                           ),
@@ -189,7 +191,7 @@ class _PatientSearchState extends State<_PatientSearch> {
                     flex: 5,
                     child: CIA_Table(
                       columnNames: PatientInfoModel.columns,
-                      loadFunction: widget.dataSource.addMoreRows,
+                      loadFunction: widget.dataSource.loadData,
                       dataSource: widget.dataSource,
                       onCellClick:  (value) {
                         print(widget.dataSource.models[value - 1].id);

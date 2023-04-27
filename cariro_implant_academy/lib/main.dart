@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body:CIA_SettingsPage()
+      body:AuthenticationPage()
     );
   }
 

@@ -80,7 +80,7 @@ class VisitsModel {
     data['leaveTime'] = CIA_DateConverters.fromDateTimeToBackend(leaveTime);
     data['doctorName'] = doctorName;
     data['doctorId'] = doctorId;
-    data['roomId'] = roomId??1;
+    data['roomId'] = roomId;
     data['from'] = CIA_DateConverters.fromDateTimeToBackend(from);
     data['to'] = CIA_DateConverters.fromDateTimeToBackend(to);
     data['title'] = "Patient: $patientName || "+(title==null||title==""?("No Subject"):title!);

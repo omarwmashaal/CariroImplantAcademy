@@ -11,7 +11,7 @@ class NonSurgicalTreatmentModel {
   String? treatment;
   int? supervisorID;
   DropDownDTO? supervisor;
-  String? operatorID;
+  int? operatorID;
   DropDownDTO? operator;
   String? date;
   String? nextVisit;

@@ -52,8 +52,8 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
             key: GlobalKey(),
             controller: tabsController,
             children: [
-              //_MyProfile(),
-              //_SettingsPage(),
+              _MyProfile(),
+              _SettingsPage(),
               _UsersSettingsPage()
             ],
           ),

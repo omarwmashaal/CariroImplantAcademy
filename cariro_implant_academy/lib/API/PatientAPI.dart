@@ -26,8 +26,12 @@ class PatientAPI {
     return response;
   }
 
-  static Future<API_Response> ListPatients() async {
-    var response = await HTTPRequest.Get("PatientInfo/ListPatients");
+  static Future<API_Response> ListPatients({String? search,String? filter}) async {
+    API_Response response = API_Response();
+    if(search!=null)
+      response = await HTTPRequest.Get("PatientInfo/ListPatients?search=$search&filter=$filter");
+    else
+     response = await HTTPRequest.Get("PatientInfo/ListPatients");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List)

@@ -962,153 +962,109 @@ class _StatusWidgetState extends State<_StatusWidget> {
                               title: "${widget.title} Data",
                               onSave: () => setState(() {}),
                               width: 900,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CIA_DropDownSearch(
-                                          label: "Implant Company",
-                                          asyncItems: () async {
-                                            var res = await LoadinAPI.LoadImplantCompanies();
-                                            if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
-                                            return res;
-                                          },
-                                          onSelect: (value) {
-                                            companyID = value!.id!;
-                                            widget.fieldModel.implant!.name = value.name;
-                                            widget.fieldModel.implantID = value.id;
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CIA_DropDownSearch(
-                                          label: "Implant Lines",
-                                          asyncItems: companyID == null
-                                              ? null
-                                              : () async {
-                                                  var res = await LoadinAPI.LoadImplantLines(companyID!);
-                                                  if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
-                                                  return res;
-                                                },
-                                          onSelect: (value) {
-                                            lineID = value!.id!;
-                                            widget.fieldModel.implant!.name = value.name;
-                                            widget.fieldModel.implantID = value.id;
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: CIA_DropDownSearch(
-                                          selectedItem: widget.fieldModel.implant,
-                                          label: "Size",
-                                          asyncItems: lineID == null
-                                              ? null
-                                              : () async {
-                                                  var res = await LoadinAPI.LoadImplants(lineID!);
-                                                  if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
-                                                  return res;
-                                                },
-                                          onSelect: (value) {
-                                            widget.fieldModel.implant!.name = value.name;
-                                            widget.fieldModel.implantID = value.id;
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  CIA_DropDownSearch(
-                                    selectedItem: widget.fieldModel.doneBySupervisor,
-                                    label: "Supervisor",
-                                    asyncItems: LoadinAPI.LoadSupervisors,
-                                    onSelect: (value) {
-                                      widget.fieldModel.doneBySupervisor = value;
-                                      widget.fieldModel.doneBySupervisorID = value.id;
-                                    },
-                                  ),
-                                  CIA_DropDownSearch(
-                                    selectedItem: widget.fieldModel.doneByCandidateBatch,
-                                    label: "Candidate Batch",
-                                    asyncItems: LoadinAPI.LoadCandidatesBatches,
-                                    onSelect: (value) {
-                                      widget.fieldModel.doneByCandidateBatch = value;
-                                      widget.fieldModel.doneByCandidateBatchID = value.id;
-                                    },
-                                  ),
-                                  CIA_DropDownSearch(
-                                    selectedItem: widget.fieldModel.doneByCandidate,
-                                    label: "Candidate",
-                                    asyncItems: widget.fieldModel.doneByCandidateBatchID == null
-                                        ? null
-                                        : () async {
-                                            return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
-                                          },
-                                    onSelect: (value) {
-                                      widget.fieldModel.doneByCandidate = value;
-                                      widget.fieldModel.doneByCandidateID = value.id;
-                                    },
-                                  ),
-                                ],
-                              ));
+                              child:
+
+                             StatefulBuilder(builder: (context, setState) {
+                               return  Column(
+                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                 children: [
+                                   Row(
+                                     children: [
+                                       Expanded(
+                                         child: CIA_DropDownSearch(
+                                           label: "Implant Company",
+                                           selectedItem: companies.firstWhereOrNull((element) => element.id==companyID),
+                                           asyncItems: () async {
+                                             var res = await LoadinAPI.LoadImplantCompanies();
+                                             if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
+                                             return res;
+                                           },
+                                           onSelect: (value) {
+                                             companyID = value!.id!;
+
+                                             setState((){});
+                                           },
+                                         ),
+                                       ),
+                                       Expanded(
+                                         child: CIA_DropDownSearch(
+                                           label: "Implant Lines",
+                                           selectedItem: lines.firstWhereOrNull((element) => element.id==lineID),
+                                           asyncItems: companyID == null
+                                               ? null
+                                               : () async {
+                                             var res = await LoadinAPI.LoadImplantLines(companyID!);
+                                             if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
+                                             return res;
+                                           },
+                                           onSelect: (value) {
+                                             lineID = value!.id!;
+
+                                             setState((){});
+                                           },
+                                         ),
+                                       ),
+                                       Expanded(
+                                         child: CIA_DropDownSearch(
+                                           selectedItem: widget.fieldModel.implant,
+                                           label: "Size",
+                                           asyncItems: lineID == null
+                                               ? null
+                                               : () async {
+                                             var res = await LoadinAPI.LoadImplants(lineID!);
+                                             if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
+                                             return res;
+                                           },
+                                           onSelect: (value) {
+                                             widget.fieldModel.implant!.name = value.name;
+                                             widget.fieldModel.implantID = value.id;
+                                             setState((){});
+                                           },
+                                         ),
+                                       ),
+                                     ],
+                                   ),
+                                   CIA_DropDownSearch(
+                                     selectedItem: widget.fieldModel.doneBySupervisor,
+                                     label: "Supervisor",
+                                     asyncItems: LoadinAPI.LoadSupervisors,
+                                     onSelect: (value) {
+                                       widget.fieldModel.doneBySupervisor = value;
+                                       widget.fieldModel.doneBySupervisorID = value.id;
+                                     },
+                                   ),
+                                   CIA_DropDownSearch(
+                                     selectedItem: widget.fieldModel.doneByCandidateBatch,
+                                     label: "Candidate Batch",
+                                     asyncItems: LoadinAPI.LoadCandidatesBatches,
+                                     onSelect: (value) {
+                                       widget.fieldModel.doneByCandidateBatch = value;
+                                       widget.fieldModel.doneByCandidateBatchID = value.id;
+                                       setState((){});
+                                     },
+                                   ),
+                                   CIA_DropDownSearch(
+                                     selectedItem: widget.fieldModel.doneByCandidate,
+                                     label: "Candidate",
+                                     asyncItems: widget.fieldModel.doneByCandidateBatchID == null
+                                         ? null
+                                         : () async {
+                                       return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
+                                     },
+                                     onSelect: (value) {
+                                       widget.fieldModel.doneByCandidate = value;
+                                       widget.fieldModel.doneByCandidateID = value.id;
+                                     },
+                                   ),
+                                 ],
+                               );
+                             },));
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
                         ),
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      FormTextKeyWidget(
-                                        text: "Implant",
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                      FormTextValueWidget(
-                                        text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant!.name,
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      FormTextKeyWidget(
-                                        text: "Assistant",
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                      FormTextValueWidget(
-                                        text: widget.fieldModel.doneByAssistant!.name,
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      FormTextKeyWidget(
-                                        text: "Supervisor",
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                      FormTextValueWidget(
-                                        text: widget.fieldModel.doneBySupervisor!.name,
-                                        smallFont: true,
-                                      ),
-                                      SizedBox(width: 5),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -1143,7 +1099,61 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                     ],
                                   ),
                                 ),
-                                Expanded(child: SizedBox())
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Assistant",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneByAssistant!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Supervisor",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.doneBySupervisor!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex:2,
+                                  child: Row(
+                                    children: [
+                                      FormTextKeyWidget(
+                                        text: "Implant",
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                      FormTextValueWidget(
+                                        text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant!.name,
+                                        smallFont: true,
+                                      ),
+                                      SizedBox(width: 5),
+                                    ],
+                                  ),
+                                ),
+
                               ],
                             ),
                           ],
