@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/InstructorInfo.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
@@ -17,7 +17,7 @@ class ViewInstructorPage extends StatefulWidget {
 }
 
 class _ViewInstructorPageState extends State<ViewInstructorPage> {
-  InstructorInfoModel? instructor;
+  ApplicationUserModel? instructor;
 
   bool edit = false;
 
@@ -25,7 +25,7 @@ class _ViewInstructorPageState extends State<ViewInstructorPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is InstructorInfoModel)
+    /*if (internalPagesController.passedObject is InstructorInfoModel)
       instructor = internalPagesController.passedObject as InstructorInfoModel;
     return Column(
       children: [
@@ -290,6 +290,7 @@ class _ViewInstructorPageState extends State<ViewInstructorPage> {
               ),
             )),
       ],
-    );
+    );*/
+    return Container();
   }
 }

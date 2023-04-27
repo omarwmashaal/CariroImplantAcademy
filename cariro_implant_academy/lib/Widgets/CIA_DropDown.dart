@@ -106,7 +106,7 @@ class _CIA_DropDownSearchState extends State<CIA_DropDownSearch> {
           return res.result as List<DropDownDTO>;
         return [];
       },
-      filterFn: (item, filter) =>item.name!.contains(filter),
+      filterFn: (item, filter) =>item.name!.toLowerCase().contains(filter.toLowerCase()),
       itemAsString: (DropDownDTO u) => u.name!,
       items: widget.items ?? [],
       onChanged: (DropDownDTO) {

@@ -1,158 +1,27 @@
+import 'package:cariro_implant_academy/API/StockAPI.dart';
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import 'API_Response.dart';
+
 class StockModel {
-  int? ID;
-  String? Name;
-  String? Count;
-  String? Status;
-  String? Price;
-
-  StockModel({this.ID, this.Name, this.Count, this.Status, this.Price});
-
-  static List<String> columns = [
-    "ID",
-    "Name",
-    "Count",
-  ];
-  static List<String> logsColumns = ["ID", "Name", "Count", "Status"];
-//IncomeDataSource dataSource = IncomeDataSource();
-
-}
-
-class StockDataSource extends DataGridSource {
-  List<StockModel> models = <StockModel>[
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count"),
-  ];
-
-  /// Creates the income data source class with required details.
-  StockDataSource() {
-    _incomeData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.ID),
-              DataGridCell<String>(columnName: 'Name', value: e.Name),
-              DataGridCell<String>(columnName: 'Count', value: e.Count),
-            ]))
-        .toList();
-  }
-
-  List<DataGridRow> _incomeData = [];
-
-  @override
-  List<DataGridRow> get rows => _incomeData;
-
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((e) {
-      return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.only(right: 50),
-        child: Text(e.value.toString()),
-      );
-    }).toList());
-  }
-}
-
-class StockLogsDataSource extends DataGridSource {
-  List<StockModel> models = <StockModel>[
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Removed"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-    StockModel(ID: 1, Name: "Item Name", Count: "Count", Status: "Added"),
-  ];
-
-  /// Creates the income data source class with required details.
-  StockLogsDataSource() {
-    _incomeData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.ID),
-              DataGridCell<String>(columnName: 'Name', value: e.Name),
-              DataGridCell<String>(columnName: 'Count', value: e.Count),
-              DataGridCell<String>(columnName: 'Status', value: e.Status),
-            ]))
-        .toList();
-  }
-
-  List<DataGridRow> _incomeData = [];
-
-  @override
-  List<DataGridRow> get rows => _incomeData;
-
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((e) {
-      return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.only(right: 50),
-        child: Text(
-          e.value.toString(),
-          style: TextStyle(
-              color: e.value.toString().toLowerCase() == "added"
-                  ? Colors.green
-                  : (e.value.toString().toLowerCase() == "removed"
-                      ? Colors.red
-                      : Colors.black)),
-        ),
-      );
-    }).toList());
-  }
-}
-
-class StockItem {
   int? id;
   String? name;
   int? count;
-  int? categoryID;
+  int? categoryId;
   DropDownDTO? category;
 
-  StockItem({this.id, this.name, this.count, this.categoryID, this.category});
+  StockModel({this.id, this.name, this.count});
 
-  StockItem.fromJson(Map<String, dynamic> json) {
+  StockModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    count = json['count'];
-    categoryID = json['categoryID'];
-    category = json['category'] != null
-        ? new DropDownDTO.fromJson(json['category'])
-        : null;
+    name = json['name'] ?? "";
+    count = json['count'] ?? 0;
+    categoryId = json['categoryId'];
+    category = DropDownDTO.fromJson(json['category'] ?? Map<String, dynamic>());
   }
 
   Map<String, dynamic> toJson() {
@@ -160,10 +29,179 @@ class StockItem {
     data['id'] = this.id;
     data['name'] = this.name;
     data['count'] = this.count;
-    data['categoryID'] = this.categoryID;
-    if (this.category != null) {
-      data['category'] = this.category!.toJson();
-    }
+    data['categoryId'] = this.categoryId;
+    data['category'] = this.category != null ? this.category!.toJson() : null;
     return data;
+  }
+//IncomeDataSource dataSource = IncomeDataSource();
+}
+
+class StockLogModel {
+  int? id;
+  String? name;
+  int? count;
+  int? categoryId;
+  DropDownDTO? category;
+  String? date;
+  String? status;
+  int? operatorID;
+  DropDownDTO? operator;
+
+  StockLogModel({this.id, this.name, this.count});
+
+  StockLogModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'] ?? "";
+    count = json['count'] ?? 0;
+    categoryId = json['categoryId'];
+    category = DropDownDTO.fromJson(json['category'] ?? Map<String, dynamic>());
+    date = CIA_DateConverters.fromBackendToDateTime(json['date']);
+    status = json['status'];
+    operatorID = json['operatorID'];
+    operator = DropDownDTO.fromJson(json['operator'] ?? Map<String, dynamic>());
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['count'] = this.count;
+    data['categoryId'] = this.categoryId;
+    data['category'] = this.category != null ? this.category!.toJson() : null;
+    data['date'] = this.date;
+    data['status'] = this.status;
+    data['operatorID'] = this.operatorID;
+    data['operator'] = this.operator==null?null:this.operator!.toJson();
+    return data;
+  }
+//IncomeDataSource dataSource = IncomeDataSource();
+}
+
+class StockDataSource extends DataGridSource {
+  List<String> columns = [
+    "ID",
+    "Name",
+    "Category",
+    "Count",
+  ];
+
+  List<StockModel> models = <StockModel>[];
+
+  /// Creates the income data source class with required details.
+  StockLogsDataSource() {
+    init();
+  }
+
+  init() {
+    _stockData = models
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+              DataGridCell<int>(columnName: 'Count', value: e.count),
+            ]))
+        .toList();
+  }
+
+  List<DataGridRow> _stockData = [];
+
+  @override
+  List<DataGridRow> get rows => _stockData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+            e.value.toString(),
+        ),
+      );
+    }).toList());
+  }
+
+  Future<bool> loadData() async {
+    late API_Response response;
+
+    response = await StockAPI.GetAllStock();
+    if (response.statusCode == 200) {
+      models = response.result as List<StockModel>;
+    }
+    init();
+    notifyListeners();
+
+    return true;
+  }
+}
+
+class StockLogsDataSource extends DataGridSource {
+  List<String> columns = [
+    "ID",
+    "Date",
+    "Name",
+    "Operator",
+    "Count",
+    "Status",
+  ];
+
+  List<StockLogModel> models = <StockLogModel>[];
+
+  /// Creates the income data source class with required details.
+  StockLogsDataSource() {
+    init();
+  }
+
+  init() {
+    _stockLogsData = models
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+      DataGridCell<int>(columnName: 'ID', value: e.id),
+      DataGridCell<String>(columnName: 'Date', value: e.date??""),
+      DataGridCell<String>(columnName: 'Name', value: e.name),
+      DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
+      DataGridCell<int>(columnName: 'Count', value: e.count),
+      DataGridCell<String>(columnName: 'Status', value: e.status??""),
+    ]))
+        .toList();
+  }
+
+  List<DataGridRow> _stockLogsData = [];
+
+  @override
+  List<DataGridRow> get rows => _stockLogsData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+          if(e.columnName == "Status")
+            return Container(
+              alignment: Alignment.center,
+              child: Text(
+                e.value.toString(),
+                style: TextStyle(
+                    color: e.value=="Added"?Colors.green:e.value=="Removed"?Colors.red:Colors.black
+                ),
+              ),
+            );
+          return Container(
+            alignment: Alignment.center,
+            child: Text(e.value.toString()),
+          );
+        }).toList());
+  }
+
+  Future<bool> loadData() async {
+    late API_Response response;
+
+    response = await StockAPI.GetStockLogs();
+    if (response.statusCode == 200) {
+      models = response.result as List<StockLogModel>;
+    }
+    init();
+    notifyListeners();
+
+    return true;
   }
 }

@@ -6,7 +6,7 @@ class ImplantModel {
   String? size;
   int? count;
   int? stockItemId;
-  StockItem? stockItem;
+  StockModel? stockItem;
 
   ImplantModel(
       {this.id,
@@ -23,7 +23,7 @@ class ImplantModel {
     count = json['count'];
     stockItemId = json['stockItemId'];
     stockItem = json['stockItem'] != null
-        ? new StockItem.fromJson(json['stockItem'])
+        ? new StockModel.fromJson(json['stockItem'])
         : null;
   }
 

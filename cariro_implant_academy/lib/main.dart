@@ -13,6 +13,7 @@ import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/Models/StockModel.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
@@ -33,6 +34,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
+import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
 import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import 'Widgets/CIA_TeethTreatmentWidget.dart';
@@ -87,13 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
     siteController.setUser(ApplicationUserModel(name: "A1",idInt: 1));
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
-
+    StockDataSource dataSource1 = StockDataSource();
+    StockLogsDataSource dataSource2 =StockLogsDataSource() ;
     return Scaffold(
 
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body:AuthenticationPage()
+      body:StockSharedPage(stock_dataSource: dataSource1, logs_dataSource: dataSource2,) // AuthenticationPage()
     );
   }
 

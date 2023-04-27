@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/AssistantInfo.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
@@ -17,7 +17,7 @@ class ViewAssistantPage extends StatefulWidget {
 }
 
 class _ViewAssistantPageState extends State<ViewAssistantPage> {
-  AssistantInfoModel? assistant;
+  ApplicationUserModel? assistant;
 
   bool edit = false;
 
@@ -25,7 +25,7 @@ class _ViewAssistantPageState extends State<ViewAssistantPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is AssistantInfoModel)
+    /*if (internalPagesController.passedObject is AssistantInfoModel)
       assistant = internalPagesController.passedObject as AssistantInfoModel;
     return Column(
       children: [
@@ -287,5 +287,7 @@ class _ViewAssistantPageState extends State<ViewAssistantPage> {
             )),
       ],
     );
+  */
+    return  Container();
   }
 }

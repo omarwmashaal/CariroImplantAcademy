@@ -20,12 +20,13 @@ class _CIA_IncrementalExpensesTextFieldState
   List<StockModel> items = [];
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = _buildColumn();
+    /*List<Widget> children = _buildColumn();
     return Column(
       children: children,
-    );
+    );*/
+    return Container();
   }
-
+/*
   List<Widget> _buildColumn() {
     List<Widget> returnValue = [];
     int index = 1;
@@ -38,9 +39,9 @@ class _CIA_IncrementalExpensesTextFieldState
           Expanded(
               flex: 2,
               child: new CIA_TextFormField(
-                onChange: (value) => item.Name = value,
+                onChange: (value) => item.name = value,
                 label: "Item",
-                controller: new TextEditingController(text: item.Name),
+                controller: new TextEditingController(text: item.name),
               )),
           SizedBox(width: 10),
           Expanded(
@@ -55,7 +56,7 @@ class _CIA_IncrementalExpensesTextFieldState
                   ? IconButton(
                       onPressed: () {
                         setState(() {
-                          items.add(StockModel(Name: "", Price: ""));
+                          items.add(StockModel(name: "", Price: ""));
                         });
                       },
                       icon: Icon(Icons.add))
@@ -105,6 +106,6 @@ class _CIA_IncrementalExpensesTextFieldState
 
   @override
   void initState() {
-    items.add(StockModel(Name: "", Price: ""));
+    items.add(StockModel(name: "", Price: ""));
   }
-}
+*/}

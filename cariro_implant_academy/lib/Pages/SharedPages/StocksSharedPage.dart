@@ -1,5 +1,14 @@
+import 'package:cariro_implant_academy/API/SettingsAPI.dart';
+import 'package:cariro_implant_academy/API/StockAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/API_Response.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +27,8 @@ class StockSharedPage extends StatefulWidget {
     this.onChange = null,
   }) : super(key: key);
 
-  DataGridSource stock_dataSource;
-  DataGridSource logs_dataSource;
+  StockDataSource stock_dataSource;
+  StockLogsDataSource logs_dataSource;
   Function? onChange;
 
   @override
@@ -28,57 +37,13 @@ class StockSharedPage extends StatefulWidget {
 
 class _StockSharedPageState extends State<StockSharedPage> {
   int selectedPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return PageView(
       controller: tabsController,
       children: [
-        Column(
-          children: [
-            Row(
-              children: [
-                Obx(
-                  () => TitleWidget(
-                    title: siteController.title.value,
-                    showBackButton: false,
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CIA_PrimaryButton(
-                        onTab: () {},
-                        label: "Remove Item",
-                        isLong: true,
-                        color: Colors.red,
-                      ),
-                      SizedBox(width: 10),
-                      CIA_PrimaryButton(
-                        onTab: () {},
-                        label: "Add Item",
-                        isLong: true,
-                        color: Colors.green,
-                      ),
-                      SizedBox(width: 30),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            SearchLayout(
-              radioButtons: [
-                "ID",
-                "Name",
-              ],
-              dataSource: widget.stock_dataSource,
-              columnNames: StockModel.columns,
-              onCellTab: (value) {
-                if (widget.onChange != null) widget.onChange!(value);
-              },
-            ),
-          ],
-        ),
+
         Column(
           children: [
             Obx(
@@ -93,7 +58,8 @@ class _StockSharedPageState extends State<StockSharedPage> {
                 "Name",
               ],
               dataSource: widget.logs_dataSource,
-              columnNames: StockModel.logsColumns,
+              columnNames: widget.logs_dataSource.columns,
+              loadMoreFuntcion: widget.logs_dataSource.loadData,
               onCellTab: (value) {
                 if (widget.onChange != null) widget.onChange!(value);
               },
@@ -102,7 +68,7 @@ class _StockSharedPageState extends State<StockSharedPage> {
         )
       ],
     );
-
+/*
     TabsLayout(
         onChange: (value) => setState(() => {selectedPage = value}),
         sideWidget: selectedPage == 0
@@ -166,7 +132,7 @@ class _StockSharedPageState extends State<StockSharedPage> {
                   if (widget.onChange != null) widget.onChange!(value);
                 },
               )),
-        ]);
+        ]);*/
   }
 
   @override

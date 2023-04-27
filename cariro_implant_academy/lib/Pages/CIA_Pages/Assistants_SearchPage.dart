@@ -1,10 +1,10 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Assistant_ViewAssistantPage.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Models/AssistantInfo.dart';
 import '../../Widgets/Title.dart';
 
 class AssistantsSearchPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class AssistantsSearchPage extends StatefulWidget {
 }
 
 class _AssistantsSearchPageState extends State<AssistantsSearchPage> {
-  AssistantDataSource dataSource = AssistantDataSource();
+  ApplicationUserDataSource dataSource = ApplicationUserDataSource(type: UserDataSourceType.Assistant);
   @override
   Widget build(BuildContext context) {
     return PageView(
@@ -37,11 +37,10 @@ class _AssistantsSearchPageState extends State<AssistantsSearchPage> {
                 "Candidate",
                 "Operation",
               ],
-              loadMoreFuntcion: dataSource.addMoreRows,
+              loadMoreFuntcion: dataSource.loadData,
               dataSource: dataSource,
-              columnNames: AssistantInfoModel.columns,
+              columnNames: dataSource.columns,
               onCellTab: (value) {
-                print(dataSource.models[value - 1].ID);
                 internalPagesController
                     .setPassedObject(dataSource.models[value - 1]);
                 internalPagesController.jumpToPage(1);

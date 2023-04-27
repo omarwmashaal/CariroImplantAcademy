@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/CandidateInfo.dart';
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
@@ -17,7 +17,7 @@ class ViewCandidatePage extends StatefulWidget {
 }
 
 class _ViewCandidatePageState extends State<ViewCandidatePage> {
-  CandidateInfoModel? candidate;
+  ApplicationUserModel? candidate;
 
   bool edit = false;
 
@@ -25,7 +25,7 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (internalPagesController.passedObject is CandidateInfoModel)
+   /* if (internalPagesController.passedObject is CandidateInfoModel)
       candidate = internalPagesController.passedObject as CandidateInfoModel;
     return Column(
       children: [
@@ -286,6 +286,7 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
               ),
             )),
       ],
-    );
+    );*/
+    return Container();
   }
 }
