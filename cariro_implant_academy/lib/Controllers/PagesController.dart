@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class PagesController extends PageController {
   PageView MainPageRoutes() {
     String role = siteController.getRole();
     switch (siteController.getSite()) {
-      case "CIA":
+      case Website.CIA:
         {
           return PageView(
             physics: NeverScrollableScrollPhysics(),
@@ -61,7 +62,7 @@ class PagesController extends PageController {
           );
           break;
         }
-      case "LAB":
+      case Website.Lab:
         {
           if (role == "Secretary")
             return PageView(
@@ -112,7 +113,7 @@ class PagesController extends PageController {
 
           break;
         }
-      case "Clinic":
+      case Website.Clinic:
         {
           return PageView(
             physics: NeverScrollableScrollPhysics(),
@@ -146,7 +147,7 @@ class PagesController extends PageController {
     String role = siteController.getRole();
 
     switch (siteController.getSite()) {
-      case "CIA":
+      case Website.CIA:
         {
           return [
             SideMenuItem(
@@ -193,7 +194,7 @@ class PagesController extends PageController {
             ),
           ];
         }
-      case "LAB":
+      case Website.Lab:
         {
           if (role == "technician") {
             return [
@@ -237,7 +238,7 @@ class PagesController extends PageController {
             ),
           ];
         }
-      case "Clinic":
+      case Website.Clinic:
         {
           return [
             SideMenuItem(

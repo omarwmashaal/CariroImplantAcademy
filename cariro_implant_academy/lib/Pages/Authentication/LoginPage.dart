@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/SlidingTab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,18 +50,16 @@ class _LoginPageState extends State<LoginPage> {
                         SlidingTab(
                             titles: ["CIA", "LAB", "Clinic"],
                             onChange: (value) {
-                              print(value);
-                              //selectedTab = value;
                               if (value == 0) {
                                 selectedTab = "CIA";
-                                setState(() => siteController.setSite("CIA"));
+                                setState(() => siteController.setSite(Website.CIA));
                               } else if (value == 1) {
                                 selectedTab = "LAB";
-                                setState(() => siteController.setSite("LAB"));
+                                setState(() => siteController.setSite(Website.Lab));
                               } else {
                                 selectedTab = "Clinic";
                                 setState(
-                                    () => siteController.setSite("Clinic"));
+                                    () => siteController.setSite(Website.Clinic));
                               }
                             },
                             weight: 450,
@@ -88,24 +87,8 @@ class _LoginPageState extends State<LoginPage> {
                         CIA_PrimaryButton(
                             label: "Login",
                             onTab: () => widget.onLogin(email, password)),
-                        HorizontalRadioButtons(
-                          names: siteController.getRoles(),
-                          onChange: (index) {
-                            siteController.setRole(index);
-                          },
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            widget.onRegister();
-                            //navigationController_Auth.navigateTo(RegisterPageRoute);
-                          },
-                          child: Text(
-                            "Don't have an account? Create new one.",
-                            style: TextStyle(
-                                color: Color_TextSecondary,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
+
+
                       ],
                     )),
               ),

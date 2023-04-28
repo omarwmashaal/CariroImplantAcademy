@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,7 @@ import '../Widgets/SlidingTab.dart';
 
 class SiteController extends GetxController {
   static SiteController instance = Get.find();
-  String _site = "CIA";
+  Website _site = Website.CIA;
   AssetImage _siteLogo = AssetImage("CIA_Logo3.png");
   RxString _currentRole = "".obs;
   String _token = "";
@@ -70,11 +71,11 @@ class SiteController extends GetxController {
     update();
   }
 
-  String getSite() => _site;
+  Website getSite() => _site;
 
   AssetImage getSiteLogo() => _siteLogo;
 
-  AssetImage getSiteLogoBySite(String site) {
+  AssetImage getSiteLogoBySite(Website site) {
     if (site == "CIA")
       return AssetImage("assets/CIA_Logo3.png");
     else if (site == "LAB")
@@ -83,12 +84,12 @@ class SiteController extends GetxController {
       return AssetImage("assets/Clinic_logo.png");
   }
 
-  setSite(String site) {
+  setSite(Website site) {
     switchTheme(site);
     _site = site;
-    if (site == "CIA")
+    if (site == Website.CIA)
       _siteLogo = AssetImage("assets/CIA_Logo3.png");
-    else if (site == "LAB")
+    else if (site == Website.Lab)
       _siteLogo = AssetImage("assets/LAB_Logo.png");
     else
       _siteLogo = AssetImage("assets/Clinic_logo.png");

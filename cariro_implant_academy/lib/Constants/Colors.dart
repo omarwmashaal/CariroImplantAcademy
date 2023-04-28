@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:flutter/material.dart';
 
 Color Color_Background = Color(0xFFF4F6FA);
@@ -12,9 +13,9 @@ Color Color_TextWhite = Color(0xFFFFFFFF);
 Color Color_TextPrimary = Color(0xFF000000);
 Color Color_SideMenuFocus = Color(0xFFECF5F4);
 
-switchTheme(String site) {
+switchTheme(Website site) {
   switch (site) {
-    case "CIA":
+    case Website.CIA:
       {
         Color_Background = Color(0xFFF4F6FA);
         Color_Accent = Color(0xFFA4BF69);
@@ -27,7 +28,7 @@ switchTheme(String site) {
         Color_SideMenuFocus = Color(0xFFECF5F4);
         break;
       }
-    case "LAB":
+    case Website.Lab:
       {
         Color_Background = Color(0xFFF4F6FA);
         Color_Accent = Color(0xFF816C46);
@@ -40,7 +41,7 @@ switchTheme(String site) {
         Color_SideMenuFocus = Colors.white;
         break;
       }
-    case "Clinic":
+    case Website.Clinic:
       {
         Color_Background = Colors.white;
         Color_Accent = Color(0xFF2278f9);

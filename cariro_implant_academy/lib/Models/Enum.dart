@@ -46,3 +46,9 @@ enum SmokingStatus
   MediumSmoker,
   HeavySmoker
 }
+enum Website
+{
+  CIA,
+  Lab,
+  Clinic
+}

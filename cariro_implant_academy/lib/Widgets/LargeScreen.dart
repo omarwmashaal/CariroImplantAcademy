@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,13 +56,13 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  siteController.setSite("CIA");
+                                  siteController.setSite(Website.CIA);
                                   setState(() {});
                                   ;
                                 },
                                 child: Image(
                                   image:
-                                      siteController.getSiteLogoBySite("CIA"),
+                                      siteController.getSiteLogoBySite(Website.CIA),
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.contain,
@@ -70,13 +71,13 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {
-                                  siteController.setSite("LAB");
+                                  siteController.setSite(Website.Lab);
                                   setState(() {});
                                   ;
                                 },
                                 child: Image(
                                   image:
-                                      siteController.getSiteLogoBySite("LAB"),
+                                      siteController.getSiteLogoBySite(Website.Lab),
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.contain,
@@ -85,13 +86,13 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               SizedBox(width: 10),
                               GestureDetector(
                                 onTap: () {
-                                  siteController.setSite("Clinic");
+                                  siteController.setSite(Website.Clinic);
                                   setState(() {});
                                   ;
                                 },
                                 child: Image(
                                   image: siteController
-                                      .getSiteLogoBySite("Clinic"),
+                                      .getSiteLogoBySite(Website.Clinic),
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.contain,
