@@ -60,10 +60,13 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
 
       setState(() {});
     });
-  }
+   }
 
   @override
   Widget build(BuildContext context) {
+    if(widget.controller.text!=null)
+      widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
+
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(

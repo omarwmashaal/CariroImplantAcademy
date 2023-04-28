@@ -1,1 +1,197 @@
+import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../API/CashFlowAPI.dart';
+import 'API_Response.dart';
+
+class CashFlowModel {
+  int? id;
+  int? receiptID;
+  DropDownDTO? receipt;
+  String? date;
+  String? name;
+  int? categoryId;
+  DropDownDTO? category;
+  int? supplierId;
+  DropDownDTO? supplier;
+  int? createdById;
+  DropDownDTO? createdBy;
+  int? price;
+  int? count;
+  int? paymentMethodId;
+  DropDownDTO? paymentMethod;
+  String? notes;
+  String? type;
+
+  CashFlowModel(
+      {this.id,
+      this.receiptID,
+      this.receipt,
+      this.date,
+      this.name,
+      this.categoryId,
+      this.category,
+      this.supplierId,
+      this.supplier,
+      this.createdById,
+      this.createdBy,
+      this.price,
+      this.count,
+      this.paymentMethodId,
+      this.paymentMethod,
+      this.notes,
+      this.type});
+
+  CashFlowModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    receiptID = json['receiptID'];
+    receipt = json['receipt'];
+    date = json['date'];
+    name = json['name'];
+    categoryId = json['categoryId'];
+    category = json['category'] != null ? new DropDownDTO.fromJson(json['category']) : DropDownDTO();
+    supplierId = json['supplierId'];
+    supplier = json['supplier'] != null ? new DropDownDTO.fromJson(json['supplier']) : DropDownDTO();
+    createdById = json['createdById'];
+    createdBy = json['createdBy'] != null ? new DropDownDTO.fromJson(json['createdBy']) : DropDownDTO();
+    price = json['price'];
+    count = json['count'];
+    paymentMethodId = json['paymentMethodId'];
+    paymentMethod = json['paymentMethod'] != null ? new DropDownDTO.fromJson(json['paymentMethod']) : DropDownDTO();
+    notes = json['notes'];
+    type = json['type'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['receiptID'] = this.receiptID;
+    data['receipt'] = this.receipt;
+    data['date'] = this.date;
+    data['name'] = this.name;
+    data['categoryId'] = this.categoryId;
+    if (this.category != null) {
+      data['category'] = this.category!.toJson();
+    }
+    data['supplierId'] = this.supplierId;
+    if (this.supplier != null) {
+      data['supplier'] = this.supplier!.toJson();
+    }
+    data['createdById'] = this.createdById;
+    data['createdBy'] = this.createdBy;
+    data['price'] = this.price;
+    data['count'] = this.count;
+    data['paymentMethodId'] = this.paymentMethodId;
+    if (this.paymentMethod != null) {
+      data['paymentMethod'] = this.paymentMethod!.toJson();
+    }
+    data['notes'] = this.notes;
+    data['type'] = this.type;
+    return data;
+  }
+}
+
+class CashFlowDataSource extends DataGridSource {
+  List<String> columns = [
+    "ID",
+    "Item",
+    "Category",
+    "Created by",
+    "Amount",
+    "Method",
+    "Notes",
+  ];
+
+  List<CashFlowModel> models = <CashFlowModel>[];
+  CashFlowType type;
+
+  /// Creates the income data source class with required details.
+  CashFlowDataSource({required this.type}) {
+    init();
+  }
+
+  init() {
+    if(type == CashFlowType.income)
+      {
+        columns = [
+          "ID",
+          "Item",
+          "Category",
+          "Created by",
+          "Amount",
+          "Method",
+          "Notes",
+        ];
+        _cashFlowData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.id),
+          DataGridCell<String>(columnName: 'Item', value: e.name),
+          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+          DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+          DataGridCell<int>(columnName: 'Amount', value: e.count),
+          DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
+          DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
+        ]))
+            .toList();
+      }
+    else if(type == CashFlowType.expenses)
+      {
+        columns = [
+          "ID",
+          "Item",
+          "Category",
+          "Supplier",
+          "Created by",
+          "Amount",
+          "Method",
+          "Notes",
+        ];
+        _cashFlowData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.id),
+          DataGridCell<String>(columnName: 'Item', value: e.name),
+          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+          DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
+          DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+          DataGridCell<int>(columnName: 'Amount', value: e.count),
+          DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
+          DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
+        ]))
+            .toList();
+      }
+
+  }
+
+  List<DataGridRow> _cashFlowData = [];
+
+  @override
+  List<DataGridRow> get rows => _cashFlowData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          e.value.toString(),
+        ),
+      );
+    }).toList());
+  }
+
+  Future<bool> loadData() async {
+    late API_Response response;
+
+    if (type == CashFlowType.income)
+      response = await CashFlowAPI.ListIncome();
+    else if (type == CashFlowType.expenses) response = await CashFlowAPI.ListExpenses();
+    if (response.statusCode == 200) models = response.result as List<CashFlowModel>;
+    init();
+    notifyListeners();
+
+    return true;
+  }
+}

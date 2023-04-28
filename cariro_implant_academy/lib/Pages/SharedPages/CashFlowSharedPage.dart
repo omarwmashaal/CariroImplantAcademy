@@ -1,8 +1,15 @@
+import 'package:cariro_implant_academy/API/CashFlowAPI.dart';
+import 'package:cariro_implant_academy/API/SettingsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/IncomeModel.dart';
+import 'package:cariro_implant_academy/Models/CashFlow.dart';
+import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +17,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../Constants/Fonts.dart';
 import '../../Models/CashFlowCategorySumamryModel.dart';
-import '../../Models/CashFlowSumamryModel.dart';
-import '../../Models/ExpensesModel.dart';
+import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Widgets/CIA_IncrementalExpensesTextField.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_Table.dart';
@@ -28,8 +34,8 @@ class CashFlowSharedPage extends StatefulWidget {
     this.onIncomeRowClick,
     this.onExpenseRowClick,
   }) : super(key: key);
-  IncomeDataSource i_dataSource;
-  ExpensesDataSource e_dataSource;
+  CashFlowDataSource i_dataSource;
+  CashFlowDataSource e_dataSource;
   CashFlowSummaryDataSource? eS_dataSource;
   CashFlowSummaryDataSource? iS_dataSource;
   CashFlowSummaryDataSource? diS_dataSource;
@@ -73,10 +79,126 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       width: 155,
                       label: "Add new income",
                       onTab: () {
+                        CashFlowModel model = CashFlowModel(
+                          category: DropDownDTO(),
+                          paymentMethod: DropDownDTO(),
+                          supplier: DropDownDTO(),
+                        );
+                        bool newCategory = false;
+                        bool newPaymentMethod = false;
                         CIA_ShowPopUp(
                             context: context,
+                            width: 700,
                             title: "Add new Income",
-                            child: Text("adasd"));
+                            onSave: ()async{
+                              var res = await CashFlowAPI.AddIncome(model);
+                              if(res.statusCode == 200)
+                                {
+                                  ShowSnackBar(isSuccess: true, title: "Success", message: "Entry Added!");
+                                }
+                              else
+                                ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage??"");
+
+                              await widget.i_dataSource.loadData();
+                            },
+                            child: StatefulBuilder(
+                              builder: (context, setState) {
+                                return Column(
+                                  children: [
+                                    CIA_TextFormField(
+                                        onChange: (value) => model.name = value, label: "Name", controller: TextEditingController(text: model.name ?? "")),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: CIA_MultiSelectChipWidget(
+                                            onChange: (item, isSelected) => setState(() => newCategory = isSelected),
+                                            labels: [
+                                              CIA_MultiSelectChipWidgeModel(label: "New Category"),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: newCategory
+                                              ? CIA_TextFormField(
+                                                  label: "Category",
+                                                  onChange: (value) {
+                                                    model.category = DropDownDTO(name: value);
+                                                    model.categoryId = null;
+                                                  },
+                                                  controller: TextEditingController(text: model.category!.name ?? ""),
+                                                )
+                                              : CIA_DropDownSearch(
+                                                  label: "Category",
+                                                  asyncItems: SettingsAPI.GetIncomeCategories,
+                                                  onSelect: (value) {
+                                                    model.category = value;
+                                                    model.categoryId = value.id;
+                                                  },
+                                                  selectedItem: model.category,
+                                                ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: CIA_MultiSelectChipWidget(
+                                            onChange: (item, isSelected) => setState(() => newPaymentMethod = isSelected),
+                                            labels: [
+                                              CIA_MultiSelectChipWidgeModel(label: "New Payment Method"),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: newPaymentMethod
+                                              ? CIA_TextFormField(
+                                                  label: "Payment Method",
+                                                  onChange: (value) {
+                                                    model.paymentMethod = DropDownDTO(name: value);
+                                                    model.paymentMethodId = null;
+                                                  },
+                                                  controller: TextEditingController(text: model.paymentMethod!.name ?? ""),
+                                                )
+                                              : CIA_DropDownSearch(
+                                                  label: "Payment Method",
+                                                  asyncItems: SettingsAPI.GetPaymentMethods,
+                                                  onSelect: (value) {
+                                                    model.paymentMethod = value;
+                                                    model.paymentMethodId = value.id;
+                                                  },
+                                                  selectedItem: model.paymentMethod,
+                                                ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    CIA_TextFormField(
+                                      isNumber: true,
+                                      onChange: (value) => model.price = int.parse(value),
+                                      label: "Price",
+                                      controller: TextEditingController(text: (model.price ?? 0).toString()),
+                                    ),
+                                    SizedBox(height: 10),
+                                    CIA_TextFormField(
+                                      isNumber: true,
+                                      onChange: (value) => model.count = int.parse(value),
+                                      label: "Count",
+                                      controller: TextEditingController(text: (model.count ?? 0).toString()),
+                                    ),
+                                    SizedBox(height: 10),
+                                    CIA_TextFormField(
+                                      onChange: (value) => model.notes = value,
+                                      label: "Notes",
+                                      controller: TextEditingController(text: model.notes ?? ""),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ));
                       },
                       isLong: true,
                     ),
@@ -93,27 +215,19 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                     Expanded(
                         child: Row(
                       children: [
-                        Expanded(
-                            child:
-                                CIA_DropDown(label: "Date", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Date", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Category", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Category", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Items", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Items", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Methods", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Methods", values: ["dates"])),
                       ],
                     )),
                     CIA_PrimaryButton(
@@ -129,11 +243,11 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
             Expanded(
               flex: 5,
               child: CIA_Table(
-                  columnNames: IncomeInfoModel.columns,
+                  columnNames: widget.i_dataSource.columns,
                   dataSource: widget.i_dataSource,
+                  loadFunction: widget.i_dataSource.loadData,
                   onCellClick: (value) {
-                    if (widget.onIncomeRowClick != null)
-                      widget.onIncomeRowClick!(value);
+                    if (widget.onIncomeRowClick != null) widget.onIncomeRowClick!(value);
                   }),
             ),
           ],
@@ -156,28 +270,282 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       width: 155,
                       label: "Add new Expense",
                       onTab: () {
-                        CIA_ShowPopUp(
-                          buttonText: "Save",
-                          width: 600,
-                          context: context,
-                          title: "Add new Expense",
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              CIA_DropDown(label: "Category", values: [
-                                "values",
-                                "values",
-                                "values",
-                                "values",
-                              ]),
-                              SizedBox(height: 10),
-                              CIA_IncrementalExpensesTextField(
-                                label: 'Item',
-                              )
-                            ],
-                          ),
+                        List<CashFlowModel> models = <CashFlowModel>[
+                          CashFlowModel(
+                            category: DropDownDTO(),
+                            paymentMethod: DropDownDTO(),
+                            supplier: DropDownDTO(),
+                          )
+                        ];
+                        bool newCategory = false;
+                        bool newPaymentMethod = false;
+                        bool newSupplier = false;
+                        bool isStockItem = false;
+                        int total = 0;
+                        CashFlowModel dummyModel = CashFlowModel(
+                          category: DropDownDTO(),
+                          paymentMethod: DropDownDTO(),
+                          supplier: DropDownDTO(),
                         );
-                        //internalPagesController.jumpToPage(2);
+                        CIA_ShowPopUp(
+                            context: context,
+                            width: 700,
+                            height  : 500,
+                            title: "Add new Expenses",
+                            onSave: () async {
+                              models.forEach((element) {
+                                element.supplierId = dummyModel.supplierId;
+                                element.supplier = dummyModel.supplier;
+                                element.paymentMethodId = dummyModel.paymentMethodId;
+                                element.paymentMethod = dummyModel.paymentMethod;
+                                element.categoryId = dummyModel.categoryId;
+                                element.category = dummyModel.category;
+                              });
+                              var res = await CashFlowAPI.AddExpense(models, isStockItem);
+                              if (res.statusCode == 200) {
+                                ShowSnackBar(isSuccess: true, title: "Success", message: "Entries Added!");
+                              } else
+                                ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+
+                              await widget.i_dataSource.loadData();
+                            },
+                            child: StatefulBuilder(
+                              builder: (context, setState) {
+                                return Column(
+                                  children: [
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: () {
+                                            List<Widget> r = [];
+                                            r.add(Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CIA_MultiSelectChipWidget(
+                                                    onChange: (item, isSelected) => setState(() => isStockItem = isSelected),
+                                                    labels: [
+                                                      CIA_MultiSelectChipWidgeModel(label: "Is Stock item?"),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                    flex: 3,
+                                                    child: FormTextKeyWidget(
+                                                      text: "Is this a stock item?",
+                                                    ))
+                                              ],
+                                            ));
+                                            r.add(SizedBox(height: 10));
+                                            r.add(Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CIA_MultiSelectChipWidget(
+                                                    onChange: (item, isSelected) => setState(() => newCategory = isSelected),
+                                                    labels: [
+                                                      CIA_MultiSelectChipWidgeModel(label: "New Category"),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: newCategory
+                                                      ? CIA_TextFormField(
+                                                          label: "Category",
+                                                          onChange: (value) {
+                                                            dummyModel.category = DropDownDTO(name: value);
+                                                            dummyModel.categoryId = null;
+                                                            models.forEach((element) {
+                                                              element.category = DropDownDTO(name: value);
+                                                              element.categoryId = null;
+                                                            });
+                                                          },
+                                                          controller: TextEditingController(text: dummyModel.category!.name ?? "" ),
+                                                        )
+                                                      : CIA_DropDownSearch(
+                                                          label: "Category",
+                                                          asyncItems: SettingsAPI.GetExpensesCategories,
+                                                          onSelect: (value) {
+                                                            dummyModel.category = value;
+                                                            dummyModel.categoryId = value.id;
+                                                            models.forEach((model) {
+
+                                                            });
+                                                          },
+                                                          selectedItem: dummyModel.category ,
+                                                        ),
+                                                )
+                                              ],
+                                            ));
+                                            r.add(SizedBox(height: 10));
+                                            r.add(Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CIA_MultiSelectChipWidget(
+                                                    onChange: (item, isSelected) => setState(() => newPaymentMethod = isSelected),
+                                                    labels: [
+                                                      CIA_MultiSelectChipWidgeModel(label: "New Payment Method"),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: newPaymentMethod
+                                                      ? CIA_TextFormField(
+                                                          label: "Payment Method",
+                                                          onChange: (value) {
+                                                            dummyModel.paymentMethod = DropDownDTO(name: value);
+                                                            dummyModel.paymentMethodId = null;
+                                                            models.forEach((model) {
+                                                              model.paymentMethod = DropDownDTO(name: value);
+                                                              model.paymentMethodId = null;
+                                                            });
+                                                          },
+                                                          controller: TextEditingController(text: dummyModel.paymentMethod!.name ?? ""),
+                                                        )
+                                                      : CIA_DropDownSearch(
+                                                          label: "Payment Method",
+                                                          asyncItems: SettingsAPI.GetPaymentMethods,
+                                                          onSelect: (value) {
+                                                            dummyModel.paymentMethod = value;
+                                                            dummyModel.paymentMethodId = value.id;
+                                                            models.forEach((model) {
+                                                              model.paymentMethod = value;
+                                                              model.paymentMethodId = value.id;
+                                                            });
+                                                          },
+                                                          selectedItem: dummyModel.paymentMethod ,
+                                                        ),
+                                                )
+                                              ],
+                                            ));
+                                            r.add(SizedBox(height: 10));
+                                            r.add(Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CIA_MultiSelectChipWidget(
+                                                    onChange: (item, isSelected) => setState(() => newSupplier = isSelected),
+                                                    labels: [
+                                                      CIA_MultiSelectChipWidgeModel(label: "New Supplier"),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: newSupplier
+                                                      ? CIA_TextFormField(
+                                                          label: "Supplier",
+                                                          onChange: (value) {
+                                                            dummyModel.supplier = DropDownDTO(name: value);
+                                                            dummyModel.supplierId = null;
+                                                            models.forEach((element) {
+                                                              element.supplier = DropDownDTO(name: value);
+                                                              element.supplierId = null;
+                                                            });
+                                                          },
+                                                          controller: TextEditingController(text: dummyModel.supplier!.name ?? ""),
+                                                        )
+                                                      : CIA_DropDownSearch(
+                                                          label: "Supplier",
+                                                          asyncItems: SettingsAPI.GetSuppliers,
+                                                          onSelect: (value) {
+                                                            dummyModel.supplier = value;
+                                                            dummyModel.supplierId = value.id;
+                                                            models.forEach((model) {
+                                                              model.supplier = value;
+                                                              model.supplierId = value.id;
+                                                            });
+                                                          },
+                                                          selectedItem: dummyModel.supplier ,
+                                                        ),
+                                                )
+                                              ],
+                                            ));
+                                            r.addAll(models
+                                                .map((model) => Column(
+                                                      children: [
+                                                        SizedBox(height: 10),
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                  onChange: (value) => model.name = value,
+                                                                  label: "Name",
+                                                                  controller: TextEditingController(text: model.name ?? "")),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                            if(value==null||value == "") value ="0";
+                                                                  model.price = int.parse(value);
+                                                                  total = 0;
+                                                                  models.forEach((element) {total+=element.price??0;});
+                                                                  setState((){});
+                                                                  },
+                                                                label: "Price",
+                                                                controller: TextEditingController(text: (model.price ?? 0).toString()),
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  if(value==null||value == "") value ="0";
+                                                                  model.count = int.parse(value);
+                                                                  setState((){});
+                                                                },
+                                                                label: "Count",
+                                                                controller: TextEditingController(text: (model.count ?? 0).toString()),
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                onChange: (value) => model.notes = value,
+                                                                label: "Notes",
+                                                                controller: TextEditingController(text: model.notes ?? ""),
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            IconButton(
+                                                                onPressed: () {
+                                                                  int index = 0;
+                                                                  index = models.indexWhere((element) => element == model);
+                                                                  models.insert(index+1,CashFlowModel(
+                                                                    category: dummyModel.category,
+                                                                    categoryId: dummyModel.categoryId,
+                                                                    paymentMethod: dummyModel.paymentMethod ,
+                                                                    paymentMethodId: dummyModel.paymentMethodId ,
+                                                                    supplier: dummyModel.supplier,
+                                                                    supplierId: dummyModel.supplierId,
+                                                                  ));
+                                                                  setState(() {});
+                                                                },
+                                                                icon: Icon(Icons.add)),
+                                                            IconButton(
+                                                                onPressed: () {
+                                                                  models.remove(model);
+                                                                  setState(() {});
+                                                                },
+                                                                icon: Icon(Icons.remove))
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ))
+                                                .toList());
+
+                                            return r;
+                                          }(),
+                                        ),
+                                      ),
+                                    ),
+                                    Text("Total: ${total.toString()}")
+                                  ],
+                                );
+                              },
+                            ));
                       },
                       isLong: true,
                     ),
@@ -194,27 +562,19 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                     Expanded(
                         child: Row(
                       children: [
-                        Expanded(
-                            child:
-                                CIA_DropDown(label: "Date", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Date", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Category", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Category", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Items", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Items", values: ["dates"])),
                         SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: CIA_DropDown(
-                                label: "Methods", values: ["dates"])),
+                        Expanded(child: CIA_DropDown(label: "Methods", values: ["dates"])),
                       ],
                     )),
                     CIA_PrimaryButton(
@@ -230,17 +590,18 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
             Expanded(
               flex: 5,
               child: CIA_Table(
-                  columnNames: IncomeInfoModel.columns,
+                  columnNames: widget.e_dataSource.columns,
                   dataSource: widget.e_dataSource,
+                  loadFunction: widget.e_dataSource.loadData,
                   onCellClick: (value) {
-                    selectedCategory =
+                    /*selectedCategory =
                         CashFlowSummaryDataSource().models[value - 2].Category!;
-                    _controller.jumpToPage(1);
+                    _controller.jumpToPage(1);*/
                   }),
             ),
           ],
         ),
-        PageView.builder(
+        /* PageView.builder(
             controller: _controller,
             itemBuilder: (BuildContext context, int index) {
               var pages = [
@@ -300,16 +661,14 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                 showGridLines: true,
                                 showSum: true,
                                 title: "Expenses Summary",
-                                columnNames: CashFlowSummaryModel.columns,
-                                dataSource: widget.eS_dataSource == null
-                                    ? CashFlowSummaryDataSource()
-                                    : widget.eS_dataSource
+                                columnNames: widget.eS_dataSource!.columns,
+                                dataSource:widget.eS_dataSource
                                         as CashFlowSummaryDataSource,
                                 onCellClick: (value) {
-                                  selectedCategory = CashFlowSummaryDataSource()
+                                /*  selectedCategory = CashFlowSummaryDataSource()
                                       .models[value - 2]
                                       .Category!;
-                                  _controller.jumpToPage(1);
+                                  _controller.jumpToPage(1);*/
                                 }),
                           ),
                           SizedBox(width: 30),
@@ -392,7 +751,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                 ),
               ];
               return pages[index];
-            })
+            })*/
         /*PageView(
           controller: _controller,
           children: [
@@ -604,7 +963,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
       ],
     );
 
-    TabsLayout(
+    /*TabsLayout(
         onChange: (value) => setState(() => selectedPage = value),
         sideWidget: Row(
           children: [
@@ -776,7 +1135,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
               ),
             ],
           ),
-        ]);
+        ]);*/
   }
 
   @override

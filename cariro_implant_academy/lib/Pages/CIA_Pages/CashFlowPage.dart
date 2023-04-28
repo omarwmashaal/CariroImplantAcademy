@@ -1,8 +1,8 @@
-import 'package:cariro_implant_academy/Models/IncomeModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Models/ExpensesModel.dart';
+import '../../Models/CashFlow.dart';
+import '../../Models/CashFlowSummaryModel.dart';
 import '../SharedPages/CashFlowSharedPage.dart';
 
 class CashFlowsSearchPage extends StatefulWidget {
@@ -13,8 +13,8 @@ class CashFlowsSearchPage extends StatefulWidget {
 }
 
 class _CashFlowsSearchPageState extends State<CashFlowsSearchPage> {
-  IncomeDataSource i_dataSource = IncomeDataSource();
-  ExpensesDataSource e_dataSource = ExpensesDataSource();
+  CashFlowDataSource i_dataSource = CashFlowDataSource(type: CashFlowType.income);
+  CashFlowDataSource e_dataSource = CashFlowDataSource(type: CashFlowType.expenses);
   int selectedPage = 0;
   @override
   Widget build(BuildContext context) {

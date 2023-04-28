@@ -11,6 +11,8 @@ import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Models/CashFlow.dart';
+import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Models/StockModel.dart';
@@ -34,6 +36,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
+import 'Pages/SharedPages/CashFlowSharedPage.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
 import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
@@ -96,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body:StockSharedPage(stock_dataSource: dataSource1, logs_dataSource: dataSource2,) // AuthenticationPage()
+      body:AuthenticationPage()
     );
   }
 

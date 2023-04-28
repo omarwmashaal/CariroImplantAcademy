@@ -46,7 +46,7 @@ class HTTPRequest {
   }
 
   static Future<API_Response> Post(
-      String url, Map<String, dynamic>? body) async {
+      String url, Object? body) async {
     API_Response apiResponse = API_Response();
     Response response = await post(
       Uri.parse("$host/$url"),
