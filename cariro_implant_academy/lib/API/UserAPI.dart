@@ -45,6 +45,15 @@ static Future<API_Response> GetUserData(int id) async {
     return response;
   }
 
+  static Future<API_Response> GetLabTechnicians() async {
+    var response = await HTTPRequest.Get("User/GetLabTechnicians");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
+    }
+    return response;
+  }
+
   static Future<API_Response> GetSecretaries() async {
     var response = await HTTPRequest.Get("User/GetSecretaries");
 

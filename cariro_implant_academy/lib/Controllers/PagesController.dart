@@ -21,6 +21,7 @@ import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_CustomersSearchPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
+import '../Pages/LAB_Pages/LAB_TechnicianSearchPage.dart';
 import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 
 class PagesController extends PageController {
@@ -98,6 +99,9 @@ class PagesController extends PageController {
             children: [
               Container(
                 child: LabRequestsSearchPage(),
+              ),
+              Container(
+                child: LAB_TechnicianSearchPage(),
               ),
               Container(
                 child: const Center(
@@ -217,23 +221,30 @@ class PagesController extends PageController {
             ),
             SideMenuItem(
               priority: 1,
-              title: 'Customers',
+              title: 'Technicians',
               onTap: (x,y) {
                 pagesController.jumpToPage(1);
               },
             ),
             SideMenuItem(
               priority: 2,
-              title: 'Stock',
+              title: 'Customers',
               onTap: (x,y) {
                 pagesController.jumpToPage(2);
               },
             ),
             SideMenuItem(
               priority: 3,
-              title: 'Cash Flow',
+              title: 'Stock',
               onTap: (x,y) {
                 pagesController.jumpToPage(3);
+              },
+            ),
+            SideMenuItem(
+              priority:4,
+              title: 'Cash Flow',
+              onTap: (x,y) {
+                pagesController.jumpToPage(4);
               },
             ),
           ];

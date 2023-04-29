@@ -29,11 +29,11 @@ class LAB_StepModel {
     id = json['id'];
     name = json['name']??"";
     technicianId = json['technicianId'];
-    technician = DropDownDTO.fromJson(json['technician']??Map<String,dynamic>);
+    technician = DropDownDTO.fromJson(json['technician']??Map<String,dynamic>());
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     status = LabStepStatus.values[json['status']??2];
     requestId = json['requestId'];
-    request = DropDownDTO.fromJson(json['request']??Map<String,dynamic>);
+    request = DropDownDTO.fromJson(json['request']??Map<String,dynamic>());
   }
 
   Map<String, dynamic> toJson() {

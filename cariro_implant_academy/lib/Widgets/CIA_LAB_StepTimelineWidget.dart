@@ -34,7 +34,7 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
                     : step.name!),
           ),
           subtitle: StepperText(step.status == LabStepStatus.Done
-              ? (step.date as String)
+              ? (step.date??"")
               : (step.status == LabStepStatus.InProgress
                   ? "In Progress"
                   : "Not Yet")),

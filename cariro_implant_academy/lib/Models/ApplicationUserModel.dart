@@ -118,7 +118,7 @@ class ApplicationUserModel {
   }
 }
 
-enum UserDataSourceType { Admin, Instructor, Assistant, Secretary, Candidate }
+enum UserDataSourceType { Admin, Instructor, Assistant, Secretary, Candidate, Technician }
 
 class ApplicationUserDataSource extends DataGridSource {
   UserDataSourceType type;
@@ -227,6 +227,28 @@ class ApplicationUserDataSource extends DataGridSource {
           ]))
               .toList();
         }
+      else if(type== UserDataSourceType.Technician)
+      {
+          columns = ["ID", "Name", "Email", "Phone", "Remove"];
+          _userData = models
+              .map<DataGridRow>((e) => DataGridRow(cells: [
+            DataGridCell<int>(columnName: 'ID', value: e.idInt),
+            DataGridCell<String>(columnName: 'Name', value: e.name),
+            DataGridCell<String>(columnName: 'Email', value: e.email),
+            DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            DataGridCell<Widget>(
+                columnName: 'Remove',
+                value: IconButton(
+                  icon: Icon(Icons.delete_forever),
+                  onPressed: () async{
+                    await UserAPI.RemoveUser(e.idInt!);
+                    await loadData();
+
+                  },
+                )),
+          ]))
+              .toList();
+        }
       else
       {
         columns = ["ID", "Name", "Email", "Phone", "Role", "Remove"];
@@ -314,6 +336,19 @@ class ApplicationUserDataSource extends DataGridSource {
         ]))
             .toList();
       }
+      else if(type== UserDataSourceType.Technician )
+      {
+        columns = ["ID", "Name", "Email", "Phone"];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.idInt),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Email', value: e.email),
+          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+
+        ]))
+            .toList();
+      }
       else
         {
           columns = ["ID", "Name", "Email", "Phone"];
@@ -362,6 +397,8 @@ class ApplicationUserDataSource extends DataGridSource {
       response = await UserAPI.GetSecretaries();
     }else if (type == UserDataSourceType.Candidate) {
       response = await UserAPI.GetCandidates();
+    }else if (type == UserDataSourceType.Technician) {
+      response = await UserAPI.GetLabTechnicians();
     }
 
     if (response.statusCode == 200) {

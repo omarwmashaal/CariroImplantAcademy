@@ -1,5 +1,7 @@
+import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,287 +34,292 @@ class LAB_ViewRequestPage extends StatelessWidget {
         LAB_StepModel("Step 6", "Omar", "12/12/2012", StepStatus.NotYet));
     request.Steps.add(
         LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));*/
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        children: [
-          Expanded(child: SizedBox()),
-          Expanded(
-            child: Row(
-              children: [
-                TitleWidget(
-                  title: "Request Details",
-                  showBackButton: true,
-                ),
-                SizedBox(width: 10),
-                CIA_SecondaryButton(
-                    label: "Medical Info",
-                    onTab: () {
-                      Alert(
-                        context: context,
-                        title: "Medical Details",
-                        content: SizedBox(
-                          width: 400,
-                        ),
-                        buttons: [
-                          DialogButton(
-                            color: Color_Accent,
-                            width: 150,
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(
-                              "Ok",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                        ],
-                      ).show();
-                    })
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 12,
-            child: Padding(
-              padding: EdgeInsets.only(top: 5),
+    return CIA_FutureBuilder(
+      loadFunction: LAB_RequestsAPI.GetRequest(request.id!),
+      onSuccess: (data) {
+        request = data as LAB_RequestModel;
+        return Column(
+          children: [
+            Expanded(
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "ID",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.id.toString(),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Date Added",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.deliveryDate == null ? "" : request.deliveryDate,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Source",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.source == null
-                                    ? ""
-                                    : request.source!.name,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Requester Name",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.customer == null
-                                    ? ""
-                                    : request.customer!.name,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Requester Phone",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.customer == null
-                                    ? ""
-                                    : request.customer!.phoneNumber,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Patient Name",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.patient == null
-                                    ? ""
-                                    : request.patient!.name,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Assigend To",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.assignedTo == null
-                                    ? ""
-                                    : request.assignedTo!.name,
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Current Status",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.status == null
-                                    ? ""
-                                    : request.status.toString(),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Payment Status",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.paid!
-                                    ? "Paid"
-                                    : "Not paid",
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Cost",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: request.cost == null ? "0" : request.cost.toString(),
-                                suffix: "EGP",
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: FormTextKeyWidget(
-                                text: "Payed Amount",
-                              ),
-                            ),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                suffix: "EGP",
-                                text: request.paidAmount == null
-                                    ? "0"
-                                    : request.paidAmount.toString(),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
+                  TitleWidget(
+                    title: "Request Details",
+                    showBackButton: true,
                   ),
-                  Expanded(child: SizedBox()),
-                  Expanded(
-                    child: CIA_LAB_StepTimelineWidget(steps: request.steps!),
-                  )
+                  SizedBox(width: 10),
+                  CIA_SecondaryButton(
+                      label: "Medical Info",
+                      onTab: () {
+                        Alert(
+                          context: context,
+                          title: "Medical Details",
+                          content: SizedBox(
+                            width: 400,
+                          ),
+                          buttons: [
+                            DialogButton(
+                              color: Color_Accent,
+                              width: 150,
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                "Ok",
+                                style:
+                                TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ).show();
+                      })
                 ],
               ),
             ),
-          ),
-        ],
-      ),
+            Expanded(
+              flex: 12,
+              child: Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "ID",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.id.toString(),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Date Added",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.date == null ? "" : request.date,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Source",
+
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.source == null
+                                      ? ""
+                                      : request.source!.name,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Requester Name",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.customer == null
+                                      ? ""
+                                      : request.customer!.name,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Requester Phone",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.customer == null
+                                      ? ""
+                                      : request.customer!.phoneNumber,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Patient Name",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.patient == null
+                                      ? ""
+                                      : request.patient!.name,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Assigend To",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.assignedTo == null
+                                      ? ""
+                                      : request.assignedTo!.name,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Current Status",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.status == null
+                                      ? ""
+                                      : request.status!.name,
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Payment Status",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.paid!
+                                      ? "Paid"
+                                      : "Not paid",
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Cost",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: request.cost == null ? "0" : request.cost.toString(),
+                                  suffix: "EGP",
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: FormTextKeyWidget(
+                                  text: "Payed Amount",
+                                ),
+                              ),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  suffix: "EGP",
+                                  text: request.paidAmount == null
+                                      ? "0"
+                                      : request.paidAmount.toString(),
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Expanded(
+                      child: Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.only(top: 50),child: CIA_LAB_StepTimelineWidget(steps: request.steps!)),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+
     );
   }
 }

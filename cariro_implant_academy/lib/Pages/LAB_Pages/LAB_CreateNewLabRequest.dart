@@ -9,19 +9,15 @@ class LAB_CreateNewLabRequest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        children: [
-          Expanded(child: SizedBox()),
-          TitleWidget(
-            title: "Create New Request",
-            showBackButton: true,
-          ),
-          SizedBox(width: 10),
-          Expanded(flex:10,child: LapRequestSharedPage()),
-        ],
-      ),
+    return Column(
+      children: [
+        TitleWidget(
+          title: "Create New Request",
+          showBackButton: true,
+        ),
+        SizedBox(width: 10),
+        Expanded(flex:10,child: LapRequestSharedPage()),
+      ],
     );
   }
 }

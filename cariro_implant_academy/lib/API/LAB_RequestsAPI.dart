@@ -36,6 +36,15 @@ class LAB_RequestsAPI {
     return response;
   }
 
+  static Future<API_Response> GetRequest(int id) async {
+    var response = await HTTPRequest.Get("LAB_Requests/GetRequest?id=$id");
+    if(response.statusCode == 200)
+      {
+        response.result  = LAB_RequestModel.fromJson((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
+      }
+    return response;
+  }
+
   static Future<API_Response> AddRequest(LAB_RequestModel model) async {
     model.source = model.customer!.workPlaceEnum;
     var response = await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());

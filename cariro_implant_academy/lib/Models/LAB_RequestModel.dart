@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/Models/LAB_CustomerModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/LAB_RequestsAPI.dart';
@@ -32,6 +33,7 @@ class LAB_RequestModel {
   String? notes;
   String? requiredStep;
   List<LAB_StepModel>? steps;
+
   int? fileId;
   DropDownDTO? file;
   bool? fullZireonCrown;
@@ -164,6 +166,20 @@ class LAB_RequestModel {
     radiographicDuplicatesForCBCT = json['radiographic_duplicates_for_CBCT'] ?? false;
     clearSurgicalTemplates = json['clear_surgical_templates'] ?? false;
     diagnosticSurveying = json['diagnostic_surveying'] ?? false;
+
+    if(steps!=null)
+      {
+        var assigned = steps!.firstWhereOrNull((element) => element.status==LabStepStatus.InProgress);
+        if(assigned==null)
+          {
+            assigned = steps!.firstWhereOrNull((element) => element.status==LabStepStatus.NotYet);
+          }
+        if(assigned!=null)
+          {
+            assignedTo = assigned!.technician??DropDownDTO();
+            assignedToId = assigned!.technicianId;
+          }
+      }
   }
 
   Map<String, dynamic> toJson() {

@@ -12,6 +12,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
+import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,49 +44,46 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
   String? to;
   String requestsInQueue = "0";
   String search = "";
-
+  late LAB_RequestModel selectedTodayLabRequests = LAB_RequestModel();
   @override
   Widget build(BuildContext context) {
-    late LAB_RequestModel selectedTodayLabRequests = LAB_RequestModel();
-    return PageView(
-      physics: NeverScrollableScrollPhysics(),
-      controller: internalPagesController,
-      children: [
-        TabsLayout(
-            sideWidget: Row(
-              children: [
-                CIA_PrimaryButton(
-                  width: 155,
-                  label: "Add new request",
-                  onTab: () {
-                    internalPagesController.jumpToPage(2);
-                  },
-                  isLong: true,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Requests in Queue ",
-                  style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
-                ),
-                Obx(() => Text(
-                      _GetXController.inQueueCount.value,
-                      style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
-                    )),
-                SizedBox(
-                  width: 30,
-                )
-              ],
-            ),
-            tabs: [
-              "Today",
-              "All"
-            ],
-            pages: [
+    return PageView.builder(
+      itemBuilder: (context, index) {
+        var pages = [
+          PageView(
+            controller: tabsController,
+            children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Obx(() => TitleWidget(title: siteController.title.value)),
+                      Expanded(child: SizedBox()),
+                      CIA_PrimaryButton(
+                        width: 155,
+                        label: "Add new request",
+                        onTab: () {
+                          internalPagesController.jumpToPage(2);
+                        },
+                        isLong: true,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Requests in Queue ",
+                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
+                      ),
+                      Obx(() => Text(
+                        _GetXController.inQueueCount.value,
+                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
+                      )),
+                      SizedBox(
+                        width: 30,
+                      )
+                    ],
+                  ),
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.only(top: 10),
@@ -257,6 +255,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                         onCellClick: (value) {
                           print(dataSource.models[value - 1].id);
                           selectedTodayLabRequests = dataSource.models[value - 1];
+
                           internalPagesController.jumpToPage(1);
                         }),
                   ),
@@ -265,6 +264,34 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      Obx(() => TitleWidget(title: siteController.title.value)),
+                      Expanded(child: SizedBox()),
+                      CIA_PrimaryButton(
+                        width: 155,
+                        label: "Add new request",
+                        onTab: () {
+                          internalPagesController.jumpToPage(2);
+                        },
+                        isLong: true,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Requests in Queue ",
+                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
+                      ),
+                      Obx(() => Text(
+                        _GetXController.inQueueCount.value,
+                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
+                      )),
+                      SizedBox(
+                        width: 30,
+                      )
+                    ],
+                  ),
                   Expanded(
                     child: Container(
                       padding: EdgeInsets.only(top: 10),
@@ -275,13 +302,13 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                             child: CIA_TextField(
                               label: "Search",
                               icon: Icons.search,
-                              onChange: (value){
+                              onChange: (value) {
                                 Search = value;
                                 search = value;
                                 dataSource.loadData(
                                   search: search,
-                                  from:from,
-                                  to:to,
+                                  from: from,
+                                  to: to,
                                   status: statusEnum,
                                   source: sourceEnum,
                                   paid: paid,
@@ -340,87 +367,87 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                 ),
                                 Expanded(
                                     child: Obx(() => Row(
-                                          children: [
-                                            Expanded(
-                                              child: CIA_TextFormField(
-                                                label: "From Date",
-                                                controller: TextEditingController(text: _GetXController.from.value),
-                                                enabled: false,
-                                                onTap: () {
-                                                  CIA_PopupDialog_DateOnlyPicker(context, "From Date", (v) {
-                                                    from = v;
-                                                    _GetXController.from.value = v;
-                                                    dataSource.loadData(
-                                                      search: search,
-                                                      from: from,
-                                                      to: to,
-                                                      source: sourceEnum,
-                                                      status: statusEnum,
-                                                      paid: paid,
-                                                    );
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  from = null;
-                                                  _GetXController.from.value = "";
-                                                  dataSource.loadData(
-                                                    search: search,
-                                                    from: from,
-                                                    to: to,
-                                                    source: sourceEnum,
-                                                    status: statusEnum,
-                                                    paid: paid,
-                                                  );
-                                                },
-                                                icon: Icon(Icons.clear))
-                                          ],
-                                        ))),
+                                      children: [
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "From Date",
+                                            controller: TextEditingController(text: _GetXController.from.value),
+                                            enabled: false,
+                                            onTap: () {
+                                              CIA_PopupDialog_DateOnlyPicker(context, "From Date", (v) {
+                                                from = v;
+                                                _GetXController.from.value = v;
+                                                dataSource.loadData(
+                                                  search: search,
+                                                  from: from,
+                                                  to: to,
+                                                  source: sourceEnum,
+                                                  status: statusEnum,
+                                                  paid: paid,
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              from = null;
+                                              _GetXController.from.value = "";
+                                              dataSource.loadData(
+                                                search: search,
+                                                from: from,
+                                                to: to,
+                                                source: sourceEnum,
+                                                status: statusEnum,
+                                                paid: paid,
+                                              );
+                                            },
+                                            icon: Icon(Icons.clear))
+                                      ],
+                                    ))),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
                                     child: Obx(() => Row(
-                                          children: [
-                                            Expanded(
-                                              child: CIA_TextFormField(
-                                                label: "To Date",
-                                                controller: TextEditingController(text: _GetXController.to.value),
-                                                enabled: false,
-                                                onTap: () {
-                                                  CIA_PopupDialog_DateOnlyPicker(context, "To Date", (v) {
-                                                    to = v;
-                                                    _GetXController.to.value = v;
-                                                    dataSource.loadData(
-                                                      search: search,
-                                                      from: from,
-                                                      to: to,
-                                                      source: sourceEnum,
-                                                      status: statusEnum,
-                                                      paid: paid,
-                                                    );
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  to = null;
-                                                  _GetXController.to.value = "";
-                                                  dataSource.loadData(
-                                                    search: search,
-                                                    from: from,
-                                                    to: to,
-                                                    source: sourceEnum,
-                                                    status: statusEnum,
-                                                    paid: paid,
-                                                  );
-                                                },
-                                                icon: Icon(Icons.clear))
-                                          ],
-                                        ))),
+                                      children: [
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "To Date",
+                                            controller: TextEditingController(text: _GetXController.to.value),
+                                            enabled: false,
+                                            onTap: () {
+                                              CIA_PopupDialog_DateOnlyPicker(context, "To Date", (v) {
+                                                to = v;
+                                                _GetXController.to.value = v;
+                                                dataSource.loadData(
+                                                  search: search,
+                                                  from: from,
+                                                  to: to,
+                                                  source: sourceEnum,
+                                                  status: statusEnum,
+                                                  paid: paid,
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              to = null;
+                                              _GetXController.to.value = "";
+                                              dataSource.loadData(
+                                                search: search,
+                                                from: from,
+                                                to: to,
+                                                source: sourceEnum,
+                                                status: statusEnum,
+                                                paid: paid,
+                                              );
+                                            },
+                                            icon: Icon(Icons.clear))
+                                      ],
+                                    ))),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -530,17 +557,23 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   ),
                 ],
               ),
-            ]),
-        LAB_ViewRequestPage(request: selectedTodayLabRequests),
-        LAB_CreateNewLabRequest()
-        /*Obx(() => (rolesController.role == "Admin" ||
-                rolesController.role == "Instructor")
-            ? TodayLabRequestsMedicalInfoPage(
-                todayLabRequestsMedicalController:
-                    TodayLabRequestsMedicalController(selectedTodayLabRequests),
-              )
-            : ViewTodayLabRequestsPage())*/
-      ],
+            ],
+          ),
+         
+          LAB_ViewRequestPage(request: selectedTodayLabRequests),
+          LAB_CreateNewLabRequest()
+        ];
+        return pages[index];
+      },
+      itemCount: 3,
+      physics: NeverScrollableScrollPhysics(),
+      controller: internalPagesController,
     );
+  }
+
+  @override
+  void initState() {
+    siteController.setAppBarWidget(tabs: ["Today's Requests","All Requests"]);
+
   }
 }
