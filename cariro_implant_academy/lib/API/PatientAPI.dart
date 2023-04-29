@@ -91,7 +91,10 @@ class PatientAPI {
   static Future<API_Response> CreatePatient(PatientInfoModel patient) async {
     var response =
         await HTTPRequest.Post("PatientInfo/CreatePatient", patient.toJson());
-
+    if(response.statusCode==200)
+      {
+        response.result = PatientInfoModel.fromJson((response.result??Map<String,dynamic>())as Map<String,dynamic>);
+      }
     return response;
   }
 

@@ -43,6 +43,10 @@ class _CIA_DropDownState extends State<CIA_DropDown> {
       onChanged: (dynamic value) {
         if (widget.onSelect != null) {
           widget.onSelect!(value);
+          widget.selectedValue = value;
+          setState(() {
+
+          });
         }
       },
       options: widget.values,

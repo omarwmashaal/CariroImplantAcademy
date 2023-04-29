@@ -1,7 +1,13 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import 'ApplicationUserModel.dart';
+import 'Enum.dart';
+import 'LAB_CustomerModel.dart';
 
 class PatientInfoModel {
   String? name;
@@ -15,8 +21,13 @@ class PatientInfoModel {
   String? city;
   DropDownDTO? relativePatient;
   int? relativePatientId;
+  EnumPatientType? patientType;
+  int? customerId;
+  ApplicationUserModel? customer;
+  List<LAB_RequestModel>? requests;
+  String? labDateOfVisit;
 
-  PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus});
+  PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus, this.patientType});
 
   PatientInfoModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -28,8 +39,14 @@ class PatientInfoModel {
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
-    relativePatient = json['relativePatient']!=null? DropDownDTO.fromJson(json['relativePatient']):DropDownDTO();
+    relativePatient = json['relativePatient'] != null ? DropDownDTO.fromJson(json['relativePatient']) : DropDownDTO();
     relativePatientId = json['relativePatientId'];
+    patientType = EnumPatientType.values[json['patientType']??0];
+    customerId = json['customerId'];
+    customer = ApplicationUserModel.fromJson(json['customer']??Map<String,dynamic>());
+    requests = ((json['requests']??[]) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e)).toList();
+    labDateOfVisit = CIA_DateConverters.fromDateTimeToBackend(json['labDateOfVisit']);
+
   }
 
   Map<String, dynamic> toJson() {
@@ -44,13 +61,18 @@ class PatientInfoModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['relativePatientId'] = this.relativePatientId;
+    data['patientType'] = (this.patientType??EnumPatientType.CIA).index;
+    data['customerId'] = this.customerId;
+    data['customer'] = this.customer!=null?this.customer!.toJson():null;
+    data['requests'] = (this.requests??[]).map((e) => e.toJson()).toList();
+    data['labDateOfVisit'] = CIA_DateConverters.fromDateTimeToBackend(this.labDateOfVisit);
+
     return data;
   }
 
   static List<PatientInfoModel> models = <PatientInfoModel>[];
-  static List<String> columns = ["ID", "Name", "Phone", "Gender","Marital Stats","Relative"];
+  static List<String> columns = ["ID", "Name", "Phone", "Gender", "Marital Stats", "Relative"];
 //PatientDataSource dataSource = PatientDataSource();
-
 }
 
 class PatientDataSource extends DataGridSource {
@@ -58,20 +80,19 @@ class PatientDataSource extends DataGridSource {
 
   /// Creates the patient data source class with required details.
   PatientDataSource() {
-   init();
+    init();
   }
-  init(){
+
+  init() {
     _patientData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'ID', value: e.id),
-      DataGridCell<String>(columnName: 'Name', value: e.name),
-      DataGridCell<String>(columnName: 'Phone', value: e.phone),
-      DataGridCell<String>(columnName: 'Gender', value: e.gender),
-      DataGridCell<String>(
-          columnName: 'Marital Status', value: e.maritalStatus),
-      DataGridCell<String>(
-          columnName: 'Relative', value: e.relativePatient!.name!),
-    ]))
+              DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Phone', value: e.phone),
+              DataGridCell<String>(columnName: 'Gender', value: e.gender),
+              DataGridCell<String>(columnName: 'Marital Status', value: e.maritalStatus),
+              DataGridCell<String>(columnName: 'Relative', value: e.relativePatient!.name!),
+            ]))
         .toList();
   }
 
@@ -92,13 +113,13 @@ class PatientDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> loadData({String? search,String? filter}) async {
-    var res = await PatientAPI.ListPatients(search: search,filter: filter);
+  Future<bool> loadData({String? search, String? filter}) async {
+    var res = await PatientAPI.ListPatients(search: search, filter: filter);
     if (res.statusCode! > 199 && res.statusCode! < 300) {
       models = res.result as List<PatientInfoModel>;
     }
 
-   init();
+    init();
     notifyListeners();
     return true;
   }

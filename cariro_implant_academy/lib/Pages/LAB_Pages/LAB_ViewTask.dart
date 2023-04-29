@@ -18,7 +18,7 @@ class LAB_ViewTaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    task.Steps.add(
+    /*task.Steps.add(
         LAB_StepModel("Scan", "Omar", "12/12/2012", StepStatus.Done));
     task.Steps.add(
         LAB_StepModel("Design", "Omar", "12/12/2012", StepStatus.Done));
@@ -31,7 +31,7 @@ class LAB_ViewTaskPage extends StatelessWidget {
     task.Steps.add(
         LAB_StepModel("Step 6", "Omar", "12/12/2012", StepStatus.NotYet));
     task.Steps.add(
-        LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));
+        LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));*/
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(

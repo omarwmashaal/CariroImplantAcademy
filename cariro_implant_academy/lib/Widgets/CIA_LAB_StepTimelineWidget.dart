@@ -1,8 +1,11 @@
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../Models/Lab_StepModel.dart';
 
 class CIA_LAB_StepTimelineWidget extends StatelessWidget {
   CIA_LAB_StepTimelineWidget({Key? key, required this.steps, this.isTask = false})
@@ -18,29 +21,29 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
     int activeIndex = 0;
     int index = 0;
     for (LAB_StepModel step in steps) {
-      if (step.stepStatus == StepStatus.InProgress) activeIndex = index;
+      if (step.status == LabStepStatus.InProgress) activeIndex = index;
       _stepperData.add(
         StepperData(
           title: StepperText(
-            step.stepStatus == StepStatus.Done
-                ? step.name + " by: " + (step.assigendTo as String)
-                : (step.stepStatus == StepStatus.InProgress
-                    ? step.name +
+            step.status == LabStepStatus.Done
+                ? step.name! + " by: " + (step.technician!.name!)
+                : (step.status == LabStepStatus.InProgress
+                    ? step.name! +
                         " assigned to" +
-                        (isTask ? " you" : ": " + (step.assigendTo as String))
-                    : step.name),
+                        (isTask ? " you" : ": " + (step.technician!.name!))
+                    : step.name!),
           ),
-          subtitle: StepperText(step.stepStatus == StepStatus.Done
+          subtitle: StepperText(step.status == LabStepStatus.Done
               ? (step.date as String)
-              : (step.stepStatus == StepStatus.InProgress
+              : (step.status == LabStepStatus.InProgress
                   ? "In Progress"
                   : "Not Yet")),
           iconWidget: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: step.stepStatus == StepStatus.Done
+                color: step.status == LabStepStatus.Done
                     ? Colors.green
-                    : (step.stepStatus == StepStatus.InProgress
+                    : (step.status == LabStepStatus.InProgress
                         ? Colors.orange
                         : Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(30))),

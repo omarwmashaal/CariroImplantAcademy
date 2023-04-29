@@ -2263,12 +2263,12 @@ class _ProstheticWidget extends StatefulWidget {
 class _ProstheticWidgetState extends State<_ProstheticWidget> {
   int? myActiveIndex = null;
   List<StepModel> stepModels = [
-    StepModel(name: "Exposure", stepStatus: StepStatus_.Done),
-    StepModel(name: "Impression", stepStatus: StepStatus_.InProgress),
-    StepModel(name: "Follow Up", stepStatus: StepStatus_.NotYet),
-    StepModel(name: "Try In", stepStatus: StepStatus_.NotYet),
-    StepModel(name: "Verification Jig", stepStatus: StepStatus_.NotYet),
-    StepModel(name: "Delivery", stepStatus: StepStatus_.NotYet),
+    StepModel(name: "Exposure", stepStatus: LabStepStatus.Done),
+    StepModel(name: "Impression", stepStatus: LabStepStatus.InProgress),
+    StepModel(name: "Follow Up", stepStatus: LabStepStatus.NotYet),
+    StepModel(name: "Try In", stepStatus: LabStepStatus.NotYet),
+    StepModel(name: "Verification Jig", stepStatus: LabStepStatus.NotYet),
+    StepModel(name: "Delivery", stepStatus: LabStepStatus.NotYet),
   ];
   bool leftEnabled = true;
   bool rightEnabled = true;
@@ -2303,7 +2303,7 @@ class _ProstheticWidgetState extends State<_ProstheticWidget> {
                   try {
                     if (myActiveIndex! !=
                         stepModels.indexWhere((element) =>
-                            element.stepStatus == StepStatus_.InProgress))
+                            element.stepStatus == LabStepStatus.InProgress))
                       myActiveIndex = (myActiveIndex as int) + 1;
 
                     setState(() {});
@@ -2335,7 +2335,7 @@ class _ProstheticWidgetState extends State<_ProstheticWidget> {
   @override
   void initState() {
     myActiveIndex = stepModels
-        .indexWhere((element) => element.stepStatus == StepStatus_.InProgress);
+        .indexWhere((element) => element.stepStatus == LabStepStatus.InProgress);
   }
 }
 

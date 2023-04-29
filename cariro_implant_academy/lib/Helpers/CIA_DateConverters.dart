@@ -40,7 +40,11 @@ class CIA_DateConverters {
     try{
       formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
     }catch(e){
-      formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+      try {
+        formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+      } on Exception catch (e) {
+        formatedDateTime =  DateFormat("yyyy-MM-dd").parse(dateTime!);
+      }
     }
     final DateFormat formatter = DateFormat('yyyy-MM-ddTHH:mm');
     final String formatted = formatter.format(formatedDateTime);
@@ -53,7 +57,11 @@ class CIA_DateConverters {
     try{
       formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
     }catch(e){
-      formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+      try {
+        formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+      } on Exception catch (e) {
+        formatedDateTime =  DateFormat("yyyy-MM-dd").parse(dateTime!);
+      }
     }
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(formatedDateTime);

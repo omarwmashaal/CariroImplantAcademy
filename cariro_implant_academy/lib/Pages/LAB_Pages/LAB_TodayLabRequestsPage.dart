@@ -1,17 +1,31 @@
+import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_CreateNewLabRequest.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
+
+class _GetXController extends GetxController {
+  static RxString inQueueCount = "0".obs;
+  static RxString from = "".obs;
+  static RxString to = "".obs;
+}
 
 class LabRequestsSearchPage extends StatefulWidget {
   const LabRequestsSearchPage({Key? key}) : super(key: key);
@@ -22,18 +36,17 @@ class LabRequestsSearchPage extends StatefulWidget {
 
 class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
   LabRequestDataSource dataSource = LabRequestDataSource();
+  EnumLabRequestStatus? statusEnum;
+  EnumLabRequestSources? sourceEnum;
+  bool? paid;
+  String? from;
+  String? to;
+  String requestsInQueue = "0";
+  String search = "";
 
   @override
   Widget build(BuildContext context) {
-    late LAB_RequestsModel selectedTodayLabRequests = LAB_RequestsModel(
-        1,
-        "Date",
-        "Source",
-        "RequesterName",
-        "RequesterPhone",
-        "PatientName",
-        "12",
-        "Status");
+    late LAB_RequestModel selectedTodayLabRequests = LAB_RequestModel();
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: internalPagesController,
@@ -56,11 +69,10 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   "Requests in Queue ",
                   style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
                 ),
-                Text(
-                  "1",
-                  style: TextStyle(
-                      fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
-                ),
+                Obx(() => Text(
+                      _GetXController.inQueueCount.value,
+                      style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
+                    )),
                 SizedBox(
                   width: 30,
                 )
@@ -86,6 +98,15 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               icon: Icons.search,
                               onChange: (value) {
                                 Search = value;
+                                search = value;
+                                dataSource.loadData(
+                                  search: search,
+                                  from: DateTime.now().toString(),
+                                  to: DateTime.now().toString(),
+                                  status: statusEnum,
+                                  source: sourceEnum,
+                                  paid: paid,
+                                );
                               },
                             ),
                           ),
@@ -95,11 +116,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                 Expanded(
                                   flex: 3,
                                   child: HorizontalRadioButtons(
-                                    names: [
-                                      "Sender Name",
-                                      "Sender Phone",
-                                      "Assigned To"
-                                    ],
+                                    names: ["Sender Name", "Sender Phone", "Assigned To"],
                                   ),
                                 ),
                                 Expanded(flex: 2, child: SizedBox())
@@ -111,27 +128,96 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "CIA")
+                                        sourceEnum = EnumLabRequestSources.CIA;
+                                      else if (v.name == "Clinic")
+                                        sourceEnum = EnumLabRequestSources.Clinic;
+                                      else if (v.name == "Outsource")
+                                        sourceEnum = EnumLabRequestSources.OutSource;
+                                      else if (v.name == "None") sourceEnum = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: DateTime.now().toString(),
+                                        to: DateTime.now().toString(),
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Source',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "CIA"),
+                                      DropDownDTO(name: "Clinic"),
+                                      DropDownDTO(name: "Outsource"),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "Unpaid")
+                                        paid = false;
+                                      else if (v.name == "Paid")
+                                        paid = true;
+                                      else if (v.name == "None") paid = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: DateTime.now().toString(),
+                                        to: DateTime.now().toString(),
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Payment',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "Paid"),
+                                      DropDownDTO(name: "Unpaid"),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "In Queue")
+                                        statusEnum = EnumLabRequestStatus.InQueue;
+                                      else if (v.name == "In Progress")
+                                        statusEnum = EnumLabRequestStatus.InProgress;
+                                      else if (v.name == "Finished and Handled")
+                                        statusEnum = EnumLabRequestStatus.FinishedAndHandeled;
+                                      else if (v.name == "Finished Not Handled")
+                                        statusEnum = EnumLabRequestStatus.FinishedNotHandeled;
+                                      else if (v.name == "None") statusEnum = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: DateTime.now().toString(),
+                                        to: DateTime.now().toString(),
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Status',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "In Queue"),
+                                      DropDownDTO(name: "In Progress"),
+                                      DropDownDTO(name: "Finished and Handled"),
+                                      DropDownDTO(name: "Finished Not Handled"),
+                                    ],
                                   ),
                                 ),
                                 Expanded(child: SizedBox())
@@ -145,12 +231,32 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   Expanded(
                     flex: 3,
                     child: CIA_Table(
-                        columnNames: LAB_RequestsModel.columns,
+                        columnNames: dataSource.columns,
                         dataSource: dataSource,
+                        loadFunction: () async {
+                          sourceEnum = null;
+                          statusEnum = null;
+                          paid = null;
+                          var res = await LAB_RequestsAPI.GetAllRequests();
+                          if (res.statusCode == 200)
+                            _GetXController.inQueueCount.value = ((res.result) as List<LAB_RequestModel>)
+                                .where((element) => element.status == EnumLabRequestStatus.InQueue)
+                                .toList()
+                                .length
+                                .toString();
+
+                          return dataSource.loadData(
+                            search: search,
+                            from: DateTime.now().toString(),
+                            to: DateTime.now().toString(),
+                            source: sourceEnum,
+                            status: statusEnum,
+                            paid: paid,
+                          );
+                        },
                         onCellClick: (value) {
-                          print(dataSource.models[value - 1].ID);
-                          selectedTodayLabRequests =
-                              dataSource.models[value - 1];
+                          print(dataSource.models[value - 1].id);
+                          selectedTodayLabRequests = dataSource.models[value - 1];
                           internalPagesController.jumpToPage(1);
                         }),
                   ),
@@ -169,8 +275,17 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                             child: CIA_TextField(
                               label: "Search",
                               icon: Icons.search,
-                              onChange: (value) {
+                              onChange: (value){
                                 Search = value;
+                                search = value;
+                                dataSource.loadData(
+                                  search: search,
+                                  from:from,
+                                  to:to,
+                                  status: statusEnum,
+                                  source: sourceEnum,
+                                  paid: paid,
+                                );
                               },
                             ),
                           ),
@@ -180,11 +295,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                 Expanded(
                                   flex: 3,
                                   child: HorizontalRadioButtons(
-                                    names: [
-                                      "Sender Name",
-                                      "Sender Phone",
-                                      "Assigned To"
-                                    ],
+                                    names: ["Sender Name", "Sender Phone", "Assigned To"],
                                   ),
                                 ),
                                 Expanded(flex: 2, child: SizedBox())
@@ -196,45 +307,182 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "CIA")
+                                        sourceEnum = EnumLabRequestSources.CIA;
+                                      else if (v.name == "Clinic")
+                                        sourceEnum = EnumLabRequestSources.Clinic;
+                                      else if (v.name == "Outsource")
+                                        sourceEnum = EnumLabRequestSources.OutSource;
+                                      else if (v.name == "None") sourceEnum = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: from,
+                                        to: to,
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Source',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "CIA"),
+                                      DropDownDTO(name: "Clinic"),
+                                      DropDownDTO(name: "Outsource"),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
-                                    label: 'From Date',
-                                    values: ["all"],
-                                  ),
-                                ),
+                                    child: Obx(() => Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_TextFormField(
+                                                label: "From Date",
+                                                controller: TextEditingController(text: _GetXController.from.value),
+                                                enabled: false,
+                                                onTap: () {
+                                                  CIA_PopupDialog_DateOnlyPicker(context, "From Date", (v) {
+                                                    from = v;
+                                                    _GetXController.from.value = v;
+                                                    dataSource.loadData(
+                                                      search: search,
+                                                      from: from,
+                                                      to: to,
+                                                      source: sourceEnum,
+                                                      status: statusEnum,
+                                                      paid: paid,
+                                                    );
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  from = null;
+                                                  _GetXController.from.value = "";
+                                                  dataSource.loadData(
+                                                    search: search,
+                                                    from: from,
+                                                    to: to,
+                                                    source: sourceEnum,
+                                                    status: statusEnum,
+                                                    paid: paid,
+                                                  );
+                                                },
+                                                icon: Icon(Icons.clear))
+                                          ],
+                                        ))),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
-                                    label: 'To Date',
-                                    values: ["all"],
-                                  ),
-                                ),
+                                    child: Obx(() => Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_TextFormField(
+                                                label: "To Date",
+                                                controller: TextEditingController(text: _GetXController.to.value),
+                                                enabled: false,
+                                                onTap: () {
+                                                  CIA_PopupDialog_DateOnlyPicker(context, "To Date", (v) {
+                                                    to = v;
+                                                    _GetXController.to.value = v;
+                                                    dataSource.loadData(
+                                                      search: search,
+                                                      from: from,
+                                                      to: to,
+                                                      source: sourceEnum,
+                                                      status: statusEnum,
+                                                      paid: paid,
+                                                    );
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  to = null;
+                                                  _GetXController.to.value = "";
+                                                  dataSource.loadData(
+                                                    search: search,
+                                                    from: from,
+                                                    to: to,
+                                                    source: sourceEnum,
+                                                    status: statusEnum,
+                                                    paid: paid,
+                                                  );
+                                                },
+                                                icon: Icon(Icons.clear))
+                                          ],
+                                        ))),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "Unpaid")
+                                        paid = false;
+                                      else if (v.name == "Paid")
+                                        paid = true;
+                                      else if (v.name == "None") paid = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: from,
+                                        to: to,
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Payment',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "Paid"),
+                                      DropDownDTO(name: "Unpaid"),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
-                                  child: CIA_DropDown(
+                                  child: CIA_DropDownSearch(
+                                    onSelect: (v) {
+                                      if (v.name == "In Queue")
+                                        statusEnum = EnumLabRequestStatus.InQueue;
+                                      else if (v.name == "In Progress")
+                                        statusEnum = EnumLabRequestStatus.InProgress;
+                                      else if (v.name == "Finished and Handled")
+                                        statusEnum = EnumLabRequestStatus.FinishedAndHandeled;
+                                      else if (v.name == "Finished Not Handled")
+                                        statusEnum = EnumLabRequestStatus.FinishedNotHandeled;
+                                      else if (v.name == "None") statusEnum = null;
+                                      dataSource.loadData(
+                                        search: search,
+                                        from: from,
+                                        to: to,
+                                        status: statusEnum,
+                                        source: sourceEnum,
+                                        paid: paid,
+                                      );
+                                    },
                                     label: 'Status',
-                                    values: ["all"],
+                                    selectedItem: DropDownDTO(name: "None"),
+                                    items: [
+                                      DropDownDTO(name: "None"),
+                                      DropDownDTO(name: "In Queue"),
+                                      DropDownDTO(name: "In Progress"),
+                                      DropDownDTO(name: "Finished and Handled"),
+                                      DropDownDTO(name: "Finished Not Handled"),
+                                    ],
                                   ),
                                 ),
                                 Expanded(child: SizedBox())
@@ -248,12 +496,35 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   Expanded(
                     flex: 3,
                     child: CIA_Table(
-                        columnNames: LAB_RequestsModel.columns,
+                        columnNames: dataSource.columns,
                         dataSource: dataSource,
+                        loadFunction: () async {
+                          sourceEnum = null;
+                          statusEnum = null;
+                          paid = null;
+                          from = null;
+                          to = null;
+                          search = "";
+                          var res = await LAB_RequestsAPI.GetAllRequests();
+                          if (res.statusCode == 200)
+                            _GetXController.inQueueCount.value = ((res.result) as List<LAB_RequestModel>)
+                                .where((element) => element.status == EnumLabRequestStatus.InQueue)
+                                .toList()
+                                .length
+                                .toString();
+
+                          return dataSource.loadData(
+                            search: search,
+                            from: from,
+                            to: to,
+                            source: sourceEnum,
+                            status: statusEnum,
+                            paid: paid,
+                          );
+                        },
                         onCellClick: (value) {
-                          print(dataSource.models[value - 1].ID);
-                          selectedTodayLabRequests =
-                              dataSource.models[value - 1];
+                          print(dataSource.models[value - 1].id);
+                          selectedTodayLabRequests = dataSource.models[value - 1];
                           internalPagesController.jumpToPage(1);
                         }),
                   ),

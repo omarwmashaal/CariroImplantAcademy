@@ -243,6 +243,7 @@ CIA_ShowPopUp(
     Widget? child,
     String? buttonText,
       double? height,
+      bool? hideButton=false,
     double? width}) {
   Alert(
     context: context,
@@ -255,7 +256,7 @@ CIA_ShowPopUp(
         child: child,
       );
     }),
-    buttons: [
+    buttons:hideButton!?[]: [
       DialogButton(
         color: Color_Accent,
         width: 150,

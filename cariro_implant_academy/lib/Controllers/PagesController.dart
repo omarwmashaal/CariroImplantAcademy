@@ -294,6 +294,7 @@ class InternalPagesController extends PageController {
   static InternalPagesController instance = Get.find();
   late Object passedObject;
   static int index = 0;
+  static int previousIndex = 0;
 
   setPassedObject(Object object) {
     passedObject = object;
@@ -302,12 +303,14 @@ class InternalPagesController extends PageController {
   @override
   @override
   void jumpToPage(int page) {
+    previousIndex = index;
     index = page;
     super.jumpToPage(page);
   }
 
   goBack() {
-    index--;
+    //index--;
+    index = previousIndex;
     super.jumpToPage(index);
   }
 }

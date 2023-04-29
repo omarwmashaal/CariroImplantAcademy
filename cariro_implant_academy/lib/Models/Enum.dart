@@ -52,3 +52,30 @@ enum Website
   Lab,
   Clinic
 }
+
+
+enum LabStepStatus {
+  Done,
+  InProgress,
+  NotYet,
+}
+enum EnumLabRequestStatus
+{
+  InQueue,
+  InProgress,
+  FinishedNotHandeled,
+  FinishedAndHandeled
+}
+
+enum EnumPatientType
+{
+  CIA,
+  Clinic,
+  OutSource
+}
+enum EnumLabRequestSources
+{
+  CIA,
+  Clinic,
+  OutSource
+}

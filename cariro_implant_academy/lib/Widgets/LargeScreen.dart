@@ -39,7 +39,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                 ),
               ),
             ),
-            siteController.getRole() != "Admin"
+            siteController.getRole() != "admin"
                 ? Container(
                     color: Colors.white,
                   )

@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../Models/ApplicationUserModel.dart';
 import '../../Models/LAB_CustomerModel.dart';
 import '../../Widgets/Title.dart';
 import 'LAB_ViewCustomer.dart';
@@ -19,8 +20,8 @@ class LAB_CustomersSearchPage extends StatefulWidget {
 
 class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
   CustomerDataSource dataSource = CustomerDataSource();
-  late CustomerInfoModel selectedCustomer =
-      CustomerInfoModel(1, "Name", "Phone", "ClinicName", "ClinicAddress");
+  late ApplicationUserModel selectedCustomer =
+      ApplicationUserModel();
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +68,9 @@ class _LAB_CustomersSearchPageState extends State<LAB_CustomersSearchPage> {
                     "Clinic Name",
                   ],
                   dataSource: dataSource,
-                  columnNames: CustomerInfoModel.columns,
+                  columnNames: [],
                   onCellTab: (value) {
-                    print(dataSource.models[value - 1].ID);
+                    print(dataSource.models[value - 1].id);
                     setState(() {
                       selectedCustomer = dataSource.models[value - 1];
                     });

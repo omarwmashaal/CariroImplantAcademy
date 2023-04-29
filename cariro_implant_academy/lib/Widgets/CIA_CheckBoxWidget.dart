@@ -4,28 +4,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CIA_CheckBoxWidget extends StatefulWidget {
-  CIA_CheckBoxWidget({Key? key, required this.text}) : super(key: key);
+  CIA_CheckBoxWidget({Key? key, required this.text, this.onChange,this.value =false}) : super(key: key);
   String text;
+  Function(bool value)? onChange;
+  bool value;
   @override
   State<CIA_CheckBoxWidget> createState() => _CIA_CheckBoxWidgetState();
 }
 
 class _CIA_CheckBoxWidgetState extends State<CIA_CheckBoxWidget> {
-  bool state = false;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Checkbox(
-          value: state,
+          value:widget.value,
           onChanged: (value) => setState(() {
-            state = value!;
+            widget.value = value!;
+            if(widget.onChange!=null)widget.onChange!(value);
           }),
           activeColor: Color_Accent,
         ),
         GestureDetector(
             onTap: () => setState(() {
-                  state = !state;
+              widget.value = !widget.value;
+                  if(widget.onChange!=null)widget.onChange!(widget.value);
                 }),
             child: FormTextValueWidget(text: widget.text))
       ],

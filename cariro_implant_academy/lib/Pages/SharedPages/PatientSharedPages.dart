@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -8,6 +9,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +29,12 @@ class _getxController extends GetxController {
 }
 
 class PatientInfo_SharedPage extends StatefulWidget {
-  PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction})
-      : super(key: key);
+  PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction, this.hideSaveButton = false, this.onSave}) : super(key: key);
 
   int patientID;
   Function? loadFunction;
+  Function(API_Response response)? onSave;
+  bool hideSaveButton;
 
   @override
   State<PatientInfo_SharedPage> createState() => _PatientInfo_SharedPageState();
@@ -53,26 +56,22 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
     }
   }
 
-  PatientInfoModel patient = PatientInfoModel();
+  PatientInfoModel patient = PatientInfoModel(patientType: EnumPatientType.CIA);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.loadFunction != null
-          ? widget.loadFunction!(widget.patientID ?? 0)
-          : null,
+      future: widget.loadFunction != null ? widget.loadFunction!(widget.patientID ?? 0) : Future(() => API_Response()),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if ((snapshot.data as API_Response).statusCode == 200) {
-            patient =
-                (snapshot.data as API_Response).result as PatientInfoModel;
+          if (!addNew && (snapshot.data as API_Response).statusCode == 200) {
+            patient = (snapshot.data as API_Response).result as PatientInfoModel;
           }
           return Padding(
             padding: EdgeInsets.only(top: 5),
             child: Column(
               children: [
-                Obx(() => TitleWidget(
-                    title: siteController.title.value, showBackButton: true)),
+                Obx(() => TitleWidget(title: siteController.title.value, showBackButton: true)),
                 Expanded(
                   flex: 4,
                   child: Row(
@@ -88,332 +87,236 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                               Visibility(
                                   child: Row(
                                     children: [
-                                      Expanded(
-                                          child: FormTextKeyWidget(text: "ID")),
-                                      Expanded(
-                                          child: FormTextValueWidget(
-                                              text:
-                                                  patient?.id.toString() == null
-                                                      ? ""
-                                                      : patient?.id.toString()))
+                                      Expanded(child: FormTextKeyWidget(text: "ID")),
+                                      Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
                                     ],
                                   ),
                                   visible: !addNew),
+                              Visibility(
+                                visible: addNew,
+                                child: CIA_MultiSelectChipWidget(
+                                  singleSelect: true,
+                                  onChange: (item, isSelected) {
+                                    if (isSelected) {
+                                      if (item == "CIA") patient.patientType = EnumPatientType.CIA;
+                                      else if (item == "Clinic")patient.patientType = EnumPatientType.Clinic;
+                                      else if (item == "OutSource")patient.patientType = EnumPatientType.OutSource;
+                                    }
+                                  },
+                                  labels: [
+                                    CIA_MultiSelectChipWidgeModel(label: "CIA"),
+                                    CIA_MultiSelectChipWidgeModel(label: "Clinic"),
+                                    CIA_MultiSelectChipWidgeModel(label: "OutSource"),
+                                  ],
+                                ),
+                              ),
                               addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.name = value;
-                                      },
-                                      label: "Name",
-                                      controller: TextEditingController(
-                                          text: patient?.name == null
-                                              ? ""
-                                              : patient?.name),
-                                    )
+                                onChange: (value) {
+                                  patient.name = value;
+                                },
+                                label: "Name",
+                                controller: TextEditingController(text: patient?.name == null ? "" : patient?.name),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Name")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.name == null
-                                                    ? ""
-                                                    : patient?.name))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Name")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name))
+                                ],
+                              ),
                               addNew
                                   ? HorizontalRadioButtons(
-                                      names: ["Male", "Female"],
-                                      groupValue: "Male",
-                                      onChange: (p0) {
-                                        patient.gender = p0;
-                                      },
-                                    )
+                                names: ["Male", "Female"],
+                                groupValue: "Male",
+                                onChange: (p0) {
+                                  patient.gender = p0;
+                                },
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Gender")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.gender == null
-                                                    ? ""
-                                                    : patient?.gender))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Gender")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) async {
-                                        var res = await PatientAPI
-                                            .CompareDuplicateNumber(
-                                                value ?? "");
-                                        if (res.statusCode == 200) {
-                                          if (res.result != null)
-                                            _getxController
-                                                    .duplicateFound.value =
-                                                res.result as PatientInfoModel;
-                                          else
-                                            _getxController.duplicateFound
-                                                .value = PatientInfoModel();
-                                        }
-                                        patient.phone = value;
-                                      },
-                                      label: "Phone Number",
-                                      controller: TextEditingController(
-                                          text: patient?.phone == null
-                                              ? ""
-                                              : patient?.phone),
-                                    )
+                                onChange: (value) async {
+                                  var res = await PatientAPI.CompareDuplicateNumber(value ?? "");
+                                  if (res.statusCode == 200) {
+                                    if (res.result != null)
+                                      _getxController.duplicateFound.value = res.result as PatientInfoModel;
+                                    else
+                                      _getxController.duplicateFound.value = PatientInfoModel();
+                                  }
+                                  patient.phone = value;
+                                },
+                                label: "Phone Number",
+                                controller: TextEditingController(text: patient?.phone == null ? "" : patient?.phone),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Phone Number")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.phone == null
-                                                    ? ""
-                                                    : patient?.phone))
-                                      ],
-                                    ),
-                              Obx(() => Visibility(
-                                  visible: _getxController
-                                          .duplicateFound.value.name !=
-                                      null && _getxController.duplicateFound.value.id!=widget.patientID,
-                                  child: FormTextKeyWidget(
-                                      color: Colors.red,
-                                      text:
-                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name != null ? _getxController.duplicateFound.value!.name! : ""}"))),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Phone Number")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.phone == null ? "" : patient?.phone))
+                                ],
+                              ),
+                              Obx(() =>
+                                  Visibility(
+                                      visible: _getxController.duplicateFound.value.name != null && _getxController.duplicateFound.value.id != widget.patientID,
+                                      child: FormTextKeyWidget(
+                                          color: Colors.red,
+                                          text:
+                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name != null ? _getxController.duplicateFound.value!
+                                              .name! : ""}"))),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.phone2 = value;
-                                      },
-                                      label: "Another Phone Number",
-                                      controller: TextEditingController(
-                                          text: patient?.phone2 == null
-                                              ? ""
-                                              : patient?.phone2),
-                                    )
+                                onChange: (value) {
+                                  patient.phone2 = value;
+                                },
+                                label: "Another Phone Number",
+                                controller: TextEditingController(text: patient?.phone2 == null ? "" : patient?.phone2),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Another Phone Number")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.phone2 == null
-                                                    ? ""
-                                                    : patient?.phone2))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Another Phone Number")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.phone2 == null ? "" : patient?.phone2))
+                                ],
+                              ),
                               addNew
                                   ? CIA_TextFormField(
-                                      onTap: () {
-                                        CIA_PopupDialog_DateOnlyPicker(
-                                            context, "Date of birth", (date) {
-                                          patient.dateOfBirth = date;
-                                          setState(() {});
-                                        });
-                                      },
-                                      onChange: (value) {
-                                        patient.dateOfBirth = value;
-                                      },
-                                      label: "Date Of Birth",
-                                      controller: TextEditingController(
-                                          text: patient?.dateOfBirth == null
-                                              ? ""
-                                              : patient?.dateOfBirth),
-                                    )
+                                onTap: () {
+                                  CIA_PopupDialog_DateOnlyPicker(context, "Date of birth", (date) {
+                                    patient.dateOfBirth = date;
+                                    setState(() {});
+                                  });
+                                },
+                                onChange: (value) {
+                                  patient.dateOfBirth = value;
+                                },
+                                label: "Date Of Birth",
+                                controller: TextEditingController(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Date Of Birth")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text:
-                                                    patient?.dateOfBirth == null
-                                                        ? ""
-                                                        : patient?.dateOfBirth))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Date Of Birth")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth))
+                                ],
+                              ),
                               edit || addNew
                                   ? HorizontalRadioButtons(
-                                      names: ["Married", "Single"],
-                                      onChange: (v) {
-                                        patient.maritalStatus = v;
-                                      },
-                                      groupValue:
-                                          patient.maritalStatus ?? "Married",
-                                    )
+                                names: ["Married", "Single"],
+                                onChange: (v) {
+                                  patient.maritalStatus = v;
+                                },
+                                groupValue: patient.maritalStatus ?? "Married",
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Marital Status")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.maritalStatus ==
-                                                        null
-                                                    ? ""
-                                                    : patient?.maritalStatus))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Marital Status")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.maritalStatus == null ? "" : patient?.maritalStatus))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.address = value;
-                                      },
-                                      label: "Address",
-                                      controller: TextEditingController(
-                                          text: patient?.address == null
-                                              ? ""
-                                              : patient?.address),
-                                    )
+                                onChange: (value) {
+                                  patient.address = value;
+                                },
+                                label: "Address",
+                                controller: TextEditingController(text: patient?.address == null ? "" : patient?.address),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Address")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.address == null
-                                                    ? ""
-                                                    : patient?.address))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Address")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.address == null ? "" : patient?.address))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.city = value;
-                                      },
-                                      label: "City",
-                                      controller: TextEditingController(
-                                          text: patient?.city == null
-                                              ? ""
-                                              : patient?.city),
-                                    )
+                                onChange: (value) {
+                                  patient.city = value;
+                                },
+                                label: "City",
+                                controller: TextEditingController(text: patient?.city == null ? "" : patient?.city),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "City")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient?.city == null
-                                                    ? ""
-                                                    : patient?.city))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "City")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.city == null ? "" : patient?.city))
+                                ],
+                              ),
                               addNew
                                   ? CIA_TextFormField(
-                                      onTap: () {
-                                        _getxController.searchList.value = [];
-                                        CIA_ShowPopUp(
-                                            context: context,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .stretch,
-                                              children: [
-                                                CIA_TextFormField(
-                                                  label: "Search",
-                                                  controller:
-                                                      TextEditingController(),
-                                                  onChange: (value) async {
-                                                    var res =
-                                                        await PatientAPI
-                                                            .QuickSearch(
-                                                                value);
-                                                    if (res.statusCode ==
-                                                        200) {
-                                                      _getxController
-                                                          .searchList
-                                                          .value = res
-                                                              .result
-                                                          as List<
-                                                              DropDownDTO>;
-                                                    } else
-                                                      _getxController
-                                                          .searchList
-                                                          .value = [];
+                                onTap: () {
+                                  _getxController.searchList.value = [];
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          CIA_TextFormField(
+                                            label: "Search",
+                                            controller: TextEditingController(),
+                                            onChange: (value) async {
+                                              var res = await PatientAPI.QuickSearch(value);
+                                              if (res.statusCode == 200) {
+                                                _getxController.searchList.value = res.result as List<DropDownDTO>;
+                                              } else
+                                                _getxController.searchList.value = [];
+                                            },
+                                          ),
+                                          SizedBox(
+                                            height: 400,
+                                            child: Obx(() =>
+                                                ListView.builder(
+                                                  itemBuilder: (context, index) {
+                                                    return ListTile(
+                                                      onTap: () {
+                                                        patient.relativePatient = DropDownDTO(
+                                                            id: _getxController.searchList.value[index].id,
+                                                            name: _getxController.searchList.value[index].name);
+                                                        patient.relativePatientId = _getxController.searchList.value[index].id;
+                                                        setState(() {});
+                                                      },
+                                                      title: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            _getxController.searchList.value[index].name!,
+                                                            textAlign: TextAlign.start,
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                    );
                                                   },
-                                                ),
-                                                SizedBox(
-                                                  height: 400,
-                                                  child: Obx(
-                                                      () =>
-                                                          ListView.builder(
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return ListTile(
-                                                                onTap:
-                                                                    () {
-                                                                    patient.relativePatient = DropDownDTO(id: _getxController.searchList.value[index].id,name:_getxController.searchList.value[index].name);
-                                                                    patient.relativePatientId = _getxController.searchList.value[index].id;
-                                                                    setState(() {
-
-                                                                    });
-                                                                    },
-                                                                title:
-                                                                    Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      _getxController
-                                                                          .searchList
-                                                                          .value[index]
-                                                                          .name!,
-                                                                      textAlign:
-                                                                          TextAlign.start,
-                                                                    ),
-                                                                    Divider()
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                            itemCount:
-                                                                _getxController
-                                                                    .searchList
-                                                                    .value
-                                                                    .length,
-                                                          )),
-                                                )
-                                              ],
-                                            ));
-                                      },
-                                      label: "Relative",
-                                      controller: TextEditingController(
-                                          text:patient.relativePatient!=null? patient.relativePatient!.name!:""),
-                                    )
+                                                  itemCount: _getxController.searchList.value.length,
+                                                )),
+                                          )
+                                        ],
+                                      ));
+                                },
+                                label: "Relative",
+                                controller: TextEditingController(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(
-                                            child: FormTextKeyWidget(
-                                                text: "Relative")),
-                                        Expanded(
-                                            child: FormTextValueWidget(
-                                                text: patient.relativePatient!=null? patient.relativePatient!.name!:""))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Relative")),
+                                  Expanded(child: FormTextValueWidget(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""))
+                                ],
+                              ),
                               Row(
                                 children: [
                                   Expanded(
                                       child: FormTextKeyWidget(
-                                    text: "Registration: " +
-                                        siteController.getUser().name!,
-                                    secondaryInfo: true,
-                                  )),
+                                        text: "Registration: " + siteController
+                                            .getUser()
+                                            .name!,
+                                        secondaryInfo: true,
+                                      )),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                    text: DateTime.now().toLocal().toString(),
-                                    secondaryInfo: true,
-                                  ))
+                                        text: DateTime.now().toLocal().toString(),
+                                        secondaryInfo: true,
+                                      ))
                                 ],
                               ),
                             ],
@@ -425,21 +328,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                           flex: 3,
                           child: Column(
                             children: [
-                              Expanded(
-                                  child: Image(
-                                      image: AssetImage(
-                                          "assets/ProfileImage.png"))),
+                              Expanded(child: Image(image: AssetImage("assets/ProfileImage.png"))),
                               Expanded(
                                 child: Row(
                                   children: [
-                                    Expanded(
-                                        child: Image(
-                                            image: AssetImage(
-                                                "assets/userIDFront.png"))),
-                                    Expanded(
-                                        child: Image(
-                                            image: AssetImage(
-                                                "assets/userIDBack.png"))),
+                                    Expanded(child: Image(image: AssetImage("assets/userIDFront.png"))),
+                                    Expanded(child: Image(image: AssetImage("assets/userIDBack.png"))),
                                   ],
                                 ),
                               )
@@ -448,82 +342,64 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: addNew
-                      ? Center(
-                          child: CIA_PrimaryButton(
-                              label: "Save",
-                              isLong: true,
-                              onTab: () async {
-                                var response =
-                                    await PatientAPI.CreatePatient(patient);
+                Visibility(
+                  visible: !widget.hideSaveButton,
+                  child: Expanded(
+                    child: addNew
+                        ? Center(
+                      child: CIA_PrimaryButton(
+                          label: "Save",
+                          isLong: true,
+                          onTab: () async {
+                            var response = await PatientAPI.CreatePatient(patient);
+                            if (widget.onSave != null) widget.onSave!(response);
+                            if (response.statusCode == 200)
+                              ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
+                            else
+                              ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
+                          }),
+                    )
+                        : edit
+                        ? Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Flexible(
+                            child: CIA_SecondaryButton(label: "Cancel", onTab: () => setState(() => edit = false)),
+                          ),
+                          Flexible(
+                            child: CIA_PrimaryButton(
+                                label: "Save",
+                                isLong: true,
+                                onTab: () async {
+                                  var response = await PatientAPI.UpdatePatientDate(patient);
 
-                                if (response.statusCode == 200)
-                                  ShowSnackBar(
-                                      isSuccess: true,
-                                      title: "Succeed!",
-                                      message:
-                                          "Patient has been added successfully!");
-                                else
-                                  ShowSnackBar(
-                                      isSuccess: false,
-                                      title: "Failed!",
-                                      message: response.errorMessage!);
-                              }),
-                        )
-                      : edit
-                          ? Center(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(child: SizedBox()),
-                                  Flexible(
-                                    child: CIA_SecondaryButton(
-                                        label: "Cancel",
-                                        onTab: () =>
-                                            setState(() => edit = false)),
-                                  ),
-                                  Flexible(
-                                    child: CIA_PrimaryButton(
-                                        label: "Save",
-                                        isLong: true,
-                                        onTab: () async {
-                                          var response = await PatientAPI
-                                              .UpdatePatientDate(patient);
+                                  if (response.statusCode == 200)
+                                    ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient data has been saved successfully!");
+                                  else
+                                    ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
 
-                                          if (response.statusCode == 200)
-                                            ShowSnackBar(
-                                                isSuccess: true,
-                                                title: "Succeed!",
-                                                message:
-                                                    "Patient data has been saved successfully!");
-                                          else
-                                            ShowSnackBar(
-                                                isSuccess: false,
-                                                title: "Failed!",
-                                                message:
-                                                    response.errorMessage!);
-
-                                          setState(() {
-                                            edit = false;
-                                          });
-                                        }),
-                                  ),
-                                  Expanded(child: SizedBox()),
-                                ],
-                              ),
-                            )
-                          : Center(
-                              child: CIA_SecondaryButton(
-                                onTab: () {
                                   setState(() {
-                                    edit = true;
+                                    edit = false;
                                   });
-                                },
-                                label: "Edit Info",
-                              ),
-                            ),
+                                }),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                    )
+                        : Center(
+                      child: CIA_SecondaryButton(
+                        onTab: () {
+                          setState(() {
+                            edit = true;
+                          });
+                        },
+                        label: "Edit Info",
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -541,17 +417,14 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
 }
 
 class PatientVisits_SharedPage extends StatefulWidget {
-  PatientVisits_SharedPage(
-      {Key? key, required this.patientID, this.loadFunction, this.patientName})
-      : super(key: key);
+  PatientVisits_SharedPage({Key? key, required this.patientID, this.loadFunction, this.patientName}) : super(key: key);
 
   Function? loadFunction;
   int patientID;
   String? patientName;
 
   @override
-  State<PatientVisits_SharedPage> createState() =>
-      _PatientVisits_SharedPageState();
+  State<PatientVisits_SharedPage> createState() => _PatientVisits_SharedPageState();
 }
 
 class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
@@ -570,7 +443,8 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
               padding: EdgeInsets.only(top: 5, left: 10),
               child: Column(
                 children: [
-                  Obx(() => TitleWidget(
+                  Obx(() =>
+                      TitleWidget(
                         title: siteController.title.value,
                         showBackButton: true,
                       )),
@@ -582,15 +456,11 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                             children: [
                               FormTextKeyWidget(text: "ID: "),
                               SizedBox(width: 10),
-                              FormTextValueWidget(
-                                  text: widget.patientID.toString()),
+                              FormTextValueWidget(text: widget.patientID.toString()),
                               SizedBox(width: 30),
                               FormTextKeyWidget(text: "Name: "),
                               SizedBox(width: 10),
-                              FormTextValueWidget(
-                                  text: dataSource.models.length == 0
-                                      ? ""
-                                      : dataSource.models[0].patientName),
+                              FormTextValueWidget(text: dataSource.models.length == 0 ? "" : dataSource.models[0].patientName),
                             ],
                           ),
                         ),
@@ -626,87 +496,58 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                     width: 150,
                                     label: "Patient Arrive",
                                     onTab: () async {
-                                      var res = await PatientAPI.PatientVisits(
-                                          widget.patientID);
+                                      var res = await PatientAPI.PatientVisits(widget.patientID);
                                       if (res.statusCode == 200) {
-                                        dataSource.setData(
-                                            res.result as List<VisitsModel>);
-                                        ShowSnackBar(
-                                            isSuccess: true,
-                                            title: "Success",
-                                            message: "");
+                                        dataSource.setData(res.result as List<VisitsModel>);
+                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(
-                                            isSuccess: false,
-                                            title: "Failed",
-                                            message: res.errorMessage ??
-                                                "Couldn't perform action");
+                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                                 CIA_SecondaryButton(
                                     width: 180,
                                     label: "Patient Enters Clinic",
                                     onTab: () async {
-                                      var res =
-                                          await PatientAPI.PatientEntersClinic(
-                                              widget.patientID);
+                                      var res = await PatientAPI.PatientEntersClinic(widget.patientID);
                                       if (res.statusCode == 200) {
-                                        dataSource.setData(
-                                            res.result as List<VisitsModel>);
-                                        ShowSnackBar(
-                                            isSuccess: true,
-                                            title: "Success",
-                                            message: "");
+                                        dataSource.setData(res.result as List<VisitsModel>);
+                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(
-                                            isSuccess: false,
-                                            title: "Failed",
-                                            message: res.errorMessage ??
-                                                "Couldn't perform action");
+                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                                 CIA_SecondaryButton(
                                     width: 150,
                                     label: "Patient Leaves",
                                     onTab: () async {
-                                      var res = await PatientAPI.PatientLeaves(
-                                          widget.patientID);
+                                      var res = await PatientAPI.PatientLeaves(widget.patientID);
                                       if (res.statusCode == 200) {
-                                        dataSource.setData(
-                                            res.result as List<VisitsModel>);
-                                        ShowSnackBar(
-                                            isSuccess: true,
-                                            title: "Success",
-                                            message: "");
+                                        dataSource.setData(res.result as List<VisitsModel>);
+                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(
-                                            isSuccess: false,
-                                            title: "Failed",
-                                            message: res.errorMessage ??
-                                                "Couldn't perform action");
+                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                               ],
                             )),
                         Expanded(
                             child: Row(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            CIA_PrimaryButton(
-                              icon: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              width: 200,
-                              label: "Schedule new visit",
-                              onTab: () {
-                                CIA_PopupDialog_DateTimePicker(
-                                    context, "Schedule Next Visit", (value) {});
-                              },
-                              isLong: true,
-                            )
-                          ],
-                        )),
+                              children: [
+                                Expanded(child: SizedBox()),
+                                CIA_PrimaryButton(
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  width: 200,
+                                  label: "Schedule new visit",
+                                  onTab: () {
+                                    CIA_PopupDialog_DateTimePicker(context, "Schedule Next Visit", (value) {});
+                                  },
+                                  isLong: true,
+                                )
+                              ],
+                            )),
                       ],
                     ),
                   ),

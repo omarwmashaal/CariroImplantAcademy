@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,13 @@ class ApplicationUserModel {
   int? batchId;
   DropDownDTO? batch;
   String? role;
+  int? workPlaceId;
+  DropDownDTO? workPlace;
+  String? phoneNumber2;
+  EnumLabRequestSources? workPlaceEnum;
 
   ApplicationUserModel({
-    this.name,
+    this.name="",
     this.role,
     this.dateOfBirth,
     this.gender,
@@ -49,6 +54,7 @@ class ApplicationUserModel {
     this.userName,
     this.email,
     this.phoneNumber,
+    this.workPlaceEnum,
   });
 
   ApplicationUserModel.fromJson(Map<String, dynamic> json) {
@@ -62,19 +68,24 @@ class ApplicationUserModel {
     address = json['address'];
     city = json['city'];
     idInt = json['idInt'];
+    id = json['id'];
     registeredById = json['registeredById'];
     registeredBy = json['registeredBy'] == null ? DropDownDTO() : DropDownDTO.fromJson(json['registeredBy']);
     registerationDate = json['registerationDate'];
-    try{
+    workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum']??0];
+    /*try{
       id = json['id'];
     }catch(e){
       idInt = json['id'];
-    }
+    }*/
     userName = json['userName'];
     email = json['email'];
     phoneNumber = json['phoneNumber'];
     batch = DropDownDTO.fromJson(json['batch']??Map<String,dynamic>());
     batchId = json['batchId'];
+    phoneNumber2 = json['phoneNumber2'];
+    workPlace =DropDownDTO.fromJson( json['workPlace']??Map<String,dynamic>());
+    workPlaceId = json['workPlaceId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -89,17 +100,20 @@ class ApplicationUserModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['idInt'] = this.idInt;
-    data['registeredById'] = this.registeredById;
-    data['registeredBy'] = this.registeredBy;
-    data['registerationDate'] = this.registerationDate;
     data['id'] = this.id;
+    //data['registeredById'] = this.registeredById;
+   // data['registeredBy'] = this.registeredBy;
+    data['registerationDate'] = this.registerationDate;
     data['userName'] = this.userName;
     data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     data['batchId'] = this.batchId;
     data['batch'] = this.batch;
     data['role'] = this.role;
-
+    data['phoneNumber2'] = this.phoneNumber2;
+    data['workPlace'] = this.workPlace!=null?this.workPlace!.toJson():null;
+    data['workPlaceId'] = this.workPlaceId;
+    data['workPlaceEnum'] = (this.workPlaceEnum??EnumLabRequestSources.CIA).index;
     return data;
   }
 }
@@ -357,5 +371,38 @@ class ApplicationUserDataSource extends DataGridSource {
     notifyListeners();
 
     return true;
+  }
+}
+
+class CustomerDataSource extends DataGridSource {
+  List<ApplicationUserModel> models = <ApplicationUserModel>[];
+
+  /// Creates the customer data source class with required details.
+  CustomerDataSource() {
+    _customerData = models
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+      DataGridCell<int>(columnName: 'ID', value: e.idInt),
+      DataGridCell<String>(columnName: 'Name', value: e.name),
+      DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+      DataGridCell<String>(columnName: 'Clinic Name', value: e.workPlace!.name),
+    ]))
+        .toList();
+  }
+
+  List<DataGridRow> _customerData = [];
+
+  @override
+  List<DataGridRow> get rows => _customerData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+          return Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(right: 50),
+            child: Text(e.value.toString()),
+          );
+        }).toList());
   }
 }

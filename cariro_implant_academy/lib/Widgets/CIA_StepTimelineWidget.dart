@@ -3,18 +3,16 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Models/Enum.dart';
+
 class StepModel {
   String name;
-  StepStatus_ stepStatus = StepStatus_.NotYet;
+  LabStepStatus stepStatus = LabStepStatus.NotYet;
   DateTime? date;
   StepModel({required this.name, this.date, required this.stepStatus});
 }
 
-enum StepStatus_ {
-  Done,
-  InProgress,
-  NotYet,
-}
+
 
 class CIA_StepTimelineWidget extends StatelessWidget {
   CIA_StepTimelineWidget({Key? key, required this.steps, this.activeIndex_})
@@ -30,7 +28,7 @@ class CIA_StepTimelineWidget extends StatelessWidget {
     int activeIndex = 0;
     int index = 0;
     for (StepModel step in steps) {
-      if (step.stepStatus == StepStatus_.InProgress)
+      if (step.stepStatus == LabStepStatus.InProgress)
         activeIndex = activeIndex_ == null ? index : activeIndex_ as int;
       _stepperData.add(
         StepperData(
@@ -39,9 +37,9 @@ class CIA_StepTimelineWidget extends StatelessWidget {
           iconWidget: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: step.stepStatus == StepStatus_.Done
+                color: step.stepStatus == LabStepStatus.Done
                     ? Colors.green
-                    : (step.stepStatus == StepStatus_.InProgress
+                    : (step.stepStatus == LabStepStatus.InProgress
                         ? Colors.orange
                         : Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(30))),
