@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,25 +52,19 @@ class LAB_ViewRequestPage extends StatelessWidget {
                   CIA_SecondaryButton(
                       label: "Medical Info",
                       onTab: () {
-                        Alert(
+                        var medicalInfo = request.getMedicalInfoList();
+                        CIA_ShowPopUp(
                           context: context,
-                          title: "Medical Details",
-                          content: SizedBox(
-                            width: 400,
+                          child: ListView.builder(
+                            itemCount: medicalInfo.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(medicalInfo[index]),
+
+                              );
+                            },
                           ),
-                          buttons: [
-                            DialogButton(
-                              color: Color_Accent,
-                              width: 150,
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                "Ok",
-                                style:
-                                TextStyle(color: Colors.white, fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ).show();
+                        );
                       })
                 ],
               ),
@@ -128,14 +123,11 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               Expanded(
                                 child: FormTextKeyWidget(
                                   text: "Source",
-
                                 ),
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.source == null
-                                      ? ""
-                                      : request.source!.name,
+                                  text: request.source == null ? "" : request.source!.name,
                                 ),
                               )
                             ],
@@ -153,9 +145,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.customer == null
-                                      ? ""
-                                      : request.customer!.name,
+                                  text: request.customer == null ? "" : request.customer!.name,
                                 ),
                               )
                             ],
@@ -173,9 +163,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.customer == null
-                                      ? ""
-                                      : request.customer!.phoneNumber,
+                                  text: request.customer == null ? "" : request.customer!.phoneNumber,
                                 ),
                               )
                             ],
@@ -193,9 +181,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.patient == null
-                                      ? ""
-                                      : request.patient!.name,
+                                  text: request.patient == null ? "" : request.patient!.name,
                                 ),
                               )
                             ],
@@ -213,9 +199,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.assignedTo == null
-                                      ? ""
-                                      : request.assignedTo!.name,
+                                  text: request.assignedTo == null ? "" : request.assignedTo!.name,
                                 ),
                               )
                             ],
@@ -233,9 +217,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.status == null
-                                      ? ""
-                                      : request.status!.name,
+                                  text: request.status == null ? "" : request.status!.name,
                                 ),
                               )
                             ],
@@ -253,9 +235,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: FormTextValueWidget(
-                                  text: request.paid!
-                                      ? "Paid"
-                                      : "Not paid",
+                                  text: request.paid! ? "Paid" : "Not paid",
                                 ),
                               )
                             ],
@@ -293,9 +273,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
                               Expanded(
                                 child: FormTextValueWidget(
                                   suffix: "EGP",
-                                  text: request.paidAmount == null
-                                      ? "0"
-                                      : request.paidAmount.toString(),
+                                  text: request.paidAmount == null ? "0" : request.paidAmount.toString(),
                                 ),
                               )
                             ],
@@ -306,11 +284,12 @@ class LAB_ViewRequestPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Expanded(
                       child: Container(
-                          alignment: Alignment.topCenter,
-                          padding: EdgeInsets.only(top: 50),child: CIA_LAB_StepTimelineWidget(steps: request.steps!)),
+                          alignment: Alignment.topCenter, padding: EdgeInsets.only(top: 50), child: CIA_LAB_StepTimelineWidget(steps: request.steps!)),
                     )
                   ],
                 ),
@@ -319,7 +298,6 @@ class LAB_ViewRequestPage extends StatelessWidget {
           ],
         );
       },
-
     );
   }
 }

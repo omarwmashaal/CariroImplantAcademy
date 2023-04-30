@@ -41,11 +41,11 @@ class LAB_StepModel {
     data['id'] = this.id;
     data['name'] = this.name;
     data['technicianId'] = this.technicianId;
-    data['technician'] = this.technician!=null?this.technician!.toJson():null;
+    //data['technician'] = this.technician!=null?this.technician!.toJson():null;
     data['date'] = this.date;
     data['status'] = (this.status??LabStepStatus.NotYet).index;
-    data['requestId'] = this.requestId;
-    data['request'] = this.request!=null?this.request!.toJson():null;
+    //data['requestId'] = this.requestId;
+    //data['request'] = this.request!=null?this.request!.toJson():null;
     return data;
   }
 }

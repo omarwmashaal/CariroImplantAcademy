@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/LAB_CustomerModel.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:cariro_implant_academy/Models/Lab_PatientModel.dart';
+import 'package:cariro_implant_academy/Models/Lab_StepModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -226,14 +227,13 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                             loadFunction: () async {
                                               return dataSource.loadData(search: "", source: selectedSource);
                                             },
-                                            onCellClick: (index) async{
+                                            onCellClick: (index) async {
                                               var p = dataSource.models[index - 1];
                                               labRequest.customer!.name = p.name;
                                               labRequest.customer!.idInt = p.id;
                                               labRequest.customerId = p.id;
                                               var res = await UserAPI.GetUserData(p.id!);
-                                              if(res.statusCode==200)
-                                                labRequest.customer = res.result as ApplicationUserModel;
+                                              if (res.statusCode == 200) labRequest.customer = res.result as ApplicationUserModel;
                                               Navigator.pop(context);
                                               globalSetState(() {});
                                             },
@@ -356,7 +356,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                               );
                                             },
                                           ),
-                                          SizedBox(height:10),
+                                          SizedBox(height: 10),
                                           CIA_MultiSelectChipWidget(
                                             singleSelect: true,
                                             onChange: (item, isSelected) {
@@ -422,13 +422,122 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      FormTextKeyWidget(
-                        text: (){
-                          if(labRequest.customer!=null && labRequest.customer!.workPlaceEnum!=null)
-                          return EnumLabRequestSources.values[labRequest.customer!.workPlaceEnum!.index!].toString().split(".").last+" Customer";
-                          else return "";
-                        }(),
-                        secondaryInfo: true,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CIA_SecondaryButton(
+                                label: "Edit Steps",
+                                onTab: () {
+                                  List<LAB_StepModel> steps = labRequest.steps ?? [LAB_StepModel()];
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: StatefulBuilder(builder: (context, setState) {
+                                        return Column(
+                                          children: () {
+                                            var r = <Widget>[];
+                                            r.addAll(
+                                              steps.map(
+                                                (e) => Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: CIA_TextFormField(
+                                                          controller: TextEditingController(text: e.name ?? ""),
+                                                          label: "Step Name",
+                                                          onChange: (v) => e.name = v,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_TextFormField(
+                                                          onTap: () {
+                                                            _PatientDoctorsSearchDataSource dataSource =
+                                                                _PatientDoctorsSearchDataSource(type: _SearchDataType.Technicians);
+                                                            String search = "";
+                                                            CIA_ShowPopUp(
+                                                              width: 900,
+                                                              height: 600,
+                                                              context: buildContext,
+                                                              onSave: () => setState(() {}),
+                                                              child: Column(
+                                                                children: [
+                                                                  CIA_TextFormField(
+                                                                    label: "Search",
+                                                                    controller: TextEditingController(text: search),
+                                                                    onChange: (v) {
+                                                                      dataSource.loadData(search: v ?? "", source: EnumLabRequestSources.CIA);
+                                                                    },
+                                                                  ),
+                                                                  SizedBox(height: 10),
+                                                                  CIA_Table(
+                                                                    columnNames: dataSource.columns,
+                                                                    dataSource: dataSource,
+                                                                    loadFunction: () async {
+                                                                      return dataSource.loadData(search: "", source: EnumLabRequestSources.CIA);
+                                                                    },
+                                                                    onCellClick: (index) async {
+                                                                      var p = dataSource.models[index - 1];
+                                                                      var res = await UserAPI.GetUserData(p.id!);
+                                                                      ApplicationUserModel user = ApplicationUserModel();
+                                                                      if (res.statusCode == 200) {
+                                                                        user = res.result as ApplicationUserModel;
+                                                                        e.technician = DropDownDTO(name: user.name, id: user.idInt);
+                                                                        e.technicianId = user.idInt;
+                                                                      }
+
+                                                                      Navigator.pop(context);
+                                                                      setState(() {});
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                          enabled: false,
+                                                          controller: TextEditingController(text: e.technician != null ? e.technician!.name ?? "" : ""),
+                                                          label: "Assigned to",
+                                                        ),
+                                                      ),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            steps.add(LAB_StepModel());
+                                                            setState(() {});
+                                                          },
+                                                          icon: Icon(Icons.add)),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            steps.remove(e);
+                                                            setState(() {});
+                                                          },
+                                                          icon: Icon(Icons.remove))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                            return r;
+                                          }(),
+                                        );
+                                      }),
+                                      onSave: () {
+                                        labRequest.steps = steps;
+                                      });
+                                }),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            child: FormTextKeyWidget(
+                              text: () {
+                                if (labRequest.customer != null && labRequest.customer!.workPlaceEnum != null)
+                                  return EnumLabRequestSources.values[labRequest.customer!.workPlaceEnum!.index!].toString().split(".").last + " Customer";
+                                else
+                                  return "";
+                              }(),
+                              secondaryInfo: true,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10,
@@ -621,7 +730,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                             width: 10,
                           ),
                           FormTextValueWidget(
-                            text: siteController.getUser().name??"",
+                            text: siteController.getUser().name ?? "",
                             secondaryInfo: true,
                           ),
                         ],
@@ -631,7 +740,13 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                         child: CIA_PrimaryButton(
                           label: "Finish",
                           onTab: () async {
-                            await LAB_RequestsAPI.AddRequest(labRequest);
+                            var res = await LAB_RequestsAPI.AddRequest(labRequest);
+                            if (res.statusCode == 200) {
+                              ShowSnackBar(isSuccess: true, title: "Success", message: "Request Added!");
+                              internalPagesController.goBack();
+                            } else {
+                              ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                            }
                           },
                           isLong: true,
                         ),
@@ -654,7 +769,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
   }
 }
 
-enum _SearchDataType { Patients, Doctors }
+enum _SearchDataType { Patients, Doctors, Technicians }
 
 class _dummyClass {
   int? id;
@@ -711,14 +826,18 @@ class _PatientDoctorsSearchDataSource extends DataGridSource {
   Future<bool> loadData({required String search, required EnumLabRequestSources source}) async {
     late API_Response res;
     if (type == _SearchDataType.Doctors) {
-      res = await UserAPI.SearchUsersByWorkplace(search: search ?? "", source: source ?? EnumLabRequestSources.CIA);
+      res = await UserAPI.SearchUsersByWorkplace(search: search ?? "", source: source);
     } else if (type == _SearchDataType.Patients) {
       res = await Lab_CustomerAPI.SearchPatientsByType(search: search, type: source);
+    } else if (type == _SearchDataType.Technicians) {
+      res = await UserAPI.SearcshUsersByRole(search: search ?? "", role: UserRoles.Technician);
     }
     if (res.statusCode! > 199 && res.statusCode! < 300) {
       if (type == _SearchDataType.Patients)
         models = (res.result as List<PatientInfoModel>).map((e) => _dummyClass(id: e.id, name: e.name, phoneNumber: e.phone)).toList();
       else if (type == _SearchDataType.Doctors)
+        models = (res.result as List<ApplicationUserModel>).map((e) => _dummyClass(id: e.idInt, name: e.name, phoneNumber: e.phoneNumber)).toList();
+      else if (type == _SearchDataType.Technicians)
         models = (res.result as List<ApplicationUserModel>).map((e) => _dummyClass(id: e.idInt, name: e.name, phoneNumber: e.phoneNumber)).toList();
     } else
       models = [];

@@ -46,6 +46,13 @@ class LAB_RequestsAPI {
   }
 
   static Future<API_Response> AddRequest(LAB_RequestModel model) async {
+    if(model.steps==null||model.steps == [])
+      {
+        return API_Response(
+          statusCode: 400,
+          errorMessage: "Steps can't be empty"
+        );
+      }
     model.source = model.customer!.workPlaceEnum;
     var response = await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());
     return response;

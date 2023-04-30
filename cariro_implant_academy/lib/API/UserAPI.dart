@@ -78,6 +78,14 @@ static Future<API_Response> GetUserData(int id) async {
     }
     return response;
   }
+  static Future<API_Response> SearcshUsersByRole({required String search, required UserRoles role}) async {
+    var response = await HTTPRequest.Get("User/SearcshUsersByRole?search=$search&role=${role.index}");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
+    }
+    return response;
+  }
   static Future<API_Response> ChangeRole(int id, String role) async {
     var response = await HTTPRequest.Put("User/ChangeRole?id=$id&role=$role",null);
 

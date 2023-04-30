@@ -29,6 +29,13 @@ class LAB_TechnicianSearchPage extends StatefulWidget {
 
 class _LAB_TechnicianSearchPageState extends State<LAB_TechnicianSearchPage> {
   ApplicationUserDataSource dataSource = ApplicationUserDataSource(type: UserDataSourceType.Technician);
+
+
+  @override
+  void initState() {
+    siteController.setAppBarWidget();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

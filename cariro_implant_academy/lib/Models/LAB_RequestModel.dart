@@ -64,6 +64,65 @@ class LAB_RequestModel {
   bool? clearSurgicalTemplates;
   bool? diagnosticSurveying;
 
+  List<String> getMedicalInfoList()
+  {
+    List<String> r = [];
+    if(fullZireonCrown??false)
+      r.add("Full Zireon Crown");
+    if(porcelainFusedToZircomium??false)
+      r.add("Porcelain Fused To Zircomium");
+    if(porcelainFusedToMetal??false)
+      r.add("Porcelain Fused ToMetal");
+    if(porcelainFusedToMetalCADCAMCoCrAlloy??false)
+      r.add("Porcelain Fused To Metal CAD-CAM-Co-Cr Alloy");
+    if(glassCeramicCrown??false)
+      r.add("Glass Ceramic Crown");
+    if(visiolignBondedToPEEK??false)
+      r.add("Visiolign Bonded To PEEK");
+    if(laminateVeneer??false)
+      r.add("Laminate Veneer");
+    if(milledPMMATemporaryCrown??false)
+      r.add("Milled PMMA TemporaryCrown");
+    if(longTermTemporaryCrown??false)
+      r.add("Long Term Temporary Crown");
+    if(screwRatainedCrown??false)
+      r.add("Screw Ratained Crown");
+    if(surveyCrownForRPD??false)
+      r.add("Survey Crown For RPD");
+    if(surveyCrownWithExtraCoronalAttahcment??false)
+      r.add("Survey Crown With Extra Coronal Attahcment");
+    if(castPostcore??false)
+      r.add("Cast Postcore");
+    if(zirconiumPostAndCore??false)
+      r.add("Zirconium Post And Core");
+    if(customCarbonFiberPost??false)
+      r.add("Custom Carbon Fiber Post");
+    if(zirconiumInlayOrOnlay??false)
+      r.add("Zirconium Inlay Or Onlay");
+    if(glassCeramicInlayOrOnlay??false)
+      r.add("Glass Ceramic Inlay Or Onlay");
+    if(caDCAMAbutment??false)
+      r.add("CaDCAMAbutment");
+    if(specialTray??false)
+      r.add("Special Tray");
+    if(occlusionBlock??false)
+      r.add("Occlusion Block");
+    if(diagnosticOrTrailSetup??false)
+      r.add("Diagnostic Or Trail Setup");
+    if(flexibleRPD??false)
+      r.add("Flexible RPD");
+    if(metallicRPD??false)
+      r.add("Metallic RPD");
+    if(nightGuardVacuumTemplate??false)
+      r.add("Night Guard Vacuum Template");
+    if(radiographicDuplicatesForCBCT??false)
+      r.add("Radiographic Duplicates For CBCT");
+    if(clearSurgicalTemplates??false)
+      r.add("Clear Surgical Templates");
+    if(diagnosticSurveying??false)
+      r.add("Diagnostic Surveying");
+    return r;
+  }
   LAB_RequestModel(
       {this.id,
       this.date,
@@ -123,8 +182,8 @@ class LAB_RequestModel {
     deliveryDate = CIA_DateConverters.fromBackendToDateOnly(json['deliveryDate']);
     entryById = json['entryById'];
     entryBy = DropDownDTO.fromJson(json['entryBy'] ?? Map<String, dynamic>());
-    //assignedToId = json['assignedToId'];
-    //assignedTo = DropDownDTO.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
+    assignedToId = json['assignedToId'];
+    assignedTo = DropDownDTO.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
     source = EnumLabRequestSources.values[json['source'] ?? 0];
     customerId = json['customerId'];
     customer = ApplicationUserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
@@ -176,8 +235,8 @@ class LAB_RequestModel {
           }
         if(assigned!=null)
           {
-            assignedTo = assigned!.technician??DropDownDTO();
-            assignedToId = assigned!.technicianId;
+            assignedTo =assignedTo?? assigned!.technician??DropDownDTO();
+            assignedToId =assignedToId?? assigned!.technicianId;
           }
       }
   }
@@ -189,14 +248,18 @@ class LAB_RequestModel {
     data['deliveryDate'] = CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
     // data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
+    if(this.steps!=null && this.steps!=[])
+      {
+        this.assignedToId = steps![0].technicianId;
+      }
     data['assignedToId'] = this.assignedToId;
-    data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
+    //data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
     data['source'] = (this.source ?? EnumLabRequestSources.CIA).index;
     data['customerId'] = this.customerId;
     //data['customer'] = this.customer != null ? this.customer!.toJson() : null;
     data['patientId'] = this.patientId;
     //data['patient'] = this.patient != null ? this.patient!.toJson() : null;
-    data['status'] = (this.status ?? LabStepStatus.NotYet).index;
+    data['status'] = (this.status ?? EnumLabRequestStatus.InQueue).index;
     data['paid'] = this.paid ?? false;
     data['cost'] = this.cost ?? 0;
     data['paidAmount'] = this.paidAmount ?? 0;

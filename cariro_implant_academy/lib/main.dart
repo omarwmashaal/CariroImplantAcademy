@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body:LabRequestsSearchPage()
+      body:AuthenticationPage()
     );
   }
 
