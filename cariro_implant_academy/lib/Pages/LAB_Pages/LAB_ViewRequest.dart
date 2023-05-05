@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
@@ -35,6 +36,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
         LAB_StepModel("Step 6", "Omar", "12/12/2012", StepStatus.NotYet));
     request.Steps.add(
         LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));*/
+    siteController.setAppBarWidget();
     return CIA_FutureBuilder(
       loadFunction: LAB_RequestsAPI.GetRequest(request.id!),
       onSuccess: (data) {

@@ -11,6 +11,7 @@ import 'package:cariro_implant_academy/Models/MedicalModels/TreatmentPlanModel.d
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Calendar.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
@@ -86,7 +87,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
     _PatientDentalExamination(),
-    _PatientNonSurgicalTreatment(),
+    PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
    _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
@@ -144,238 +145,124 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
             }),
       ]),
     );
-    /*siteController.setAppBarWidget(
-      width: MediaQuery.of(context).size.width * 0.75,
-      height: MediaQuery.of(context).size.width * 0.04,
-      fontSize: MediaQuery.of(context).size.width * 0.01,
-      popUp: () async {
-        int currentPage = tabsController.index.value;
-        bool changePage = true;
-        switch (currentPage) {
-          case 0:
-            {
-              await CIA_ShowPopUpSaveRequest(
-                  context: context,
-                  onSave: () {
-                    print("Save");
-                    changePage = true;
-                  },
-                  onCancel: () {
-                    print("Cancel");
-                    changePage = false;
-                    },
-                  onDontSave: () {
-                    print("Dont Save");
-                    changePage = true;
-                  });
-              break;
-            }
-          case 1:
-            {
-              break;
-            }
-          case 2:
-            {
-              break;
-            }
-          case 3:
-            {
-              break;
-            }
-          case 4:
-            {
-              break;
-            }
-          case 5:
-            {
-              break;
-            }
 
-          case 6:
-            {
-              break;
-            }
-          default:
-        }
-        return changePage;
-      },
-      tabs: [
-        "Medical Examination",
-        "Dental History",
-        "Dental Examination",
-        "Non Surgical Treatment",
-        "Treatment Plan",
-        "Surgical Treatment",
-        "Prosthetic Treatment",
-        "Photos and CBCTs"
-      ],
-    );*/
     patient?.gender = "Male";
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Obx(() => TitleWidget(
-                        showBackButton: true,
-                        title: siteController.title.value,
-                      )),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: PageView(
-                      controller: tabsController,
-                      children: pages,
+    return CIA_FutureBuilder(loadFunction: PatientAPI.GetPatientData(patientID), onSuccess: (data){
+      patient = data as PatientInfoModel;
+      return Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 7,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Obx(() => TitleWidget(
+                      showBackButton: true,
+                      title: siteController.title.value,
+                    )),
+                  ),
+                  Expanded(
+                    flex: 10,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: PageView(
+                        controller: tabsController,
+                        children: pages,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: SizedBox()),
+                  Expanded(
+                    flex: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Image(
+                          image: AssetImage("assets/ProfileImage.png"),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "View more info",
+                            onTab: () {
+                              internalPagesController.jumpToPage(2);
+                            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "LAB Request",
+                            icon: Icon(Icons.document_scanner_outlined),
+                            onTab: () {}),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "ID")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                text: patient?.id.toString() == null
+                                    ? ""
+                                    : patient?.id.toString(),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Name")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                  text:
+                                  patient?.name == null ? "" : patient?.name),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Gender")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                  text: patient?.gender == null
+                                      ? ""
+                                      : patient?.gender),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+
+                      ],
                     ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: SizedBox()),
-                Expanded(
-                  flex: 10,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Image(
-                        image: AssetImage("assets/ProfileImage.png"),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                          label: "View more info",
-                          onTab: () {
-                            internalPagesController.jumpToPage(2);
-                          }),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                          label: "LAB Request",
-                          icon: Icon(Icons.document_scanner_outlined),
-                          onTab: () {}),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "ID")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: patient?.id.toString() == null
-                                  ? ""
-                                  : patient?.id.toString(),
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "Name")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                                text:
-                                    patient?.name == null ? "" : patient?.name),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: FormTextKeyWidget(text: "Gender")),
-                          Expanded(
-                            child: FormTextValueWidget(
-                                text: patient?.gender == null
-                                    ? ""
-                                    : patient?.gender),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FormTextKeyWidget(
-                              text: "Operator",
-                              secondaryInfo: true,
-                            ),
-                          ),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: "Omar Wael",
-                              secondaryInfo: true,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: FormTextKeyWidget(
-                              text: "Date:",
-                              secondaryInfo: true,
-                            ),
-                          ),
-                          Expanded(
-                            child: FormTextValueWidget(
-                              text: "12/1/2022",
-                              secondaryInfo: true,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_SecondaryButton(
-                        label: "Cancel",
-                        onTab: () {},
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CIA_PrimaryButton(
-                        label: "Save",
-                        onTab: () {},
-                        isLong: true,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -840,7 +727,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                         label: 'Type',
                         values: ["Random", "Fasting"],
                         selectedValue: medicalExaminationModel.diabetic != null
-                            ? medicalExaminationModel.diabetic?.type.toString()
+                            ? medicalExaminationModel.diabetic?.type!.name
                             : "",
                       ),
                     ),
@@ -1910,16 +1797,16 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   }
 }
 
-class _PatientNonSurgicalTreatment extends StatefulWidget {
-  const _PatientNonSurgicalTreatment({Key? key}) : super(key: key);
+class PatientNonSurgicalTreatment extends StatefulWidget {
+  const PatientNonSurgicalTreatment({Key? key}) : super(key: key);
 
   @override
-  State<_PatientNonSurgicalTreatment> createState() =>
+  State<PatientNonSurgicalTreatment> createState() =>
       _PatientNonSurgicalTreatmentState();
 }
 
 class _PatientNonSurgicalTreatmentState
-    extends State<_PatientNonSurgicalTreatment> {
+    extends State<PatientNonSurgicalTreatment> {
   String date = "";
 
   late Future load;

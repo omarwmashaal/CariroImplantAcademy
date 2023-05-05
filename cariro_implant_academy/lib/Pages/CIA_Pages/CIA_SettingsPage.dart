@@ -5,6 +5,8 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Models/CIA_RoomModel.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
@@ -14,6 +16,7 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SlidingTab.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +27,7 @@ import 'package:sidebarx/sidebarx.dart';
 import '../../API/UserAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Models/DTOs/DropDownDTO.dart';
+import '../../Models/Enum.dart';
 import '../../Models/ImplantModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
@@ -52,9 +56,9 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
             key: GlobalKey(),
             controller: tabsController,
             children: [
-              _MyProfile(),
+              //  ViewUserData(userId: siteController.getUser().idInt!),
               _SettingsPage(),
-              _UsersSettingsPage()
+              //_UsersSettingsPage()
             ],
           ),
         ),
@@ -163,12 +167,19 @@ class _SettingsPageState extends State<_SettingsPage> {
                   currentIndex = 7;
                 },
                 iconWidget: Container()),
+            SidebarXItem(
+                label: "Rooms",
+                onTap: () {
+                  _pageController.jumpToPage(8);
+                  currentIndex = 8;
+                },
+                iconWidget: Container()),
           ],
         ),
         SizedBox(width: 10),
         Expanded(
           child: PageView.builder(
-            itemCount: 8,
+            itemCount: 9,
             itemBuilder: (context, index) {
               var pages = [
                 _ImplantsSettings(),
@@ -244,6 +255,196 @@ class _SettingsPageState extends State<_SettingsPage> {
                     return await SettingsAPI.GetPaymentMethods();
                   },
                 ),
+                _CommonSettingsWidget(
+                  addFunction1: (value) async {
+                    return await SettingsAPI.EditRooms(value);
+                  },
+                  loadFunction1: () async {
+                    return await SettingsAPI.GetRooms();
+                  },
+                  anotherWidget: (list) {
+                    var tempName = "";
+                    return Column(
+                      children: [
+                        Column(
+                          children: (list as List<CIA_RoomModel>)
+                              .map((e) => Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                            onPressed: () async {
+                                              list.removeWhere((element) => element.id == e.id);
+                                              await SettingsAPI.EditRooms!(list);
+                                              setState(() {});
+                                            },
+                                            icon: Icon(Icons.remove)),
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "Value",
+                                            onChange: (v)=>e.name =v,
+                                            controller: TextEditingController(text: e.name ?? ""),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        GestureDetector(
+                                          onTap: (){
+                                            Color selectedColor =e.color!;
+                                            CIA_ShowPopUp(
+                                                context: context,
+                                                child: StatefulBuilder(
+                                                  builder: (context,mySetState) {
+                                                    return Row(
+                                                      children: () {
+                                                        List<Widget> r = [];
+                                                        List<Color> colors = [
+                                                          Colors.red,
+                                                          Colors.blue,
+                                                          Colors.black,
+                                                          Colors.orange,
+                                                          Colors.brown,
+                                                          Colors.indigo,
+                                                          Colors.green,
+                                                        ];
+                                                        r.addAll(
+                                                          colors.map(
+                                                                (element) => GestureDetector(
+                                                              onTap: () {
+                                                                selectedColor = element;
+                                                                mySetState(() {});
+                                                              },
+                                                              child: Padding(
+                                                                padding: EdgeInsets.all(5),
+                                                                child: Container(
+                                                                  width: 30,
+                                                                  height: 30,
+                                                                  decoration: BoxDecoration(
+                                                                    color: element,
+                                                                    border: Border.all(
+                                                                        color: selectedColor == element ? Colors.yellow : element,
+                                                                        width: 3
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                        return r;
+                                                      }(),
+                                                    );
+                                                  }
+                                                ),
+                                                onSave: () async {
+                                                  e.color = selectedColor;
+                                                  await SettingsAPI.EditRooms(list).then((value) {
+                                                    if(value.statusCode == 200)
+                                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                                    else
+                                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                                  });
+                                                  setState(() {});
+                                                });
+                                          },
+                                          child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            color: e.color,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                        Expanded(child: SizedBox()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CIA_SecondaryButton(
+                                label: "Add Room",
+                                onTab: () {
+                                  Color selectedColor = Colors.red;
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: StatefulBuilder(
+                                        builder: (context, setState) {
+                                          return Column(
+                                            children: [
+                                              CIA_TextFormField(
+                                                label: "Value",
+                                                controller: TextEditingController(text:tempName),
+                                                onChange: (value) => tempName = value,
+                                              ),
+                                              Row(
+                                                children: () {
+                                                  List<Widget> r = [];
+                                                  List<Color> colors = [
+                                                    Colors.red,
+                                                    Colors.blue,
+                                                    Colors.black,
+                                                    Colors.orange,
+                                                    Colors.brown,
+                                                    Colors.indigo,
+                                                    Colors.green,
+                                                  ];
+                                                  r.addAll(
+                                                    colors.map(
+                                                      (e) => GestureDetector(
+                                                        onTap: () {
+                                                          selectedColor = e;
+                                                          ShowSnackBar(isSuccess: true, title: e.value.toString(), message: "");
+                                                          setState(() {});
+                                                        },
+                                                        child: Padding(
+                                                          padding: EdgeInsets.all(5),
+                                                          child: Container(
+                                                            width: 30,
+                                                            height: 30,
+                                                            decoration: BoxDecoration(
+                                                              color: e,
+                                                              border: Border.all(
+                                                                color: selectedColor == e ? Colors.yellow : e,
+                                                                width: 3
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                  return r;
+                                                }(),
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                      onSave: () async {
+                                        list.add(CIA_RoomModel(name: tempName,color: selectedColor));
+                                        await SettingsAPI.EditRooms!(list);
+                                        setState(() {});
+                                      });
+                                }),
+                            SizedBox(width:10),
+                            CIA_PrimaryButton(
+                                label: "Save Changes",
+                                isLong: true,
+                                onTab: () async{
+                                  await SettingsAPI.EditRooms!(list).then((value) {
+                                    if(value.statusCode == 200)
+                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                    else
+                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                  });
+                                  setState(() {});
+                                }),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ];
               return pages[index];
             },
@@ -263,25 +464,20 @@ class _ImplantsSettings extends StatefulWidget {
 }
 
 class _CommonSettingsWidget extends StatefulWidget {
-  _CommonSettingsWidget({
-    Key? key,
-    this.label1 = "",
-    this.label2 = "",
-    this.loadFunction1,
-    this.loadFunction2,
-    this.addFunction1,
-    this.addFunction2,
-  }) : super(key: key);
+  _CommonSettingsWidget(
+      {Key? key, this.label1 = "", this.label2 = "", this.loadFunction1, this.loadFunction2, this.addFunction1, this.addFunction2, this.anotherWidget})
+      : super(key: key);
 
-  List<DropDownDTO> list1 = [];
+  List<dynamic> list1 = [];
   int? selectedList1Id;
   List<DropDownDTO> list2 = [];
   Future<API_Response> Function()? loadFunction1;
   Future<API_Response> Function(dynamic?)? loadFunction2;
-  Future<API_Response> Function(List<DropDownDTO> list)? addFunction1;
+  Future<API_Response> Function(dynamic)? addFunction1;
   Future<API_Response> Function(dynamic?, dynamic?)? addFunction2;
   String label1;
   String label2;
+  Function? anotherWidget;
 
   @override
   State<_CommonSettingsWidget> createState() => _CommonSettingsWidgetState();
@@ -316,7 +512,12 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                               ),
                               onSave: () async {
                                 widget.list1.add(DropDownDTO(name: tempName));
-                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1);
+                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                  if(value.statusCode == 200)
+                                    ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                  else
+                                    ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                });
                                 setState(() {});
                               });
                         }),
@@ -369,7 +570,12 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                         label: "Delete",
                                         onTab: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1);
+                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                            if(value.statusCode == 200)
+                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                            else
+                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                          });
                                           setState(() {});
                                         }),
                                   ),
@@ -388,7 +594,12 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                               ),
                                               onSave: () async {
                                                 widget.list1.firstWhere((element) => element.id == e.id).name = tempName;
-                                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1);
+                                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                                  if(value.statusCode == 200)
+                                                    ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                                  else
+                                                    ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                                });
                                                 setState(() {});
                                               });
                                         }),
@@ -428,11 +639,16 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                     IconButton(
                                         onPressed: () async {
                                           widget.list2.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2);
+                                          if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                            if(value.statusCode == 200)
+                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                            else
+                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                          });
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.remove)),
-                                    Expanded(child: CIA_TextFormField(label: "Name", controller: TextEditingController(text: e.name ?? ""))),
+                                    Expanded(child: CIA_TextFormField(label: "Name", controller: TextEditingController(text: e.name ?? ""),onChange: (v)=>e.name = v,)),
                                   ],
                                 ),
                               ))
@@ -441,25 +657,59 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                     Expanded(child: SizedBox()),
                     widget.selectedList1Id == null
                         ? Container()
-                        : CIA_PrimaryButton(
-                            label: "Add ${widget.label2}",
-                            isLong: true,
-                            onTab: () {
-                              CIA_ShowPopUp(
-                                  context: context,
-                                  child: CIA_TextFormField(
-                                    label: "Value",
-                                    controller: TextEditingController(),
-                                    onChange: (value) => tempName = value,
-                                  ),
-                                  onSave: () async {
-                                    widget.list2.add(DropDownDTO(name: tempName));
-                                    if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2);
-                                    setState(() {});
+                        : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CIA_SecondaryButton(
+                                label: "Add ${widget.label2}",
+                                onTab: () {
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: CIA_TextFormField(
+                                        label: "Value",
+                                        controller: TextEditingController(),
+                                        onChange: (value) => tempName = value,
+                                      ),
+                                      onSave: () async {
+                                        widget.list2.add(DropDownDTO(name: tempName));
+                                        if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                          if(value.statusCode == 200)
+                                            ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                          else
+                                            ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                        });
+                                        setState(() {});
+                                      });
+                                }),
+                            SizedBox(width:10),
+                            CIA_PrimaryButton(
+                                label: "Save Changes",
+                                isLong: true,
+                                onTab: () async{
+                                  if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                    if(value.statusCode == 200)
+                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                    else
+                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
                                   });
-                            }),
+                                  setState(() {});
+                                }),
+                          ],
+                        ),
                   ],
                 );
+              },
+            ),
+          ));
+        } else if (widget.loadFunction1 != null && widget.anotherWidget != null) {
+          r.add(Expanded(
+            child: CIA_FutureBuilder(
+              loadFunction: widget.loadFunction1!(),
+              onSuccess: (data) {
+                var tempName = "";
+
+                widget.list1 = data as List<dynamic>;
+                return widget.anotherWidget!(widget.list1);
               },
             ),
           ));
@@ -469,6 +719,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
               loadFunction: widget.loadFunction1!(),
               onSuccess: (data) {
                 var tempName = "";
+
                 widget.list1 = data as List<DropDownDTO>;
                 return Column(
                   children: [
@@ -481,34 +732,61 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                     IconButton(
                                         onPressed: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1);
+                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                            if(value.statusCode == 200)
+                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                            else
+                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                          });
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.remove)),
-                                    Expanded(child: CIA_TextFormField(label: "Value", controller: TextEditingController(text: e.name ?? ""))),
+                                    Expanded(child: CIA_TextFormField(label: "Value", controller: TextEditingController(text: e.name ?? ""),onChange: (v)=>e.name=v,)),
                                   ],
                                 ),
                               ))
                           .toList(),
                     ),
                     Expanded(child: SizedBox()),
-                    CIA_PrimaryButton(
-                        label: "Add ${widget.label2}",
-                        isLong: true,
-                        onTab: () {
-                          CIA_ShowPopUp(
-                              context: context,
-                              child: CIA_TextFormField(
-                                label: "Value",
-                                controller: TextEditingController(),
-                                onChange: (value) => tempName = value,
-                              ),
-                              onSave: () async {
-                                widget.list1.add(DropDownDTO(name: tempName));
-                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1);
-                                setState(() {});
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CIA_SecondaryButton(
+                            label: "Add ${widget.label2}",
+                            onTab: () {
+                              CIA_ShowPopUp(
+                                  context: context,
+                                  child: CIA_TextFormField(
+                                    label: "Value",
+                                    controller: TextEditingController(),
+                                    onChange: (value) => tempName = value,
+                                  ),
+                                  onSave: () async {
+                                    widget.list1.add(DropDownDTO(name: tempName));
+                                    if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                      if(value.statusCode == 200)
+                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                      else
+                                        ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                    });
+                                    setState(() {});
+                                  });
+                            }),
+                        SizedBox(width:10),
+                        CIA_PrimaryButton(
+                            label: "Save Changes",
+                            isLong:true,
+                            onTab: () async{
+                              if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
+                                if(value.statusCode == 200)
+                                  ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                else
+                                  ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
                               });
-                        }),
+                              setState(() {});
+                            }),
+                      ],
+                    ),
                   ],
                 );
               },
@@ -826,160 +1104,154 @@ class _UsersSettingsPageState extends State<_UsersSettingsPage> {
                   else if (controller.index.value == 3)
                     role = "candidate";
                   else if (controller.index.value == 4) role = "secretary";
-                  ApplicationUserModel newUser = ApplicationUserModel(role: role,gender: "Male");
+                  ApplicationUserModel newUser = ApplicationUserModel(role: role, gender: "Male");
                   bool newBatch = false;
                   CIA_ShowPopUp(
                     title: "Add new $role",
                     height: 600,
                     context: context,
-                    child: StatefulBuilder(
-                      builder: (context,setState) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: CIA_TextFormField(
-                                  label: "Name",
-                                  controller: TextEditingController(text:newUser.name??""),
-                                  onChange: (value) => newUser.name = value,
-                                ),
+                    child: StatefulBuilder(builder: (context, setState) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                label: "Name",
+                                controller: TextEditingController(text: newUser.name ?? ""),
+                                onChange: (value) => newUser.name = value,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Visibility(
-                        visible:controller.index.value!=3,
-                                  child: CIA_TextFormField(
-                                    label: "Email",
-                                    controller: TextEditingController(text:newUser.email??""),
-                                    onChange: (value) => newUser.email = value,
-                                  ),
-                                ),
-                              ),
-                              Visibility(
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Visibility(
                                 visible: controller.index.value != 3,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: FormTextValueWidget(
-                                      text: r"Default passowrd: Pa$$word1",
-                                    )),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: HorizontalRadioButtons(
-                                    names: ["Male", "Female"],
-                                    groupValue: "Male",
-                                    onChange: (v) {
-                                      newUser.gender = v;
-                                    }),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
                                 child: CIA_TextFormField(
-                                  label: "Phone Number",
-                                  isNumber: true,
-                                  controller: TextEditingController(text:newUser.phoneNumber??""),
-                                  onChange: (value) => newUser.phoneNumber = value,
+                                  label: "Email",
+                                  controller: TextEditingController(text: newUser.email ?? ""),
+                                  onChange: (value) => newUser.email = value,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: CIA_TextFormField(
-                                  onTap: () {
-                                    CIA_PopupDialog_DateOnlyPicker(context, "Birthday", (v) {
-                                      setState(() {
-                                        newUser.dateOfBirth = v;
-                                      });
+                            ),
+                            Visibility(
+                              visible: controller.index.value != 3,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: FormTextValueWidget(
+                                    text: r"Default passowrd: Pa$$word1",
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: HorizontalRadioButtons(
+                                  names: ["Male", "Female"],
+                                  groupValue: "Male",
+                                  onChange: (v) {
+                                    newUser.gender = v;
+                                  }),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                label: "Phone Number",
+                                isNumber: true,
+                                controller: TextEditingController(text: newUser.phoneNumber ?? ""),
+                                onChange: (value) => newUser.phoneNumber = value,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                onTap: () {
+                                  CIA_PopupDialog_DateOnlyPicker(context, "Birthday", (v) {
+                                    setState(() {
+                                      newUser.dateOfBirth = v;
                                     });
-                                  },
-                                  label: "Date of Birth",
-                                  controller: TextEditingController(text:newUser.dateOfBirth??""),
-
-                                ),
+                                  });
+                                },
+                                label: "Date of Birth",
+                                controller: TextEditingController(text: newUser.dateOfBirth ?? ""),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: CIA_TextFormField(
-                                  label: "Graduated From",
-                                  controller: TextEditingController(text:newUser.graduatedFrom??""),
-                                  onChange: (value) => newUser.graduatedFrom = value,
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                label: "Graduated From",
+                                controller: TextEditingController(text: newUser.graduatedFrom ?? ""),
+                                onChange: (value) => newUser.graduatedFrom = value,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: CIA_TextFormField(
-                                  label: "Class Year",
-                                  controller: TextEditingController(text:newUser.classYear??""),
-                                  onChange: (value) => newUser.classYear = value,
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                label: "Class Year",
+                                controller: TextEditingController(text: newUser.classYear ?? ""),
+                                onChange: (value) => newUser.classYear = value,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: CIA_TextFormField(
-                                  label: "Speciality",
-                                  controller: TextEditingController(text:newUser.speciality??""),
-                                  onChange: (value) => newUser.speciality = value,
-                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CIA_TextFormField(
+                                label: "Speciality",
+                                controller: TextEditingController(text: newUser.speciality ?? ""),
+                                onChange: (value) => newUser.speciality = value,
                               ),
-                              Visibility(
-                                visible: controller.index.value == 3,
-                                child: Column(
-                                  children: [
-                                    CIA_MultiSelectChipWidget(
-                                      onChange: (item, isSelected) {
-                                        if(isSelected) newUser.batchId = null;
-                                        else newUser.batch = null;
-                                        setState(() => newBatch = isSelected);
-                                      },
-                                      labels: [
-                                        CIA_MultiSelectChipWidgeModel(
-                                          label: "New Batch",
-                                        ),
-                                      ],
-                                    ),
-                                    newBatch
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: CIA_TextFormField(
-                                              label: "New Batch Name",
-                                              controller: TextEditingController(text:newUser.batch==null?"":newUser.batch!.name??""),
-                                              onChange: (value) {
-                                                newUser.batch = DropDownDTO(name: value);
-                                                newUser.batchId = null;
-                                              },
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: CIA_DropDownSearch(
-                                              asyncItems: LoadinAPI.LoadCandidatesBatches,
-                                              label: "Batch",
-                                              onSelect: (value) {
-                                                newUser.batchId = value.id;
-                                                newUser.batch = null;
-                                              },
-                                            ),
-                                          )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
+                            ),
+                            Visibility(
+                              visible: controller.index.value == 3,
+                              child: Column(
+                                children: [
+                                  CIA_MultiSelectChipWidget(
+                                    onChange: (item, isSelected) {
+                                      if (isSelected)
+                                        newUser.batchId = null;
+                                      else
+                                        newUser.batch = null;
+                                      setState(() => newBatch = isSelected);
+                                    },
+                                    labels: [
+                                      CIA_MultiSelectChipWidgeModel(
+                                        label: "New Batch",
+                                      ),
+                                    ],
+                                  ),
+                                  newBatch
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: CIA_TextFormField(
+                                            label: "New Batch Name",
+                                            controller: TextEditingController(text: newUser.batch == null ? "" : newUser.batch!.name ?? ""),
+                                            onChange: (value) {
+                                              newUser.batch = DropDownDTO(name: value);
+                                              newUser.batchId = null;
+                                            },
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: CIA_DropDownSearch(
+                                            asyncItems: LoadinAPI.LoadCandidatesBatches,
+                                            label: "Batch",
+                                            onSelect: (value) {
+                                              newUser.batchId = value.id;
+                                              newUser.batch = null;
+                                            },
+                                          ),
+                                        )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+                    onSave: () async {
+                      if (role == "candidate") {
+                        await UserAPI.AddCandidate(newUser);
+                      } else {
+                        await AuthenticationAPI.Register(newUser);
                       }
-                    ),
-                    onSave: () async{
-                      if(role=="candidate")
-                        {
-                          await UserAPI.AddCandidate(newUser);
-                        }
-                      else
-                        {
-                          await AuthenticationAPI.Register(newUser);
-                        }
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                   );
                 })
@@ -989,11 +1261,11 @@ class _UsersSettingsPageState extends State<_UsersSettingsPage> {
           child: PageView(
             controller: controller,
             children: [
-              _buildWidget(UserDataSourceType.Admin),
-              _buildWidget(UserDataSourceType.Instructor),
-              _buildWidget(UserDataSourceType.Assistant),
-              _buildWidget(UserDataSourceType.Candidate),
-              _buildWidget(UserDataSourceType.Secretary),
+              _buildWidget(UserRoles.Admin),
+              _buildWidget(UserRoles.Instructor),
+              _buildWidget(UserRoles.Assistant),
+              _buildWidget(UserRoles.Candidate),
+              _buildWidget(UserRoles.Secretary),
             ],
           ),
         )
@@ -1001,7 +1273,7 @@ class _UsersSettingsPageState extends State<_UsersSettingsPage> {
     );
   }
 
-  _buildWidget(UserDataSourceType type) {
+  _buildWidget(UserRoles type) {
     ApplicationUserDataSource dataSource = ApplicationUserDataSource(type: type);
     return CIA_Table(
       columnNames: dataSource.columns,

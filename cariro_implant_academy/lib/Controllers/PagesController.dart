@@ -1,16 +1,16 @@
+import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
+import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../Constants/Controllers.dart';
-import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
 import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
-import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
 import '../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../Pages/CIA_Pages/StockPage.dart';
 import '../Pages/Clinic_Pages/Clinic_CashFlowPage.dart';
@@ -18,10 +18,8 @@ import '../Pages/Clinic_Pages/Clinic_DoctorsSearchPage.dart';
 import '../Pages/Clinic_Pages/Clinic_PatientsSearchPage.dart';
 import '../Pages/Clinic_Pages/Clinic_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
-import '../Pages/LAB_Pages/LAB_CustomersSearchPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
-import '../Pages/LAB_Pages/LAB_TechnicianSearchPage.dart';
 import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 
 class PagesController extends PageController {
@@ -40,12 +38,12 @@ class PagesController extends PageController {
                 child: PatientsSearchPage(),
               ),
               Container(
-                child: const Center(
-                  child: AssistantsSearchPage(),
+                child:  Center(
+                  child:  UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
                 ),
               ),
               Container(
-                child: const Center(child: InstructorsSearchPage()),
+                child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
               ),
               Container(child: CandidatesSearchPage()),
               Container(
@@ -74,12 +72,12 @@ class PagesController extends PageController {
                   child: LabRequestsSearchPage(),
                 ),
                 Container(
-                  child: const Center(
-                    child: LAB_CustomersSearchPage(),
+                  child:  Center(
+                    child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
                   ),
                 ),
                 Container(
-                  child: const Center(child: LAB_StockSearchPage()),
+                  child:  Center(child: LAB_StockSearchPage()),
                 ),
                 LAB_CashFlowsSearchPage(),
               ],
@@ -101,15 +99,15 @@ class PagesController extends PageController {
                 child: LabRequestsSearchPage(),
               ),
               Container(
-                child: LAB_TechnicianSearchPage(),
+                child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Technician)),
               ),
               Container(
-                child: const Center(
-                  child: LAB_CustomersSearchPage(),
+                child:  Center(
+                  child:UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
                 ),
               ),
               Container(
-                child: const Center(child: LAB_StockSearchPage()),
+                child:  Center(child: LAB_StockSearchPage()),
               ),
               LAB_CashFlowsSearchPage()
             ],

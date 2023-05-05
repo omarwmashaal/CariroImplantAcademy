@@ -76,9 +76,9 @@ class SiteController extends GetxController {
   AssetImage getSiteLogo() => _siteLogo;
 
   AssetImage getSiteLogoBySite(Website site) {
-    if (site == "CIA")
+    if (site == Website.CIA)
       return AssetImage("assets/CIA_Logo3.png");
-    else if (site == "LAB")
+    else if (site == Website.Lab)
       return AssetImage("assets/LAB_Logo.png");
     else
       return AssetImage("assets/Clinic_logo.png");

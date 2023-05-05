@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../Models/Enum.dart';
 import '../../Widgets/Title.dart';
 
 class CandidatesSearchPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class CandidatesSearchPage extends StatefulWidget {
 }
 
 class _CandidatesSearchPageState extends State<CandidatesSearchPage> {
-  ApplicationUserDataSource dataSource = ApplicationUserDataSource(type: UserDataSourceType.Candidate);
+  ApplicationUserDataSource dataSource = ApplicationUserDataSource(type: UserRoles.Candidate);
   @override
   Widget build(BuildContext context) {
     return PageView(

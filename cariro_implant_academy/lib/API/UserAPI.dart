@@ -7,61 +7,12 @@ import 'HTTP.dart';
 class UserAPI {
   static Future<API_Response> AddCandidate(ApplicationUserModel model) async {
 
+    model.email = "dummy@email.com";
     var response = await HTTPRequest.Post("User/AddCandidate",model.toJson());
     return response;
   }
- static Future<API_Response> GetInstructors() async {
-    var response = await HTTPRequest.Get("User/GetInstructors");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    return response;
-  }
-static Future<API_Response> GetUserData(int id) async {
-    var response = await HTTPRequest.Get("User/GetUserData?id=$id");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ApplicationUserModel.fromJson ((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
-    }
-    return response;
-  }
-
-  static Future<API_Response> GetAssistants() async {
-    var response = await HTTPRequest.Get("User/GetAssistants");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    return response;
-  }
-
-  static Future<API_Response> GetAdmins() async {
-    var response = await HTTPRequest.Get("User/GetAdmins");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    return response;
-  }
-
-  static Future<API_Response> GetLabTechnicians() async {
-    var response = await HTTPRequest.Get("User/GetLabTechnicians");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    return response;
-  }
-
-  static Future<API_Response> GetSecretaries() async {
-    var response = await HTTPRequest.Get("User/GetSecretaries");
-
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    return response;
-  }static Future<API_Response> GetCandidates() async {
+  //TODO: REMOVE THIS
+  static Future<API_Response> GetCandidates() async {
     var response = await HTTPRequest.Get("User/GetCandidates");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
@@ -78,8 +29,12 @@ static Future<API_Response> GetUserData(int id) async {
     }
     return response;
   }
-  static Future<API_Response> SearcshUsersByRole({required String search, required UserRoles role}) async {
-    var response = await HTTPRequest.Get("User/SearcshUsersByRole?search=$search&role=${role.index}");
+  static Future<API_Response> SearcshUsersByRole({String? search, required UserRoles role}) async {
+    API_Response response =API_Response();
+    if(search==null)
+      response = await HTTPRequest.Get("User/SearcshUsersByRole?role=${role.index}");
+    else
+      response = await HTTPRequest.Get("User/SearcshUsersByRole?search=$search&role=${role.index}");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();
@@ -97,4 +52,21 @@ static Future<API_Response> GetUserData(int id) async {
 
     return response;
   }
+  static Future<API_Response> GetUserData(int id) async {
+    var response = await HTTPRequest.Get("User/GetUserData?id=$id");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ApplicationUserModel.fromJson ((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
+    }
+    return response;
+  }
+
+static Future<API_Response> UpdateUserInfo(ApplicationUserModel user) async {
+    var response = await HTTPRequest.Put("User/UpdateUserInfo?id=${user.idInt}",user.toJson());
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ApplicationUserModel.fromJson ((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
+    }
+    return response;
+  }
+
 }

@@ -225,9 +225,13 @@ class VisitsCalendarDataSource extends CalendarDataSource {
       res = await PatientAPI.GetScheduleForDoctor();
     else
       res = await PatientAPI.GetAllSchedules();
-    notifyListeners(CalendarDataSourceAction.reset, res.result as List<VisitsModel>);
+    //notifyListeners(CalendarDataSourceAction.resetResource, res.result as List<VisitsModel>);
+    //appointments = <VisitsModel>[];
     appointments = res.result as List<VisitsModel>;
-    notifyListeners(CalendarDataSourceAction.add, res.result as List<VisitsModel>);
+   // notifyListeners(CalendarDataSourceAction.resetResource, res.result as List<VisitsModel>);
+    //notifyListeners(CalendarDataSourceAction.removeResource, []);
+    //notifyListeners(CalendarDataSourceAction.add, res.result as List<VisitsModel>);
+    notifyListeners(CalendarDataSourceAction.reset, appointments!);
     return true;
   }
 }

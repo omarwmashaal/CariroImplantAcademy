@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,7 +37,7 @@ class ApplicationUserModel {
   EnumLabRequestSources? workPlaceEnum;
 
   ApplicationUserModel({
-    this.name="",
+    this.name = "",
     this.role,
     this.dateOfBirth,
     this.gender,
@@ -68,11 +69,17 @@ class ApplicationUserModel {
     address = json['address'];
     city = json['city'];
     idInt = json['idInt'];
-    id = json['id'];
+    try{
+      id = json['id'];
+    }catch(e){
+      id = json['idInt'];
+    }
+
+
     registeredById = json['registeredById'];
     registeredBy = json['registeredBy'] == null ? DropDownDTO() : DropDownDTO.fromJson(json['registeredBy']);
-    registerationDate = json['registerationDate'];
-    workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum']??0];
+    registerationDate = CIA_DateConverters.fromBackendToDateTime(json['registerationDate']);
+    workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum'] ?? 0];
     /*try{
       id = json['id'];
     }catch(e){
@@ -81,10 +88,10 @@ class ApplicationUserModel {
     userName = json['userName'];
     email = json['email'];
     phoneNumber = json['phoneNumber'];
-    batch = DropDownDTO.fromJson(json['batch']??Map<String,dynamic>());
+    batch = DropDownDTO.fromJson(json['batch'] ?? Map<String, dynamic>());
     batchId = json['batchId'];
     phoneNumber2 = json['phoneNumber2'];
-    workPlace =DropDownDTO.fromJson( json['workPlace']??Map<String,dynamic>());
+    workPlace = DropDownDTO.fromJson(json['workPlace'] ?? Map<String, dynamic>());
     workPlaceId = json['workPlaceId'];
   }
 
@@ -102,26 +109,25 @@ class ApplicationUserModel {
     data['idInt'] = this.idInt;
     data['id'] = this.id;
     //data['registeredById'] = this.registeredById;
-   // data['registeredBy'] = this.registeredBy;
+    // data['registeredBy'] = this.registeredBy;
     data['registerationDate'] = this.registerationDate;
     data['userName'] = this.userName;
     data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     data['batchId'] = this.batchId;
     data['batch'] = this.batch;
-    data['role'] = this.role;
+    data['role'] = this.role??"";
     data['phoneNumber2'] = this.phoneNumber2;
-    data['workPlace'] = this.workPlace!=null?this.workPlace!.toJson():null;
+    data['workPlace'] = this.workPlace != null ? this.workPlace!.toJson() : null;
     data['workPlaceId'] = this.workPlaceId;
-    data['workPlaceEnum'] = (this.workPlaceEnum??EnumLabRequestSources.CIA).index;
+    data['workPlaceEnum'] = (this.workPlaceEnum ?? EnumLabRequestSources.CIA).index;
     return data;
   }
 }
 
-enum UserDataSourceType { Admin, Instructor, Assistant, Secretary, Candidate, Technician }
 
 class ApplicationUserDataSource extends DataGridSource {
-  UserDataSourceType type;
+  UserRoles type;
   List<ApplicationUserModel> models = <ApplicationUserModel>[];
   List<String> columns = [
     "ID",
@@ -137,231 +143,210 @@ class ApplicationUserDataSource extends DataGridSource {
 
   init() {
     if (siteController.getRole() == "admin") {
-      if(type == UserDataSourceType.Candidate)
-      {
-        columns = ["ID", "Name","Batch", "Email", "Phone", "Remove"];
+      if (type == UserRoles.Candidate) {
+        columns = ["ID", "Name", "Batch", "Email", "Phone", "Remove"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Batch', value: e.batch!=null?e.batch!.name??"":""),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-
-          DataGridCell<Widget>(
-              columnName: 'Remove',
-              value: IconButton(
-                icon: Icon(Icons.delete_forever),
-                onPressed: () async{
-                  await UserAPI.RemoveUser(e.idInt!);
-                  await loadData();
-
-                },
-              )),
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<Widget>(
+                  columnName: 'Remove',
+                  value: IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    onPressed: () async {
+                      await UserAPI.RemoveUser(e.idInt!);
+                      await loadData();
+                    },
+                  )),
+            ]))
             .toList();
-      }
-      else if(type == UserDataSourceType.Secretary)
-      {
+      } else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone", "Remove"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<Widget>(
-              columnName: 'Remove',
-              value: IconButton(
-                icon: Icon(Icons.delete_forever),
-                onPressed: () async{
-                  await UserAPI.RemoveUser(e.idInt!);
-                  await loadData();
-
-                },
-              )),
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<Widget>(
+                  columnName: 'Remove',
+                  value: IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    onPressed: () async {
+                      await UserAPI.RemoveUser(e.idInt!);
+                      await loadData();
+                    },
+                  )),
+            ]))
             .toList();
-      }
-      else if(type== UserDataSourceType.Assistant || type == UserDataSourceType.Instructor)
-      {
-          columns = ["ID", "Name", "Email", "Phone","Graduated","Class Year","Speciality", "Role", "Remove"];
-          _userData = models
-              .map<DataGridRow>((e) => DataGridRow(cells: [
-            DataGridCell<int>(columnName: 'ID', value: e.idInt),
-            DataGridCell<String>(columnName: 'Name', value: e.name),
-            DataGridCell<String>(columnName: 'Email', value: e.email),
-            DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-            DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
-            DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
-            DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
-            DataGridCell<Widget>(
-              columnName: 'Role',
-              value: HorizontalRadioButtons(
-                names: ["Admin", "Instructor", "Assistant"],
-                groupValue: type == UserDataSourceType.Admin
-                    ? "Admin"
-                    : type == UserDataSourceType.Assistant
-                    ? "Assistant"
-                    : type == UserDataSourceType.Instructor
-                    ? "Instructor"
-                    : type == UserDataSourceType.Secretary
-                    ? "Secretary"
-                    : "",
-                onChange: (value) async {
-                  await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
-                  await loadData();
-                },
+      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+        columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality", "Role", "Remove"];
+        _userData = models
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
+              DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
+              DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
+              DataGridCell<Widget>(
+                columnName: 'Role',
+                value: HorizontalRadioButtons(
+                  names: ["Admin", "Instructor", "Assistant"],
+                  groupValue: type == UserRoles.Admin
+                      ? "Admin"
+                      : type == UserRoles.Assistant
+                      ? "Assistant"
+                      : type == UserRoles.Instructor
+                      ? "Instructor"
+                      : type == UserRoles.Secretary
+                      ? "Secretary"
+                      : "",
+                  onChange: (value) async {
+                    await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
+                    await loadData();
+                  },
+                ),
               ),
-            ),
-            DataGridCell<Widget>(
-                columnName: 'Remove',
-                value: IconButton(
-                  icon: Icon(Icons.delete_forever),
-                  onPressed: () async{
-                    await UserAPI.RemoveUser(e.idInt!);
-                    await loadData();
-
-                  },
-                )),
-          ]))
-              .toList();
-        }
-      else if(type== UserDataSourceType.Technician)
-      {
-          columns = ["ID", "Name", "Email", "Phone", "Remove"];
-          _userData = models
-              .map<DataGridRow>((e) => DataGridRow(cells: [
-            DataGridCell<int>(columnName: 'ID', value: e.idInt),
-            DataGridCell<String>(columnName: 'Name', value: e.name),
-            DataGridCell<String>(columnName: 'Email', value: e.email),
-            DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-            DataGridCell<Widget>(
-                columnName: 'Remove',
-                value: IconButton(
-                  icon: Icon(Icons.delete_forever),
-                  onPressed: () async{
-                    await UserAPI.RemoveUser(e.idInt!);
-                    await loadData();
-
-                  },
-                )),
-          ]))
-              .toList();
-        }
-      else
-      {
+              DataGridCell<Widget>(
+                  columnName: 'Remove',
+                  value: IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    onPressed: () async {
+                      await UserAPI.RemoveUser(e.idInt!);
+                      await loadData();
+                    },
+                  )),
+            ]))
+            .toList();
+      } else if (type == UserRoles.Technician||type == UserRoles.OutSource) {
+        columns = ["ID", "Name", "Email", "Phone", "Remove"];
+        _userData = models
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<Widget>(
+                  columnName: 'Remove',
+                  value: IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    onPressed: () async {
+                      await UserAPI.RemoveUser(e.idInt!);
+                      await loadData();
+                    },
+                  )),
+            ]))
+            .toList();
+      } else {
         columns = ["ID", "Name", "Email", "Phone", "Role", "Remove"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<Widget>(
-            columnName: 'Role',
-            value: HorizontalRadioButtons(
-              names: ["Admin", "Instructor", "Assistant"],
-              groupValue: type == UserDataSourceType.Admin
-                  ? "Admin"
-                  : type == UserDataSourceType.Assistant
-                  ? "Assistant"
-                  : type == UserDataSourceType.Instructor
-                  ? "Instructor"
-                  : type == UserDataSourceType.Secretary
-                  ? "Secretary"
-                  : "",
-              onChange: (value) async {
-                await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
-                await loadData();
-              },
-            ),
-          ),
-          DataGridCell<Widget>(
-              columnName: 'Remove',
-              value: IconButton(
-                icon: Icon(Icons.delete_forever),
-                onPressed: () async{
-                  await UserAPI.RemoveUser(e.idInt!);
-                  await loadData();
-
-                },
-              )),
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<Widget>(
+                columnName: 'Role',
+                value: HorizontalRadioButtons(
+                  names: ["Admin", "Instructor", "Assistant"],
+                  groupValue: type == UserRoles.Admin
+                      ? "Admin"
+                      : type == UserRoles.Assistant
+                      ? "Assistant"
+                      : type == UserRoles.Instructor
+                      ? "Instructor"
+                      : type == UserRoles.Secretary
+                      ? "Secretary"
+                      : "",
+                  onChange: (value) async {
+                    await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
+                    await loadData();
+                  },
+                ),
+              ),
+              DataGridCell<Widget>(
+                  columnName: 'Remove',
+                  value: IconButton(
+                    icon: Icon(Icons.delete_forever),
+                    onPressed: () async {
+                      await UserAPI.RemoveUser(e.idInt!);
+                      await loadData();
+                    },
+                  )),
+            ]))
             .toList();
       }
-
-
-
     } else {
-      if(type == UserDataSourceType.Candidate)
-        {
-          columns = ["ID", "Name","Batch", "Email", "Phone"];
-          _userData = models
-              .map<DataGridRow>((e) => DataGridRow(cells: [
-            DataGridCell<int>(columnName: 'ID', value: e.idInt),
-            DataGridCell<String>(columnName: 'Name', value: e.name),
-            DataGridCell<String>(columnName: 'Batch', value: e.batch!=null?e.batch!.name??"":""),
-            DataGridCell<String>(columnName: 'Email', value: e.email),
-            DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          ]))
-              .toList();
-        }
-      else if(type == UserDataSourceType.Secretary)
-      {
+      if (type == UserRoles.Candidate) {
+        columns = ["ID", "Name", "Batch", "Email", "Phone"];
+        _userData = models
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            ]))
+            .toList();
+      } else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            ]))
             .toList();
-      }
-      else if(type== UserDataSourceType.Assistant || type == UserDataSourceType.Instructor)
-      {
-        columns = ["ID", "Name", "Email", "Phone","Graduated","Class Year","Speciality"];
+      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+        columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
-          DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
-          DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
-
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+              DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
+              DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
+              DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
+            ]))
             .toList();
-      }
-      else if(type== UserDataSourceType.Technician )
-      {
+      } else if (type == UserRoles.Technician||type == UserRoles.OutSource) {
         columns = ["ID", "Name", "Email", "Phone"];
         _userData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.idInt),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Email', value: e.email),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-
-        ]))
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            ]))
+            .toList();
+      } else {
+        columns = ["ID", "Name", "Email", "Phone"];
+        _userData = models
+            .map<DataGridRow>((e) =>
+            DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.idInt),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Email', value: e.email),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+            ]))
             .toList();
       }
-      else
-        {
-          columns = ["ID", "Name", "Email", "Phone"];
-          _userData = models
-              .map<DataGridRow>((e) => DataGridRow(cells: [
-            DataGridCell<int>(columnName: 'ID', value: e.idInt),
-            DataGridCell<String>(columnName: 'Name', value: e.name),
-            DataGridCell<String>(columnName: 'Email', value: e.email),
-            DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          ]))
-              .toList();
-        }
-
     }
   }
 
@@ -374,32 +359,25 @@ class ApplicationUserDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-      if (e.value is Widget) return e.value;
-      return Container(
-        alignment: Alignment.center,
-        child: Text(
-          e.value == null ? "" : e.value.toString(),
-          style: TextStyle(fontSize: 12),
-        ),
-      );
-    }).toList());
+          if (e.value is Widget) return e.value;
+          return Container(
+            alignment: Alignment.center,
+            child: Text(
+              e.value == null ? "" : e.value.toString(),
+              style: TextStyle(fontSize: 12),
+            ),
+          );
+        }).toList());
   }
 
-  Future<bool> loadData() async {
+  Future<bool> loadData({String? search}) async {
     late API_Response response;
-    if (type == UserDataSourceType.Admin) {
-      response = await UserAPI.GetAdmins();
-    } else if (type == UserDataSourceType.Assistant) {
-      response = await UserAPI.GetAssistants();
-    } else if (type == UserDataSourceType.Instructor) {
-      response = await UserAPI.GetInstructors();
-    } else if (type == UserDataSourceType.Secretary) {
-      response = await UserAPI.GetSecretaries();
-    }else if (type == UserDataSourceType.Candidate) {
+    if (type == UserRoles.Candidate) {
       response = await UserAPI.GetCandidates();
-    }else if (type == UserDataSourceType.Technician) {
-      response = await UserAPI.GetLabTechnicians();
     }
+    else
+      response =await UserAPI.SearcshUsersByRole(search: search, role: type);
+
 
     if (response.statusCode == 200) {
       models = response.result as List<ApplicationUserModel>;
@@ -417,12 +395,13 @@ class CustomerDataSource extends DataGridSource {
   /// Creates the customer data source class with required details.
   CustomerDataSource() {
     _customerData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'ID', value: e.idInt),
-      DataGridCell<String>(columnName: 'Name', value: e.name),
-      DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-      DataGridCell<String>(columnName: 'Clinic Name', value: e.workPlace!.name),
-    ]))
+        .map<DataGridRow>((e) =>
+        DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.idInt),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+          DataGridCell<String>(columnName: 'Clinic Name', value: e.workPlace!.name),
+        ]))
         .toList();
   }
 

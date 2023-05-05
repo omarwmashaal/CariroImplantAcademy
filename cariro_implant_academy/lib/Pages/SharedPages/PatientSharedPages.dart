@@ -435,6 +435,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder(
         future: dataSource.loadData(widget.patientID),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -460,7 +461,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                               SizedBox(width: 30),
                               FormTextKeyWidget(text: "Name: "),
                               SizedBox(width: 10),
-                              FormTextValueWidget(text: dataSource.models.length == 0 ? "" : dataSource.models[0].patientName),
+                              FormTextValueWidget(text: dataSource.models.length == 0 ? "" : dataSource.models[0].patientName??""),
                             ],
                           ),
                         ),

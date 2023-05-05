@@ -119,7 +119,10 @@ class _PatientSearch extends StatefulWidget {
 class _PatientSearchState extends State<_PatientSearch> {
   @override
   void initState() {
+    if(siteController.getRole()=="secretary")
     siteController
+        .setAppBarWidget(tabs: ["Patients Data",  "Visits Log"]);
+   else siteController
         .setAppBarWidget(tabs: ["Patients Data", "My Patients", "Visits Log"]);
   }
 

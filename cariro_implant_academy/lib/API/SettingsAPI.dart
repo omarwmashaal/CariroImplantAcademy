@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Models/CIA_RoomModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/ImplantModel.dart';
 
@@ -145,6 +146,15 @@ class SettingsAPI {
     return response;
   }
 
+  static Future<API_Response> GetRooms() async {
+    var response = await HTTPRequest.Get("Settings/GetRooms");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => CIA_RoomModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
   static Future<API_Response> ChangeImplantCompanyName(int id, String name) async {
     var response = await HTTPRequest.Put("Settings/ChangeImplantCompanyName?id=$id&name=$name",null);
     return response;
@@ -224,6 +234,13 @@ class SettingsAPI {
 
   static Future<API_Response> AddPaymentMethods( List<DropDownDTO> model) async {
     var response = await HTTPRequest.Put("Settings/AddPaymentMethods?",model.map((e) => e.toJson()).toList());
+    return response;
+  }
+
+
+
+  static Future<API_Response> EditRooms( List<CIA_RoomModel> model) async {
+    var response = await HTTPRequest.Put("Settings/EditRooms?",model.map((e) => e.toJson()).toList());
     return response;
   }
 

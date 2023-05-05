@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Constants/Controllers.dart';
-import '../Pages/CIA_Pages/Assistants_SearchPage.dart';
+import '../Models/ApplicationUserModel.dart';
+import '../Models/Enum.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
-import '../Pages/CIA_Pages/Instructors_SearchPage.dart';
+import '../Pages/UsersSearchPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
 const String RegisterPageRoute = "RegisterPageRoute";
@@ -20,12 +21,12 @@ PageView MainPageRoutes() {
         child: PatientsSearchPage(),
       ),
       Container(
-        child: const Center(
-          child: AssistantsSearchPage(),
+        child:  Center(
+          child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
         ),
       ),
       Container(
-        child: const Center(child: InstructorsSearchPage()),
+        child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
       ),
       Container(child: CandidatesSearchPage()),
       Container(

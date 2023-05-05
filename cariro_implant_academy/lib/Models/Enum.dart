@@ -87,5 +87,6 @@ enum UserRoles
   Instructor,
   Secretary,
   Technician,
-  OutSource
+  OutSource,
+  Candidate
 }
