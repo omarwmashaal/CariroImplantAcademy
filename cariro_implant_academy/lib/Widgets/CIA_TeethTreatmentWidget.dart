@@ -827,7 +827,7 @@ class _StatusWidgetState extends State<_StatusWidget> {
                   child: isSurgical
                       ? RoundCheckBox(
                           isChecked: widget.fieldModel.status,
-                          onTap: siteController.getRole() != "assistant"
+                          onTap: siteController.getRole() == "secretary"
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
@@ -1167,7 +1167,7 @@ class _StatusWidgetState extends State<_StatusWidget> {
                 child: isSurgical
                     ? RoundCheckBox(
                         isChecked: widget.fieldModel.status,
-                        onTap: siteController.getRole() != "assistant"
+                        onTap: siteController.getRole() == "secretary"
                             ? null
                             : (selected) {
                                 widget.fieldModel.status = selected;

@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     siteController.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MzMxMDI3MSwiZXhwIjoxNjgzOTE1MDcxLCJpYXQiOjE2ODMzMTAyNzF9.VuqJj3p5WT4ubwYxzvWXNd6o5No0Mhm6CvAI4lcyl_w");
     siteController.setRole("admin");
     siteController.setSite(Website.CIA);
-    siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1));
+    siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1,phoneNumber: "01127744835"));
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
     StockDataSource dataSource1 = StockDataSource();
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: CIA_TeethTreatmentPlanWidget(patientID: 2,surgical: true,)
+      body: PatientMedicalInfoPage(patientMedicalController: PatientMedicalController(PatientInfoModel(id: patientID)), patientID: patientID,)
     );
   }
 }
