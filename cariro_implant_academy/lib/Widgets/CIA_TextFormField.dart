@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,10 @@ class CIA_TextFormField extends StatefulWidget {
     this.borderColorOnChange,
     this.changeColorIfFilled = false,
     this.onTap,
+    this.inputFormatter,
     required this.controller,
+    this.errorFunction,
+    this.validator
   }) : super(key: key);
 
   int maxLines;
@@ -41,6 +45,9 @@ class CIA_TextFormField extends StatefulWidget {
   bool changeColorIfFilled;
   Color? borderColorOnChange;
   bool enabled;
+  List<TextInputFormatter>? inputFormatter;
+  String Function(String value)? validator;
+  bool Function(String value)? errorFunction;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -48,7 +55,7 @@ class CIA_TextFormField extends StatefulWidget {
 
 class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
   FocusNode focus = FocusNode();
-
+  bool error = false;
   @override
   void initState() {
     focus.addListener(() {
@@ -57,6 +64,10 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           widget.onChange!(widget.controller.text);
         }
       }
+      if(widget.errorFunction!=null)
+        {
+          error = widget.errorFunction!(widget.controller.text??"");
+        }
 
       setState(() {});
     });
@@ -64,6 +75,10 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.errorFunction!=null)
+    {
+      error = widget.errorFunction!(widget.controller.text??"");
+    }
     if (widget.controller.text != null)
       widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
 
@@ -83,30 +98,45 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             if (widget.onTap != null) widget.onTap!();
           },
           onChanged: (value) {
+            if(widget.isNumber && value==""||value== null) value = "0";
             if (widget.onInstantChange != null) widget.onInstantChange!(value);
             if (widget.onChange != null) widget.onChange!(value);
-          },
-          autovalidateMode: widget.isMinutes || widget.isHours ? AutovalidateMode.onUserInteraction : null,
-          validator: (value) {
-            if (widget.isHours) {
-              if (value != null && value.isNotEmpty) {
-                if (int.parse(value!) > 12) {
-                  widget.controller.text = 12.toString();
-                }
+            if(widget.errorFunction!=null)
+              {
+                var t = widget.errorFunction!(value);
+                if(t!=error) setState(() {
+                  error = t;
+                });
+
               }
-            } else if (widget.isMinutes) {
-              if (value != null && value.isNotEmpty) {
-                if (int.parse(value!) > 59) {
-                  widget.controller.text = 59.toString();
+          },
+          autovalidateMode: widget.isMinutes || widget.isHours ||widget.validator!=null ? AutovalidateMode.onUserInteraction : null,
+          validator:  (value) {
+            if(widget.isNumber && value==""||value== null) value = "0";
+            if(widget.validator!=null) widget.controller.text = widget.validator!(value??"");
+          else {
+              if (widget.isHours) {
+                if (value != null && value.isNotEmpty) {
+                  if (int.parse(value!) > 12) {
+                    widget.controller.text = 12.toString();
+                  }
+                }
+              } else if (widget.isMinutes) {
+                if (value != null && value.isNotEmpty) {
+                  if (int.parse(value!) > 59) {
+                    widget.controller.text = 59.toString();
+                  }
                 }
               }
             }
+          widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
           },
-          inputFormatters: widget.isHours || widget.isMinutes || widget.isNumber
+          inputFormatters:widget.inputFormatter!=null?
+          widget.inputFormatter!: ( widget.isHours || widget.isMinutes || widget.isNumber
               ? [
                   FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                 ]
-              : null,
+              : null),
           cursorColor: Color_Accent,
           maxLines: widget.maxLines,
           focusNode: focus,
@@ -119,7 +149,9 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             prefixIconColor: focus.hasFocus ? Colors.red : null,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: widget.changeColorIfFilled && widget.controller.text != "" && widget.borderColorOnChange != null
+                  color:
+                  error?Colors.red:
+                  widget.changeColorIfFilled && widget.controller.text != "" && widget.borderColorOnChange != null
                       ? widget.borderColorOnChange!
                       : widget.borderColor == null
                           ? Color_TextFieldBorder
@@ -152,3 +184,176 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
     );
   }
 }
+
+
+class CIA_DateTimeTextFormField extends StatefulWidget {
+  CIA_DateTimeTextFormField({
+    Key? key,
+    required this.label,
+    this.isObscure,
+    this.onChange = null,
+    this.onInstantChange = null,
+    this.icon,
+    this.isNumber = false,
+    this.isMinutes = false,
+    this.isHours = false,
+    this.maxLines = 1,
+    this.borderColor,
+    this.enabled = true,
+    this.suffix,
+    this.borderColorOnChange,
+    this.changeColorIfFilled = false,
+    this.onTap,
+    this.inputFormatter,
+    required this.controller,
+    this.validator
+  }) : super(key: key);
+
+  int maxLines;
+  bool isHours;
+  bool isMinutes;
+  bool? isObscure = false;
+  String label;
+  Function(String value)? onChange;
+  Function? onInstantChange;
+  Function? onTap;
+  IconData? icon;
+  Color? borderColor;
+  TextEditingController controller;
+  bool isNumber;
+  String? suffix;
+  bool changeColorIfFilled;
+  Color? borderColorOnChange;
+  bool enabled;
+  List<TextInputFormatter>? inputFormatter;
+  String Function(String value)? validator;
+
+  @override
+  State<CIA_DateTimeTextFormField> createState() => _CIA_DateTimeTextFormFieldState();
+}
+
+class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
+  FocusNode focus = FocusNode();
+
+  bool error = false;
+  @override
+  void initState() {
+    focus.addListener(() {
+      if (!focus.hasFocus) {
+        if (widget.onChange != null) {
+          widget.onChange!(widget.controller.text);
+        }
+      }
+
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.controller.text != null)
+      widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: ThemeData().colorScheme.copyWith(
+          primary: Color_Accent,
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (value){
+            if (widget.onChange != null) widget.onChange!(value);
+            widget.controller.text = value;
+            setState(() {
+
+            });
+          });
+        },
+        child: TextFormField(
+          enabled: false,
+          onTap: () {
+            CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (value){
+              if (widget.onChange != null) widget.onChange!(value);
+              widget.controller.text = value;
+              setState(() {
+
+              });
+            });
+          },
+          onChanged: (value) {
+            if (widget.onInstantChange != null) widget.onInstantChange!(value);
+            if (widget.onChange != null) widget.onChange!(value);
+          },
+          autovalidateMode: widget.isMinutes || widget.isHours ||widget.validator!=null ? AutovalidateMode.onUserInteraction : null,
+          validator:  (value) {
+            if(widget.validator!=null) widget.controller.text = widget.validator!(value??"");
+            else {
+              if (widget.isHours) {
+                if (value != null && value.isNotEmpty) {
+                  if (int.parse(value!) > 12) {
+                    widget.controller.text = 12.toString();
+                  }
+                }
+              } else if (widget.isMinutes) {
+                if (value != null && value.isNotEmpty) {
+                  if (int.parse(value!) > 59) {
+                    widget.controller.text = 59.toString();
+                  }
+                }
+              }
+            }
+            widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
+          },
+          inputFormatters:widget.inputFormatter!=null?
+          widget.inputFormatter!: ( widget.isHours || widget.isMinutes || widget.isNumber
+              ? [
+            FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+          ]
+              : null),
+          cursorColor: Color_Accent,
+          maxLines: widget.maxLines,
+          focusNode: focus,
+          controller: widget.controller,
+          textInputAction: TextInputAction.next,
+          obscureText: widget.isObscure == null ? false : true,
+          decoration: InputDecoration(
+            suffixText: widget.suffix,
+            prefixIcon: widget.icon != null ? Icon(Icons.search) : null,
+            prefixIconColor: focus.hasFocus ? Colors.red : null,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: widget.changeColorIfFilled && widget.controller.text != "" && widget.borderColorOnChange != null
+                      ? widget.borderColorOnChange!
+                      : widget.borderColor == null
+                      ? Color_TextFieldBorder
+                      : widget.borderColor!,
+                  width: 0.0),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: widget.changeColorIfFilled && widget.controller.text != "" && widget.borderColorOnChange != null
+                      ? widget.borderColorOnChange!
+                      : widget.borderColor == null
+                      ? Color_TextFieldBorder
+                      : widget.borderColor!,
+                  width: 0.0),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color_Accent),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            floatingLabelStyle: TextStyle(color: focus.hasFocus ? Color_Accent : Color(0xff000000), fontWeight: FontWeight.bold),
+            filled: true,
+            labelText: widget.label,
+            fillColor: Color_Background,
+            isDense: true,
+          ),
+        ),
+      ),
+    );
+  }
+}
+

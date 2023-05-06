@@ -11,6 +11,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_IncrementalTextField.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,6 +29,10 @@ import 'MultiSelectChipWidget.dart';
 
 bool isSurgical = false;
 
+class _getXController extends GetxController {
+  static RxBool tickVisible = false.obs;
+}
+
 // TODO: Listen to models and higlight chips
 class CIA_TeethTreatmentPlanWidget extends StatefulWidget {
   CIA_TeethTreatmentPlanWidget({Key? key, required this.patientID, this.surgical = false}) : super(key: key);
@@ -42,9 +47,9 @@ class CIA_TeethTreatmentPlanWidget extends StatefulWidget {
 late List<TreatmentPlanSubModel> models;
 
 class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWidget> {
-  List<String> selectedTeeth = [];
+  List<int> selectedTeeth = [];
   List<String> selectedStatus = [];
-  bool tickVisible = false;
+  bool viewOnlyMode = false;
 
   _updateTeethStatus(List<int> teeth, String status) {
     for (int tooth in teeth) {
@@ -199,13 +204,6 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
               currentTooth.expansionWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.expansionWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
-            currentTooth.immediateImplant = null;
-            currentTooth.simpleImplant = null;
-            currentTooth.guidedImplant = null;
-            currentTooth.closedSinusWithImplant = null;
-            currentTooth.openSinusWithImplant = null;
-            currentTooth.gbrWithImplant = null;
-            currentTooth.splittingWithImplant = null;
             break;
           }
         case "Splitting Without Implant":
@@ -249,7 +247,6 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             }
             break;
           }
-
 
         case "Pontic":
           {
@@ -295,9 +292,9 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
     }
   }
 
-  _updateTeethMultiStatus(List<String> teeth, List<String> status) {
+  _updateTeethMultiStatus(List<int> teeth, List<String> status) {
     for (String s in status) {
-      _updateTeethStatus(teeth.map((e) => int.parse(e)).toList(), s);
+      _updateTeethStatus(teeth, s);
     }
   }
 
@@ -371,7 +368,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
   Widget build(BuildContext context) {
     if (selectedTeeth.isEmpty) {
       selectedStatus.clear();
-      tickVisible = false;
+      _getXController.tickVisible.value = false;
       setState(() {});
     }
     return CIA_FutureBuilder(
@@ -390,100 +387,21 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
               Row(
                 children: [
                   Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        setState(() {
-                          tickVisible = true;
-                        });
-                        setState(() {});
+                    child: CIA_TeethChart(
+                      onChange: (selectedTeethList) {
+                        selectedTeeth = selectedTeethList;
+                        _getXController.tickVisible.value = true;
                       },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "11", isSelected: selectedTeeth.contains("11")),
-                        CIA_MultiSelectChipWidgeModel(label: "12", isSelected: selectedTeeth.contains("12")),
-                        CIA_MultiSelectChipWidgeModel(label: "13", isSelected: selectedTeeth.contains("13")),
-                        CIA_MultiSelectChipWidgeModel(label: "14", isSelected: selectedTeeth.contains("14")),
-                        CIA_MultiSelectChipWidgeModel(label: "15", isSelected: selectedTeeth.contains("15")),
-                        CIA_MultiSelectChipWidgeModel(label: "16", isSelected: selectedTeeth.contains("16")),
-                        CIA_MultiSelectChipWidgeModel(label: "17", isSelected: selectedTeeth.contains("17")),
-                        CIA_MultiSelectChipWidgeModel(label: "18", isSelected: selectedTeeth.contains("18")),
-                        CIA_MultiSelectChipWidgeModel(label: "19", isSelected: selectedTeeth.contains("19"))
-                      ],
                     ),
                   ),
-                  SizedBox(),
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        setState(() {
-                          tickVisible = true;
-                        });
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "21", isSelected: selectedTeeth.contains("21")),
-                        CIA_MultiSelectChipWidgeModel(label: "22", isSelected: selectedTeeth.contains("22")),
-                        CIA_MultiSelectChipWidgeModel(label: "23", isSelected: selectedTeeth.contains("23")),
-                        CIA_MultiSelectChipWidgeModel(label: "24", isSelected: selectedTeeth.contains("24")),
-                        CIA_MultiSelectChipWidgeModel(label: "25", isSelected: selectedTeeth.contains("25")),
-                        CIA_MultiSelectChipWidgeModel(label: "26", isSelected: selectedTeeth.contains("26")),
-                        CIA_MultiSelectChipWidgeModel(label: "27", isSelected: selectedTeeth.contains("27")),
-                        CIA_MultiSelectChipWidgeModel(label: "28", isSelected: selectedTeeth.contains("28")),
-                        CIA_MultiSelectChipWidgeModel(label: "29", isSelected: selectedTeeth.contains("29"))
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        setState(() {
-                          tickVisible = true;
-                        });
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "31", isSelected: selectedTeeth.contains("31")),
-                        CIA_MultiSelectChipWidgeModel(label: "32", isSelected: selectedTeeth.contains("32")),
-                        CIA_MultiSelectChipWidgeModel(label: "33", isSelected: selectedTeeth.contains("33")),
-                        CIA_MultiSelectChipWidgeModel(label: "34", isSelected: selectedTeeth.contains("34")),
-                        CIA_MultiSelectChipWidgeModel(label: "35", isSelected: selectedTeeth.contains("35")),
-                        CIA_MultiSelectChipWidgeModel(label: "36", isSelected: selectedTeeth.contains("36")),
-                        CIA_MultiSelectChipWidgeModel(label: "37", isSelected: selectedTeeth.contains("37")),
-                        CIA_MultiSelectChipWidgeModel(label: "38", isSelected: selectedTeeth.contains("38")),
-                        CIA_MultiSelectChipWidgeModel(label: "39", isSelected: selectedTeeth.contains("39"))
-                      ],
-                    ),
-                  ),
-                  SizedBox(),
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth = selectedItems;
-                        setState(() {
-                          tickVisible = true;
-                        });
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "41", isSelected: selectedTeeth.contains("41")),
-                        CIA_MultiSelectChipWidgeModel(label: "42", isSelected: selectedTeeth.contains("42")),
-                        CIA_MultiSelectChipWidgeModel(label: "43", isSelected: selectedTeeth.contains("43")),
-                        CIA_MultiSelectChipWidgeModel(label: "44", isSelected: selectedTeeth.contains("44")),
-                        CIA_MultiSelectChipWidgeModel(label: "45", isSelected: selectedTeeth.contains("45")),
-                        CIA_MultiSelectChipWidgeModel(label: "46", isSelected: selectedTeeth.contains("46")),
-                        CIA_MultiSelectChipWidgeModel(label: "47", isSelected: selectedTeeth.contains("47")),
-                        CIA_MultiSelectChipWidgeModel(label: "48", isSelected: selectedTeeth.contains("48")),
-                        CIA_MultiSelectChipWidgeModel(label: "49", isSelected: selectedTeeth.contains("49"))
-                      ],
-                    ),
+                  CIA_MultiSelectChipWidget(
+                    onChange: (item, isSelected) {
+                      viewOnlyMode = isSelected;
+                      setState(() {});
+                    },
+                    labels: [
+                      CIA_MultiSelectChipWidgeModel(label: "View Only Mode",borderColor: Colors.black,round:false),
+                    ],
                   ),
                 ],
               ),
@@ -496,14 +414,6 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                     } else
                       selectedStatus = selectedItems;
                   },
-                  /*onChange: (item, isSelected) {
-                    if (!isSelected) {
-                      _removeTeethStatus(
-                          selectedTeeth.map((e) => int.parse(e)).toList(),
-                          item);
-                      setState(() {});
-                    }
-                  },*/
                   labels: [
                     CIA_MultiSelectChipWidgeModel(
                       label: "Simple Implant",
@@ -565,40 +475,40 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                       label: "Pontic",
                     ),
                   ]),
-              Visibility(
-                visible: tickVisible,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _updateTeethMultiStatus(selectedTeeth, selectedStatus);
-                        tickVisible = false;
-                        selectedStatus.clear();
-                        selectedTeeth.clear();
-                        setState(() {});
-                      },
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
+              Obx(() => Visibility(
+                    visible: _getXController.tickVisible.value,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _updateTeethMultiStatus(selectedTeeth, selectedStatus);
+                            _getXController.tickVisible.value = false;
+                            selectedStatus.clear();
+                            selectedTeeth.clear();
+                            setState(() {});
+                          },
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            _getXController.tickVisible.value = false;
+                            selectedTeeth.clear();
+                            selectedStatus.clear();
+                            setState(() {});
+                          },
+                          child: Icon(
+                            Icons.highlight_remove,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        tickVisible = false;
-                        selectedTeeth.clear();
-                        selectedStatus.clear();
-                        setState(() {});
-                      },
-                      child: Icon(
-                        Icons.highlight_remove,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  )),
               SizedBox(height: 10),
               Expanded(
                 child: ListView(
@@ -616,11 +526,12 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
     List<Widget> returnValue = isSurgical ? <Widget>[_PostSurgeryWidget()] : [];
     for (var model in models) {
       returnValue.add(new _ToothWidget(
+        viewOnlyMode: viewOnlyMode,
         key: GlobalKey(),
         toothID: model!.tooth!,
         onChange: () => setState(() {}),
       ));
-      returnValue.add(SizedBox(height: 20));
+      returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
     }
     return returnValue;
   }
@@ -635,8 +546,8 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
 }
 
 class _ToothWidget extends StatelessWidget {
-  _ToothWidget({Key? key, required this.toothID, required this.onChange}) : super(key: key);
-
+  _ToothWidget({Key? key, required this.toothID, required this.onChange, this.viewOnlyMode = false}) : super(key: key);
+  bool viewOnlyMode;
   int toothID;
   Function onChange;
 
@@ -651,8 +562,9 @@ class _ToothWidget extends StatelessWidget {
     var currentTooth = models.firstWhereOrNull((element) => element.tooth == toothID);
     if (currentTooth != null) {
       if (currentTooth!.simpleImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 0 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.simpleImplant!,
           title: "Simple Implant",
           onDelete: () {
@@ -662,8 +574,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.immediateImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.immediateImplant!,
           title: "Immediate Implant",
           onDelete: () {
@@ -673,8 +586,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.guidedImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.guidedImplant!,
           title: "Guided Implant",
           onDelete: () {
@@ -684,8 +598,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithImplant!,
           title: "Expansion With Implant",
           onDelete: () {
@@ -695,8 +610,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithImplant!,
           title: "Splitting Without Implant",
           onDelete: () {
@@ -706,8 +622,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithImplant!,
           title: "GBR Without Implant",
           onDelete: () {
@@ -717,8 +634,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithImplant!,
           title: "Open Sinus Without Implant",
           onDelete: () {
@@ -728,8 +646,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithImplant!,
           title: "Closed Sinus Without Implant",
           onDelete: () {
@@ -739,8 +658,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithoutImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithoutImplant!,
           title: "Expansion Without Implant",
           onDelete: () {
@@ -750,8 +670,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithoutImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithoutImplant!,
           title: "Splitting Without Implant",
           onDelete: () {
@@ -761,8 +682,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithoutImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithoutImplant!,
           title: "GBR Without Implant",
           onDelete: () {
@@ -772,8 +694,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithoutImplant!,
           title: "Open Sinus Without Implant",
           onDelete: () {
@@ -783,8 +706,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithoutImplant!,
           title: "Closed Sinus Without Implant",
           onDelete: () {
@@ -794,8 +718,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.extraction != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.extraction!,
           title: "Extraction",
           assignButton: true,
@@ -806,8 +731,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.restoration != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.restoration!,
           title: "Restoration",
           assignButton: true,
@@ -818,8 +744,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.rootCanalTreatment != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.rootCanalTreatment!,
           title: "Root Canal Treatment",
           assignButton: true,
@@ -830,8 +757,9 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.pontic != null) {
-        returnValue.add(SizedBox(height: 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
         returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.pontic!,
           title: "Pontic",
           onDelete: () {
@@ -846,13 +774,13 @@ class _ToothWidget extends StatelessWidget {
         children: [
           Text(
             "Tooth",
-            style: TextStyle(fontFamily: Inter_Bold, fontSize: 25),
+            style: TextStyle(fontFamily: Inter_Bold, fontSize: viewOnlyMode ? 12 : 25),
           ),
           SizedBox(width: 30),
           FormTextValueWidget(text: toothID.toString()),
         ],
       ),
-      SizedBox(height: 10),
+      SizedBox(height: viewOnlyMode ? 2 : 10),
     ];
     if (returnValue.isNotEmpty) {
       title.addAll(returnValue);
@@ -864,12 +792,15 @@ class _ToothWidget extends StatelessWidget {
 }
 
 class _StatusWidget extends StatefulWidget {
-  _StatusWidget({Key? key, required this.fieldModel, required this.title, this.onDelete, this.assignButton = false, this.isImplant = false}) : super(key: key);
+  _StatusWidget(
+      {Key? key, required this.fieldModel, required this.title, this.onDelete, this.assignButton = false, this.isImplant = false, this.viewOnlyMode = false})
+      : super(key: key);
   TreatmentPlanFieldsModel fieldModel;
   String title;
   bool isImplant;
   bool assignButton;
   Function? onDelete;
+  bool viewOnlyMode;
 
   @override
   State<_StatusWidget> createState() => _StatusWidgetState();
@@ -878,6 +809,347 @@ class _StatusWidget extends StatefulWidget {
 class _StatusWidgetState extends State<_StatusWidget> {
   @override
   Widget build(BuildContext context) {
+    if (widget.viewOnlyMode) {
+      return Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                    child: IconButton(
+                  onPressed: () {
+                    if (widget.onDelete != null) widget.onDelete!();
+                  },
+                  icon: Icon(Icons.delete_forever),
+                  color: Colors.red,
+                )),
+                Expanded(
+                  child: isSurgical
+                      ? RoundCheckBox(
+                          isChecked: widget.fieldModel.status,
+                          onTap: siteController.getRole() != "assistant"
+                              ? null
+                              : (selected) {
+                                  widget.fieldModel.status = selected;
+                                  if (selected!) {
+                                    widget.fieldModel.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+                                    widget.fieldModel.doneByAssistantID = siteController.getUser().idInt;
+                                  } else {
+                                    widget.fieldModel.doneByAssistant = DropDownDTO();
+                                    widget.fieldModel.doneByAssistantID = null;
+                                  }
+                                  setState(() {});
+                                },
+                          border: null,
+                          borderColor: Colors.transparent,
+                          uncheckedWidget: Icon(
+                            Icons.remove,
+                            color: Colors.red,
+                          ),
+                          size: 30,
+                        )
+                      : widget.fieldModel.status!
+                          ? Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              Icons.remove,
+                              color: Colors.red,
+                            ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 18,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: isSurgical ? 7 : 3,
+                  child: widget.viewOnlyMode
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  FormTextKeyWidget(
+                                    text: widget.title,
+                                  ),
+                                  FormTextValueWidget(
+                                    text: ": ${widget.fieldModel.value ?? ""}",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            widget.assignButton
+                                ? Expanded(
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Assigned to: ",
+                                        ),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.assignedTo != null ? widget.fieldModel.assignedTo!.name ?? "" : "",
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        )
+                      : CIA_TextFormField(
+                          onChange: (value) {
+                            widget.fieldModel.value = value;
+                          },
+                          label: widget.title,
+                          controller: TextEditingController(
+                            text: (widget.fieldModel.value),
+                          ),
+                        ),
+                ),
+                SizedBox(width: 10),
+                isSurgical
+                    ? Expanded(
+                        flex: 9,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            List<DropDownDTO> companies = [];
+                            int? companyID;
+                            List<DropDownDTO> lines = [];
+                            int? lineID;
+                            List<DropDownDTO> implants = [];
+
+                            CIA_ShowPopUp(
+                                context: context,
+                                title: "${widget.title} Data",
+                                onSave: () => setState(() {}),
+                                width: 900,
+                                child: StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Implant Company",
+                                                selectedItem: companies.firstWhereOrNull((element) => element.id == companyID),
+                                                asyncItems: () async {
+                                                  var res = await LoadinAPI.LoadImplantCompanies();
+                                                  if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
+                                                  return res;
+                                                },
+                                                onSelect: (value) {
+                                                  companyID = value!.id!;
+
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Implant Lines",
+                                                selectedItem: lines.firstWhereOrNull((element) => element.id == lineID),
+                                                asyncItems: companyID == null
+                                                    ? null
+                                                    : () async {
+                                                        var res = await LoadinAPI.LoadImplantLines(companyID!);
+                                                        if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
+                                                        return res;
+                                                      },
+                                                onSelect: (value) {
+                                                  lineID = value!.id!;
+
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                selectedItem: widget.fieldModel.implant,
+                                                label: "Size",
+                                                asyncItems: lineID == null
+                                                    ? null
+                                                    : () async {
+                                                        var res = await LoadinAPI.LoadImplants(lineID!);
+                                                        if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
+                                                        return res;
+                                                      },
+                                                onSelect: (value) {
+                                                  widget.fieldModel.implant!.name = value.name;
+                                                  widget.fieldModel.implantID = value.id;
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        CIA_DropDownSearch(
+                                          selectedItem: widget.fieldModel.doneBySupervisor,
+                                          label: "Supervisor",
+                                          asyncItems: LoadinAPI.LoadSupervisors,
+                                          onSelect: (value) {
+                                            widget.fieldModel.doneBySupervisor = value;
+                                            widget.fieldModel.doneBySupervisorID = value.id;
+                                          },
+                                        ),
+                                        CIA_DropDownSearch(
+                                          selectedItem: widget.fieldModel.doneByCandidateBatch,
+                                          label: "Candidate Batch",
+                                          asyncItems: LoadinAPI.LoadCandidatesBatches,
+                                          onSelect: (value) {
+                                            widget.fieldModel.doneByCandidateBatch = value;
+                                            widget.fieldModel.doneByCandidateBatchID = value.id;
+                                            setState(() {});
+                                          },
+                                        ),
+                                        CIA_DropDownSearch(
+                                          selectedItem: widget.fieldModel.doneByCandidate,
+                                          label: "Candidate",
+                                          asyncItems: widget.fieldModel.doneByCandidateBatchID == null
+                                              ? null
+                                              : () async {
+                                                  return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
+                                                },
+                                          onSelect: (value) {
+                                            widget.fieldModel.doneByCandidate = value;
+                                            widget.fieldModel.doneByCandidateID = value.id;
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ));
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Candidate",
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.doneByCandidate!.name,
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Batch",
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.doneByCandidateBatch!.name,
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Assistant",
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.doneByAssistant!.name,
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Supervisor",
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.doneBySupervisor!.name,
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        FormTextKeyWidget(
+                                          text: "Implant",
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant!.name,
+                                          smallFont: true,
+                                        ),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ))
+                    : widget.assignButton && !widget.viewOnlyMode
+                        ? Expanded(
+                            child: Row(
+                            children: [
+                              Expanded(
+                                child: CIA_DropDownSearch(
+                                  label: "Assign to assistant",
+                                  onSelect: (value) {
+                                    widget.fieldModel.assignedTo = value;
+                                    widget.fieldModel.assignedToID = value.id;
+                                  },
+                                  selectedItem: widget.fieldModel.assignedTo,
+                                  asyncItems: LoadinAPI.LoadAssistants,
+                                ),
+                              ),
+                              SizedBox(width: 10)
+                            ],
+                          ))
+                        : SizedBox(),
+                //SizedBox(width: 10)
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return Row(
       children: [
         Expanded(
@@ -962,103 +1234,103 @@ class _StatusWidgetState extends State<_StatusWidget> {
                               title: "${widget.title} Data",
                               onSave: () => setState(() {}),
                               width: 900,
-                              child:
+                              child: StatefulBuilder(
+                                builder: (context, setState) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Implant Company",
+                                              selectedItem: companies.firstWhereOrNull((element) => element.id == companyID),
+                                              asyncItems: () async {
+                                                var res = await LoadinAPI.LoadImplantCompanies();
+                                                if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
+                                                return res;
+                                              },
+                                              onSelect: (value) {
+                                                companyID = value!.id!;
 
-                             StatefulBuilder(builder: (context, setState) {
-                               return  Column(
-                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                 children: [
-                                   Row(
-                                     children: [
-                                       Expanded(
-                                         child: CIA_DropDownSearch(
-                                           label: "Implant Company",
-                                           selectedItem: companies.firstWhereOrNull((element) => element.id==companyID),
-                                           asyncItems: () async {
-                                             var res = await LoadinAPI.LoadImplantCompanies();
-                                             if (res.statusCode == 200) companies = res.result as List<DropDownDTO>;
-                                             return res;
-                                           },
-                                           onSelect: (value) {
-                                             companyID = value!.id!;
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Implant Lines",
+                                              selectedItem: lines.firstWhereOrNull((element) => element.id == lineID),
+                                              asyncItems: companyID == null
+                                                  ? null
+                                                  : () async {
+                                                      var res = await LoadinAPI.LoadImplantLines(companyID!);
+                                                      if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
+                                                      return res;
+                                                    },
+                                              onSelect: (value) {
+                                                lineID = value!.id!;
 
-                                             setState((){});
-                                           },
-                                         ),
-                                       ),
-                                       Expanded(
-                                         child: CIA_DropDownSearch(
-                                           label: "Implant Lines",
-                                           selectedItem: lines.firstWhereOrNull((element) => element.id==lineID),
-                                           asyncItems: companyID == null
-                                               ? null
-                                               : () async {
-                                             var res = await LoadinAPI.LoadImplantLines(companyID!);
-                                             if (res.statusCode == 200) lines = res.result as List<DropDownDTO>;
-                                             return res;
-                                           },
-                                           onSelect: (value) {
-                                             lineID = value!.id!;
-
-                                             setState((){});
-                                           },
-                                         ),
-                                       ),
-                                       Expanded(
-                                         child: CIA_DropDownSearch(
-                                           selectedItem: widget.fieldModel.implant,
-                                           label: "Size",
-                                           asyncItems: lineID == null
-                                               ? null
-                                               : () async {
-                                             var res = await LoadinAPI.LoadImplants(lineID!);
-                                             if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
-                                             return res;
-                                           },
-                                           onSelect: (value) {
-                                             widget.fieldModel.implant!.name = value.name;
-                                             widget.fieldModel.implantID = value.id;
-                                             setState((){});
-                                           },
-                                         ),
-                                       ),
-                                     ],
-                                   ),
-                                   CIA_DropDownSearch(
-                                     selectedItem: widget.fieldModel.doneBySupervisor,
-                                     label: "Supervisor",
-                                     asyncItems: LoadinAPI.LoadSupervisors,
-                                     onSelect: (value) {
-                                       widget.fieldModel.doneBySupervisor = value;
-                                       widget.fieldModel.doneBySupervisorID = value.id;
-                                     },
-                                   ),
-                                   CIA_DropDownSearch(
-                                     selectedItem: widget.fieldModel.doneByCandidateBatch,
-                                     label: "Candidate Batch",
-                                     asyncItems: LoadinAPI.LoadCandidatesBatches,
-                                     onSelect: (value) {
-                                       widget.fieldModel.doneByCandidateBatch = value;
-                                       widget.fieldModel.doneByCandidateBatchID = value.id;
-                                       setState((){});
-                                     },
-                                   ),
-                                   CIA_DropDownSearch(
-                                     selectedItem: widget.fieldModel.doneByCandidate,
-                                     label: "Candidate",
-                                     asyncItems: widget.fieldModel.doneByCandidateBatchID == null
-                                         ? null
-                                         : () async {
-                                       return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
-                                     },
-                                     onSelect: (value) {
-                                       widget.fieldModel.doneByCandidate = value;
-                                       widget.fieldModel.doneByCandidateID = value.id;
-                                     },
-                                   ),
-                                 ],
-                               );
-                             },));
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              selectedItem: widget.fieldModel.implant,
+                                              label: "Size",
+                                              asyncItems: lineID == null
+                                                  ? null
+                                                  : () async {
+                                                      var res = await LoadinAPI.LoadImplants(lineID!);
+                                                      if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
+                                                      return res;
+                                                    },
+                                              onSelect: (value) {
+                                                widget.fieldModel.implant!.name = value.name;
+                                                widget.fieldModel.implantID = value.id;
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      CIA_DropDownSearch(
+                                        selectedItem: widget.fieldModel.doneBySupervisor,
+                                        label: "Supervisor",
+                                        asyncItems: LoadinAPI.LoadSupervisors,
+                                        onSelect: (value) {
+                                          widget.fieldModel.doneBySupervisor = value;
+                                          widget.fieldModel.doneBySupervisorID = value.id;
+                                        },
+                                      ),
+                                      CIA_DropDownSearch(
+                                        selectedItem: widget.fieldModel.doneByCandidateBatch,
+                                        label: "Candidate Batch",
+                                        asyncItems: LoadinAPI.LoadCandidatesBatches,
+                                        onSelect: (value) {
+                                          widget.fieldModel.doneByCandidateBatch = value;
+                                          widget.fieldModel.doneByCandidateBatchID = value.id;
+                                          setState(() {});
+                                        },
+                                      ),
+                                      CIA_DropDownSearch(
+                                        selectedItem: widget.fieldModel.doneByCandidate,
+                                        label: "Candidate",
+                                        asyncItems: widget.fieldModel.doneByCandidateBatchID == null
+                                            ? null
+                                            : () async {
+                                                return await LoadinAPI.LoadCandidatesByBatchID(widget.fieldModel.doneByCandidateBatchID!);
+                                              },
+                                        onSelect: (value) {
+                                          widget.fieldModel.doneByCandidate = value;
+                                          widget.fieldModel.doneByCandidateID = value.id;
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ));
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
@@ -1115,7 +1387,6 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                     ],
                                   ),
                                 ),
-
                               ],
                             ),
                             Row(
@@ -1137,7 +1408,7 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex:2,
+                                  flex: 2,
                                   child: Row(
                                     children: [
                                       FormTextKeyWidget(
@@ -1153,7 +1424,6 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                     ],
                                   ),
                                 ),
-
                               ],
                             ),
                           ],

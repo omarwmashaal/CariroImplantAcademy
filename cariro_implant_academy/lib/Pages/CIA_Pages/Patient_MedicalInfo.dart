@@ -18,6 +18,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -36,6 +37,7 @@ import '../../Widgets/CIA_IncrementalTextField.dart';
 import '../../Widgets/CIA_MedicalPageWidget.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/CIA_TagsInputWidget.dart';
+import '../../Widgets/CIA_TeethChart.dart';
 import '../../Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import '../../Widgets/CIA_TeethTreatmentWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
@@ -86,8 +88,8 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   List<Widget> pages = [
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
-    _PatientDentalExamination(),
-    PatientNonSurgicalTreatment(),
+    PatientDentalExamination(),
+    _PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
    _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
@@ -534,17 +536,17 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     case "Normal":
                       bloodPressure = BloodPressureEnum.Normal;
                       break;
-                    case "Hypertensive controller":
+                    case "Hypertensive controlled":
                       bloodPressure = BloodPressureEnum.HypertensiveControlled;
                       break;
-                    case "Hypertensive uncontroller":
+                    case "Hypertensive uncontrolled":
                       bloodPressure =
                           BloodPressureEnum.HypertensiveUncontrolled;
                       break;
-                    case "Hypotensive controller":
+                    case "Hypotensive controlled":
                       bloodPressure = BloodPressureEnum.HypotensiveControlled;
                       break;
-                    case "Hypotensive uncontroller":
+                    case "Hypotensive uncontrolled":
                       bloodPressure = BloodPressureEnum.HypotensiveUncontrolled;
                       break;
                   }
@@ -564,26 +566,26 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                               medicalExaminationModel.bloodPressure?.status ==
                                   BloodPressureEnum.Normal),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Hypertensive controller",
+                      label: "Hypertensive controlled",
                       isSelected:
                           medicalExaminationModel.bloodPressure != null &&
                               medicalExaminationModel.bloodPressure?.status ==
                                   BloodPressureEnum.HypertensiveControlled),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Hypertensive uncontroller",
+                      label: "Hypertensive uncontrolled",
                       selectedColor: Colors.red,
                       isSelected:
                           medicalExaminationModel.bloodPressure != null &&
                               medicalExaminationModel.bloodPressure?.status ==
                                   BloodPressureEnum.HypertensiveUncontrolled),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Hypotensive controller",
+                      label: "Hypotensive controlled",
                       isSelected:
                           medicalExaminationModel.bloodPressure != null &&
                               medicalExaminationModel.bloodPressure?.status ==
                                   BloodPressureEnum.HypotensiveControlled),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Hypotensive uncontroller",
+                      label: "Hypotensive uncontrolled",
                       selectedColor: Colors.red,
                       isSelected:
                           medicalExaminationModel.bloodPressure != null &&
@@ -598,6 +600,21 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CIA_TextFormField(
+                        validator: (value){
+                          var regExp = RegExp("/");
+                         Iterable<Match> match =  regExp.allMatches(value,);
+                         if(match.length>1)
+                           value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/")+1, "");
+
+                         return value;
+
+                        },
+                        inputFormatter: [
+
+                            FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
+
+
+                        ],
                           onChange: (value) {
                             if (medicalExaminationModel.bloodPressure == null) {
                               medicalExaminationModel.bloodPressure =
@@ -607,6 +624,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                                 value;
                           },
                           label: "Last Reading ",
+
                           controller: TextEditingController(
                               text: medicalExaminationModel
                                   .bloodPressure?.lastReading)),
@@ -615,7 +633,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
+                      child: CIA_DateTimeTextFormField(
                           onChange: (value) {
                             if (medicalExaminationModel.bloodPressure == null) {
                               medicalExaminationModel.bloodPressure =
@@ -650,6 +668,21 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: CIA_TextFormField(
+                          validator: (value){
+                        var regExp = RegExp("/");
+                        Iterable<Match> match =  regExp.allMatches(value,);
+                        if(match.length>1)
+                          value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/")+1, "");
+
+                        return value;
+
+                      },
+                          inputFormatter: [
+
+                            FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
+
+
+                          ],
                           onChange: (value) {
                             if (medicalExaminationModel.bloodPressure == null) {
                               medicalExaminationModel.bloodPressure =
@@ -674,10 +707,10 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     case "Non diabetic":
                       diabetese = DiabetesEnum.Normal;
                       break;
-                    case "Diabetic controller":
+                    case "Diabetic controlled":
                       diabetese = DiabetesEnum.DiabeticControlled;
                       break;
-                    case "Diabetic uncontroller":
+                    case "Diabetic uncontrolled":
                       diabetese = DiabetesEnum.DiabeticUncontrolled;
                       break;
                   }
@@ -695,12 +728,12 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                           medicalExaminationModel.diabetic?.status ==
                               DiabetesEnum.Normal),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Diabetic controller",
+                      label: "Diabetic controlled",
                       isSelected: medicalExaminationModel.diabetic != null &&
                           medicalExaminationModel.diabetic?.status ==
                               DiabetesEnum.DiabeticControlled),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "Diabetic uncontroller",
+                      label: "Diabetic uncontrolled",
                       selectedColor: Colors.red,
                       isSelected: medicalExaminationModel.diabetic != null &&
                           medicalExaminationModel.diabetic?.status ==
@@ -736,6 +769,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CIA_TextFormField(
+                        isNumber: true,
                           onChange: (value) {
                             if (medicalExaminationModel.diabetic == null) {
                               medicalExaminationModel.diabetic = Diabetic();
@@ -752,7 +786,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CIA_TextFormField(
+                      child: CIA_DateTimeTextFormField(
                           onChange: (value) {
                             if (medicalExaminationModel.diabetic == null) {
                               medicalExaminationModel.diabetic = Diabetic();
@@ -768,6 +802,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CIA_TextFormField(
+                        isNumber: true,
                           onChange: (value) {
                             if (medicalExaminationModel.diabetic == null) {
                               medicalExaminationModel.diabetic = Diabetic();
@@ -930,38 +965,225 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   }
 }
 
-class _PatientDentalExamination extends StatefulWidget {
-  const _PatientDentalExamination({Key? key}) : super(key: key);
+class _PatientDentalHistory extends StatefulWidget {
+  const _PatientDentalHistory({Key? key}) : super(key: key);
 
   @override
-  State<_PatientDentalExamination> createState() =>
-      _PatientDentalExaminationState();
+  State<_PatientDentalHistory> createState() => _PatientDentalHistoryState();
 }
 
-class AppProfile {
-  final String name;
-  final String email;
-  final String imageUrl;
-
-  const AppProfile(this.name, this.email, this.imageUrl);
+class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
+  Color clench = Color_TextFieldBorder;
+  String tobacco = "0";
+  late Future<API_Response> load;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AppProfile &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
+  void initState() {
+    load = MedicalAPI.GetPatientDentalHistory(patientID);
+    super.initState();
+  }
 
   @override
-  int get hashCode => name.hashCode;
-
-  @override
-  String toString() {
-    return name;
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: load,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            var res = snapshot.data as API_Response;
+            if (res.statusCode == 200) {
+              dentalHistoryModel = res.result as DentalHistoryModel;
+              _getxClass.tobacco.value = dentalHistoryModel.smoke ?? 0;
+              return CIA_MedicalPagesWidget(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Are your teeth sensitive to ?")),
+                      Expanded(
+                          flex: 2,
+                          child: CIA_MultiSelectChipWidget(
+                              onChange: (value, isSelected) {
+                                if (value.toString() == "Hot or cold")
+                                  dentalHistoryModel.senstiveHotCold =
+                                      isSelected;
+                                else if (value.toString() == "sweets")
+                                  dentalHistoryModel.senstiveSweets =
+                                      isSelected;
+                                else if (value.toString() ==
+                                    "Biting or chewing")
+                                  dentalHistoryModel.bittingCheweing =
+                                      isSelected;
+                              },
+                              labels: [
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "Hot or cold",
+                                    isSelected:
+                                    dentalHistoryModel.senstiveHotCold ??
+                                        false),
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "sweets",
+                                    isSelected:
+                                    dentalHistoryModel.senstiveSweets ??
+                                        false),
+                                CIA_MultiSelectChipWidgeModel(
+                                    label: "Biting or chewing",
+                                    isSelected:
+                                    dentalHistoryModel.bittingCheweing ??
+                                        false),
+                              ]))
+                    ],
+                  ),
+                  CIA_TextFormField(
+                      borderColor: clench,
+                      borderColorOnChange: Colors.orange,
+                      changeColorIfFilled: true,
+                      onChange: (value) {
+                        dentalHistoryModel.clench = value;
+                      },
+                      label:
+                      "Do you clench or grind your teeth while awake or sleep?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.clench)),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                            text: "Smoke Tobacco?",
+                          )),
+                      Expanded(
+                          child: CIA_TextFormField(
+                              onChange: (value) {
+                                dentalHistoryModel.smoke = int.parse(value);
+                                _getxClass.tobacco.value = int.parse(value);
+                              },
+                              errorFunction: (value){
+                                return int.parse(value)>=20;
+                              },
+                              label: "Cigarette per day",
+                              isNumber: true,
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel.smoke == null
+                                      ? null
+                                      : dentalHistoryModel.smoke.toString()))),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Obx(() => FormTextValueWidget(text: () {
+                            var returnValue = "";
+                            if ((_getxClass.tobacco.value) == 0) {
+                              returnValue = "Non Smoker";
+                              dentalHistoryModel.smokingStatus =
+                                  SmokingStatus.NoneSmoker;
+                            } else if ((_getxClass.tobacco.value) < 10) {
+                              returnValue = "Light Smoker";
+                              dentalHistoryModel.smokingStatus =
+                                  SmokingStatus.LightSmoker;
+                            } else if ((_getxClass.tobacco.value) < 20) {
+                              returnValue = "Medium Smoker";
+                              dentalHistoryModel.smokingStatus =
+                                  SmokingStatus.MediumSmoker;
+                            } else {
+                              returnValue = "Heavy Smoker";
+                              dentalHistoryModel.smokingStatus =
+                                  SmokingStatus.HeavySmoker;
+                            }
+                            return returnValue;
+                          }()))),
+                      Expanded(flex: 3, child: SizedBox())
+                    ],
+                  ),
+                  CIA_TextFormField(
+                      onChange: (value) =>
+                      dentalHistoryModel.seriousInjury = value,
+                      label: "A serious injury to the mouth?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.seriousInjury)),
+                  CIA_TextFormField(
+                      onChange: (value) => dentalHistoryModel.satisfied = value,
+                      label: "Are you satisfied with your teeth's appearance?",
+                      controller: TextEditingController(
+                          text: dentalHistoryModel.satisfied)),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Patient Cooperation Score")),
+                      Expanded(
+                          child: CIA_TextFormField(
+                              isNumber: true,
+                              errorFunction: (v)=>int.parse(v)<=5,
+                              validator: (value) {
+                                if(int.parse(value)>10) return "10";
+                                return value;
+                              },
+                              onChange: (value) => dentalHistoryModel
+                                  .cooperationScore = int.parse(value),
+                              label: "",
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel.cooperationScore !=
+                                      null
+                                      ? dentalHistoryModel.cooperationScore
+                                      .toString()
+                                      : null))),
+                      Expanded(child: FormTextKeyWidget(text: "/10")),
+                      Expanded(child: SizedBox())
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: FormTextKeyWidget(
+                              text: "Patient willing for implant score")),
+                      Expanded(
+                          child: CIA_TextFormField(validator: (value) {
+                            if(int.parse(value)>10) return "10";
+                            return value;
+                          },
+                              errorFunction: (v)=>  int.parse(v)<=5,
+                              onChange: (value) => dentalHistoryModel
+                                  .willingForImplantScore = int.parse(value),
+                              label: "",
+                              isNumber: true,
+                              controller: TextEditingController(
+                                  text: dentalHistoryModel
+                                      .willingForImplantScore !=
+                                      null
+                                      ? dentalHistoryModel
+                                      .willingForImplantScore
+                                      .toString()
+                                      : null))),
+                      Expanded(child: FormTextKeyWidget(text: "/10")),
+                      Expanded(child: SizedBox())
+                    ],
+                  ),
+                ],
+              );
+            }
+            return Container();
+          } else {
+            return Center(
+              child: LoadingIndicator(
+                indicatorType: Indicator.ballClipRotateMultiple,
+                colors: [Color_Accent],
+              ),
+            );
+          }
+        });
   }
 }
 
-class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
+class PatientDentalExamination extends StatefulWidget {
+  const PatientDentalExamination({Key? key}) : super(key: key);
+
+  @override
+  State<PatientDentalExamination> createState() =>
+      _PatientDentalExaminationState();
+}
+
+
+class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   List<int> selectedTeeth = [];
   String selectedTooth = "";
   String selectedStatus = "";
@@ -983,168 +1205,10 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
             if (res.statusCode == 200)
               dentalExaminationModel = res.result as DentalExaminationModel;
             return CIA_MedicalPagesWidget(children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth =
-                            selectedItems.map((e) => int.parse(e)).toList();
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "11",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "12",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "13",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "14",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "15",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "16",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "17",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "18",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "19",
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(),
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth =
-                            selectedItems.map((e) => int.parse(e)).toList();
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "21",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "22",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "23",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "24",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "25",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "26",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "27",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "28",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "29",
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+              CIA_TeethChart(
+                onChange: (selectedTeethList) => selectedTeeth =selectedTeethList,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth =
-                            selectedItems.map((e) => int.parse(e)).toList();
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "31",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "32",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "33",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "34",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "35",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "36",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "37",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "38",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "39",
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(),
-                  Expanded(
-                    child: CIA_MultiSelectChipWidget(
-                      key: GlobalKey(),
-                      onChangeList: (selectedItems) {
-                        selectedTeeth =
-                            selectedItems.map((e) => int.parse(e)).toList();
-                      },
-                      labels: [
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "41",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "42",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "43",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "44",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "45",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "46",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "47",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "48",
-                        ),
-                        CIA_MultiSelectChipWidgeModel(
-                          label: "49",
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+
               CIA_MultiSelectChipWidget(
                 key: GlobalKey(),
                 onChange: (value, isSelected) {
@@ -1268,6 +1332,9 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .carious = false;
+                  setState(() {
+
+                  });
                 },
               ),
               CIA_TagsInputWidget(
@@ -1295,6 +1362,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .filled = false;
+                  setState(() {});
                 },
               ),
               CIA_TagsInputWidget(
@@ -1322,6 +1390,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .missed = false;
+                  setState(() {});
                 },
               ),
               CIA_TagsInputWidget(
@@ -1349,6 +1418,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .notSure = false;
+                  setState(() {});
                 },
               ),
               Row(
@@ -1383,6 +1453,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityI = false;
+                        setState(() {});
                       },
                     ),
                   ),
@@ -1417,6 +1488,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityII = false;
+                        setState(() {});
                       },
                     ),
                   ),
@@ -1452,6 +1524,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                             .firstWhere(
                                 (element) => element.tooth.toString() == value)
                             .mobilityIII = false;
+                        setState(() {});
                       },
                     ),
                   ),
@@ -1484,6 +1557,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .hopelessteeth = false;
+                  setState(() {});
                 },
               ),
               Row(
@@ -1549,6 +1623,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .implantPlaced = false;
+                  setState(() {});
                 },
               ),
               CIA_TagsInputWidget(
@@ -1578,6 +1653,7 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
                       .firstWhere(
                           (element) => element.tooth.toString() == value)
                       .implantFailed = false;
+                  setState(() {});
                 },
               ),
               CIA_TextFormField(
@@ -1600,213 +1676,17 @@ class _PatientDentalExaminationState extends State<_PatientDentalExamination> {
   }
 }
 
-class _PatientDentalHistory extends StatefulWidget {
-  const _PatientDentalHistory({Key? key}) : super(key: key);
+
+class _PatientNonSurgicalTreatment extends StatefulWidget {
+  const _PatientNonSurgicalTreatment({Key? key}) : super(key: key);
 
   @override
-  State<_PatientDentalHistory> createState() => _PatientDentalHistoryState();
-}
-
-class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
-  Color clench = Color_TextFieldBorder;
-  String tobacco = "0";
-  late Future<API_Response> load;
-
-  @override
-  void initState() {
-    load = MedicalAPI.GetPatientDentalHistory(patientID);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: load,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            var res = snapshot.data as API_Response;
-            if (res.statusCode == 200) {
-              dentalHistoryModel = res.result as DentalHistoryModel;
-              _getxClass.tobacco.value = dentalHistoryModel.smoke ?? 0;
-              return CIA_MedicalPagesWidget(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                          child: FormTextKeyWidget(
-                              text: "Are your teeth sensitive to ?")),
-                      Expanded(
-                          flex: 2,
-                          child: CIA_MultiSelectChipWidget(
-                              onChange: (value, isSelected) {
-                                if (value.toString() == "Hot or cold")
-                                  dentalHistoryModel.senstiveHotCold =
-                                      isSelected;
-                                else if (value.toString() == "sweets")
-                                  dentalHistoryModel.senstiveSweets =
-                                      isSelected;
-                                else if (value.toString() ==
-                                    "Biting or chewing")
-                                  dentalHistoryModel.bittingCheweing =
-                                      isSelected;
-                              },
-                              labels: [
-                                CIA_MultiSelectChipWidgeModel(
-                                    label: "Hot or cold",
-                                    isSelected:
-                                        dentalHistoryModel.senstiveHotCold ??
-                                            false),
-                                CIA_MultiSelectChipWidgeModel(
-                                    label: "sweets",
-                                    isSelected:
-                                        dentalHistoryModel.senstiveSweets ??
-                                            false),
-                                CIA_MultiSelectChipWidgeModel(
-                                    label: "Biting or chewing",
-                                    isSelected:
-                                        dentalHistoryModel.bittingCheweing ??
-                                            false),
-                              ]))
-                    ],
-                  ),
-                  CIA_TextFormField(
-                      borderColor: clench,
-                      borderColorOnChange: Colors.orange,
-                      changeColorIfFilled: true,
-                      onChange: (value) {
-                        dentalHistoryModel.clench = value;
-                      },
-                      label:
-                          "Do you clench or grind your teeth while awake or sleep?",
-                      controller: TextEditingController(
-                          text: dentalHistoryModel.clench)),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: FormTextKeyWidget(
-                        text: "Smoke Tobacco?",
-                      )),
-                      Expanded(
-                          child: CIA_TextFormField(
-                              onChange: (value) {
-                                dentalHistoryModel.smoke = int.parse(value);
-                                _getxClass.tobacco.value = int.parse(value);
-                              },
-                              label: "Cigarette per day",
-                              isNumber: true,
-                              controller: TextEditingController(
-                                  text: dentalHistoryModel.smoke == null
-                                      ? null
-                                      : dentalHistoryModel.smoke.toString()))),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                          child: Obx(() => FormTextValueWidget(text: () {
-                                var returnValue = "";
-                                if ((_getxClass.tobacco.value) == 0) {
-                                  returnValue = "Non Smoker";
-                                  dentalHistoryModel.smokingStatus =
-                                      SmokingStatus.NoneSmoker;
-                                } else if ((_getxClass.tobacco.value) < 10) {
-                                  returnValue = "Light Smoker";
-                                  dentalHistoryModel.smokingStatus =
-                                      SmokingStatus.LightSmoker;
-                                } else if ((_getxClass.tobacco.value) < 20) {
-                                  returnValue = "Medium Smoker";
-                                  dentalHistoryModel.smokingStatus =
-                                      SmokingStatus.MediumSmoker;
-                                } else {
-                                  returnValue = "Heavy Smoker";
-                                  dentalHistoryModel.smokingStatus =
-                                      SmokingStatus.HeavySmoker;
-                                }
-                                return returnValue;
-                              }()))),
-                      Expanded(flex: 3, child: SizedBox())
-                    ],
-                  ),
-                  CIA_TextFormField(
-                      onChange: (value) =>
-                          dentalHistoryModel.seriousInjury = value,
-                      label: "A serious injury to the mouth?",
-                      controller: TextEditingController(
-                          text: dentalHistoryModel.seriousInjury)),
-                  CIA_TextFormField(
-                      onChange: (value) => dentalHistoryModel.satisfied = value,
-                      label: "Are you satisfied with your teeth's appearance?",
-                      controller: TextEditingController(
-                          text: dentalHistoryModel.satisfied)),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: FormTextKeyWidget(
-                              text: "Patient Cooperation Score")),
-                      Expanded(
-                          child: CIA_TextFormField(
-                              isNumber: true,
-                              onChange: (value) => dentalHistoryModel
-                                  .cooperationScore = int.parse(value),
-                              label: "",
-                              controller: TextEditingController(
-                                  text: dentalHistoryModel.cooperationScore !=
-                                          null
-                                      ? dentalHistoryModel.cooperationScore
-                                          .toString()
-                                      : null))),
-                      Expanded(child: FormTextKeyWidget(text: "/10")),
-                      Expanded(child: SizedBox())
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: FormTextKeyWidget(
-                              text: "Patient willing for implant score")),
-                      Expanded(
-                          child: CIA_TextFormField(
-                              onChange: (value) => dentalHistoryModel
-                                  .willingForImplantScore = int.parse(value),
-                              label: "",
-                              isNumber: true,
-                              controller: TextEditingController(
-                                  text: dentalHistoryModel
-                                              .willingForImplantScore !=
-                                          null
-                                      ? dentalHistoryModel
-                                          .willingForImplantScore
-                                          .toString()
-                                      : null))),
-                      Expanded(child: FormTextKeyWidget(text: "/10")),
-                      Expanded(child: SizedBox())
-                    ],
-                  ),
-                ],
-              );
-            }
-            return Container();
-          } else {
-            return Center(
-              child: LoadingIndicator(
-                indicatorType: Indicator.ballClipRotateMultiple,
-                colors: [Color_Accent],
-              ),
-            );
-          }
-        });
-  }
-}
-
-class PatientNonSurgicalTreatment extends StatefulWidget {
-  const PatientNonSurgicalTreatment({Key? key}) : super(key: key);
-
-  @override
-  State<PatientNonSurgicalTreatment> createState() =>
+  State<_PatientNonSurgicalTreatment> createState() =>
       _PatientNonSurgicalTreatmentState();
 }
 
 class _PatientNonSurgicalTreatmentState
-    extends State<PatientNonSurgicalTreatment> {
+    extends State<_PatientNonSurgicalTreatment> {
   String date = "";
 
   late Future load;

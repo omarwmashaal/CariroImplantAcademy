@@ -11,6 +11,7 @@ class CIA_MultiSelectChipWidgeModel {
       this.value,
       this.isSelected = false,
       this.borderColor,
+        this.round = true,
       this.selectedColor});
 
   String label;
@@ -18,6 +19,7 @@ class CIA_MultiSelectChipWidgeModel {
   bool isSelected = false;
   Color? selectedColor = Color_Accent;
   Color? borderColor;
+  bool round;
 }
 
 class CIA_MultiSelectChipWidget extends StatelessWidget {
@@ -98,7 +100,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
             decoration: BoxDecoration(
               border:
                   Border.all(color: label.borderColor ?? Color_TextFieldBorder),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: label.round? BorderRadius.circular(20):null,
             ),
             selectedDecoration: disabled
                 ? BoxDecoration(
@@ -107,7 +109,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
                         color: label.borderColor ?? Color_TextFieldBorder),
                   )
                 : BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: label.round?BorderRadius.circular(20):null,
                     border: Border.all(
                         color: redFlags
                             ? Colors.red

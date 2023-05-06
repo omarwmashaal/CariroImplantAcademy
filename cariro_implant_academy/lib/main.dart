@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: PatientNonSurgicalTreatment()
+      body: CIA_TeethTreatmentPlanWidget(patientID: 2,surgical: true,)
     );
   }
 }

@@ -39,6 +39,10 @@ class _CIA_IncrementalHBA1CTextFieldState
           Expanded(
               flex: 2,
               child: CIA_TextFormField(
+                errorFunction: (value){
+                  return int.parse(value)>=6;
+;                },
+                isNumber: true,
                 onChange: (value) {
                   item.reading = value;
                   if (widget.onChange != null) {
@@ -51,7 +55,7 @@ class _CIA_IncrementalHBA1CTextFieldState
           const SizedBox(width: 10),
           Expanded(
               flex: 2,
-              child: CIA_TextFormField(
+              child: CIA_DateTimeTextFormField(
                 onChange: (value) {
                   item.date = value;
                   if (widget.onChange != null) {
