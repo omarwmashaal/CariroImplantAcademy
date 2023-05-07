@@ -43,6 +43,7 @@ import 'Models/Enum.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
+import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
 import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
@@ -89,10 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MzMxMDI3MSwiZXhwIjoxNjgzOTE1MDcxLCJpYXQiOjE2ODMzMTAyNzF9.VuqJj3p5WT4ubwYxzvWXNd6o5No0Mhm6CvAI4lcyl_w");
+    siteController.setToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MzMxMDI3MSwiZXhwIjoxNjgzOTE1MDcxLCJpYXQiOjE2ODMzMTAyNzF9.VuqJj3p5WT4ubwYxzvWXNd6o5No0Mhm6CvAI4lcyl_w");
     siteController.setRole("admin");
     siteController.setSite(Website.CIA);
-    siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1,phoneNumber: "01127744835"));
+    siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1, phoneNumber: "01127744835"));
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
     StockDataSource dataSource1 = StockDataSource();
@@ -101,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: PatientMedicalInfoPage(patientMedicalController: PatientMedicalController(PatientInfoModel(id: patientID)), patientID: patientID,)
+      body: AuthenticationPage(),
     );
   }
 }

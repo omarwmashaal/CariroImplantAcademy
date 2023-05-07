@@ -26,6 +26,7 @@ class VisitsModel {
   String? treatment;
   int? patientId;
   String? patientName;
+  String? duration;
 
   VisitsModel(
       {this.id,
@@ -62,6 +63,7 @@ class VisitsModel {
     title = json['title'];
     roomId = json['roomId'] ?? 0;
     patientId = json['patientId'] ?? 0;
+    duration = CIA_DateConverters.fromBackendToTimeSpan(json['duration'])??"";
     room = json['room'] != null
         ? CIA_RoomModel.fromJson(json['room'] as Map<String, dynamic>)
         : CIA_RoomModel();
@@ -98,27 +100,34 @@ class VisitDataSource extends DataGridSource {
     "Real Visit Time",
     "Enters Clinic Time",
     "Leave Time",
+    "Duration",
     "Doctor Name",
     //"Treatment",
   ];
 
   /// Creates the visit data source class with required details.
   VisitDataSource() {
+    init();
+  }
+  init()
+  {
     _visitData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: e.id),
-              DataGridCell<String>(columnName: 'Status', value: e.status),
-              DataGridCell<String>(
-                  columnName: 'Reservation Time', value: e.reservationTime),
-              DataGridCell<String>(
-                  columnName: 'Real Visit Time', value: e.realVisitTime),
-              DataGridCell<String>(
-                  columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-              DataGridCell<String>(
-                  columnName: 'Leave Time', value: e.leaveTime),
-              DataGridCell<String>(
-                  columnName: 'Doctor Name', value: e.doctorName),
-            ]))
+      DataGridCell<int>(columnName: 'id', value: e.id),
+      DataGridCell<String>(columnName: 'Status', value: e.status),
+      DataGridCell<String>(
+          columnName: 'Reservation Time', value: e.reservationTime),
+      DataGridCell<String>(
+          columnName: 'Real Visit Time', value: e.realVisitTime),
+      DataGridCell<String>(
+          columnName: 'Enters Clinic Time', value: e.entersClinicTime),
+      DataGridCell<String>(
+          columnName: 'Leave Time', value: e.leaveTime),
+      DataGridCell<String>(
+          columnName: 'Duration', value: e.duration),
+      DataGridCell<String>(
+          columnName: 'Doctor Name', value: e.doctorName),
+    ]))
         .toList();
   }
 
@@ -146,22 +155,7 @@ class VisitDataSource extends DataGridSource {
     if (response.statusCode == 200) {
       models = response.result as List<VisitsModel>;
     }
-    _visitData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: e.id),
-              DataGridCell<String>(columnName: 'Status', value: e.status),
-              DataGridCell<String>(
-                  columnName: 'Reservation Time', value: e.reservationTime),
-              DataGridCell<String>(
-                  columnName: 'Real Visit Time', value: e.realVisitTime),
-              DataGridCell<String>(
-                  columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-              DataGridCell<String>(
-                  columnName: 'Leave Time', value: e.leaveTime),
-              DataGridCell<String>(
-                  columnName: 'Doctor Name', value: e.doctorName),
-            ]))
-        .toList();
+    init();
     notifyListeners();
 
     return true;
@@ -169,22 +163,7 @@ class VisitDataSource extends DataGridSource {
 
   Future<bool> setData(List<VisitsModel> model) async {
     models = model;
-    _visitData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'id', value: e.id),
-              DataGridCell<String>(columnName: 'Status', value: e.status),
-              DataGridCell<String>(
-                  columnName: 'Reservation Time', value: e.reservationTime),
-              DataGridCell<String>(
-                  columnName: 'Real Visit Time', value: e.realVisitTime),
-              DataGridCell<String>(
-                  columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-              DataGridCell<String>(
-                  columnName: 'Leave Time', value: e.leaveTime),
-              DataGridCell<String>(
-                  columnName: 'Doctor Name', value: e.doctorName),
-            ]))
-        .toList();
+    init();
     notifyListeners();
 
     return true;

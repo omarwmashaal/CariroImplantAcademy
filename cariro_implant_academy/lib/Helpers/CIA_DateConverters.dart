@@ -34,6 +34,11 @@ class CIA_DateConverters {
     return formatted;
   }
 
+  static fromBackendToTimeSpan(String? timeSpan) {
+    if (timeSpan == null || timeSpan == "") return null;
+    return timeSpan.split(".").first;
+  }
+
   static fromDateTimeToBackend(String? dateTime) {
     if (dateTime == null || dateTime == "") return null;
     late DateTime formatedDateTime;

@@ -28,6 +28,9 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
           patientID: widget.patientID,
           loadFunction: PatientAPI.GetVisitsLogs,
         ),
+        PatientComplains(patientId: widget.patientID,
+
+        )
       ],
     );
     /*Column(
@@ -50,6 +53,6 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["Patient Data", "Patient Visits"]);
+    siteController.setAppBarWidget(tabs: ["Patient Data", "Patient Visits","Complains"]);
   }
 }
