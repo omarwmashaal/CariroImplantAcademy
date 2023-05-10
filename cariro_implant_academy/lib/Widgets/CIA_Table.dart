@@ -62,14 +62,15 @@ class _CIA_TableState extends State<CIA_Table> {
             headerGridLinesVisibility: widget.showGridLines
                 ? GridLinesVisibility.both
                 : GridLinesVisibility.horizontal,
+
             tableSummaryRows: widget.showSum
                 ? [
                     GridTableSummaryRow(
-                        showSummaryInRow: true,
-                        title: '{Sum}',
-                        columns: [
+                        showSummaryInRow: false,
+                        title: 'Amount',
+                        columns:<GridSummaryColumn> [
                           GridSummaryColumn(
-                              name: 'Sum',
+                              name: 'Amount',
                               columnName: 'Amount',
                               summaryType: GridSummaryType.sum),
                         ],

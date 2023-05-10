@@ -13,7 +13,9 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../../Constants/Fonts.dart';
 import '../../Models/CashFlowCategorySumamryModel.dart';
@@ -22,6 +24,13 @@ import '../../Widgets/CIA_IncrementalExpensesTextField.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/Title.dart';
+
+class _getXController extends GetxController {
+  static RxInt incomeSum = 0.obs;
+  static RxInt expensesSum = 0.obs;
+  static RxString from = "".obs;
+  static RxString to = "".obs;
+}
 
 class CashFlowSharedPage extends StatefulWidget {
   CashFlowSharedPage({
@@ -61,6 +70,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
     return PageView(
       controller: tabsController,
       children: [
+
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -182,13 +192,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                       label: "Price",
                                       controller: TextEditingController(text: (model.price ?? 0).toString()),
                                     ),
-                                    SizedBox(height: 10),
-                                    CIA_TextFormField(
-                                      isNumber: true,
-                                      onChange: (value) => model.count = int.parse(value),
-                                      label: "Count",
-                                      controller: TextEditingController(text: (model.count ?? 0).toString()),
-                                    ),
+
                                     SizedBox(height: 10),
                                     CIA_TextFormField(
                                       onChange: (value) => model.notes = value,
@@ -601,19 +605,19 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
             ),
           ],
         ),
-        /* PageView.builder(
+        PageView.builder(
             controller: _controller,
             itemBuilder: (BuildContext context, int index) {
               var pages = [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         weekSelected
-                            ? CIA_PrimaryButton(
-                                label: "This Week", isLong: true, onTab: () {})
+                            ? CIA_PrimaryButton(label: "This Week", isLong: true, onTab: () {})
                             : CIA_SecondaryButton(
                                 label: "This Week",
                                 onTab: () {
@@ -625,8 +629,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                 }),
                         SizedBox(width: 10),
                         monthSelected
-                            ? CIA_PrimaryButton(
-                                label: "This Month", isLong: true, onTab: () {})
+                            ? CIA_PrimaryButton(label: "This Month", isLong: true, onTab: () {})
                             : CIA_SecondaryButton(
                                 label: "This Month",
                                 onTab: () {
@@ -638,8 +641,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                 }),
                         SizedBox(width: 10),
                         yearSelected
-                            ? CIA_PrimaryButton(
-                                label: "This Year", isLong: true, onTab: () {})
+                            ? CIA_PrimaryButton(label: "This Year", isLong: true, onTab: () {})
                             : CIA_SecondaryButton(
                                 label: "This Year",
                                 onTab: () {
@@ -652,53 +654,127 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       ],
                     ),
                     SizedBox(height: 10),
+                    Obx(() => Row(
+                      children: [
+                        FormTextValueWidget(text: "from: ${_getXController.from.value}"),
+                        SizedBox(width: 10,),
+                        FormTextValueWidget(text: "to: ${_getXController.to.value}"),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ),),
+                    SizedBox(height:10),
                     Expanded(
                       flex: 5,
                       child: Row(
                         children: [
                           Expanded(
-                            child: CIA_Table(
-                                showGridLines: true,
-                                showSum: true,
-                                title: "Expenses Summary",
-                                columnNames: widget.eS_dataSource!.columns,
-                                dataSource:widget.eS_dataSource
-                                        as CashFlowSummaryDataSource,
-                                onCellClick: (value) {
-                                /*  selectedCategory = CashFlowSummaryDataSource()
-                                      .models[value - 2]
-                                      .Category!;
-                                  _controller.jumpToPage(1);*/
-                                }),
+                            child: Column(
+                              children: [
+                                CIA_Table(
+                                    showGridLines: true,
+                                    title: "Expenses Summary",
+                                    columnNames: widget.eS_dataSource!.columns,
+                                    loadFunction: () async {
+                                      var res = await widget.eS_dataSource!.loadData(weekSelected
+                                          ? "ThisWeek"
+                                          : monthSelected
+                                              ? "ThisMonth"
+                                              : yearSelected
+                                                  ? "ThisYear"
+                                                  : "");
+                                      if(res.statusCode == 200) {
+                                        _getXController.from.value = (res.result as CashFlowSummaryModel).from ?? "";
+                                        _getXController.to.value = (res.result as CashFlowSummaryModel).to ?? "";
+                                      }
+                                      var t = 0;
+                                      widget.eS_dataSource!.models.forEach((element) {
+                                        t += element.total ?? 0;
+                                      });
+                                      _getXController.expensesSum.value = t;
+                                      print(t);
+                                      return res;
+                                    },
+                                    dataSource: widget.eS_dataSource as CashFlowSummaryDataSource,
+                                    onCellClick: (value) {
+                                      /*  selectedCategory = CashFlowSummaryDataSource()
+                                          .models[value - 2]
+                                          .Category!;
+                                      _controller.jumpToPage(1);*/
+                                    }),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    FormTextKeyWidget(text: "Total: "),
+                                    Obx(() => FormTextValueWidget(
+                                          text: () {
+                                            _getXController.expensesSum.value = 0;
+                                            widget.eS_dataSource!.models.forEach((element) {
+                                              _getXController.expensesSum.value += element.total ?? 0;
+                                            });
+                                            return _getXController.expensesSum.value.toString();
+                                          }(),
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(width: 30),
                           Expanded(
                               child: Column(
                             children: [
-                              Expanded(
-                                child: CIA_Table(
-                                    showSum: true,
-                                    showGridLines: true,
-                                    title: "Income Summary",
-                                    columnNames: CashFlowSummaryModel.columns,
-                                    dataSource: widget.iS_dataSource == null
-                                        ? CashFlowSummaryDataSource()
-                                        : widget.iS_dataSource
-                                            as CashFlowSummaryDataSource,
-                                    onCellClick: (value) {
-                                      try {
-                                        selectedCategory =
-                                            CashFlowSummaryDataSource()
-                                                .models[value - 2]
-                                                .Category!;
-                                        _controller.jumpToPage(1);
-                                      } catch (e) {}
-                                    }),
+                              CIA_Table(
+                                  showGridLines: true,
+                                  title: "Income Summary",
+                                  columnNames: widget.iS_dataSource!.columns,
+                                  dataSource: widget.iS_dataSource == null
+                                      ? CashFlowSummaryDataSource(type: CashFlowType.income)
+                                      : widget.iS_dataSource as CashFlowSummaryDataSource,
+                                  loadFunction: () async {
+                                    var res = await widget.iS_dataSource!.loadData(weekSelected
+                                        ? "ThisWeek"
+                                        : monthSelected
+                                            ? "ThisMonth"
+                                            : yearSelected
+                                                ? "ThisYear"
+                                                : "");
+                                    var t = 0;
+                                    widget.iS_dataSource!.models.forEach((element) {
+                                      t += element.total ?? 0;
+                                    });
+                                    _getXController.incomeSum.value = t;
+                                    print (t);
+                                    return res;
+                                  },
+                                  onCellClick: (value) {
+                                    try {
+                                      selectedCategory = widget.iS_dataSource!.models[value - 2].category!.name!;
+                                      _controller.jumpToPage(1);
+                                    } catch (e) {}
+                                  }),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  FormTextKeyWidget(text: "Total: "),
+                                  Obx(() => FormTextValueWidget(
+                                        text: () {
+                                          _getXController.incomeSum.value = 0;
+                                          widget.iS_dataSource!.models.forEach((element) {
+                                            _getXController.incomeSum.value += element.total ?? 0;
+                                          });
+                                          return _getXController.incomeSum.value.toString();
+                                        }(),
+                                      )),
+                                ],
                               ),
                               SizedBox(height: 30),
-                              Expanded(
+                              /*Expanded(
                                 child: CIA_Table(
-                                    showSum: true,
+
                                     showGridLines: true,
                                     title: "Doctors Income Summary",
                                     columnNames: CashFlowSummaryModel.columns,
@@ -713,7 +789,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                               .Category!;
                                       _controller.jumpToPage(1);
                                     }),
-                              )
+                              )*/
                             ],
                           ))
                         ],
@@ -735,23 +811,20 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                             child: Center(
                                 child: Text(
                           selectedCategory,
-                          style: TextStyle(
-                              fontFamily: Inter_ExtraBold, fontSize: 20),
+                          style: TextStyle(fontFamily: Inter_ExtraBold, fontSize: 20),
                         )))
                       ],
                     ),
                     SizedBox(height: 10),
                     Expanded(
                       child: CIA_Table(
-                          columnNames: CashFlowCategorySummaryModel.columns,
-                          dataSource: CashFlowCategorySummaryDataSource(),
-                          onCellClick: (value) {}),
+                          columnNames: CashFlowCategorySummaryModel.columns, dataSource: CashFlowCategorySummaryDataSource(), onCellClick: (value) {}),
                     ),
                   ],
                 ),
               ];
               return pages[index];
-            })*/
+            })
         /*PageView(
           controller: _controller,
           children: [
@@ -809,7 +882,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       Expanded(
                         child: CIA_Table(
                             showGridLines: true,
-                            showSum: true,
+
                             title: "Expenses Summary",
                             columnNames: CashFlowSummaryModel.columns,
                             dataSource: widget.eS_dataSource == null
@@ -827,7 +900,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                         children: [
                           Expanded(
                             child: CIA_Table(
-                                showSum: true,
+
                                 showGridLines: true,
                                 title: "Income Summary",
                                 columnNames: CashFlowSummaryModel.columns,
@@ -848,7 +921,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                           SizedBox(height: 30),
                           Expanded(
                             child: CIA_Table(
-                                showSum: true,
+
                                 showGridLines: true,
                                 title: "Doctors Income Summary",
                                 columnNames: CashFlowSummaryModel.columns,
@@ -897,7 +970,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                       Expanded(
                         child: CIA_Table(
                             showGridLines: true,
-                            showSum: true,
+
                             title: "Expenses Summary",
                             columnNames: CashFlowSummaryModel.columns,
                             dataSource: widget.eS_dataSource == null
@@ -915,7 +988,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                         children: [
                           Expanded(
                             child: CIA_Table(
-                                showSum: true,
+
                                 showGridLines: true,
                                 title: "Income Summary",
                                 columnNames: CashFlowSummaryModel.columns,
@@ -936,7 +1009,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                           SizedBox(height: 30),
                           Expanded(
                             child: CIA_Table(
-                                showSum: true,
+
                                 showGridLines: true,
                                 title: "Doctors Income Summary",
                                 columnNames: CashFlowSummaryModel.columns,

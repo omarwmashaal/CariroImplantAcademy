@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/API/CashFlowAPI.dart';
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -10,10 +11,11 @@ class CashFlowItemSummaryModel{
   int? total;
 
   CashFlowItemSummaryModel.fromJson(Map<String, dynamic> json) {
-    category = DropDownDTO.fromJson((json['category']??Map<String,dynamic>));
+    category = DropDownDTO.fromJson((json['category']??Map<String,dynamic>()));
     total = json['total'];
 
   }
+  CashFlowItemSummaryModel({this.category,this.total});
 
 
 
@@ -26,9 +28,9 @@ class CashFlowSummaryModel{
   List<CashFlowItemSummaryModel>? income;
   List<CashFlowItemSummaryModel>? expenses;
   CashFlowSummaryModel.fromJson(Map<String, dynamic> json) {
-    from = json['from'];
-    to = json['to'];
-    category = DropDownDTO.fromJson((json['category']??Map<String,dynamic>) as Map<String,dynamic>);
+    from = CIA_DateConverters.fromBackendToDateOnly(json['from']);
+    to = CIA_DateConverters.fromBackendToDateOnly(json['to']);
+    category = DropDownDTO.fromJson((json['category']??Map<String,dynamic>()) as Map<String,dynamic>);
     income = ((json['income']??[]) as List<dynamic>).map((e) => CashFlowItemSummaryModel.fromJson(e as Map<String,dynamic>)).toList();
     expenses = ((json['expenses']??[]) as List<dynamic>).map((e) => CashFlowItemSummaryModel.fromJson(e as Map<String,dynamic>)).toList();
 
@@ -57,7 +59,7 @@ class CashFlowSummaryDataSource extends DataGridSource {
   init() {
     _cashFlowSummaryData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+      DataGridCell<String>(columnName: 'Category', value: e.category!.name??""),
       DataGridCell<int>(columnName: 'Amount', value: e.total??0),
 
     ]))
@@ -83,7 +85,7 @@ class CashFlowSummaryDataSource extends DataGridSource {
         }).toList());
   }
 
-  Future<bool> loadData(String filter) async {
+  Future<API_Response> loadData(String filter) async {
     late API_Response response;
 
     response = await CashFlowAPI.GetSummary(filter);
@@ -94,9 +96,14 @@ class CashFlowSummaryDataSource extends DataGridSource {
       else if(type==CashFlowType.expenses)
         models = result.expenses!;
     }
+
     init();
     notifyListeners();
+    notifyDataSourceListeners();
 
-    return true;
+
+    return response;
   }
+
+
 }

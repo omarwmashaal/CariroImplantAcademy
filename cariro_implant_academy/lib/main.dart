@@ -40,6 +40,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Models/Enum.dart';
+import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';

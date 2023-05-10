@@ -29,6 +29,7 @@ import '../../Constants/Controllers.dart';
 import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Models/Enum.dart';
 import '../../Models/ImplantModel.dart';
+import '../../Models/TacCompanyModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
 import '../../Widgets/Title.dart';
@@ -198,23 +199,110 @@ class _SettingsPageState extends State<_SettingsPage> {
                   },
                   label1: "Company",
                   label2: "Membrane",
+                  field: "Size",
                 ),
                 _CommonSettingsWidget(
-                  addFunction1: (value) async {
-                    return await SettingsAPI.AddTacsCompanies(value);
-                  },
-                  addFunction2: (id, list) async {
-                    return await SettingsAPI.AddTacs(id, list);
-                  },
-                  loadFunction1: () async {
-                    return await SettingsAPI.GetTacsCompanies();
-                  },
-                  loadFunction2: (id) async {
-                    return await SettingsAPI.GetTacs(id);
-                  },
-                  label1: "Company",
-                  label2: "Tacs",
-                ),
+                    addFunction1: (value) async {
+                      return await SettingsAPI.AddTacsCompanies(value);
+                    },
+                    loadFunction1: () async {
+                      return await SettingsAPI.GetTacsCompanies();
+                    },
+                    label1: "Tacs",
+                    anotherWidget: (list) {
+                      var tempName = "";
+                      var tempNumber = 0;
+                      return Column(
+                        children: [
+                          Column(
+                            children: (list as List<TacCompanyModel>)
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                              onPressed: () async {
+                                                list.removeWhere((element) => element.id == e.id);
+                                                await SettingsAPI.AddTacsCompanies!(list);
+                                                setState(() {});
+                                              },
+                                              icon: Icon(Icons.remove)),
+                                          Expanded(
+                                            child: CIA_TextFormField(
+                                              label: "Name",
+                                              onChange: (v) => e.name = v,
+                                              controller: TextEditingController(text: e.name ?? ""),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_TextFormField(
+                                              label: "Number",
+                                              isNumber: true,
+                                              onChange: (v) => e.number = int.parse(v),
+                                              controller: TextEditingController(text: (e.number??0).toString()),
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
+                          Expanded(child: SizedBox()),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CIA_SecondaryButton(
+                                  label: "Add Tac Company",
+                                  onTab: () {
+                                    CIA_ShowPopUp(
+                                        context: context,
+                                        child: StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return Column(
+                                              children: [
+                                                CIA_TextFormField(
+                                                  label: "Name",
+                                                  controller: TextEditingController(text: tempName),
+                                                  onChange: (value) => tempName = value,
+                                                ),
+                                                 SizedBox(height:10),
+                                                 CIA_TextFormField(
+                                                  label: "Number",
+                                                  isNumber:true,
+                                                  controller: TextEditingController(text: tempNumber.toString()),
+                                                  onChange: (value) => tempNumber = int.parse(value),
+                                                ),
+
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                        onSave: () async {
+                                          list.add(TacCompanyModel(name: tempName,number: tempNumber));
+                                          await SettingsAPI.AddTacsCompanies!(list);
+                                          setState(() {});
+                                        });
+                                  }),
+                              SizedBox(width: 10),
+                              CIA_PrimaryButton(
+                                  label: "Save Changes",
+                                  isLong: true,
+                                  onTab: () async {
+                                    await SettingsAPI.AddTacsCompanies!(list).then((value) {
+                                      if (value.statusCode == 200)
+                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                      else
+                                        ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                    });
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                        ],
+                      );
+                    }),
                 _CommonSettingsWidget(
                   addFunction1: (value) async {
                     return await SettingsAPI.AddExpensesCategories(value);
@@ -282,66 +370,61 @@ class _SettingsPageState extends State<_SettingsPage> {
                                         Expanded(
                                           child: CIA_TextFormField(
                                             label: "Value",
-                                            onChange: (v)=>e.name =v,
+                                            onChange: (v) => e.name = v,
                                             controller: TextEditingController(text: e.name ?? ""),
                                           ),
                                         ),
                                         SizedBox(width: 10),
                                         GestureDetector(
-                                          onTap: (){
-                                            Color selectedColor =e.color!;
+                                          onTap: () {
+                                            Color selectedColor = e.color!;
                                             CIA_ShowPopUp(
                                                 context: context,
-                                                child: StatefulBuilder(
-                                                  builder: (context,mySetState) {
-                                                    return Row(
-                                                      children: () {
-                                                        List<Widget> r = [];
-                                                        List<Color> colors = [
-                                                          Colors.red,
-                                                          Colors.blue,
-                                                          Colors.black,
-                                                          Colors.orange,
-                                                          Colors.brown,
-                                                          Colors.indigo,
-                                                          Colors.green,
-                                                        ];
-                                                        r.addAll(
-                                                          colors.map(
-                                                                (element) => GestureDetector(
-                                                              onTap: () {
-                                                                selectedColor = element;
-                                                                mySetState(() {});
-                                                              },
-                                                              child: Padding(
-                                                                padding: EdgeInsets.all(5),
-                                                                child: Container(
-                                                                  width: 30,
-                                                                  height: 30,
-                                                                  decoration: BoxDecoration(
-                                                                    color: element,
-                                                                    border: Border.all(
-                                                                        color: selectedColor == element ? Colors.yellow : element,
-                                                                        width: 3
-                                                                    ),
-                                                                  ),
+                                                child: StatefulBuilder(builder: (context, mySetState) {
+                                                  return Row(
+                                                    children: () {
+                                                      List<Widget> r = [];
+                                                      List<Color> colors = [
+                                                        Colors.red,
+                                                        Colors.blue,
+                                                        Colors.black,
+                                                        Colors.orange,
+                                                        Colors.brown,
+                                                        Colors.indigo,
+                                                        Colors.green,
+                                                      ];
+                                                      r.addAll(
+                                                        colors.map(
+                                                          (element) => GestureDetector(
+                                                            onTap: () {
+                                                              selectedColor = element;
+                                                              mySetState(() {});
+                                                            },
+                                                            child: Padding(
+                                                              padding: EdgeInsets.all(5),
+                                                              child: Container(
+                                                                width: 30,
+                                                                height: 30,
+                                                                decoration: BoxDecoration(
+                                                                  color: element,
+                                                                  border: Border.all(color: selectedColor == element ? Colors.yellow : element, width: 3),
                                                                 ),
                                                               ),
                                                             ),
                                                           ),
-                                                        );
-                                                        return r;
-                                                      }(),
-                                                    );
-                                                  }
-                                                ),
+                                                        ),
+                                                      );
+                                                      return r;
+                                                    }(),
+                                                  );
+                                                }),
                                                 onSave: () async {
                                                   e.color = selectedColor;
                                                   await SettingsAPI.EditRooms(list).then((value) {
-                                                    if(value.statusCode == 200)
+                                                    if (value.statusCode == 200)
                                                       ShowSnackBar(isSuccess: true, title: "Success", message: "");
                                                     else
-                                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
                                                   });
                                                   setState(() {});
                                                 });
@@ -373,7 +456,7 @@ class _SettingsPageState extends State<_SettingsPage> {
                                             children: [
                                               CIA_TextFormField(
                                                 label: "Value",
-                                                controller: TextEditingController(text:tempName),
+                                                controller: TextEditingController(text: tempName),
                                                 onChange: (value) => tempName = value,
                                               ),
                                               Row(
@@ -403,10 +486,7 @@ class _SettingsPageState extends State<_SettingsPage> {
                                                             height: 30,
                                                             decoration: BoxDecoration(
                                                               color: e,
-                                                              border: Border.all(
-                                                                color: selectedColor == e ? Colors.yellow : e,
-                                                                width: 3
-                                                              ),
+                                                              border: Border.all(color: selectedColor == e ? Colors.yellow : e, width: 3),
                                                             ),
                                                           ),
                                                         ),
@@ -421,21 +501,21 @@ class _SettingsPageState extends State<_SettingsPage> {
                                         },
                                       ),
                                       onSave: () async {
-                                        list.add(CIA_RoomModel(name: tempName,color: selectedColor));
+                                        list.add(CIA_RoomModel(name: tempName, color: selectedColor));
                                         await SettingsAPI.EditRooms!(list);
                                         setState(() {});
                                       });
                                 }),
-                            SizedBox(width:10),
+                            SizedBox(width: 10),
                             CIA_PrimaryButton(
                                 label: "Save Changes",
                                 isLong: true,
-                                onTab: () async{
+                                onTab: () async {
                                   await SettingsAPI.EditRooms!(list).then((value) {
-                                    if(value.statusCode == 200)
+                                    if (value.statusCode == 200)
                                       ShowSnackBar(isSuccess: true, title: "Success", message: "");
                                     else
-                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
                                   });
                                   setState(() {});
                                 }),
@@ -465,7 +545,15 @@ class _ImplantsSettings extends StatefulWidget {
 
 class _CommonSettingsWidget extends StatefulWidget {
   _CommonSettingsWidget(
-      {Key? key, this.label1 = "", this.label2 = "", this.loadFunction1, this.loadFunction2, this.addFunction1, this.addFunction2, this.anotherWidget})
+      {Key? key,
+      this.label1 = "",
+      this.field,
+      this.label2 = "",
+      this.loadFunction1,
+      this.loadFunction2,
+      this.addFunction1,
+      this.addFunction2,
+      this.anotherWidget})
       : super(key: key);
 
   List<dynamic> list1 = [];
@@ -477,6 +565,7 @@ class _CommonSettingsWidget extends StatefulWidget {
   Future<API_Response> Function(dynamic?, dynamic?)? addFunction2;
   String label1;
   String label2;
+  String? field;
   Function? anotherWidget;
 
   @override
@@ -512,12 +601,13 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                               ),
                               onSave: () async {
                                 widget.list1.add(DropDownDTO(name: tempName));
-                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                  if(value.statusCode == 200)
-                                    ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                  else
-                                    ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                });
+                                if (widget.addFunction1 != null)
+                                  await widget.addFunction1!(widget.list1).then((value) {
+                                    if (value.statusCode == 200)
+                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                    else
+                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                  });
                                 setState(() {});
                               });
                         }),
@@ -570,12 +660,13 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                         label: "Delete",
                                         onTab: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                            if(value.statusCode == 200)
-                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                            else
-                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                          });
+                                          if (widget.addFunction1 != null)
+                                            await widget.addFunction1!(widget.list1).then((value) {
+                                              if (value.statusCode == 200)
+                                                ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                              else
+                                                ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                            });
                                           setState(() {});
                                         }),
                                   ),
@@ -594,12 +685,13 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                               ),
                                               onSave: () async {
                                                 widget.list1.firstWhere((element) => element.id == e.id).name = tempName;
-                                                if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                                  if(value.statusCode == 200)
-                                                    ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                                  else
-                                                    ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                                });
+                                                if (widget.addFunction1 != null)
+                                                  await widget.addFunction1!(widget.list1).then((value) {
+                                                    if (value.statusCode == 200)
+                                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                                    else
+                                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                                  });
                                                 setState(() {});
                                               });
                                         }),
@@ -639,16 +731,22 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                     IconButton(
                                         onPressed: () async {
                                           widget.list2.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
-                                            if(value.statusCode == 200)
-                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                            else
-                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                          });
+                                          if (widget.addFunction2 != null)
+                                            await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                              if (value.statusCode == 200)
+                                                ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                              else
+                                                ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                            });
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.remove)),
-                                    Expanded(child: CIA_TextFormField(label: "Name", controller: TextEditingController(text: e.name ?? ""),onChange: (v)=>e.name = v,)),
+                                    Expanded(
+                                        child: CIA_TextFormField(
+                                      label: widget.field ?? "Name",
+                                      controller: TextEditingController(text: e.name ?? ""),
+                                      onChange: (v) => e.name = v,
+                                    )),
                                   ],
                                 ),
                               ))
@@ -658,44 +756,46 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                     widget.selectedList1Id == null
                         ? Container()
                         : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CIA_SecondaryButton(
-                                label: "Add ${widget.label2}",
-                                onTab: () {
-                                  CIA_ShowPopUp(
-                                      context: context,
-                                      child: CIA_TextFormField(
-                                        label: "Value",
-                                        controller: TextEditingController(),
-                                        onChange: (value) => tempName = value,
-                                      ),
-                                      onSave: () async {
-                                        widget.list2.add(DropDownDTO(name: tempName));
-                                        if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
-                                          if(value.statusCode == 200)
-                                            ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                          else
-                                            ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CIA_SecondaryButton(
+                                  label: "Add ${widget.label2}",
+                                  onTab: () {
+                                    CIA_ShowPopUp(
+                                        context: context,
+                                        child: CIA_TextFormField(
+                                          label: "Value",
+                                          controller: TextEditingController(),
+                                          onChange: (value) => tempName = value,
+                                        ),
+                                        onSave: () async {
+                                          widget.list2.add(DropDownDTO(name: tempName));
+                                          if (widget.addFunction2 != null)
+                                            await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                              if (value.statusCode == 200)
+                                                ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                              else
+                                                ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                            });
+                                          setState(() {});
                                         });
-                                        setState(() {});
+                                  }),
+                              SizedBox(width: 10),
+                              CIA_PrimaryButton(
+                                  label: "Save Changes",
+                                  isLong: true,
+                                  onTab: () async {
+                                    if (widget.addFunction2 != null)
+                                      await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
+                                        if (value.statusCode == 200)
+                                          ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                        else
+                                          ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
                                       });
-                                }),
-                            SizedBox(width:10),
-                            CIA_PrimaryButton(
-                                label: "Save Changes",
-                                isLong: true,
-                                onTab: () async{
-                                  if (widget.addFunction2 != null) await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
-                                    if(value.statusCode == 200)
-                                      ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                    else
-                                      ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                  });
-                                  setState(() {});
-                                }),
-                          ],
-                        ),
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
                   ],
                 );
               },
@@ -732,16 +832,22 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                     IconButton(
                                         onPressed: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
-                                          if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                            if(value.statusCode == 200)
-                                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                            else
-                                              ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                          });
+                                          if (widget.addFunction1 != null)
+                                            await widget.addFunction1!(widget.list1).then((value) {
+                                              if (value.statusCode == 200)
+                                                ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                              else
+                                                ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                            });
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.remove)),
-                                    Expanded(child: CIA_TextFormField(label: "Value", controller: TextEditingController(text: e.name ?? ""),onChange: (v)=>e.name=v,)),
+                                    Expanded(
+                                        child: CIA_TextFormField(
+                                      label: widget.field ?? "Value",
+                                      controller: TextEditingController(text: e.name ?? ""),
+                                      onChange: (v) => e.name = v,
+                                    )),
                                   ],
                                 ),
                               ))
@@ -763,26 +869,28 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                   ),
                                   onSave: () async {
                                     widget.list1.add(DropDownDTO(name: tempName));
-                                    if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                      if(value.statusCode == 200)
-                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                      else
-                                        ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                                    });
+                                    if (widget.addFunction1 != null)
+                                      await widget.addFunction1!(widget.list1).then((value) {
+                                        if (value.statusCode == 200)
+                                          ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                        else
+                                          ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                      });
                                     setState(() {});
                                   });
                             }),
-                        SizedBox(width:10),
+                        SizedBox(width: 10),
                         CIA_PrimaryButton(
                             label: "Save Changes",
-                            isLong:true,
-                            onTab: () async{
-                              if (widget.addFunction1 != null) await widget.addFunction1!(widget.list1).then((value) {
-                                if(value.statusCode == 200)
-                                  ShowSnackBar(isSuccess: true, title: "Success", message: "");
-                                else
-                                  ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage??"");
-                              });
+                            isLong: true,
+                            onTab: () async {
+                              if (widget.addFunction1 != null)
+                                await widget.addFunction1!(widget.list1).then((value) {
+                                  if (value.statusCode == 200)
+                                    ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                  else
+                                    ShowSnackBar(isSuccess: false, title: "Faild", message: value.errorMessage ?? "");
+                                });
                               setState(() {});
                             }),
                       ],

@@ -1,6 +1,8 @@
 import 'package:cariro_implant_academy/Models/CIA_RoomModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/ImplantModel.dart';
+import 'package:cariro_implant_academy/Models/MembraneModel.dart';
+import 'package:cariro_implant_academy/Models/TacCompanyModel.dart';
 
 import '../Models/API_Response.dart';
 import 'HTTP.dart';
@@ -55,18 +57,12 @@ class SettingsAPI {
     var response = await HTTPRequest.Get("Settings/GetMembranes?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>).map((e) => MembraneModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<MembraneModel>).map((e) => DropDownDTO(name: e.size,id: e.id)).toList();
     }
     return response;
   }
-  static Future<API_Response> GetTacs(int id) async {
-    var response = await HTTPRequest.Get("Settings/GetTacs?id=$id");
 
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    return response;
-  }
   static Future<API_Response> GetMembraneCompanies() async {
     var response = await HTTPRequest.Get("Settings/GetMembraneCompanies");
 
@@ -80,23 +76,17 @@ class SettingsAPI {
     var response = await HTTPRequest.Get("Settings/GetTacsCompanies");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>).map((e) => TacCompanyModel.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
-  static Future<API_Response> GetAllTacs() async {
-    var response = await HTTPRequest.Get("Settings/GetAllTacs");
 
-    if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    return response;
-  }
   static Future<API_Response> GetAllMembranes() async {
     var response = await HTTPRequest.Get("Settings/GetAllMembranes");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>).map((e) => MembraneModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<MembraneModel>).map((e) => DropDownDTO(name: e.size,id: e.id)).toList();
     }
     return response;
   }
@@ -181,17 +171,14 @@ class SettingsAPI {
   }
 
   static Future<API_Response> AddMembranes(int id, List<DropDownDTO> model) async {
-    var response = await HTTPRequest.Put("Settings/AddMembranes?id=$id",model.map((e) => e.toJson()).toList());
-    return response;
-  }
-
-  static Future<API_Response> AddTacs(int id, List<DropDownDTO> model) async {
-    var response = await HTTPRequest.Put("Settings/AddTacs?id=$id",model.map((e) => e.toJson()).toList());
+    var myModel = model.map((e) => MembraneModel(id: e.id,size: e.name)).toList();
+    var response = await HTTPRequest.Put("Settings/AddMembranes?id=$id",myModel.map((e) => e.toJson()).toList());
     return response;
   }
 
 
-  static Future<API_Response> AddTacsCompanies( List<DropDownDTO> model) async {
+
+  static Future<API_Response> AddTacsCompanies( List<TacCompanyModel> model) async {
     var response = await HTTPRequest.Put("Settings/AddTacsCompanies?",model.map((e) => e.toJson()).toList());
     return response;
   }
