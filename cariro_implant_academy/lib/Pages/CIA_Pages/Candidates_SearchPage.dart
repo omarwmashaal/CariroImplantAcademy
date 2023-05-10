@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../Models/Enum.dart';
 import '../../Widgets/Title.dart';
-
+/*
 class CandidatesSearchPage extends StatefulWidget {
   const CandidatesSearchPage({Key? key}) : super(key: key);
 
@@ -62,3 +62,4 @@ class _CandidatesSearchPageState extends State<CandidatesSearchPage> {
     siteController.setAppBarWidget();
   }
 }
+*/

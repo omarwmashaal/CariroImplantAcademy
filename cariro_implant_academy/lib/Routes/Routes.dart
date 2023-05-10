@@ -28,7 +28,7 @@ PageView MainPageRoutes() {
       Container(
         child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
       ),
-      Container(child: CandidatesSearchPage()),
+      Container(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),
       Container(
         child: const Center(
           child: Text(

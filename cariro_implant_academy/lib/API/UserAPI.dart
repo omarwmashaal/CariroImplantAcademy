@@ -12,8 +12,11 @@ class UserAPI {
     return response;
   }
   //TODO: REMOVE THIS
-  static Future<API_Response> GetCandidates() async {
-    var response = await HTTPRequest.Get("User/GetCandidates");
+  static Future<API_Response> GetCandidates({String? search,int? batch}) async {
+    var query = "";
+    if(search!=null) query+= "${query==""?"":"&"}search=$search";
+    if(batch!=null) query+= "${query==""?"":"&"}batch=${batch.toString()}";
+    var response = await HTTPRequest.Get("User/GetCandidates?$query");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = ((response.result??[]) as List<dynamic>).map((e) => ApplicationUserModel.fromJson(e as Map<String,dynamic>)).toList();

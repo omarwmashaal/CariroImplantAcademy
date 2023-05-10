@@ -36,8 +36,11 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
               label: e.name,
               height: 50,
               onTab: () async {
-                bool changePage = false;
-                await CIA_ShowPopUpSaveRequest(
+                bool changePage = true;
+                if (widget.pages.firstWhere((element) => element.isSelected == true).onSave != null)
+                  widget.pages.firstWhere((element) => element.isSelected == true).onSave!();
+
+                /*await CIA_ShowPopUpSaveRequest(
                     context: context,
                     onSave: () {
                       widget.pages
@@ -50,8 +53,8 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
                     },
                     onDontSave: () {
                       changePage = true;
-                    });
-                if(!changePage) return;
+                    });*/
+                if (!changePage) return;
                 tabsController.jumpToPage(e.getIndex());
                 e.isSelected = true;
                 for (var ff in widget.pages) {
@@ -95,6 +98,5 @@ class MedicalSlidingModel {
     return _index;
   }
 
-  MedicalSlidingModel(
-      {this.onSave, required this.name, this.isSelected = false});
+  MedicalSlidingModel({this.onSave, required this.name, this.isSelected = false});
 }

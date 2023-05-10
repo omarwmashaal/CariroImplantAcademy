@@ -69,6 +69,10 @@ class ApplicationUserModel {
     address = json['address'];
     city = json['city'];
     idInt = json['idInt'];
+    if(idInt==null)
+      try{
+        idInt = json['id'];
+      }catch(e){};
     try{
       id = json['id'];
     }catch(e){
@@ -370,10 +374,10 @@ class ApplicationUserDataSource extends DataGridSource {
         }).toList());
   }
 
-  Future<bool> loadData({String? search}) async {
+  Future<bool> loadData({int? batch,String? search}) async {
     late API_Response response;
     if (type == UserRoles.Candidate) {
-      response = await UserAPI.GetCandidates();
+      response = await UserAPI.GetCandidates(search: search,batch: batch);
     }
     else
       response =await UserAPI.SearcshUsersByRole(search: search, role: type);

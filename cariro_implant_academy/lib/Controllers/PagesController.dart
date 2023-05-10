@@ -45,7 +45,7 @@ class PagesController extends PageController {
               Container(
                 child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
               ),
-              Container(child: CandidatesSearchPage()),
+              Container(child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),),
               Container(
                 child: Center(
                   child: StockSearchPage(),

@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: AuthenticationPage(),
+      body: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate)),
     );
   }
 }
