@@ -213,4 +213,9 @@ class _ViewUserDataState extends State<ViewUserData> {
       },
     );
   }
+
+  @override
+  void initState() {
+
+  }
 }

@@ -90,3 +90,10 @@ enum UserRoles
   OutSource,
   Candidate
 }
+enum EnumOralHygieneRating
+{
+  BadHygiene,
+  FairHygiene,
+  GoodHygiene,
+  ExcellentHygiene,
+}

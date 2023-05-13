@@ -1,5 +1,7 @@
+import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -9,7 +11,7 @@ import 'API_Response.dart';
 class CashFlowModel {
   int? id;
   int? receiptID;
-  DropDownDTO? receipt;
+  ReceiptModel? receipt;
   String? date;
   String? name;
   int? categoryId;
@@ -18,10 +20,14 @@ class CashFlowModel {
   DropDownDTO? supplier;
   int? createdById;
   DropDownDTO? createdBy;
+  int? patientId;
+  DropDownDTO? patient;
   int? price;
   int? count;
   int? paymentMethodId;
   DropDownDTO? paymentMethod;
+  int? paymentLogId;
+  DropDownDTO? paymentLog;
   String? notes;
   String? type;
 
@@ -47,11 +53,13 @@ class CashFlowModel {
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     receiptID = json['receiptID'];
-    receipt = json['receipt'];
-    date = json['date'];
+    receipt = ReceiptModel.fromJson(json['receipt']??Map<String,dynamic>());
+    date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     name = json['name'];
     categoryId = json['categoryId'];
     category = json['category'] != null ? new DropDownDTO.fromJson(json['category']) : DropDownDTO();
+    patientId = json['patientId'];
+    patient = json['patient'] != null ? new DropDownDTO.fromJson(json['patient']) : DropDownDTO();
     supplierId = json['supplierId'];
     supplier = json['supplier'] != null ? new DropDownDTO.fromJson(json['supplier']) : DropDownDTO();
     createdById = json['createdById'];
@@ -60,8 +68,12 @@ class CashFlowModel {
     count = json['count'];
     paymentMethodId = json['paymentMethodId'];
     paymentMethod = json['paymentMethod'] != null ? new DropDownDTO.fromJson(json['paymentMethod']) : DropDownDTO();
+   paymentLogId = json['paymentLogId'];
+    paymentLog = json['paymentLog'] != null ? new DropDownDTO.fromJson(json['paymentLog']) : DropDownDTO();
     notes = json['notes'];
     type = json['type'];
+    receiptID = json['receiptID'];
+    receipt = ReceiptModel.fromJson(json['receipt']??Map<String,dynamic>());
   }
 
   Map<String, dynamic> toJson() {
@@ -69,7 +81,7 @@ class CashFlowModel {
     data['id'] = this.id;
     data['receiptID'] = this.receiptID;
     data['receipt'] = this.receipt;
-    data['date'] = this.date;
+    data['date'] = CIA_DateConverters.fromBackendToDateTime(this.date);
     data['name'] = this.name;
     data['categoryId'] = this.categoryId;
     if (this.category != null) {
@@ -117,22 +129,22 @@ class CashFlowDataSource extends DataGridSource {
       {
         columns = [
           "ID",
-          "Item",
-          "Category",
+          "Date",
           "Created by",
+          "Patient",
+          "Receipt Id",
+          "Payment Log Id",
           "Amount",
-          "Method",
-          "Notes",
         ];
         _cashFlowData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<int>(columnName: 'ID', value: e.id),
-          DataGridCell<String>(columnName: 'Item', value: e.name),
-          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+          DataGridCell<String>(columnName: 'Date', value: e.date),
           DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-          DataGridCell<int>(columnName: 'Amount', value: e.count),
-          DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
-          DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
+          DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
+          DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
+          DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
+          DataGridCell<int>(columnName: 'Amount', value: e.price),
         ]))
             .toList();
       }

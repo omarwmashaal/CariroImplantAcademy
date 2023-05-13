@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:get/get.dart';
 
 class DentalExaminationModel {
@@ -11,6 +13,7 @@ class DentalExaminationModel {
   String? operatorImplantNotes;
   int? operatorId;
   DropDownDTO? operator;
+  EnumOralHygieneRating?  oralHygieneRating;
 
   DentalExaminationModel(
       {this.id,
@@ -20,6 +23,7 @@ class DentalExaminationModel {
         this.interarchspaceLT=0,
         this.date="",
         this.operatorImplantNotes="",
+        this.oralHygieneRating=EnumOralHygieneRating.GoodHygiene,
         this.operatorId,
         this.operator});
 
@@ -35,6 +39,7 @@ class DentalExaminationModel {
     else dentalExaminations = [];
     interarchspaceRT = json['interarchspaceRT']??0;
     interarchspaceLT = json['interarchspaceLT']??0;
+    oralHygieneRating = EnumOralHygieneRating.values[json['oralHygieneRating']??2];
     date = json['date']??"";
     operatorImplantNotes = json['operatorImplantNotes']??"";
     operatorId = json['operatorId'];
@@ -56,7 +61,8 @@ class DentalExaminationModel {
     data['interarchspaceRT'] = this.interarchspaceRT;
     data['interarchspaceLT'] = this.interarchspaceLT;
     data['operatorImplantNotes'] = this.operatorImplantNotes;
-    
+    data['oralHygieneRating'] = this.oralHygieneRating!.index;
+
     return data;
   }
 
@@ -122,7 +128,7 @@ class DentalExaminations {
     return data;
   }
 
-  updateToothStatus(String value) {
+  updateToothStatus(String value)  {
 
 
     switch (value) {

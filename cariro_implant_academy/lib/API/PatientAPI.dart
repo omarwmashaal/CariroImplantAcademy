@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/Models/PaymentLogModel.dart';
+import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 
 import '../Models/VisitsModel.dart';
 
@@ -141,41 +143,109 @@ class PatientAPI {
   }
 
   static Future<API_Response> ResolveComplain(int id) async {
-    var response = await HTTPRequest.Put("PatientInfo/ResolveComplain?id=$id",null);
+    var response = await HTTPRequest.Put("PatientInfo/ResolveComplain?id=$id", null);
 
     if (response.statusCode == 200) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    return response;
-  }
- static Future<API_Response> AddComplain(ComplainsModel model) async {
-    var response = await HTTPRequest.Post("PatientInfo/AddComplain",model.toJson());
-
-    if (response.statusCode == 200) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
 
-  static Future<API_Response> GetComplains({int? id,String? search,bool? resolved}) async {
+  static Future<API_Response> AddComplain(ComplainsModel model) async {
+    var response = await HTTPRequest.Post("PatientInfo/AddComplain", model.toJson());
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetComplains({int? id, String? search, bool? resolved}) async {
     API_Response response = API_Response();
     if (id != null)
       response = await HTTPRequest.Get("PatientInfo/GetComplains?id=$id");
-    else
-      {
-        var query = "";
-        if (resolved != null) query = "resolved=$resolved";
-        if (search != null&& search!="")
-        {
-          query = query == "" ? query + "search=$search" : query + "&search=$search";
-        }
-        response = await HTTPRequest.Get("PatientInfo/GetComplains?$query");
+    else {
+      var query = "";
+      if (resolved != null) query = "resolved=$resolved";
+      if (search != null && search != "") {
+        query = query == "" ? query + "search=$search" : query + "&search=$search";
       }
+      response = await HTTPRequest.Get("PatientInfo/GetComplains?$query");
+    }
 
     if (response.statusCode == 200) {
-        response.result = ((response.result??[]) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
     }
 
     return response;
   }
+
+  static Future<API_Response> GetTodaysReceipt(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetTodaysReceipt?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetLastReceipt(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetLastReceipt?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetReceipts(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetReceipts?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ReceiptModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetAllPaymentLogs(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetAllPaymentLogs?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetPaymentLogsForAReceipt(int id, int receiptId) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetPaymentLogsForAReceipt?id=$id&receiptId=$receiptId");
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> AddPayment(int id, int receiptId, int paidAmount) async {
+    var response = await HTTPRequest.Post("PatientInfo/AddPayment?id=$id&receiptId=$receiptId&paidAmount=$paidAmount", null);
+    return response;
+  }
+
+  static Future<API_Response> GetTotalDebt(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetTotalDebt?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = response.result??0 as int;
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetReceiptById(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/GetReceiptById?id=$id");
+
+    if (response.statusCode == 200) {
+      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+    }
+    return response;
+  }
+
 }

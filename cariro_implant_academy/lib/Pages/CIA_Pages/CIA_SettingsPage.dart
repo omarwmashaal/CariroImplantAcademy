@@ -29,6 +29,7 @@ import '../../Constants/Controllers.dart';
 import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Models/Enum.dart';
 import '../../Models/ImplantModel.dart';
+import '../../Models/MedicalModels/TreatmentPrices.dart';
 import '../../Models/TacCompanyModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
@@ -175,12 +176,19 @@ class _SettingsPageState extends State<_SettingsPage> {
                   currentIndex = 8;
                 },
                 iconWidget: Container()),
+            SidebarXItem(
+                label: "Treatment Prices",
+                onTap: () {
+                  _pageController.jumpToPage(9);
+                  currentIndex = 9;
+                },
+                iconWidget: Container()),
           ],
         ),
         SizedBox(width: 10),
         Expanded(
           child: PageView.builder(
-            itemCount: 9,
+            itemCount: 10,
             itemBuilder: (context, index) {
               var pages = [
                 _ImplantsSettings(),
@@ -240,10 +248,9 @@ class _SettingsPageState extends State<_SettingsPage> {
                                               label: "Number",
                                               isNumber: true,
                                               onChange: (v) => e.number = int.parse(v),
-                                              controller: TextEditingController(text: (e.number??0).toString()),
+                                              controller: TextEditingController(text: (e.number ?? 0).toString()),
                                             ),
                                           ),
-
                                         ],
                                       ),
                                     ))
@@ -267,20 +274,19 @@ class _SettingsPageState extends State<_SettingsPage> {
                                                   controller: TextEditingController(text: tempName),
                                                   onChange: (value) => tempName = value,
                                                 ),
-                                                 SizedBox(height:10),
-                                                 CIA_TextFormField(
+                                                SizedBox(height: 10),
+                                                CIA_TextFormField(
                                                   label: "Number",
-                                                  isNumber:true,
+                                                  isNumber: true,
                                                   controller: TextEditingController(text: tempNumber.toString()),
                                                   onChange: (value) => tempNumber = int.parse(value),
                                                 ),
-
                                               ],
                                             );
                                           },
                                         ),
                                         onSave: () async {
-                                          list.add(TacCompanyModel(name: tempName,number: tempNumber));
+                                          list.add(TacCompanyModel(name: tempName, number: tempNumber));
                                           await SettingsAPI.AddTacsCompanies!(list);
                                           setState(() {});
                                         });
@@ -525,6 +531,74 @@ class _SettingsPageState extends State<_SettingsPage> {
                     );
                   },
                 ),
+                CIA_FutureBuilder(
+                  loadFunction: SettingsAPI.GetTreatmentPrices(),
+                  onSuccess: (data) {
+                    var prices = data as TreatmentPrices;
+                    return Column(
+                      children: [
+                        SizedBox(height: 10,),
+                        CIA_TextFormField(
+                          label: "Extraction",
+                          controller: TextEditingController(
+                            text: (prices.extraction ?? 0).toString(),
+                          ),
+                          isNumber:true,
+                          suffix:"EGP",
+                          onChange: (v)=> prices.extraction = int.parse(v),
+                        ),SizedBox(height: 10,),
+                        CIA_TextFormField(
+                          label: "Scaling",
+                          controller: TextEditingController(
+                            text: (prices.scaling ?? 0).toString(),
+                          ),
+                          isNumber:true,
+                          suffix:"EGP",
+                          onChange: (v)=> prices.scaling = int.parse(v),
+                        ),SizedBox(height: 10,),
+                        CIA_TextFormField(
+                          label: "Crown",
+                          controller: TextEditingController(
+                            text: (prices.crown ?? 0).toString(),
+                          ),
+                          isNumber:true,
+                          suffix:"EGP",
+                          onChange: (v)=> prices.crown = int.parse(v),
+                        ),SizedBox(height: 10,),
+                        CIA_TextFormField(
+                          label: "Restoration",
+                          controller: TextEditingController(
+                            text: (prices.restoration ?? 0).toString(),
+                          ),
+                          isNumber:true,
+                          suffix:"EGP",
+                          onChange: (v)=> prices.restoration = int.parse(v),
+                        ),SizedBox(height: 10,),
+                        CIA_TextFormField(
+                          label: "Root Canal Treatment",
+                          controller: TextEditingController(
+                            text: (prices.rootCanalTreatment ?? 0).toString(),
+                          ),
+                          isNumber:true,
+                          suffix:"EGP",
+                          onChange: (v)=> prices.rootCanalTreatment = int.parse(v),
+                        ),
+                        Expanded(child: SizedBox()),
+                        CIA_PrimaryButton(label: "Save", onTab: ()async{
+                          await SettingsAPI.EditTreatmentPrices(prices).then((value){
+                            if(value.statusCode==200)
+                              ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                            else
+                              ShowSnackBar(isSuccess: false, title: "Failed", message: "");
+                          });
+                          setState(() {
+
+                          });
+                        })
+                      ],
+                    );
+                  },
+                )
               ];
               return pages[index];
             },

@@ -20,7 +20,7 @@ class SearchLayout extends StatefulWidget {
   DataGridSource dataSource;
   Function? loadMoreFuntcion;
   List<String> columnNames;
-  Function? onCellTab;
+  Function(int index)? onCellTab;
 
   @override
   State<SearchLayout> createState() => _SearchLayoutState();

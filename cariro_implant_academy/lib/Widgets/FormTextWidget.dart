@@ -47,13 +47,14 @@ class FormTextKeyWidget extends StatelessWidget {
 
 class FormTextValueWidget extends StatelessWidget {
   FormTextValueWidget(
-      {Key? key, required this.text,this.align = TextAlign.start, this.secondaryInfo = false, this.suffix, this.smallFont = false})
+      {Key? key, this.color, required this.text,this.align = TextAlign.start, this.secondaryInfo = false, this.suffix, this.smallFont = false})
       : super(key: key);
   String? text;
   bool secondaryInfo;
   String? suffix;
   bool smallFont;
   TextAlign align;
+  Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +66,11 @@ class FormTextValueWidget extends StatelessWidget {
           ? TextStyle(
               fontSize: fontSize,
               fontFamily: Inter_Regular,
-              color: Color_TextSecondary)
+              color:color?? Color_TextSecondary)
           : TextStyle(
               fontSize: fontSize,
               fontFamily: Inter_Regular,
+          color:color??Colors.black
             ),
     );
   }

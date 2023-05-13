@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/MembraneModel.dart';
 import 'package:cariro_implant_academy/Models/TacCompanyModel.dart';
 
 import '../Models/API_Response.dart';
+import '../Models/MedicalModels/TreatmentPrices.dart';
 import 'HTTP.dart';
 
 class SettingsAPI {
@@ -232,6 +233,21 @@ class SettingsAPI {
   }
 
 
+  static Future<API_Response> EditTreatmentPrices( TreatmentPrices prices) async {
+    var response = await HTTPRequest.Put("Settings/EditTreatmentPrices?",prices.toJson());
+    return response;
+  }
+
+
+
+  static Future<API_Response> GetTreatmentPrices() async {
+    var response = await HTTPRequest.Get("Settings/GetTreatmentPrices?");
+    if(response.statusCode==200)
+      {
+        response.result = TreatmentPrices.fromJson((response.result as Map<String,dynamic>));
+      }
+    return response;
+  }
 
 
 

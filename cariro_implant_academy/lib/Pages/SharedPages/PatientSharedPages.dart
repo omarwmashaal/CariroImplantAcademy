@@ -6,6 +6,8 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/Models/PaymentLogModel.dart';
+import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
@@ -93,6 +95,65 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Row(
+                                children: [
+                                  CIA_PrimaryButton(
+                                      label: "Show Receipts and Payments",
+                                      onTab: () {
+                                        ReceiptDataSource dataSource = ReceiptDataSource();
+                                        CIA_ShowPopUp(
+                                          width:900,
+                                          context: context,
+                                          child: Column(
+                                            children: [
+                                              FormTextKeyWidget(text: "Click on receipt to view payment log"),
+                                              Expanded(
+                                                child: CIA_Table(
+                                                  columnNames: dataSource.columns,
+                                                  dataSource: dataSource,
+                                                  loadFunction: () async{
+                                                    return await dataSource.loadData(id: widget.patientID);
+                                                  },
+                                                  onCellClick: (index) async{
+                                                    PaymentLogDataSrouce logDataSource = PaymentLogDataSrouce();
+                                                    CIA_ShowPopUp(
+                                                      width:900,
+                                                      context: context,
+                                                      child: Column(
+                                                        children: [
+                                                          FormTextKeyWidget(text: "Payment log for receipt Id ${dataSource.models[index-1].id}"),
+                                                          Expanded(
+                                                            child: CIA_Table(
+                                                              columnNames: logDataSource.columns,
+                                                              dataSource: logDataSource,
+                                                              loadFunction: () async{
+                                                                return await logDataSource.loadData(id: widget.patientID,receiptId: dataSource.models[index-1].id!);
+                                                              },
+
+                                                            ),
+                                                          ),
+                                                          FormTextKeyWidget(text: "Total paid ${(){
+                                                            int paid = 0;
+                                                            dataSource.models.forEach((element) {
+                                                              paid+=element.paid??0;
+                                                            });
+                                                            return paid.toString();
+                                                          }()}"),
+
+                                                        ],
+                                                      ),
+                                                    );
+
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                  Expanded(child: SizedBox())
+                                ],
+                              ),
                               Visibility(
                                   child: Row(
                                     children: [
@@ -525,7 +586,159 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                     width: 150,
                                     label: "Patient Leaves",
                                     onTab: () async {
-                                      var res = await PatientAPI.PatientLeaves(widget.patientID);
+                                      var res = await PatientAPI.GetTodaysReceipt(widget.patientID);
+                                      ReceiptModel receipt = ReceiptModel();
+                                      if (res.statusCode == 200) receipt = res.result as ReceiptModel;
+                                      int newPayment = 0;
+                                      int debt = 0;
+                                      res = await PatientAPI.GetTotalDebt(widget.patientID);
+                                      if(res.statusCode == 200) debt = res.result as int;
+                                      await CIA_ShowPopUp(
+                                          context: context,
+                                          title: "Receipt",
+                                          onSave: () async {
+                                            await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPayment);
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Patient total debt")),
+                                                  Expanded( child: FormTextValueWidget(color:debt!=0?Colors.red:Colors.black ,text: debt.toString())),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Date")),
+                                                  Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Patient ID")),
+                                                  Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Patient Name")),
+                                                  Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Operator")),
+                                                  Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              Visibility(
+                                                visible: (receipt.crown ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Crown")),
+                                                      Expanded(child: FormTextValueWidget(text: (receipt.crown ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: (receipt.scaling ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Scaling")),
+                                                      Expanded(child: FormTextValueWidget(text: (receipt.scaling ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: (receipt.extraction ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Extraction")),
+                                                      Expanded(child: FormTextValueWidget(text: (receipt.extraction ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: (receipt.restoration ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Restoration")),
+                                                      Expanded(child: FormTextValueWidget(text: (receipt.restoration ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: (receipt.rootCanalTreatment ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Root Canal Treatment")),
+                                                      Expanded(child: FormTextValueWidget(text: (receipt.rootCanalTreatment ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Divider(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Total")),
+                                                    Expanded(child: FormTextValueWidget(text: (receipt.total ?? 0).toString())),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Paid amount")),
+                                                    Expanded(child: FormTextValueWidget(color: Colors.green, text: (receipt.paid ?? 0).toString())),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Unpaid amount")),
+                                                    Expanded(
+                                                        child: FormTextValueWidget(
+                                                            color: receipt.unpaid != 0 ? Colors.red : Colors.black, text: (receipt.unpaid ?? 0).toString())),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(bottom: 10),
+                                                child: CIA_TextFormField(
+                                                  label: "New Payment",
+                                                  isNumber: true,
+                                                  controller: TextEditingController(text: "0"),
+                                                  suffix: "EGP",
+                                                  onChange: (v) => newPayment = int.parse(v),
+                                                ),
+                                              ),
+                                            ],
+                                          ));
+                                      res = await PatientAPI.PatientLeaves(widget.patientID);
                                       if (res.statusCode == 200) {
                                         dataSource.setData(res.result as List<VisitsModel>);
                                         ShowSnackBar(isSuccess: true, title: "Success", message: "");
@@ -696,7 +909,6 @@ class _PatientComplainsState extends State<PatientComplains> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                
                 child: Column(
                   children: complains
                       .map(
@@ -706,25 +918,25 @@ class _PatientComplainsState extends State<PatientComplains> {
                             Divider(),
                             Row(
                               children: [
-                                
-
                                 Expanded(
                                   child: Text(
                                     e.comment ?? "",
                                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                                   ),
-                                ),SizedBox(width: 10),Column(
+                                ),
+                                SizedBox(width: 10),
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     RoundCheckBox(
                                       onTap: e.resolved!
                                           ? null
                                           : (value) async {
-                                        await PatientAPI.ResolveComplain(e.id!).then((value) {
-                                          if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
-                                          setState(() {});
-                                        });
-                                      },
+                                              await PatientAPI.ResolveComplain(e.id!).then((value) {
+                                                if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
+                                                setState(() {});
+                                              });
+                                            },
                                       size: 30,
                                       disabledColor: Colors.green,
                                       checkedColor: Colors.green,
@@ -739,7 +951,6 @@ class _PatientComplainsState extends State<PatientComplains> {
                                     )
                                   ],
                                 ),
-
                               ],
                             ),
                             SizedBox(

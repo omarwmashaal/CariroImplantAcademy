@@ -24,7 +24,7 @@ class CIA_Table extends StatefulWidget {
   List<String> columnNames;
   DataGridSource dataSource;
   Function? loadFunction;
-  Function? onCellClick;
+  Function(int index)? onCellClick;
   bool? isTreatment;
   String? title;
   bool showGridLines;

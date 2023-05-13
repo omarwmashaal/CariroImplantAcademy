@@ -49,6 +49,8 @@ import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
 import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import 'Widgets/CIA_TeethTreatmentWidget.dart';
+import 'Widgets/LargeScreen.dart';
+import 'Widgets/SiteLayout.dart';
 
 void main() {
   html.window.onUnload.listen((event) async {
@@ -92,8 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4MzMxMDI3MSwiZXhwIjoxNjgzOTE1MDcxLCJpYXQiOjE2ODMzMTAyNzF9.VuqJj3p5WT4ubwYxzvWXNd6o5No0Mhm6CvAI4lcyl_w");
-    siteController.setRole("admin");
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4Mzk4Njc1NSwiZXhwIjoxNjg0NTkxNTU1LCJpYXQiOjE2ODM5ODY3NTV9.ScANSzfiG1wmXnw8r8Pe37K6n_xwCEVHTqOOL_Pul30");    siteController.setRole("admin");
     siteController.setSite(Website.CIA);
     siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1, phoneNumber: "01127744835"));
     patientID = 2;
@@ -104,7 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate)),
+      body: SiteLayout(
+        largeScreen: CIA_LargeScreen(),
+      ),
     );
   }
 }

@@ -15,6 +15,7 @@ class CIA_TagsInputWidget extends StatefulWidget {
       this.strikeValues,
       this.onDelete,
       this.onChange = null,
+        this.dynamicVisibility = false,
       required this.patientController})
       : super(key: key);
   String label;
@@ -23,6 +24,7 @@ class CIA_TagsInputWidget extends StatefulWidget {
   List<String>? initialValue;
   List<String>? strikeValues;
   PatientMedicalController patientController;
+  bool dynamicVisibility;
 
   @override
   State<CIA_TagsInputWidget> createState() => _CIA_TagsInputWidgetState();
@@ -50,8 +52,9 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-     return Column(
+    bool show = widget.dynamicVisibility?widget.initialValue!.isNotEmpty :true;
+     return
+       show?Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        children: [
          FormTextKeyWidget(text: widget.label),
@@ -87,7 +90,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
            ),
          ),
        ],
-     );
+     ):SizedBox(height: 1,);
   }
   buildChips()
   {

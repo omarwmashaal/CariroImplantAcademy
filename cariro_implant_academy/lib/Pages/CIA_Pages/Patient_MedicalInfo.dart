@@ -47,6 +47,7 @@ import '../../Widgets/MedicalSlidingBar.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
 import 'package:collection/collection.dart';
 
+import '../../Widgets/SnackBar.dart';
 import '../SharedPages/LapRequestSharedPage.dart';
 
 late PatientMedicalController MasterController;
@@ -87,7 +88,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     _PatientMedicalHistory(),
     _PatientDentalHistory(),
     PatientDentalExamination(),
-    _PatientNonSurgicalTreatment(),
+    PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
     _PatientSurgicalTreatment(),
     // _PatientProstheticTreatment(),
@@ -209,11 +210,9 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                     hideButton: true,
                                     context: context,
                                     width: 1100,
-                                    height:650,
-                                    onSave: (){
-
-                                    },
-                                    child: LapRequestSharedPage(isDoctor: true,patient: patient),
+                                    height: 650,
+                                    onSave: () {},
+                                    child: LapRequestSharedPage(isDoctor: true, patient: patient),
                                   );
                                 }),
                             SizedBox(
@@ -1091,6 +1090,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 ),
               ),
               CIA_TagsInputWidget(
+                dynamicVisibility: true,
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Carious",
@@ -1112,6 +1112,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 },
               ),
               CIA_TagsInputWidget(
+                dynamicVisibility: true,
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Filled",
@@ -1131,6 +1132,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 },
               ),
               CIA_TagsInputWidget(
+                dynamicVisibility: true,
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Missed",
@@ -1150,6 +1152,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 },
               ),
               CIA_TagsInputWidget(
+                dynamicVisibility: true,
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Not Sure",
@@ -1173,6 +1176,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                   Expanded(
                     key: GlobalKey(),
                     child: CIA_TagsInputWidget(
+                      dynamicVisibility: true,
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility I",
@@ -1199,6 +1203,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                   Expanded(
                     key: GlobalKey(),
                     child: CIA_TagsInputWidget(
+                      dynamicVisibility: true,
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility II",
@@ -1225,6 +1230,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                   Expanded(
                     key: GlobalKey(),
                     child: CIA_TagsInputWidget(
+                      dynamicVisibility: true,
                       key: GlobalKey(),
                       patientController: MasterController,
                       label: "Mobility III",
@@ -1250,6 +1256,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 ],
               ),
               CIA_TagsInputWidget(
+                dynamicVisibility: true,
                 key: GlobalKey(),
                 patientController: MasterController,
                 label: "Hopeless teeth",
@@ -1268,6 +1275,52 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                 onChange: (value) => MasterController.updateDentalExamination("Hopeless teeth", value),
                 onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).hopelessteeth = false;
+                  setState(() {});
+                },
+              ),
+              CIA_TagsInputWidget(
+                dynamicVisibility: true,
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Implant Placed",
+                initialValue: dentalExaminationModel.dentalExaminations
+                    .where((element) => element.implantPlaced == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                strikeValues: dentalExaminationModel.dentalExaminations.where((element) => element.previousState! == "implantPlaced") != null
+                    ? dentalExaminationModel.dentalExaminations
+                        .where((element) => element.previousState! == "implantPlaced")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
+                onChange: (value) => MasterController.updateDentalExamination("Implant Placed", value),
+                onDelete: (value) {
+                  dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantPlaced = false;
+                  setState(() {});
+                },
+              ),
+              CIA_TagsInputWidget(
+                dynamicVisibility: true,
+                key: GlobalKey(),
+                patientController: MasterController,
+                label: "Implant Failed",
+                initialValue: dentalExaminationModel.dentalExaminations
+                    .where((element) => element.implantFailed == true)
+                    .toList()
+                    .map((e) => e.tooth.toString())
+                    .toList(),
+                strikeValues: dentalExaminationModel.dentalExaminations.where((element) => element.previousState! == "implantFailed") != null
+                    ? dentalExaminationModel.dentalExaminations
+                        .where((element) => element.previousState! == "implantFailed")
+                        .toList()
+                        .map((e) => e.tooth.toString())
+                        .toList()
+                    : null,
+                onChange: (value) => MasterController.updateDentalExamination("Implant Failed", value),
+                onDelete: (value) {
+                  dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantFailed = false;
                   setState(() {});
                 },
               ),
@@ -1303,56 +1356,34 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                   ),
                 ],
               ),
-              CIA_TagsInputWidget(
-                key: GlobalKey(),
-                patientController: MasterController,
-                label: "Implant Placed",
-                initialValue: dentalExaminationModel.dentalExaminations
-                    .where((element) => element.implantPlaced == true)
-                    .toList()
-                    .map((e) => e.tooth.toString())
-                    .toList(),
-                strikeValues: dentalExaminationModel.dentalExaminations.where((element) => element.previousState! == "implantPlaced") != null
-                    ? dentalExaminationModel.dentalExaminations
-                        .where((element) => element.previousState! == "implantPlaced")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
-                    : null,
-                onChange: (value) => MasterController.updateDentalExamination("Implant Placed", value),
-                onDelete: (value) {
-                  dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantPlaced = false;
-                  setState(() {});
+              FormTextKeyWidget(text: "Oral Hygiene Rating"),
+              CIA_MultiSelectChipWidget(
+                singleSelect: true,
+                onChange: (item, isSelected) {
+                  if (item == "Bad")
+                    dentalExaminationModel.oralHygieneRating = EnumOralHygieneRating.BadHygiene;
+                  else if (item == "Fair")
+                    dentalExaminationModel.oralHygieneRating = EnumOralHygieneRating.FairHygiene;
+                  else if (item == "Good")
+                    dentalExaminationModel.oralHygieneRating = EnumOralHygieneRating.GoodHygiene;
+                  else if (item == "Excellent") dentalExaminationModel.oralHygieneRating = EnumOralHygieneRating.ExcellentHygiene;
                 },
-              ),
-              CIA_TagsInputWidget(
-                key: GlobalKey(),
-                patientController: MasterController,
-                label: "Implant Failed",
-                initialValue: dentalExaminationModel.dentalExaminations
-                    .where((element) => element.implantFailed == true)
-                    .toList()
-                    .map((e) => e.tooth.toString())
-                    .toList(),
-                strikeValues: dentalExaminationModel.dentalExaminations.where((element) => element.previousState! == "implantFailed") != null
-                    ? dentalExaminationModel.dentalExaminations
-                        .where((element) => element.previousState! == "implantFailed")
-                        .toList()
-                        .map((e) => e.tooth.toString())
-                        .toList()
-                    : null,
-                onChange: (value) => MasterController.updateDentalExamination("Implant Failed", value),
-                onDelete: (value) {
-                  dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantFailed = false;
-                  setState(() {});
-                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Bad", selectedColor: Colors.red, isSelected: dentalExaminationModel.oralHygieneRating == EnumOralHygieneRating.BadHygiene),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Fair", selectedColor: Colors.orange, isSelected: dentalExaminationModel.oralHygieneRating == EnumOralHygieneRating.FairHygiene),
+                  CIA_MultiSelectChipWidgeModel(label: "Good", isSelected: dentalExaminationModel.oralHygieneRating == EnumOralHygieneRating.GoodHygiene),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "Excellent", isSelected: dentalExaminationModel.oralHygieneRating == EnumOralHygieneRating.ExcellentHygiene),
+                ],
               ),
               CIA_TextFormField(
                   label: "Operator Implant Notes",
                   onChange: (value) {
                     dentalExaminationModel.operatorImplantNotes = value;
                   },
-                  controller: TextEditingController(text: dentalExaminationModel.operatorImplantNotes ?? ""))
+                  controller: TextEditingController(text: dentalExaminationModel.operatorImplantNotes ?? "")),
             ]);
           } else {
             return Center(
@@ -1366,14 +1397,14 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   }
 }
 
-class _PatientNonSurgicalTreatment extends StatefulWidget {
-  const _PatientNonSurgicalTreatment({Key? key}) : super(key: key);
+class PatientNonSurgicalTreatment extends StatefulWidget {
+  const PatientNonSurgicalTreatment({Key? key}) : super(key: key);
 
   @override
-  State<_PatientNonSurgicalTreatment> createState() => _PatientNonSurgicalTreatmentState();
+  State<PatientNonSurgicalTreatment> createState() => _PatientNonSurgicalTreatmentState();
 }
 
-class _PatientNonSurgicalTreatmentState extends State<_PatientNonSurgicalTreatment> {
+class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatment> {
   String date = "";
 
   late Future load;
@@ -1412,9 +1443,9 @@ class _PatientNonSurgicalTreatmentState extends State<_PatientNonSurgicalTreatme
           if (snapshot.hasData) {
             return CIA_MedicalPagesWidget(children: [
               CIA_TextFormField(
-                onChange: (value) async {
+                onChange: (value)  {
                   nonSurgicalTreatment.treatment = value;
-                  await MedicalAPI.CheckNonSurgicalTreatementTeethStatus(value).then((value) {
+                   MedicalAPI.CheckNonSurgicalTreatementTeethStatus(value).then((value) {
                     if (value.statusCode == 200) {
                       if (_getxClass.containedTeeth.value != value.result as List<int>) _getxClass.containedTeeth.value = value.result as List<int>;
                     }
@@ -1518,7 +1549,7 @@ class _PatientNonSurgicalTreatmentState extends State<_PatientNonSurgicalTreatme
         key: LabeledGlobalKey(tooth.toString()),
         singleSelect: true,
         labels: tempSelectionModel,
-        onChange: (value, isSelected) {
+        onChange: (value, isSelected) async {
           if (currentToothDentalExamination!.carious!) {
             currentToothDentalExamination!.previousState = "carious";
             currentToothDentalExamination.carious = false;
@@ -1559,9 +1590,103 @@ class _PatientNonSurgicalTreatmentState extends State<_PatientNonSurgicalTreatme
             currentToothDentalExamination!.previousState = "implantPlaced";
             currentToothDentalExamination.implantPlaced = false;
           }
-          if (isSelected) currentToothDentalExamination.updateToothStatus(value);
-          var s = tempDentalExamination;
-          print("s");
+          if (isSelected) {
+            currentToothDentalExamination.updateToothStatus(value);
+            if (value == "Missed") {
+              var res = await MedicalAPI.GetPaidPlanItem(patientID, currentToothDentalExamination.tooth!, value);
+              if (res.statusCode == 200) {
+                var model = res.result as Map<String, TreatmentPlanFieldsModel?>;
+                if (model['extraction'] != null) {
+                  await CIA_ShowPopUpYesNo(
+                    context: context,
+                    onSave: () async {
+                      var res = await MedicalAPI.AddPatientReceipt(patientID, currentToothDentalExamination!.tooth!, "extraction");
+                      if (res.statusCode == 200)
+                        ShowSnackBar(isSuccess: true, message: "Receipt updated!");
+                      else
+                        ShowSnackBar(isSuccess: false);
+                    },
+                    title: "Extraction done at price ${model['extraction']!.planPrice!.toString()}?",
+                  );
+                }
+              }
+            } else if (value == "Filled") {
+              var res = await MedicalAPI.GetPaidPlanItem(patientID, currentToothDentalExamination.tooth!, value);
+              if (res.statusCode == 200) {
+                var model = res.result as Map<String, TreatmentPlanFieldsModel?>;
+                bool crown = false;
+                bool rootCanalTreatment = false;
+                bool restoration = false;
+
+                await CIA_ShowPopUp(
+                  context: context,
+                  onSave: () async {
+                    API_Response res = API_Response();
+                    if (crown) res = await MedicalAPI.AddPatientReceipt(patientID, currentToothDentalExamination!.tooth!, "crown");
+                    if (rootCanalTreatment) res = await MedicalAPI.AddPatientReceipt(patientID, currentToothDentalExamination!.tooth!, "rootCanaltreatment");
+                    if (restoration) res = await MedicalAPI.AddPatientReceipt(patientID, currentToothDentalExamination!.tooth!, "restoration");
+
+                    if (res.statusCode == 200)
+                      ShowSnackBar(isSuccess: true, message: "Receipt updated!");
+                    else
+                      ShowSnackBar(isSuccess: false);
+                  },
+                  child: Column(
+                    children: [
+                      model['crown'] != null
+                          ? Row(
+                              children: [
+                                FormTextKeyWidget(text: "Crown at price ${model['crown']!.planPrice!.toString()}"),
+                                SizedBox(width: 10),
+                                CIA_MultiSelectChipWidget(
+                                  onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
+                                  singleSelect: true,
+                                  labels: [
+                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                  ],
+                                )
+                              ],
+                            )
+                          : SizedBox(),
+                      model['restoration'] != null
+                          ? Row(
+                              children: [
+                                FormTextKeyWidget(text: "Restoration at price ${model['restoration']!.planPrice!.toString()}"),
+                                SizedBox(width: 10),
+                                CIA_MultiSelectChipWidget(
+                                  singleSelect: true,
+                                  onChange: (item, isSelected) => restoration = item == "Yes" && isSelected,
+                                  labels: [
+                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                  ],
+                                )
+                              ],
+                            )
+                          : SizedBox(),
+                      model['rootCanalTreatment'] != null
+                          ? Row(
+                              children: [
+                                FormTextKeyWidget(text: "Root Canal Treatment at price ${model['rootCanalTreatment']!.planPrice!.toString()}"),
+                                SizedBox(width: 10),
+                                CIA_MultiSelectChipWidget(
+                                  singleSelect: true,
+                                  onChange: (item, isSelected) => rootCanalTreatment = item == "Yes" && isSelected,
+                                  labels: [
+                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                  ],
+                                )
+                              ],
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                );
+              }
+            }
+          }
         },
       ));
       uu.add(SizedBox(height: 10));

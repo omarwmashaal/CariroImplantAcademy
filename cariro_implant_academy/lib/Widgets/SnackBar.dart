@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void ShowSnackBar(
-    {required bool isSuccess, required String title, required String message}) {
+    {required bool isSuccess,  String title="",  String message=""}) {
+  if(title=="") title = isSuccess?"Success":"Failed";
   Get.snackbar(
     title,
     message,

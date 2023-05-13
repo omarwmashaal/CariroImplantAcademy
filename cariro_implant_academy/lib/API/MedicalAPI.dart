@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/API/HTTP.dart';
+import 'package:cariro_implant_academy/API/SettingsAPI.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
@@ -8,6 +9,7 @@ import 'package:cariro_implant_academy/Models/MedicalModels/TreatmentPlanModel.d
 
 import '../Models/MedicalModels/DentalHistory.dart';
 import '../Models/MedicalModels/NonSurgicalTreatment.dart';
+import '../Models/MedicalModels/TreatmentPrices.dart';
 
 
 class MedicalAPI {
@@ -90,6 +92,25 @@ static Future<API_Response> GetPatientAllNonSurgicalTreatments(int id) async {
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result =
           TreatmentPlanModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String, dynamic>);
+      var pricesRes = await SettingsAPI.GetTreatmentPrices();
+      if(pricesRes.statusCode == 200)
+        {
+          var prices = pricesRes.result as TreatmentPrices;
+          (response.result as TreatmentPlanModel).treatmentPlan!.forEach((element) {
+            if(element.crown!=null)
+              element.crown!.price = prices.crown;
+            if(element.extraction!=null)
+              element.extraction!.price = prices.extraction;
+            if(element.rootCanalTreatment!=null)
+              element.rootCanalTreatment!.price = prices.rootCanalTreatment;
+            if(element.restoration!=null)
+              element.restoration!.price = prices.restoration;
+            if(element.scaling!=null)
+              element.scaling!.price = prices.scaling;
+
+          });
+        }
+
     }
     return response;
   }
@@ -109,6 +130,35 @@ static Future<API_Response> GetPatientAllNonSurgicalTreatments(int id) async {
   }
   static Future<API_Response> UpdatePatientSurgicalTreatment(int id,SurgicalTreatmentModel  model) async {
     var response = await HTTPRequest.Put("Medical/UpdatePatientSurgicalTreatment?id=$id",model.toJson());
+    return response;
+  }
+
+  static Future<API_Response> AddPatientReceipt(int id,int tooth, String action) async {
+    var response = await HTTPRequest.Put("Medical/AddPatientReceipt?id=$id&tooth=$tooth&action=$action",null);
+    return response;
+  }
+static Future<API_Response> GetPaidPlanItem(int id,int tooth, String action) async {
+    var response = await HTTPRequest.Get("Medical/GetPaidPlanItem?id=$id&tooth=$tooth&action=$action");
+    Map<String,TreatmentPlanFieldsModel?> result = Map();
+    if(response.statusCode == 200)
+      {
+        var pricesRes = await SettingsAPI.GetTreatmentPrices();
+
+        var prices = pricesRes.result as TreatmentPrices;
+
+
+        result['crown'] =(response.result as Map<String,dynamic>)['crown']==null?null:  TreatmentPlanFieldsModel.fromJson((response.result as Map<String,dynamic>)['crown']?? Map<String,dynamic>());
+        result['extraction'] =(response.result as Map<String,dynamic>)['extraction']==null?null:  TreatmentPlanFieldsModel.fromJson((response.result as Map<String,dynamic>)['extraction']?? Map<String,dynamic>());
+        result['scaling'] =(response.result as Map<String,dynamic>)['scaling']==null?null:  TreatmentPlanFieldsModel.fromJson((response.result as Map<String,dynamic>)['scaling']?? Map<String,dynamic>());
+        result['restoration'] = (response.result as Map<String,dynamic>)['restoration']==null?null: TreatmentPlanFieldsModel.fromJson((response.result as Map<String,dynamic>)['restoration']?? Map<String,dynamic>());
+        result['rootCanalTreatment'] =(response.result as Map<String,dynamic>)['rootCanalTreatment']==null?null:  TreatmentPlanFieldsModel.fromJson((response.result as Map<String,dynamic>)['rootCanalTreatment']?? Map<String,dynamic>());
+        if(result['crown']!=null && result['crown']!.planPrice==0 ) result['crown']!.planPrice = prices.crown;
+        if(result['extraction']!=null && result['extraction']!.planPrice==0 ) result['extraction']!.planPrice = prices.extraction;
+        if(result['scaling']!=null && result['scaling']!.planPrice==0 ) result['scaling']!.planPrice = prices.scaling;
+        if(result['restoration']!=null && result['restoration']!.planPrice==0 ) result['restoration']!.planPrice = prices.restoration;
+        if(result['rootCanalTreatment']!=null && result['rootCanalTreatment']!.planPrice==0 ) result['rootCanalTreatment']!.planPrice = prices.rootCanalTreatment;
+        response.result = result;
+      }
     return response;
   }
 

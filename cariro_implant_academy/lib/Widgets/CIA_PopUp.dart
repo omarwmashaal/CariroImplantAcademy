@@ -244,8 +244,8 @@ CIA_ShowPopUp(
     String? buttonText,
       double? height,
       bool? hideButton=false,
-    double? width}) {
-  Alert(
+    double? width}) async{
+  await Alert(
     context: context,
     title: title,
     content: StatefulBuilder(builder:
@@ -326,6 +326,54 @@ CIA_ShowPopUpSaveRequest(
         },
         child: Text(
           buttonText == null ? "Save" : buttonText,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+    ],
+  ).show();
+}
+
+CIA_ShowPopUpYesNo(
+    {required BuildContext context,
+    String? title,
+    required Function onSave,
+    Function? onDontSave,
+    Function? onCancel,
+    String? buttonText,
+    double? size}) async {
+  await Alert(
+    context: context,
+    title: title,
+    content: StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      return SizedBox(
+        width: size == null ? 400 : size,
+        child: Text(title ??""),
+      );
+    }),
+    buttons: [
+      DialogButton(
+        color: Color_Background,
+        width: 150,
+        onPressed: () {
+          if (onCancel != null) onCancel();
+          Navigator.pop(context);
+        },
+        child: Text(
+          buttonText == null ? "No" : buttonText,
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+      ),
+
+      DialogButton(
+        color: Color_Accent,
+        width: 150,
+        onPressed: () {
+          if (onSave != null) onSave();
+          Navigator.pop(context);
+        },
+        child: Text(
+          buttonText == null ? "Yes" : buttonText,
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),

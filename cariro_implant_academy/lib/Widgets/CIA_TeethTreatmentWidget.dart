@@ -288,6 +288,26 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             }
             break;
           }
+        case "Scaling":
+          {
+            if (currentTooth.scaling == null) currentTooth.scaling = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.scaling!.status = true;
+              currentTooth.scaling!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.scaling!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            break;
+          }
+        case "Crown":
+          {
+            if (currentTooth.crown == null) currentTooth.crown = TreatmentPlanFieldsModel();
+            if (isSurgical) {
+              currentTooth.crown!.status = true;
+              currentTooth.crown!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
+              currentTooth.crown!.doneByAssistantID = siteController.getUser().idInt;
+            }
+            break;
+          }
       }
     }
   }
@@ -295,72 +315,6 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
   _updateTeethMultiStatus(List<int> teeth, List<String> status) {
     for (String s in status) {
       _updateTeethStatus(teeth, s);
-    }
-  }
-
-  _removeTeethStatus(List<int> teeth, String status) {
-    for (int tooth in teeth) {
-      var currentTooth = models.firstWhereOrNull((element) => element.tooth == tooth);
-      if (currentTooth == null) {
-        currentTooth = new TreatmentPlanSubModel();
-        models.add(currentTooth);
-      }
-      switch (status) {
-        case "Extraction":
-          {
-            if (currentTooth.extraction == null) currentTooth.extraction = TreatmentPlanFieldsModel();
-            break;
-          }
-
-        case "SimpleImplant":
-          {
-            if (currentTooth.simpleImplant == null) currentTooth.simpleImplant = TreatmentPlanFieldsModel();
-            break;
-
-            break;
-          }
-        case "Immediate Implant":
-          {
-            if (currentTooth.immediateImplant == null) currentTooth.immediateImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Expansion":
-          {
-            if (currentTooth.expansionWithoutImplant == null) currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Splitting":
-          {
-            if (currentTooth.splittingWithoutImplant == null) currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "GBR":
-          {
-            if (currentTooth.gbrWithoutImplant == null) currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Open Sinus":
-          {
-            if (currentTooth.openSinusWithoutImplant == null) currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Closed Sinus":
-          {
-            if (currentTooth.closedSinusWithoutImplant == null) currentTooth.closedSinusWithoutImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-        case "Guided Implant":
-          {
-            if (currentTooth.guidedImplant == null) currentTooth.guidedImplant = TreatmentPlanFieldsModel();
-            break;
-          }
-
-        case "Pontic":
-          {
-            if (currentTooth.pontic == null) currentTooth.pontic = TreatmentPlanFieldsModel();
-            break;
-          }
-      }
     }
   }
 
@@ -400,7 +354,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                       setState(() {});
                     },
                     labels: [
-                      CIA_MultiSelectChipWidgeModel(label: "View Only Mode",borderColor: Colors.black,round:false),
+                      CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
                     ],
                   ),
                 ],
@@ -474,6 +428,12 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                     CIA_MultiSelectChipWidgeModel(
                       label: "Pontic",
                     ),
+                    CIA_MultiSelectChipWidgeModel(
+                      label: "Scaling",
+                    ),
+                    CIA_MultiSelectChipWidgeModel(
+                      label: "Crown",
+                    ),
                   ]),
               Obx(() => Visibility(
                     visible: _getXController.tickVisible.value,
@@ -531,8 +491,42 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
         toothID: model!.tooth!,
         onChange: () => setState(() {}),
       ));
-      returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+      returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
     }
+    if (viewOnlyMode) {
+      returnValue.add(Expanded(child: SizedBox(height:100)));
+      returnValue.add(Expanded(
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Total",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(child: SizedBox()),
+            Expanded(
+              child: Text(
+                    () {
+                  int p = 0;
+                  treatmentPlanModel.treatmentPlan!.forEach((element) {
+                    if (element.scaling != null) p += element.scaling!.planPrice ?? 0;
+                    if (element.crown != null) p += element.crown!.planPrice ?? 0;
+                    if (element.restoration != null) p += element.restoration!.planPrice ?? 0;
+                    if (element.rootCanalTreatment != null) p += element.rootCanalTreatment!.planPrice ?? 0;
+                    if (element.extraction != null) p += element.extraction!.planPrice ?? 0;
+                  });
+                  return p.toString()+" EGP";
+                }(),
+                textAlign: TextAlign.center ,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+
     return returnValue;
   }
 
@@ -550,7 +544,6 @@ class _ToothWidget extends StatelessWidget {
   bool viewOnlyMode;
   int toothID;
   Function onChange;
-
   @override
   Widget build(BuildContext context) {
     return Column(children: _buildWidgets());
@@ -574,7 +567,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.immediateImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.immediateImplant!,
@@ -586,7 +579,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.guidedImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.guidedImplant!,
@@ -598,7 +591,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithImplant!,
@@ -610,11 +603,11 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithImplant!,
-          title: "Splitting Without Implant",
+          title: "Splitting With Implant",
           onDelete: () {
             currentTooth!.splittingWithImplant = null;
             onChange();
@@ -622,11 +615,11 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithImplant!,
-          title: "GBR Without Implant",
+          title: "GBR With Implant",
           onDelete: () {
             currentTooth!.gbrWithImplant = null;
             onChange();
@@ -634,11 +627,11 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithImplant!,
-          title: "Open Sinus Without Implant",
+          title: "Open Sinus Wit Implant",
           onDelete: () {
             currentTooth!.openSinusWithImplant = null;
             onChange();
@@ -646,11 +639,11 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithImplant!,
-          title: "Closed Sinus Without Implant",
+          title: "Closed Sinus With Implant",
           onDelete: () {
             currentTooth!.closedSinusWithImplant = null;
             onChange();
@@ -658,7 +651,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithoutImplant!,
@@ -670,7 +663,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithoutImplant!,
@@ -682,7 +675,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithoutImplant!,
@@ -694,7 +687,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithoutImplant!,
@@ -706,7 +699,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithoutImplant!,
@@ -717,47 +710,76 @@ class _ToothWidget extends StatelessWidget {
           },
         ));
       }
-      if (currentTooth!.extraction != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+      if (currentTooth!.extraction != null && !isSurgical) {
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.extraction!,
           title: "Extraction",
           assignButton: true,
+          price: true,
           onDelete: () {
             currentTooth!.extraction = null;
             onChange();
           },
         ));
       }
-      if (currentTooth!.restoration != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+      if (currentTooth!.restoration != null && !isSurgical) {
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.restoration!,
           title: "Restoration",
           assignButton: true,
+          price: true,
           onDelete: () {
             currentTooth!.restoration = null;
             onChange();
           },
         ));
       }
-      if (currentTooth!.rootCanalTreatment != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+      if (currentTooth!.rootCanalTreatment != null && !isSurgical) {
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.rootCanalTreatment!,
           title: "Root Canal Treatment",
           assignButton: true,
+          price: true,
           onDelete: () {
             currentTooth!.rootCanalTreatment = null;
             onChange();
           },
         ));
       }
+      if (currentTooth!.scaling != null && !isSurgical) {
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
+        returnValue.add(_StatusWidget(
+          viewOnlyMode: viewOnlyMode,
+          fieldModel: currentTooth!.scaling!,
+          title: "Scaling",
+          price: true,
+          onDelete: () {
+            currentTooth!.scaling = null;
+            onChange();
+          },
+        ));
+      }
+      if (currentTooth!.crown != null && !isSurgical) {
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
+        returnValue.add(_StatusWidget(
+          price: true,
+          viewOnlyMode: viewOnlyMode,
+          fieldModel: currentTooth!.crown!,
+          title: "Crown",
+          onDelete: () {
+            currentTooth!.crown = null;
+            onChange();
+          },
+        ));
+      }
       if (currentTooth!.pontic != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 2 : 10));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.pontic!,
@@ -780,7 +802,7 @@ class _ToothWidget extends StatelessWidget {
           FormTextValueWidget(text: toothID.toString()),
         ],
       ),
-      SizedBox(height: viewOnlyMode ? 2 : 10),
+      SizedBox(height: viewOnlyMode ? 1 : 10),
     ];
     if (returnValue.isNotEmpty) {
       title.addAll(returnValue);
@@ -793,7 +815,14 @@ class _ToothWidget extends StatelessWidget {
 
 class _StatusWidget extends StatefulWidget {
   _StatusWidget(
-      {Key? key, required this.fieldModel, required this.title, this.onDelete, this.assignButton = false, this.isImplant = false, this.viewOnlyMode = false})
+      {Key? key,
+      required this.fieldModel,
+      this.price = false,
+      required this.title,
+      this.onDelete,
+      this.assignButton = false,
+      this.isImplant = false,
+      this.viewOnlyMode = false})
       : super(key: key);
   TreatmentPlanFieldsModel fieldModel;
   String title;
@@ -801,12 +830,14 @@ class _StatusWidget extends StatefulWidget {
   bool assignButton;
   Function? onDelete;
   bool viewOnlyMode;
+  bool price;
 
   @override
   State<_StatusWidget> createState() => _StatusWidgetState();
 }
 
 class _StatusWidgetState extends State<_StatusWidget> {
+
   @override
   Widget build(BuildContext context) {
     if (widget.viewOnlyMode) {
@@ -866,51 +897,40 @@ class _StatusWidgetState extends State<_StatusWidget> {
             child: Row(
               children: [
                 Expanded(
-                  flex: isSurgical ? 7 : 3,
-                  child: widget.viewOnlyMode
-                      ? Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  FormTextKeyWidget(
-                                    text: widget.title,
-                                  ),
-                                  FormTextValueWidget(
-                                    text: ": ${widget.fieldModel.value ?? ""}",
-                                  ),
-                                ],
+                    flex: isSurgical ? 7 : 3,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              FormTextKeyWidget(
+                                text: widget.title,
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            widget.assignButton
-                                ? Expanded(
-                                    child: Row(
-                                      children: [
-                                        FormTextKeyWidget(
-                                          text: "Assigned to: ",
-                                        ),
-                                        FormTextValueWidget(
-                                          text: widget.fieldModel.assignedTo != null ? widget.fieldModel.assignedTo!.name ?? "" : "",
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        )
-                      : CIA_TextFormField(
-                          onChange: (value) {
-                            widget.fieldModel.value = value;
-                          },
-                          label: widget.title,
-                          controller: TextEditingController(
-                            text: (widget.fieldModel.value),
+                              FormTextValueWidget(
+                                text: ": ${widget.fieldModel.value ?? ""}",
+                              ),
+                            ],
                           ),
                         ),
-                ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        widget.assignButton
+                            ? Expanded(
+                                child: Row(
+                                  children: [
+                                    FormTextKeyWidget(
+                                      text: "Assigned to: ",
+                                    ),
+                                    FormTextValueWidget(
+                                      text: widget.fieldModel.assignedTo != null ? widget.fieldModel.assignedTo!.name ?? "" : "",
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                      ],
+                    )),
                 SizedBox(width: 10),
                 isSurgical
                     ? Expanded(
@@ -1138,18 +1158,24 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                   asyncItems: LoadinAPI.LoadAssistants,
                                 ),
                               ),
+
                               SizedBox(width: 10)
                             ],
                           ))
-                        : SizedBox(),
-                //SizedBox(width: 10)
+                        : SizedBox(width: 10),
+                Expanded(
+                    child: Row(
+                  children: [
+                    FormTextKeyWidget(text: "Price: "),
+                    FormTextKeyWidget(text: (widget.fieldModel.planPrice ?? 0).toString()),
+                  ],
+                ))
               ],
             ),
           ),
         ],
       );
     }
-
     return Row(
       children: [
         Expanded(
@@ -1206,7 +1232,11 @@ class _StatusWidgetState extends State<_StatusWidget> {
           child: Row(
             children: [
               Expanded(
-                flex: isSurgical ? 7 : 3,
+                flex: isSurgical
+                    ? 7
+                    : widget.price
+                        ? 2
+                        : 3,
                 child: CIA_TextFormField(
                   onChange: (value) {
                     widget.fieldModel.value = value;
@@ -1217,6 +1247,22 @@ class _StatusWidgetState extends State<_StatusWidget> {
                   ),
                 ),
               ),
+              SizedBox(width: 10),
+              widget.price
+                  ? Expanded(
+                      child: CIA_TextFormField(
+                      suffix: "EGP",
+                      label: 'Price',
+                      isNumber: true,
+                      onChange: (v)=>widget.fieldModel.planPrice = int.parse(v),
+                      controller: TextEditingController(text: () {
+                        if (widget.fieldModel.planPrice != null && widget.fieldModel.planPrice != 0)
+                          return widget.fieldModel.planPrice.toString();
+                        else
+                          return widget.fieldModel.price.toString();
+                      }()),
+                    ))
+                  : SizedBox(),
               SizedBox(width: 10),
               isSurgical
                   ? Expanded(
@@ -1454,6 +1500,12 @@ class _StatusWidgetState extends State<_StatusWidget> {
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    if(widget.price&& widget.fieldModel.planPrice==null || widget.fieldModel.planPrice==0)
+      widget.fieldModel.planPrice = widget.fieldModel.price;
   }
 }
 

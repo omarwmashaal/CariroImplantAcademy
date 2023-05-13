@@ -17,6 +17,7 @@ class CIA_TextFormField extends StatefulWidget {
     this.isMinutes = false,
     this.isHours = false,
     this.maxLines = 1,
+    this.isPhoneNumber = false,
     this.borderColor,
     this.enabled = true,
     this.suffix,
@@ -41,6 +42,7 @@ class CIA_TextFormField extends StatefulWidget {
   Color? borderColor;
   TextEditingController controller;
   bool isNumber;
+  bool isPhoneNumber;
   String? suffix;
   bool changeColorIfFilled;
   Color? borderColorOnChange;
@@ -98,7 +100,20 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
             if (widget.onTap != null) widget.onTap!();
           },
           onChanged: (value) {
-            if(widget.isNumber && value==""||value== null) value = "0";
+            if(widget.isNumber && value==""||value== null) {
+              value = "0";
+              setState(() {
+                widget.controller.text = "0";
+              });
+            }
+            if(widget.isNumber && !widget.isPhoneNumber)
+              {
+                if(value.length>1 && value.startsWith("0"))
+                  value = value.replaceFirst(RegExp(r'0'), "");
+                setState(() {
+                  widget.controller.text = value;
+                });
+              }
             if (widget.onInstantChange != null) widget.onInstantChange!(value);
             if (widget.onChange != null) widget.onChange!(value);
             if(widget.errorFunction!=null)

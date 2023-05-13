@@ -48,8 +48,8 @@ class CashFlowSharedPage extends StatefulWidget {
   CashFlowSummaryDataSource? eS_dataSource;
   CashFlowSummaryDataSource? iS_dataSource;
   CashFlowSummaryDataSource? diS_dataSource;
-  Function? onIncomeRowClick;
-  Function? onExpenseRowClick;
+  Function(CashFlowModel model)? onIncomeRowClick;
+  Function(int index)? onExpenseRowClick;
 
   @override
   State<CashFlowSharedPage> createState() => _CashFlowSharedPageState();
@@ -74,141 +74,11 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Obx(
+            Obx(
                   () => TitleWidget(
-                    title: siteController.title.value,
-                    showBackButton: false,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: CIA_PrimaryButton(
-                      width: 155,
-                      label: "Add new income",
-                      onTab: () {
-                        CashFlowModel model = CashFlowModel(
-                          category: DropDownDTO(),
-                          paymentMethod: DropDownDTO(),
-                          supplier: DropDownDTO(),
-                        );
-                        bool newCategory = false;
-                        bool newPaymentMethod = false;
-                        CIA_ShowPopUp(
-                            context: context,
-                            width: 700,
-                            title: "Add new Income",
-                            onSave: ()async{
-                              var res = await CashFlowAPI.AddIncome(model);
-                              if(res.statusCode == 200)
-                                {
-                                  ShowSnackBar(isSuccess: true, title: "Success", message: "Entry Added!");
-                                }
-                              else
-                                ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage??"");
-
-                              await widget.i_dataSource.loadData();
-                            },
-                            child: StatefulBuilder(
-                              builder: (context, setState) {
-                                return Column(
-                                  children: [
-                                    CIA_TextFormField(
-                                        onChange: (value) => model.name = value, label: "Name", controller: TextEditingController(text: model.name ?? "")),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_MultiSelectChipWidget(
-                                            onChange: (item, isSelected) => setState(() => newCategory = isSelected),
-                                            labels: [
-                                              CIA_MultiSelectChipWidgeModel(label: "New Category"),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: newCategory
-                                              ? CIA_TextFormField(
-                                                  label: "Category",
-                                                  onChange: (value) {
-                                                    model.category = DropDownDTO(name: value);
-                                                    model.categoryId = null;
-                                                  },
-                                                  controller: TextEditingController(text: model.category!.name ?? ""),
-                                                )
-                                              : CIA_DropDownSearch(
-                                                  label: "Category",
-                                                  asyncItems: SettingsAPI.GetIncomeCategories,
-                                                  onSelect: (value) {
-                                                    model.category = value;
-                                                    model.categoryId = value.id;
-                                                  },
-                                                  selectedItem: model.category,
-                                                ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_MultiSelectChipWidget(
-                                            onChange: (item, isSelected) => setState(() => newPaymentMethod = isSelected),
-                                            labels: [
-                                              CIA_MultiSelectChipWidgeModel(label: "New Payment Method"),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 3,
-                                          child: newPaymentMethod
-                                              ? CIA_TextFormField(
-                                                  label: "Payment Method",
-                                                  onChange: (value) {
-                                                    model.paymentMethod = DropDownDTO(name: value);
-                                                    model.paymentMethodId = null;
-                                                  },
-                                                  controller: TextEditingController(text: model.paymentMethod!.name ?? ""),
-                                                )
-                                              : CIA_DropDownSearch(
-                                                  label: "Payment Method",
-                                                  asyncItems: SettingsAPI.GetPaymentMethods,
-                                                  onSelect: (value) {
-                                                    model.paymentMethod = value;
-                                                    model.paymentMethodId = value.id;
-                                                  },
-                                                  selectedItem: model.paymentMethod,
-                                                ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    CIA_TextFormField(
-                                      isNumber: true,
-                                      onChange: (value) => model.price = int.parse(value),
-                                      label: "Price",
-                                      controller: TextEditingController(text: (model.price ?? 0).toString()),
-                                    ),
-
-                                    SizedBox(height: 10),
-                                    CIA_TextFormField(
-                                      onChange: (value) => model.notes = value,
-                                      label: "Notes",
-                                      controller: TextEditingController(text: model.notes ?? ""),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ));
-                      },
-                      isLong: true,
-                    ),
-                  ),
-                )
-              ],
+                title: siteController.title.value,
+                showBackButton: false,
+              ),
             ),
             Expanded(
               child: Container(
@@ -251,7 +121,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                   dataSource: widget.i_dataSource,
                   loadFunction: widget.i_dataSource.loadData,
                   onCellClick: (value) {
-                    if (widget.onIncomeRowClick != null) widget.onIncomeRowClick!(value);
+                    if (widget.onIncomeRowClick != null) widget.onIncomeRowClick!(widget.i_dataSource.models[value-1]);
                   }),
             ),
           ],
