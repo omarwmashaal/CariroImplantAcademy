@@ -24,12 +24,14 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:popover/popover.dart';
 import 'package:sidebarx/sidebarx.dart';
 
+import '../../API/StockAPI.dart';
 import '../../API/UserAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Models/Enum.dart';
 import '../../Models/ImplantModel.dart';
 import '../../Models/MedicalModels/TreatmentPrices.dart';
+import '../../Models/StockModel.dart';
 import '../../Models/TacCompanyModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
@@ -170,17 +172,24 @@ class _SettingsPageState extends State<_SettingsPage> {
                 },
                 iconWidget: Container()),
             SidebarXItem(
-                label: "Rooms",
+                label: "Screws",
                 onTap: () {
                   _pageController.jumpToPage(8);
                   currentIndex = 8;
                 },
                 iconWidget: Container()),
             SidebarXItem(
-                label: "Treatment Prices",
+                label: "Rooms",
                 onTap: () {
                   _pageController.jumpToPage(9);
                   currentIndex = 9;
+                },
+                iconWidget: Container()),
+            SidebarXItem(
+                label: "Treatment Prices",
+                onTap: () {
+                  _pageController.jumpToPage(10);
+                  currentIndex = 10;
                 },
                 iconWidget: Container()),
           ],
@@ -188,7 +197,7 @@ class _SettingsPageState extends State<_SettingsPage> {
         SizedBox(width: 10),
         Expanded(
           child: PageView.builder(
-            itemCount: 10,
+            itemCount: 11,
             itemBuilder: (context, index) {
               var pages = [
                 _ImplantsSettings(),
@@ -347,6 +356,60 @@ class _SettingsPageState extends State<_SettingsPage> {
                   },
                   loadFunction1: () async {
                     return await SettingsAPI.GetPaymentMethods();
+                  },
+                ),
+                _CommonSettingsWidget(
+                  addFunction1: (value) async {
+                    return Future.value();
+                  },
+                  loadFunction1: () async {
+                    return await StockAPI.GetStockByName("Screws");
+                  },
+                  anotherWidget: (item) {
+                    int extraNumber = 0;
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            FormTextKeyWidget(text: "Screws"),
+                            SizedBox(width:10),
+                            FormTextValueWidget(text: ((item as StockModel).count).toString())
+                          ],
+                        ),
+                        Expanded(child: SizedBox()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CIA_SecondaryButton(
+                                label: "Add Screws",
+                                onTab: () {
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: StatefulBuilder(
+                                        builder: (context, setState) {
+                                          return CIA_TextFormField(
+                                            label: "Extra number",
+                                            isNumber: true,
+                                            controller: TextEditingController(text: extraNumber.toString()),
+                                            onChange: (value) => extraNumber = int.parse(value),
+                                          );
+                                        },
+                                      ),
+                                      onSave: () async {
+                                        await StockAPI.AddItem(StockModel(
+                                          name: "Screws",
+                                          count: extraNumber,
+                                          category: DropDownDTO(name: "Screws")
+                                        ),);
+                                        setState(() {});
+                                      });
+                                }),
+                            SizedBox(width: 10),
+
+                          ],
+                        ),
+                      ],
+                    );
                   },
                 ),
                 _CommonSettingsWidget(
@@ -881,9 +944,12 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
               loadFunction: widget.loadFunction1!(),
               onSuccess: (data) {
                 var tempName = "";
-
-                widget.list1 = data as List<dynamic>;
-                return widget.anotherWidget!(widget.list1);
+                try{
+                  widget.list1 = data as List<dynamic>;
+                  return widget.anotherWidget!(widget.list1);
+                }catch(e){
+                  return widget.anotherWidget!(data);
+                }
               },
             ),
           ));

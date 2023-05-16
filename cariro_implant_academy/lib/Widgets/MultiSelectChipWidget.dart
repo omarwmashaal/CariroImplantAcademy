@@ -12,6 +12,7 @@ class CIA_MultiSelectChipWidgeModel {
       this.isSelected = false,
       this.borderColor,
         this.round = true,
+        this.isButton = false,
       this.selectedColor});
 
   String label;
@@ -20,6 +21,7 @@ class CIA_MultiSelectChipWidgeModel {
   Color? selectedColor = Color_Accent;
   Color? borderColor;
   bool round;
+  bool isButton;
 }
 
 class CIA_MultiSelectChipWidget extends StatelessWidget {
@@ -32,7 +34,9 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       this.onChangeList,
       this.verticalList = false,
       this.onChangeSpecificTooth,
-      this.singleSelect = false})
+      this.singleSelect = false
+
+      })
       : super(key: key);
 
   List<CIA_MultiSelectChipWidgeModel> labels;
@@ -96,13 +100,17 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
       returnValue.add(MultiSelectCard(
           value: label.value == null ? label.label : label.value,
           label: label.label,
-          decorations: MultiSelectItemDecorations(
+          decorations:  MultiSelectItemDecorations(
             decoration: BoxDecoration(
               border:
                   Border.all(color: label.borderColor ?? Color_TextFieldBorder),
               borderRadius: label.round? BorderRadius.circular(20):null,
             ),
-            selectedDecoration: disabled
+            selectedDecoration: label.isButton?BoxDecoration(
+              border:
+              Border.all(color: label.borderColor ?? Color_TextFieldBorder),
+              borderRadius: label.round? BorderRadius.circular(20):null,
+            ): disabled
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
@@ -122,7 +130,14 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
                             ? Color_Accent
                             : label.selectedColor!),
           ),
-          selected: label.isSelected));
+          selected: label.isSelected,
+          textStyles: label.isButton?  MultiSelectItemTextStyles(
+              selectedTextStyle:TextStyle(color: Colors.black)
+          ):MultiSelectItemTextStyles(
+
+          )
+
+      ));
     }
 
     return returnValue;

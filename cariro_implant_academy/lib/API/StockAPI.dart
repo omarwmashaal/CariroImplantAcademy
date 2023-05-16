@@ -21,6 +21,14 @@ class StockAPI{
     }
     return response;
   }
+  static Future<API_Response> GetStockByName(String name) async {
+    var response = await HTTPRequest.Get("Stock/GetStockByName?name=$name");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = StockModel.fromJson((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
+    }
+    return response;
+  }
   static Future<API_Response> GetStockLogs() async {
     var response = await HTTPRequest.Get("Stock/GetStockLogs");
 

@@ -1,4 +1,6 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/MembraneModel.dart';
+import 'package:cariro_implant_academy/Models/TacCompanyModel.dart';
 
 import 'TreatmentPlanModel.dart';
 
@@ -28,19 +30,13 @@ class SurgicalTreatmentModel {
   String? openSinusLiftApproachString;
   bool? openSinusLiftFillMaterial;
   String? openSinusLiftFillMaterialString;
-  bool? openSinusLiftMembrane;
-  String? openSinusLiftMembraneSize1;
-  String? openSinusLiftMembraneSize2;
-  int? openSinusLiftMembraneMaterialID;
-  DropDownDTO? openSinusLiftMembraneMaterial;
-  int? openSinusLiftMembraneCompanyID;
-  DropDownDTO? openSinusLiftMembraneCompany;
-  bool? openSinusLiftTacs;
-  String? openSinusLiftTacsNumber;
-  int? openSinusLiftTacsMaterialID;
-  DropDownDTO? openSinusLiftTacsMaterial;
-  int? openSinusLiftTacsCompanyID;
-  DropDownDTO? openSinusLiftTacsCompany;
+  int? openSinusLift_MembraneID;
+  MembraneModel? openSinusLift_Membrane;
+  int? openSinusLift_Membrane_CompanyID;
+  DropDownDTO? openSinusLift_Membrane_Company;
+  int? openSinusLiftTacsNumber;
+  int? openSinusLift_TacsCompanyID;
+  TacCompanyModel? openSinusLift_TacsCompany;
   bool? softTissueGraft;
   bool? softTissueGraftSurgeryType;
   bool? softTissueGraftSurgeryTypeSoftTissueGraft;
@@ -117,19 +113,13 @@ class SurgicalTreatmentModel {
       this.openSinusLiftApproachString,
       this.openSinusLiftFillMaterial = false,
       this.openSinusLiftFillMaterialString,
-      this.openSinusLiftMembrane = false,
-      this.openSinusLiftMembraneSize1,
-      this.openSinusLiftMembraneSize2,
-      this.openSinusLiftMembraneMaterialID,
-      this.openSinusLiftMembraneMaterial,
-      this.openSinusLiftMembraneCompanyID,
-      this.openSinusLiftMembraneCompany,
-      this.openSinusLiftTacs = false,
+      this.openSinusLift_MembraneID,
+      this.openSinusLift_Membrane,
+      this.openSinusLift_Membrane_CompanyID,
+      this.openSinusLift_Membrane_Company,
+      this.openSinusLift_TacsCompany,
+      this.openSinusLift_TacsCompanyID,
       this.openSinusLiftTacsNumber,
-      this.openSinusLiftTacsMaterialID,
-      this.openSinusLiftTacsMaterial,
-      this.openSinusLiftTacsCompanyID,
-      this.openSinusLiftTacsCompany,
       this.softTissueGraft = false,
       this.softTissueGraftSurgeryType = false,
       this.softTissueGraftSurgeryTypeSoftTissueGraft = false,
@@ -207,19 +197,13 @@ class SurgicalTreatmentModel {
     openSinusLiftApproachString = json['openSinusLift_Approach_String']??"";
     openSinusLiftFillMaterial = json['openSinusLift_FillMaterial'] ?? false;
     openSinusLiftFillMaterialString = json['openSinusLift_FillMaterial_String']??"";
-    openSinusLiftMembrane = json['openSinusLift_Membrane'] ?? false;
-    openSinusLiftMembraneSize1 = json['openSinusLift_Membrane_Size1']??"";
-    openSinusLiftMembraneSize2 = json['openSinusLift_Membrane_Size2']??"";
-    openSinusLiftMembraneMaterialID = json['openSinusLift_Membrane_MaterialID'];
-    openSinusLiftMembraneMaterial = json['openSinusLift_Membrane_Material'] != null ? new DropDownDTO.fromJson(json['openSinusLift_Membrane_Material']) : null;
-    openSinusLiftMembraneCompanyID = json['openSinusLift_Membrane_CompanyID'];
-    openSinusLiftMembraneCompany = json['openSinusLift_Membrane_Company'] != null ? new DropDownDTO.fromJson(json['openSinusLift_Membrane_Company']) : null;
-    openSinusLiftTacs = json['openSinusLift_Tacs'] ?? false;
-    openSinusLiftTacsNumber = json['openSinusLift_Tacs_Number']??"";
-    openSinusLiftTacsMaterialID = json['openSinusLift_Tacs_MaterialID'];
-    openSinusLiftTacsMaterial = json['openSinusLift_Tacs_Material'] != null ? new DropDownDTO.fromJson(json['openSinusLift_Tacs_Material']) : null;
-    openSinusLiftTacsCompanyID = json['openSinusLift_Tacs_CompanyID'];
-    openSinusLiftTacsCompany = json['openSinusLift_Tacs_Company'] != null ? new DropDownDTO.fromJson(json['openSinusLift_Tacs_Company']) : null;
+    openSinusLift_MembraneID = json['openSinusLift_MembraneID'];
+    openSinusLift_Membrane = MembraneModel.fromJson(json['openSinusLift_Membrane']??Map<String,dynamic>());
+    openSinusLift_Membrane_CompanyID = json['openSinusLift_Membrane_CompanyID'];
+    openSinusLift_Membrane_Company = json['openSinusLift_Membrane_Company'] != null ? new DropDownDTO.fromJson(json['openSinusLift_Membrane_Company']) : null;
+    openSinusLift_TacsCompany = TacCompanyModel.fromJson(json['openSinusLift_TacsCompany']??Map<String,dynamic>());
+    openSinusLift_TacsCompanyID = json['openSinusLift_TacsCompanyID'];
+    openSinusLiftTacsNumber = json['openSinusLiftTacsNumber'];
     softTissueGraft = json['softTissueGraft'] ?? false;
     softTissueGraftSurgeryType = json['softTissueGraft_SurgeryType'] ?? false;
     softTissueGraftSurgeryTypeSoftTissueGraft = json['softTissueGraft_SurgeryType_SoftTissueGraft'] ?? false;
@@ -298,28 +282,12 @@ class SurgicalTreatmentModel {
     data['openSinusLift_Approach_String'] = this.openSinusLiftApproachString;
     data['openSinusLift_FillMaterial'] = this.openSinusLiftFillMaterial;
     data['openSinusLift_FillMaterial_String'] = this.openSinusLiftFillMaterialString;
-    data['openSinusLift_Membrane'] = this.openSinusLiftMembrane;
-    data['openSinusLift_Membrane_Size1'] = this.openSinusLiftMembraneSize1;
-    data['openSinusLift_Membrane_Size2'] = this.openSinusLiftMembraneSize2;
-    data['openSinusLift_Membrane_MaterialID'] = this.openSinusLiftMembraneMaterialID;
-    if (this.openSinusLiftMembraneMaterial != null) {
-      data['openSinusLift_Membrane_Material'] = this.openSinusLiftMembraneMaterial!.toJson();
-    }
-    data['openSinusLift_Membrane_CompanyID'] = this.openSinusLiftMembraneCompanyID;
-    if (this.openSinusLiftMembraneCompany != null) {
-      data['openSinusLift_Membrane_Company'] = this.openSinusLiftMembraneCompany!.toJson();
-    }
-    data['openSinusLift_Tacs'] = this.openSinusLiftTacs;
-    data['openSinusLift_Tacs_Number'] = this.openSinusLiftTacsNumber;
-    data['openSinusLift_Tacs_MaterialID'] = this.openSinusLiftTacsMaterialID;
-    if (this.openSinusLiftTacsMaterial != null) {
-      data['openSinusLift_Tacs_Material'] = this.openSinusLiftTacsMaterial!.toJson();
-    }
-    data['openSinusLift_Tacs_CompanyID'] = this.openSinusLiftTacsCompanyID;
-    if (this.openSinusLiftTacsCompany != null) {
-      data['openSinusLift_Tacs_Company'] = this.openSinusLiftTacsCompany!.toJson();
-    }
-    data['softTissueGraft'] = this.softTissueGraft;
+
+    data['openSinusLift_Membrane_CompanyID'] = this.openSinusLift_Membrane_CompanyID;
+    data['openSinusLift_MembraneID'] = this.openSinusLift_MembraneID;
+    data['openSinusLift_TacsCompanyID'] = this.openSinusLift_TacsCompanyID;
+    data['openSinusLiftTacsNumber'] = this.openSinusLiftTacsNumber;
+
     data['softTissueGraft_SurgeryType'] = this.softTissueGraftSurgeryType;
     data['softTissueGraft_SurgeryType_SoftTissueGraft'] = this.softTissueGraftSurgeryTypeSoftTissueGraft;
     data['softTissueGraft_SurgeryType_Advanced'] = this.softTissueGraftSurgeryTypeAdvanced;

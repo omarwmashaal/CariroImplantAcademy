@@ -61,4 +61,9 @@ class CashFlowAPI {
 
     return response;
   }
+  static Future<API_Response> AddSettlement(String filter, int value) async {
+    var response = await HTTPRequest.Post("CashFlow/AddSettlement?filter=$filter&value=$value",null);
+
+    return response;
+  }
 }

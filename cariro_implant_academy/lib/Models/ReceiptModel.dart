@@ -15,11 +15,7 @@ class ReceiptModel {
   PatientInfoModel? patient;
   int? operatorId;
   ApplicationUserModel? operator;
-  int? crown;
-  int? scaling;
-  int? restoration;
-  int? rootCanalTreatment;
-  int? extraction;
+  List<ToothReceiptData>? toothReceiptData;
   int? total;
   int? paid;
   int? unpaid;
@@ -31,11 +27,7 @@ class ReceiptModel {
       this.patient,
       this.operatorId,
       this.operator,
-      this.crown,
-      this.scaling,
-      this.restoration,
-      this.rootCanalTreatment,
-      this.extraction,
+      this.toothReceiptData,
       this.total,
       this.paid,
       this.unpaid});
@@ -47,11 +39,7 @@ class ReceiptModel {
     patient = PatientInfoModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     operatorId = json['operatorId'];
     operator = ApplicationUserModel.fromJson(json['operator'] ?? Map<String, dynamic>());
-    crown = json['crown'];
-    scaling = json['scaling'];
-    restoration = json['restoration'];
-    rootCanalTreatment = json['rootCanalTreatment'];
-    extraction = json['extraction'];
+    toothReceiptData = ((json['toothReceiptData']??[]) as List<dynamic> ).map((e) => ToothReceiptData.fromJson(e as Map<String,dynamic>)).toList();
     total = json['total'];
     paid = json['paid'];
     unpaid = json['unpaid'];
@@ -65,16 +53,39 @@ class ReceiptModel {
     data['patient'] = this.patient == null ? null : this.patient!.toJson();
     data['operatorId'] = this.operatorId;
     data['operator'] = this.operator == null ? null : this.operator!.toJson();
-    data['crown'] = this.crown;
-    data['scaling'] = this.scaling;
-    data['restoration'] = this.restoration;
-    data['rootCanalTreatment'] = this.rootCanalTreatment;
-    data['extraction'] = this.extraction;
     data['total'] = this.total;
     data['paid'] = this.paid;
     data['unpaid'] = this.unpaid;
     return data;
   }
+}
+
+class ToothReceiptData {
+  int? tooth;
+  int? crown;
+  int? scaling;
+  int? restoration;
+  int? rootCanalTreatment;
+  int? extraction;
+  ToothReceiptData({
+    this.extraction=0,
+    this.restoration=0,
+    this.rootCanalTreatment=0,
+    this.scaling=0,
+    this.crown=0,
+    this.tooth,
+  });
+
+  ToothReceiptData.fromJson(Map<String, dynamic> json) {
+    crown = json['crown'];
+    scaling = json['scaling'];
+    restoration = json['restoration'];
+    rootCanalTreatment = json['rootCanalTreatment'];
+    extraction = json['extraction'];
+    tooth = json['tooth'];
+  }
+
+
 }
 
 class ReceiptDataSource extends DataGridSource {
@@ -123,9 +134,7 @@ class ReceiptDataSource extends DataGridSource {
         alignment: Alignment.center,
         child: Text(
           e.value.toString(),
-          style: TextStyle(
-            color: e.columnName.toLowerCase()=="unpaid" && e.value!=0? Colors.red:Colors.black
-          ),
+          style: TextStyle(color: e.columnName.toLowerCase() == "unpaid" && e.value != 0 ? Colors.red : Colors.black),
         ),
       );
     }).toList());
@@ -134,8 +143,7 @@ class ReceiptDataSource extends DataGridSource {
   Future<bool> loadData({required int id}) async {
     late API_Response response;
     response = await PatientAPI.GetReceipts(id);
-    if (response.statusCode == 200)
-      models = response.result as List<ReceiptModel>;
+    if (response.statusCode == 200) models = response.result as List<ReceiptModel>;
     init();
     notifyListeners();
 

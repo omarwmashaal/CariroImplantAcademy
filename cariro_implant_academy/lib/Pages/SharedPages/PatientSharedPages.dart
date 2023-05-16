@@ -102,7 +102,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       onTab: () {
                                         ReceiptDataSource dataSource = ReceiptDataSource();
                                         CIA_ShowPopUp(
-                                          width:900,
+                                          width: 900,
                                           context: context,
                                           child: Column(
                                             children: [
@@ -111,39 +111,235 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                 child: CIA_Table(
                                                   columnNames: dataSource.columns,
                                                   dataSource: dataSource,
-                                                  loadFunction: () async{
+                                                  loadFunction: () async {
                                                     return await dataSource.loadData(id: widget.patientID);
                                                   },
-                                                  onCellClick: (index) async{
+                                                  onCellClick: (index) async {
                                                     PaymentLogDataSrouce logDataSource = PaymentLogDataSrouce();
+
                                                     CIA_ShowPopUp(
-                                                      width:900,
+                                                      width: 1000,
                                                       context: context,
-                                                      child: Column(
-                                                        children: [
-                                                          FormTextKeyWidget(text: "Payment log for receipt Id ${dataSource.models[index-1].id}"),
-                                                          Expanded(
-                                                            child: CIA_Table(
-                                                              columnNames: logDataSource.columns,
-                                                              dataSource: logDataSource,
-                                                              loadFunction: () async{
-                                                                return await logDataSource.loadData(id: widget.patientID,receiptId: dataSource.models[index-1].id!);
-                                                              },
+                                                      child: StatefulBuilder(builder: (context, setState) {
+                                                        ReceiptModel receipt = ReceiptModel();
 
-                                                            ),
-                                                          ),
-                                                          FormTextKeyWidget(text: "Total paid ${(){
-                                                            int paid = 0;
-                                                            dataSource.models.forEach((element) {
-                                                              paid+=element.paid??0;
-                                                            });
-                                                            return paid.toString();
-                                                          }()}"),
-
-                                                        ],
-                                                      ),
+                                                        return CIA_FutureBuilder(
+                                                          loadFunction: ()async{
+                                                            await logDataSource.loadData(
+                                                                id: widget.patientID, receiptId: dataSource.models[index - 1].id!);
+                                                            await dataSource.loadData(id: widget.patientID);
+                                                            return  await PatientAPI.GetReceiptById(dataSource.models[index - 1].id!);
+                                                          }(),
+                                                        onSuccess: (data) {
+                                                            receipt = data as ReceiptModel;
+                                                            return Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: SingleChildScrollView(
+                                                                          child: Column(
+                                                                            children: [
+                                                                              SizedBox(height: 10),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Expanded(child: FormTextKeyWidget(text: "Date")),
+                                                                                  Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
+                                                                                ],
+                                                                              ),
+                                                                              SizedBox(height: 10),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Expanded(child: FormTextKeyWidget(text: "Patient ID")),
+                                                                                  Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                                                                ],
+                                                                              ),
+                                                                              SizedBox(height: 10),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Expanded(child: FormTextKeyWidget(text: "Patient Name")),
+                                                                                  Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
+                                                                                ],
+                                                                              ),
+                                                                              SizedBox(height: 10),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Expanded(child: FormTextKeyWidget(text: "Operator")),
+                                                                                  Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
+                                                                                ],
+                                                                              ),
+                                                                              SizedBox(height: 10),
+                                                                              Column(
+                                                                                children: () {
+                                                                                  List<Widget> r = [];
+                                                                                  receipt.toothReceiptData!.forEach((element) {
+                                                                                    r.add(Visibility(
+                                                                                      visible: (element.crown ?? 0) != 0,
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
+                                                                                            Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ));
+                                                                                    r.add(Visibility(
+                                                                                      visible: (element.scaling ?? 0) != 0,
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
+                                                                                            Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ));
+                                                                                    r.add(Visibility(
+                                                                                      visible: (element.extraction ?? 0) != 0,
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
+                                                                                            Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ));
+                                                                                    r.add(Visibility(
+                                                                                      visible: (element.restoration ?? 0) != 0,
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
+                                                                                            Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ));
+                                                                                    r.add(Visibility(
+                                                                                      visible: (element.rootCanalTreatment ?? 0) != 0,
+                                                                                      child: Padding(
+                                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                                        child: Row(
+                                                                                          children: [
+                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
+                                                                                            Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ));
+                                                                                    r.add(Divider());
+                                                                                  });
+                                                                                  return r;
+                                                                                }(),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Divider(),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Expanded(child: FormTextKeyWidget(text: "Total")),
+                                                                            Expanded(child: FormTextValueWidget(text: (receipt.total ?? 0).toString())),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Expanded(child: FormTextKeyWidget(text: "Paid amount")),
+                                                                            Expanded(
+                                                                                child: FormTextValueWidget(
+                                                                                    color: Colors.green, text: (receipt.paid ?? 0).toString())),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets.only(bottom: 10),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Expanded(child: FormTextKeyWidget(text: "Unpaid amount")),
+                                                                            Expanded(
+                                                                                child: FormTextValueWidget(
+                                                                                    color: receipt.unpaid != 0 ? Colors.red : Colors.black,
+                                                                                    text: (receipt.unpaid ?? 0).toString())),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      CIA_PrimaryButton(
+                                                                          label: "Add payment",
+                                                                          onTab: () async {
+                                                                            int newPrice = 0;
+                                                                            CIA_ShowPopUp(
+                                                                              height:200,
+                                                                              context: context,
+                                                                              onSave: ()async{
+                                                                                var res = await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPrice);
+                                                                                if(res.statusCode==200) {
+                                                                                  ShowSnackBar(isSuccess: true);
+                                                                                  setState((){});
+                                                                                }
+                                                                              },
+                                                                              child: CIA_TextFormField(
+                                                                                label: "New payment",
+                                                                                isNumber: true,
+                                                                                controller: TextEditingController(),
+                                                                                onChange: (v) => newPrice = int.parse(v),
+                                                                                validator: (value) {
+                                                                                  if(int.parse(value)>= receipt.unpaid!)
+                                                                                    value = receipt.unpaid!.toString();
+                                                                                  return value;
+                                                                                },
+                                                                              ),
+                                                                            );
+                                                                          })
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Column(
+                                                                    children: [
+                                                                      FormTextKeyWidget(text: "Payment log for receipt Id ${dataSource.models[index - 1].id}"),
+                                                                      Expanded(
+                                                                        child: CIA_Table(
+                                                                          columnNames: logDataSource.columns,
+                                                                          dataSource: logDataSource,
+                                                                          loadFunction: () async {
+                                                                            return await logDataSource.loadData(
+                                                                                id: widget.patientID, receiptId: dataSource.models[index - 1].id!);
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                      FormTextKeyWidget(
+                                                                          text: "Total paid ${() {
+                                                                        int paid = 0;
+                                                                        logDataSource.models.forEach((element) {
+                                                                          paid += element.paidAmount ?? 0;
+                                                                        });
+                                                                        return paid.toString();
+                                                                      }()}"),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      }),
                                                     );
-
                                                   },
                                                 ),
                                               ),
@@ -592,8 +788,9 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                       int newPayment = 0;
                                       int debt = 0;
                                       res = await PatientAPI.GetTotalDebt(widget.patientID);
-                                      if(res.statusCode == 200) debt = res.result as int;
+                                      if (res.statusCode == 200) debt = res.result as int;
                                       await CIA_ShowPopUp(
+                                        width:500,
                                           context: context,
                                           title: "Receipt",
                                           onSave: () async {
@@ -601,97 +798,114 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                           },
                                           child: Column(
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Patient total debt")),
-                                                  Expanded( child: FormTextValueWidget(color:debt!=0?Colors.red:Colors.black ,text: debt.toString())),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Date")),
-                                                  Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Patient ID")),
-                                                  Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Patient Name")),
-                                                  Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Operator")),
-                                                  Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Visibility(
-                                                visible: (receipt.crown ?? 0) != 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  child: Column(
                                                     children: [
-                                                      Expanded(child: FormTextKeyWidget(text: "Crown")),
-                                                      Expanded(child: FormTextValueWidget(text: (receipt.crown ?? 0).toString())),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: (receipt.scaling ?? 0) != 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(child: FormTextKeyWidget(text: "Scaling")),
-                                                      Expanded(child: FormTextValueWidget(text: (receipt.scaling ?? 0).toString())),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: (receipt.extraction ?? 0) != 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(child: FormTextKeyWidget(text: "Extraction")),
-                                                      Expanded(child: FormTextValueWidget(text: (receipt.extraction ?? 0).toString())),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: (receipt.restoration ?? 0) != 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(child: FormTextKeyWidget(text: "Restoration")),
-                                                      Expanded(child: FormTextValueWidget(text: (receipt.restoration ?? 0).toString())),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Visibility(
-                                                visible: (receipt.rootCanalTreatment ?? 0) != 0,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.only(bottom: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(child: FormTextKeyWidget(text: "Root Canal Treatment")),
-                                                      Expanded(child: FormTextValueWidget(text: (receipt.rootCanalTreatment ?? 0).toString())),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: FormTextKeyWidget(text: "Patient total debt")),
+                                                          Expanded(child: FormTextValueWidget(color: debt != 0 ? Colors.red : Colors.black, text: debt.toString())),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: FormTextKeyWidget(text: "Date")),
+                                                          Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: FormTextKeyWidget(text: "Patient ID")),
+                                                          Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: FormTextKeyWidget(text: "Patient Name")),
+                                                          Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(child: FormTextKeyWidget(text: "Operator")),
+                                                          Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Column(
+                                                        children: () {
+                                                          List<Widget> r = [];
+                                                          receipt.toothReceiptData!.forEach((element) {
+                                                            r.add(Visibility(
+                                                              visible: (element.crown ?? 0) != 0,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
+                                                                    Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                                            r.add(Visibility(
+                                                              visible: (element.scaling ?? 0) != 0,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
+                                                                    Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                                            r.add(Visibility(
+                                                              visible: (element.extraction ?? 0) != 0,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
+                                                                    Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                                            r.add(Visibility(
+                                                              visible: (element.restoration ?? 0) != 0,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
+                                                                    Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                                            r.add(Visibility(
+                                                              visible: (element.rootCanalTreatment ?? 0) != 0,
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(bottom: 10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
+                                                                    Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                                            r.add(Divider());
+                                                          });
+                                                          return r;
+                                                        }(),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),

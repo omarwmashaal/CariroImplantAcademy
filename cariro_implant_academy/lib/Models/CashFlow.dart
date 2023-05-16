@@ -130,6 +130,7 @@ class CashFlowDataSource extends DataGridSource {
         columns = [
           "ID",
           "Date",
+          "Category",
           "Created by",
           "Patient",
           "Receipt Id",
@@ -140,6 +141,7 @@ class CashFlowDataSource extends DataGridSource {
             .map<DataGridRow>((e) => DataGridRow(cells: [
           DataGridCell<int>(columnName: 'ID', value: e.id),
           DataGridCell<String>(columnName: 'Date', value: e.date),
+          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
           DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
           DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
           DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),

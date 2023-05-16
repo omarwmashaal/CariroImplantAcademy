@@ -14,7 +14,7 @@ class StockModel {
   int? categoryId;
   DropDownDTO? category;
 
-  StockModel({this.id, this.name, this.count});
+  StockModel({this.id, this.name, this.count, this.category});
 
   StockModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

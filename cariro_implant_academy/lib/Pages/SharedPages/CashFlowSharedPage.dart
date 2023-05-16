@@ -61,6 +61,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
   bool weekSelected = false;
   bool monthSelected = true;
   bool yearSelected = false;
+  bool lastMonthSelected = false;
   String selectedCategory = "";
 
   PageController _controller = PageController();
@@ -70,12 +71,11 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
     return PageView(
       controller: tabsController,
       children: [
-
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Obx(
-                  () => TitleWidget(
+              () => TitleWidget(
                 title: siteController.title.value,
                 showBackButton: false,
               ),
@@ -121,7 +121,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                   dataSource: widget.i_dataSource,
                   loadFunction: widget.i_dataSource.loadData,
                   onCellClick: (value) {
-                    if (widget.onIncomeRowClick != null) widget.onIncomeRowClick!(widget.i_dataSource.models[value-1]);
+                    if (widget.onIncomeRowClick != null) widget.onIncomeRowClick!(widget.i_dataSource.models[value - 1]);
                   }),
             ),
           ],
@@ -164,7 +164,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                         CIA_ShowPopUp(
                             context: context,
                             width: 700,
-                            height  : 500,
+                            height: 500,
                             title: "Add new Expenses",
                             onSave: () async {
                               models.forEach((element) {
@@ -233,7 +233,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                               element.categoryId = null;
                                                             });
                                                           },
-                                                          controller: TextEditingController(text: dummyModel.category!.name ?? "" ),
+                                                          controller: TextEditingController(text: dummyModel.category!.name ?? ""),
                                                         )
                                                       : CIA_DropDownSearch(
                                                           label: "Category",
@@ -241,11 +241,9 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                           onSelect: (value) {
                                                             dummyModel.category = value;
                                                             dummyModel.categoryId = value.id;
-                                                            models.forEach((model) {
-
-                                                            });
+                                                            models.forEach((model) {});
                                                           },
-                                                          selectedItem: dummyModel.category ,
+                                                          selectedItem: dummyModel.category,
                                                         ),
                                                 )
                                               ],
@@ -287,7 +285,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                               model.paymentMethodId = value.id;
                                                             });
                                                           },
-                                                          selectedItem: dummyModel.paymentMethod ,
+                                                          selectedItem: dummyModel.paymentMethod,
                                                         ),
                                                 )
                                               ],
@@ -329,7 +327,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                               model.supplierId = value.id;
                                                             });
                                                           },
-                                                          selectedItem: dummyModel.supplier ,
+                                                          selectedItem: dummyModel.supplier,
                                                         ),
                                                 )
                                               ],
@@ -351,12 +349,14 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                               child: CIA_TextFormField(
                                                                 isNumber: true,
                                                                 onChange: (value) {
-                                            if(value==null||value == "") value ="0";
+                                                                  if (value == null || value == "") value = "0";
                                                                   model.price = int.parse(value);
                                                                   total = 0;
-                                                                  models.forEach((element) {total+=element.price??0;});
-                                                                  setState((){});
-                                                                  },
+                                                                  models.forEach((element) {
+                                                                    total += element.price ?? 0;
+                                                                  });
+                                                                  setState(() {});
+                                                                },
                                                                 label: "Price",
                                                                 controller: TextEditingController(text: (model.price ?? 0).toString()),
                                                               ),
@@ -366,9 +366,9 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                               child: CIA_TextFormField(
                                                                 isNumber: true,
                                                                 onChange: (value) {
-                                                                  if(value==null||value == "") value ="0";
+                                                                  if (value == null || value == "") value = "0";
                                                                   model.count = int.parse(value);
-                                                                  setState((){});
+                                                                  setState(() {});
                                                                 },
                                                                 label: "Count",
                                                                 controller: TextEditingController(text: (model.count ?? 0).toString()),
@@ -387,14 +387,16 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                                                 onPressed: () {
                                                                   int index = 0;
                                                                   index = models.indexWhere((element) => element == model);
-                                                                  models.insert(index+1,CashFlowModel(
-                                                                    category: dummyModel.category,
-                                                                    categoryId: dummyModel.categoryId,
-                                                                    paymentMethod: dummyModel.paymentMethod ,
-                                                                    paymentMethodId: dummyModel.paymentMethodId ,
-                                                                    supplier: dummyModel.supplier,
-                                                                    supplierId: dummyModel.supplierId,
-                                                                  ));
+                                                                  models.insert(
+                                                                      index + 1,
+                                                                      CashFlowModel(
+                                                                        category: dummyModel.category,
+                                                                        categoryId: dummyModel.categoryId,
+                                                                        paymentMethod: dummyModel.paymentMethod,
+                                                                        paymentMethodId: dummyModel.paymentMethodId,
+                                                                        supplier: dummyModel.supplier,
+                                                                        supplierId: dummyModel.supplierId,
+                                                                      ));
                                                                   setState(() {});
                                                                 },
                                                                 icon: Icon(Icons.add)),
@@ -495,6 +497,7 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                     weekSelected = true;
                                     monthSelected = false;
                                     yearSelected = false;
+                                    lastMonthSelected = false;
                                   });
                                 }),
                         SizedBox(width: 10),
@@ -506,6 +509,20 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                   setState(() {
                                     weekSelected = false;
                                     monthSelected = true;
+                                    yearSelected = false;
+                                    lastMonthSelected = false;
+                                  });
+                                }),
+                        SizedBox(width: 10),
+                        lastMonthSelected
+                            ? CIA_PrimaryButton(label: "Last Month", isLong: true, onTab: () {})
+                            : CIA_SecondaryButton(
+                                label: "Last Month",
+                                onTab: () {
+                                  setState(() {
+                                    weekSelected = false;
+                                    monthSelected = false;
+                                    lastMonthSelected = true;
                                     yearSelected = false;
                                   });
                                 }),
@@ -519,20 +536,25 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                     weekSelected = false;
                                     monthSelected = false;
                                     yearSelected = true;
+                                    lastMonthSelected = false;
                                   });
                                 }),
                       ],
                     ),
                     SizedBox(height: 10),
-                    Obx(() => Row(
-                      children: [
-                        FormTextValueWidget(text: "from: ${_getXController.from.value}"),
-                        SizedBox(width: 10,),
-                        FormTextValueWidget(text: "to: ${_getXController.to.value}"),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    ),),
-                    SizedBox(height:10),
+                    Obx(
+                      () => Row(
+                        children: [
+                          FormTextValueWidget(text: "from: ${_getXController.from.value}"),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          FormTextValueWidget(text: "to: ${_getXController.to.value}"),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
                     Expanded(
                       flex: 5,
                       child: Row(
@@ -551,8 +573,10 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                               ? "ThisMonth"
                                               : yearSelected
                                                   ? "ThisYear"
-                                                  : "");
-                                      if(res.statusCode == 200) {
+                                                  : lastMonthSelected
+                                                      ? "LastMonth"
+                                                      : "");
+                                      if (res.statusCode == 200) {
                                         _getXController.from.value = (res.result as CashFlowSummaryModel).from ?? "";
                                         _getXController.to.value = (res.result as CashFlowSummaryModel).to ?? "";
                                       }
@@ -609,13 +633,15 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                                             ? "ThisMonth"
                                             : yearSelected
                                                 ? "ThisYear"
-                                                : "");
+                                                : lastMonthSelected
+                                                    ? "LastMonth"
+                                                    : "");
                                     var t = 0;
                                     widget.iS_dataSource!.models.forEach((element) {
                                       t += element.total ?? 0;
                                     });
                                     _getXController.incomeSum.value = t;
-                                    print (t);
+                                    print(t);
                                     return res;
                                   },
                                   onCellClick: (value) {
@@ -665,6 +691,51 @@ class _CashFlowSharedPageState extends State<CashFlowSharedPage> {
                         ],
                       ),
                     ),
+                    Center(
+                      child: Wrap(
+                        children: [
+                              CIA_PrimaryButton(
+                              label: "Add Settlement",
+                              onTab: () {
+                                int newValue = 0;
+                                String filter = "This month";
+                                CIA_ShowPopUp(
+                                  onSave: ()async
+                                  {
+                                    var res = await CashFlowAPI.AddSettlement(filter, newValue);
+                                    ShowSnackBar(isSuccess: res.statusCode==200);
+                                    setState(() {
+
+                                    });
+                                  },
+                                  context: context,
+                                  child: Column(
+                                    children: [
+                                      CIA_MultiSelectChipWidget(
+                                          singleSelect: true,
+                                          onChange: (item, isSelected) {
+                                            if (isSelected) {
+                                              filter = item;
+                                            }
+                                          },
+                                          labels: [
+                                            CIA_MultiSelectChipWidgeModel(label: "This month", isSelected: true),
+                                            CIA_MultiSelectChipWidgeModel(label: "Last month"),
+                                          ]),
+                                      CIA_TextFormField(
+                                        isNumber: true,
+                                        label: "Value",
+                                        controller: TextEditingController(),
+                                        onChange: (v) => newValue = int.parse(v),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ],
+                      ),
+                    ),
+                    Expanded(child: SizedBox())
                   ],
                 ),
                 Column(
