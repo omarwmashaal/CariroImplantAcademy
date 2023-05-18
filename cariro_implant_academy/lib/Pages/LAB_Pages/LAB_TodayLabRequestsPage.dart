@@ -21,6 +21,7 @@ import 'package:intl/intl.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
+import 'LAB_ViewTask.dart';
 
 class _GetXController extends GetxController {
   static RxString inQueueCount = "0".obs;
@@ -42,9 +43,9 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
   bool? paid;
   String? from;
   String? to;
-  String requestsInQueue = "0";
   String search = "";
   late LAB_RequestModel selectedTodayLabRequests = LAB_RequestModel();
+
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
@@ -76,9 +77,9 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                         style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
                       ),
                       Obx(() => Text(
-                        _GetXController.inQueueCount.value,
-                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
-                      )),
+                            _GetXController.inQueueCount.value,
+                            style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
+                          )),
                       SizedBox(
                         width: 30,
                       )
@@ -97,14 +98,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               onChange: (value) {
                                 Search = value;
                                 search = value;
-                                dataSource.loadData(
-                                  search: search,
-                                  from: DateTime.now().toString(),
-                                  to: DateTime.now().toString(),
-                                  status: statusEnum,
-                                  source: sourceEnum,
-                                  paid: paid,
-                                );
+                                reload();
                               },
                             ),
                           ),
@@ -135,14 +129,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Outsource")
                                         sourceEnum = EnumLabRequestSources.OutSource;
                                       else if (v.name == "None") sourceEnum = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: DateTime.now().toString(),
-                                        to: DateTime.now().toString(),
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Source',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -165,14 +152,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Paid")
                                         paid = true;
                                       else if (v.name == "None") paid = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: DateTime.now().toString(),
-                                        to: DateTime.now().toString(),
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Payment',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -198,14 +178,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Finished Not Handled")
                                         statusEnum = EnumLabRequestStatus.FinishedNotHandeled;
                                       else if (v.name == "None") statusEnum = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: DateTime.now().toString(),
-                                        to: DateTime.now().toString(),
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Status',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -235,22 +208,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                           sourceEnum = null;
                           statusEnum = null;
                           paid = null;
-                          var res = await LAB_RequestsAPI.GetAllRequests();
-                          if (res.statusCode == 200)
-                            _GetXController.inQueueCount.value = ((res.result) as List<LAB_RequestModel>)
-                                .where((element) => element.status == EnumLabRequestStatus.InQueue)
-                                .toList()
-                                .length
-                                .toString();
-
-                          return dataSource.loadData(
-                            search: search,
-                            from: DateTime.now().toString(),
-                            to: DateTime.now().toString(),
-                            source: sourceEnum,
-                            status: statusEnum,
-                            paid: paid,
-                          );
+                          return reload();
                         },
                         onCellClick: (value) {
                           print(dataSource.models[value - 1].id);
@@ -284,9 +242,9 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                         style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
                       ),
                       Obx(() => Text(
-                        _GetXController.inQueueCount.value,
-                        style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
-                      )),
+                            _GetXController.inQueueCount.value,
+                            style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
+                          )),
                       SizedBox(
                         width: 30,
                       )
@@ -305,14 +263,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               onChange: (value) {
                                 Search = value;
                                 search = value;
-                                dataSource.loadData(
-                                  search: search,
-                                  from: from,
-                                  to: to,
-                                  status: statusEnum,
-                                  source: sourceEnum,
-                                  paid: paid,
-                                );
+                                reload();
                               },
                             ),
                           ),
@@ -343,14 +294,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Outsource")
                                         sourceEnum = EnumLabRequestSources.OutSource;
                                       else if (v.name == "None") sourceEnum = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: from,
-                                        to: to,
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Source',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -367,87 +311,59 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                 ),
                                 Expanded(
                                     child: Obx(() => Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_TextFormField(
-                                            label: "From Date",
-                                            controller: TextEditingController(text: _GetXController.from.value),
-                                            enabled: false,
-                                            onTap: () {
-                                              CIA_PopupDialog_DateOnlyPicker(context, "From Date", (v) {
-                                                from = v;
-                                                _GetXController.from.value = v;
-                                                dataSource.loadData(
-                                                  search: search,
-                                                  from: from,
-                                                  to: to,
-                                                  source: sourceEnum,
-                                                  status: statusEnum,
-                                                  paid: paid,
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              from = null;
-                                              _GetXController.from.value = "";
-                                              dataSource.loadData(
-                                                search: search,
-                                                from: from,
-                                                to: to,
-                                                source: sourceEnum,
-                                                status: statusEnum,
-                                                paid: paid,
-                                              );
-                                            },
-                                            icon: Icon(Icons.clear))
-                                      ],
-                                    ))),
+                                          children: [
+                                            Expanded(
+                                              child: CIA_TextFormField(
+                                                label: "From Date",
+                                                controller: TextEditingController(text: _GetXController.from.value),
+                                                enabled: false,
+                                                onTap: () {
+                                                  CIA_PopupDialog_DateOnlyPicker(context, "From Date", (v) {
+                                                    from = v;
+                                                    _GetXController.from.value = v;
+                                                    reload();
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  from = null;
+                                                  _GetXController.from.value = "";
+                                                  reload();
+                                                },
+                                                icon: Icon(Icons.clear))
+                                          ],
+                                        ))),
                                 SizedBox(
                                   width: 10,
                                 ),
                                 Expanded(
                                     child: Obx(() => Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_TextFormField(
-                                            label: "To Date",
-                                            controller: TextEditingController(text: _GetXController.to.value),
-                                            enabled: false,
-                                            onTap: () {
-                                              CIA_PopupDialog_DateOnlyPicker(context, "To Date", (v) {
-                                                to = v;
-                                                _GetXController.to.value = v;
-                                                dataSource.loadData(
-                                                  search: search,
-                                                  from: from,
-                                                  to: to,
-                                                  source: sourceEnum,
-                                                  status: statusEnum,
-                                                  paid: paid,
-                                                );
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              to = null;
-                                              _GetXController.to.value = "";
-                                              dataSource.loadData(
-                                                search: search,
-                                                from: from,
-                                                to: to,
-                                                source: sourceEnum,
-                                                status: statusEnum,
-                                                paid: paid,
-                                              );
-                                            },
-                                            icon: Icon(Icons.clear))
-                                      ],
-                                    ))),
+                                          children: [
+                                            Expanded(
+                                              child: CIA_TextFormField(
+                                                label: "To Date",
+                                                controller: TextEditingController(text: _GetXController.to.value),
+                                                enabled: false,
+                                                onTap: () {
+                                                  CIA_PopupDialog_DateOnlyPicker(context, "To Date", (v) {
+                                                    to = v;
+                                                    _GetXController.to.value = v;
+                                                    reload();
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  to = null;
+                                                  _GetXController.to.value = "";
+                                                  reload();
+                                                },
+                                                icon: Icon(Icons.clear))
+                                          ],
+                                        ))),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -459,14 +375,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Paid")
                                         paid = true;
                                       else if (v.name == "None") paid = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: from,
-                                        to: to,
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Payment',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -492,14 +401,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                                       else if (v.name == "Finished Not Handled")
                                         statusEnum = EnumLabRequestStatus.FinishedNotHandeled;
                                       else if (v.name == "None") statusEnum = null;
-                                      dataSource.loadData(
-                                        search: search,
-                                        from: from,
-                                        to: to,
-                                        status: statusEnum,
-                                        source: sourceEnum,
-                                        paid: paid,
-                                      );
+                                      reload();
                                     },
                                     label: 'Status',
                                     selectedItem: DropDownDTO(name: "None"),
@@ -542,8 +444,8 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
                           return dataSource.loadData(
                             search: search,
-                            from: from,
-                            to: to,
+                            from: DateTime.now().toString(),
+                            to: DateTime.now().toString(),
                             source: sourceEnum,
                             status: statusEnum,
                             paid: paid,
@@ -559,8 +461,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               ),
             ],
           ),
-         
-          LAB_ViewRequestPage(request: selectedTodayLabRequests),
+          siteController.getRole() == "technician" ? LAB_ViewTaskPage(id:selectedTodayLabRequests!.id??0) : LAB_ViewRequestPage(request: selectedTodayLabRequests),
           LAB_CreateNewLabRequest()
         ];
         return pages[index];
@@ -573,7 +474,22 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["Today's Requests","All Requests"]);
+    siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
+  }
 
+  reload() async {
+    var res = await dataSource.loadData(
+      search: search,
+      from: DateTime.now().toString(),
+      to: DateTime.now().toString(),
+      source: sourceEnum,
+      status: statusEnum,
+      paid: paid,
+    );
+    if (res.statusCode == 200)
+      _GetXController.inQueueCount.value =
+          ((res.result) as List<LAB_RequestModel>).where((element) => element.status == EnumLabRequestStatus.InQueue).toList().length.toString();
+
+    return res;
   }
 }

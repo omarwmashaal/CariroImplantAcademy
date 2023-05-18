@@ -4,48 +4,57 @@ import 'Enum.dart';
 
 class LAB_StepModel {
   int? id;
-  String? name;
   int? technicianId;
   DropDownDTO? technician;
   String? date;
   LabStepStatus? status;
   int? requestId;
   DropDownDTO? request;
+  int? stepId;
+  DropDownDTO? step;
+  String? notes;
+  int? price;
 
   LAB_StepModel({
     this.id,
-    this.name="",
     this.technicianId,
     this.technician,
     this.date,
     this.status,
     this.requestId,
+    this.step,
+    this.stepId,
+    this.notes = "",
+    this.price = 0,
     this.request,}){
     technician = DropDownDTO();
     status = LabStepStatus.NotYet;
     request =DropDownDTO();
+    //step = DropDownDTO();
   }
   LAB_StepModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name']??"";
+    notes = json['notes'];
+    price = json['price'];
     technicianId = json['technicianId'];
     technician = DropDownDTO.fromJson(json['technician']??Map<String,dynamic>());
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     status = LabStepStatus.values[json['status']??2];
     requestId = json['requestId'];
     request = DropDownDTO.fromJson(json['request']??Map<String,dynamic>());
+  stepId = json['stepId'];
+    step = DropDownDTO.fromJson(json['step']??Map<String,dynamic>());
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['name'] = this.name;
+    data['notes'] = this.notes;
+    data['price'] = this.price;
     data['technicianId'] = this.technicianId;
-    //data['technician'] = this.technician!=null?this.technician!.toJson():null;
-    data['date'] = this.date;
+    //data['date'] = this.date;
     data['status'] = (this.status??LabStepStatus.NotYet).index;
-    //data['requestId'] = this.requestId;
-    //data['request'] = this.request!=null?this.request!.toJson():null;
+    data['stepId'] = this.stepId;
     return data;
   }
 }

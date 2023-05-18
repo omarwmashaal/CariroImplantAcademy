@@ -23,6 +23,7 @@ import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.d
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
+import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
@@ -44,6 +45,7 @@ import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
+import 'Pages/SharedPages/LapRequestSharedPage.dart';
 import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
@@ -94,9 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImJkZjA2YzE5LWRlZDYtNGUyNC1hMDUyLTVjYTAxN2RjNjU0NCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4Mzk4Njc1NSwiZXhwIjoxNjg0NTkxNTU1LCJpYXQiOjE2ODM5ODY3NTV9.ScANSzfiG1wmXnw8r8Pe37K6n_xwCEVHTqOOL_Pul30");    siteController.setRole("admin");
-    siteController.setSite(Website.CIA);
-    siteController.setUser(ApplicationUserModel(name: "A1", idInt: 1, phoneNumber: "01127744835"));
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E"
+    );
+        siteController.setSite(Website.CIA);
+
+    siteController.setUser(ApplicationUserModel(name: "tec1", idInt: 6, phoneNumber: "01127744835"));
+    siteController.setRole("technician");
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
     StockDataSource dataSource1 = StockDataSource();
@@ -105,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-      body: CIA_TeethTreatmentPlanWidget(patientID: patientID,surgical: true),
+body: LabRequestsSearchPage()
     );
   }
 }

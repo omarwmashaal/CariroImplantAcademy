@@ -1,5 +1,6 @@
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,23 +22,23 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
     int activeIndex = 0;
     int index = 0;
     for (LAB_StepModel step in steps) {
-      if (step.status == LabStepStatus.InProgress) activeIndex = index;
+      if (step.status == LabStepStatus.InProgress||step.status == LabStepStatus.Done) activeIndex = index;
       _stepperData.add(
         StepperData(
           title: StepperText(
             step.status == LabStepStatus.Done
-                ? step.name! + " by: " + (step.technician!.name!)
+                ? step.step!.name! + " by: " + (step.technician!.name!)
                 : (step.status == LabStepStatus.InProgress
-                    ? step.name! +
+                    ? step.step!.name! +
                         " assigned to" +
-                        (isTask ? " you" : ": " + (step.technician!.name!))
-                    : step.name!),
+                (step.step!.id==10?" Customer": step.step!.id==11?"Lab": (isTask && step.technicianId == siteController.getUser().idInt ? " you" : ": " + (step.technician!.name!)) )
+                    : step.step!.name!),
           ),
           subtitle: StepperText(step.status == LabStepStatus.Done
-              ? (step.date??"")
+              ? (step.date??"") + " || Notes: ${step.notes??""}"
               : (step.status == LabStepStatus.InProgress
                   ? "In Progress"
-                  : "Not Yet")),
+                  : "Not Yet") + " || Notes: ${step.notes??""}"),
           iconWidget: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -55,7 +56,8 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
     return AnotherStepper(
       //gap: 20,
       stepperList: _stepperData,
-      stepperDirection: Axis.horizontal,
+      stepperDirection: Axis.vertical,
+      scrollPhysics: ScrollPhysics(),
       activeIndex: activeIndex,
       barThickness: 8,
       activeBarColor: Colors.green,

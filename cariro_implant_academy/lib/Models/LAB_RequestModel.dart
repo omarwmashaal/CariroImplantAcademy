@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/LAB_CustomerModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/LAB_RequestsAPI.dart';
+import '../Widgets/SnackBar.dart';
 import 'API_Response.dart';
 import 'ApplicationUserModel.dart';
 import 'DTOs/DropDownDTO.dart';
@@ -33,6 +35,8 @@ class LAB_RequestModel {
   String? notes;
   String? requiredStep;
   List<LAB_StepModel>? steps;
+  List<int>? teeth;
+  EnumLabRequestInitStatus? initStatus;
 
   int? fileId;
   DropDownDTO? file;
@@ -64,65 +68,38 @@ class LAB_RequestModel {
   bool? clearSurgicalTemplates;
   bool? diagnosticSurveying;
 
-  List<String> getMedicalInfoList()
-  {
+  List<String> getMedicalInfoList() {
     List<String> r = [];
-    if(fullZireonCrown??false)
-      r.add("Full Zireon Crown");
-    if(porcelainFusedToZircomium??false)
-      r.add("Porcelain Fused To Zircomium");
-    if(porcelainFusedToMetal??false)
-      r.add("Porcelain Fused ToMetal");
-    if(porcelainFusedToMetalCADCAMCoCrAlloy??false)
-      r.add("Porcelain Fused To Metal CAD-CAM-Co-Cr Alloy");
-    if(glassCeramicCrown??false)
-      r.add("Glass Ceramic Crown");
-    if(visiolignBondedToPEEK??false)
-      r.add("Visiolign Bonded To PEEK");
-    if(laminateVeneer??false)
-      r.add("Laminate Veneer");
-    if(milledPMMATemporaryCrown??false)
-      r.add("Milled PMMA TemporaryCrown");
-    if(longTermTemporaryCrown??false)
-      r.add("Long Term Temporary Crown");
-    if(screwRatainedCrown??false)
-      r.add("Screw Ratained Crown");
-    if(surveyCrownForRPD??false)
-      r.add("Survey Crown For RPD");
-    if(surveyCrownWithExtraCoronalAttahcment??false)
-      r.add("Survey Crown With Extra Coronal Attahcment");
-    if(castPostcore??false)
-      r.add("Cast Postcore");
-    if(zirconiumPostAndCore??false)
-      r.add("Zirconium Post And Core");
-    if(customCarbonFiberPost??false)
-      r.add("Custom Carbon Fiber Post");
-    if(zirconiumInlayOrOnlay??false)
-      r.add("Zirconium Inlay Or Onlay");
-    if(glassCeramicInlayOrOnlay??false)
-      r.add("Glass Ceramic Inlay Or Onlay");
-    if(caDCAMAbutment??false)
-      r.add("CaDCAMAbutment");
-    if(specialTray??false)
-      r.add("Special Tray");
-    if(occlusionBlock??false)
-      r.add("Occlusion Block");
-    if(diagnosticOrTrailSetup??false)
-      r.add("Diagnostic Or Trail Setup");
-    if(flexibleRPD??false)
-      r.add("Flexible RPD");
-    if(metallicRPD??false)
-      r.add("Metallic RPD");
-    if(nightGuardVacuumTemplate??false)
-      r.add("Night Guard Vacuum Template");
-    if(radiographicDuplicatesForCBCT??false)
-      r.add("Radiographic Duplicates For CBCT");
-    if(clearSurgicalTemplates??false)
-      r.add("Clear Surgical Templates");
-    if(diagnosticSurveying??false)
-      r.add("Diagnostic Surveying");
+    if (fullZireonCrown ?? false) r.add("Full Zireon Crown");
+    if (porcelainFusedToZircomium ?? false) r.add("Porcelain Fused To Zircomium");
+    if (porcelainFusedToMetal ?? false) r.add("Porcelain Fused ToMetal");
+    if (porcelainFusedToMetalCADCAMCoCrAlloy ?? false) r.add("Porcelain Fused To Metal CAD-CAM-Co-Cr Alloy");
+    if (glassCeramicCrown ?? false) r.add("Glass Ceramic Crown");
+    if (visiolignBondedToPEEK ?? false) r.add("Visiolign Bonded To PEEK");
+    if (laminateVeneer ?? false) r.add("Laminate Veneer");
+    if (milledPMMATemporaryCrown ?? false) r.add("Milled PMMA TemporaryCrown");
+    if (longTermTemporaryCrown ?? false) r.add("Long Term Temporary Crown");
+    if (screwRatainedCrown ?? false) r.add("Screw Ratained Crown");
+    if (surveyCrownForRPD ?? false) r.add("Survey Crown For RPD");
+    if (surveyCrownWithExtraCoronalAttahcment ?? false) r.add("Survey Crown With Extra Coronal Attahcment");
+    if (castPostcore ?? false) r.add("Cast Postcore");
+    if (zirconiumPostAndCore ?? false) r.add("Zirconium Post And Core");
+    if (customCarbonFiberPost ?? false) r.add("Custom Carbon Fiber Post");
+    if (zirconiumInlayOrOnlay ?? false) r.add("Zirconium Inlay Or Onlay");
+    if (glassCeramicInlayOrOnlay ?? false) r.add("Glass Ceramic Inlay Or Onlay");
+    if (caDCAMAbutment ?? false) r.add("CaDCAMAbutment");
+    if (specialTray ?? false) r.add("Special Tray");
+    if (occlusionBlock ?? false) r.add("Occlusion Block");
+    if (diagnosticOrTrailSetup ?? false) r.add("Diagnostic Or Trail Setup");
+    if (flexibleRPD ?? false) r.add("Flexible RPD");
+    if (metallicRPD ?? false) r.add("Metallic RPD");
+    if (nightGuardVacuumTemplate ?? false) r.add("Night Guard Vacuum Template");
+    if (radiographicDuplicatesForCBCT ?? false) r.add("Radiographic Duplicates For CBCT");
+    if (clearSurgicalTemplates ?? false) r.add("Clear Surgical Templates");
+    if (diagnosticSurveying ?? false) r.add("Diagnostic Surveying");
     return r;
   }
+
   LAB_RequestModel(
       {this.id,
       this.date,
@@ -166,18 +143,23 @@ class LAB_RequestModel {
       this.diagnosticOrTrailSetup = false,
       this.flexibleRPD = false,
       this.metallicRPD = false,
+      this.initStatus = EnumLabRequestInitStatus.Scan,
       this.nightGuardVacuumTemplate = false,
       this.radiographicDuplicatesForCBCT = false,
       this.clearSurgicalTemplates = false,
+      this.teeth,
       this.diagnosticSurveying = false}) {
     entryBy = DropDownDTO();
     customer = ApplicationUserModel();
     patient = DropDownDTO();
     file = DropDownDTO();
+    teeth = [];
   }
 
   LAB_RequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    initStatus = json['initStatus'] != null ? EnumLabRequestInitStatus.values[json['initStatus']] : null;
+    teeth = ((json['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
     date = CIA_DateConverters.fromBackendToDateOnly(json['date']);
     deliveryDate = CIA_DateConverters.fromBackendToDateOnly(json['deliveryDate']);
     entryById = json['entryById'];
@@ -226,32 +208,30 @@ class LAB_RequestModel {
     clearSurgicalTemplates = json['clear_surgical_templates'] ?? false;
     diagnosticSurveying = json['diagnostic_surveying'] ?? false;
 
-    if(steps!=null)
-      {
-        var assigned = steps!.firstWhereOrNull((element) => element.status==LabStepStatus.InProgress);
-        if(assigned==null)
-          {
-            assigned = steps!.firstWhereOrNull((element) => element.status==LabStepStatus.NotYet);
-          }
-        if(assigned!=null)
-          {
-            assignedTo =assignedTo?? assigned!.technician??DropDownDTO();
-            assignedToId =assignedToId?? assigned!.technicianId;
-          }
+    if (steps != null) {
+      var assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.InProgress);
+      if (assigned == null) {
+        assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.NotYet);
       }
+      if (assigned != null) {
+        assignedTo = assignedTo ?? assigned!.technician ?? DropDownDTO();
+        assignedToId = assignedToId ?? assigned!.technicianId;
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id ?? 0;
+    data['initStatus'] = this.initStatus != null ? this.initStatus!.index : null;
+    data['teeth'] = this.teeth ?? [];
     //data['date'] = CIA_DateConverters.fromDateTimeToBackend(this.date);
     data['deliveryDate'] = CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
     // data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
-    if(this.steps!=null && this.steps!=[])
-      {
-        this.assignedToId = steps![0].technicianId;
-      }
+    if (this.steps != null && this.steps != []) {
+      this.assignedToId = steps![0].technicianId;
+    }
     data['assignedToId'] = this.assignedToId;
     //data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
     data['source'] = (this.source ?? EnumLabRequestSources.CIA).index;
@@ -265,7 +245,7 @@ class LAB_RequestModel {
     data['paidAmount'] = this.paidAmount ?? 0;
     data['notes'] = this.notes;
     data['requiredStep'] = this.requiredStep;
-    data['steps'] = this.steps;
+    data['steps'] = (this.steps ?? []).map((e) => e.toJson()).toList();
     data['fileId'] = this.fileId;
     data['file'] = this.file != null ? this.file!.toJson() : null;
     data['full_zireon_crown'] = this.fullZireonCrown;
@@ -303,23 +283,32 @@ class LabRequestDataSource extends DataGridSource {
   List<LAB_RequestModel> models = [];
   var columns = ["ID", "Date", "Source", "Customer Name", "Customer Phone", "Patient Name", "Paid", "Status"];
 
+  String? from;
+  String? to;
+  String? search;
+  EnumLabRequestStatus? status;
+  EnumLabRequestSources? source;
+  bool? paid;
+
   /// Creates the labRequest data source class with required details.
   LabRequestDataSource() {
     init();
   }
 
   init() {
+    columns = ["ID", "Date", "Source", "Customer Name", "Customer Phone", "Patient Name", "Paid", "Status","Step"];
     _labRequestData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Date', value: e.date ?? ""),
-              DataGridCell<String>(columnName: 'Source', value: e.source!.name),
-              DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),
-              DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
-              DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
-              DataGridCell<String>(columnName: 'Paid', value: (e.paid??false)?"Paid":"Not Paid"),
-              DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
-            ]))
+      DataGridCell<int>(columnName: 'ID', value: e.id),
+      DataGridCell<String>(columnName: 'Date', value: e.date ?? ""),
+      DataGridCell<String>(columnName: 'Source', value: e.source!.name),
+      DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),
+      DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
+      DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
+      DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
+      DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
+      DataGridCell<String>(columnName: 'Step', value: (e.steps??[]).last.step!.name),
+    ]))
         .toList();
   }
 
@@ -332,6 +321,8 @@ class LabRequestDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
+          if(e.value is Widget)
+            return e.value;
       return Container(
         alignment: Alignment.center,
         child: Text(e.value.toString()),
@@ -347,6 +338,12 @@ class LabRequestDataSource extends DataGridSource {
     EnumLabRequestSources? source,
     bool? paid,
   }) async {
+    this.from = from;
+    this.to = to;
+    this.search = search;
+    this.status = status;
+    this.source = source;
+    this.paid = paid;
     API_Response res = await LAB_RequestsAPI.GetAllRequests(
       from: from,
       to: to,
@@ -360,6 +357,6 @@ class LabRequestDataSource extends DataGridSource {
     }
     init();
     notifyListeners();
-    return true;
+    return res;
   }
 }

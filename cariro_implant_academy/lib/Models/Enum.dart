@@ -97,3 +97,10 @@ enum EnumOralHygieneRating
   GoodHygiene,
   ExcellentHygiene,
 }
+enum EnumLabRequestInitStatus
+{
+  Scan,
+  Physical,
+  Cast,
+  Remake,
+}

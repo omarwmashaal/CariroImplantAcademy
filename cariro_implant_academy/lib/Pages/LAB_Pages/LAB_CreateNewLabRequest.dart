@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +8,11 @@ import '../SharedPages/LapRequestSharedPage.dart';
 class LAB_CreateNewLabRequest extends StatelessWidget {
   const LAB_CreateNewLabRequest({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+    siteController.setAppBarWidget();
     return Column(
       children: [
         TitleWidget(
