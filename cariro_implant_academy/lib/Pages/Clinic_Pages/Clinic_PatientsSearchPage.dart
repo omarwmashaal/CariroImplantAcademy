@@ -40,7 +40,7 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
             ],
             loadMoreFuntcion: dataSource.loadData,
             dataSource: dataSource,
-            columnNames: PatientInfoModel.columns,
+            columnNames: dataSource.columns,
             onCellTab: (value) {
               print(dataSource.models[value - 1].id);
               setState(() {

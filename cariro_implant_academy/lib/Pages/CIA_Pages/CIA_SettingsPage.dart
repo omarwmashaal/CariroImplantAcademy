@@ -52,7 +52,8 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
         Obx(
           () => TitleWidget(
             title: siteController.title.value,
-            showBackButton: false,
+            showBackButton: true,
+            mainPages: true,
           ),
         ),
         Expanded(
@@ -60,9 +61,9 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
             key: GlobalKey(),
             controller: tabsController,
             children: [
-              //  ViewUserData(userId: siteController.getUser().idInt!),
+                //ViewUserData(userId: siteController.getUser().idInt!),
               _SettingsPage(),
-              //_UsersSettingsPage()
+             _UsersSettingsPage()
             ],
           ),
         ),
@@ -72,7 +73,10 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["My Profile", "Settings", "Users"]);
+    if(siteController.getRole()=="admin")
+    siteController.setAppBarWidget(tabs: ["Settings", "Users"]);
+    else
+      siteController.setAppBarWidget();
   }
 }
 
@@ -1421,28 +1425,37 @@ class _UsersSettingsPageState extends State<_UsersSettingsPage> {
                                 controller: TextEditingController(text: newUser.dateOfBirth ?? ""),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CIA_TextFormField(
-                                label: "Graduated From",
-                                controller: TextEditingController(text: newUser.graduatedFrom ?? ""),
-                                onChange: (value) => newUser.graduatedFrom = value,
+                            Visibility(
+                              visible:role!="secretary" ,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: CIA_TextFormField(
+                                  label: "Graduated From",
+                                  controller: TextEditingController(text: newUser.graduatedFrom ?? ""),
+                                  onChange: (value) => newUser.graduatedFrom = value,
+                                ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CIA_TextFormField(
-                                label: "Class Year",
-                                controller: TextEditingController(text: newUser.classYear ?? ""),
-                                onChange: (value) => newUser.classYear = value,
+                            Visibility(
+                              visible:role!="secretary" ,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: CIA_TextFormField(
+                                  label: "Class Year",
+                                  controller: TextEditingController(text: newUser.classYear ?? ""),
+                                  onChange: (value) => newUser.classYear = value,
+                                ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: CIA_TextFormField(
-                                label: "Speciality",
-                                controller: TextEditingController(text: newUser.speciality ?? ""),
-                                onChange: (value) => newUser.speciality = value,
+                            Visibility(
+                              visible:role!="secretary" ,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: CIA_TextFormField(
+                                  label: "Speciality",
+                                  controller: TextEditingController(text: newUser.speciality ?? ""),
+                                  onChange: (value) => newUser.speciality = value,
+                                ),
                               ),
                             ),
                             Visibility(

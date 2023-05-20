@@ -199,11 +199,11 @@ class HbA1c {
   String? date;
   String? reading;
 
-  HbA1c({this.date = "", this.reading = ""});
+  HbA1c({this.date = "", this.reading = "0"});
 
   HbA1c.fromJson(Map<String, dynamic> json) {
     date =  CIA_DateConverters.fromBackendToDateOnly(json['date']);
-    reading = json['reading'] ?? "";
+    reading = json['reading'] == null || json['reading'] ==""? "0":json['reading'];
   }
 
   Map<String, dynamic> toJson() {

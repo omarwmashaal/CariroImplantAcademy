@@ -38,7 +38,7 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
               onTab: () async {
                 bool changePage = true;
                 if (widget.pages.firstWhere((element) => element.isSelected == true).onSave != null)
-                  widget.pages.firstWhere((element) => element.isSelected == true).onSave!();
+                  await widget.pages.firstWhere((element) => element.isSelected == true).onSave!();
 
                 /*await CIA_ShowPopUpSaveRequest(
                     context: context,

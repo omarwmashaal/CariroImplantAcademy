@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Widgets/Title.dart';
 
@@ -36,10 +37,7 @@ class _ViewUserDataState extends State<ViewUserData> {
         user = data as ApplicationUserModel;
         return Column(
           children: [
-            TitleWidget(
-              title: "User Data",
-              showBackButton: true,
-            ),
+
             Expanded(
                 flex: 10,
                 child: Padding(
@@ -215,7 +213,5 @@ class _ViewUserDataState extends State<ViewUserData> {
   }
 
   @override
-  void initState() {
-
-  }
+  void initState() {}
 }

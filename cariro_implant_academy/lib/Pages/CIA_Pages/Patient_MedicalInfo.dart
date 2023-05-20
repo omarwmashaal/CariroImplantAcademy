@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cariro_implant_academy/API/LoadinAPI.dart';
@@ -96,41 +97,41 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   ];
   int index = 0;
 
+  Uint8List? personalImageBytes;
   @override
   Widget build(BuildContext context) {
     siteController.setMedicalAppBar(
-      bar: MedicalSlidingBar(pages: [
+      bar: MedicalSlidingBar(
+          pages: [
         MedicalSlidingModel(
             name: "Medical Examination",
-            onSave: () {
-              MedicalAPI.UpdatePatientMedicalExamination(patientID, medicalExaminationModel);
-            }),
+            ),
         MedicalSlidingModel(
             name: "Dental History",
-            onSave: () {
-              MedicalAPI.UpdatePatientDentalHistory(patientID, dentalHistoryModel);
-            }),
+          ),
         MedicalSlidingModel(
             name: "Dental Examination",
-            onSave: () {
-              MedicalAPI.UpdatePatientDentalExamination(patientID, dentalExaminationModel);
-            }),
+           ),
         MedicalSlidingModel(
             name: "Non Surgical Treatment",
-            onSave: () {
-              MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
-              MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
-            }),
+          onSave: ()async{
+            await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
+            await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
+
+          }
+            ),
         MedicalSlidingModel(
             name: "Treatment Plan",
-            onSave: () {
-              MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
-            }),
+          onSave: ()async{
+            await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
+          }
+           ),
         MedicalSlidingModel(
             name: "Surgical Treatment",
-            onSave: () {
-              MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
-            }),
+          onSave: ()async{
+            await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
+          }
+           ),
         MedicalSlidingModel(
             name: "Prosthetic Treatment",
             onSave: () {
@@ -146,7 +147,18 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
     patient?.gender = "Male";
     return CIA_FutureBuilder(
-        loadFunction: PatientAPI.GetPatientData(patientID),
+        loadFunction: ()async{
+          var res = await PatientAPI.GetPatientData(patientID);
+          if(res.statusCode==200)
+            {
+              var temp = res.result as PatientInfoModel;
+              if (temp.profileImageId != null) await PatientAPI.DownloadImage(temp.profileImageId!).then((value) {
+                if (value.statusCode == 200)
+                  personalImageBytes = base64Decode(value.result as String);
+              },);
+            }
+          return res;
+        }(),
         onSuccess: (data) {
           patient = data as PatientInfoModel;
           return Container(
@@ -188,9 +200,20 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                             SizedBox(
                               height: 10,
                             ),
-                            Image(
-                              image: AssetImage("assets/ProfileImage.png"),
-                            ),
+
+                              personalImageBytes == null
+                                  ? Image(
+                                image: AssetImage("assets/ProfileImage.png"),
+                                height: 100,
+                                width: 100,
+                              )
+                                  : Image(
+                                image: MemoryImage(personalImageBytes!),
+                                height: 100,
+                                width: 100,
+                              ),
+
+
                             SizedBox(
                               height: 10,
                             ),
@@ -281,6 +304,12 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   @override
   void initState() {
     load = MedicalAPI.GetPatientMedicalExamination(patientID);
+  }
+
+
+  @override
+  void dispose() async{
+    await MedicalAPI.UpdatePatientMedicalExamination(patientID, medicalExaminationModel);
   }
 
   @override
@@ -796,9 +825,54 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   label: "Operator Comments",
                   controller: TextEditingController(text: medicalExaminationModel.operatorComments)),
               FormTextKeyWidget(text: "Drugs Taken by patient"),
-              CIA_IncrementalTextField(
-                label: "Drug Name",
+              StatefulBuilder(
+                builder: (context, setState) {
+                  int index = 0;
+                  if(medicalExaminationModel.drugsTaken!.isEmpty) medicalExaminationModel.drugsTaken!.add("");
+                  return Column(
+                    children: medicalExaminationModel.drugsTaken!
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: Row(
+                              children: [
+                                Text(() {
+                                  index += 1;
+                                  return index.toString();
+                                }()),
+                                SizedBox(width:10),
+                                Expanded(
+                                  child: CIA_TextFormField(
+                                    label: "Drug",
+                                    controller: TextEditingController(text: e),
+                                    onChange: (v) {
+                                      e = v;
+                                      medicalExaminationModel.drugsTaken![index-1] = v;
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() => medicalExaminationModel.drugsTaken!.add(""));
+                                  },
+                                  icon: Icon(Icons.add),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() => medicalExaminationModel.drugsTaken!.remove(e));
+                                  },
+                                  icon: Icon(Icons.remove),
+                                ),
+                                Expanded(child: SizedBox())
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
               ),
+
             ]);
           } else {
             return Center(
@@ -823,6 +897,12 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   Color clench = Color_TextFieldBorder;
   String tobacco = "0";
   late Future<API_Response> load;
+
+
+  @override
+  void dispose() async{
+    await MedicalAPI.UpdatePatientDentalHistory(patientID, dentalHistoryModel);
+  }
 
   @override
   void initState() {
@@ -988,6 +1068,13 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   String selectedStatus = "";
   bool mobilityDegrees = false;
   late Future load;
+
+
+  @override
+  void dispose() async{
+    await MedicalAPI.UpdatePatientDentalExamination(patientID, dentalExaminationModel);
+
+  }
 
   @override
   void initState() {
@@ -1410,6 +1497,12 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   late Future load;
 
   @override
+  void dispose() async{
+    await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
+    await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
+  }
+
+  @override
   void initState() {
     load = loadFuntionc();
   }
@@ -1443,9 +1536,9 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
           if (snapshot.hasData) {
             return CIA_MedicalPagesWidget(children: [
               CIA_TextFormField(
-                onChange: (value)  {
+                onChange: (value) {
                   nonSurgicalTreatment.treatment = value;
-                   MedicalAPI.CheckNonSurgicalTreatementTeethStatus(value).then((value) {
+                  MedicalAPI.CheckNonSurgicalTreatementTeethStatus(value).then((value) {
                     if (value.statusCode == 200) {
                       if (_getxClass.containedTeeth.value != value.result as List<int>) _getxClass.containedTeeth.value = value.result as List<int>;
                     }
@@ -1708,11 +1801,18 @@ class _PatientTreatmentPlan extends StatefulWidget {
 }
 
 class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
+
   @override
   Widget build(BuildContext context) {
     return CIA_TeethTreatmentPlanWidget(
       patientID: patientID,
     );
+  }
+
+  @override
+  void dispose() async{
+    await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
+
   }
 }
 
@@ -1724,12 +1824,19 @@ class _PatientSurgicalTreatment extends StatefulWidget {
 }
 
 class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
+
   @override
   Widget build(BuildContext context) {
     return CIA_TeethTreatmentPlanWidget(
       patientID: patientID,
       surgical: true,
     );
+  }
+
+  @override
+  void dispose() async{
+    await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
+
   }
 }
 

@@ -28,84 +28,11 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
     return Row(
       children: [
         //TODO: Remove onrole change
-        Expanded(
-            child: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: DrawerItems(
-                onSiteChange: () => setState(
-                  () {},
-                ),
-              ),
-            ),
-            siteController.getRole() != "admin"
-                ? Container(
-                    color: Colors.white,
-                  )
-                : Expanded(
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          Divider(),
-                          FormTextKeyWidget(text: "Switch Sites"),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  siteController.setSite(Website.CIA);
-                                  setState(() {});
-                                  ;
-                                },
-                                child: Image(
-                                  image:
-                                      siteController.getSiteLogoBySite(Website.CIA),
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {
-                                  siteController.setSite(Website.Lab);
-                                  setState(() {});
-                                  ;
-                                },
-                                child: Image(
-                                  image:
-                                      siteController.getSiteLogoBySite(Website.Lab),
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {
-                                  siteController.setSite(Website.Clinic);
-                                  setState(() {});
-                                  ;
-                                },
-                                child: Image(
-                                  image: siteController
-                                      .getSiteLogoBySite(Website.Clinic),
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-          ],
-        )),
+        DrawerItems(
+          onSiteChange: () => setState(
+            () {},
+          ),
+        ),
         Expanded(
             flex: 7,
             child: Column(

@@ -50,7 +50,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                   }
                 },
                 label: "Reading",
-                controller: TextEditingController(text: item.reading),
+                controller: TextEditingController(text: item.reading??"0"),
               )),
           const SizedBox(width: 10),
           Expanded(
@@ -63,7 +63,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                   }
                 },
                 label: "Date",
-                controller: TextEditingController(text: item.date),
+                controller: TextEditingController(text: item.date??""),
               )),
           Expanded(
               child: items.last == item
@@ -73,7 +73,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                           widget.onChange!(items);
                         }
                         setState(() {
-                          items.add(HbA1c(date: "", reading: ""));
+                          items.add(HbA1c());
                         });
                       },
                       icon: Icon(Icons.add))

@@ -33,7 +33,6 @@ class PatientsSearchPage extends StatefulWidget {
 }
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
-  PatientDataSource dataSource = PatientDataSource();
   List<Widget> myPages = [];
   ValueNotifier<int> buildCount = ValueNotifier<int>(0);
 
@@ -48,9 +47,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
           builder: (context, bldcnt, child) {
             if (siteController.getRole() == "admin" || siteController.getRole() == "instructor" || siteController.getRole() == "assistant")
               myPages = [
-                _PatientSearch(
+                _PatientsMainPage(
                   key: GlobalKey(),
-                  dataSource: dataSource,
                 ),
                  PatientMedicalInfoPage(
                   key: GlobalKey(),
@@ -65,9 +63,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
               ];
              else
               myPages = [
-                _PatientSearch(
+                _PatientsMainPage(
                   key: GlobalKey(),
-                  dataSource: dataSource,
                 ),
 
                 ViewPatientPage(
@@ -87,9 +84,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   void initState() {
     if (siteController.getRole() == "admin" || siteController.getRole() == "instructor" || siteController.getRole() == "assistant")
       myPages = [
-        _PatientSearch(
+        _PatientsMainPage(
           key: GlobalKey(),
-          dataSource: dataSource,
         ),
         PatientMedicalInfoPage(
           key: GlobalKey(),
@@ -104,9 +100,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
       ];
     else
       myPages = [
-        _PatientSearch(
+        _PatientsMainPage(
           key: GlobalKey(),
-          dataSource: dataSource,
         ),
 
         ViewPatientPage(
@@ -118,16 +113,16 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   }
 }
 
-class _PatientSearch extends StatefulWidget {
-  _PatientSearch({Key? key, required this.dataSource}) : super(key: key);
+class _PatientsMainPage extends StatefulWidget {
+  _PatientsMainPage({Key? key}) : super(key: key);
 
-  PatientDataSource dataSource;
+
 
   @override
-  State<_PatientSearch> createState() => _PatientSearchState();
+  State<_PatientsMainPage> createState() => _PatientsMainPageState();
 }
 
-class _PatientSearchState extends State<_PatientSearch> {
+class _PatientsMainPageState extends State<_PatientsMainPage> {
   @override
   void initState() {
     if (siteController.getRole() == "secretary")
@@ -146,88 +141,7 @@ class _PatientSearchState extends State<_PatientSearch> {
       controller: tabsController,
       children:
       (){
-        List<Widget> r = [Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Obx(
-                        () => TitleWidget(
-                      title: siteController.title.value,
-                      showBackButton: false,
-                    ),
-                  ),
-                ),
-                CIA_PrimaryButton(
-                    label: "Add Patient",
-                    onTab: () {
-                      selectedPatientID = 0;
-                      internalPagesController.jumpToPage(2);
-                    })
-              ],
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: CIA_TextField(
-                              label: "Search",
-                              icon: Icons.search,
-                              onChange: (value) {
-                                _getXController.search.value = value;
-                                widget.dataSource.loadData(search: value, filter: _getXController.searchFilter.value);
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: HorizontalRadioButtons(
-                                    groupValue: "Name",
-                                    names: ["Name", "Phone", "All"],
-                                    onChange: (value) {
-                                      _getXController.searchFilter.value = value;
-                                    },
-                                  ),
-                                ),
-                                Expanded(child: SizedBox())
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: CIA_Table(
-                      columnNames: PatientInfoModel.columns,
-                      loadFunction: widget.dataSource.loadData,
-                      dataSource: widget.dataSource,
-                      onCellClick: (value) {
-                        print(widget.dataSource.models[value - 1].id);
-                        setState(() {
-                          selectedPatientID = widget.dataSource.models[value - 1].id!;
-                          print("");
-                        });
-
-                        internalPagesController.jumpToPage(1);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),];
+        List<Widget> r = [_PatientsSearch()];
         if (siteController.getRole() == "secretary")
           {
             //todo: VISITS LOG PAGE
@@ -307,7 +221,7 @@ class _PatientSearchState extends State<_PatientSearch> {
         else
           {
             //todo: My Patients
-            r.add(Container());
+            r.add(_PatientsSearch(myPatients: true,));
             //todo: VISITS LOG PAGE
             r.add(Container());
             //todo: Complains Page
@@ -387,3 +301,104 @@ class _PatientSearchState extends State<_PatientSearch> {
     );
   }
 }
+
+class _PatientsSearch extends StatefulWidget {
+  _PatientsSearch({Key? key, this.myPatients=false}) : super(key: key);
+
+  bool myPatients;
+  @override
+  State<_PatientsSearch> createState() => _PatientsSearchState();
+}
+
+class _PatientsSearchState extends State<_PatientsSearch> {
+  PatientDataSource dataSource = PatientDataSource();
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Obx(
+                    () => TitleWidget(
+                  title: siteController.title.value,
+                  showBackButton: false,
+                ),
+              ),
+            ),
+            CIA_PrimaryButton(
+                label: "Add Patient",
+                onTab: () {
+                  selectedPatientID = 0;
+                  internalPagesController.jumpToPage(2);
+                })
+          ],
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: CIA_TextField(
+                          label: "Search",
+                          icon: Icons.search,
+                          onChange: (value) {
+                            _getXController.search.value = value;
+                            dataSource.loadData(search: value, filter: _getXController.searchFilter.value,myPatients: widget.myPatients);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: HorizontalRadioButtons(
+                                groupValue: "Name",
+                                names: ["Name", "Phone", "All"],
+                                onChange: (value) {
+                                  _getXController.searchFilter.value = value;
+                                },
+                              ),
+                            ),
+                            Expanded(child: SizedBox())
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: CIA_Table(
+                  columnNames: dataSource.columns,
+                  loadFunction: ()async{
+                    return await dataSource.loadData(myPatients: widget.myPatients);
+                  },
+                  dataSource: dataSource,
+                  onCellClick: (value) {
+                    print(dataSource.models[value - 1].id);
+                    setState(() {
+                      selectedPatientID = dataSource.models[value - 1].id!;
+                      print("");
+                    });
+
+                    internalPagesController.jumpToPage(1);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+

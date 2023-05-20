@@ -4,8 +4,10 @@ import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:sidebarx/sidebarx.dart';
 
 import '../Constants/Controllers.dart';
 import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
@@ -24,6 +26,8 @@ import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 
 class PagesController extends PageController {
   static PagesController instance = Get.find();
+  static int index = 0;
+  static int previousIndex = 0;
 
   PageView MainPageRoutes() {
     String role = siteController.getRole();
@@ -38,14 +42,16 @@ class PagesController extends PageController {
                 child: PatientsSearchPage(),
               ),
               Container(
-                child:  Center(
-                  child:  UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
+                child: Center(
+                  child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
                 ),
               ),
               Container(
-                child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
+                child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
               ),
-              Container(child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),),
+              Container(
+                child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),
+              ),
               Container(
                 child: Center(
                   child: StockSearchPage(),
@@ -72,12 +78,12 @@ class PagesController extends PageController {
                   child: LabRequestsSearchPage(),
                 ),
                 Container(
-                  child:  Center(
+                  child: Center(
                     child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
                   ),
                 ),
                 Container(
-                  child:  Center(child: LAB_StockSearchPage()),
+                  child: Center(child: LAB_StockSearchPage()),
                 ),
                 LAB_CashFlowsSearchPage(),
               ],
@@ -87,7 +93,7 @@ class PagesController extends PageController {
               physics: NeverScrollableScrollPhysics(),
               controller: pagesController,
               children: [
-                LAB_MyTasksPage(),
+                LabRequestsSearchPage(),
               ],
             );
           }
@@ -102,12 +108,12 @@ class PagesController extends PageController {
                 child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Technician)),
               ),
               Container(
-                child:  Center(
-                  child:UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
+                child: Center(
+                  child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
                 ),
               ),
               Container(
-                child:  Center(child: LAB_StockSearchPage()),
+                child: Center(child: LAB_StockSearchPage()),
               ),
               LAB_CashFlowsSearchPage()
             ],
@@ -137,62 +143,100 @@ class PagesController extends PageController {
         }
       default:
         {
-          return PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: pagesController,
-              children: []);
+          return PageView(physics: NeverScrollableScrollPhysics(), controller: pagesController, children: []);
         }
     }
   }
 
-  static List<SideMenuItem> DrawerItems() {
+  @override
+  void jumpToPage(int page) {
+    previousIndex = index;
+    index = page;
+    super.jumpToPage(page);
+  }
+
+  goBack() {
+    //index--;
+    index = previousIndex;
+    super.jumpToPage(index);
+  }
+
+  static List<SidebarXItem> DrawerItems() {
     String role = siteController.getRole();
 
     switch (siteController.getSite()) {
       case Website.CIA:
         {
           return [
-            SideMenuItem(
-              priority: 0,
-              title: 'Patients',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'atients',
+              onTap: () {
                 pagesController.jumpToPage(0);
               },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Patients",
+                    child: Icon(IconDataSolid(
+                int.parse('0x00050'),
+              )),
+                  )),
             ),
-            SideMenuItem(
-              priority: 1,
-              title: 'Assistants',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'ssistants',
+              onTap: () {
                 pagesController.jumpToPage(1);
               },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Assistants",
+                    child: Icon(IconDataSolid(
+                int.parse('0x00041'),
+              )),
+                  )),
             ),
-            SideMenuItem(
-              priority: 2,
-              title: 'Instructors',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'nstructors',
+              onTap: () {
                 pagesController.jumpToPage(2);
               },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Instructors",
+                    child: Icon(IconDataSolid(
+                int.parse('0x00049'),
+              )),
+                  )),
             ),
-            SideMenuItem(
-              priority: 3,
-              title: 'Candidates',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'andidates',
+              onTap: () {
                 pagesController.jumpToPage(3);
               },
+              iconWidget: Container(
+                  child:Tooltip(
+                    message: "Candidates",
+                    child: Icon(IconDataSolid(
+                int.parse('0x00043'),
+              )),
+                  )),
             ),
-            SideMenuItem(
-              priority: 4,
-              title: 'Stock',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'Stock',
+              onTap: () {
                 pagesController.jumpToPage(4);
               },
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Stock",child: Icon(Icons.store))),
             ),
-            SideMenuItem(
-              priority: 5,
-              title: 'Cash Flow',
-              onTap: (x,y) {
+            SidebarXItem(
+              label: 'Cash Flow',
+              onTap: () {
                 pagesController.jumpToPage(5);
               },
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Cash Flow",child: Icon(Icons.attach_money))),
             ),
           ];
         }
@@ -200,84 +244,84 @@ class PagesController extends PageController {
         {
           if (role == "technician") {
             return [
-              SideMenuItem(
-                priority: 0,
-                title: 'My Tasks',
-                onTap: (x,y) {
-                  pagesController.jumpToPage(0);
-                },
+              SidebarXItem(
+                  label: 'My Tasks',
+                  onTap: () {
+                    pagesController.jumpToPage(0);
+                  },
+                iconWidget: Container(
+                    child: Tooltip(
+                      message: "My Tasks",
+                      child: Icon(Icons.task),
+                    )),
               ),
             ];
           }
           return [
-            SideMenuItem(
-              priority: 0,
-              title: 'Lab Requests',
-              onTap: (x,y) {
-                pagesController.jumpToPage(0);
-              },
-            ),
-            SideMenuItem(
-              priority: 1,
-              title: 'Technicians',
-              onTap: (x,y) {
-                pagesController.jumpToPage(1);
-              },
-            ),
-            SideMenuItem(
-              priority: 2,
-              title: 'Customers',
-              onTap: (x,y) {
-                pagesController.jumpToPage(2);
-              },
-            ),
-            SideMenuItem(
-              priority: 3,
-              title: 'Stock',
-              onTap: (x,y) {
-                pagesController.jumpToPage(3);
-              },
-            ),
-            SideMenuItem(
-              priority:4,
-              title: 'Cash Flow',
-              onTap: (x,y) {
-                pagesController.jumpToPage(4);
-              },
-            ),
+            SidebarXItem(
+                label: 'Lab Requests',
+                onTap: () {
+                  pagesController.jumpToPage(0);
+                },
+                iconWidget: Container()),
+            SidebarXItem(
+                label: 'Technicians',
+                onTap: () {
+                  pagesController.jumpToPage(1);
+                },
+                iconWidget: Container()),
+            SidebarXItem(
+                label: 'Customers',
+                onTap: () {
+                  pagesController.jumpToPage(2);
+                },
+                iconWidget: Container()),
+            SidebarXItem(
+                label: 'Stock',
+                onTap: () {
+                  pagesController.jumpToPage(3);
+                },
+                iconWidget: Container()),
+            SidebarXItem(
+                label: 'Cash Flow',
+                onTap: () {
+                  pagesController.jumpToPage(4);
+                },
+                iconWidget: Container()),
           ];
         }
       case Website.Clinic:
         {
           return [
-            SideMenuItem(
-              priority: 0,
-              title: 'Patients',
-              onTap: (x,y) {
+            /* SideMenuItem(
+
+              label: 'Patients',
+              onTap: () {
                 pagesController.jumpToPage(0);
               },
             ),
             SideMenuItem(
-              priority: 1,
-              title: 'Doctors',
-              onTap: (x,y) {
+
+              label: 'Doctors',
+              onTap: () {
                 pagesController.jumpToPage(1);
               },
             ),
             SideMenuItem(
-              priority: 2,
-              title: 'Stock',
-              onTap: (x,y) {
+
+              label: 'Stock',
+              onTap: () {
                 pagesController.jumpToPage(2);
               },
             ),
             SideMenuItem(
-              priority: 3,
-              title: 'Cash Flow',
-              onTap: (x,y) {
+
+              label: 'Cash Flow',
+              onTap: () {
                 pagesController.jumpToPage(3);
               },
             ),
+          */
           ];
           break;
         }
@@ -292,6 +336,7 @@ class PagesController extends PageController {
 class TabsController extends PageController {
   static TabsController instance = Get.find();
   RxInt index = 0.obs;
+
   @override
   void jumpToPage(int page) {
     index.value = page;

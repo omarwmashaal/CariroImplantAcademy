@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:cariro_implant_academy/API/HTTP.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Models/PaymentLogModel.dart';
 import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
@@ -26,12 +29,12 @@ class PatientAPI {
     return response;
   }
 
-  static Future<API_Response> ListPatients({String? search, String? filter}) async {
+  static Future<API_Response> ListPatients({String? search, String? filter, bool? myPatients}) async {
     API_Response response = API_Response();
     if (search != null)
-      response = await HTTPRequest.Get("PatientInfo/ListPatients?search=$search&filter=$filter");
+      response = await HTTPRequest.Get("PatientInfo/ListPatients?search=$search&filter=$filter&myPatients=${myPatients ?? "false"}");
     else
-      response = await HTTPRequest.Get("PatientInfo/ListPatients");
+      response = await HTTPRequest.Get("PatientInfo/ListPatients?myPatients=${myPatients ?? "false"}");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List).map((e) => PatientInfoModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -234,7 +237,7 @@ class PatientAPI {
     var response = await HTTPRequest.Get("PatientInfo/GetTotalDebt?id=$id");
 
     if (response.statusCode == 200) {
-      response.result = response.result??0 as int;
+      response.result = response.result ?? 0 as int;
     }
     return response;
   }
@@ -248,4 +251,21 @@ class PatientAPI {
     return response;
   }
 
+  static Future<API_Response> UploadImage(int id, EnumImageType type, Uint8List imageBytess) async {
+    var response = await HTTPRequest.UploadImage("PatientInfo/UploadImage?id=$id&type=${type.index}", imageBytess);
+    return response;
+  }
+
+  static Future<API_Response> AddToMyPatients(int id) async {
+    var response = await HTTPRequest.Post("PatientInfo/AddToMyPatients?id=$id", null);
+    return response;
+  }
+  static Future<API_Response> RemoveFromMyPatients(int id) async {
+    var response = await HTTPRequest.Post("PatientInfo/RemoveFromMyPatients?id=$id", null);
+    return response;
+  }
+  static Future<API_Response> DownloadImage(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/DownloadImage?id=$id");
+    return response;
+  }
 }

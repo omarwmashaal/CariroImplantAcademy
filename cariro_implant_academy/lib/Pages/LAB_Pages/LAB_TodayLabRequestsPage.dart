@@ -48,6 +48,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
     return PageView.builder(
       itemBuilder: (context, index) {
         var pages = [

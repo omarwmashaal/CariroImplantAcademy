@@ -1,8 +1,10 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'ApplicationUserModel.dart';
@@ -11,6 +13,7 @@ import 'LAB_CustomerModel.dart';
 
 class PatientInfoModel {
   String? name;
+  String? nationalId;
   int? id;
   String? gender;
   String? phone;
@@ -26,32 +29,56 @@ class PatientInfoModel {
   ApplicationUserModel? customer;
   List<LAB_RequestModel>? requests;
   String? labDateOfVisit;
+  String? profilePhoto;
+  String? idBackPhoto;
+  String? idFrontPhoto;
+  int? profileImageId;
+  int? idFrontImageId;
+  int? idBackImageId;
+  int? doctorId;
+  DropDownDTO? doctor;
+  String? registerationDate;
+  DropDownDTO? registeredBy;
 
   PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus, this.patientType});
 
   PatientInfoModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     id = json['id'];
+    doctor = DropDownDTO.fromJson(json['doctor'] ?? Map<String, dynamic>());
+    doctorId = json['doctorID'];
+    registeredBy = DropDownDTO.fromJson(json['registeredBy'] ?? Map<String, dynamic>());
+    registerationDate =CIA_DateConverters.fromBackendToDateTime( json['registerationDate']);
+    idBackImageId = json['idBackImageId'];
+    idFrontImageId = json['idFrontImageId'];
+    profileImageId = json['profileImageId'];
     gender = json['gender'];
     phone = json['phone'];
+    nationalId = json['nationalId'];
     phone2 = json['phone2'];
     dateOfBirth = json['dateOfBirth'];
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
+    profilePhoto = json['profilePhoto'];
+    idBackPhoto = json['idBackPhoto'];
+    idFrontPhoto = json['idFrontPhoto'];
     relativePatient = json['relativePatient'] != null ? DropDownDTO.fromJson(json['relativePatient']) : DropDownDTO();
     relativePatientId = json['relativePatientId'];
-    patientType = EnumPatientType.values[json['patientType']??0];
+    patientType = EnumPatientType.values[json['patientType'] ?? 0];
     customerId = json['customerId'];
-    customer = ApplicationUserModel.fromJson(json['customer']??Map<String,dynamic>());
-    requests = ((json['requests']??[]) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e)).toList();
+    customer = ApplicationUserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
+    requests = ((json['requests'] ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e)).toList();
     labDateOfVisit = CIA_DateConverters.fromDateTimeToBackend(json['labDateOfVisit']);
-
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['idBackImageId'] = this.idBackImageId;
+    data['idFrontImageId'] = this.idFrontImageId;
+    data['profileImageId'] = this.profileImageId;
+    data['nationalId'] = this.nationalId;
     data['id'] = this.id;
     data['gender'] = this.gender;
     data['phone'] = this.phone;
@@ -61,22 +88,34 @@ class PatientInfoModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['relativePatientId'] = this.relativePatientId;
-    data['patientType'] = (this.patientType??EnumPatientType.CIA).index;
+    data['patientType'] = (this.patientType ?? EnumPatientType.CIA).index;
     data['customerId'] = this.customerId;
-    data['customer'] = this.customer!=null?this.customer!.toJson():null;
-    data['requests'] = (this.requests??[]).map((e) => e.toJson()).toList();
+    data['customer'] = this.customer != null ? this.customer!.toJson() : null;
+    data['requests'] = (this.requests ?? []).map((e) => e.toJson()).toList();
     data['labDateOfVisit'] = CIA_DateConverters.fromDateTimeToBackend(this.labDateOfVisit);
 
     return data;
   }
 
   static List<PatientInfoModel> models = <PatientInfoModel>[];
-  static List<String> columns = ["ID", "Name", "Phone", "Gender", "Marital Stats", "Relative"];
 //PatientDataSource dataSource = PatientDataSource();
 }
 
 class PatientDataSource extends DataGridSource {
   List<PatientInfoModel> models = <PatientInfoModel>[];
+  List<String> columns = [
+    "ID",
+    "Name",
+    "Phone",
+    "Gender",
+    "Marital Stats",
+    "Relative",
+    "Add to my patients",
+  ];
+
+  String? search;
+  String? filter;
+  bool myPatients = false;
 
   /// Creates the patient data source class with required details.
   PatientDataSource() {
@@ -84,16 +123,72 @@ class PatientDataSource extends DataGridSource {
   }
 
   init() {
-    _patientData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Name', value: e.name),
-              DataGridCell<String>(columnName: 'Phone', value: e.phone),
-              DataGridCell<String>(columnName: 'Gender', value: e.gender),
-              DataGridCell<String>(columnName: 'Marital Status', value: e.maritalStatus),
-              DataGridCell<String>(columnName: 'Relative', value: e.relativePatient!.name!),
-            ]))
-        .toList();
+    if (siteController.getRole() != "secretary")
+      {
+        columns = [
+          "ID",
+          "Name",
+          "Phone",
+          "Gender",
+          "Marital Stats",
+          "Relative",
+          "Add to my patients",
+        ];
+        _patientData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.id),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Phone', value: e.phone),
+          DataGridCell<String>(columnName: 'Gender', value: e.gender),
+          DataGridCell<String>(columnName: 'Marital Status', value: e.maritalStatus),
+          DataGridCell<String>(columnName: 'Relative', value: e.relativePatient!.name!),
+          DataGridCell<Widget>(
+            columnName: 'Add to my patients',
+            value: Center(
+              child: e.doctorId == siteController.getUser().idInt
+                  ? IconButton(
+                icon: Icon(Icons.remove),
+                onPressed: () async {
+                  await PatientAPI.RemoveFromMyPatients(e.id!);
+                  await loadData(myPatients: myPatients, search: search, filter: filter);
+                },
+              )
+                  : e.doctorId == null
+                  ? IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () async {
+                  await PatientAPI.AddToMyPatients(e.id!);
+                  await loadData(myPatients: myPatients, search: search, filter: filter);
+                },
+              )
+                  : Text(e.doctor!.name!),
+            ),
+          ),
+        ]))
+            .toList();
+      }
+    else
+      {
+        columns = [
+          "ID",
+          "Name",
+          "Phone",
+          "Gender",
+          "Marital Stats",
+          "Relative",
+        ];
+        _patientData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'ID', value: e.id),
+          DataGridCell<String>(columnName: 'Name', value: e.name),
+          DataGridCell<String>(columnName: 'Phone', value: e.phone),
+          DataGridCell<String>(columnName: 'Gender', value: e.gender),
+          DataGridCell<String>(columnName: 'Marital Status', value: e.maritalStatus),
+          DataGridCell<String>(columnName: 'Relative', value: e.relativePatient!.name!),
+        ]))
+            .toList();
+      }
+
   }
 
   List<DataGridRow> _patientData = [];
@@ -105,16 +200,23 @@ class PatientDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
+      if (e.value is Widget) return e.value;
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(right: 50),
         child: Text(e.value.toString()),
       );
     }).toList());
   }
 
-  Future<bool> loadData({String? search, String? filter}) async {
-    var res = await PatientAPI.ListPatients(search: search, filter: filter);
+  Future<bool> loadData({
+    String? search,
+    String? filter,
+    bool myPatients = false,
+  }) async {
+    this.search = search;
+    this.filter = filter;
+    this.myPatients = myPatients;
+    var res = await PatientAPI.ListPatients(search: search, filter: filter, myPatients: myPatients);
     if (res.statusCode! > 199 && res.statusCode! < 300) {
       models = res.result as List<PatientInfoModel>;
     }

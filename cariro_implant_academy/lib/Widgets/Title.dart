@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import '../Constants/Fonts.dart';
 
 class TitleWidget extends StatelessWidget {
-  TitleWidget({Key? key, required this.title, this.showBackButton = false})
+  TitleWidget({Key? key, required this.title, this.mainPages = false, this.showBackButton = false})
       : super(key: key);
 
   String title;
   bool showBackButton = false;
+  bool mainPages= false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,9 @@ class TitleWidget extends StatelessWidget {
   }
 
   bool onWillPop() {
+    if(mainPages)
+      pagesController.goBack();
+    else
     internalPagesController.goBack();
     return false;
   }

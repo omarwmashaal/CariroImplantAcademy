@@ -43,6 +43,7 @@ import 'Controllers/RolesController.dart';
 import 'Models/Enum.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
+import 'Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
 import 'Pages/SharedPages/LapRequestSharedPage.dart';
@@ -96,12 +97,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E"
-    );
-        siteController.setSite(Website.CIA);
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E");
+    siteController.setSite(Website.CIA);
 
-    siteController.setUser(ApplicationUserModel(name: "tec1", idInt: 6, phoneNumber: "01127744835"));
-    siteController.setRole("technician");
+    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
+    siteController.setRole("admin");
     patientID = 2;
     MasterController = PatientMedicalController(PatientInfoModel(id: 2));
     StockDataSource dataSource1 = StockDataSource();
@@ -110,7 +110,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //body: DashBoardPage(),
 
       backgroundColor: Color_Background,
-body: LabRequestsSearchPage()
+      body: AuthenticationPage() /*SiteLayout(
+        largeScreen: CIA_LargeScreen(),
+      ),*/
     );
   }
 }

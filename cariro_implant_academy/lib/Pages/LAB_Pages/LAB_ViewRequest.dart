@@ -57,14 +57,31 @@ class LAB_ViewRequestPage extends StatelessWidget {
                         var medicalInfo = request.getMedicalInfoList();
                         CIA_ShowPopUp(
                           context: context,
-                          child: ListView.builder(
-                            itemCount: medicalInfo.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(medicalInfo[index]),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  FormTextKeyWidget(text: "Teeth: "),
+                                  FormTextValueWidget(text: (){
+                                    var r = "";
+                                    (request.teeth??[]).forEach((e) => r+="${e.toString()}, ");
+                                    return r;
+                                  }()),
+                                ],
+                              ),
+                              Container(alignment:AlignmentDirectional.centerStart ,child: FormTextKeyWidget(text: "Required: ")),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: medicalInfo.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(medicalInfo[index]),
 
-                              );
-                            },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       })

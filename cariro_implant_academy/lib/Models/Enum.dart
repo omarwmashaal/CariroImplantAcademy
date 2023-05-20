@@ -104,3 +104,11 @@ enum EnumLabRequestInitStatus
   Cast,
   Remake,
 }
+
+enum EnumImageType
+{
+  PatientProfile,
+  IdBack,
+  IdFront,
+  Remake,
+}

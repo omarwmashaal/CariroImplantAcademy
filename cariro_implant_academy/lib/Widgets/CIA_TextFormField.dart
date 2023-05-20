@@ -147,7 +147,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
           },
           inputFormatters:widget.inputFormatter!=null?
-          widget.inputFormatter!: ( widget.isHours || widget.isMinutes || widget.isNumber
+          widget.inputFormatter!: ( widget.isHours || widget.isMinutes || widget.isNumber || widget.isPhoneNumber
               ? [
                   FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                 ]

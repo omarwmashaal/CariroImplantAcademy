@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cariro_implant_academy/API/LoadinAPI.dart';
 import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
@@ -22,6 +25,8 @@ import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
@@ -56,12 +61,21 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
   bool addNew = false;
   FocusNode next = FocusNode();
 
+  Uint8List? personalImageBytes;
+  Uint8List? frontIdImageBytes;
+  Uint8List? backIdImageBytes;
+  double imageWidth = 200;
+  double imageHeight = 200;
+
   @override
   void initState() {
     addNew = widget.patientID == 0;
+
     if (addNew) {
+      siteController.setAppBarWidget();
       patient.maritalStatus = "Married";
       patient.gender = "Male";
+      patient.patientType = EnumPatientType.CIA;
       _getxController.searchList.value = [];
       _getxController.duplicateFound.value = PatientInfoModel();
     }
@@ -97,7 +111,9 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                             children: [
                               Row(
                                 children: [
-                                  CIA_PrimaryButton(
+                                  addNew
+                                      ? Container()
+                                      : CIA_PrimaryButton(
                                       label: "Show Receipts and Payments",
                                       onTab: () {
                                         ReceiptDataSource dataSource = ReceiptDataSource();
@@ -124,13 +140,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                         ReceiptModel receipt = ReceiptModel();
 
                                                         return CIA_FutureBuilder(
-                                                          loadFunction: ()async{
-                                                            await logDataSource.loadData(
-                                                                id: widget.patientID, receiptId: dataSource.models[index - 1].id!);
+                                                          loadFunction: () async {
+                                                            await logDataSource.loadData(id: widget.patientID, receiptId: dataSource.models[index - 1].id!);
                                                             await dataSource.loadData(id: widget.patientID);
-                                                            return  await PatientAPI.GetReceiptById(dataSource.models[index - 1].id!);
+                                                            return await PatientAPI.GetReceiptById(dataSource.models[index - 1].id!);
                                                           }(),
-                                                        onSuccess: (data) {
+                                                          onSuccess: (data) {
                                                             receipt = data as ReceiptModel;
                                                             return Row(
                                                               children: [
@@ -152,7 +167,9 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                               Row(
                                                                                 children: [
                                                                                   Expanded(child: FormTextKeyWidget(text: "Patient ID")),
-                                                                                  Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                                                                  Expanded(
+                                                                                      child: FormTextValueWidget(
+                                                                                          text: (receipt.patient!.id ?? "").toString())),
                                                                                 ],
                                                                               ),
                                                                               SizedBox(height: 10),
@@ -180,8 +197,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                         padding: const EdgeInsets.only(bottom: 10),
                                                                                         child: Row(
                                                                                           children: [
-                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
-                                                                                            Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
+                                                                                            Expanded(
+                                                                                                child: FormTextKeyWidget(
+                                                                                                    text: "tooth ${element.tooth.toString()} Crown")),
+                                                                                            Expanded(
+                                                                                                child: FormTextValueWidget(
+                                                                                                    text: (element.crown ?? 0).toString())),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -192,8 +213,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                         padding: const EdgeInsets.only(bottom: 10),
                                                                                         child: Row(
                                                                                           children: [
-                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
-                                                                                            Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
+                                                                                            Expanded(
+                                                                                                child: FormTextKeyWidget(
+                                                                                                    text: "tooth ${element.tooth.toString()} Scaling")),
+                                                                                            Expanded(
+                                                                                                child: FormTextValueWidget(
+                                                                                                    text: (element.scaling ?? 0).toString())),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -204,8 +229,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                         padding: const EdgeInsets.only(bottom: 10),
                                                                                         child: Row(
                                                                                           children: [
-                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
-                                                                                            Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
+                                                                                            Expanded(
+                                                                                                child: FormTextKeyWidget(
+                                                                                                    text: "tooth ${element.tooth.toString()} Extraction")),
+                                                                                            Expanded(
+                                                                                                child: FormTextValueWidget(
+                                                                                                    text: (element.extraction ?? 0).toString())),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -216,8 +245,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                         padding: const EdgeInsets.only(bottom: 10),
                                                                                         child: Row(
                                                                                           children: [
-                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
-                                                                                            Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
+                                                                                            Expanded(
+                                                                                                child: FormTextKeyWidget(
+                                                                                                    text: "tooth ${element.tooth.toString()} Restoration")),
+                                                                                            Expanded(
+                                                                                                child: FormTextValueWidget(
+                                                                                                    text: (element.restoration ?? 0).toString())),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -228,8 +261,13 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                         padding: const EdgeInsets.only(bottom: 10),
                                                                                         child: Row(
                                                                                           children: [
-                                                                                            Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
-                                                                                            Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
+                                                                                            Expanded(
+                                                                                                child: FormTextKeyWidget(
+                                                                                                    text:
+                                                                                                    "tooth ${element.tooth.toString()} Root Canal Treatment")),
+                                                                                            Expanded(
+                                                                                                child: FormTextValueWidget(
+                                                                                                    text: (element.rootCanalTreatment ?? 0).toString())),
                                                                                           ],
                                                                                         ),
                                                                                       ),
@@ -281,13 +319,14 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                           onTab: () async {
                                                                             int newPrice = 0;
                                                                             CIA_ShowPopUp(
-                                                                              height:200,
+                                                                              height: 200,
                                                                               context: context,
-                                                                              onSave: ()async{
-                                                                                var res = await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPrice);
-                                                                                if(res.statusCode==200) {
+                                                                              onSave: () async {
+                                                                                var res =
+                                                                                await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPrice);
+                                                                                if (res.statusCode == 200) {
                                                                                   ShowSnackBar(isSuccess: true);
-                                                                                  setState((){});
+                                                                                  setState(() {});
                                                                                 }
                                                                               },
                                                                               child: CIA_TextFormField(
@@ -296,7 +335,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                 controller: TextEditingController(),
                                                                                 onChange: (v) => newPrice = int.parse(v),
                                                                                 validator: (value) {
-                                                                                  if(int.parse(value)>= receipt.unpaid!)
+                                                                                  if (int.parse(value) >= receipt.unpaid!)
                                                                                     value = receipt.unpaid!.toString();
                                                                                   return value;
                                                                                 },
@@ -312,7 +351,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                 Expanded(
                                                                   child: Column(
                                                                     children: [
-                                                                      FormTextKeyWidget(text: "Payment log for receipt Id ${dataSource.models[index - 1].id}"),
+                                                                      FormTextKeyWidget(
+                                                                          text: "Payment log for receipt Id ${dataSource.models[index - 1].id}"),
                                                                       Expanded(
                                                                         child: CIA_Table(
                                                                           columnNames: logDataSource.columns,
@@ -325,12 +365,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                       ),
                                                                       FormTextKeyWidget(
                                                                           text: "Total paid ${() {
-                                                                        int paid = 0;
-                                                                        logDataSource.models.forEach((element) {
-                                                                          paid += element.paidAmount ?? 0;
-                                                                        });
-                                                                        return paid.toString();
-                                                                      }()}"),
+                                                                            int paid = 0;
+                                                                            logDataSource.models.forEach((element) {
+                                                                              paid += element.paidAmount ?? 0;
+                                                                            });
+                                                                            return paid.toString();
+                                                                          }()}"),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -359,8 +399,9 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   ),
                                   visible: !addNew),
                               Visibility(
-                                visible: addNew,
+                                visible: addNew && siteController.getSite() == Website.Lab,
                                 child: CIA_MultiSelectChipWidget(
+                                  key: GlobalKey(),
                                   singleSelect: true,
                                   onChange: (item, isSelected) {
                                     if (isSelected) {
@@ -372,214 +413,240 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                     }
                                   },
                                   labels: [
-                                    CIA_MultiSelectChipWidgeModel(label: "CIA"),
-                                    CIA_MultiSelectChipWidgeModel(label: "Clinic"),
-                                    CIA_MultiSelectChipWidgeModel(label: "OutSource"),
+                                    CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
+                                    CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
+                                    CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
                                   ],
                                 ),
                               ),
                               addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.name = value;
-                                      },
-                                      label: "Name",
-                                      controller: TextEditingController(text: patient?.name == null ? "" : patient?.name),
-                                    )
+                                onChange: (value) {
+                                  patient.name = value;
+                                },
+                                label: "Name",
+                                controller: TextEditingController(text: patient?.name == null ? "" : patient?.name),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Name")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Name")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name))
+                                ],
+                              ),
+                              addNew
+                                  ? CIA_TextFormField(
+                                onChange: (value) {
+                                  patient.nationalId = value;
+                                },
+                                isNumber: true,
+                                label: "National ID",
+                                controller: TextEditingController(text: patient?.nationalId == null ? "" : patient?.nationalId),
+                              )
+                                  : Row(
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "nationalId")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.nationalId == null ? "" : patient?.nationalId))
+                                ],
+                              ),
                               addNew
                                   ? HorizontalRadioButtons(
-                                      names: ["Male", "Female"],
-                                      groupValue: "Male",
-                                      onChange: (p0) {
-                                        patient.gender = p0;
-                                      },
-                                    )
+                                names: ["Male", "Female"],
+                                groupValue: "Male",
+                                onChange: (p0) {
+                                  patient.gender = p0;
+                                },
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Gender")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Gender")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) async {
-                                        var res = await PatientAPI.CompareDuplicateNumber(value ?? "");
-                                        if (res.statusCode == 200) {
-                                          if (res.result != null)
-                                            _getxController.duplicateFound.value = res.result as PatientInfoModel;
-                                          else
-                                            _getxController.duplicateFound.value = PatientInfoModel();
-                                        }
-                                        patient.phone = value;
-                                      },
-                                      label: "Phone Number",
-                                      controller: TextEditingController(text: patient?.phone == null ? "" : patient?.phone),
-                                    )
+                                onChange: (value) async {
+                                  var res = await PatientAPI.CompareDuplicateNumber(value ?? "");
+                                  if (res.statusCode == 200) {
+                                    if (res.result != null)
+                                      _getxController.duplicateFound.value = res.result as PatientInfoModel;
+                                    else
+                                      _getxController.duplicateFound.value = PatientInfoModel();
+                                  }
+                                  patient.phone = value;
+                                },
+                                isPhoneNumber: true,
+                                label: "Phone Number",
+                                controller: TextEditingController(text: patient?.phone == null ? "" : patient?.phone),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Phone Number")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.phone == null ? "" : patient?.phone))
-                                      ],
-                                    ),
-                              Obx(() => Visibility(
-                                  visible: _getxController.duplicateFound.value.name != null && _getxController.duplicateFound.value.id != widget.patientID,
-                                  child: FormTextKeyWidget(
-                                      color: Colors.red,
-                                      text:
-                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name != null ? _getxController.duplicateFound.value!.name! : ""}"))),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Phone Number")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.phone == null ? "" : patient?.phone))
+                                ],
+                              ),
+                              Obx(() =>
+                                  Visibility(
+                                      visible: _getxController.duplicateFound.value.name != null && _getxController.duplicateFound.value.id != widget.patientID,
+                                      child: FormTextKeyWidget(
+                                          color: Colors.red,
+                                          text:
+                                          "Duplicate found patient: ${_getxController.duplicateFound.value.name != null ? _getxController.duplicateFound.value!
+                                              .name! : ""}"))),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.phone2 = value;
-                                      },
-                                      label: "Another Phone Number",
-                                      controller: TextEditingController(text: patient?.phone2 == null ? "" : patient?.phone2),
-                                    )
+                                onChange: (value) {
+                                  patient.phone2 = value;
+                                },
+                                isPhoneNumber: true,
+                                label: "Another Phone Number",
+                                controller: TextEditingController(text: patient?.phone2 == null ? "" : patient?.phone2),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Another Phone Number")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.phone2 == null ? "" : patient?.phone2))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Another Phone Number")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.phone2 == null ? "" : patient?.phone2))
+                                ],
+                              ),
                               addNew
-                                  ? CIA_TextFormField(
-                                      onTap: () {
-                                        CIA_PopupDialog_DateOnlyPicker(context, "Date of birth", (date) {
-                                          patient.dateOfBirth = date;
-                                          setState(() {});
-                                        });
-                                      },
-                                      onChange: (value) {
-                                        patient.dateOfBirth = value;
-                                      },
-                                      label: "Date Of Birth",
-                                      controller: TextEditingController(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth),
-                                    )
+                                  ? CIA_DateTimeTextFormField(
+                                onTap: () {
+                                  CIA_PopupDialog_DateOnlyPicker(context, "Date of birth", (date) {
+                                    patient.dateOfBirth = date;
+                                    setState(() {});
+                                  });
+                                },
+                                onChange: (value) {
+                                  patient.dateOfBirth = value;
+                                },
+                                label: "Date Of Birth",
+                                controller: TextEditingController(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Date Of Birth")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Date Of Birth")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth))
+                                ],
+                              ),
                               edit || addNew
                                   ? HorizontalRadioButtons(
-                                      names: ["Married", "Single"],
-                                      onChange: (v) {
-                                        patient.maritalStatus = v;
-                                      },
-                                      groupValue: patient.maritalStatus ?? "Married",
-                                    )
+                                names: ["Married", "Single"],
+                                onChange: (v) {
+                                  patient.maritalStatus = v;
+                                },
+                                groupValue: patient.maritalStatus ?? "Married",
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Marital Status")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.maritalStatus == null ? "" : patient?.maritalStatus))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Marital Status")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.maritalStatus == null ? "" : patient?.maritalStatus))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.address = value;
-                                      },
-                                      label: "Address",
-                                      controller: TextEditingController(text: patient?.address == null ? "" : patient?.address),
-                                    )
+                                onChange: (value) {
+                                  patient.address = value;
+                                },
+                                label: "Address",
+                                controller: TextEditingController(text: patient?.address == null ? "" : patient?.address),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Address")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.address == null ? "" : patient?.address))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Address")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.address == null ? "" : patient?.address))
+                                ],
+                              ),
                               edit || addNew
                                   ? CIA_TextFormField(
-                                      onChange: (value) {
-                                        patient.city = value;
-                                      },
-                                      label: "City",
-                                      controller: TextEditingController(text: patient?.city == null ? "" : patient?.city),
-                                    )
+                                onChange: (value) {
+                                  patient.city = value;
+                                },
+                                label: "City",
+                                controller: TextEditingController(text: patient?.city == null ? "" : patient?.city),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "City")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.city == null ? "" : patient?.city))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "City")),
+                                  Expanded(child: FormTextValueWidget(text: patient?.city == null ? "" : patient?.city))
+                                ],
+                              ),
                               addNew
                                   ? CIA_TextFormField(
-                                      onTap: () {
-                                        _getxController.searchList.value = [];
-                                        CIA_ShowPopUp(
-                                            context: context,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                                              children: [
-                                                CIA_TextFormField(
-                                                  label: "Search",
-                                                  controller: TextEditingController(),
-                                                  onChange: (value) async {
-                                                    var res = await PatientAPI.QuickSearch(value);
-                                                    if (res.statusCode == 200) {
-                                                      _getxController.searchList.value = res.result as List<DropDownDTO>;
-                                                    } else
-                                                      _getxController.searchList.value = [];
+                                onTap: () {
+                                  _getxController.searchList.value = [];
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        children: [
+                                          CIA_TextFormField(
+                                            label: "Search",
+                                            controller: TextEditingController(),
+                                            onChange: (value) async {
+                                              var res = await PatientAPI.QuickSearch(value);
+                                              if (res.statusCode == 200) {
+                                                _getxController.searchList.value = res.result as List<DropDownDTO>;
+                                              } else
+                                                _getxController.searchList.value = [];
+                                            },
+                                          ),
+                                          SizedBox(
+                                            height: 400,
+                                            child: Obx(() =>
+                                                ListView.builder(
+                                                  itemBuilder: (context, index) {
+                                                    return ListTile(
+                                                      onTap: () {
+                                                        patient.relativePatient = DropDownDTO(
+                                                            id: _getxController.searchList.value[index].id,
+                                                            name: _getxController.searchList.value[index].name);
+                                                        patient.relativePatientId = _getxController.searchList.value[index].id;
+                                                        setState(() {});
+                                                      },
+                                                      title: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            _getxController.searchList.value[index].name!,
+                                                            textAlign: TextAlign.start,
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                    );
                                                   },
-                                                ),
-                                                SizedBox(
-                                                  height: 400,
-                                                  child: Obx(() => ListView.builder(
-                                                        itemBuilder: (context, index) {
-                                                          return ListTile(
-                                                            onTap: () {
-                                                              patient.relativePatient = DropDownDTO(
-                                                                  id: _getxController.searchList.value[index].id,
-                                                                  name: _getxController.searchList.value[index].name);
-                                                              patient.relativePatientId = _getxController.searchList.value[index].id;
-                                                              setState(() {});
-                                                            },
-                                                            title: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text(
-                                                                  _getxController.searchList.value[index].name!,
-                                                                  textAlign: TextAlign.start,
-                                                                ),
-                                                                Divider()
-                                                              ],
-                                                            ),
-                                                          );
-                                                        },
-                                                        itemCount: _getxController.searchList.value.length,
-                                                      )),
-                                                )
-                                              ],
-                                            ));
-                                      },
-                                      label: "Relative",
-                                      controller: TextEditingController(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""),
-                                    )
+                                                  itemCount: _getxController.searchList.value.length,
+                                                )),
+                                          )
+                                        ],
+                                      ));
+                                },
+                                label: "Relative",
+                                controller: TextEditingController(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""),
+                              )
                                   : Row(
-                                      children: [
-                                        Expanded(child: FormTextKeyWidget(text: "Relative")),
-                                        Expanded(child: FormTextValueWidget(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""))
-                                      ],
-                                    ),
+                                children: [
+                                  Expanded(child: FormTextKeyWidget(text: "Relative")),
+                                  Expanded(child: FormTextValueWidget(text: patient.relativePatient != null ? patient.relativePatient!.name! : ""))
+                                ],
+                              ),
                               Row(
                                 children: [
                                   Expanded(
                                       child: FormTextKeyWidget(
-                                    text: "Registration: " + siteController.getUser().name!,
-                                    secondaryInfo: true,
-                                  )),
+                                        text: "Registration: ${addNew ? siteController
+                                            .getUser()
+                                            .name! : patient.registeredBy!.name!}",
+                                        secondaryInfo: true,
+                                      )),
                                   Expanded(
                                       child: FormTextValueWidget(
-                                    text: DateTime.now().toLocal().toString(),
-                                    secondaryInfo: true,
-                                  ))
+                                        text:
+                                        addNew ?
+                                        DateTime.now().toLocal().toString() :
+                                        patient.registerationDate ?? ""
+                                        ,
+                                        secondaryInfo: true,
+                                      ))
                                 ],
                               ),
                             ],
@@ -589,19 +656,103 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                       Expanded(child: SizedBox()),
                       Expanded(
                           flex: 3,
-                          child: Column(
-                            children: [
-                              Expanded(child: Image(image: AssetImage("assets/ProfileImage.png"))),
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Image(image: AssetImage("assets/userIDFront.png"))),
-                                    Expanded(child: Image(image: AssetImage("assets/userIDBack.png"))),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ))
+                          child: CIA_FutureBuilder(loadFunction: () async {
+                            if (patient.profileImageId != null) await PatientAPI.DownloadImage(patient.profileImageId!).then((value) {
+                              if (value.statusCode == 200)
+                                personalImageBytes = base64Decode(value.result as String);
+                            },);
+                            if (patient.idFrontImageId != null) await PatientAPI.DownloadImage(patient.idFrontImageId!).then((value) {
+                              if (value.statusCode == 200)
+                                frontIdImageBytes = base64Decode(value.result as String);
+                            },);
+                            if (patient.idBackImageId != null) await PatientAPI.DownloadImage(patient.idBackImageId!).then((value) {
+                              if (value.statusCode == 200)
+                                backIdImageBytes = base64Decode(value.result as String);
+                            },);
+                            return  Future.value(API_Response(statusCode: 200));
+                          }(), onSuccess:(date){
+                            return Column(
+                              children: [
+                                Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        personalImageBytes == null
+                                            ? Image(
+                                          image: AssetImage("assets/ProfileImage.png"),
+                                          height: imageHeight,
+                                          width: imageWidth,
+                                        )
+                                            : Image(
+                                          image: MemoryImage(personalImageBytes!),
+                                          height: imageHeight,
+                                          width: imageWidth,
+                                        ),
+                                        SizedBox(height: 10),
+                                        CIA_SecondaryButton(
+                                            label: "Upload Image",
+                                            onTab: () async {
+                                              personalImageBytes = await ImagePickerWeb.getImageAsBytes();
+                                              setState(() {});
+                                            })
+                                      ],
+                                    )),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                            children: [
+                                              frontIdImageBytes == null
+                                                  ? Image(
+                                                image: AssetImage("assets/userIDFront.png"),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              )
+                                                  : Image(
+                                                image: MemoryImage(frontIdImageBytes!),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_SecondaryButton(
+                                                  label: "Upload Image",
+                                                  onTab: () async {
+                                                    frontIdImageBytes = await ImagePickerWeb.getImageAsBytes();
+
+                                                    setState(() {});
+                                                  })
+                                            ],
+                                          )),
+                                      Expanded(
+                                          child: Column(
+                                            children: [
+                                              backIdImageBytes == null
+                                                  ? Image(
+                                                image: AssetImage("assets/userIDBack.png"),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              )
+                                                  : Image(
+                                                image: MemoryImage(backIdImageBytes!),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_SecondaryButton(
+                                                  label: "Upload Image",
+                                                  onTab: () async {
+                                                    backIdImageBytes = await ImagePickerWeb.getImageAsBytes();
+                                                    setState(() {});
+                                                  })
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          },))
                     ],
                   ),
                 ),
@@ -610,58 +761,72 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                   child: Expanded(
                     child: addNew
                         ? Center(
+                      child: CIA_PrimaryButton(
+                          label: "Save",
+                          isLong: true,
+                          onTab: () async {
+                            var response = patient.id == null ? await PatientAPI.CreatePatient(patient) : API_Response(statusCode: 200, result: patient);
+                            if (response.statusCode == 200) {
+                              patient = response.result as PatientInfoModel;
+                            }
+                            if (widget.onSave != null) widget.onSave!(response);
+                            if (response.statusCode == 200) {
+                              ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Uploading Images...");
+                              if (personalImageBytes != null)
+                                response = await PatientAPI.UploadImage(patient.id!, EnumImageType.PatientProfile, personalImageBytes!);
+                              if (backIdImageBytes != null) response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdBack, backIdImageBytes!);
+                              if (frontIdImageBytes != null)
+                                response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdFront, frontIdImageBytes!);
+
+                              if (response.statusCode == 200) {
+                                ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
+                                internalPagesController.goBack();
+                              } else
+                                ShowSnackBar(isSuccess: false, title: "Failed!", message: "Patient added but failed to upload images");
+                            } else
+                              ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
+                          }),
+                    )
+                        : edit
+                        ? Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Flexible(
+                            child: CIA_SecondaryButton(label: "Cancel", onTab: () => setState(() => edit = false)),
+                          ),
+                          Flexible(
                             child: CIA_PrimaryButton(
                                 label: "Save",
                                 isLong: true,
                                 onTab: () async {
-                                  var response = await PatientAPI.CreatePatient(patient);
-                                  if (widget.onSave != null) widget.onSave!(response);
+                                  var response = await PatientAPI.UpdatePatientDate(patient);
+
                                   if (response.statusCode == 200)
-                                    ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
+                                    ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient data has been saved successfully!");
                                   else
                                     ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
+
+                                  setState(() {
+                                    edit = false;
+                                  });
                                 }),
-                          )
-                        : edit
-                            ? Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(child: SizedBox()),
-                                    Flexible(
-                                      child: CIA_SecondaryButton(label: "Cancel", onTab: () => setState(() => edit = false)),
-                                    ),
-                                    Flexible(
-                                      child: CIA_PrimaryButton(
-                                          label: "Save",
-                                          isLong: true,
-                                          onTab: () async {
-                                            var response = await PatientAPI.UpdatePatientDate(patient);
-
-                                            if (response.statusCode == 200)
-                                              ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient data has been saved successfully!");
-                                            else
-                                              ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
-
-                                            setState(() {
-                                              edit = false;
-                                            });
-                                          }),
-                                    ),
-                                    Expanded(child: SizedBox()),
-                                  ],
-                                ),
-                              )
-                            : Center(
-                                child: CIA_SecondaryButton(
-                                  onTab: () {
-                                    setState(() {
-                                      edit = true;
-                                    });
-                                  },
-                                  label: "Edit Info",
-                                ),
-                              ),
+                          ),
+                          Expanded(child: SizedBox()),
+                        ],
+                      ),
+                    )
+                        : Center(
+                      child: CIA_SecondaryButton(
+                        onTab: () {
+                          setState(() {
+                            edit = true;
+                          });
+                        },
+                        label: "Edit Info",
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -706,7 +871,8 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
               padding: EdgeInsets.only(top: 5, left: 10),
               child: Column(
                 children: [
-                  Obx(() => TitleWidget(
+                  Obx(() =>
+                      TitleWidget(
                         title: siteController.title.value,
                         showBackButton: true,
                       )),
@@ -790,7 +956,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                       res = await PatientAPI.GetTotalDebt(widget.patientID);
                                       if (res.statusCode == 200) debt = res.result as int;
                                       await CIA_ShowPopUp(
-                                        width:500,
+                                          width: 500,
                                           context: context,
                                           title: "Receipt",
                                           onSave: () async {
@@ -805,7 +971,8 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                                       Row(
                                                         children: [
                                                           Expanded(child: FormTextKeyWidget(text: "Patient total debt")),
-                                                          Expanded(child: FormTextValueWidget(color: debt != 0 ? Colors.red : Colors.black, text: debt.toString())),
+                                                          Expanded(
+                                                              child: FormTextValueWidget(color: debt != 0 ? Colors.red : Colors.black, text: debt.toString())),
                                                         ],
                                                       ),
                                                       SizedBox(height: 10),
@@ -895,7 +1062,9 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                                                 padding: const EdgeInsets.only(bottom: 10),
                                                                 child: Row(
                                                                   children: [
-                                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
+                                                                    Expanded(
+                                                                        child:
+                                                                        FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
                                                                     Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
                                                                   ],
                                                                 ),
@@ -964,22 +1133,22 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                             )),
                         Expanded(
                             child: Row(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            CIA_PrimaryButton(
-                              icon: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              width: 200,
-                              label: "Schedule new visit",
-                              onTab: () {
-                                CIA_PopupDialog_DateTimePicker(context, "Schedule Next Visit", (value) {});
-                              },
-                              isLong: true,
-                            )
-                          ],
-                        )),
+                              children: [
+                                Expanded(child: SizedBox()),
+                                CIA_PrimaryButton(
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  width: 200,
+                                  label: "Schedule new visit",
+                                  onTab: () {
+                                    CIA_PopupDialog_DateTimePicker(context, "Schedule Next Visit", (value) {});
+                                  },
+                                  isLong: true,
+                                )
+                              ],
+                            )),
                       ],
                     ),
                   ),
@@ -1037,7 +1206,8 @@ class _PatientComplainsState extends State<PatientComplains> {
         complains = data as List<ComplainsModel>;
         return Column(
           children: [
-            Obx(() => TitleWidget(
+            Obx(() =>
+                TitleWidget(
                   title: siteController.title.value,
                   showBackButton: true,
                 )),
@@ -1059,7 +1229,9 @@ class _PatientComplainsState extends State<PatientComplains> {
                   child: Row(
                     children: [
                       FormTextKeyWidget(secondaryInfo: true, smallFont: true, text: "Entered By: "),
-                      FormTextValueWidget(secondaryInfo: true, smallFont: true, text: siteController.getUser().name),
+                      FormTextValueWidget(secondaryInfo: true, smallFont: true, text: siteController
+                          .getUser()
+                          .name),
                     ],
                   ),
                 ),
@@ -1126,7 +1298,8 @@ class _PatientComplainsState extends State<PatientComplains> {
                 child: Column(
                   children: complains
                       .map(
-                        (e) => Column(
+                        (e) =>
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Divider(),
@@ -1146,11 +1319,11 @@ class _PatientComplainsState extends State<PatientComplains> {
                                       onTap: e.resolved!
                                           ? null
                                           : (value) async {
-                                              await PatientAPI.ResolveComplain(e.id!).then((value) {
-                                                if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
-                                                setState(() {});
-                                              });
-                                            },
+                                        await PatientAPI.ResolveComplain(e.id!).then((value) {
+                                          if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
+                                          setState(() {});
+                                        });
+                                      },
                                       size: 30,
                                       disabledColor: Colors.green,
                                       checkedColor: Colors.green,
@@ -1232,7 +1405,7 @@ class _PatientComplainsState extends State<PatientComplains> {
                             Divider()
                           ],
                         ),
-                      )
+                  )
                       .toList(),
                 ),
               ),

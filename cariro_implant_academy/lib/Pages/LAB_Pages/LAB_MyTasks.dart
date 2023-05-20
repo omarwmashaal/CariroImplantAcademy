@@ -9,7 +9,7 @@ import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import 'LAB_ViewTask.dart';
-
+/*
 class LAB_MyTasksPage extends StatefulWidget {
   const LAB_MyTasksPage({Key? key}) : super(key: key);
 
@@ -147,7 +147,7 @@ class _LAB_MyTasksPageState extends State<LAB_MyTasksPage> {
           ),
         ]),
         LAB_ViewTaskPage(
-          task: selectedTask,
+          request: selectedTask,
         )
 
         /*Obx(() => (rolesController.role == "Admin" ||
@@ -160,4 +160,4 @@ class _LAB_MyTasksPageState extends State<LAB_MyTasksPage> {
       ],
     );
   }
-}
+}*/

@@ -71,6 +71,10 @@ dependencies:
   sidebarx: ^0.15.0
   popover: ^0.2.8+2
   flex_color_picker: ^3.2.1
+  collapsible_sidebar: ^2.0.5+1
+  image_picker_web: ^3.0.0+1
+  font_awesome_flutter: ^10.4.0
+
 
 
 
