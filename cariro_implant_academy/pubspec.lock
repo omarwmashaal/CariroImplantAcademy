@@ -392,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.5"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: b185cf91b5a6861f4c2a92ddaa65f8919909416ee033e00751f7c67ebee1588d
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.2"
   google_fonts:
     dependency: "direct main"
     description:
@@ -496,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "04094f2eb032cbb06c6f6e8d3607edcfcb0455e2bb6cbc010cb01171dcb64e6d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   matcher:
     dependency: transitive
     description:
@@ -644,10 +660,10 @@ packages:
     dependency: "direct main"
     description:
       name: sidebarx
-      sha256: "8f3c1acdb4cd85bd7e5ab3f5bd8b13f5d5beeb82950e52d31c403ffea701e8be"
+      sha256: "26a8392ceddb659c8f2c688beba6c04bcbf520b4d5decb143c5fd7253653081f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.0"
+    version: "0.15.0"
   sky_engine:
     dependency: transitive
     description: flutter

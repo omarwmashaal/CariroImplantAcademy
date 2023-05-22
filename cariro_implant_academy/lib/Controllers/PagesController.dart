@@ -1,3 +1,6 @@
+import 'dart:js';
+
+import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
@@ -7,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../Constants/Controllers.dart';
@@ -161,7 +165,7 @@ class PagesController extends PageController {
     super.jumpToPage(index);
   }
 
-  static List<SidebarXItem> DrawerItems() {
+  static List<SidebarXItem> DrawerItems(BuildContext context,SidebarXController controller) {
     String role = siteController.getRole();
 
     switch (siteController.getSite()) {
@@ -171,7 +175,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'atients',
               onTap: () {
-                pagesController.jumpToPage(0);
+                context.goNamed(PatientsSearchPage.routeName);
+                controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
@@ -184,7 +189,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'ssistants',
               onTap: () {
-                pagesController.jumpToPage(1);
+                context.goNamed(UserSearchPage.routeName);
+                controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(

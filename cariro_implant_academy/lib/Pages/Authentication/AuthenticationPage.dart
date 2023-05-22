@@ -1,11 +1,15 @@
 import 'package:cariro_implant_academy/Controllers/Auth_NavigationController.dart';
+import 'package:cariro_implant_academy/Controllers/SiteController.dart';
+import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/LoginPage.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/RegsiterPage.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Routes/Routes.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../API/AuthenticationAPI.dart';
 import '../../Widgets/LargeScreen.dart';
@@ -30,13 +34,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         child: CurrentPage == LoginPageRoute
             ? LoginPage(
                 onLogin: (email, password) async {
+                  //context.go("/"+PatientsSearchPage.routeName);
+                  context.go("/Patients");
                   var login = await AuthenticationAPI.Login(email, password);
                   if (login.statusCode == 200) {
-                    Get.off(
-                        SiteLayout(
-                          largeScreen: CIA_LargeScreen(),
-                        ),
-                        duration: Duration(seconds: 0));
+                    //context.go("Patsients");
                   } else {
                     ShowSnackBar(
                         isSuccess: false,

@@ -15,15 +15,13 @@ class CIA_TagsInputWidget extends StatefulWidget {
       this.strikeValues,
       this.onDelete,
       this.onChange = null,
-        this.dynamicVisibility = false,
-      required this.patientController})
+        this.dynamicVisibility = false,})
       : super(key: key);
   String label;
   Function(List<String>)? onChange;
   Function(String)? onDelete;
   List<String>? initialValue;
   List<String>? strikeValues;
-  PatientMedicalController patientController;
   bool dynamicVisibility;
 
   @override

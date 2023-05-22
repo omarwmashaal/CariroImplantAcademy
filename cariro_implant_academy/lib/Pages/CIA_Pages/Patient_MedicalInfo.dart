@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import '../../API/TempPatientAPI.dart';
@@ -51,7 +52,6 @@ import 'package:collection/collection.dart';
 import '../../Widgets/SnackBar.dart';
 import '../SharedPages/LapRequestSharedPage.dart';
 
-late PatientMedicalController MasterController;
 late int patientID;
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
@@ -67,9 +67,9 @@ class _getxClass extends GetxController {
 }
 
 class PatientMedicalInfoPage extends StatefulWidget {
-  PatientMedicalInfoPage({Key? key, required this.patientMedicalController, required this.patientID}) : super(key: key);
-  PatientMedicalController patientMedicalController;
-  int patientID;
+  PatientMedicalInfoPage({Key? key,  required this.patientId, required this.child}) : super(key: key);
+  int patientId;
+  Widget child;
 
   @override
   State<PatientMedicalInfoPage> createState() => _PatientMedicalInfoPageState();
@@ -80,44 +80,102 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
   @override
   void initState() {
-    MasterController = widget.patientMedicalController;
-    patient = widget.patientMedicalController.patient;
-    patientID = widget.patientID;
+    patientID = widget.patientId;
+    patient = PatientInfoModel();
+    print("medical rebuilt");
+    siteController.setMedicalAppBar(
+      context: context,
+      bar: MedicalSlidingBar(
+          pages: [
+            MedicalSlidingModel(
+                name: "Medical History",
+                onTap:()=> context.goNamed(PatientMedicalHistory.routeName,pathParameters: {"id":widget.patientId.toString()})
+
+            ),
+            MedicalSlidingModel(
+                name: "Dental History",
+                onTap:()=> context.goNamed(PatientDentalHistory.routeName,pathParameters: {"id":widget.patientId.toString()})
+            ),
+            MedicalSlidingModel(
+                name: "Dental Examination",
+                onTap:()=> context.goNamed(PatientDentalExamination.routeName,pathParameters: {"id":widget.patientId.toString()})
+
+            ),
+            MedicalSlidingModel(
+                name: "Non Surgical Treatment",
+                onSave: ()async{
+                  await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
+                  await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
+                }
+            ),
+            MedicalSlidingModel(
+                name: "Treatment Plan",
+                onSave: ()async{
+                  await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
+                }
+            ),
+            MedicalSlidingModel(
+                name: "Surgical Treatment",
+                onSave: ()async{
+                  await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
+                }
+            ),
+            MedicalSlidingModel(
+                name: "Prosthetic Treatment",
+                onSave: () {
+                  print("3");
+                }),
+            MedicalSlidingModel(
+                name: "Photos and CBCTs",
+                onSave: () {
+                  print("4");
+                }),
+          ]),
+    );
   }
 
-  List<Widget> pages = [
-    _PatientMedicalHistory(),
-    _PatientDentalHistory(),
-    PatientDentalExamination(),
-    PatientNonSurgicalTreatment(),
-    _PatientTreatmentPlan(),
-    _PatientSurgicalTreatment(),
-    // _PatientProstheticTreatment(),
-    //_Patient_CBCTandPhotos(),
-  ];
+
   int index = 0;
 
   Uint8List? personalImageBytes;
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      PatientMedicalHistory(patientId: widget.patientId),
+    //  PatientDentalHistory(),
+      //PatientDentalExamination(),
+      PatientNonSurgicalTreatment(),
+      _PatientTreatmentPlan(),
+      _PatientSurgicalTreatment(),
+      // _PatientProstheticTreatment(),
+      //_Patient_CBCTandPhotos(),
+    ];
+
+
+/*
     siteController.setMedicalAppBar(
+      context: context,
       bar: MedicalSlidingBar(
           pages: [
         MedicalSlidingModel(
-            name: "Medical Examination",
+            name: "Medical History",
+          onTap:()=> context.goNamed(PatientMedicalHistory.routeName,pathParameters: {"id":widget.patientID.toString()})
+
             ),
         MedicalSlidingModel(
             name: "Dental History",
-          ),
+            onTap:()=> context.goNamed(PatientDentalHistory.routeName,pathParameters: {"id":widget.patientID.toString()})
+        ),
         MedicalSlidingModel(
             name: "Dental Examination",
-           ),
+            onTap:()=> context.goNamed(PatientDentalExamination.routeName,pathParameters: {"id":widget.patientID.toString()})
+
+        ),
         MedicalSlidingModel(
             name: "Non Surgical Treatment",
           onSave: ()async{
             await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
             await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
-
           }
             ),
         MedicalSlidingModel(
@@ -143,7 +201,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
               print("4");
             }),
       ]),
-    );
+    );*/
 
     patient?.gender = "Male";
     return CIA_FutureBuilder(
@@ -179,10 +237,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                         flex: 10,
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: PageView(
-                            controller: tabsController,
-                            children: pages,
-                          ),
+                          child: widget.child,
                         ),
                       )
                     ],
@@ -289,31 +344,42 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   }
 }
 
-class _PatientMedicalHistory extends StatefulWidget {
-  const _PatientMedicalHistory({Key? key}) : super(key: key);
+class PatientMedicalHistory extends StatefulWidget {
+  PatientMedicalHistory({Key? key, required this.patientId}) : super(key: key);
+  static String routeName = "MedicalHistory";
+  static String routePath = "Patient/:id/MedicalHistory";
+  int patientId;
+  static String getPath(String id){
+    return "/Patients/Patient/$id/MedicalHistory";
 
+  }
   @override
-  State<_PatientMedicalHistory> createState() => _PatientMedicalHistoryState();
+  State<PatientMedicalHistory> createState() => _PatientMedicalHistoryState();
 }
 
-class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
+class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
   bool diseases = false;
   Color illegalDrugs = Color_TextFieldBorder;
   late Future load;
 
   @override
   void initState() {
-    load = MedicalAPI.GetPatientMedicalExamination(patientID);
+    load = MedicalAPI.GetPatientMedicalExamination(widget.patientId);
+
+
+
   }
 
 
   @override
-  void dispose() async{
-    await MedicalAPI.UpdatePatientMedicalExamination(patientID, medicalExaminationModel);
+  void dispose() {
+    MedicalAPI.UpdatePatientMedicalExamination(widget.patientId, medicalExaminationModel);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("rebuilt ${widget.patientId.toString()}");
     return FutureBuilder(
         future: load,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -886,27 +952,31 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
   }
 }
 
-class _PatientDentalHistory extends StatefulWidget {
-  const _PatientDentalHistory({Key? key}) : super(key: key);
+class PatientDentalHistory extends StatefulWidget {
+  PatientDentalHistory({Key? key,required this.patientId}) : super(key: key);
+  static String routeName = "DentalHistory";
+  static String routePath = "Patient/:id/DentalHistory";
+  int patientId;
 
   @override
-  State<_PatientDentalHistory> createState() => _PatientDentalHistoryState();
+  State<PatientDentalHistory> createState() => _PatientDentalHistoryState();
 }
 
-class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
+class _PatientDentalHistoryState extends State<PatientDentalHistory> {
   Color clench = Color_TextFieldBorder;
   String tobacco = "0";
   late Future<API_Response> load;
 
 
   @override
-  void dispose() async{
-    await MedicalAPI.UpdatePatientDentalHistory(patientID, dentalHistoryModel);
+  void dispose() {
+    MedicalAPI.UpdatePatientDentalHistory(widget.patientId, dentalHistoryModel).then((value) => super.dispose());
   }
 
   @override
   void initState() {
-    load = MedicalAPI.GetPatientDentalHistory(patientID);
+
+    load = MedicalAPI.GetPatientDentalHistory(widget.patientId);
     super.initState();
   }
 
@@ -1056,8 +1126,10 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
 }
 
 class PatientDentalExamination extends StatefulWidget {
-  const PatientDentalExamination({Key? key}) : super(key: key);
-
+   PatientDentalExamination({Key? key,required this.patientId}) : super(key: key);
+  static String routeName = "DentalExamination";
+  static String routePath = "Patient/:id/DentalExamination";
+  int patientId;
   @override
   State<PatientDentalExamination> createState() => _PatientDentalExaminationState();
 }
@@ -1072,13 +1144,13 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
 
   @override
   void dispose() async{
-    await MedicalAPI.UpdatePatientDentalExamination(patientID, dentalExaminationModel);
+    await MedicalAPI.UpdatePatientDentalExamination(widget.patientId, dentalExaminationModel);
 
   }
 
   @override
   void initState() {
-    load = MedicalAPI.GetPatientDentalExamination(patientID);
+    load = MedicalAPI.GetPatientDentalExamination(widget.patientId);
   }
 
   @override
@@ -1179,7 +1251,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Carious",
                 initialValue:
                     dentalExaminationModel.dentalExaminations.where((element) => element.carious == true).toList().map((e) => e.tooth.toString()).toList(),
@@ -1190,9 +1262,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) {
-                  MasterController.updateDentalExamination("Carious", value);
-                },
+
                 onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).carious = false;
                   setState(() {});
@@ -1201,7 +1271,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Filled",
                 initialValue:
                     dentalExaminationModel.dentalExaminations.where((element) => element.filled == true).toList().map((e) => e.tooth.toString()).toList(),
@@ -1212,8 +1282,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Filled", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).filled = false;
                   setState(() {});
                 },
@@ -1221,7 +1290,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Missed",
                 initialValue:
                     dentalExaminationModel.dentalExaminations.where((element) => element.missed == true).toList().map((e) => e.tooth.toString()).toList(),
@@ -1232,8 +1301,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Missed", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).missed = false;
                   setState(() {});
                 },
@@ -1241,7 +1309,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Not Sure",
                 initialValue:
                     dentalExaminationModel.dentalExaminations.where((element) => element.notSure == true).toList().map((e) => e.tooth.toString()).toList(),
@@ -1252,8 +1320,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Not Sure", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).notSure = false;
                   setState(() {});
                 },
@@ -1265,7 +1332,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                     child: CIA_TagsInputWidget(
                       dynamicVisibility: true,
                       key: GlobalKey(),
-                      patientController: MasterController,
+
                       label: "Mobility I",
                       initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityI == true)
@@ -1279,8 +1346,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                               .map((e) => e.tooth.toString())
                               .toList()
                           : null,
-                      onChange: (value) => MasterController.updateDentalExamination("Mobility I", value),
-                      onDelete: (value) {
+                                            onDelete: (value) {
                         dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).mobilityI = false;
                         setState(() {});
                       },
@@ -1292,7 +1358,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                     child: CIA_TagsInputWidget(
                       dynamicVisibility: true,
                       key: GlobalKey(),
-                      patientController: MasterController,
+
                       label: "Mobility II",
                       initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityII == true)
@@ -1306,8 +1372,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                               .map((e) => e.tooth.toString())
                               .toList()
                           : null,
-                      onChange: (value) => MasterController.updateDentalExamination("Mobility II", value),
-                      onDelete: (value) {
+                                            onDelete: (value) {
                         dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).mobilityII = false;
                         setState(() {});
                       },
@@ -1319,7 +1384,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                     child: CIA_TagsInputWidget(
                       dynamicVisibility: true,
                       key: GlobalKey(),
-                      patientController: MasterController,
+
                       label: "Mobility III",
                       initialValue: dentalExaminationModel.dentalExaminations
                           .where((element) => element.mobilityIII == true)
@@ -1333,8 +1398,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                               .map((e) => e.tooth.toString())
                               .toList()
                           : null,
-                      onChange: (value) => MasterController.updateDentalExamination("Mobility III", value),
-                      onDelete: (value) {
+                                            onDelete: (value) {
                         dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).mobilityIII = false;
                         setState(() {});
                       },
@@ -1345,7 +1409,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Hopeless teeth",
                 initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.hopelessteeth == true)
@@ -1359,8 +1423,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Hopeless teeth", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).hopelessteeth = false;
                   setState(() {});
                 },
@@ -1368,7 +1431,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Implant Placed",
                 initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.implantPlaced == true)
@@ -1382,8 +1445,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Implant Placed", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantPlaced = false;
                   setState(() {});
                 },
@@ -1391,7 +1453,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
               CIA_TagsInputWidget(
                 dynamicVisibility: true,
                 key: GlobalKey(),
-                patientController: MasterController,
+
                 label: "Implant Failed",
                 initialValue: dentalExaminationModel.dentalExaminations
                     .where((element) => element.implantFailed == true)
@@ -1405,8 +1467,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
                         .map((e) => e.tooth.toString())
                         .toList()
                     : null,
-                onChange: (value) => MasterController.updateDentalExamination("Implant Failed", value),
-                onDelete: (value) {
+                                onDelete: (value) {
                   dentalExaminationModel.dentalExaminations.firstWhere((element) => element.tooth.toString() == value).implantFailed = false;
                   setState(() {});
                 },

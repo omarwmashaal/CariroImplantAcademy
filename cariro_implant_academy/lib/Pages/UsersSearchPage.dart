@@ -15,8 +15,10 @@ import '../Models/Enum.dart';
 import '../Widgets/CIA_TextField.dart';
 
 class UserSearchPage extends StatefulWidget {
-  UserSearchPage({Key? key, required this.dataSource}) : super(key: key);
+  UserSearchPage({Key? key, required this.dataSource, this.type}) : super(key: key);
   ApplicationUserDataSource dataSource;
+  static String routeName = "Users";
+  String? type;
 
   @override
   State<UserSearchPage> createState() => _UserSearchPageState();
@@ -122,6 +124,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
 
   @override
   void initState() {
+    print(widget.type);
     siteController.setAppBarWidget();
   }
 }

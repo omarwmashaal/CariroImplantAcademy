@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
@@ -27,7 +29,7 @@ class _getXController extends GetxController {
 
 class PatientsSearchPage extends StatefulWidget {
   const PatientsSearchPage({Key? key}) : super(key: key);
-
+  static String routeName = "Patients";
   @override
   State<PatientsSearchPage> createState() => _PatientsSearchPageState();
 }
@@ -52,8 +54,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                 ),
                  PatientMedicalInfoPage(
                   key: GlobalKey(),
-                  patientMedicalController: PatientMedicalController(PatientInfoModel()),
-                  patientID: selectedPatientID,
+                  child: Container(),
+                  patientId: selectedPatientID,
                 ),
                  ViewPatientPage(
                   key: GlobalKey(),
@@ -88,9 +90,9 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
           key: GlobalKey(),
         ),
         PatientMedicalInfoPage(
+          child: Container(),
           key: GlobalKey(),
-          patientMedicalController: PatientMedicalController(PatientInfoModel()),
-          patientID: selectedPatientID,
+          patientId: selectedPatientID,
         ),
         ViewPatientPage(
           key: GlobalKey(),
@@ -383,13 +385,13 @@ class _PatientsSearchState extends State<_PatientsSearch> {
                   },
                   dataSource: dataSource,
                   onCellClick: (value) {
-                    print(dataSource.models[value - 1].id);
+                    //print(dataSource.models[value - 1].id);
                     setState(() {
                       selectedPatientID = dataSource.models[value - 1].id!;
                       print("");
                     });
-
-                    internalPagesController.jumpToPage(1);
+                    //internalPagesController.jumpToPage(1);
+                    context.goNamed(CIA_Router.routeConst_PatientInfo,pathParameters: {"id":dataSource.models[value - 1].id!.toString()});
                   },
                 ),
               ),

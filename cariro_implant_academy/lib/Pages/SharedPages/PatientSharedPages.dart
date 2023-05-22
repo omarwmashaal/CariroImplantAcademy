@@ -46,7 +46,11 @@ class _getxController extends GetxController {
 
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction, this.hideSaveButton = false, this.onSave}) : super(key: key);
-
+  static String routeName = "PatientPersonalInfo";
+  static String routePath = "Patient/:id/PersonalInfo";
+  static String getPath(String id){
+    return "/Patients/Patient/$id/PersonalInfo";
+  }
   int patientID;
   Function? loadFunction;
   Function(API_Response response)? onSave;
@@ -69,6 +73,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
 
   @override
   void initState() {
+    print("init patient");
     addNew = widget.patientID == 0;
 
     if (addNew) {
@@ -85,6 +90,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("rebuilt ${widget.patientID}");
     return FutureBuilder(
       future: widget.loadFunction != null ? widget.loadFunction!(widget.patientID ?? 0) : Future(() => API_Response()),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
