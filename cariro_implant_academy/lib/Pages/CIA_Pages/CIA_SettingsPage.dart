@@ -61,7 +61,7 @@ class _CIA_SettingsPageState extends State<CIA_SettingsPage> {
             key: GlobalKey(),
             controller: tabsController,
             children: [
-                //ViewUserData(userId: siteController.getUser().idInt!),
+              //ViewUserData(userId: siteController.getUser().idInt!),
               _SettingsPage(),
              _UsersSettingsPage()
             ],
@@ -1507,11 +1507,9 @@ class _UsersSettingsPageState extends State<_UsersSettingsPage> {
                       );
                     }),
                     onSave: () async {
-                      if (role == "candidate") {
-                        await UserAPI.AddCandidate(newUser);
-                      } else {
-                        await AuthenticationAPI.Register(newUser);
-                      }
+
+                      await AuthenticationAPI.Register(newUser);
+
                       setState(() {});
                     },
                   );

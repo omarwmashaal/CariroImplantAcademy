@@ -8,9 +8,11 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
+import 'package:cariro_implant_academy/Models/MedicalModels/ProstheticTreatmentModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/TreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Calendar.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -92,46 +94,42 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     PatientNonSurgicalTreatment(),
     _PatientTreatmentPlan(),
     _PatientSurgicalTreatment(),
-    // _PatientProstheticTreatment(),
+     _PatientProstheticTreatment(patientId: patientID),
     //_Patient_CBCTandPhotos(),
   ];
   int index = 0;
 
   Uint8List? personalImageBytes;
+
   @override
   Widget build(BuildContext context) {
     siteController.setMedicalAppBar(
-      bar: MedicalSlidingBar(
-          pages: [
+      bar: MedicalSlidingBar(pages: [
         MedicalSlidingModel(
-            name: "Medical Examination",
-            ),
+          name: "Medical Examination",
+        ),
         MedicalSlidingModel(
-            name: "Dental History",
-          ),
+          name: "Dental History",
+        ),
         MedicalSlidingModel(
-            name: "Dental Examination",
-           ),
+          name: "Dental Examination",
+        ),
         MedicalSlidingModel(
             name: "Non Surgical Treatment",
-          onSave: ()async{
-            await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
-            await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
-
-          }
-            ),
+            onSave: () async {
+              await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
+              await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
+            }),
         MedicalSlidingModel(
             name: "Treatment Plan",
-          onSave: ()async{
-            await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
-          }
-           ),
+            onSave: () async {
+              await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
+            }),
         MedicalSlidingModel(
             name: "Surgical Treatment",
-          onSave: ()async{
-            await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
-          }
-           ),
+            onSave: () async {
+              await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
+            }),
         MedicalSlidingModel(
             name: "Prosthetic Treatment",
             onSave: () {
@@ -146,146 +144,142 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     );
 
     patient?.gender = "Male";
-    return CIA_FutureBuilder(
-        loadFunction: ()async{
-          var res = await PatientAPI.GetPatientData(patientID);
-          if(res.statusCode==200)
-            {
-              var temp = res.result as PatientInfoModel;
-              if (temp.profileImageId != null) await PatientAPI.DownloadImage(temp.profileImageId!).then((value) {
-                if (value.statusCode == 200)
-                  personalImageBytes = base64Decode(value.result as String);
-              },);
-            }
-          return res;
-        }(),
-        onSuccess: (data) {
-          patient = data as PatientInfoModel;
-          return Container(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Obx(() => TitleWidget(
-                              showBackButton: true,
-                              title: siteController.title.value,
-                            )),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: PageView(
-                            controller: tabsController,
-                            children: pages,
-                          ),
-                        ),
-                      )
-                    ],
+    return CIA_FutureBuilder(loadFunction: () async {
+      var res = await PatientAPI.GetPatientData(patientID);
+      if (res.statusCode == 200) {
+        var temp = res.result as PatientInfoModel;
+        if (temp.profileImageId != null)
+          await PatientAPI.DownloadImage(temp.profileImageId!).then(
+            (value) {
+              if (value.statusCode == 200) personalImageBytes = base64Decode(value.result as String);
+            },
+          );
+      }
+      return res;
+    }(), onSuccess: (data) {
+      patient = data as PatientInfoModel;
+      return Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 7,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Obx(() => TitleWidget(
+                          showBackButton: true,
+                          title: siteController.title.value,
+                        )),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(child: SizedBox()),
-                      Expanded(
-                        flex: 10,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-
-                              personalImageBytes == null
-                                  ? Image(
+                  Expanded(
+                    flex: 10,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: PageView(
+                        controller: tabsController,
+                        children: pages,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(child: SizedBox()),
+                  Expanded(
+                    flex: 10,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        personalImageBytes == null
+                            ? Image(
                                 image: AssetImage("assets/ProfileImage.png"),
                                 height: 100,
                                 width: 100,
                               )
-                                  : Image(
+                            : Image(
                                 image: MemoryImage(personalImageBytes!),
                                 height: 100,
                                 width: 100,
                               ),
-
-
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CIA_SecondaryButton(
-                                label: "View more info",
-                                onTab: () {
-                                  internalPagesController.jumpToPage(2);
-                                }),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CIA_SecondaryButton(
-                                label: "LAB Request",
-                                icon: Icon(Icons.document_scanner_outlined),
-                                onTab: () {
-                                  CIA_ShowPopUp(
-                                    hideButton: true,
-                                    context: context,
-                                    width: 1100,
-                                    height: 650,
-                                    onSave: () {},
-                                    child: LapRequestSharedPage(isDoctor: true, patient: patient),
-                                  );
-                                }),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(child: FormTextKeyWidget(text: "ID")),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: patient?.id.toString() == null ? "" : patient?.id.toString(),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(child: FormTextKeyWidget(text: "Name")),
-                                Expanded(
-                                  child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(child: FormTextKeyWidget(text: "Gender")),
-                                Expanded(
-                                  child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "View more info",
+                            onTab: () {
+                              internalPagesController.jumpToPage(2);
+                            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CIA_SecondaryButton(
+                            label: "LAB Request",
+                            icon: Icon(Icons.document_scanner_outlined),
+                            onTab: () {
+                              CIA_ShowPopUp(
+                                hideButton: true,
+                                context: context,
+                                width: 1100,
+                                height: 650,
+                                onSave: () {},
+                                child: LapRequestSharedPage(isDoctor: true, patient: patient),
+                              );
+                            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "ID")),
+                            Expanded(
+                              child: FormTextValueWidget(
+                                text: patient?.id.toString() == null ? "" : patient?.id.toString(),
+                              ),
+                            )
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Name")),
+                            Expanded(
+                              child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Gender")),
+                            Expanded(
+                              child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          );
-        });
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -306,9 +300,8 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
     load = MedicalAPI.GetPatientMedicalExamination(patientID);
   }
 
-
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.UpdatePatientMedicalExamination(patientID, medicalExaminationModel);
   }
 
@@ -828,7 +821,7 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
               StatefulBuilder(
                 builder: (context, setState) {
                   int index = 0;
-                  if(medicalExaminationModel.drugsTaken!.isEmpty) medicalExaminationModel.drugsTaken!.add("");
+                  if (medicalExaminationModel.drugsTaken!.isEmpty) medicalExaminationModel.drugsTaken!.add("");
                   return Column(
                     children: medicalExaminationModel.drugsTaken!
                         .map(
@@ -840,14 +833,14 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                                   index += 1;
                                   return index.toString();
                                 }()),
-                                SizedBox(width:10),
+                                SizedBox(width: 10),
                                 Expanded(
                                   child: CIA_TextFormField(
                                     label: "Drug",
                                     controller: TextEditingController(text: e),
                                     onChange: (v) {
                                       e = v;
-                                      medicalExaminationModel.drugsTaken![index-1] = v;
+                                      medicalExaminationModel.drugsTaken![index - 1] = v;
                                     },
                                   ),
                                 ),
@@ -872,7 +865,6 @@ class _PatientMedicalHistoryState extends State<_PatientMedicalHistory> {
                   );
                 },
               ),
-
             ]);
           } else {
             return Center(
@@ -898,9 +890,8 @@ class _PatientDentalHistoryState extends State<_PatientDentalHistory> {
   String tobacco = "0";
   late Future<API_Response> load;
 
-
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.UpdatePatientDentalHistory(patientID, dentalHistoryModel);
   }
 
@@ -1069,11 +1060,9 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   bool mobilityDegrees = false;
   late Future load;
 
-
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.UpdatePatientDentalExamination(patientID, dentalExaminationModel);
-
   }
 
   @override
@@ -1497,7 +1486,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   late Future load;
 
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.AddPatientNonSurgicalTreatment(patientID, nonSurgicalTreatment);
     await MedicalAPI.UpdatePatientDentalExamination(patientID, tempDentalExamination);
   }
@@ -1801,7 +1790,6 @@ class _PatientTreatmentPlan extends StatefulWidget {
 }
 
 class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
-
   @override
   Widget build(BuildContext context) {
     return CIA_TeethTreatmentPlanWidget(
@@ -1810,9 +1798,8 @@ class _PatientTreatmentPlanState extends State<_PatientTreatmentPlan> {
   }
 
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.UpdatePatientTreatmentPlan(patientID, treatmentPlanModel!.treatmentPlan!);
-
   }
 }
 
@@ -1824,7 +1811,6 @@ class _PatientSurgicalTreatment extends StatefulWidget {
 }
 
 class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
-
   @override
   Widget build(BuildContext context) {
     return CIA_TeethTreatmentPlanWidget(
@@ -1834,14 +1820,14 @@ class _PatientSurgicalTreatmentState extends State<_PatientSurgicalTreatment> {
   }
 
   @override
-  void dispose() async{
+  void dispose() async {
     await MedicalAPI.UpdatePatientSurgicalTreatment(patientID, surgicalTreatmentModel);
-
   }
 }
 
 class _PatientProstheticTreatment extends StatefulWidget {
-  const _PatientProstheticTreatment({Key? key}) : super(key: key);
+  _PatientProstheticTreatment({Key? key, required this.patientId}) : super(key: key);
+  int patientId;
 
   @override
   State<_PatientProstheticTreatment> createState() => _PatientProstheticTreatmentState();
@@ -1850,12 +1836,354 @@ class _PatientProstheticTreatment extends StatefulWidget {
 class _PatientProstheticTreatmentState extends State<_PatientProstheticTreatment> {
   @override
   Widget build(BuildContext context) {
-    return CIA_MedicalPagesWidget(
-      children: [
-        Column(
-          children: _buildWidgets(),
-        )
-      ],
+    return DefaultTabController(
+      length: 2,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 60,
+            child: TabBar(
+              labelColor: Colors.black,
+              tabs: [
+                Tab(
+                  text: "Diagnostic",
+                ),
+                Tab(
+                  text: "Final Prothesis",
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                CIA_FutureBuilder(
+                  loadFunction: MedicalAPI.GetPatientProstheticTreatmentDiagnostic(widget.patientId),
+                  onSuccess: (data) {
+                    ProstheticTreatmentModel model = data as ProstheticTreatmentModel;
+                    return CIA_MedicalPagesWidget(
+                      children: [
+                        FormTextKeyWidget(text: "Diagnostic Impression"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Diagnostic",
+                                selectedItem: () {
+                                  if (model.prostheticDiagnosticDiagnosticImpressionDiagnostic != null) {
+                                    return DropDownDTO(name: model.prostheticDiagnosticDiagnosticImpressionDiagnostic!.name.replaceAll("_", " "));
+                                  }
+                                  return null;
+                                }(),
+                                onSelect: (value) {
+                                  model.prostheticDiagnosticDiagnosticImpressionDiagnostic =
+                                      EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
+                                },
+                                items: [
+                                  DropDownDTO(name: "Physical", id: 0),
+                                  DropDownDTO(name: "Digital", id: 1),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Next Step",
+                                selectedItem: () {
+                                  if (model.prostheticDiagnosticDiagnosticImpressionNextStep != null) {
+                                    return DropDownDTO(name: model.prostheticDiagnosticDiagnosticImpressionNextStep!.name.replaceAll("_", " "));
+                                  }
+                                  return null;
+                                }(),
+                                onSelect: (value) {
+                                  model.prostheticDiagnosticDiagnosticImpressionNextStep =
+                                      EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
+                                },
+                                items: [
+                                  DropDownDTO(name: "Ready for implant", id: 0),
+                                  DropDownDTO(name: "Bite", id: 1),
+                                  DropDownDTO(name: "Needs new impression", id: 2),
+                                  DropDownDTO(name: "Needs scan PPT", id: 3),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            CIA_CheckBoxWidget(
+                              text: "Needs Remake",
+                              onChange: (v) => model.prostheticDiagnosticDiagnosticImpressionNeedsRemake = v,
+                              value: model.prostheticDiagnosticDiagnosticImpressionNeedsRemake ?? false,
+                            ),
+                          ],
+                        ),
+                        FormTextKeyWidget(text: "Bite"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Diagnostic",
+                                selectedItem: () {
+                                  if (model.prostheticDiagnosticBiteDiagnostic != null) {
+                                    return DropDownDTO(name: model.prostheticDiagnosticBiteDiagnostic!.name.replaceAll("_", " "));
+                                  }
+                                  return null;
+                                }(),
+                                onSelect: (value) {
+                                  model.prostheticDiagnosticBiteDiagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
+                                },
+                                items: [
+                                  DropDownDTO(name: "Done", id: 0),
+                                  DropDownDTO(name: "Needs ReScan", id: 1),
+                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Next Step",
+                                selectedItem: () {
+                                  if (model.prostheticDiagnosticBiteNextStep != null) {
+                                    return DropDownDTO(name: model.prostheticDiagnosticBiteNextStep!.name.replaceAll("_", " "));
+                                  }
+                                  return null;
+                                }(),
+                                onSelect: (value) {
+                                  model.prostheticDiagnosticBiteNextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
+                                },
+                                items: [
+                                  DropDownDTO(name: "Scan Appliance", id: 0),
+                                  DropDownDTO(name: "ReImpression", id: 1),
+                                  DropDownDTO(name: "ReBite", id: 2),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            CIA_CheckBoxWidget(
+                              text: "Needs Remake",
+                              onChange: (v) => model.prostheticDiagnosticBiteNeedsRemake = v,
+                              value: model.prostheticDiagnosticBiteNeedsRemake ?? false,
+                            ),
+                          ],
+                        ),
+                        FormTextKeyWidget(text: "Scan Appliance"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CIA_DropDownSearch(
+                                label: "Diagnostic",
+                                selectedItem: () {
+                                  if (model.prostheticDiagnosticScanApplianceDiagnostic != null) {
+                                    return DropDownDTO(name: model.prostheticDiagnosticScanApplianceDiagnostic!.name.replaceAll("_", " "));
+                                  }
+                                  return null;
+                                }(),
+                                onSelect: (value) {
+                                  model.prostheticDiagnosticScanApplianceDiagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
+                                },
+                                items: [
+                                  DropDownDTO(name: "Done", id: 0),
+                                  DropDownDTO(name: "Needs ReBite", id: 1),
+                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                  DropDownDTO(name: "Needs ReDesign", id: 3),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(child: SizedBox()),
+                            SizedBox(width: 10),
+                            CIA_CheckBoxWidget(
+                              text: "Needs Remake",
+                              onChange: (v) => model.prostheticDiagnosticScanApplianceNeedsRemake = v,
+                              value: model.prostheticDiagnosticScanApplianceNeedsRemake ?? false,
+                            ),
+                          ],
+                        ),
+
+                      ],
+                    );
+                  },
+                ),
+                DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 60,
+                        width: 500,
+                        child: TabBar(
+                          labelColor: Colors.black,
+                          indicatorColor: Colors.orange,
+                          tabs: [
+                            Tab(
+                              text: "Single & Bridge",
+                            ),
+                            Tab(
+                              text: "Full Arch",
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            CIA_FutureBuilder(
+                                loadFunction: MedicalAPI.GetPatientProstheticTreatmentFinalProthesisSingleBridge(widget.patientId),
+                                onSuccess: (data) {
+                                  ProstheticTreatmentModel model = data as ProstheticTreatmentModel;
+                                  return CIA_MedicalPagesWidget(
+                                    children: [
+                                      CIA_TeethChart(onChange: (selectedTeethList) {
+                                        model.finalProthesisSingleBridgeTeeth = selectedTeethList;
+                                      },
+                                      selectedTeeth: model.finalProthesisSingleBridgeTeeth??[],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: CIA_CheckBoxWidget(
+                                            text: "Healing Collar",
+                                          )),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Customization",
+                                              selectedItem: () {
+                                                if (model.finalProthesisSingleBridgeHealingCollarStatus != null) {
+                                                  return DropDownDTO(name: model.finalProthesisSingleBridgeHealingCollarStatus!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                model.finalProthesisSingleBridgeHealingCollarStatus =
+                                                    EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "With Customization", id: 0),
+                                                DropDownDTO(name: "Without Customization", id: 1),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox())
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_CheckBoxWidget(
+                                              text: "Impression",
+                                              onChange: (v) => model.finalProthesisSingleBridgeHealingCollar = v,
+                                              value: model.finalProthesisSingleBridgeHealingCollar ?? false,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Procedure",
+                                              selectedItem: () {
+                                                if (model.finalProthesisSingleBridgeImpressionStatus != null) {
+                                                  return DropDownDTO(name: model.finalProthesisSingleBridgeImpressionStatus!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                model.finalProthesisSingleBridgeImpressionStatus =
+                                                    EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Scan by scan body", id: 0),
+                                                DropDownDTO(name: "Scan by abutment", id: 1),
+                                                DropDownDTO(name: "Physical Impression open tray", id: 2),
+                                                DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox())
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: CIA_CheckBoxWidget(
+                                            text: "Try in",
+                                                onChange: (v) => model.finalProthesisSingleBridgeImpression = v,
+                                                value: model.finalProthesisSingleBridgeImpression ?? false,
+                                              )),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Procedure",
+                                              selectedItem: () {
+                                                if (model.finalProthesisSingleBridgeTryInStatus != null) {
+                                                  return DropDownDTO(name: model.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                model.finalProthesisSingleBridgeTryInStatus = EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
+                                                DropDownDTO(name: "Try in PMMA", id: 1),
+                                                DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
+                                                DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox())
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: CIA_CheckBoxWidget(
+                                            text: "Delivery",
+                                                onChange: (v) => model.finalProthesisSingleBridgeTryIn = v,
+                                                value: model.finalProthesisSingleBridgeTryIn ?? false,
+                                              )),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Status",
+                                              selectedItem: () {
+                                                if (model.finalProthesisSingleBridgeDeliveryStatus != null) {
+                                                  return DropDownDTO(name: model.finalProthesisSingleBridgeDeliveryStatus!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                model.finalProthesisSingleBridgeDeliveryStatus = EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Done", id: 0),
+                                                DropDownDTO(name: "ReDesign", id: 1),
+                                                DropDownDTO(name: "ReImpression", id: 2),
+                                                DropDownDTO(name: "ReTryIn", id: 3),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox())
+                                        ],
+                                      ),
+                                     
+                                    ],
+                                  );
+                                }),
+                            Column(
+                              children: [],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

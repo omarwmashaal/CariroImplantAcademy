@@ -19,6 +19,7 @@ class AuthenticationAPI {
   }
 
   static Future<API_Response> Register(ApplicationUserModel model) async {
+    if(model.role=="candidate") model.email="";
     var response = await HTTPRequest.Post(r"Authentication/Register?password=Pa$$word1", model.toJson());
 
     return response;

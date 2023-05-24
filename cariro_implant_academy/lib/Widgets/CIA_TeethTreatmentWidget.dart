@@ -899,9 +899,11 @@ class _StatusWidgetState extends State<_StatusWidget> {
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
+                                  print("seleced");
                                   if (selected!) {
                                     widget.fieldModel.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
                                     widget.fieldModel.doneByAssistantID = siteController.getUser().idInt;
+                                    widget.fieldModel.date = DateTime.now().toUtc().toString();
                                   } else {
                                     widget.fieldModel.doneByAssistant = DropDownDTO();
                                     widget.fieldModel.doneByAssistantID = null;
@@ -1240,6 +1242,7 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                 if (selected!) {
                                   widget.fieldModel.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
                                   widget.fieldModel.doneByAssistantID = siteController.getUser().idInt;
+                                  widget.fieldModel.date = DateTime.now().toUtc().toString();
                                 } else {
                                   widget.fieldModel.doneByAssistant = DropDownDTO();
                                   widget.fieldModel.doneByAssistantID = null;

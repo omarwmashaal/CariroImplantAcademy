@@ -247,7 +247,7 @@ class TreatmentPlanFieldsModel {
     data['planPrice'] = this.planPrice;
     data['assignedToID'] = this.assignedToID;
 
-    data['date'] = this.date;
+    data['date'] =this.date!=null? this.date!.replaceFirst(" ", "T"):null;
     data['doneByAssistantID'] = this.doneByAssistantID;
 
     data['doneBySupervisorID'] = this.doneBySupervisorID;

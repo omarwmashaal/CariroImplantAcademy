@@ -376,11 +376,8 @@ class ApplicationUserDataSource extends DataGridSource {
 
   Future<bool> loadData({int? batch,String? search}) async {
     late API_Response response;
-    if (type == UserRoles.Candidate) {
-      response = await UserAPI.GetCandidates(search: search,batch: batch);
-    }
-    else
-      response =await UserAPI.SearcshUsersByRole(search: search, role: type);
+
+      response =await UserAPI.SearcshUsersByRole(search: search, role: type,batch: batch);
 
 
     if (response.statusCode == 200) {

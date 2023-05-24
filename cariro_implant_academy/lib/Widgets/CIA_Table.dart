@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -18,6 +19,7 @@ class CIA_Table extends StatefulWidget {
       required this.dataSource,
       this.title,
       this.showSum = false,
+      this.allowSorting = false,
       this.showGridLines = false})
       : super(key: key);
 
@@ -29,6 +31,7 @@ class CIA_Table extends StatefulWidget {
   String? title;
   bool showGridLines;
   bool showSum;
+  bool allowSorting;
 
   // List<Object> models;
   @override
@@ -55,6 +58,7 @@ class _CIA_TableState extends State<CIA_Table> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return SfDataGrid(
+            allowSorting: widget.allowSorting,
             highlightRowOnHover: true,
             gridLinesVisibility: widget.showGridLines
                 ? GridLinesVisibility.both

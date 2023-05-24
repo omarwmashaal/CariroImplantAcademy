@@ -644,10 +644,10 @@ packages:
     dependency: "direct main"
     description:
       name: sidebarx
-      sha256: "8f3c1acdb4cd85bd7e5ab3f5bd8b13f5d5beeb82950e52d31c403ffea701e8be"
+      sha256: "26a8392ceddb659c8f2c688beba6c04bcbf520b4d5decb143c5fd7253653081f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.0"
+    version: "0.15.0"
   sky_engine:
     dependency: transitive
     description: flutter
