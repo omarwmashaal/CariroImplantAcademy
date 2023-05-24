@@ -2166,7 +2166,7 @@ class _PatientProstheticTreatmentState extends State<_PatientProstheticTreatment
                                           Expanded(child: SizedBox())
                                         ],
                                       ),
-                                     
+
                                     ],
                                   );
                                 }),
