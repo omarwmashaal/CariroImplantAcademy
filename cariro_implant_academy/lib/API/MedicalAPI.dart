@@ -137,12 +137,37 @@ class MedicalAPI {
     return response;
   }
 
+  static Future<API_Response> UpdatePatientProstheticTreatmentFinalProthesisFullArch(int id, ProstheticTreatmentModel model) async {
+    var response = await HTTPRequest.Put("Medical/UpdatePatientProstheticTreatmentFinalProthesisFullArch?id=$id", model.toJson());
+    return response;
+  }
+
   static Future<API_Response> UpdatePatientProstheticTreatmentDiagnostic(int id, ProstheticTreatmentModel model) async {
+
+    model.prostheticDiagnostic_DiagnosticImpression!.removeWhere((element) =>
+      element.diagnostic==null &&element.nextStep==null
+    );
+
+    model.prostheticDiagnostic_ScanAppliance!.removeWhere((element) =>
+      element.diagnostic==null
+    );
+
+    model.prostheticDiagnostic_Bite!.removeWhere((element) =>
+      element.diagnostic==null &&element.nextStep==null
+    );
+
+
+    if(model.prostheticDiagnostic_DiagnosticImpression![0].diagnostic==null && model.prostheticDiagnostic_DiagnosticImpression![0].nextStep==null)
+          {
+            model.prostheticDiagnostic_DiagnosticImpression = [];
+          }
+
     var response = await HTTPRequest.Put("Medical/UpdatePatientProstheticTreatmentDiagnostic?id=$id", model.toJson());
     return response;
   }
 
   static Future<API_Response> GetPatientProstheticTreatmentDiagnostic(int id) async {
+
     var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentDiagnostic?id=$id");
     if(response.statusCode==200)
       {
@@ -153,6 +178,15 @@ class MedicalAPI {
 
   static Future<API_Response> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
     var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentFinalProthesisSingleBridge?id=$id");
+    if(response.statusCode==200)
+    {
+      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String,dynamic>);
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
+    var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentFinalProthesisFullArch?id=$id");
     if(response.statusCode==200)
     {
       response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String,dynamic>);
@@ -193,4 +227,12 @@ class MedicalAPI {
     }
     return response;
   }
+
+
+  static Future<API_Response> ConsumeImplant(int id) async {
+    var response = await HTTPRequest.Post("Medical/ConsumeImplant?id=$id",null);
+
+    return response;
+  }
+
 }

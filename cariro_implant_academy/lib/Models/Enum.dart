@@ -96,3 +96,27 @@ enum EnumFinalProthesisSingleBridgeImpressionStatus { Scan_by_scan_body, Scan_by
 enum EnumFinalProthesisSingleBridgeTryInStatus { Try_in_abutment_scan_abutment, Try_in_PMMA, Try_in_on_scan_abutment_PMMY, Physical_Impression_closed_tray }
 
 enum EnumFinalProthesisSingleBridgeDeliveryStatus { Done, ReDesign, ReImpression, ReTryIn }
+
+ enum EnumFinalProthesisSingleBridgeHealingCollarNextVisit
+{
+  Needs_Impression
+}
+ enum EnumFinalProthesisSingleBridgeImpressionNextVisit
+{
+  Custom_Abutment,
+  Try_In,
+  Delivery
+}
+ enum EnumFinalProthesisSingleBridgeTryInNextVisit
+{
+  Delivery,
+  Try_In_PMMA,
+  ReImpression
+}
+ enum EnumFinalProthesisSingleBridgeDeliveryNextVisit
+{
+  Done,
+  ReDesign,
+  ReImpression,
+  ReTryIn
+}

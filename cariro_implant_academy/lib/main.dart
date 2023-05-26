@@ -97,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E");
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTEwNzY2OSwiZXhwIjoxNjg1NzEyNDY5LCJpYXQiOjE2ODUxMDc2Njl9.HgDPgYxYawyZZINeoI3crT1GYZmSGurndG-HoRT5Iro",
+    );
     siteController.setSite(Website.CIA);
 
     siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
@@ -107,10 +108,9 @@ class _MyHomePageState extends State<MyHomePage> {
     StockDataSource dataSource1 = StockDataSource();
     StockLogsDataSource dataSource2 = StockLogsDataSource();
     return Scaffold(
-      //body: DashBoardPage(),
+        //body: DashBoardPage(),
 
-      backgroundColor: Color_Background,
-      body: AuthenticationPage()
-    );
+        backgroundColor: Color_Background,
+        body: AuthenticationPage());
   }
 }

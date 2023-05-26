@@ -12,6 +12,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -899,7 +900,6 @@ class _StatusWidgetState extends State<_StatusWidget> {
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
-                                  print("seleced");
                                   if (selected!) {
                                     widget.fieldModel.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
                                     widget.fieldModel.doneByAssistantID = siteController.getUser().idInt;
@@ -1375,9 +1375,15 @@ class _StatusWidgetState extends State<_StatusWidget> {
                                                       if (res.statusCode == 200) implants = res.result as List<DropDownDTO>;
                                                       return res;
                                                     },
-                                              onSelect: (value) {
+                                              onSelect: (value) async{
                                                 widget.fieldModel.implant!.name = value.name;
                                                 widget.fieldModel.implantID = value.id;
+                                                await CIA_ShowPopUpYesNo(context: context,
+                                                    title: "Consume Implant ${widget.fieldModel.implant!.name}?",
+                                                    onSave: ()async{
+                                                  var res =await  MedicalAPI.ConsumeImplant(widget.fieldModel.implantID!);
+                                                  ShowSnackBar(isSuccess: res.statusCode==200,message: res.errorMessage??"");
+                                                });
                                                 setState(() {});
                                               },
                                             ),
