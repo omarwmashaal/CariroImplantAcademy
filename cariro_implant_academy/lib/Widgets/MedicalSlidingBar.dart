@@ -39,7 +39,7 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
                 bool changePage = true;
                 if (widget.pages.firstWhere((element) => element.isSelected == true).onSave != null)
                   await widget.pages.firstWhere((element) => element.isSelected == true).onSave!();
-
+                if(e.onTap!=null) e.onTap!();
                 /*await CIA_ShowPopUpSaveRequest(
                     context: context,
                     onSave: () {
@@ -89,6 +89,7 @@ class MedicalSlidingModel {
   int _index = 0;
   bool isSelected = false;
   Function? onSave;
+  Function? onTap;
 
   setIndex(int i) {
     _index = i;
@@ -98,5 +99,5 @@ class MedicalSlidingModel {
     return _index;
   }
 
-  MedicalSlidingModel({this.onSave, required this.name, this.isSelected = false});
+  MedicalSlidingModel({this.onSave, required this.name, this.isSelected = false,this.onTap});
 }

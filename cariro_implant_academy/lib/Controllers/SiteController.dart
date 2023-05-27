@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:go_router/go_router.dart';
 
 import '../Constants/Controllers.dart';
 import '../Widgets/SlidingTab.dart';
@@ -24,6 +25,7 @@ class SiteController extends GetxController {
   ApplicationUserModel getUser() => _applicationUser;
 
   setUser(ApplicationUserModel user) => _applicationUser = user;
+
   Widget appBarWidget = Container();
   RxString title = "".obs;
 
@@ -64,10 +66,21 @@ class SiteController extends GetxController {
     update();
   }
 
-  setMedicalAppBar({required MedicalSlidingBar bar}) async
+  setMedicalAppBar({required MedicalSlidingBar bar, required BuildContext context}) async
   {
+    //var path = GoRouter.of(context).location.split("/").last;
+    for(var element in bar.pages)
+      {
+        if(element!.name!.removeAllWhitespace.toString().toLowerCase()=="medical".toLowerCase())
+        {
+          element.isSelected = true;
+         // title.value = element.name;
+          break;
+        }
+      }
+
     appBarWidget = bar;
-    await Future.delayed(Duration(microseconds: 1));
+    await Future.delayed(Duration(milliseconds: 1));
     update();
   }
 

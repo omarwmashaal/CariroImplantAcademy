@@ -24,9 +24,10 @@ class DrawerItems extends StatefulWidget {
 
 class _DrawerItemsState extends State<DrawerItems> {
   double radius = 30;
-
+SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
   @override
   Widget build(BuildContext context) {
+
     return Container(
       padding: EdgeInsets.all(1),
       decoration:  BoxDecoration(
@@ -41,7 +42,7 @@ class _DrawerItemsState extends State<DrawerItems> {
         ],
       ),
       child: SidebarX(
-        controller: SidebarXController(selectedIndex: 0, extended: false),
+        controller: ss,
         headerBuilder: (context, extended) {
           return Image(
             image: siteController.getSiteLogo(),
@@ -50,7 +51,7 @@ class _DrawerItemsState extends State<DrawerItems> {
             fit: BoxFit.contain,
           );
         },
-        items: PagesController.DrawerItems(),
+        items: PagesController.DrawerItems(context,ss),
         showToggleButton: true,
         theme: SidebarXTheme(
           selectedItemDecoration: BoxDecoration(

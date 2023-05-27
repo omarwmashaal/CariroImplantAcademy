@@ -10,6 +10,7 @@ import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
+import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
@@ -73,12 +74,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    siteController.setToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E");
+    siteController.setSite(Website.CIA);
+
+    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
+    siteController.setRole("admin");
+    patientID = 2;
+    StockDataSource dataSource1 = StockDataSource();
+    StockLogsDataSource dataSource2 = StockLogsDataSource();
+    return MaterialApp.router(
       title: 'easy_sidemenu Demo',
       theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
-      home: const MyHomePage(title: 'easy_sidemenu Demo'),
       debugShowCheckedModeBanner: false,
-    );
+      //routeInformationParser:CIA_Router.routes.routeInformationParser ,
+     // routerDelegate: CIA_Router.routes.routerDelegate,
+      routerConfig: CIA_Router.routes,
+
+      );
   }
 }
 
@@ -104,7 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
     siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
     siteController.setRole("admin");
     patientID = 2;
-    MasterController = PatientMedicalController(PatientInfoModel(id: 2));
     StockDataSource dataSource1 = StockDataSource();
     StockLogsDataSource dataSource2 = StockLogsDataSource();
     return Scaffold(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class SiteLayout extends StatefulWidget {
   SiteLayout({Key? key, required this.largeScreen}) : super(key: key);
   Widget largeScreen;
+  static String routeName = "/CIA_HomePage";
 
   @override
   State<SiteLayout> createState() => _SiteLayoutState();
