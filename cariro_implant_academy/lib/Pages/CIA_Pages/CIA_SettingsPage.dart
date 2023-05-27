@@ -260,8 +260,8 @@ class _SettingsPageState extends State<_SettingsPage> {
                                             child: CIA_TextFormField(
                                               label: "Number",
                                               isNumber: true,
-                                              onChange: (v) => e.number = int.parse(v),
-                                              controller: TextEditingController(text: (e.number ?? 0).toString()),
+                                              onChange: (v) => e.count = int.parse(v),
+                                              controller: TextEditingController(text: (e.count ?? 0).toString()),
                                             ),
                                           ),
                                         ],
@@ -299,7 +299,7 @@ class _SettingsPageState extends State<_SettingsPage> {
                                           },
                                         ),
                                         onSave: () async {
-                                          list.add(TacCompanyModel(name: tempName, number: tempNumber));
+                                          list.add(TacCompanyModel(name: tempName, count: tempNumber));
                                           await SettingsAPI.AddTacsCompanies!(list);
                                           setState(() {});
                                         });

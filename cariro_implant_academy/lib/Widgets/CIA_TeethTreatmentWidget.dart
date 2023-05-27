@@ -2086,7 +2086,7 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
                                           onSelect: (value) {
                                             surgicalTreatmentModel.openSinusLift_TacsCompanyID = value.id;
                                             surgicalTreatmentModel.openSinusLift_TacsCompany = tacs.firstWhere((element) => element.id == value.id);
-                                            availableNumber = surgicalTreatmentModel.openSinusLift_TacsCompany!.number ?? 0;
+                                            availableNumber = surgicalTreatmentModel.openSinusLift_TacsCompany!.count ?? 0;
                                             setState(() {});
                                           },
                                         ),
