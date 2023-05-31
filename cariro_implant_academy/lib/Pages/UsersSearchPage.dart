@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../Widgets/Title.dart';
 import '../Models/Enum.dart';
@@ -17,7 +18,10 @@ import '../Widgets/CIA_TextField.dart';
 class UserSearchPage extends StatefulWidget {
   UserSearchPage({Key? key, required this.dataSource, this.type}) : super(key: key);
   ApplicationUserDataSource dataSource;
-  static String routeName = "Users";
+  static String assistantsRouteName = "Users/Assistants";
+  static String candidatesRouteName = "Candidates";
+  static String instructorsRouteName = "Users/Instructors";
+
   String? type;
 
   @override
@@ -106,7 +110,8 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   onCellClick: (index) {
                     var d = widget.dataSource.models[index - 1];
                     selectedUserId = d.idInt ?? 0;
-                    internalPagesController.jumpToPage(1);
+                    context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserData.candidateRouteName:ViewUserData.routeName,pathParameters: {"id":selectedUserId.toString()});
+
                   },
                 ),
               ),

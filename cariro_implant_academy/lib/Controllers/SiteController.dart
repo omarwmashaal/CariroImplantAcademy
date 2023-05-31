@@ -1,6 +1,9 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
+import 'package:cariro_implant_academy/Pages/SharedPages/PatientSharedPages.dart';
+import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -8,7 +11,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:go_router/go_router.dart';
 
+import '../API/MedicalAPI.dart';
 import '../Constants/Controllers.dart';
+import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
+import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
+import '../Pages/CIA_Pages/Patient_MedicalInfo.dart';
+import '../Pages/CIA_Pages/PatientsSearchPage.dart';
+import '../Pages/CIA_Pages/ViewUserPage.dart';
+import '../Pages/UsersSearchPage.dart';
 import '../Widgets/SlidingTab.dart';
 
 class SiteController extends GetxController {
@@ -20,6 +30,7 @@ class SiteController extends GetxController {
   List<String> _CIA_Roles = ["admin", "instructor", "secretary", "assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
+  RxBool disableMedicalEdit = true.obs;
   ApplicationUserModel _applicationUser = ApplicationUserModel();
 
   ApplicationUserModel getUser() => _applicationUser;
@@ -27,38 +38,39 @@ class SiteController extends GetxController {
   setUser(ApplicationUserModel user) => _applicationUser = user;
 
   Widget appBarWidget = Container();
-  RxString title = "".obs;
+  String selectedTitle = "";
+  String title = "";
 
   setAppBarWidget(
-      {List<String>? tabs,
+      {List<SlidingTabModel>? tabs,
       Function? onChange,
       Future<bool> Function()? popUp,
       double? width,
       double? height,
+      SlidingTabModel? initalTab,
       double? fontSize}) async {
     if (tabs != null) {
-      appBarWidget = Container(
-        key: GlobalKey(),
-        child: SlidingTab(
-            key: GlobalKey(),
-            titles: tabs,
-            weight: width == null ? 400 : width,
-            height: height,
-            fontSize: fontSize,
-            controller: tabsController,
-            onChange: ((value) async {
-              if (popUp != null) {
-                bool changePage = await popUp();
-                if(!changePage) return;
-              }
-              print(tabsController.page.toString() + " => $value");
-              tabsController.jumpToPage(value);
-              title.value = tabs[value];
-            })),
-      );
+      appBarWidget = GetBuilder<SiteController>(
+          builder: (siteController) => Container(
+                key: GlobalKey(),
+                child: SlidingTab(
+                    key: GlobalKey(),
+                    tabs: tabs,
+                    weight: width == null ? 400 : width,
+                    height: height,
+                    fontSize: fontSize,
+                    onChange: ((value) async {
+                      if (popUp != null) {
+                        bool changePage = await popUp();
+                        if (!changePage) return;
+                      }
+                      title = tabs[value].title;
+                    })),
+              ));
+
       //title.value = tabs[0];
       await Future.delayed(Duration(microseconds: 1));
-      title.value = tabs[0];
+
     } else {
       appBarWidget = Container();
       await Future.delayed(Duration(microseconds: 1));
@@ -66,18 +78,116 @@ class SiteController extends GetxController {
     update();
   }
 
-  setMedicalAppBar({required MedicalSlidingBar bar, required BuildContext context}) async
-  {
-    //var path = GoRouter.of(context).location.split("/").last;
-    for(var element in bar.pages)
-      {
-        if(element!.name!.removeAllWhitespace.toString().toLowerCase()=="medical".toLowerCase())
-        {
-          element.isSelected = true;
-         // title.value = element.name;
-          break;
-        }
+  setAppBarSelectedTitle(String title) async {
+    selectedTitle = title;
+    await Future.delayed(Duration(microseconds: 1));
+    update();
+  }
+
+  setDynamicAppBar({required BuildContext context, Map<String, String>? pathQueries}) {
+    var path = GoRouter.of(context).location.split("/").last;
+    if ((path == SettingsPage.routeName && getRole() == "admin") || (path == UsersSettingsPage.routeName && getRole() == "admin"))
+      siteController.setAppBarWidget(tabs: [
+        SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),
+        SlidingTabModel(title: "Users", namedDirectory: UsersSettingsPage.routeName),
+      ]);
+    else if (path == PatientInfo_SharedPage.viewPatientRouteName || path == PatientVisits_SharedPage.routeName || path == PatientComplains.routeName)
+      siteController.setAppBarWidget(tabs: [
+        SlidingTabModel(title: "Patient Data", namedDirectory: PatientInfo_SharedPage.viewPatientRouteName, pathParameters: pathQueries),
+        SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits_SharedPage.routeName, pathParameters: pathQueries),
+        SlidingTabModel(title: "Complains", namedDirectory: PatientComplains.routeName, pathParameters: pathQueries),
+      ]);
+    else if (path == PatientsSearchPage.routeName || path == PatientsSearchPage.myPatientsRouteName || path == PatientsComplainsPage.routeName) {
+      if (getRole() == "secretary")
+        siteController.setAppBarWidget(tabs: [
+          SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
+          SlidingTabModel(title: "Patient Visits", namedDirectory: ""),
+          SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
+        ]);
+      else
+        siteController.setAppBarWidget(tabs: [
+          SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
+          SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
+          SlidingTabModel(title: "Patient Visits", namedDirectory: ""),
+          SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
+        ]);
+    } else if (path == ViewUserData.candidateRouteName || path == ViewCandidateData.routeName)
+      siteController.setAppBarWidget(tabs: [
+        SlidingTabModel(title: "Profile", namedDirectory: ViewUserData.candidateRouteName, pathParameters: pathQueries),
+        SlidingTabModel(title: "Data", namedDirectory: ViewCandidateData.routeName, pathParameters: pathQueries),
+      ]);
+    else if (path == CashFlowIncomeSharedPage.routeName || path == CashFlowExpensesSharedPage.routeName || path == CashFlowSummarySharedPage.routeName)
+      siteController.setAppBarWidget(tabs: [
+        SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomeSharedPage.routeName),
+        SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesSharedPage.routeName),
+        SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummarySharedPage.routeName),
+      ]);
+    else if (path == StockListSharedPage.routeName || path == StockLogsSharedPage.routeName)
+      siteController.setAppBarWidget(tabs: [
+        SlidingTabModel(title: "Stock", namedDirectory: StockListSharedPage.routeName),
+        SlidingTabModel(title: "Logs", namedDirectory: StockLogsSharedPage.routeName),
+      ]);
+    else if (path == PatientMedicalHistory.routeName ||
+        path == PatientDentalExamination.routeName ||
+        path == PatientProstheticTreatment.routeName ||
+        path == PatientDentalHistory.routeName ||
+        path == PatientNonSurgicalTreatment.routeName ||
+        path == PatientTreatmentPlan.routeName ||
+        path == PatientSurgicalTreatment.routeName)
+      setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
+    else
+      setAppBarWidget();
+  }
+
+  setMedicalAppBar({required int id, required BuildContext context}) async {
+    var path = GoRouter.of(context).location.split("/").last;
+    var pages = [
+      MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": id.toString()})),
+      MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(PatientDentalHistory.routeName, pathParameters: {"id": id.toString()})),
+      MedicalSlidingModel(name: "Dental Examination", onTap: () => context.goNamed(PatientDentalExamination.routeName, pathParameters: {"id": id.toString()})),
+      MedicalSlidingModel(
+          name: "Non Surgical Treatment",
+          onTap: () => context.goNamed(PatientNonSurgicalTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onSave: () async {
+            if(!siteController.disableMedicalEdit.value) {
+              await MedicalAPI.AddPatientNonSurgicalTreatment(id, nonSurgicalTreatment);
+              await MedicalAPI.UpdatePatientDentalExamination(id, tempDentalExamination);
+            }
+          }),
+      MedicalSlidingModel(
+          name: "Treatment Plan",
+          onTap: () => context.goNamed(PatientTreatmentPlan.routeName, pathParameters: {"id": id.toString()}),
+          onSave: () async {
+            if(!siteController.disableMedicalEdit.value)
+            await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
+          }),
+      MedicalSlidingModel(
+          name: "Surgical Treatment",
+          onTap: () => context.goNamed(PatientSurgicalTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onSave: () async {
+            if(!siteController.disableMedicalEdit.value)
+            await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
+          }),
+      MedicalSlidingModel(
+          name: "Prosthetic Treatment",
+          onTap: () => context.goNamed(PatientProstheticTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onSave: () {
+            print("3");
+          }),
+      MedicalSlidingModel(
+          name: "Photos and CBCTs",
+          onSave: () {
+            print("4");
+          }),
+    ];
+    for (var element in pages) {
+      if (element!.name!.removeAllWhitespace.toString().toLowerCase() == path.toLowerCase()) {
+        element.isSelected = true;
+         title = element.name;
+        break;
       }
+    }
+    var bar = MedicalSlidingBar(key: new GlobalKey(), pages: pages);
 
     appBarWidget = bar;
     await Future.delayed(Duration(milliseconds: 1));

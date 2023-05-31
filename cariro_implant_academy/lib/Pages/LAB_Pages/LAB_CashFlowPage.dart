@@ -8,17 +8,18 @@ class LAB_CashFlowsSearchPage extends StatefulWidget {
   const LAB_CashFlowsSearchPage({Key? key}) : super(key: key);
 
   @override
-  State<LAB_CashFlowsSearchPage> createState() =>
-      _LAB_CashFlowsSearchPageState();
+  State<LAB_CashFlowsSearchPage> createState() => _LAB_CashFlowsSearchPageState();
 }
 
 class _LAB_CashFlowsSearchPageState extends State<LAB_CashFlowsSearchPage> {
   CashFlowDataSource i_dataSource = CashFlowDataSource(type: CashFlowType.income);
   CashFlowDataSource e_dataSource = CashFlowDataSource(type: CashFlowType.expenses);
   int selectedPage = 0;
+
   @override
   Widget build(BuildContext context) {
-    return CashFlowSharedPage(
-        i_dataSource: i_dataSource, e_dataSource: e_dataSource);
+    return CashFlowIncomeSharedPage(
+     // e_dataSource: e_dataSource,
+    );
   }
 }

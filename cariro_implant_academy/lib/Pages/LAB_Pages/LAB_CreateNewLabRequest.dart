@@ -12,7 +12,7 @@ class LAB_CreateNewLabRequest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setAppBarWidget();
+
     return Column(
       children: [
         TitleWidget(

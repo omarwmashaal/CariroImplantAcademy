@@ -3,30 +3,43 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:slide_switcher/slide_switcher.dart';
+
+class SlidingTabModel {
+  String title;
+  String namedDirectory;
+  Map<String, String>? pathParameters;
+
+  SlidingTabModel({
+    required this.title,
+    required this.namedDirectory,
+    this.pathParameters,
+  });
+}
 
 class SlidingTab extends StatefulWidget {
   SlidingTab(
       {Key? key,
-      required this.titles,
+      required this.tabs,
       this.onChange,
       required this.weight,
       this.height,
       this.fontSize,
       this.adapt,
       this.selectedColor,
-      required this.controller})
+})
       : super(key: key);
 
   bool? adapt = false;
 
-  List<String> titles;
+  List<SlidingTabModel> tabs;
   Function? onChange;
   double weight;
   double? height;
   double? fontSize;
   Color? selectedColor;
-  TabsController controller;
   late List<Widget> ItemsWidget;
 
   @override
@@ -35,23 +48,28 @@ class SlidingTab extends StatefulWidget {
 
 class _SlidingTabState extends State<SlidingTab> {
   int switcherIndex = 0;
+  var path = "";
 
   @override
   Widget build(BuildContext context) {
+    path = GoRouter.of(context).location.split("/").last;
+    switcherIndex =  widget.tabs.indexWhere((element) => element.namedDirectory == path) == -1 ? 0 : widget.tabs.indexWhere((element) => element.namedDirectory == path);
+    siteController.title = widget.tabs[switcherIndex].title;
     return SlideSwitcher(
       children: BuildItems(),
+      initialIndex: widget.tabs.indexWhere((element) => element.namedDirectory == path) == -1 ? 0 : widget.tabs.indexWhere((element) => element.namedDirectory == path),
       onSelect: (int index) {
         setState(() => switcherIndex = index);
-        if (widget.onChange != null) widget.onChange!(index);
-        else widget.controller.index.value = index;
+        context.goNamed(widget.tabs[index].namedDirectory, pathParameters: widget.tabs[index].pathParameters ?? Map<String, String>());
+        if (widget.onChange != null)
+          widget.onChange!(index);
+        else
+          print("");
+         // widget.controller.index.value = index;
       },
       containerColor: Colors.transparent,
       containerBorder: Border.all(color: Color_TextFieldBorder),
-      slidersColors: [
-        (widget.selectedColor == null
-            ? Color_Accent
-            : widget.selectedColor as Color)
-      ],
+      slidersColors: [(widget.selectedColor == null ? Color_Accent : widget.selectedColor as Color)],
       containerHeight: widget.height == null ? 50 : widget.height as double,
       containerWight: widget.weight,
       containerBorderRadius: 8,
@@ -60,14 +78,18 @@ class _SlidingTabState extends State<SlidingTab> {
 
   @override
   void initState() {
-    widget.controller.index.value = 0;
+  //  widget.controller.index.value = switcherIndex;
+
   }
 
   List<Widget> BuildItems() {
     List<Widget> returnValue = <Widget>[];
     int index = 0;
-    for (String title in widget.titles) {
+
+
+    for (SlidingTabModel tab in widget.tabs) {
       returnValue.add(Container(
+        key: GlobalKey(),
         //padding: switcherIndex==index? null:null,//EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         /*decoration: switcherIndex==index? null:null,BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -77,7 +99,7 @@ class _SlidingTabState extends State<SlidingTab> {
           )*/
         child: Text(
           textAlign: TextAlign.center,
-          title,
+          tab.title,
           style: TextStyle(
             fontSize: widget.fontSize == null ? 20 : widget.fontSize as double,
             color: switcherIndex == index ? Colors.white : Color_TextSecondary,

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
@@ -73,6 +75,15 @@ static Future<API_Response> GetCandidateDetails(int id,{String? from,String? to}
       response.result = ((response.result??[]) as List<dynamic>).map((e) => CandidateDetails.fromJson(e as Map<String,dynamic>)).toList();
 
     }
+    return response;
+  }
+  static Future<API_Response> DownloadImage(int id) async {
+    var response = await HTTPRequest.Get("User/DownloadImage?id=$id");
+    return response;
+  }
+
+  static Future<API_Response> UploadImage(int id, EnumImageType type, Uint8List imageBytess) async {
+    var response = await HTTPRequest.UploadImage("User/UploadImage?id=$id&type=${type.index}", imageBytess);
     return response;
   }
 

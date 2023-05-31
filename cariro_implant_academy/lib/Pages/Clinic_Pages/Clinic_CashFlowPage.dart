@@ -16,9 +16,11 @@ class _Clinic_CashFlowPageState extends State<Clinic_CashFlowPage> {
   CashFlowDataSource i_dataSource = CashFlowDataSource(type: CashFlowType.income);
   CashFlowDataSource e_dataSource = CashFlowDataSource(type: CashFlowType.expenses);
   int selectedPage = 0;
+
   @override
   Widget build(BuildContext context) {
-    return CashFlowSharedPage(
-        i_dataSource: i_dataSource, e_dataSource: e_dataSource);
+    return CashFlowIncomeSharedPage(
+      //e_dataSource: e_dataSource,
+    );
   }
 }

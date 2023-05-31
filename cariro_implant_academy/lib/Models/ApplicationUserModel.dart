@@ -35,6 +35,7 @@ class ApplicationUserModel {
   DropDownDTO? workPlace;
   String? phoneNumber2;
   EnumLabRequestSources? workPlaceEnum;
+  int? profileImageId;
 
   ApplicationUserModel({
     this.name = "",
@@ -54,12 +55,14 @@ class ApplicationUserModel {
     this.id,
     this.userName,
     this.email,
+    this.profileImageId,
     this.phoneNumber,
     this.workPlaceEnum,
   });
 
   ApplicationUserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    profileImageId = json['profileImageId'];
     dateOfBirth = json['dateOfBirth'];
     gender = json['gender'];
     graduatedFrom = json['graduatedFrom'];

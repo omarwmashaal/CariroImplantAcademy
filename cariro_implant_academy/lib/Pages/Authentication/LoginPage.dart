@@ -47,8 +47,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        SlidingTab(
-                            titles: ["CIA", "LAB", "Clinic"],
+                        /*SlidingTab(
+                          //todo: fix this
+                            //tabs: ["CIA", "LAB", "Clinic"],
+                            tabs: [],
                             onChange: (value) {
                               if (value == 0) {
                                 selectedTab = "CIA";
@@ -63,7 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             },
                             weight: 450,
-                            controller: TabsController()),
+                           ),*/
+
                         Image(
                           image: siteController.getSiteLogo(),
                           width: 150,

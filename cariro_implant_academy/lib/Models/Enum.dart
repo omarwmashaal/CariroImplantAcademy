@@ -63,7 +63,8 @@ enum EnumImageType {
   PatientProfile,
   IdBack,
   IdFront,
-  Remake,
+  UserProfile,
+  Pros
 }
 
 enum EnumProstheticDiagnosticDiagnosticImpressionDiagnostic { Physical, Digital }

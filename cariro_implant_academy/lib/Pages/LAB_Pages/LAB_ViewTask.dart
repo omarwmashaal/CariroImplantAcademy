@@ -47,7 +47,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget();
+    //siteController.setAppBarWidget();
   }
 
   @override
@@ -207,7 +207,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                 title: "Mark request as finished?",
                                 onSave: () async {
                                   var res = await LAB_RequestsAPI.MarkRequestAsDone(widget.id, thisStepNotes);
-                                  ShowSnackBar(isSuccess: res.statusCode == 200);
+                                  ShowSnackBar(context,isSuccess: res.statusCode == 200);
                                   setState(() {});
                                 },
                                 onDontSave: () => setState(() {}),
@@ -303,7 +303,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                         CIA_PrimaryButton(label: "Save Receipt", onTab: ()
                                         async{
                                           var res = await LAB_RequestsAPI.AddOrUpdateRequestReceipt(widget.id, request.steps??[]);
-                                          ShowSnackBar(isSuccess: res.statusCode==200);
+                                          ShowSnackBar(context,isSuccess: res.statusCode==200);
                                           setState(() {
 
                                           });
@@ -408,7 +408,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                               thisStepNotes = null;
                                               nextAssignId = null;
                                               nextTaskId = null;
-                                              ShowSnackBar(isSuccess: res.statusCode == 200);
+                                              ShowSnackBar(context,isSuccess: res.statusCode == 200);
                                               setState(() {});
                                             },
                                           ),

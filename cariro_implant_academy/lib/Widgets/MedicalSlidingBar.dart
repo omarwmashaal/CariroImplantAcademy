@@ -23,6 +23,7 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
       i++;
     });
     return Row(
+      key: GlobalKey(),
       children: widget.pages.map((e) {
         Widget _widget = Text("");
         if (e.isSelected)
@@ -54,8 +55,7 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
                     onDontSave: () {
                       changePage = true;
                     });*/
-                if (!changePage) return;
-                tabsController.jumpToPage(e.getIndex());
+
                 e.isSelected = true;
                 for (var ff in widget.pages) {
                   if (ff.getIndex() == e.getIndex())
@@ -78,7 +78,7 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
     int i = 0;
     widget.pages.forEach((element) {
       element.setIndex(i);
-      element.isSelected = i == 0;
+     // element.isSelected = i == 0;
       i++;
     });
   }

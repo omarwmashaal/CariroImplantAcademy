@@ -53,7 +53,7 @@ class CashFlowModel {
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     receiptID = json['receiptID'];
-    receipt = ReceiptModel.fromJson(json['receipt']??Map<String,dynamic>());
+    receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     name = json['name'];
     categoryId = json['categoryId'];
@@ -68,12 +68,12 @@ class CashFlowModel {
     count = json['count'];
     paymentMethodId = json['paymentMethodId'];
     paymentMethod = json['paymentMethod'] != null ? new DropDownDTO.fromJson(json['paymentMethod']) : DropDownDTO();
-   paymentLogId = json['paymentLogId'];
+    paymentLogId = json['paymentLogId'];
     paymentLog = json['paymentLog'] != null ? new DropDownDTO.fromJson(json['paymentLog']) : DropDownDTO();
     notes = json['notes'];
     type = json['type'];
     receiptID = json['receiptID'];
-    receipt = ReceiptModel.fromJson(json['receipt']??Map<String,dynamic>());
+    receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
   }
 
   Map<String, dynamic> toJson() {
@@ -125,57 +125,53 @@ class CashFlowDataSource extends DataGridSource {
   }
 
   init() {
-    if(type == CashFlowType.income)
-      {
-        columns = [
-          "ID",
-          "Date",
-          "Category",
-          "Created by",
-          "Patient",
-          "Receipt Id",
-          "Payment Log Id",
-          "Amount",
-        ];
-        _cashFlowData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.id),
-          DataGridCell<String>(columnName: 'Date', value: e.date),
-          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-          DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-          DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
-          DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
-          DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
-          DataGridCell<int>(columnName: 'Amount', value: e.price),
-        ]))
-            .toList();
-      }
-    else if(type == CashFlowType.expenses)
-      {
-        columns = [
-          "ID",
-          "Item",
-          "Category",
-          "Supplier",
-          "Created by",
-          "Amount",
-          "Method",
-          "Notes",
-        ];
-        _cashFlowData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.id),
-          DataGridCell<String>(columnName: 'Item', value: e.name),
-          DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-          DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
-          DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-          DataGridCell<int>(columnName: 'Amount', value: e.count),
-          DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
-          DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
-        ]))
-            .toList();
-      }
-
+    if (type == CashFlowType.income) {
+      columns = [
+        "ID",
+        "Date",
+        "Category",
+        "Created by",
+        "Patient",
+        "Receipt Id",
+        "Payment Log Id",
+        "Amount",
+      ];
+      _cashFlowData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<String>(columnName: 'Date', value: e.date),
+                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
+                DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
+                DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
+                DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
+              ]))
+          .toList();
+    } else if (type == CashFlowType.expenses) {
+      columns = [
+        "ID",
+        "Item",
+        "Category",
+        "Supplier",
+        "Created by",
+        "Amount",
+        "Method",
+        "Notes",
+      ];
+      _cashFlowData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<String>(columnName: 'Item', value: e.name),
+                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
+                DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                DataGridCell<int>(columnName: 'Amount', value: e.count),
+                DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
+                DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
+              ]))
+          .toList();
+    }
   }
 
   List<DataGridRow> _cashFlowData = [];
@@ -196,12 +192,17 @@ class CashFlowDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> loadData() async {
+  Future<bool> loadData({
+    String? from,
+    String? to,
+    int? catId,
+    int? paymentMethodId,
+  }) async {
     late API_Response response;
 
     if (type == CashFlowType.income)
-      response = await CashFlowAPI.ListIncome();
-    else if (type == CashFlowType.expenses) response = await CashFlowAPI.ListExpenses();
+      response = await CashFlowAPI.ListIncome(from:from,to:to,catId:catId,paymentMethodId:paymentMethodId);
+    else if (type == CashFlowType.expenses) response = await CashFlowAPI.ListExpenses(from:from,to:to,catId:catId,paymentMethodId:paymentMethodId);
     if (response.statusCode == 200) models = response.result as List<CashFlowModel>;
     init();
     notifyListeners();

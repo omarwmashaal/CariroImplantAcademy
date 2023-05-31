@@ -122,10 +122,10 @@ class StockDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> loadData() async {
+  Future<bool> loadData({String? search}) async {
     late API_Response response;
 
-    response = await StockAPI.GetAllStock();
+    response = await StockAPI.GetAllStock(search: search);
     if (response.statusCode == 200) {
       models = response.result as List<StockModel>;
     }
@@ -192,10 +192,10 @@ class StockLogsDataSource extends DataGridSource {
         }).toList());
   }
 
-  Future<bool> loadData() async {
+  Future<bool> loadData({String? search}) async {
     late API_Response response;
 
-    response = await StockAPI.GetStockLogs();
+    response = await StockAPI.GetStockLogs(search:search);
     if (response.statusCode == 200) {
       models = response.result as List<StockLogModel>;
     }

@@ -36,7 +36,6 @@ class TabsLayout extends StatefulWidget {
   Widget? sideWidget;
   Function? onChange;
 
-  final tabsController = new TabsController();
 
   @override
   State<TabsLayout> createState() => _TabsLayoutState();
@@ -83,17 +82,17 @@ class _TabsLayoutState extends State<TabsLayout> {
                     child: SlidingTab(
                       onChange: ((value) {
                         if (widget.onChange != null) widget.onChange!(value);
-                        tabsController.jumpToPage(value);
+                       // tabsController.jumpToPage(value);
                         setState(() {
                           index = value;
                         });
                       }),
-                      titles: widget.tabs,
+                      tabs: [],//widget.tabs,
                       weight:
                           widget.weight == null ? 400 : widget.weight as double,
                       height: widget.height,
                       fontSize: widget.fontSize,
-                      controller: tabsController,
+                     // controller: tabsController,
                     ),
                   ),
                   widget.sideWidget == null
@@ -122,7 +121,6 @@ class _TabsLayoutState extends State<TabsLayout> {
             Expanded(
                 flex: widget.beforeTitleWidget == null ? 10 : 8,
                 child: PageView(
-                  controller: tabsController,
                   children: widget.pages,
                 ))
           ],

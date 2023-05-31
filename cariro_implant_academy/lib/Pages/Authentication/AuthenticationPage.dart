@@ -35,12 +35,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             ? LoginPage(
                 onLogin: (email, password) async {
                   //context.go("/"+PatientsSearchPage.routeName);
-                  context.go("/Patients");
+
                   var login = await AuthenticationAPI.Login(email, password);
                   if (login.statusCode == 200) {
-                    //context.go("Patsients");
+                    context.go("/CIA/Patients");
                   } else {
-                    ShowSnackBar(
+                    ShowSnackBar(context,
                         isSuccess: false,
                         title: "Login Failed",
                         message: login.errorMessage!);

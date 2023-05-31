@@ -92,7 +92,7 @@ CIA_PopupDialog_DateTimePicker(
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -101,7 +101,7 @@ CIA_PopupDialog_DateTimePicker(
       ),
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -144,7 +144,7 @@ CIA_PopupDialog_DateOnlyPicker(
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -153,7 +153,7 @@ CIA_PopupDialog_DateOnlyPicker(
       ),
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -163,7 +163,7 @@ CIA_PopupDialog_DateOnlyPicker(
   ).show();
 }
 
-CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
+CIA_PopupDialog_Table(int patientId, BuildContext context, String title,
     Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
 
@@ -179,7 +179,7 @@ CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
               width: 1000,
               height: 400,
               child: FutureBuilder(
-                  future: dataSource.loadData(patientID),
+                  future: dataSource.loadData(patientId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return CIA_Table(
@@ -197,7 +197,7 @@ CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
                               buttons: [
                                 DialogButton(
                                   width: 150,
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                                   child: Text(
                                     "Ok",
                                     style: TextStyle(
@@ -226,7 +226,7 @@ CIA_PopupDialog_Table(int paitnetID, BuildContext context, String title,
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         child: Text(
           "Ok",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -262,7 +262,7 @@ CIA_ShowPopUp(
         width: 150,
         onPressed: () {
 
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
           if (onSave != null) onSave!();
         },
         child: Text(
@@ -298,7 +298,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () {
           if (onCancel != null) onCancel();
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "Cancel" : buttonText,
@@ -310,7 +310,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () async {
           if (onDontSave != null) onDontSave();
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "Don't Save" : buttonText,
@@ -322,7 +322,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () {
           if (onSave != null) onSave();
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "Save" : buttonText,
@@ -350,7 +350,7 @@ CIA_ShowPopUpYesNo(
         width: 150,
         onPressed: () {
           if (onCancel != null) onCancel();
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "No" : buttonText,
@@ -363,7 +363,7 @@ CIA_ShowPopUpYesNo(
         width: 150,
         onPressed: () {
           if (onSave != null) onSave();
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "Yes" : buttonText,
@@ -426,7 +426,7 @@ CIA_PopUpSearch(
                     title: Text(results[index].name!),
                     onTap: () {
                       if (onChoose != null) onChoose!(results[index]);
-                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).pop();
                     },
                   );
                 },
@@ -441,7 +441,7 @@ CIA_PopUpSearch(
         color: Color_Accent,
         width: 150,
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context, rootNavigator: true).pop();
         },
         child: Text(
           buttonText == null ? "Ok" : buttonText,

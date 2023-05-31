@@ -17,7 +17,7 @@ class SurgicalTreatmentModel {
   bool? guidedBoneRegenerationCutByDisc;
   bool? guidedBoneRegenerationCutByPiezo;
   bool? guidedBoneRegenerationCutByScrews;
-  String? guidedBoneRegenerationCutByScrewsNumber;
+  int? guidedBoneRegenerationCutByScrewsNumber;
   bool? guidedBoneRegenerationBoneParticle;
   bool? guidedBoneRegenerationBoneParticle100Autogenous;
   bool? guidedBoneRegenerationBoneParticle100Xenograft;
@@ -100,7 +100,7 @@ class SurgicalTreatmentModel {
       this.guidedBoneRegenerationCutByDisc = false,
       this.guidedBoneRegenerationCutByPiezo = false,
       this.guidedBoneRegenerationCutByScrews = false,
-      this.guidedBoneRegenerationCutByScrewsNumber,
+      this.guidedBoneRegenerationCutByScrewsNumber=0,
       this.guidedBoneRegenerationBoneParticle = false,
       this.guidedBoneRegenerationBoneParticle100Autogenous = false,
       this.guidedBoneRegenerationBoneParticle100Xenograft = false,
@@ -184,7 +184,7 @@ class SurgicalTreatmentModel {
     guidedBoneRegenerationCutByDisc = json['guidedBoneRegeneration_CutBy_Disc'] ?? false;
     guidedBoneRegenerationCutByPiezo = json['guidedBoneRegeneration_CutBy_Piezo'] ?? false;
     guidedBoneRegenerationCutByScrews = json['guidedBoneRegeneration_CutBy_Screws'] ?? false;
-    guidedBoneRegenerationCutByScrewsNumber = json['guidedBoneRegeneration_CutBy_ScrewsNumber']??"";
+    guidedBoneRegenerationCutByScrewsNumber = json['guidedBoneRegeneration_CutBy_ScrewsNumber']??0;
     guidedBoneRegenerationBoneParticle = json['guidedBoneRegeneration_BoneParticle'] ?? false;
     guidedBoneRegenerationBoneParticle100Autogenous = json['guidedBoneRegeneration_BoneParticle_100Autogenous'] ?? false;
     guidedBoneRegenerationBoneParticle100Xenograft = json['guidedBoneRegeneration_BoneParticle_100Xenograft'] ?? false;

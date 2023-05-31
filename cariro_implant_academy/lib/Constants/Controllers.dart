@@ -6,7 +6,6 @@ import '../Controllers/PagesController.dart';
 
 NavigationController navigationController = NavigationController.instance;
 PagesController pagesController = PagesController.instance;
-TabsController tabsController = new TabsController();
 InternalPagesController internalPagesController =
     InternalPagesController.instance;
 RolesController rolesController = RolesController.instance;

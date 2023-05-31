@@ -1,6 +1,9 @@
+import 'dart:js';
+
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../Constants/Fonts.dart';
 
@@ -20,7 +23,8 @@ class TitleWidget extends StatelessWidget {
           visible: showBackButton!,
           child: IconButton(
               onPressed: () {
-                onWillPop();
+             //   context.pop();
+
               },
               icon: Icon(Icons.arrow_back)),
         ),
@@ -33,6 +37,7 @@ class TitleWidget extends StatelessWidget {
   }
 
   bool onWillPop() {
+
     if(mainPages)
       pagesController.goBack();
     else

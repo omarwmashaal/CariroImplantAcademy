@@ -172,14 +172,14 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                                       newCustomer.workPlaceEnum = EnumLabRequestSources.OutSource;
                                                       var res = await Lab_CustomerAPI.AddCustomer(newCustomer);
                                                       if (res.statusCode == 200) {
-                                                        ShowSnackBar(isSuccess: true, title: "Success", message: "Customer Added!");
+                                                        ShowSnackBar(context,isSuccess: true, title: "Success", message: "Customer Added!");
                                                         labRequest.customer = res.result as ApplicationUserModel;
                                                         labRequest.customerId = labRequest.customer!.idInt;
                                                         globalSetState(() {});
                                                         Navigator.pop(buildContext);
                                                         Navigator.pop(buildContext);
                                                       } else
-                                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                                                        ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
                                                     },
                                                     child: Text(
                                                       "Ok",
@@ -687,13 +687,13 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                             }
                             var res = await LAB_RequestsAPI.AddRequest(labRequest);
                             if (res.statusCode == 200) {
-                              ShowSnackBar(isSuccess: true, title: "Success", message: "Request Added!");
+                              ShowSnackBar(context,isSuccess: true, title: "Success", message: "Request Added!");
                               if (widget.isDoctor)
                                 Navigator.pop(context);
                               else
                                 internalPagesController.goBack();
                             } else {
-                              ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                              ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
                             }
                           },
                           isLong: true,

@@ -11,7 +11,7 @@ class ImplantModel {
   ImplantModel(
       {this.id,
         this.name="",
-        this.size,
+        this.size="",
         this.count,
         this.stockItemId,
         this.stockItem});

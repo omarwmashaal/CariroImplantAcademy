@@ -10,7 +10,6 @@ import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
-import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
@@ -41,6 +40,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
+import 'Helpers/Router.dart';
 import 'Models/Enum.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
@@ -62,7 +62,6 @@ void main() {
   });
   Get.put(NavigationController());
   Get.put(PagesController());
-  Get.put(TabsController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
   Get.put(SiteController());
@@ -75,23 +74,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NDM0NDMxMCwiZXhwIjoxNjg0OTQ5MTEwLCJpYXQiOjE2ODQzNDQzMTB9.a73vf1PW42K4EN7pJjqOGWVeEnYNP2Y2nsEDd5oPV5E");
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI4ZTgwYWViLTA5M2QtNGEyYy1iYjU1LTEwZTgwMzA0NWUwYSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTM4Nzc0MCwiZXhwIjoxNjg1OTkyNTQwLCJpYXQiOjE2ODUzODc3NDB9.x6gCAgW4j2U1-DtsNUx1REQ5mUdNruImW9a43x0-p04");
     siteController.setSite(Website.CIA);
 
-    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
+    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 1, phoneNumber: "01127744835"));
     siteController.setRole("admin");
-    patientID = 2;
+
     StockDataSource dataSource1 = StockDataSource();
     StockLogsDataSource dataSource2 = StockLogsDataSource();
     return MaterialApp.router(
-      title: 'easy_sidemenu Demo',
+      title: 'CIA',
       theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
       debugShowCheckedModeBanner: false,
       //routeInformationParser:CIA_Router.routes.routeInformationParser ,
-     // routerDelegate: CIA_Router.routes.routerDelegate,
+      // routerDelegate: CIA_Router.routes.routerDelegate,
       routerConfig: CIA_Router.routes,
-
-      );
+    );
   }
 }
 
@@ -116,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
     siteController.setRole("admin");
-    patientID = 2;
+
     StockDataSource dataSource1 = StockDataSource();
     StockLogsDataSource dataSource2 = StockLogsDataSource();
     return Scaffold(

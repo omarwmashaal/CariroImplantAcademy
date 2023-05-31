@@ -48,19 +48,18 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
+    //siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
     return PageView.builder(
       itemBuilder: (context, index) {
         var pages = [
           PageView(
-            controller: tabsController,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Obx(() => TitleWidget(title: siteController.title.value)),
+                      TitleWidget(title: "Today's Requests"),
                       Expanded(child: SizedBox()),
                       CIA_PrimaryButton(
                         width: 155,
@@ -225,7 +224,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                 children: [
                   Row(
                     children: [
-                      Obx(() => TitleWidget(title: siteController.title.value)),
+                      TitleWidget(title:"All Requests"),
                       Expanded(child: SizedBox()),
                       CIA_PrimaryButton(
                         width: 155,
@@ -475,7 +474,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
+   // siteController.setAppBarWidget(tabs: ["Today's Requests", "All Requests"]);
   }
 
   reload() async {

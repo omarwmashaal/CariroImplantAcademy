@@ -5,8 +5,19 @@ import '../Models/CashFlowSummaryModel.dart';
 import 'HTTP.dart';
 
 class CashFlowAPI {
-  static Future<API_Response> ListIncome() async {
-    var response = await HTTPRequest.Get("CashFlow/ListIncome");
+  static Future<API_Response> ListIncome({
+    String? from,
+    String? to,
+    int? catId,
+    int? paymentMethodId,
+  }) async {
+    var query = "";
+    if(from!=null) query+= "${query==""?"":"&"}from=$from";
+    if(to!=null) query+= "${query==""?"":"&"}to=$to";
+    if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
+    if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+
+    var response = await HTTPRequest.Get("CashFlow/ListIncome?$query");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -14,8 +25,19 @@ class CashFlowAPI {
     return response;
   }
 
-  static Future<API_Response> ListExpenses() async {
-    var response = await HTTPRequest.Get("CashFlow/ListExpenses");
+  static Future<API_Response> ListExpenses({
+    String? from,
+    String? to,
+    int? catId,
+    int? paymentMethodId,
+  }) async {
+    var query = "";
+    if(from!=null) query+= "${query==""?"":"&"}from=$from";
+    if(to!=null) query+= "${query==""?"":"&"}to=$to";
+    if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
+    if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+
+    var response = await HTTPRequest.Get("CashFlow/ListExpenses?$query");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String, dynamic>)).toList();

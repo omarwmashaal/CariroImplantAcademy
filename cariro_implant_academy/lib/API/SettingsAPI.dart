@@ -158,6 +158,7 @@ class SettingsAPI {
 
   static Future<API_Response> AddImplants(int id,List<ImplantModel> model) async {
     var response = await HTTPRequest.Put("Settings/Implants?id=$id",model.map((e) => e.toJson()).toList());
+    print(response.toJson());
     return response;
   }
 

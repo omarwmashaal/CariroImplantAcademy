@@ -18,6 +18,8 @@ class CIA_MyProfilePage extends StatefulWidget {
   CIA_MyProfilePage({Key? key}) : super(key: key);
 
   PatientInfoModel user = PatientInfoModel();
+  static String routeName = "MyProfile";
+  static String routePath = "MyProfile";
 
   @override
   State<CIA_MyProfilePage> createState() => _CIA_MyProfilePageState();
@@ -28,267 +30,264 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: tabsController,
+    return Column(
       children: [
-        Column(
-          children: [
-            TitleWidget(title: "My Profile"),
-            Expanded(
-              flex: 4,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: FocusTraversalGroup(
-                      policy: OrderedTraversalPolicy(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        TitleWidget(title: "My Profile"),
+        Expanded(
+          flex: 4,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(child: FormTextKeyWidget(text: "ID")),
-                              Expanded(
-                                  child: FormTextValueWidget(
-                                      text: widget.user?.id.toString() == null
-                                          ? ""
-                                          : widget.user?.id.toString()))
-                            ],
-                          ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Name",
-                                  controller: TextEditingController(
-                                      text: widget.user?.name == null
-                                          ? ""
-                                          : widget.user?.name),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(text: "Name")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.name == null
-                                                ? ""
-                                                : widget.user?.name))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Name",
-                                  controller: TextEditingController(
-                                      text: widget.user?.name == null
-                                          ? ""
-                                          : widget.user?.name),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child:
-                                            FormTextKeyWidget(text: "Gender")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.gender == null
-                                                ? ""
-                                                : widget.user?.gender))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Phone Number",
-                                  controller: TextEditingController(
-                                      text: widget.user?.phone == null
-                                          ? ""
-                                          : widget.user?.phone),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(
-                                            text: "Phone Number")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.phone == null
-                                                ? ""
-                                                : widget.user?.phone))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Another Phone Number",
-                                  controller: TextEditingController(
-                                      text: widget.user?.phone2 == null
-                                          ? ""
-                                          : widget.user?.phone2),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(
-                                            text: "Another Phone Number")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.phone2 == null
-                                                ? ""
-                                                : widget.user?.phone2))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Date Of Birth",
-                                  controller: TextEditingController(
-                                      text: widget.user?.dateOfBirth == null
-                                          ? ""
-                                          : widget.user?.dateOfBirth),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(
-                                            text: "Date Of Birth")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text:
-                                                widget.user?.dateOfBirth == null
-                                                    ? ""
-                                                    : widget.user?.dateOfBirth))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "MaritalStatus",
-                                  controller: TextEditingController(
-                                      text: widget.user?.maritalStatus == null
-                                          ? ""
-                                          : widget.user?.maritalStatus),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(
-                                            text: "Marital Status")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.maritalStatus ==
-                                                    null
-                                                ? ""
-                                                : widget.user?.maritalStatus))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "Address",
-                                  controller: TextEditingController(
-                                      text: widget.user?.address == null
-                                          ? ""
-                                          : widget.user?.address),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child:
-                                            FormTextKeyWidget(text: "Address")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.address == null
-                                                ? ""
-                                                : widget.user?.address))
-                                  ],
-                                ),
-                          edit
-                              ? CIA_TextFormField(
-                                  label: "City",
-                                  controller: TextEditingController(
-                                      text: widget.user?.city == null
-                                          ? ""
-                                          : widget.user?.city),
-                                )
-                              : Row(
-                                  children: [
-                                    Expanded(
-                                        child: FormTextKeyWidget(text: "City")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            text: widget.user?.city == null
-                                                ? ""
-                                                : widget.user?.city))
-                                  ],
-                                ),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: FormTextKeyWidget(
+                          Expanded(child: FormTextKeyWidget(text: "ID")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.id.toString() == null
+                                      ? ""
+                                      : widget.user?.id.toString()))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Name",
+                        controller: TextEditingController(
+                            text: widget.user?.name == null
+                                ? ""
+                                : widget.user?.name),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(text: "Name")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.name == null
+                                      ? ""
+                                      : widget.user?.name))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Name",
+                        controller: TextEditingController(
+                            text: widget.user?.name == null
+                                ? ""
+                                : widget.user?.name),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child:
+                              FormTextKeyWidget(text: "Gender")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.gender == null
+                                      ? ""
+                                      : widget.user?.gender))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Phone Number",
+                        controller: TextEditingController(
+                            text: widget.user?.phone == null
+                                ? ""
+                                : widget.user?.phone),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(
+                                  text: "Phone Number")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.phone == null
+                                      ? ""
+                                      : widget.user?.phone))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Another Phone Number",
+                        controller: TextEditingController(
+                            text: widget.user?.phone2 == null
+                                ? ""
+                                : widget.user?.phone2),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(
+                                  text: "Another Phone Number")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.phone2 == null
+                                      ? ""
+                                      : widget.user?.phone2))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Date Of Birth",
+                        controller: TextEditingController(
+                            text: widget.user?.dateOfBirth == null
+                                ? ""
+                                : widget.user?.dateOfBirth),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(
+                                  text: "Date Of Birth")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text:
+                                  widget.user?.dateOfBirth == null
+                                      ? ""
+                                      : widget.user?.dateOfBirth))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "MaritalStatus",
+                        controller: TextEditingController(
+                            text: widget.user?.maritalStatus == null
+                                ? ""
+                                : widget.user?.maritalStatus),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(
+                                  text: "Marital Status")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.maritalStatus ==
+                                      null
+                                      ? ""
+                                      : widget.user?.maritalStatus))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "Address",
+                        controller: TextEditingController(
+                            text: widget.user?.address == null
+                                ? ""
+                                : widget.user?.address),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child:
+                              FormTextKeyWidget(text: "Address")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.address == null
+                                      ? ""
+                                      : widget.user?.address))
+                        ],
+                      ),
+                      edit
+                          ? CIA_TextFormField(
+                        label: "City",
+                        controller: TextEditingController(
+                            text: widget.user?.city == null
+                                ? ""
+                                : widget.user?.city),
+                      )
+                          : Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(text: "City")),
+                          Expanded(
+                              child: FormTextValueWidget(
+                                  text: widget.user?.city == null
+                                      ? ""
+                                      : widget.user?.city))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: FormTextKeyWidget(
                                 text: "Registration: " +
                                     (widget.user?.name == null
                                         ? ""
                                         : widget.user?.name as String),
                                 secondaryInfo: true,
                               )),
-                              Expanded(
-                                  child: FormTextValueWidget(
+                          Expanded(
+                              child: FormTextValueWidget(
                                 text: "12/10/2022",
                                 secondaryInfo: true,
                               ))
-                            ],
-                          ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                  Expanded(child: SizedBox()),
-                  Expanded(
-                      flex: 3,
-                      child: Column(
-                        children: [
-                          Expanded(
-                              child: Image(
-                                  image:
-                                      AssetImage("assets/ProfileImage.png"))),
-                        ],
-                      ))
-                ],
+                ),
               ),
-            ),
-            Expanded(
-              child: edit
-                  ? Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: SizedBox()),
-                          Flexible(
-                            child: CIA_SecondaryButton(
-                                label: "Cancel",
-                                onTab: () => setState(() => edit = false)),
-                          ),
-                          Flexible(
-                            child: CIA_PrimaryButton(
-                                label: "Save",
-                                isLong: true,
-                                onTab: () => setState(() => edit = false)),
-                          ),
-                          Expanded(child: SizedBox()),
-                        ],
-                      ),
-                    )
-                  : Center(
-                      child: CIA_SecondaryButton(
-                        onTab: () {
-                          setState(() {
-                            edit = true;
-                          });
-                        },
-                        label: "Edit Info",
-                      ),
-                    ),
-            )
-          ],
+              Expanded(child: SizedBox()),
+              Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      Expanded(
+                          child: Image(
+                              image:
+                              AssetImage("assets/ProfileImage.png"))),
+                    ],
+                  ))
+            ],
+          ),
         ),
-        _Calendar()
+        Expanded(
+          child: edit
+              ? Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: SizedBox()),
+                Flexible(
+                  child: CIA_SecondaryButton(
+                      label: "Cancel",
+                      onTab: () => setState(() => edit = false)),
+                ),
+                Flexible(
+                  child: CIA_PrimaryButton(
+                      label: "Save",
+                      isLong: true,
+                      onTab: () => setState(() => edit = false)),
+                ),
+                Expanded(child: SizedBox()),
+              ],
+            ),
+          )
+              : Center(
+            child: CIA_SecondaryButton(
+              onTab: () {
+                setState(() {
+                  edit = true;
+                });
+              },
+              label: "Edit Info",
+            ),
+          ),
+        )
       ],
     );
+
+    //todo: fix this
+    _Calendar();
   }
 
   @override

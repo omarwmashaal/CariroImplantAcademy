@@ -4,8 +4,9 @@ import 'package:cariro_implant_academy/Models/StockModel.dart';
 import '../Models/API_Response.dart';
 import 'HTTP.dart';
 class StockAPI{
-  static Future<API_Response> GetAllStock() async {
-    var response = await HTTPRequest.Get("Stock/GetAllStock");
+  static Future<API_Response> GetAllStock({String? search}) async {
+    if(search=="")search = null;
+    var response = await HTTPRequest.Get("Stock/GetAllStock?${search!=null?"search=$search":""}");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => StockModel.fromJson(e as Map<String, dynamic>)).toList();
@@ -29,8 +30,9 @@ class StockAPI{
     }
     return response;
   }
-  static Future<API_Response> GetStockLogs() async {
-    var response = await HTTPRequest.Get("Stock/GetStockLogs");
+  static Future<API_Response> GetStockLogs({String? search}) async {
+    if(search=="")search = null;
+    var response = await HTTPRequest.Get("Stock/GetStockLogs?${search!=null?"search=$search":""}");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => StockLogModel.fromJson(e as Map<String, dynamic>)).toList();

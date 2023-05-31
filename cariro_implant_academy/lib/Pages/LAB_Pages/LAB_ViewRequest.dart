@@ -36,7 +36,7 @@ class LAB_ViewRequestPage extends StatelessWidget {
         LAB_StepModel("Step 6", "Omar", "12/12/2012", StepStatus.NotYet));
     request.Steps.add(
         LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));*/
-    siteController.setAppBarWidget();
+    //siteController.setAppBarWidget();
     return CIA_FutureBuilder(
       loadFunction: LAB_RequestsAPI.GetRequest(request.id!),
       onSuccess: (data) {

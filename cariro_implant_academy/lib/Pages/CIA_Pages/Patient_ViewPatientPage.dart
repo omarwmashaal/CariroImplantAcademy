@@ -18,7 +18,6 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
   @override
   Widget build(BuildContext context) {
     return PageView(
-      controller: tabsController,
       children: [
         PatientInfo_SharedPage(
           loadFunction: PatientAPI.GetPatientData,
@@ -26,7 +25,7 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
         ),
         PatientVisits_SharedPage(
           patientID: widget.patientID,
-          loadFunction: PatientAPI.GetVisitsLogs,
+          //loadFunction: PatientAPI.GetVisitsLogs,
         ),
         PatientComplains(patientId: widget.patientID,
 
@@ -53,6 +52,6 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
 
   @override
   void initState() {
-    siteController.setAppBarWidget(tabs: ["Patient Data", "Patient Visits","Complains"]);
+  //  siteController.setAppBarWidget(tabs: ["Patient Data", "Patient Visits","Complains"]);
   }
 }

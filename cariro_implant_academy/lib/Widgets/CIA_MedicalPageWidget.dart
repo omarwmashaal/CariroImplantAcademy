@@ -1,8 +1,11 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import '../../Constants/Colors.dart';
+
 
 class CIA_MedicalPagesWidget extends StatelessWidget {
   CIA_MedicalPagesWidget({Key? key, required this.children}) : super(key: key);
@@ -41,10 +44,13 @@ class CIA_MedicalPagesWidget extends StatelessWidget {
       children: [
         FocusTraversalGroup(
           policy: OrderedTraversalPolicy(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: widgets,
-          ),
+          child:Obx(() =>  AbsorbPointer(
+            absorbing: siteController.disableMedicalEdit.value,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: widgets,
+            ),
+          )),
         ),
       ],
     );

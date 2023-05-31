@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
+import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
+import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +191,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'ssistants',
               onTap: () {
-                context.goNamed(UserSearchPage.routeName);
+                context.goNamed(UserSearchPage.assistantsRouteName);
                 controller.notifyListeners();
               },
               iconWidget: Container(
@@ -203,8 +205,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'nstructors',
               onTap: () {
-                pagesController.jumpToPage(2);
-              },
+
+                context.goNamed(UserSearchPage.instructorsRouteName);              },
               iconWidget: Container(
                   child: Tooltip(
                     message: "Instructors",
@@ -216,8 +218,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'andidates',
               onTap: () {
-                pagesController.jumpToPage(3);
-              },
+
+                context.goNamed(UserSearchPage.candidatesRouteName);              },
               iconWidget: Container(
                   child:Tooltip(
                     message: "Candidates",
@@ -229,7 +231,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Stock',
               onTap: () {
-                pagesController.jumpToPage(4);
+                context.goNamed(StockListSharedPage.routeName);
               },
               iconWidget: Container(
                   child: Tooltip(
@@ -238,7 +240,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                pagesController.jumpToPage(5);
+                context.goNamed(CashFlowIncomeSharedPage.routeName);
               },
               iconWidget: Container(
                   child: Tooltip(
@@ -339,16 +341,6 @@ class PagesController extends PageController {
   }
 }
 
-class TabsController extends PageController {
-  static TabsController instance = Get.find();
-  RxInt index = 0.obs;
-
-  @override
-  void jumpToPage(int page) {
-    index.value = page;
-    super.jumpToPage(page);
-  }
-}
 
 class InternalPagesController extends PageController {
   static InternalPagesController instance = Get.find();

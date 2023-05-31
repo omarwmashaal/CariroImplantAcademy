@@ -5,9 +5,11 @@ import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../Models/Enum.dart';
+import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'FormTextWidget.dart';
 
 List<String> roles = ["Secretary", "Admin", "Instructor"];
@@ -117,12 +119,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
           return siteController.getRole() != "admin"
               ? Container(
                   color: Colors.white,
-                  child: IconButton(
-                    icon: Icon(Icons.settings),
-                    onPressed: (){
-                      pagesController.jumpToPage(6);
-                    },
-                  ),
+
                 )
               : Expanded(
                   child: Container(
@@ -145,7 +142,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
                         IconButton(
                           icon: Icon(Icons.settings),
                           onPressed: (){
-                            pagesController.jumpToPage(6);
+                            context.goNamed(SettingsPage.routeName);
                           },
                         )
                       ],

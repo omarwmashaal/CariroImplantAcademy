@@ -46,11 +46,19 @@ class _getxController extends GetxController {
 
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction, this.hideSaveButton = false, this.onSave}) : super(key: key);
-  static String routeName = "PatientPersonalInfo";
-  static String routePath = "Patient/:id/PersonalInfo";
-  static String getPath(String id){
-    return "/Patients/Patient/$id/PersonalInfo";
+
+  static String getPathViewPatient(String id){
+    return "/CIA/Patients/$id/ViewPatient";
   }
+ static String getPathAddPatient(String id){
+    return "/CIA/Patients/AddPatient";
+  }
+
+  static String viewPatientRouteName = "ViewPatient";
+  static String viewPatientRoutePath = "Patients/:id/ViewPatient";
+  static String addPatientRouteName = "AddPatient";
+  static String addPatientRoutePath = "AddPatient";
+
   int patientID;
   Function? loadFunction;
   Function(API_Response response)? onSave;
@@ -77,7 +85,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
     addNew = widget.patientID == 0;
 
     if (addNew) {
-      siteController.setAppBarWidget();
+      //siteController.setAppBarWidget();
       patient.maritalStatus = "Married";
       patient.gender = "Male";
       patient.patientType = EnumPatientType.CIA;
@@ -102,7 +110,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
             padding: EdgeInsets.only(top: 5),
             child: Column(
               children: [
-                Obx(() => TitleWidget(title: siteController.title.value, showBackButton: true)),
+                TitleWidget(title: "Patient's Data", showBackButton: true),
                 Expanded(
                   flex: 4,
                   child: Row(
@@ -331,7 +339,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                 var res =
                                                                                 await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPrice);
                                                                                 if (res.statusCode == 200) {
-                                                                                  ShowSnackBar(isSuccess: true);
+                                                                                  ShowSnackBar(context,isSuccess: true);
                                                                                   setState(() {});
                                                                                 }
                                                                               },
@@ -695,12 +703,15 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                           width: imageWidth,
                                         ),
                                         SizedBox(height: 10),
-                                        CIA_SecondaryButton(
-                                            label: "Upload Image",
-                                            onTab: () async {
-                                              personalImageBytes = await ImagePickerWeb.getImageAsBytes();
-                                              setState(() {});
-                                            })
+                                        Visibility(
+                                          visible:edit,
+                                          child: CIA_SecondaryButton(
+                                              label: "Upload Image",
+                                              onTab: () async {
+                                                personalImageBytes = await ImagePickerWeb.getImageAsBytes();
+                                                setState(() {});
+                                              }),
+                                        )
                                       ],
                                     )),
                                 Expanded(
@@ -721,13 +732,16 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                 width: imageWidth,
                                               ),
                                               SizedBox(height: 10),
-                                              CIA_SecondaryButton(
-                                                  label: "Upload Image",
-                                                  onTab: () async {
-                                                    frontIdImageBytes = await ImagePickerWeb.getImageAsBytes();
+                                              Visibility(
+                                                visible:edit,
+                                                child: CIA_SecondaryButton(
+                                                    label: "Upload Image",
+                                                    onTab: () async {
+                                                      frontIdImageBytes = await ImagePickerWeb.getImageAsBytes();
 
-                                                    setState(() {});
-                                                  })
+                                                      setState(() {});
+                                                    }),
+                                              )
                                             ],
                                           )),
                                       Expanded(
@@ -745,12 +759,15 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                 width: imageWidth,
                                               ),
                                               SizedBox(height: 10),
-                                              CIA_SecondaryButton(
-                                                  label: "Upload Image",
-                                                  onTab: () async {
-                                                    backIdImageBytes = await ImagePickerWeb.getImageAsBytes();
-                                                    setState(() {});
-                                                  })
+                                              Visibility(
+                                                visible:edit,
+                                                child: CIA_SecondaryButton(
+                                                    label: "Upload Image",
+                                                    onTab: () async {
+                                                      backIdImageBytes = await ImagePickerWeb.getImageAsBytes();
+                                                      setState(() {});
+                                                    }),
+                                              )
                                             ],
                                           )),
                                     ],
@@ -777,7 +794,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                             }
                             if (widget.onSave != null) widget.onSave!(response);
                             if (response.statusCode == 200) {
-                              ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Uploading Images...");
+                              ShowSnackBar(context,isSuccess: true, title: "Succeed!", message: "Uploading Images...");
                               if (personalImageBytes != null)
                                 response = await PatientAPI.UploadImage(patient.id!, EnumImageType.PatientProfile, personalImageBytes!);
                               if (backIdImageBytes != null) response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdBack, backIdImageBytes!);
@@ -785,12 +802,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                 response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdFront, frontIdImageBytes!);
 
                               if (response.statusCode == 200) {
-                                ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
-                                internalPagesController.goBack();
+                                ShowSnackBar(context,isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
+
                               } else
-                                ShowSnackBar(isSuccess: false, title: "Failed!", message: "Patient added but failed to upload images");
+                                ShowSnackBar(context,isSuccess: false, title: "Failed!", message: "Patient added but failed to upload images");
                             } else
-                              ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
+                              ShowSnackBar(context,isSuccess: false, title: "Failed!", message: response.errorMessage!);
                           }),
                     )
                         : edit
@@ -809,10 +826,22 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                 onTab: () async {
                                   var response = await PatientAPI.UpdatePatientDate(patient);
 
-                                  if (response.statusCode == 200)
-                                    ShowSnackBar(isSuccess: true, title: "Succeed!", message: "Patient data has been saved successfully!");
+                                  if (response.statusCode == 200) {
+                                    ShowSnackBar(context,isSuccess: true, title: "Succeed!", message: "Uploading Images...");
+                                    if (personalImageBytes != null)
+                                      response = await PatientAPI.UploadImage(patient.id!, EnumImageType.PatientProfile, personalImageBytes!);
+                                    if (backIdImageBytes != null) response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdBack, backIdImageBytes!);
+                                    if (frontIdImageBytes != null)
+                                      response = await PatientAPI.UploadImage(patient.id!, EnumImageType.IdFront, frontIdImageBytes!);
+
+                                    if (response.statusCode == 200) {
+                                      ShowSnackBar(context,isSuccess: true, title: "Succeed!", message: "Patient has been added successfully!");
+
+                                    } else
+                                      ShowSnackBar(context,isSuccess: false, title: "Failed!", message: "Patient added but failed to upload images");
+                                  }
                                   else
-                                    ShowSnackBar(isSuccess: false, title: "Failed!", message: response.errorMessage!);
+                                    ShowSnackBar(context,isSuccess: false, title: "Failed!", message: response.errorMessage!);
 
                                   setState(() {
                                     edit = false;
@@ -851,9 +880,13 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
 }
 
 class PatientVisits_SharedPage extends StatefulWidget {
-  PatientVisits_SharedPage({Key? key, required this.patientID, this.loadFunction, this.patientName}) : super(key: key);
+  PatientVisits_SharedPage({Key? key, required this.patientID, this.patientName}) : super(key: key);
 
-  Function? loadFunction;
+  static String getPath(String id){
+    return "/Patients/$id/VisitsLogs";
+  }
+  static String routeName = "VisitsLogs";
+  static String routePath = "Patients/:id/VisitsLogs";
   int patientID;
   String? patientName;
 
@@ -877,11 +910,10 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
               padding: EdgeInsets.only(top: 5, left: 10),
               child: Column(
                 children: [
-                  Obx(() =>
-                      TitleWidget(
-                        title: siteController.title.value,
-                        showBackButton: true,
-                      )),
+                  TitleWidget(
+                    title: "Visits",
+                    showBackButton: true,
+                  ),
                   Expanded(
                     child: Row(
                       children: [
@@ -933,9 +965,9 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                       var res = await PatientAPI.PatientVisits(widget.patientID);
                                       if (res.statusCode == 200) {
                                         dataSource.setData(res.result as List<VisitsModel>);
-                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                        ShowSnackBar(context,isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
+                                        ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                                 CIA_SecondaryButton(
@@ -945,9 +977,9 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                       var res = await PatientAPI.PatientEntersClinic(widget.patientID);
                                       if (res.statusCode == 200) {
                                         dataSource.setData(res.result as List<VisitsModel>);
-                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                        ShowSnackBar(context,isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
+                                        ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                                 CIA_SecondaryButton(
@@ -1130,9 +1162,9 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                       res = await PatientAPI.PatientLeaves(widget.patientID);
                                       if (res.statusCode == 200) {
                                         dataSource.setData(res.result as List<VisitsModel>);
-                                        ShowSnackBar(isSuccess: true, title: "Success", message: "");
+                                        ShowSnackBar(context,isSuccess: true, title: "Success", message: "");
                                       } else {
-                                        ShowSnackBar(isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
+                                        ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "Couldn't perform action");
                                       }
                                     }),
                               ],
@@ -1184,7 +1216,11 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
 class PatientComplains extends StatefulWidget {
   PatientComplains({Key? key, required this.patientId}) : super(key: key);
   int patientId;
-
+  static String getPath(String id){
+    return "/Patients/Patient/$id/Complains";
+  }
+  static String routeName = "Complains";
+  static String routePath = "Patients/:id/Complains";
   @override
   State<PatientComplains> createState() => _PatientComplainsState();
 }
@@ -1212,11 +1248,10 @@ class _PatientComplainsState extends State<PatientComplains> {
         complains = data as List<ComplainsModel>;
         return Column(
           children: [
-            Obx(() =>
-                TitleWidget(
-                  title: siteController.title.value,
-                  showBackButton: true,
-                )),
+          TitleWidget(
+          title: "Complains",
+          showBackButton: true,
+        ),
             SizedBox(
               height: 10,
             ),
@@ -1286,10 +1321,10 @@ class _PatientComplainsState extends State<PatientComplains> {
                     onTab: () async {
                       await PatientAPI.AddComplain(newComplain).then((value) {
                         if (value.statusCode == 200) {
-                          ShowSnackBar(isSuccess: true, title: "Added", message: "");
+                          ShowSnackBar(context,isSuccess: true, title: "Added", message: "");
                           setState(() {});
                         } else
-                          ShowSnackBar(isSuccess: false, title: "Failed", message: value.errorMessage ?? "");
+                          ShowSnackBar(context,isSuccess: false, title: "Failed", message: value.errorMessage ?? "");
                       });
                     },
                   ),

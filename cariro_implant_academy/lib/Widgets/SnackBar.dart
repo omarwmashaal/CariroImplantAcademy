@@ -1,10 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 
-void ShowSnackBar(
-    {required bool isSuccess,  String title="",  String message=""}) {
-  if(title=="") title = isSuccess?"Success":"Failed";
+void ShowSnackBar(BuildContext context, {required bool isSuccess, String title = "", String message = ""}) {
+  if (title == "") title = isSuccess ? "Success" : "Failed";
+  late MotionToast toast;
+  if(isSuccess)
+   toast = MotionToast.success(
+    title: Text(
+      title,
+      style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+    description: Text(
+      message ?? "",
+      style: TextStyle(fontSize: 12),
+    ),
+    animationType: AnimationType.fromBottom,
+    dismissable: true,
+  );
+  else
+   toast = MotionToast.error(
+    title: Text(
+      title,
+      style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+    description: Text(
+      message ?? "",
+      style: TextStyle(fontSize: 12),
+    ),
+    animationType: AnimationType.fromBottom,
+    dismissable: true,
+  );
+  toast.show(context);
+  Future.delayed(const Duration(seconds: 4)).then((value) {
+    toast.dismiss();
+  });
+  /*
   Get.snackbar(
     title,
     message,
@@ -19,5 +52,5 @@ void ShowSnackBar(
     isDismissible: true,
     dismissDirection: DismissDirection.horizontal,
     forwardAnimationCurve: Curves.easeOutBack,
-  );
+  );*/
 }
