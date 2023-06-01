@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/API/HTTP.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
+import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
@@ -266,6 +267,15 @@ class PatientAPI {
   }
   static Future<API_Response> DownloadImage(int id) async {
     var response = await HTTPRequest.Get("PatientInfo/DownloadImage?id=$id");
+    return response;
+  }
+
+  static Future<API_Response> AdvancedSearchPatient(AdvancedPatientSearchDTO query) async {
+    var response = await HTTPRequest.Post("PatientInfo/AdvancedSearchPatient",query.toJson());
+    if(response.statusCode==200)
+      {
+        response.result = ((response.result) as List<dynamic>).map((e) => AdvancedPatientSearchDTO.fromJson(e as Map<String,dynamic>)).toList();
+      }
     return response;
   }
 }

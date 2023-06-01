@@ -56,7 +56,10 @@ class _CIA_TableState extends State<CIA_Table> {
     return FutureBuilder(
       future: widget.loadFunction != null ? widget.loadFunction!() : wait(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
+        print(snapshot.connectionState);
+        print(snapshot.data);
+        if (snapshot.hasData|| snapshot.connectionState == ConnectionState.done) {
+          print("finished");
           return SfDataGrid(
             allowSorting: widget.allowSorting,
             highlightRowOnHover: true,

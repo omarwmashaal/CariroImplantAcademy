@@ -44,13 +44,13 @@ class _CIA_IncrementalHBA1CTextFieldState
 ;                },
                 isNumber: true,
                 onChange: (value) {
-                  item.reading = value;
+                  item.reading = int.parse(value);
                   if (widget.onChange != null) {
                     widget.onChange!(items);
                   }
                 },
                 label: "Reading",
-                controller: TextEditingController(text: item.reading??"0"),
+                controller: TextEditingController(text: item.reading.toString()??"0"),
               )),
           const SizedBox(width: 10),
           Expanded(
@@ -104,6 +104,6 @@ class _CIA_IncrementalHBA1CTextFieldState
   void initState() {
     items = widget.model;
     if (items == null || items.length == 0)
-      items.add(HbA1c(reading: "", date: ""));
+      items.add(HbA1c(reading: 0, date: ""));
   }
 }

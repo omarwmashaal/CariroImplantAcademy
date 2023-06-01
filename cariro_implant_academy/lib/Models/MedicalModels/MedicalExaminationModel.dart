@@ -163,23 +163,23 @@ class BloodPressure {
 }
 
 class Diabetic {
-  String? lastReading;
+  int? lastReading;
   String? when;
-  String? randomInClinic;
+  int? randomInClinic;
   DiabetesEnum? status;
   DiabetesMeasureType? type;
 
   Diabetic(
-      {this.lastReading = "",
+      {this.lastReading = 0,
       this.when = "",
-      this.randomInClinic = "",
+      this.randomInClinic = 0,
       this.status = DiabetesEnum.Normal,
       this.type = DiabetesMeasureType.Random});
 
   Diabetic.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'];
     when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
-    randomInClinic = json['randomInClinic'] ?? "";
+    randomInClinic = json['randomInClinic'] ?? 0;
     status = DiabetesEnum.values[json["status"] ?? 0];
     type = DiabetesMeasureType.values[json['type'] ?? 0];
   }
@@ -197,13 +197,13 @@ class Diabetic {
 
 class HbA1c {
   String? date;
-  String? reading;
+  int? reading;
 
-  HbA1c({this.date = "", this.reading = "0"});
+  HbA1c({this.date = "", this.reading = 0});
 
   HbA1c.fromJson(Map<String, dynamic> json) {
     date =  CIA_DateConverters.fromBackendToDateOnly(json['date']);
-    reading = json['reading'] == null || json['reading'] ==""? "0":json['reading'];
+    reading = json['reading'] == null? 0:json['reading'];
   }
 
   Map<String, dynamic> toJson() {

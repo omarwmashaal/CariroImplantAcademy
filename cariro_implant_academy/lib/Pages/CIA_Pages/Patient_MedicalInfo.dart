@@ -702,10 +702,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             if (medicalExaminationModel.diabetic == null) {
                               medicalExaminationModel.diabetic = Diabetic();
                             }
-                            medicalExaminationModel.diabetic?.lastReading = value;
+                            medicalExaminationModel.diabetic?.lastReading = int.parse(value);
                           },
                           label: "Last Reading ",
-                          controller: TextEditingController(text: medicalExaminationModel.diabetic?.lastReading)),
+                          controller: TextEditingController(text: medicalExaminationModel.diabetic?.lastReading.toString())),
                     ),
                   ),
                   Expanded(
@@ -731,10 +731,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             if (medicalExaminationModel.diabetic == null) {
                               medicalExaminationModel.diabetic = Diabetic();
                             }
-                            medicalExaminationModel.diabetic?.randomInClinic = value;
+                            medicalExaminationModel.diabetic?.randomInClinic = int.parse(value);
                           },
                           label: "Random in clinic ",
-                          controller: TextEditingController(text: medicalExaminationModel.diabetic?.randomInClinic)),
+                          controller: TextEditingController(text: medicalExaminationModel.diabetic?.randomInClinic.toString())),
                     ),
                   ),
                 ],
@@ -985,7 +985,11 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
                       Expanded(
                           child: Obx(() => FormTextValueWidget(text: () {
                                 var returnValue = "";
-                                if ((_getxClass.tobacco.value) == 0) {
+
+                                if (dentalHistoryModel.smokingStatus!=null&& _getxClass.tobacco.value!=2000) {
+                                  return (dentalHistoryModel.smokingStatus)!.name;
+                                }
+                                else if ((_getxClass.tobacco.value) == 0) {
                                   returnValue = "Non Smoker";
                                   dentalHistoryModel.smokingStatus = SmokingStatus.NoneSmoker;
                                 } else if ((_getxClass.tobacco.value) < 10) {

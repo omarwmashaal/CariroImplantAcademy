@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
@@ -100,6 +101,15 @@ class CIA_Router {
                         print("search router");
                         return NoTransitionPage(
                           child: PatientsComplainsPage(),
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      path: PatientAdvancedSearchPage.routeName,
+                      name: PatientAdvancedSearchPage.routeName,
+                      pageBuilder: (context, state) {
+                        return NoTransitionPage(
+                          child: PatientAdvancedSearchPage(),
                         );
                       },
                     ),

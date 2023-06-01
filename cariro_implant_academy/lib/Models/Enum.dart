@@ -121,3 +121,22 @@ enum EnumFinalProthesisSingleBridgeDeliveryStatus { Done, ReDesign, ReImpression
   ReImpression,
   ReTryIn
 }
+enum EnumGender
+{
+  Male,
+  Female
+}
+enum EnumCooperationScore
+{
+  BadCooperation,
+  FairCooperation,
+  GoodCooperation,
+  ExcellentCooperation
+}
+enum EnumTeethClassification
+{
+UpperAnterior,
+LowerAnterior,
+UpperPosterior,
+LowerPosterior
+}
