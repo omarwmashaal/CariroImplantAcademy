@@ -24,4 +24,9 @@ class AuthenticationAPI {
 
     return response;
   }
+  static Future<API_Response> ResetPassword(String oldPassword, String newPassword1,String newPassword2) async {
+    var response = await HTTPRequest.Post("Authentication/ResetPassword?oldPassword=$oldPassword&newPassword1=$newPassword1&newPassword2=$newPassword2",null);
+
+    return response;
+  }
 }

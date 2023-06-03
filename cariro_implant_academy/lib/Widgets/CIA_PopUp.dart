@@ -260,10 +260,20 @@ CIA_ShowPopUp(
       DialogButton(
         color: Color_Accent,
         width: 150,
-        onPressed: () {
+        onPressed: () async {
+          bool close = true;
+          if (onSave != null)
+            {
+              var s = await onSave!();
+              if(s!=null && s is bool)
+                close = s;
+            }
 
+
+
+          if(close)
           Navigator.of(context, rootNavigator: true).pop();
-          if (onSave != null) onSave!();
+
         },
         child: Text(
           buttonText == null ? "Ok" : buttonText,

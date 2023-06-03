@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,7 +74,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                           SizedBox(width: 30),
                           GestureDetector(
                               onTap: () {
-                                context.goNamed(CIA_MyProfilePage.routeName);
+                                context.goNamed(ViewUserData.routeName,pathParameters: {"id":siteController.getUser().idInt.toString()});
                               },
                               child: Image.asset("assets/user.png")),
                           SizedBox(

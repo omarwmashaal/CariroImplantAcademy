@@ -32,7 +32,12 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TitleWidget(title: "My Profile"),
+        Row(
+          children: [
+            TitleWidget(title: "My Profile"),
+
+          ],
+        ),
         Expanded(
           flex: 4,
           child: Row(

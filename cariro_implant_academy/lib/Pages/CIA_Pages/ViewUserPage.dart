@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:cariro_implant_academy/API/AuthenticationAPI.dart';
 import 'package:cariro_implant_academy/API/UserAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
@@ -9,6 +10,7 @@ import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
@@ -54,7 +56,6 @@ class _ViewUserDataState extends State<ViewUserData> {
   double imageWidth = 200;
   double imageHeight = 200;
 
-
   @override
   Widget build(BuildContext context) {
     return CIA_FutureBuilder(
@@ -81,6 +82,92 @@ class _ViewUserDataState extends State<ViewUserData> {
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
+                                    Row(
+                                      children: [
+                                        TitleWidget(title: "User Profile"),
+                                        SizedBox(width: 10),
+                                        () {
+                                          if (widget.userId == siteController.getUser().idInt) {
+                                            return CIA_SecondaryButton(
+                                                label: "Reset Password",
+                                                onTab: () {
+                                                  String oldPassword = "";
+                                                  String newPassword1 = "";
+                                                  String newPassword2 = "";
+                                                  bool capital = false;
+                                                  bool small = false;
+                                                  bool number = false;
+                                                  bool symbol = false;
+                                                  CIA_ShowPopUp(
+                                                      context: context,
+                                                      height: 300,
+                                                      onSave: ()async{
+                                                        if(newPassword2!=newPassword1)
+                                                          {
+                                                            ShowSnackBar(context, isSuccess: false,message: "Passwords dont match");
+                                                            return false;
+                                                          }
+                                                        else
+                                                          {
+                                                           var res =  await AuthenticationAPI.ResetPassword(oldPassword,newPassword1,newPassword2);
+                                                           ShowSnackBar(context, isSuccess: res.statusCode==200,message: res.statusCode==200?"Password reset successfully":"Failed to reset password: ${res.errorMessage}");
+                                                           if(res.statusCode==200) return true;
+                                                           else return false;
+                                                          }
+                                                      },
+                                                      child: StatefulBuilder(
+                                                        builder: (context,_setState) {
+                                                          return Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                            children: [
+                                                              CIA_TextFormField(
+                                                                label: "Old Password",
+                                                                controller: TextEditingController(text: oldPassword),
+                                                                isObscure: true,
+                                                                onChange: (v)=>_setState((){oldPassword=v;}),
+                                                              ),
+                                                              SizedBox(height: 10),
+                                                              CIA_TextFormField(
+                                                                label: "New Password",
+                                                                controller: TextEditingController(text: newPassword1),
+                                                                isObscure: true,
+                                                                onChange: (v) {
+                                                                  if(v.contains(RegExp(r'[A-Z]'))) capital = true; else capital = false;
+                                                                  if(v.contains(RegExp(r'[a-z]'))) small = true; else small = false;
+                                                                  if(v.contains(RegExp(r'[0-9]'))) number = true; else number = false;
+                                                                  if(v.contains(RegExp(r'(?=.*?[!@#\$&*~.])'))) symbol = true; else symbol = false;
+                                                                  _setState(()=>newPassword1=v);
+                                                                },
+                                                              ),
+                                                              SizedBox(height: 10),
+                                                              CIA_TextFormField(
+                                                                label: "Repeat New Password",
+                                                                controller: TextEditingController(text: newPassword2),
+                                                                isObscure: true,
+                                                                errorFunction: (value) {
+                                                                  return value!=newPassword1;
+                                                                },
+                                                                onChange: (v)=>_setState(()=>newPassword2=v),
+                                                              ),
+                                                              SizedBox(height: 10),
+                                                            Text(newPassword1.isEmpty?"Password can't be empty": newPassword2==newPassword1?"Passwords match":"Passwords don't match",style: TextStyle(color: newPassword2==newPassword1 && newPassword1.isNotEmpty?Colors.green: Colors.red,fontSize: 15),),
+                                                          Text("Contains at least 1 Capital Letter", style: TextStyle( color:capital? Colors.green: Colors.red,fontSize: 15,),textAlign: TextAlign.start,),
+                                                          Text("Contains at least 1 Small Letter",style: TextStyle(color:small? Colors.green: Colors.red,fontSize: 15),),
+                                                          Text("Contains at least 1 Number",style: TextStyle(color:number? Colors.green: Colors.red,fontSize: 15),),
+                                                          Text("Contains at least 1 Symbol",style: TextStyle(color:symbol? Colors.green: Colors.red,fontSize: 15),),
+                                                          SizedBox(height: 10),
+
+                                                            ],
+                                                          );
+                                                        }
+                                                      ));
+                                                });
+                                          } else
+                                            return Container();
+                                        }()
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
                                     Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "ID")),
@@ -183,26 +270,28 @@ class _ViewUserDataState extends State<ViewUserData> {
                                 flex: 3,
                                 child: CIA_FutureBuilder(
                                   loadFunction: () async {
-                                    if (user.profileImageId != null) await UserAPI.DownloadImage(user.profileImageId!).then((value) {
-                                      if (value.statusCode == 200)
-                                        profileImageBytes = base64Decode(value.result as String);
-                                    },);
-                                     return  Future.value(API_Response(statusCode: 200)) ;
+                                    if (user.profileImageId != null)
+                                      await UserAPI.DownloadImage(user.profileImageId!).then(
+                                        (value) {
+                                          if (value.statusCode == 200) profileImageBytes = base64Decode(value.result as String);
+                                        },
+                                      );
+                                    return Future.value(API_Response(statusCode: 200));
                                   }(),
                                   onSuccess: (data) {
                                     return Column(
                                       children: [
                                         profileImageBytes == null
                                             ? Image(
-                                          image: AssetImage("assets/ProfileImage.png"),
-                                          height: imageHeight,
-                                          width: imageWidth,
-                                        )
+                                                image: AssetImage("assets/ProfileImage.png"),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              )
                                             : Image(
-                                          image: MemoryImage(profileImageBytes!),
-                                          height: imageHeight,
-                                          width: imageWidth,
-                                        ),
+                                                image: MemoryImage(profileImageBytes!),
+                                                height: imageHeight,
+                                                width: imageWidth,
+                                              ),
                                         Visibility(
                                             visible: edit,
                                             child: CIA_SecondaryButton(
@@ -210,13 +299,12 @@ class _ViewUserDataState extends State<ViewUserData> {
                                                 onTab: () async {
                                                   var temp = profileImageBytes;
                                                   profileImageBytes = await ImagePickerWeb.getImageAsBytes();
-                                                  if(temp!=profileImageBytes) photoChanged = true;
+                                                  if (temp != profileImageBytes) photoChanged = true;
                                                   setState(() {});
                                                 })),
                                       ],
                                     );
                                   },
-
                                 ))
                           ],
                         ),
@@ -240,12 +328,12 @@ class _ViewUserDataState extends State<ViewUserData> {
                                             if (res.statusCode == 200) {
                                               user = res.result as ApplicationUserModel;
                                               ShowSnackBar(context, isSuccess: true, title: "Success", message: "User Updated!");
-                                              if(photoChanged && profileImageBytes!=null)
-                                                {
-                                                  res = await UserAPI.UploadImage(widget.userId, EnumImageType.UserProfile, profileImageBytes!);
-                                                  ShowSnackBar(context, isSuccess: res.statusCode==200, message: res.statusCode!=200? "Failed to change photo":"Photo Uploaded!");
-
-                                                }
+                                              if (photoChanged && profileImageBytes != null) {
+                                                res = await UserAPI.UploadImage(widget.userId, EnumImageType.UserProfile, profileImageBytes!);
+                                                ShowSnackBar(context,
+                                                    isSuccess: res.statusCode == 200,
+                                                    message: res.statusCode != 200 ? "Failed to change photo" : "Photo Uploaded!");
+                                              }
                                               setState(() {
                                                 edit = false;
                                                 photoChanged = false;
@@ -355,8 +443,8 @@ class _ViewCandidateDataState extends State<ViewCandidateData> {
                   });
                 },
                 onCellClick: (index) {
-                  if(index!=0)
-                  context.goNamed(PatientSurgicalTreatment.routeName,pathParameters: {'id':dataSource!.models![index-1]!.patientId!.toString()});
+                  if (index != 0)
+                    context.goNamed(PatientSurgicalTreatment.routeName, pathParameters: {'id': dataSource!.models![index - 1]!.patientId!.toString()});
                 },
               ),
             ),
