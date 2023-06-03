@@ -51,7 +51,6 @@ import 'Pages/SharedPages/LapRequestSharedPage.dart';
 import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
-import 'Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import 'Widgets/CIA_TeethTreatmentWidget.dart';
 import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
@@ -74,8 +73,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI4ZTgwYWViLTA5M2QtNGEyYy1iYjU1LTEwZTgwMzA0NWUwYSIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTM4Nzc0MCwiZXhwIjoxNjg1OTkyNTQwLCJpYXQiOjE2ODUzODc3NDB9.x6gCAgW4j2U1-DtsNUx1REQ5mUdNruImW9a43x0-p04");
-    siteController.setSite(Website.CIA);
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImIzZTQxNmRkLTEwOTEtNDhhNC05YjJkLWViOWIzZWI1YWUwYiIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTcyNDE5MywiZXhwIjoxNjg2MzI4OTkzLCJpYXQiOjE2ODU3MjQxOTN9.qsv9iz57dTeRTyohKl3NjdtPVdYogD_zCoPUHdAGmq8");    siteController.setSite(Website.CIA);
 
     siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 1, phoneNumber: "01127744835"));
     siteController.setRole("admin");

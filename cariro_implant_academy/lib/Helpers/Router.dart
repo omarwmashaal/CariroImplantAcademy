@@ -105,11 +105,20 @@ class CIA_Router {
                       },
                     ),
                     GoRoute(
-                      path: PatientAdvancedSearchPage.routeName,
+                      path: PatientAdvancedSearchPage.routePath,
                       name: PatientAdvancedSearchPage.routeName,
                       pageBuilder: (context, state) {
                         return NoTransitionPage(
                           child: PatientAdvancedSearchPage(),
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      path: PatientAdvancedSearchPage.routeNameTreatmentsPath,
+                      name: PatientAdvancedSearchPage.routeNameTreatments,
+                      pageBuilder: (context, state) {
+                        return NoTransitionPage(
+                          child: PatientAdvancedSearchPage(treatments: true,),
                         );
                       },
                     ),

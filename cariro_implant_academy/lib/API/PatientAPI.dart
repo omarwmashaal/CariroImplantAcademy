@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
+import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
@@ -275,6 +276,14 @@ class PatientAPI {
     if(response.statusCode==200)
       {
         response.result = ((response.result) as List<dynamic>).map((e) => AdvancedPatientSearchDTO.fromJson(e as Map<String,dynamic>)).toList();
+      }
+    return response;
+  }
+  static Future<API_Response> AdvancedSearchTreatment(AdvancedTreatmentSearchDTO query) async {
+    var response = await HTTPRequest.Post("PatientInfo/AdvancedSearchTreatment",query.toJson());
+    if(response.statusCode==200)
+      {
+        response.result = ((response.result) as List<dynamic>).map((e) => AdvancedTreatmentSearchDTO.fromJson(e as Map<String,dynamic>)).toList();
       }
     return response;
   }

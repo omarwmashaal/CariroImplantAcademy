@@ -58,28 +58,25 @@ class _CIA_TableState extends State<CIA_Table> {
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         print(snapshot.connectionState);
         print(snapshot.data);
-        if (snapshot.hasData|| snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData || snapshot.connectionState == ConnectionState.done) {
           print("finished");
           return SfDataGrid(
+            isScrollbarAlwaysShown: true,
+            horizontalScrollController: ScrollController(),
+            horizontalScrollPhysics: ScrollPhysics(),
+
             allowSorting: widget.allowSorting,
             highlightRowOnHover: true,
-            gridLinesVisibility: widget.showGridLines
-                ? GridLinesVisibility.both
-                : GridLinesVisibility.horizontal,
-            headerGridLinesVisibility: widget.showGridLines
-                ? GridLinesVisibility.both
-                : GridLinesVisibility.horizontal,
+            gridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
+            headerGridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
 
             tableSummaryRows: widget.showSum
                 ? [
                     GridTableSummaryRow(
                         showSummaryInRow: false,
                         title: 'Amount',
-                        columns:<GridSummaryColumn> [
-                          GridSummaryColumn(
-                              name: 'Amount',
-                              columnName: 'Amount',
-                              summaryType: GridSummaryType.sum),
+                        columns: <GridSummaryColumn>[
+                          GridSummaryColumn(name: 'Amount', columnName: 'Amount', summaryType: GridSummaryType.sum),
                         ],
                         position: GridTableSummaryRowPosition.bottom),
                   ]
@@ -89,10 +86,7 @@ class _CIA_TableState extends State<CIA_Table> {
                     StackedHeaderRow(cells: [
                       StackedHeaderCell(
                           columnNames: widget.columnNames,
-                          child: Container(
-                              alignment: Alignment.center,
-                              color: Color_Accent,
-                              child: Text(widget.title as String)))
+                          child: Container(alignment: Alignment.center, color: Color_Accent, child: Text(widget.title as String)))
                     ])
                   ]
                 : [],
@@ -133,13 +127,11 @@ class _CIA_TableState extends State<CIA_Table> {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ))),*/
-            columnWidthMode: widget.isTreatment!
-                ? ColumnWidthMode.lastColumnFill
-                : ColumnWidthMode.fill,
+            columnWidthMode: widget.isTreatment! ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.fill,
             // allowFiltering: true,
             navigationMode: GridNavigationMode.row,
             onCellTap: (value) {
-              if (widget.onCellClick != null) {
+              if (widget.onCellClick != null && value.rowColumnIndex.rowIndex!=0) {
                 widget.onCellClick!(value.rowColumnIndex.rowIndex);
               }
             },
@@ -158,20 +150,34 @@ class _CIA_TableState extends State<CIA_Table> {
 
   List<GridColumn> _buildColumns() {
     List<GridColumn> returnValue = <GridColumn>[];
-    for (String name in widget.columnNames) {
-      returnValue.add(GridColumn(
-          columnName: name,
-          columnWidthMode: name == "Treatment"
-              ? ColumnWidthMode.lastColumnFill
-              : ColumnWidthMode.none,
-          label: Container(
-              //padding: EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              child: Text(
-                name,
-                style: TextStyle(fontWeight: FontWeight.w900),
-              ))));
-    }
+    if (widget.dataSource.rows.isNotEmpty)
+      for (var r in widget.dataSource.rows[0].getCells()) {
+        returnValue.add(GridColumn(
+            width: widget.columnNames.length > 6 ? 200 : double.nan,
+            columnName: r.columnName,
+            columnWidthMode: r.columnName == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
+            label: Container(
+                //padding: EdgeInsets.all(16.0),
+                alignment: Alignment.center,
+                child: Text(
+                  r.columnName,
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ))));
+      }
+    else
+      for (String name in widget.columnNames) {
+        returnValue.add(GridColumn(
+            width: widget.columnNames.length > 6 ? 200 : double.nan,
+            columnName: name,
+            columnWidthMode: name == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
+            label: Container(
+                //padding: EdgeInsets.all(16.0),
+                alignment: Alignment.center,
+                child: Text(
+                  name,
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ))));
+      }
     return returnValue;
   }
 }

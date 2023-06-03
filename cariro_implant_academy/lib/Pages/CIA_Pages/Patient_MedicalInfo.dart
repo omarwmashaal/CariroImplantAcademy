@@ -44,7 +44,6 @@ import '../../Widgets/CIA_MedicalPageWidget.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/CIA_TagsInputWidget.dart';
 import '../../Widgets/CIA_TeethChart.dart';
-import '../../Widgets/CIA_TeethSurgicalTreatmentWidget.dart';
 import '../../Widgets/CIA_TeethTreatmentWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';

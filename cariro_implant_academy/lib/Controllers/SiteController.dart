@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
+import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
@@ -44,6 +45,7 @@ class SiteController extends GetxController {
   String title = "";
   List<String> searchPatientColumn = [];
   AdvancedPatientSearchDTO searchPatientQuery = AdvancedPatientSearchDTO();
+  AdvancedTreatmentSearchDTO searchTreatmentQuery = AdvancedTreatmentSearchDTO(done: false);
 
   setAppBarWidget(
       {List<SlidingTabModel>? tabs,
@@ -101,7 +103,7 @@ class SiteController extends GetxController {
         SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits_SharedPage.routeName, pathParameters: pathQueries),
         SlidingTabModel(title: "Complains", namedDirectory: PatientComplains.routeName, pathParameters: pathQueries),
       ]);
-    else if (path == PatientsSearchPage.routeName || path == PatientsSearchPage.myPatientsRouteName || path == PatientsComplainsPage.routeName || path ==PatientAdvancedSearchPage.routeName) {
+    else if (path == PatientsSearchPage.routeName || path == PatientsSearchPage.myPatientsRouteName || path == PatientsComplainsPage.routeName || path ==PatientAdvancedSearchPage.routeName || path ==PatientAdvancedSearchPage.routeNameTreatments ) {
       if (getRole() == "secretary")
         siteController.setAppBarWidget(tabs: [
           SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
@@ -114,7 +116,12 @@ class SiteController extends GetxController {
           SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
           SlidingTabModel(title: "Patient Visits", namedDirectory: ""),
           SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
-          SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),
+          path ==PatientAdvancedSearchPage.routeNameTreatments?
+          SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments ):
+          SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName )
+
+
+          ,
         ]);
     } else if (path == ViewUserData.candidateRouteName || path == ViewCandidateData.routeName)
       siteController.setAppBarWidget(tabs: [

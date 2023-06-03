@@ -367,17 +367,15 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                         setState(() {});
                       }
                       if (item == "Post Surgery") {
-                        int tempScrews = (surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ??0);
-                        int? membraneSizeId = surgicalTreatmentModel.openSinusLift_Membrane!=null?
-                        surgicalTreatmentModel.openSinusLift_Membrane!.id:null;
-                        int tacsNumber = surgicalTreatmentModel.openSinusLiftTacsNumber??0;
-                        int tacCompany = surgicalTreatmentModel.openSinusLift_TacsCompanyID??0;
+                        int tempScrews = (surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? 0);
+                        int? membraneSizeId = surgicalTreatmentModel.openSinusLift_Membrane != null ? surgicalTreatmentModel.openSinusLift_Membrane!.id : null;
+                        int tacsNumber = surgicalTreatmentModel.openSinusLiftTacsNumber ?? 0;
+                        int tacCompany = surgicalTreatmentModel.openSinusLift_TacsCompanyID ?? 0;
 
                         await CIA_ShowPopUp(
                           width: 1000,
                           height: 600,
                           context: context,
-
                           onSave: () async {
                             if (tempScrews != (surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? 0)) {
                               if (((surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? 0)) > tempScrews) {
@@ -387,45 +385,42 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
                                     onSave: () async {
                                       var t = await StockAPI.GetStockByName("Screws");
                                       if (t.statusCode == 200) {
-                                        var y = await StockAPI.ConsumeItem((t.result as StockModel).id!,
-                                            ((surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? 0)) - tempScrews);
-                                        ShowSnackBar(context, isSuccess: y.statusCode==200,message:y.statusCode==200? "Screws consumed":"Failed to consume screws");
+                                        var y = await StockAPI.ConsumeItem(
+                                            (t.result as StockModel).id!, ((surgicalTreatmentModel.guidedBoneRegenerationCutByScrewsNumber ?? 0)) - tempScrews);
+                                        ShowSnackBar(context,
+                                            isSuccess: y.statusCode == 200, message: y.statusCode == 200 ? "Screws consumed" : "Failed to consume screws");
                                       }
                                     });
                               }
                             }
-                            if(tacCompany!= surgicalTreatmentModel.openSinusLift_TacsCompanyID) tacsNumber = 0;
-                            if(tacsNumber!=(surgicalTreatmentModel.openSinusLiftTacsNumber??0))
-                              {
-                                if ((surgicalTreatmentModel.openSinusLiftTacsNumber??0)>tacsNumber) {
-                                  await CIA_ShowPopUpYesNo(
-                                      title: "Consume ${((surgicalTreatmentModel.openSinusLiftTacsNumber??0)) - tacsNumber} Tacs?",
-                                      context: context,
-                                      onSave: () async {
-                                          var y = await StockAPI.ConsumeItem((surgicalTreatmentModel.openSinusLift_TacsCompanyID)!,
-                                              ((surgicalTreatmentModel.openSinusLiftTacsNumber??0)) - tacsNumber);
-                                          ShowSnackBar(context, isSuccess: y.statusCode==200,message:y.statusCode==200? "Tacs consumed":"Failed to consume tacs");
-
-                                      });
-                                }
+                            if (tacCompany != surgicalTreatmentModel.openSinusLift_TacsCompanyID) tacsNumber = 0;
+                            if (tacsNumber != (surgicalTreatmentModel.openSinusLiftTacsNumber ?? 0)) {
+                              if ((surgicalTreatmentModel.openSinusLiftTacsNumber ?? 0) > tacsNumber) {
+                                await CIA_ShowPopUpYesNo(
+                                    title: "Consume ${((surgicalTreatmentModel.openSinusLiftTacsNumber ?? 0)) - tacsNumber} Tacs?",
+                                    context: context,
+                                    onSave: () async {
+                                      var y = await StockAPI.ConsumeItem((surgicalTreatmentModel.openSinusLift_TacsCompanyID)!,
+                                          ((surgicalTreatmentModel.openSinusLiftTacsNumber ?? 0)) - tacsNumber);
+                                      ShowSnackBar(context,
+                                          isSuccess: y.statusCode == 200, message: y.statusCode == 200 ? "Tacs consumed" : "Failed to consume tacs");
+                                    });
                               }
+                            }
 
-                            if(membraneSizeId!=surgicalTreatmentModel.openSinusLift_MembraneID)
-                              {
-                                if(surgicalTreatmentModel.openSinusLift_MembraneID!=null)
-                                  {
-                                    await CIA_ShowPopUpYesNo(
-                                        title: "Consume 1 ${surgicalTreatmentModel.openSinusLift_Membrane!.size??""} Membrane?",
-                                        context: context,
-                                        onSave: () async {
-                                          var y = await StockAPI.ConsumeItem((surgicalTreatmentModel.openSinusLift_MembraneID)!,1);
-                                          ShowSnackBar(context, isSuccess: y.statusCode==200,message:y.statusCode==200? "Membrane consumed":"Failed to consume Membrane");
-
-                                        });
-                                  }
+                            if (membraneSizeId != surgicalTreatmentModel.openSinusLift_MembraneID) {
+                              if (surgicalTreatmentModel.openSinusLift_MembraneID != null) {
+                                await CIA_ShowPopUpYesNo(
+                                    title: "Consume 1 ${surgicalTreatmentModel.openSinusLift_Membrane!.size ?? ""} Membrane?",
+                                    context: context,
+                                    onSave: () async {
+                                      var y = await StockAPI.ConsumeItem((surgicalTreatmentModel.openSinusLift_MembraneID)!, 1);
+                                      ShowSnackBar(context,
+                                          isSuccess: y.statusCode == 200, message: y.statusCode == 200 ? "Membrane consumed" : "Failed to consume Membrane");
+                                    });
                               }
-                            },
-
+                            }
+                          },
                           child: _PostSurgeryWidget(),
                         );
                       }
@@ -654,7 +649,7 @@ class _ToothWidget extends StatelessWidget {
     var currentTooth = models.firstWhereOrNull((element) => element.tooth == toothID);
     if (currentTooth != null) {
       if (currentTooth!.simpleImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.simpleImplant!,
@@ -666,7 +661,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.immediateImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.immediateImplant!,
@@ -678,7 +673,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.guidedImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.guidedImplant!,
@@ -690,7 +685,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithImplant!,
@@ -702,7 +697,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithImplant!,
@@ -714,7 +709,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithImplant!,
@@ -726,7 +721,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithImplant!,
@@ -738,7 +733,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithImplant!,
@@ -750,7 +745,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.expansionWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.expansionWithoutImplant!,
@@ -762,7 +757,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.splittingWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.splittingWithoutImplant!,
@@ -774,7 +769,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.gbrWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.gbrWithoutImplant!,
@@ -786,7 +781,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.openSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.openSinusWithoutImplant!,
@@ -798,7 +793,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.closedSinusWithoutImplant != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.closedSinusWithoutImplant!,
@@ -810,7 +805,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.extraction != null && !isSurgical) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.extraction!,
@@ -825,7 +820,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.restoration != null && !isSurgical) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.restoration!,
@@ -840,7 +835,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.rootCanalTreatment != null && !isSurgical) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.rootCanalTreatment!,
@@ -855,7 +850,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.scaling != null && !isSurgical) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.scaling!,
@@ -869,7 +864,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.crown != null && !isSurgical) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           price: true,
           viewOnlyMode: viewOnlyMode,
@@ -883,7 +878,7 @@ class _ToothWidget extends StatelessWidget {
         ));
       }
       if (currentTooth!.pontic != null) {
-        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 2));
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(_StatusWidget(
           viewOnlyMode: viewOnlyMode,
           fieldModel: currentTooth!.pontic!,
@@ -2138,18 +2133,16 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
                             Expanded(child: FormTextValueWidget(text: "Tacs")),
                             Expanded(
                               flex: 4,
-                              child: SimpleBuilder(builder: (context) {                                
+                              child: SimpleBuilder(builder: (context) {
                                 List<TacCompanyModel> tacs = [];
                                 SettingsAPI.GetTacsCompanies().then((value) {
-                                  if(value.statusCode == 200)
-                                    {
-                                      tacs = value.result as List<TacCompanyModel>;
-                                      if(surgicalTreatmentModel.openSinusLift_TacsCompanyID!=null)
-                                        {
-                                          _getXController.availableTacsNumber.value = tacs.firstWhere((element) => element.id == surgicalTreatmentModel.openSinusLift_TacsCompanyID).count??0;
-                                        }
-                                     
+                                  if (value.statusCode == 200) {
+                                    tacs = value.result as List<TacCompanyModel>;
+                                    if (surgicalTreatmentModel.openSinusLift_TacsCompanyID != null) {
+                                      _getXController.availableTacsNumber.value =
+                                          tacs.firstWhere((element) => element.id == surgicalTreatmentModel.openSinusLift_TacsCompanyID).count ?? 0;
                                     }
+                                  }
                                 });
                                 return StatefulBuilder(
                                   builder: (context, setState) {

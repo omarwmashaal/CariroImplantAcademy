@@ -111,7 +111,7 @@ class TreatmentPlanSubModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    // data['id'] = this.id;
+    data['id'] = this.id;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     if (this.rootCanalTreatment != null) {
