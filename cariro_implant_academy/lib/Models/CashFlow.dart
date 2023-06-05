@@ -30,25 +30,38 @@ class CashFlowModel {
   DropDownDTO? paymentLog;
   String? notes;
   String? type;
+  DropDownDTO? membraneCompany;
+  DropDownDTO? membrane;
+  DropDownDTO? tac;
+  DropDownDTO? implantCompany;
+  DropDownDTO? implantLine;
+  DropDownDTO? implant;
 
-  CashFlowModel(
-      {this.id,
-      this.receiptID,
-      this.receipt,
-      this.date,
-      this.name,
-      this.categoryId,
-      this.category,
-      this.supplierId,
-      this.supplier,
-      this.createdById,
-      this.createdBy,
-      this.price,
-      this.count,
-      this.paymentMethodId,
-      this.paymentMethod,
-      this.notes,
-      this.type});
+  CashFlowModel({
+    this.id,
+    this.receiptID,
+    this.receipt,
+    this.date,
+    this.name,
+    this.categoryId,
+    this.category,
+    this.supplierId,
+    this.supplier,
+    this.createdById,
+    this.createdBy,
+    this.price,
+    this.count,
+    this.paymentMethodId,
+    this.paymentMethod,
+    this.notes,
+    this.type,
+    this.membraneCompany,
+    this.membrane,
+    this.tac,
+    this.implantCompany,
+    this.implantLine,
+    this.implant,
+  });
 
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -152,6 +165,7 @@ class CashFlowDataSource extends DataGridSource {
       columns = [
         "ID",
         "Item",
+        "Date",
         "Category",
         "Supplier",
         "Created by",
@@ -163,10 +177,11 @@ class CashFlowDataSource extends DataGridSource {
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<int>(columnName: 'ID', value: e.id),
                 DataGridCell<String>(columnName: 'Item', value: e.name),
+                DataGridCell<String>(columnName: 'Date', value: e.date),
                 DataGridCell<String>(columnName: 'Category', value: e.category!.name),
                 DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
                 DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-                DataGridCell<int>(columnName: 'Amount', value: e.count),
+                DataGridCell<int>(columnName: 'Amount', value: e.price??0),
                 DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
                 DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
               ]))
@@ -201,8 +216,8 @@ class CashFlowDataSource extends DataGridSource {
     late API_Response response;
 
     if (type == CashFlowType.income)
-      response = await CashFlowAPI.ListIncome(from:from,to:to,catId:catId,paymentMethodId:paymentMethodId);
-    else if (type == CashFlowType.expenses) response = await CashFlowAPI.ListExpenses(from:from,to:to,catId:catId,paymentMethodId:paymentMethodId);
+      response = await CashFlowAPI.ListIncome(from: from, to: to, catId: catId, paymentMethodId: paymentMethodId);
+    else if (type == CashFlowType.expenses) response = await CashFlowAPI.ListExpenses(from: from, to: to, catId: catId, paymentMethodId: paymentMethodId);
     if (response.statusCode == 200) models = response.result as List<CashFlowModel>;
     init();
     notifyListeners();

@@ -140,3 +140,4 @@ LowerAnterior,
 UpperPosterior,
 LowerPosterior
 }
+enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }

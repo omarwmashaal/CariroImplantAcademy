@@ -59,7 +59,7 @@ class SettingsAPI {
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => MembraneModel.fromJson(e as Map<String, dynamic>)).toList();
-      response.result = (response.result as List<MembraneModel>).map((e) => DropDownDTO(name: e.size,id: e.id)).toList();
+      response.result = (response.result as List<MembraneModel>).map((e) => DropDownDTO(name: e.size==null||e.size==""?e.name:e.size,id: e.id)).toList();
     }
     return response;
   }
@@ -97,6 +97,30 @@ class SettingsAPI {
 
   static Future<API_Response> GetExpensesCategories() async {
     var response = await HTTPRequest.Get("Settings/GetExpensesCategories");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+  static Future<API_Response> GetMedicalExpensesCategories() async {
+    var response = await HTTPRequest.Get("Settings/GetMedicalExpensesCategories");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+  static Future<API_Response> GetNonMedicalNonStockExpensesCategories() async {
+    var response = await HTTPRequest.Get("Settings/GetNonMedicalNonStockExpensesCategories");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+  static Future<API_Response> GetNonMedicalStockCategories() async {
+    var response = await HTTPRequest.Get("Settings/GetNonMedicalStockCategories");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();

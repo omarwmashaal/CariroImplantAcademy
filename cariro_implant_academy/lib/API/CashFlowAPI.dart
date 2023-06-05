@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/CashFlowSummaryModel.dart';
@@ -78,8 +79,8 @@ class CashFlowAPI {
     return response;
   }
 
-  static Future<API_Response> AddExpense(List<CashFlowModel> models, bool isStockItem) async {
-    var response = await HTTPRequest.Post("CashFlow/AddExpense?isStockItem=$isStockItem", models.map((e) => e.toJson()).toList());
+  static Future<API_Response> AddExpense(List<CashFlowModel> models, bool isStockItem,EnumExpenseseCategoriesType type) async {
+    var response = await HTTPRequest.Post("CashFlow/AddExpense?isStockItem=$isStockItem&type=${type.index}", models.map((e) => e.toJson()).toList());
 
     return response;
   }
