@@ -19,6 +19,7 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -30,19 +31,23 @@ import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_CheckBoxWidget.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/FormTextWidget.dart';
+import '../../Widgets/Title.dart';
+import '../LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'PatientSharedPages.dart';
 
-class LapRequestSharedPage extends StatefulWidget {
-  LapRequestSharedPage({Key? key, this.isDoctor = false, this.onChange, this.patient}) : super(key: key);
+class LabCreateNewRequestSharedPage extends StatefulWidget {
+  LabCreateNewRequestSharedPage({Key? key, this.isDoctor = false, this.onChange, this.patient}) : super(key: key);
+  static String routeName = "CreateRequest";
+  static String routePath = "CreateRequest";
   bool isDoctor;
   Function? onChange;
   PatientInfoModel? patient;
 
   @override
-  State<LapRequestSharedPage> createState() => _LapRequestSharedPageState();
+  State<LabCreateNewRequestSharedPage> createState() => _LabCreateNewRequestSharedPageState();
 }
 
-class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
+class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestSharedPage> {
   LAB_RequestModel labRequest = LAB_RequestModel(steps: [
     LAB_StepModel(step: DropDownDTO(name: "Scan",),),
     LAB_StepModel(step: DropDownDTO(name: "Design",),),
@@ -51,9 +56,14 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
   late Function globalSetState;
 
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     return Column(
       children: [
+        TitleWidget(
+          title: "Create New Request",
+          showBackButton: true,
+        ),
+        SizedBox(width: 10),
         Expanded(
           flex: 10,
           child: Padding(
@@ -84,7 +94,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                   CIA_ShowPopUp(
                                     width: 900,
                                     height: 600,
-                                    context: buildContext,
+                                    context: context,
                                     onSave: () => setState(() {}),
                                     child: StatefulBuilder(builder: (context, setState) {
                                       return Column(
@@ -95,7 +105,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                               ApplicationUserModel newCustomer = ApplicationUserModel();
                                               bool newWorkPlace = false;
                                               Alert(
-                                                context: buildContext,
+                                                context: context,
                                                 title: "Add new customer",
                                                 content: StatefulBuilder(builder: (context, setState) {
                                                   return Column(
@@ -176,8 +186,9 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                                         labRequest.customer = res.result as ApplicationUserModel;
                                                         labRequest.customerId = labRequest.customer!.idInt;
                                                         globalSetState(() {});
-                                                        Navigator.pop(buildContext);
-                                                        Navigator.pop(buildContext);
+                                                        Navigator.of(context, rootNavigator: true).pop();
+                                                        Navigator.of(context, rootNavigator: true).pop();
+                                                        Navigator.of(context, rootNavigator: true).pop();
                                                       } else
                                                         ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
                                                     },
@@ -233,7 +244,8 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                               labRequest.customerId = p.id;
                                               var res = await UserAPI.GetUserData(p.id!);
                                               if (res.statusCode == 200) labRequest.customer = res.result as ApplicationUserModel;
-                                              Navigator.pop(context);
+                                              Navigator.of(context, rootNavigator: true).pop();
+
                                               globalSetState(() {});
                                             },
                                           )
@@ -251,7 +263,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                           Expanded(
                             child: CIA_TextFormField(
                                 onTap: () {
-                                  CIA_PopupDialog_DateOnlyPicker(buildContext, "Delivery Date", (value) {
+                                  CIA_PopupDialog_DateOnlyPicker(context, "Delivery Date", (value) {
                                     setState(() {
                                       labRequest.deliveryDate = value;
                                     });
@@ -312,7 +324,7 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                   CIA_ShowPopUp(
                                     width: 900,
                                     height: 600,
-                                    context: buildContext,
+                                    context: context,
                                     onSave: () => setState(() {}),
                                     child: StatefulBuilder(builder: (context, setState) {
                                       return Column(
@@ -335,8 +347,8 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                                       labRequest.patientId = res.id;
                                                       labRequest.patient = DropDownDTO(name: res.name, id: res.id);
                                                     }
-                                                    Navigator.pop(context);
-                                                    Navigator.pop(context);
+                                                    Navigator.of(context, rootNavigator: true).pop();
+                                                    Navigator.of(context, rootNavigator: true).pop();
                                                     globalSetState(() {});
                                                   },
                                                 ),
@@ -384,7 +396,8 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                                               labRequest.patient!.name = p.name;
                                               labRequest.patient!.id = p.id;
                                               labRequest.patientId = p.id;
-                                              Navigator.pop(context);
+                                              Navigator.of(context, rootNavigator: true).pop();
+                                              //context.goNamed(LabTodaysRequestsSearch.routeName);
                                               globalSetState(() {});
                                             },
                                           )
@@ -688,8 +701,8 @@ class _LapRequestSharedPageState extends State<LapRequestSharedPage> {
                             var res = await LAB_RequestsAPI.AddRequest(labRequest);
                             if (res.statusCode == 200) {
                               ShowSnackBar(context,isSuccess: true, title: "Success", message: "Request Added!");
-                              if (widget.isDoctor)
-                                Navigator.pop(context);
+                              if (widget.isDoctor) print("");
+                                //Navigator.of(context, rootNavigator: true).pop();
                               else
                                 internalPagesController.goBack();
                             } else {

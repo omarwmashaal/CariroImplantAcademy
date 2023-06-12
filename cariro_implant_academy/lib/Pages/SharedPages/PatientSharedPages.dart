@@ -704,7 +704,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         ),
                                         SizedBox(height: 10),
                                         Visibility(
-                                          visible:edit,
+                                          visible:edit||addNew,
                                           child: CIA_SecondaryButton(
                                               label: "Upload Image",
                                               onTab: () async {
@@ -733,7 +733,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                               ),
                                               SizedBox(height: 10),
                                               Visibility(
-                                                visible:edit,
+                                                visible:edit||addNew,
                                                 child: CIA_SecondaryButton(
                                                     label: "Upload Image",
                                                     onTab: () async {
@@ -760,7 +760,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                               ),
                                               SizedBox(height: 10),
                                               Visibility(
-                                                visible:edit,
+                                                visible:edit||addNew,
                                                 child: CIA_SecondaryButton(
                                                     label: "Upload Image",
                                                     onTab: () async {
@@ -903,7 +903,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: dataSource.loadData(widget.patientID),
+        future: dataSource.loadData(id:widget.patientID),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Padding(

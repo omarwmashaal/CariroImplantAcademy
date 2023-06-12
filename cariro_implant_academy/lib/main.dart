@@ -36,6 +36,7 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'API/TempPatientAPI.dart';
@@ -45,9 +46,9 @@ import 'Models/Enum.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'Pages/CIA_Pages/PatientsSearchPage.dart';
-import 'Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
+import 'Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
-import 'Pages/SharedPages/LapRequestSharedPage.dart';
+import 'Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
 import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'Widgets/CIA_PopUp.dart';
@@ -72,13 +73,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjkxNmI1ZjExLTlhNjctNDEwMy05ZDViLTJkMjZlZmQ4NTE2MCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTg2MzI4MSwiZXhwIjoxNjg2NDY4MDgxLCJpYXQiOjE2ODU4NjMyODF9.aXufSxCrH9g_nTJj1oa3cEIK7OWvX_im-VtvBJHwlpQ");
-    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 1, phoneNumber: "01127744835"));
-    siteController.setRole("admin");
 
-    StockDataSource dataSource1 = StockDataSource();
-    StockLogsDataSource dataSource2 = StockLogsDataSource();
     return MaterialApp.router(
       title: 'CIA',
       theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
@@ -104,16 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    siteController.setToken(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjI5ODg1YWE3LTEzZTQtNGE3OC05OWIwLTk3NDI1YTQzMGFiMCIsInJvbGUiOiJhZG1pbiIsIm5iZiI6MTY4NTEwNzY2OSwiZXhwIjoxNjg1NzEyNDY5LCJpYXQiOjE2ODUxMDc2Njl9.HgDPgYxYawyZZINeoI3crT1GYZmSGurndG-HoRT5Iro",
-    );
-    siteController.setSite(Website.CIA);
 
-    siteController.setUser(ApplicationUserModel(name: "Admin", idInt: 6, phoneNumber: "01127744835"));
-    siteController.setRole("admin");
-
-    StockDataSource dataSource1 = StockDataSource();
-    StockLogsDataSource dataSource2 = StockLogsDataSource();
     return Scaffold(
         //body: DashBoardPage(),
 

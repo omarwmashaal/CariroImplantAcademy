@@ -24,6 +24,7 @@ class CIA_TextFormField extends StatefulWidget {
     this.borderColorOnChange,
     this.changeColorIfFilled = false,
     this.onTap,
+    this.onSubmit,
     this.inputFormatter,
     required this.controller,
     this.errorFunction,
@@ -38,6 +39,7 @@ class CIA_TextFormField extends StatefulWidget {
   Function(String value)? onChange;
   Function? onInstantChange;
   Function? onTap;
+  Function(String value)? onSubmit;
   IconData? icon;
   Color? borderColor;
   TextEditingController controller;
@@ -95,6 +97,9 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           if (widget.onTap != null) widget.onTap!();
         },
         child: TextFormField(
+          onFieldSubmitted: (value) {
+            if(widget.onSubmit!=null)widget.onSubmit!(value);
+          },
           enabled: widget.enabled,
           onTap: () {
             if (widget.onTap != null) widget.onTap!();

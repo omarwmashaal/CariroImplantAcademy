@@ -21,6 +21,8 @@ class UserSearchPage extends StatefulWidget {
   static String assistantsRouteName = "Users/Assistants";
   static String candidatesRouteName = "Candidates";
   static String instructorsRouteName = "Users/Instructors";
+  static String techniciansRouteName = "Users/Technicians";
+  static String outSourceRouteName = "Users/Customers";
 
   String? type;
 

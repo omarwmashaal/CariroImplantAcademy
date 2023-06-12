@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationModel.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/ProstheticTreatmentModel.dart';
@@ -19,6 +20,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_StepTimelineWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,8 @@ import '../../Widgets/MultiSelectChipWidget.dart';
 import 'package:collection/collection.dart';
 
 import '../../Widgets/SnackBar.dart';
-import '../SharedPages/LapRequestSharedPage.dart';
+import '../LAB_Pages/LAB_ViewTask.dart';
+import '../SharedPages/LapCreateNewRequestSharedPage.dart';
 
 late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
@@ -82,7 +85,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
 
   @override
   void initState() {
-
     patient = PatientInfoModel();
 
     print("medical rebuilt");
@@ -163,13 +165,13 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                             label: "View more info",
                             onTab: () {
                               print("pressed more info");
-                              context.goNamed(PatientInfo_SharedPage.viewPatientRouteName,pathParameters: {"id":widget.patientId.toString()});
-                              }),
+                              context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
+                            }),
                         SizedBox(
                           height: 10,
                         ),
                         CIA_SecondaryButton(
-                            label: "LAB Request",
+                            label: "Create LAB Request",
                             icon: Icon(Icons.document_scanner_outlined),
                             onTab: () {
                               CIA_ShowPopUp(
@@ -178,22 +180,42 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                 width: 1100,
                                 height: 650,
                                 onSave: () {},
-                                child: LapRequestSharedPage(isDoctor: true, patient: patient),
+                                child: LabCreateNewRequestSharedPage(isDoctor: true, patient: patient),
                               );
                             }),
                         SizedBox(
                           height: 10,
                         ),
-                        Obx(() =>
-                            !siteController.disableMedicalEdit.value?
-                            CIA_SecondaryButton(
-                            label: "View mode",
-                            onTab: () => siteController.disableMedicalEdit.value=true )
-                        : CIA_PrimaryButton(
-                                label: "Edit mode",
-                                onTab: () => siteController.disableMedicalEdit.value=false )
-                        )
-                        ,
+                        CIA_SecondaryButton(
+                            label: "View LAB Request",
+                            icon: Icon(Icons.document_scanner_outlined),
+                            onTab: () {
+                              LabRequestDataSource dataSource = LabRequestDataSource();
+                              CIA_ShowPopUp(
+                                hideButton: true,
+                                context: context,
+                                width: 1100,
+                                height: 650,
+                                onSave: () {},
+                                child: CIA_Table(
+                                  columnNames: dataSource.columns,
+                                  dataSource: dataSource,
+                                  loadFunction: ()async{
+                                    return  dataSource.loadPatientRequests(patient!.id!);
+                                  },
+                                  onCellClick: (index) {
+                                    CIA_ShowPopUp(width: 1100,
+                                        height: 650,context: context,child: LAB_ViewTaskPage(id: dataSource.models[index-1].id!,));
+                                  },
+                                ),
+                              );
+                            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Obx(() => !siteController.disableMedicalEdit.value
+                            ? CIA_SecondaryButton(label: "View mode", onTab: () => siteController.disableMedicalEdit.value = true)
+                            : CIA_PrimaryButton(label: "Edit mode", onTab: () => siteController.disableMedicalEdit.value = false)),
                         SizedBox(
                           height: 10,
                         ),
@@ -267,13 +289,11 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
   @override
   void initState() {
     load = MedicalAPI.GetPatientMedicalExamination(widget.patientId);
-
   }
 
   @override
   void dispose() {
-    if(!siteController.disableMedicalEdit.value)
-      MedicalAPI.UpdatePatientMedicalExamination(widget.patientId, medicalExaminationModel);
+    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientMedicalExamination(widget.patientId, medicalExaminationModel);
     siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
@@ -524,30 +544,26 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: CIA_TextFormField(
                           validator: (value) {
-                            if(value==""||value==null) value = "0";
-                            if(value.length>1 && value[0]=="0") value = value.replaceFirst("0", "");
+                            if (value == "" || value == null) value = "0";
+                            if (value.length > 1 && value[0] == "0") value = value.replaceFirst("0", "");
                             var regExp = RegExp("/");
                             Iterable<Match> match = regExp.allMatches(
                               value,
                             );
                             if (match.length > 1) value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/") + 1, "");
-                            if(!value.contains("/"))
-                            {
-                              if(int.parse(value)>200)
-                                {
-                                  int temp = int.parse(value.substring(0,3));
-                                  if(temp>200)
-                                    value = value.substring(0,2)+"/"+value.substring(2);
-                                  else
-                                    {
-                                      value = value.substring(0,3)+"/"+value.substring(3);
-                                    }
+                            if (!value.contains("/")) {
+                              if (int.parse(value) > 200) {
+                                int temp = int.parse(value.substring(0, 3));
+                                if (temp > 200)
+                                  value = value.substring(0, 2) + "/" + value.substring(2);
+                                else {
+                                  value = value.substring(0, 3) + "/" + value.substring(3);
                                 }
+                              }
+                            } else if (int.parse(value.split("/").last) > 999) {
+                              value = value.replaceRange(value.length - 1, value.length, "");
                             }
-                            else if(int.parse(value.split("/").last)>999){
-                              value = value.replaceRange(value.length-1, value.length, "");
-                            }
-                            if(value.contains("/0")) value = value.replaceAll("/0", "/");
+                            if (value.contains("/0")) value = value.replaceAll("/0", "/");
 
                             return value;
                           },
@@ -596,34 +612,30 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: CIA_TextFormField(
-                          validator:  (value) {
-                      if(value==""||value==null) value = "0";
-                      if(value.length>1 && value[0]=="0") value = value.replaceFirst("0", "");
-                      var regExp = RegExp("/");
-                      Iterable<Match> match = regExp.allMatches(
-                      value,
-                      );
-                      if (match.length > 1) value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/") + 1, "");
-                      if(!value.contains("/"))
-                      {
-                      if(int.parse(value)>200)
-                      {
-                      int temp = int.parse(value.substring(0,3));
-                      if(temp>200)
-                      value = value.substring(0,2)+"/"+value.substring(2);
-                      else
-                      {
-                      value = value.substring(0,3)+"/"+value.substring(3);
-                      }
-                      }
-                      }
-                      else if(int.parse(value.split("/").last)>999){
-                      value = value.replaceRange(value.length-1, value.length, "");
-                      }
-                      if(value.contains("/0")) value = value.replaceAll("/0", "/");
+                          validator: (value) {
+                            if (value == "" || value == null) value = "0";
+                            if (value.length > 1 && value[0] == "0") value = value.replaceFirst("0", "");
+                            var regExp = RegExp("/");
+                            Iterable<Match> match = regExp.allMatches(
+                              value,
+                            );
+                            if (match.length > 1) value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/") + 1, "");
+                            if (!value.contains("/")) {
+                              if (int.parse(value) > 200) {
+                                int temp = int.parse(value.substring(0, 3));
+                                if (temp > 200)
+                                  value = value.substring(0, 2) + "/" + value.substring(2);
+                                else {
+                                  value = value.substring(0, 3) + "/" + value.substring(3);
+                                }
+                              }
+                            } else if (int.parse(value.split("/").last) > 999) {
+                              value = value.replaceRange(value.length - 1, value.length, "");
+                            }
+                            if (value.contains("/0")) value = value.replaceAll("/0", "/");
 
-                      return value;
-                      },
+                            return value;
+                          },
                           inputFormatter: [
                             FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
                           ],
@@ -906,15 +918,13 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
 
   @override
   void dispose() {
-    if(!siteController.disableMedicalEdit.value)
-      MedicalAPI.UpdatePatientDentalHistory(widget.patientId, dentalHistoryModel);
+    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientDentalHistory(widget.patientId, dentalHistoryModel);
     siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
 
   @override
   void initState() {
-
     load = MedicalAPI.GetPatientDentalHistory(widget.patientId);
     super.initState();
   }
@@ -985,10 +995,9 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
                           child: Obx(() => FormTextValueWidget(text: () {
                                 var returnValue = "";
 
-                                if (dentalHistoryModel.smokingStatus!=null&& _getxClass.tobacco.value!=2000) {
+                                if (dentalHistoryModel.smokingStatus != null && _getxClass.tobacco.value != 2000) {
                                   return (dentalHistoryModel.smokingStatus)!.name;
-                                }
-                                else if ((_getxClass.tobacco.value) == 0) {
+                                } else if ((_getxClass.tobacco.value) == 0) {
                                   returnValue = "Non Smoker";
                                   dentalHistoryModel.smokingStatus = SmokingStatus.NoneSmoker;
                                 } else if ((_getxClass.tobacco.value) < 10) {
@@ -1086,9 +1095,8 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   late Future load;
 
   @override
-  void dispose()  {
-    if(!siteController.disableMedicalEdit.value)
-      MedicalAPI.UpdatePatientDentalExamination(widget.patientId, dentalExaminationModel);
+  void dispose() {
+    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientDentalExamination(widget.patientId, dentalExaminationModel);
     siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
@@ -1096,7 +1104,6 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   @override
   void initState() {
     load = MedicalAPI.GetPatientDentalExamination(widget.patientId);
-
   }
 
   @override
@@ -1481,10 +1488,11 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
 }
 
 class PatientNonSurgicalTreatment extends StatefulWidget {
- PatientNonSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
+  PatientNonSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "NonSurgicalTreatment";
   static String routePath = "Patient/:id/NonSurgicalTreatment";
   int patientId;
+
   @override
   State<PatientNonSurgicalTreatment> createState() => _PatientNonSurgicalTreatmentState();
 }
@@ -1495,8 +1503,8 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   late Future load;
 
   @override
-  void dispose()  {
-    if(!siteController.disableMedicalEdit.value) {
+  void dispose() {
+    if (!siteController.disableMedicalEdit.value) {
       print("updating all with ${siteController.disableMedicalEdit.value}");
       MedicalAPI.AddPatientNonSurgicalTreatment(widget.patientId, nonSurgicalTreatment);
       MedicalAPI.UpdatePatientDentalExamination(widget.patientId, tempDentalExamination);
@@ -1555,7 +1563,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
                       maxLines: 5,
                     ),
                   ),
-                  SizedBox(height:20),
+                  SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -1603,9 +1611,9 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
                           }),
                     ],
                   ),
-                  SizedBox(height:20),
+                  SizedBox(height: 20),
                   CIA_MedicalAbsrobPointerWidget(child: Obx(() => _buildTeethSuggestion())),
-                  SizedBox(height:20),
+                  SizedBox(height: 20),
                 ]),
               ],
             );
@@ -1730,7 +1738,8 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
                   onSave: () async {
                     API_Response res = API_Response();
                     if (crown) res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "crown");
-                    if (rootCanalTreatment) res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "rootCanaltreatment");
+                    if (rootCanalTreatment)
+                      res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "rootCanaltreatment");
                     if (restoration) res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "restoration");
 
                     if (res.statusCode == 200)
@@ -1812,6 +1821,7 @@ class PatientTreatmentPlan extends StatefulWidget {
   static String routeName = "TreatmentPlan";
   static String routePath = "Patient/:id/TreatmentPlan";
   int patientId;
+
   @override
   State<PatientTreatmentPlan> createState() => _PatientTreatmentPlanState();
 }
@@ -1825,9 +1835,8 @@ class _PatientTreatmentPlanState extends State<PatientTreatmentPlan> {
   }
 
   @override
-  void dispose()  {
-    if(!siteController.disableMedicalEdit.value)
-      MedicalAPI.UpdatePatientTreatmentPlan(widget.patientId, treatmentPlanModel!.treatmentPlan!);
+  void dispose() {
+    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientTreatmentPlan(widget.patientId, treatmentPlanModel!.treatmentPlan!);
     siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
@@ -1838,6 +1847,7 @@ class PatientSurgicalTreatment extends StatefulWidget {
   static String routeName = "SurgicalTreatment";
   static String routePath = "Patient/:id/SurgicalTreatment";
   int patientId;
+
   @override
   State<PatientSurgicalTreatment> createState() => _PatientSurgicalTreatmentState();
 }
@@ -1852,9 +1862,8 @@ class _PatientSurgicalTreatmentState extends State<PatientSurgicalTreatment> {
   }
 
   @override
-  void dispose()  {
-    if(!siteController.disableMedicalEdit.value)
-      MedicalAPI.UpdatePatientSurgicalTreatment(widget.patientId, surgicalTreatmentModel);
+  void dispose() {
+    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientSurgicalTreatment(widget.patientId, surgicalTreatmentModel);
     siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
@@ -1865,6 +1874,7 @@ class PatientProstheticTreatment extends StatefulWidget {
   int patientId;
   static String routeName = "ProstheticTreatment";
   static String routePath = "Patient/:id/ProstheticTreatment";
+
   @override
   State<PatientProstheticTreatment> createState() => _PatientProstheticTreatmentState();
 }
@@ -2164,7 +2174,7 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
                                   ))
                               .toList());
 
-                          r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child:e)).toList();
+                          r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child: e)).toList();
                           return r;
                           /*
                         * FormTextKeyWidget(text: "Diagnostic Impression"),
@@ -2458,7 +2468,8 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
                                                 label: "Procedure",
                                                 selectedItem: () {
                                                   if (singleBridgeModel!.finalProthesisSingleBridgeTryInStatus != null) {
-                                                    return DropDownDTO(name: singleBridgeModel!.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
+                                                    return DropDownDTO(
+                                                        name: singleBridgeModel!.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
                                                   }
                                                   return null;
                                                 }(),
@@ -2583,7 +2594,8 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
                                                 label: "Customization",
                                                 selectedItem: () {
                                                   if (fullArchModel!.finalProthesisFullArchHealingCollarStatus != null) {
-                                                    return DropDownDTO(name: fullArchModel!.finalProthesisFullArchHealingCollarStatus!.name.replaceAll("_", " "));
+                                                    return DropDownDTO(
+                                                        name: fullArchModel!.finalProthesisFullArchHealingCollarStatus!.name.replaceAll("_", " "));
                                                   }
                                                   return null;
                                                 }(),
@@ -2639,7 +2651,8 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
                                                 label: "Next Visit",
                                                 selectedItem: () {
                                                   if (fullArchModel!.finalProthesisFullArchImpressionNextVisit != null) {
-                                                    return DropDownDTO(name: fullArchModel!.finalProthesisFullArchImpressionNextVisit!.name.replaceAll("_", " "));
+                                                    return DropDownDTO(
+                                                        name: fullArchModel!.finalProthesisFullArchImpressionNextVisit!.name.replaceAll("_", " "));
                                                   }
                                                   return null;
                                                 }(),
@@ -2676,7 +2689,8 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
                                                   return null;
                                                 }(),
                                                 onSelect: (value) {
-                                                  fullArchModel!.finalProthesisFullArchTryInStatus = EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                  fullArchModel!.finalProthesisFullArchTryInStatus =
+                                                      EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
                                                 },
                                                 items: [
                                                   DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
@@ -2785,24 +2799,24 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
 
   @override
   void dispose() {
-    if(!siteController.disableMedicalEdit.value)
+    if (!siteController.disableMedicalEdit.value)
       Future.delayed(Duration.zero, () async {
-      try {
-        if (fullArchModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisFullArch(widget.patientId, fullArchModel!);
-      } on Exception catch (e) {
-        // TODO
-      }
-      try {
-        if (diagnosticModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentDiagnostic(widget.patientId, diagnosticModel!);
-      } on Exception catch (e) {
-        // TODO
-      }
-      try {
-        if (singleBridgeModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisSingleBridge(widget.patientId, singleBridgeModel!);
-      } on Exception catch (e) {
-        // TODO
-      }
-    });
+        try {
+          if (fullArchModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisFullArch(widget.patientId, fullArchModel!);
+        } on Exception catch (e) {
+          // TODO
+        }
+        try {
+          if (diagnosticModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentDiagnostic(widget.patientId, diagnosticModel!);
+        } on Exception catch (e) {
+          // TODO
+        }
+        try {
+          if (singleBridgeModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisSingleBridge(widget.patientId, singleBridgeModel!);
+        } on Exception catch (e) {
+          // TODO
+        }
+      });
 
     siteController.disableMedicalEdit.value = true;
     super.dispose();

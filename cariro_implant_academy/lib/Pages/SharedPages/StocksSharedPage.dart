@@ -26,7 +26,11 @@ class StockListSharedPage extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  static String routePath = "Stock";
   static String routeName = "Stock";
+  static String routeCIAname = "CIAStock";
+  static String routeLABname = "LabStock";
+  static String routeClinicName = "ClinicStock";
   StockDataSource stock_dataSource = StockDataSource();
 
   @override
@@ -269,6 +273,10 @@ class StockLogsSharedPage extends StatefulWidget {
    StockLogsSharedPage({Key? key}) : super(key: key);
   StockLogsDataSource logs_dataSource = StockLogsDataSource();
    static String routeName = "StockLogs";
+   static String routePath = "StockLogs";
+   static String routeCIAname = "CIAStockLogs";
+   static String routeLABname = "LabStockLogs";
+   static String routeClinicName = "ClinicStockLogs";
 
    @override
   State<StockLogsSharedPage> createState() => _StockLogsSharedPageState();

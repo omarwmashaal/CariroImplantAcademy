@@ -576,37 +576,36 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
       returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
     }
     if (viewOnlyMode) {
-      returnValue.add(Expanded(child: SizedBox(height: 100)));
-      returnValue.add(Expanded(
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                "Total",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+      returnValue.add(SizedBox(height: 20));
+      returnValue.add(Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Total",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Expanded(child: SizedBox()),
-            Expanded(
-              child: Text(
-                () {
-                  int p = 0;
-                  treatmentPlanModel.treatmentPlan!.forEach((element) {
-                    if (element.scaling != null) p += element.scaling!.planPrice ?? 0;
-                    if (element.crown != null) p += element.crown!.planPrice ?? 0;
-                    if (element.restoration != null) p += element.restoration!.planPrice ?? 0;
-                    if (element.rootCanalTreatment != null) p += element.rootCanalTreatment!.planPrice ?? 0;
-                    if (element.extraction != null) p += element.extraction!.planPrice ?? 0;
-                  });
-                  return p.toString() + " EGP";
-                }(),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+          ),
+          Expanded(child: SizedBox()),
+          Expanded(
+            child: Text(
+              () {
+                int p = 0;
+                treatmentPlanModel.treatmentPlan!.forEach((element) {
+                  if (element.scaling != null) p += element.scaling!.planPrice ?? 0;
+                  if (element.crown != null) p += element.crown!.planPrice ?? 0;
+                  if (element.restoration != null) p += element.restoration!.planPrice ?? 0;
+                  if (element.rootCanalTreatment != null) p += element.rootCanalTreatment!.planPrice ?? 0;
+                  if (element.extraction != null) p += element.extraction!.planPrice ?? 0;
+                });
+                return p.toString() + " EGP";
+              }(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-          ],
-        ),
+          ),
+        ],
       ));
+      returnValue.add(SizedBox(height: 20));
     }
 
     return returnValue;
@@ -921,7 +920,7 @@ class _StatusWidget extends StatefulWidget {
       this.onDelete,
       this.assignButton = false,
       this.isImplant = false,
-      this.settingsPrice,
+      this.settingsPrice=0,
       this.viewOnlyMode = false})
       : super(key: key);
   TreatmentPlanFieldsModel fieldModel;

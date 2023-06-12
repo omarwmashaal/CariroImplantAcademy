@@ -11,13 +11,14 @@ import 'package:http/http.dart';
 
 import '../Models/API_Response.dart';
 
-String host = "https://localhost:7128/api";
+//String host = "http://localhost:5000/api";
+String host = "http://54.166.50.255/api/api";
 
 class HTTPRequest {
   static Future<API_Response> Get(String url) async {
     API_Response apiResponse = API_Response();
     Response response = await get(Uri.parse("$host/$url"),
-        headers: {"Authorization": "Bearer ${siteController.getToken()}",
+        headers: {"Authorization": "Bearer ${await siteController.getToken()}",
           "Site": siteController
               .getSite()
               .index
@@ -64,7 +65,7 @@ class HTTPRequest {
         "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
         "Access-Control-Allow-Headers":
         "Origin, X-Requested-With, Content-Type, Accept",
-        "Authorization": "Bearer ${siteController.getToken()}",
+        "Authorization": "Bearer ${await siteController.getToken()}",
         "Site": siteController
             .getSite()
             .index
@@ -114,7 +115,7 @@ class HTTPRequest {
         "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
         "Access-Control-Allow-Headers":
         "Origin, X-Requested-With, Content-Type, Accept",
-        "Authorization": "Bearer ${siteController.getToken()}",
+        "Authorization": "Bearer ${await siteController.getToken()}",
         "Site": siteController
             .getSite()
             .index
@@ -157,7 +158,7 @@ class HTTPRequest {
   static Future<API_Response> Delete(String url) async {
     API_Response apiResponse = API_Response();
     Response response = await delete(Uri.parse("$host/$url"),
-        headers: {"Authorization": "Bearer ${siteController.getToken()}",
+        headers: {"Authorization": "Bearer ${await siteController.getToken()}",
           "Site": siteController
               .getSite()
               .index

@@ -15,30 +15,17 @@ import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 
 class LAB_ViewRequestPage extends StatelessWidget {
-  LAB_ViewRequestPage({Key? key, required this.request}) : super(key: key);
-  LAB_RequestModel request;
-
+  LAB_ViewRequestPage({Key? key,required this.id}) : super(key: key);
+  int id;
+  static String routeName = "ViewRequest";
+  static String routePath = "ViewRequest";
+  late LAB_RequestModel request;
   @override
   Widget build(BuildContext context) {
-    /*request.Cost = "1500";
-    request.PayedAmount = "0";
-    request.steps.add(
-        LAB_StepModel("Scan", "Omar", "12/12/2012", StepStatus.Done));
-    request.Steps.add(
-        LAB_StepModel("Design", "Omar", "12/12/2012", StepStatus.Done));
-    request.Steps.add(
-        LAB_StepModel("Review Design", "Omar", "asdas", StepStatus.InProgress));
-    request.Steps.add(
-        LAB_StepModel("Milling", "Omar", "12/12/2012", StepStatus.NotYet));
-    request.Steps.add(
-        LAB_StepModel("Step 5", "Omar", "12/12/2012", StepStatus.NotYet));
-    request.Steps.add(
-        LAB_StepModel("Step 6", "Omar", "12/12/2012", StepStatus.NotYet));
-    request.Steps.add(
-        LAB_StepModel("Step 7", "Omar", "12/12/2012", StepStatus.NotYet));*/
+
     //siteController.setAppBarWidget();
     return CIA_FutureBuilder(
-      loadFunction: LAB_RequestsAPI.GetRequest(request.id!),
+      loadFunction: LAB_RequestsAPI.GetRequest(id),
       onSuccess: (data) {
         request = data as LAB_RequestModel;
         return Column(

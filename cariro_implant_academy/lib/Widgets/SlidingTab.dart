@@ -10,11 +10,13 @@ import 'package:slide_switcher/slide_switcher.dart';
 class SlidingTabModel {
   String title;
   String namedDirectory;
+  String? compareName;
   Map<String, String>? pathParameters;
 
   SlidingTabModel({
     required this.title,
     required this.namedDirectory,
+    this.compareName,
     this.pathParameters,
   });
 }
@@ -53,14 +55,14 @@ class _SlidingTabState extends State<SlidingTab> {
   @override
   Widget build(BuildContext context) {
     path = GoRouter.of(context).location.split("/").last;
-    switcherIndex =  widget.tabs.indexWhere((element) => element.namedDirectory == path) == -1 ? 0 : widget.tabs.indexWhere((element) => element.namedDirectory == path);
+    switcherIndex =  widget.tabs.indexWhere((element) =>(element.compareName?? element.namedDirectory) ==path) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory) == path);
     siteController.title = widget.tabs[switcherIndex].title;
     return SlideSwitcher(
       children: BuildItems(),
-      initialIndex: widget.tabs.indexWhere((element) => element.namedDirectory == path) == -1 ? 0 : widget.tabs.indexWhere((element) => element.namedDirectory == path),
+      initialIndex: widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory) == path) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory)== path),
       onSelect: (int index) {
         setState(() => switcherIndex = index);
-        context.goNamed(widget.tabs[index].namedDirectory, pathParameters: widget.tabs[index].pathParameters ?? Map<String, String>());
+          context.goNamed(widget.tabs[index].namedDirectory, pathParameters: widget.tabs[index].pathParameters ?? Map<String, String>());
         if (widget.onChange != null)
           widget.onChange!(index);
         else

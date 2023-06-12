@@ -289,6 +289,7 @@ class LabRequestDataSource extends DataGridSource {
   EnumLabRequestStatus? status;
   EnumLabRequestSources? source;
   bool? paid;
+  bool? myRequests;
 
   /// Creates the labRequest data source class with required details.
   LabRequestDataSource() {
@@ -296,19 +297,31 @@ class LabRequestDataSource extends DataGridSource {
   }
 
   init() {
-    columns = ["ID", "Date", "Source", "Customer Name", "Customer Phone", "Patient Name", "Paid", "Status","Step"];
+    columns = [
+     // "ID",
+      "Date",
+      "Source",
+      "Customer Name",
+      "Customer Phone",
+      "Patient Name",
+      "Paid",
+      "Assigned",
+      "Status",
+      "Step",
+    ];
     _labRequestData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'ID', value: e.id),
-      DataGridCell<String>(columnName: 'Date', value: e.date ?? ""),
-      DataGridCell<String>(columnName: 'Source', value: e.source!.name),
-      DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),
-      DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
-      DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
-      DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
-      DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
-      DataGridCell<String>(columnName: 'Step', value: (e.steps??[]).last.step!.name),
-    ]))
+              //DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<String>(columnName: 'Date', value: e.date ?? ""),
+              DataGridCell<String>(columnName: 'Source', value: e.source!.name),
+              DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),
+              DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
+              DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
+              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUser().idInt ? "You" : e.assignedTo!.name),
+              DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
+              DataGridCell<String>(columnName: 'Step', value: (e.steps ?? []).last.step!.name),
+            ]))
         .toList();
   }
 
@@ -321,8 +334,7 @@ class LabRequestDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          if(e.value is Widget)
-            return e.value;
+      if (e.value is Widget) return e.value;
       return Container(
         alignment: Alignment.center,
         child: Text(e.value.toString()),
@@ -337,6 +349,7 @@ class LabRequestDataSource extends DataGridSource {
     EnumLabRequestStatus? status,
     EnumLabRequestSources? source,
     bool? paid,
+    bool? myRequests
   }) async {
     this.from = from;
     this.to = to;
@@ -344,6 +357,7 @@ class LabRequestDataSource extends DataGridSource {
     this.status = status;
     this.source = source;
     this.paid = paid;
+    this.myRequests = myRequests;
     API_Response res = await LAB_RequestsAPI.GetAllRequests(
       from: from,
       to: to,
@@ -351,6 +365,19 @@ class LabRequestDataSource extends DataGridSource {
       source: source,
       paid: paid,
       search: search,
+      myRequests: myRequests??false,
+    );
+    if (res.statusCode == 200) {
+      models = res.result as List<LAB_RequestModel>;
+    }
+    init();
+    notifyListeners();
+    return res;
+  }
+
+  loadPatientRequests(int id) async {
+    API_Response res = await LAB_RequestsAPI.GetPatientRequests(
+      id
     );
     if (res.statusCode == 200) {
       models = res.result as List<LAB_RequestModel>;

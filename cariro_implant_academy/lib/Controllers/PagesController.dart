@@ -28,7 +28,7 @@ import '../Pages/Clinic_Pages/Clinic_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
-import '../Pages/LAB_Pages/LAB_TodayLabRequestsPage.dart';
+import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 
 class PagesController extends PageController {
   static PagesController instance = Get.find();
@@ -81,7 +81,7 @@ class PagesController extends PageController {
               controller: pagesController,
               children: [
                 Container(
-                  child: LabRequestsSearchPage(),
+                  child: Container()//LabRequestsSearchPage(),
                 ),
                 Container(
                   child: Center(
@@ -99,7 +99,7 @@ class PagesController extends PageController {
               physics: NeverScrollableScrollPhysics(),
               controller: pagesController,
               children: [
-                LabRequestsSearchPage(),
+                //LabRequestsSearchPage(),
               ],
             );
           }
@@ -108,7 +108,7 @@ class PagesController extends PageController {
             controller: pagesController,
             children: [
               Container(
-                child: LabRequestsSearchPage(),
+                child:Container()// LabRequestsSearchPage(),
               ),
               Container(
                 child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Technician)),
@@ -206,7 +206,8 @@ class PagesController extends PageController {
               label: 'nstructors',
               onTap: () {
 
-                context.goNamed(UserSearchPage.instructorsRouteName);              },
+                context.goNamed(UserSearchPage.instructorsRouteName);
+                controller.notifyListeners();             },
               iconWidget: Container(
                   child: Tooltip(
                     message: "Instructors",
@@ -219,7 +220,8 @@ class PagesController extends PageController {
               label: 'andidates',
               onTap: () {
 
-                context.goNamed(UserSearchPage.candidatesRouteName);              },
+                context.goNamed(UserSearchPage.candidatesRouteName);
+                controller.notifyListeners();           },
               iconWidget: Container(
                   child:Tooltip(
                     message: "Candidates",
@@ -231,7 +233,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Stock',
               onTap: () {
-                context.goNamed(StockListSharedPage.routeName);
+                context.goNamed(StockListSharedPage.routeCIAname);
+                controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
@@ -240,7 +243,8 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                context.goNamed(CashFlowIncomeSharedPage.routeName);
+                context.goNamed(CashFlowIncomeSharedPage.routeCIAname);
+                controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
@@ -253,14 +257,17 @@ class PagesController extends PageController {
           if (role == "technician") {
             return [
               SidebarXItem(
-                  label: 'My Tasks',
-                  onTap: () {
-                    pagesController.jumpToPage(0);
-                  },
+                label: 'y Tasks',
+                onTap: () {
+                  context.goNamed(LabTodaysRequestsSearch.routeName);
+                  controller.notifyListeners();
+                },
                 iconWidget: Container(
                     child: Tooltip(
                       message: "My Tasks",
-                      child: Icon(Icons.task),
+                      child: Icon(IconDataSolid(
+                        int.parse('0x0004D'),
+                      )),
                     )),
               ),
             ];
@@ -269,33 +276,61 @@ class PagesController extends PageController {
             SidebarXItem(
                 label: 'Lab Requests',
                 onTap: () {
-                  pagesController.jumpToPage(0);
+                  context.goNamed(LabTodaysRequestsSearch.routeName);
+                  controller.notifyListeners();
                 },
-                iconWidget: Container()),
+                iconWidget: Container(
+                    child:Tooltip(
+                      message: "Requests",
+                      child: Icon(IconDataSolid(
+                        int.parse('0x00052'),
+                      )),
+                    ))),
             SidebarXItem(
                 label: 'Technicians',
                 onTap: () {
-                  pagesController.jumpToPage(1);
+                  context.goNamed(UserSearchPage.techniciansRouteName);
+                  controller.notifyListeners();
                 },
-                iconWidget: Container()),
+
+                iconWidget: Container(
+                    child:Tooltip(
+                      message: "Technicians",
+                      child: Icon(IconDataSolid(
+                        int.parse('0x00054'),
+                      )),
+                    ))),
             SidebarXItem(
                 label: 'Customers',
                 onTap: () {
-                  pagesController.jumpToPage(2);
+                  context.goNamed(UserSearchPage.outSourceRouteName);
+                  controller.notifyListeners();
                 },
-                iconWidget: Container()),
+                iconWidget: Container(
+                    child:Tooltip(
+                      message: "Customers",
+                      child: Icon(IconDataSolid(
+                        int.parse('0x00043'),
+                      )),
+                    ))),
             SidebarXItem(
                 label: 'Stock',
                 onTap: () {
-                  pagesController.jumpToPage(3);
+                  context.goNamed(StockListSharedPage.routeLABname);
+                  controller.notifyListeners();
                 },
-                iconWidget: Container()),
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Stock",child: Icon(Icons.store))),),
             SidebarXItem(
                 label: 'Cash Flow',
                 onTap: () {
-                  pagesController.jumpToPage(4);
+                  context.goNamed(CashFlowIncomeSharedPage.routeLABname);
+                  controller.notifyListeners();
                 },
-                iconWidget: Container()),
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Cash Flow",child: Icon(Icons.attach_money))),),
           ];
         }
       case Website.Clinic:

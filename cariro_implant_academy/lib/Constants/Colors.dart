@@ -31,7 +31,7 @@ switchTheme(Website site) {
     case Website.Lab:
       {
         Color_Background = Color(0xFFF4F6FA);
-        Color_Accent = Color(0xFF816C46);
+        Color_Accent = Colors.red;
         Color_DrawerHover = Colors.white;
         Color_TextSecondary = Color(0xFF6D6F74);
         Color_TextHint = Color(0xFFAEAEAE);

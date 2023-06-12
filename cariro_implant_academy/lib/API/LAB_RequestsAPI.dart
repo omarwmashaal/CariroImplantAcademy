@@ -15,6 +15,7 @@ class LAB_RequestsAPI {
     EnumLabRequestStatus? status,
     EnumLabRequestSources? source,
     bool? paid,
+    bool myRequests = false,
   }) async {
     var query = "";
     from = CIA_DateConverters.fromDateTimeToBackend(from);
@@ -27,8 +28,18 @@ class LAB_RequestsAPI {
     if (paid != null) query = query == "" ? query + "paid=$paid" : query + "&paid=$paid";
     if (status != null) query = query == "" ? query + "status=${status.index}" : query + "&status=${status.index}";
     if (source != null) query = query == "" ? query + "source=${source.index}" : query + "&source=${source.index}";
+    if (myRequests != null) query = query == "" ? query + "myRequests=${myRequests}" : query + "&myRequests=${myRequests}";
 
-    var response = await HTTPRequest.Get("LAB_Requests/GetAllRequests?$query");
+     API_Response response = await HTTPRequest.Get("LAB_Requests/GetAllRequests?$query");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> GetPatientRequests(int id) async {
+    var response = await HTTPRequest.Get("LAB_Requests/GetPatientRequests?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = ((response.result ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e as Map<String, dynamic>)).toList();

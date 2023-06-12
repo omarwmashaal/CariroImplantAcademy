@@ -48,6 +48,10 @@ class CashFlowIncomeSharedPage extends StatefulWidget {
   CashFlowDataSource i_dataSource = CashFlowDataSource(type: CashFlowType.income);
   Function(CashFlowModel model)? onIncomeRowClick;
   static String routeName = "CashFlowIncome";
+  static String routePath = "CashFlowIncome";
+  static String routeCIAname = "CashFlowIncomeCIA";
+  static String routeLABname = "CashFlowIncomeLAB";
+  static String routeClinicName = "CashFlowIncomeClinic";
 
   @override
   State<CashFlowIncomeSharedPage> createState() => _CashFlowIncomeSharedPageState();
@@ -490,6 +494,10 @@ class CashFlowExpensesSharedPage extends StatefulWidget {
   CashFlowDataSource e_dataSource = CashFlowDataSource(type: CashFlowType.expenses);
 
   static String routeName = "CashFlowExpenses";
+  static String routePath = "CashFlowExpenses";
+  static String routeCIAname = "CashFlowExpensesCIA";
+  static String routeLABname = "CashFlowExpensesLAB";
+  static String routeClinicName = "CashFlowExpensesClinic";
 
   @override
   State<CashFlowExpensesSharedPage> createState() => _CashFlowExpensesSharedPageState();
@@ -1288,6 +1296,10 @@ class CashFlowSummarySharedPage extends StatefulWidget {
   CashFlowSummaryDataSource? diS_dataSource;
 
   static String routeName = "CashFlowSummary";
+  static String routePath = "CashFlowSummary";
+  static String routeCIAname = "CashFlowSummaryCIA";
+  static String routeLABname = "CashFlowSummaryLAB";
+  static String routeClinicName = "CashFlowSummaryClinic";
 
   @override
   State<CashFlowSummarySharedPage> createState() => _CashFlowSummarySharedPageState();

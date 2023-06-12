@@ -234,7 +234,7 @@ class TreatmentPlanFieldsModel {
     doneByCandidateBatchID = json['doneByCandidateBatchID'];
     doneByCandidateBatch = json['doneByCandidateBatch'] != null ? new DropDownDTO.fromJson(json['doneByCandidateBatch']) : DropDownDTO();
     implantID = json['implantID'];
-    price = json['price'];
+    price = json['price']??0;
     planPrice = json['planPrice'];
     implant = json['implant'] != null ? new DropDownDTO.fromJson(json['implant']) : DropDownDTO();
   }
@@ -244,7 +244,7 @@ class TreatmentPlanFieldsModel {
     data['value'] = this.value;
     data['status'] = this.status;
     data['price'] = this.price;
-    data['planPrice'] = this.planPrice;
+    data['planPrice'] = this.planPrice??this.price;
     data['assignedToID'] = this.assignedToID;
 
     data['date'] =this.date!=null? this.date!.replaceFirst(" ", "T"):null;
