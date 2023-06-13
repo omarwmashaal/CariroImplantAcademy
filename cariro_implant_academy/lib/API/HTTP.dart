@@ -9,15 +9,17 @@ import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
 import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
 import 'package:http/http.dart';
 
+import '../Constants/Connection.dart';
 import '../Models/API_Response.dart';
 
-//String host = "http://localhost:5000/api";
-String host = "http://54.166.50.255/api/api";
+
+
 
 class HTTPRequest {
+
   static Future<API_Response> Get(String url) async {
     API_Response apiResponse = API_Response();
-    Response response = await get(Uri.parse("$host/$url"),
+    Response response = await get(Uri.parse("$serverHost/$url"),
         headers: {"Authorization": "Bearer ${await siteController.getToken()}",
           "Site": siteController
               .getSite()
@@ -58,7 +60,7 @@ class HTTPRequest {
   static Future<API_Response> Post(String url, Object? body) async {
     API_Response apiResponse = API_Response();
     Response response = await post(
-      Uri.parse("$host/$url"),
+      Uri.parse("$serverHost/$url"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
@@ -108,7 +110,7 @@ class HTTPRequest {
   static Future<API_Response> Put(String url, Object? body) async {
     API_Response apiResponse = API_Response();
     Response response = await put(
-      Uri.parse("$host/$url"),
+      Uri.parse("$serverHost/$url"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
@@ -157,7 +159,7 @@ class HTTPRequest {
 
   static Future<API_Response> Delete(String url) async {
     API_Response apiResponse = API_Response();
-    Response response = await delete(Uri.parse("$host/$url"),
+    Response response = await delete(Uri.parse("$serverHost/$url"),
         headers: {"Authorization": "Bearer ${await siteController.getToken()}",
           "Site": siteController
               .getSite()
@@ -206,7 +208,7 @@ class HTTPRequest {
     });
     var _dio = dio.Dio();
      API_Response response = await _dio.put(
-        "$host/$url",
+        "$serverHost/$url",
         data: formData,
 
     ).catchError((error){

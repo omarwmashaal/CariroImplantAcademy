@@ -20,10 +20,10 @@ class TitleWidget extends StatelessWidget {
     return Row(
       children: [
         Visibility(
-          visible: showBackButton!,
+          visible: false,
           child: IconButton(
               onPressed: () {
-             //   context.pop();
+                Navigator.pop(context);
 
               },
               icon: Icon(Icons.arrow_back)),
@@ -36,12 +36,5 @@ class TitleWidget extends StatelessWidget {
     );
   }
 
-  bool onWillPop() {
 
-    if(mainPages)
-      pagesController.goBack();
-    else
-    internalPagesController.goBack();
-    return false;
-  }
 }

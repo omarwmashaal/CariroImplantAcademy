@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/Models/NotificationModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
@@ -40,7 +41,8 @@ class SiteController extends GetxController {
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
   RxBool disableMedicalEdit = true.obs;
   ApplicationUserModel _applicationUser = ApplicationUserModel();
-
+  Rx<bool> newNotification = false.obs;
+  RxList<NotificationModel> notifications = <NotificationModel>[].obs;
   ApplicationUserModel getUser() => _applicationUser;
 
   setUser(ApplicationUserModel user) => _applicationUser = user;
@@ -229,12 +231,12 @@ class SiteController extends GetxController {
           name: "Prosthetic Treatment",
           onTap: () => context.goNamed(PatientProstheticTreatment.routeName, pathParameters: {"id": id.toString()}),
           onSave: () {
-            print("3");
+
           }),
       MedicalSlidingModel(
           name: "Photos and CBCTs",
           onSave: () {
-            print("4");
+
           }),
     ];
     for (var element in pages) {

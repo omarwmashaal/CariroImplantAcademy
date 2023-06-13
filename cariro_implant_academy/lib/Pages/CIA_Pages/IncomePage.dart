@@ -119,7 +119,7 @@ class IncomDataSource extends DataGridSource {
   }
 
   Future<bool> addMoreRows() async {
-    print("entered bunction");
+
     models.add(Incom("1/12/2022", "myItem", "Category", "CreatedBy", "Amount",
         "Method", "Notes"));
     models.add(Incom("2/12/2022", "myItem", "Category", "CreatedBy", "Amount",

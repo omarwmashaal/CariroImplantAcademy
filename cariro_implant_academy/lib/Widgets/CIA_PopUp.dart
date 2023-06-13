@@ -12,8 +12,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../Constants/Colors.dart';
 
-CIA_PopupDialog_DateTimePicker(
-    BuildContext context, String title, Function onChange) async {
+CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onChange) async {
   String date = "";
   String hour = "";
   String minute = "";
@@ -78,8 +77,7 @@ CIA_PopupDialog_DateTimePicker(
                 navigationMode: DateRangePickerNavigationMode.snap,
                 onSelectionChanged: (value) {
                   setState(() {
-                    date =
-                        value.value.toString().replaceAll(" 00:00:00.000", "");
+                    date = value.value.toString().replaceAll(" 00:00:00.000", "");
                     onChange(date);
                   });
                 },
@@ -111,8 +109,7 @@ CIA_PopupDialog_DateTimePicker(
   ).show();
 }
 
-CIA_PopupDialog_DateOnlyPicker(
-    BuildContext context, String title, Function onChange) async {
+CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function onChange) async {
   String date = "";
   Alert(
     context: context,
@@ -163,8 +160,7 @@ CIA_PopupDialog_DateOnlyPicker(
   ).show();
 }
 
-CIA_PopupDialog_Table(int patientId, BuildContext context, String title,
-    Function onChange) async {
+CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String title, Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
 
   Alert(
@@ -189,10 +185,11 @@ CIA_PopupDialog_Table(int patientId, BuildContext context, String title,
                               context: context,
                               title: "Treatment Notes",
                               content: SizedBox(
-                                width: 400,
-                                child: Text(dataSource
-                                    .models[value - 1].treatment
-                                    .toString()),
+                                width: 600,
+                                child: Text(
+                                  dataSource.models[value - 1].treatment.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.normal),
+                                ),
                               ),
                               buttons: [
                                 DialogButton(
@@ -200,8 +197,7 @@ CIA_PopupDialog_Table(int patientId, BuildContext context, String title,
                                   onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                                   child: Text(
                                     "Ok",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
                                   ),
                                 ),
                               ],
@@ -242,45 +238,40 @@ CIA_ShowPopUp(
     Function? onSave,
     Widget? child,
     String? buttonText,
-      double? height,
-      bool? hideButton=false,
-    double? width}) async{
+    double? height,
+    bool? hideButton = false,
+    double? width}) async {
   await Alert(
     context: context,
     title: title,
-    content: StatefulBuilder(builder:
-        (BuildContext context, void Function(void Function()) setState) {
+    content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
-        width: width ?? 400 ,
-        height: height??400,
+        width: width ?? 400,
+        height: height ?? 400,
         child: child,
       );
     }),
-    buttons:hideButton!?[]: [
-      DialogButton(
-        color: Color_Accent,
-        width: 150,
-        onPressed: () async {
-          bool close = true;
-          if (onSave != null)
-            {
-              var s = await onSave!();
-              if(s!=null && s is bool)
-                close = s;
-            }
+    buttons: hideButton!
+        ? []
+        : [
+            DialogButton(
+              color: Color_Accent,
+              width: 150,
+              onPressed: () async {
+                bool close = true;
+                if (onSave != null) {
+                  var s = await onSave!();
+                  if (s != null && s is bool) close = s;
+                }
 
-
-
-          if(close)
-          Navigator.of(context, rootNavigator: true).pop();
-
-        },
-        child: Text(
-          buttonText == null ? "Ok" : buttonText,
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-    ],
+                if (close) Navigator.of(context, rootNavigator: true).pop();
+              },
+              child: Text(
+                buttonText == null ? "Ok" : buttonText,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          ],
   ).show();
 }
 
@@ -295,8 +286,7 @@ CIA_ShowPopUpSaveRequest(
   await Alert(
     context: context,
     title: title,
-    content: StatefulBuilder(builder:
-        (BuildContext context, void Function(void Function()) setState) {
+    content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
         width: size == null ? 400 : size,
         child: Text(title ?? "Do you want to save changes?"),
@@ -367,7 +357,6 @@ CIA_ShowPopUpYesNo(
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
       ),
-
       DialogButton(
         color: Color_Accent,
         width: 150,
@@ -397,11 +386,9 @@ CIA_PopUpSearch(
   Alert(
     context: context,
     title: title,
-    content: StatefulBuilder(builder:
-        (BuildContext context, void Function(void Function()) setState) {
+    content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       controller.text = search;
-      controller.selection =
-          TextSelection(baseOffset: search.length, extentOffset: search.length);
+      controller.selection = TextSelection(baseOffset: search.length, extentOffset: search.length);
       return SizedBox(
         width: size == null ? 400 : size,
         height: 400,
@@ -419,8 +406,7 @@ CIA_PopUpSearch(
                     return;
                   }
                   var res = await searchFunction(value);
-                  if (res.statusCode == 200)
-                    results = res.result as List<DropDownDTO>;
+                  if (res.statusCode == 200) results = res.result as List<DropDownDTO>;
                   setState(() {
                     search = value;
                   });

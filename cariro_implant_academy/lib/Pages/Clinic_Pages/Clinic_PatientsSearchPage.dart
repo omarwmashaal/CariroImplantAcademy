@@ -42,7 +42,7 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
             dataSource: dataSource,
             columnNames: dataSource.columns,
             onCellTab: (value) {
-              print(dataSource.models[value - 1].id);
+
               setState(() {
                 patientID = dataSource.models[value - 1].id!;
               });

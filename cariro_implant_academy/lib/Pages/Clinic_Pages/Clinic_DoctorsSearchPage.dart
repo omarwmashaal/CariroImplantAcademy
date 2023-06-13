@@ -51,7 +51,7 @@ class _Clinic_DoctorsSearchPageState extends State<Clinic_DoctorsSearchPage> {
                   dataSource: dataSource,
                   columnNames: Clinic_DoctorModel.columns,
                   onCellTab: (value) {
-                    print(dataSource.models[value - 1].ID);
+
                     setState(() {
                       selectedDoctor = dataSource.models[value - 1];
                     });

@@ -50,10 +50,10 @@ class _TabsLayoutState extends State<TabsLayout> {
       future: buildAsync(),
       builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
         if (snapshot.hasData) {
-          print("Done");
+
           return snapshot.data as Widget;
         } else {
-          print("Loading....");
+
           return LoadingIndicator(
             indicatorType: Indicator.circleStrokeSpin,
             colors: [Colors.red, Colors.orange],

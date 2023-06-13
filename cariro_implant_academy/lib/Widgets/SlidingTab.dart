@@ -65,8 +65,8 @@ class _SlidingTabState extends State<SlidingTab> {
           context.goNamed(widget.tabs[index].namedDirectory, pathParameters: widget.tabs[index].pathParameters ?? Map<String, String>());
         if (widget.onChange != null)
           widget.onChange!(index);
-        else
-          print("");
+       // else
+
          // widget.controller.index.value = index;
       },
       containerColor: Colors.transparent,

@@ -204,10 +204,10 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                   },
                   dataSource: dataSource,
                   onCellClick: (value) {
-                    //print(dataSource.models[value - 1].id);
+
                     setState(() {
                       selectedPatientID = dataSource.models[value - 1].id!;
-                      print("");
+
                     });
                     //internalPagesController.jumpToPage(1);
                     context.goNamed(CIA_Router.routeConst_PatientInfo,pathParameters: {"id":dataSource.models[value - 1].id!.toString()});
@@ -294,7 +294,7 @@ class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
                     setState(() {
                       selectedPatientID = complainsDataSource.models[value - 1].patientID!;
                     });
-                    internalPagesController.jumpToPage(1);
+
                   },
                 ),
               ),

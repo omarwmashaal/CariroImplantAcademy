@@ -141,3 +141,4 @@ UpperPosterior,
 LowerPosterior
 }
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
+enum EnumNotificationType { Patient,TreatmentPlan }

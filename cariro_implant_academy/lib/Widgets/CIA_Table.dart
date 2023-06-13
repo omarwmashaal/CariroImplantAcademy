@@ -56,10 +56,10 @@ class _CIA_TableState extends State<CIA_Table> {
     return FutureBuilder(
       future: widget.loadFunction != null ? widget.loadFunction!() : wait(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        print(snapshot.connectionState);
-        print(snapshot.data);
+
+
         if (snapshot.hasData || snapshot.connectionState == ConnectionState.done) {
-          print("finished");
+
           return SfDataGrid(
             isScrollbarAlwaysShown: true,
             horizontalScrollController: ScrollController(),
@@ -167,7 +167,7 @@ class _CIA_TableState extends State<CIA_Table> {
     else
       for (String name in widget.columnNames) {
         returnValue.add(GridColumn(
-            width: widget.columnNames.length > 6 ? 200 : double.nan,
+            width: widget.columnNames.length > 9 ? 200 : double.nan,
             columnName: name,
             columnWidthMode: name == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
             label: Container(

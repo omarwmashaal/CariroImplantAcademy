@@ -1419,7 +1419,7 @@ class _CashFlowSummarySharedPageState extends State<CashFlowSummarySharedPage> {
                             t += element.total ?? 0;
                           });
                           _getXController.expensesSum.value = t;
-                          print(t);
+
                           return res;
                         },
                         dataSource: widget.eS_dataSource as CashFlowSummaryDataSource,
@@ -1477,7 +1477,7 @@ class _CashFlowSummarySharedPageState extends State<CashFlowSummarySharedPage> {
                           t += element.total ?? 0;
                         });
                         _getXController.incomeSum.value = t;
-                        print(t);
+
                         return res;
                       },
                       onCellClick: (value) {

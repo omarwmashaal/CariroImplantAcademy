@@ -471,7 +471,7 @@ class LabAllRequestsSearch extends StatelessWidget {
                 return reload();
               },
               onCellClick: (value) {
-                print(dataSource.models[value - 1].id);
+
                 context.goNamed(CIA_Router.routeConst_LabView,pathParameters: {"id":dataSource.models[value - 1].id.toString()});
               }),
         ),

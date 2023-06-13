@@ -38,100 +38,89 @@ class _UserSearchPageState extends State<UserSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      itemBuilder: (context, index) {
-        var pages = [
-          Column(
-            children: [
-              TitleWidget(
-                title: () {
-                  if (widget.dataSource.type == UserRoles.Admin)
-                    return "Admins Data";
-                  else if (widget.dataSource.type == UserRoles.Secretary)
-                    return "Secretaries Data";
-                  else if (widget.dataSource.type == UserRoles.Instructor)
-                    return "Instructors Data";
-                  else if (widget.dataSource.type == UserRoles.Assistant)
-                    return "Assistants Data";
-                  else if (widget.dataSource.type == UserRoles.Candidate)
-                    return "Candidates Data";
-                  else if (widget.dataSource.type == UserRoles.Admin)
-                    return "Admins Data";
-                  else if (widget.dataSource.type == UserRoles.Technician)
-                    return "Technicians Data";
-                  else if (widget.dataSource.type == UserRoles.OutSource) return "Customers Data";
-                  return "";
-                }(),
-              ),
-              CIA_TextField(
-                label: "Search",
-                icon: Icons.search,
-                onChange: (value) {
-                  search = value;
-                  widget.dataSource.loadData(search: search == "" ? null : search);
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: () {
-                  List<Widget> r = [];
-                  if (widget.dataSource.type == UserRoles.Candidate) {
-                    r.add(
-                      Container(
-                        width: 400,
-                        child: CIA_DropDownSearch(
-                          label: "Batch",
-                          asyncItems: () async {
-                            var res = await LoadinAPI.LoadCandidatesBatches();
-                            if (res.statusCode == 200) (res.result as List<DropDownDTO>).insert(0, DropDownDTO(name: "None"));
-                            return res;
-                          },
-                          onSelect: (value) {
-                            widget.dataSource.loadData(search: search == "" ? null : search, batch: value.id);
-                          },
-                        ),
-                      ),
-                    );
-                    r.add(
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                    );
-                  }
-                  return r;
-                }(),
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: CIA_Table(
-                  columnNames: widget.dataSource.columns,
-                  dataSource: widget.dataSource,
-                  loadFunction: widget.dataSource.loadData,
-                  onCellClick: (index) {
-                    var d = widget.dataSource.models[index - 1];
-                    selectedUserId = d.idInt ?? 0;
-                    context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserData.candidateRouteName:ViewUserData.routeName,pathParameters: {"id":selectedUserId.toString()});
-
-                  },
+    return Column(
+      children: [
+        TitleWidget(
+          title: () {
+            if (widget.dataSource.type == UserRoles.Admin)
+              return "Admins Data";
+            else if (widget.dataSource.type == UserRoles.Secretary)
+              return "Secretaries Data";
+            else if (widget.dataSource.type == UserRoles.Instructor)
+              return "Instructors Data";
+            else if (widget.dataSource.type == UserRoles.Assistant)
+              return "Assistants Data";
+            else if (widget.dataSource.type == UserRoles.Candidate)
+              return "Candidates Data";
+            else if (widget.dataSource.type == UserRoles.Admin)
+              return "Admins Data";
+            else if (widget.dataSource.type == UserRoles.Technician)
+              return "Technicians Data";
+            else if (widget.dataSource.type == UserRoles.OutSource) return "Customers Data";
+            return "";
+          }(),
+        ),
+        CIA_TextField(
+          label: "Search",
+          icon: Icons.search,
+          onChange: (value) {
+            search = value;
+            widget.dataSource.loadData(search: search == "" ? null : search);
+          },
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: () {
+            List<Widget> r = [];
+            if (widget.dataSource.type == UserRoles.Candidate) {
+              r.add(
+                Container(
+                  width: 400,
+                  child: CIA_DropDownSearch(
+                    label: "Batch",
+                    asyncItems: () async {
+                      var res = await LoadinAPI.LoadCandidatesBatches();
+                      if (res.statusCode == 200) (res.result as List<DropDownDTO>).insert(0, DropDownDTO(name: "None"));
+                      return res;
+                    },
+                    onSelect: (value) {
+                      widget.dataSource.loadData(search: search == "" ? null : search, batch: value.id);
+                    },
+                  ),
                 ),
-              ),
-            ],
+              );
+              r.add(
+                Expanded(
+                  child: SizedBox(),
+                ),
+              );
+            }
+            return r;
+          }(),
+        ),
+        SizedBox(height: 10),
+        Expanded(
+          child: CIA_Table(
+            columnNames: widget.dataSource.columns,
+            dataSource: widget.dataSource,
+            loadFunction: widget.dataSource.loadData,
+            onCellClick: (index) {
+              var d = widget.dataSource.models[index - 1];
+              selectedUserId = d.idInt ?? 0;
+              context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserData.candidateRouteName:ViewUserData.routeName,pathParameters: {"id":selectedUserId.toString()});
+
+            },
           ),
-          ViewUserData(userId: selectedUserId)
-        ];
-        return pages[index];
-      },
-      itemCount: 2,
-      physics: NeverScrollableScrollPhysics(),
-      controller: internalPagesController,
+        ),
+      ],
     );
   }
 
   @override
   void initState() {
-    print(widget.type);
+
     siteController.setAppBarWidget();
   }
 }

@@ -1,13 +1,15 @@
+import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../Models/NotificationModel.dart';
 
-class CIA_DropDown2 extends StatefulWidget {
-  CIA_DropDown2({
+class CIA_NotificationsWidget extends StatefulWidget {
+  CIA_NotificationsWidget({
     Key? key,
     this.hint,
     this.customButton,
@@ -21,17 +23,17 @@ class CIA_DropDown2 extends StatefulWidget {
   List<NotificationModel>? notifications;
 
   @override
-  State<CIA_DropDown2> createState() => _CIA_DropDown2State();
+  State<CIA_NotificationsWidget> createState() => _CIA_NotificationsWidgetState();
 }
 
-class _CIA_DropDown2State extends State<CIA_DropDown2> {
+class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
   String? selectedValue;
   NotificationModel? selectedValueNot;
-
+  bool _isOpen = false;
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2(
+      child: DropdownButton2<NotificationModel>(
         isExpanded: true,
         customButton: widget.customButton,
         hint: widget.hint != null
@@ -59,63 +61,61 @@ class _CIA_DropDown2State extends State<CIA_DropDown2> {
                 ],
               )
             : null,
-        items: widget.childrenString != null
-            ? (widget.childrenString as List<String>)
-                .map((item) => DropdownMenuItem<String>(
-                      value: item as String,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList()
-            : (widget.notifications as List<NotificationModel>)
+        items:(widget.notifications as List<NotificationModel>)
                 .map((item) => DropdownMenuItem<NotificationModel>(
                       value: item,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.title as String,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  item.title as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: ((item.read ??false))? Colors.black : Colors.red,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Expanded(child: SizedBox()),
+
+                                Text(
+                                  item.date as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: ((item.read ??false))? Colors.black : Colors.red,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            item.content as String,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
+                            Text(
+                              item.content as String,
+                              style:  TextStyle(
+                                fontSize: 14,
+                                color: ((item.read ??false))? Colors.black : Colors.red,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Divider(),
-                        ],
+                            Divider(),
+                          ],
+                        ),
                       ),
                     ))
                 .toList(),
-        value: widget.childrenString != null ? selectedValue : selectedValueNot,
         onChanged: (value) async {
-          pagesController.jumpToPage(0);
-          await Future.delayed(Duration(milliseconds: 5));
-          internalPagesController.jumpToPage(1);
-          setState(() {
-            if (widget.childrenString != null)
-              selectedValue = value as String;
-            else
-              selectedValueNot = value as NotificationModel;
-          });
+          if(value!=null && value.onClickAction!=null && value.infoId!=null)
+            {
+              context.goNamed(value.onClickAction!(),pathParameters: {'id':value.infoId!.toString()});
+            }
+
         },
         icon: widget.hint != null
             ? const Icon(
@@ -136,8 +136,14 @@ class _CIA_DropDown2State extends State<CIA_DropDown2> {
           color: Colors.transparent,
         ),
         buttonElevation: 2,
-        itemHeight: 60,
-        itemPadding: const EdgeInsets.only(left: 14, right: 14),
+        itemHeight: 70,
+        onMenuStateChange: (isOpen)  async{
+          siteController.newNotification.value = false;
+          await NotificationsAPI.MarkAllAsRead();
+          if(!isOpen)
+            await NotificationsAPI.GetNotifications();
+        },
+        itemPadding: const EdgeInsets.only(left: 5, right: 5,bottom: 5),
         dropdownMaxHeight: 300,
         dropdownWidth: 400,
         dropdownPadding: null,

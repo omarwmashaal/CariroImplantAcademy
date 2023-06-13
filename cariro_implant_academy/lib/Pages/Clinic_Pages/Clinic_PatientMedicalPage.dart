@@ -270,7 +270,7 @@ class _MedicalTreatmentState extends State<_MedicalTreatment> {
     List<Widget> returnValue = <Widget>[];
 
     for (_TableRow r in rows) {
-      print("add " + r.key.toString());
+
       returnValue.add(SizedBox(
         height: 10,
       ));

@@ -87,7 +87,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   void initState() {
     patient = PatientInfoModel();
 
-    print("medical rebuilt");
+
   }
 
   int index = 0;
@@ -164,7 +164,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                         CIA_SecondaryButton(
                             label: "View more info",
                             onTab: () {
-                              print("pressed more info");
+
                               context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
                             }),
                         SizedBox(
@@ -426,10 +426,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                   }
                   if (isSelected) {
                     medicalExaminationModel.diseases?.add(disease!);
-                    print(medicalExaminationModel.diseases.toString());
+
                   } else {
                     medicalExaminationModel.diseases?.remove(disease);
-                    print(medicalExaminationModel.diseases.toString());
+
                   }
                 },
                 redFlags: true,
@@ -1505,7 +1505,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   @override
   void dispose() {
     if (!siteController.disableMedicalEdit.value) {
-      print("updating all with ${siteController.disableMedicalEdit.value}");
+
       MedicalAPI.AddPatientNonSurgicalTreatment(widget.patientId, nonSurgicalTreatment);
       MedicalAPI.UpdatePatientDentalExamination(widget.patientId, tempDentalExamination);
     }
@@ -1584,7 +1584,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
                       CIA_SecondaryButton(
                           label: "View History",
                           onTab: () {
-                            CIA_PopupDialog_Table(widget.patientId, context, "View History Treatments", (value) {});
+                            CIA_PopUpTreatmentHistory_Table(widget.patientId, context, "View History Treatments", (value) {});
                           }),
                       SizedBox(
                         width: 10,

@@ -19,11 +19,9 @@ import 'CIA_DropDown2.dart';
 
 //TODO: Return to stateless
 class CIA_LargeScreen extends StatefulWidget {
-  CIA_LargeScreen({
-    Key? key,
-    required this.child
-  }) : super(key: key);
+  CIA_LargeScreen({Key? key, required this.child}) : super(key: key);
   Widget child;
+
   @override
   State<CIA_LargeScreen> createState() => _CIA_LargeScreenState();
 }
@@ -33,8 +31,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
   Widget build(BuildContext context) {
     if (pagesController.hasClients) pagesController.jumpToPage(0);
 
-    if(GoRouter.of(context).location=="/")
-      return AuthenticationPage();
+    if (GoRouter.of(context).location == "/") return AuthenticationPage();
     return Row(
       children: [
         //TODO: Remove onrole change
@@ -58,23 +55,21 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          CIA_DropDown2(
-                            customButton: Icon(Icons.notifications),
-                            notifications: [
-                              NotificationModel(title: "title 1", content: "akdhaasdasdasdasdasdasdasdasdasdasdsadsadssl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghasadasdaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                              NotificationModel(title: "title 1", content: "akdhasl;fghaskljf"),
-                            ],
-                          ),
+                          Obx(() => CIA_NotificationsWidget(
+                                customButton: Icon(
+                                  Icons.notifications,
+                                  color: siteController.newNotification.value ||
+                                          (siteController.notifications.firstWhereOrNull((element) => element.read == false) != null)
+                                      ? Colors.red
+                                      : null,
+                                ),
+                                hint: "omar",
+                                notifications: siteController.notifications.value,
+                              )),
                           SizedBox(width: 30),
                           GestureDetector(
                               onTap: () {
-                                context.goNamed(ViewUserData.routeName,pathParameters: {"id":siteController.getUser().idInt.toString()});
+                                context.goNamed(ViewUserData.routeName, pathParameters: {"id": siteController.getUser().idInt.toString()});
                               },
                               child: Image.asset("assets/user.png")),
                           SizedBox(

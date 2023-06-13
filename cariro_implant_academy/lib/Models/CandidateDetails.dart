@@ -67,7 +67,7 @@ class CandidateDetailsDataSource extends DataGridSource {
           DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name),
           DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
           DataGridCell<int>(columnName: 'Tooth', value: e.tooth),
-          DataGridCell<String>(columnName: 'Date', value: e.date),
+          DataGridCell<DateTime>(columnName: 'Date', value: e.date==null?null: DateTime.parse(e.date!)),
           DataGridCell<String>(columnName: 'Implant', value: e.implant!.size),
           DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
          // DataGridCell<List<String>>(columnName: 'Other Procedures', value: e.otherProcedures),

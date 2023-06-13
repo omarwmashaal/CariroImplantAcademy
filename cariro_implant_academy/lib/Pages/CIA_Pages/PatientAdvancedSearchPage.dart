@@ -601,10 +601,10 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       },
                       dataSource: dataSource_patients,
                       onCellClick: (value) {
-                        //print(dataSource.models[value - 1].id);
+
                         // setState(() {
                         //selectedPatientID = dataSource.models[value - 1].id!;
-                        //print("");
+
                         //});
                         //internalPagesController.jumpToPage(1);
                         context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": dataSource_patients.models[value - 1].id!.toString()});
@@ -945,10 +945,10 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       loadFunction: () => dataSource_treatments.loadData(msearchDTO: searchTreatmentsDTO),
                       dataSource: dataSource_treatments,
                       onCellClick: (value) {
-                        //print(dataSource.models[value - 1].id);
+
                         // setState(() {
                         //selectedPatientID = dataSource.models[value - 1].id!;
-                        //print("");
+
                         //});
                         //internalPagesController.jumpToPage(1);
                         if (searchTreatmentsDTO.done == true)

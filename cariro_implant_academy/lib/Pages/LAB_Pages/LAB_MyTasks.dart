@@ -37,7 +37,7 @@ class _LAB_MyTasksPageState extends State<LAB_MyTasksPage> {
               columnNames: LAB_TaskModel.columns,
               dataSource: dataSource,
               onCellClick: (value) {
-                print(dataSource.models[value - 1].ID);
+
                 setState(() {
                   selectedTask = dataSource.models[value - 1];
                 });
@@ -137,7 +137,7 @@ class _LAB_MyTasksPageState extends State<LAB_MyTasksPage> {
                     columnNames: LAB_TaskModel.columns,
                     dataSource: dataSource,
                     onCellClick: (value) {
-                      print(dataSource.models[value - 1].ID);
+
                       setState(() {
                         selectedTask = dataSource.models[value - 1];
                       });

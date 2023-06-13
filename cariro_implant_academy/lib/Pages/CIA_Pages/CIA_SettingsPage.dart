@@ -519,7 +519,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                       (e) => GestureDetector(
                                                         onTap: () {
                                                           selectedColor = e;
-                                                          ShowSnackBar(context, isSuccess: true, title: e.value.toString(), message: "");
+
                                                           setState(() {});
                                                         },
                                                         child: Padding(
@@ -1149,7 +1149,7 @@ class _ImplantsSettingsState extends State<_ImplantsSettings> {
                                                   Expanded(child: CIA_TextFormField(label: "Size",onChange: (v)=>e.size=v, controller: TextEditingController(text: e.size ?? ""))),
                                                   IconButton(
                                                       onPressed: () {
-                                                        print(implants.last.toJson());
+
                                                         if (implants.last.size != "" && implants.last.size != null)
                                                         {
                                                           implants.add(ImplantModel());

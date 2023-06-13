@@ -37,7 +37,7 @@ class _CIA_TextFieldState extends State<CIA_TextField> {
       child: Focus(
         onFocusChange: (focus) => setState(() {
           hasFocus = focus;
-          print(focus);
+
         }),
         child: TextField(
           onChanged: (value) {

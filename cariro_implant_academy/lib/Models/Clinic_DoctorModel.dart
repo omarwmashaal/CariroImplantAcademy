@@ -111,7 +111,7 @@ class DoctorDataSource extends DataGridSource {
 
   @override
   Future<Function> handleLoadMoreRows() async {
-    print("entered function");
+
     models.add(Clinic_DoctorModel(16, "Omar", "1290447120", "Male", "3/2/1997",
         "Cairo University", "2019", "Speciality"));
     models.add(Clinic_DoctorModel(16, "Omar", "1290447120", "Male", "3/2/1997",
@@ -144,14 +144,14 @@ class DoctorDataSource extends DataGridSource {
             ]))
         .toList();
     notifyListeners();
-    print("ended");
+
     return () {
-      print("myfunction");
+
     };
   }
 
   Future<bool> addMoreRows() async {
-    print("entered bunction");
+
     models.add(Clinic_DoctorModel(16, "Omar", "1290447120", "Male", "3/2/1997",
         "Cairo University", "2019", "Speciality"));
     models.add(Clinic_DoctorModel(16, "Omar", "1290447120", "Male", "3/2/1997",

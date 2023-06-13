@@ -82,7 +82,6 @@ class NonSurgicalTreatmentDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(right: 50),
         child: Text(e.value.toString()),
       );
     }).toList());

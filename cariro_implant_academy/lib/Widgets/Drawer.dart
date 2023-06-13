@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
+import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +83,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
             onTap: () {
               siteController.setSite(Website.CIA);
               widget.onSiteChange();
+              context.goNamed(PatientsSearchPage.routeName);
 
             },
             child: Image(
@@ -95,6 +98,8 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
               onTap: () {
                 siteController.setSite(Website.Lab);
                 widget.onSiteChange();
+                context.goNamed(LabTodaysRequestsSearch.routeName);
+
               },
               child: Image(
                 image: siteController.getSiteLogoBySite(Website.Lab),

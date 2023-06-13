@@ -103,7 +103,7 @@ class _CIA_DropDownSearchState extends State<CIA_DropDownSearch> {
       ),
       selectedItem: widget.selectedItem,
       asyncItems: (c)async{
-        print(c);
+
         if(widget.asyncItems==null) return [];
         var res  = await widget.asyncItems!();
         if(res.statusCode == 200)

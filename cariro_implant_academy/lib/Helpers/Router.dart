@@ -61,7 +61,7 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 redirect: (context, state) async {
-                  var res = await AuthenticationAPI.Login(null, null);
+                  var res = await AuthenticationAPI.Login(null,null);
                   if (
                   await siteController.getToken() == "" ||
                       !(
@@ -349,7 +349,7 @@ class CIA_Router {
                               name: PatientMedicalHistory.routeName,
                               path: PatientMedicalHistory.routePath,
                               pageBuilder: (context, state) {
-                                print("medical router");
+
                                 return NoTransitionPage(
                                   child: _Authorize(
                                     allowedRoles: [
@@ -484,7 +484,7 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 redirect: (context, state) async {
-                  var res = await AuthenticationAPI.Login(null, null);
+                  var res = await AuthenticationAPI.Login(null,null);
                   if (
                   await siteController.getToken() == "" ||
                       !(
@@ -647,22 +647,20 @@ class _Authorize extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
     return FutureBuilder(
-      future: AuthenticationAPI.Login(null, null),
+      future: AuthenticationAPI.Login(null,null),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (siteController.getRole()=="admin"|| roles.contains(siteController.getRole()))
             return child;
           else {
-            return Expanded(
-              child: Center(
-                child: Text(
-                  "Sorry you don't have access to this page",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 100,
-                    color: Colors.grey
-                  ),
+            return Center(
+              child: Text(
+                "Sorry you don't have access to this page",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 100,
+                  color: Colors.grey
                 ),
               ),
             );

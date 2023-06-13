@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/Widgets/SlidingTab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants/Colors.dart';
@@ -37,11 +38,18 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 3, vsync: this,initialIndex: (){
+      if(siteController.getSite()==Website.CIA) return 0;
+      else if(siteController.getSite()==Website.Lab) return 1;
+      else if(siteController.getSite()==Website.Clinic) return 2;
+      else return 0;
+
+    }());
   }
 
   @override
   Widget build(BuildContext context) {
+   // tabController.index = 0;
     return FutureBuilder(
       future: AuthenticationAPI.Login(null, null),
       builder: (context, snapshot) {

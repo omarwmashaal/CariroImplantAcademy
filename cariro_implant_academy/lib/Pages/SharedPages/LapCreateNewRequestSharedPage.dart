@@ -701,10 +701,10 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                             var res = await LAB_RequestsAPI.AddRequest(labRequest);
                             if (res.statusCode == 200) {
                               ShowSnackBar(context,isSuccess: true, title: "Success", message: "Request Added!");
-                              if (widget.isDoctor) print("");
-                                //Navigator.of(context, rootNavigator: true).pop();
-                              else
-                                internalPagesController.goBack();
+                            //  if (!widget.isDoctor)
+                                Navigator.of(context, rootNavigator: true).pop();
+
+                               // internalPagesController.goBack();
                             } else {
                               ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
                             }

@@ -51,20 +51,22 @@ import 'Pages/SharedPages/CashFlowSharedPage.dart';
 import 'Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
 import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
+import 'SignalR/Config.dart';
 import 'Widgets/CIA_PopUp.dart';
 import 'Widgets/CIA_TeethTreatmentWidget.dart';
 import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
 
-void main() {
+void main() async{
   html.window.onUnload.listen((event) async {
-    print('Reloaded');
   });
   Get.put(NavigationController());
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
   Get.put(SiteController());
+
+
   runApp(const MyApp());
 }
 
@@ -74,6 +76,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    Future(() async=> {
+
+    });
     return MaterialApp.router(
       title: 'CIA',
       theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
@@ -83,6 +88,7 @@ class MyApp extends StatelessWidget {
       routerConfig: CIA_Router.routes,
     );
   }
+
 }
 
 class MyHomePage extends StatefulWidget {
@@ -96,6 +102,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   PageController page = PageController();
+
+  @override
+  void initState() {
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
