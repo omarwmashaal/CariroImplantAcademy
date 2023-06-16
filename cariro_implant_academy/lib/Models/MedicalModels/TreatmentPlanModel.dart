@@ -33,6 +33,11 @@ class TreatmentPlanModel {
     data['treatmentPlan'] = (this.treatmentPlan ?? <TreatmentPlanSubModel>[]).map((e) => e.toJson()).toList();
     return data;
   }
+
+  Compare(TreatmentPlanModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
 }
 
 class TreatmentPlanSubModel {

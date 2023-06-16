@@ -51,4 +51,9 @@ class DentalHistoryModel {
     data['willingForImplantScore'] = this.willingForImplantScore;
     return data;
   }
+
+  Compare(DentalHistoryModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
 }

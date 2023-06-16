@@ -127,6 +127,11 @@ class MedicalExaminationModel {
     data['drugsTaken'] = this.drugsTaken;
     return data;
   }
+
+  Compare(MedicalExaminationModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
 }
 
 class BloodPressure {

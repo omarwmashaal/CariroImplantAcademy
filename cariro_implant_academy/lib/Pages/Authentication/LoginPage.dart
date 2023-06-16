@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
    // tabController.index = 0;
     return FutureBuilder(
-      future: AuthenticationAPI.Login(null, null),
+      future: AuthenticationAPI.VerifyToken(),
       builder: (context, snapshot) {
         bool isLoggedIn = false;
         if(snapshot.hasData)

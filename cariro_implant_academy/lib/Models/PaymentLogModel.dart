@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../Widgets/SnackBar.dart';
 import 'API_Response.dart';
 import 'PatientInfo.dart';
 
@@ -68,6 +69,7 @@ class PaymentLogDataSrouce extends DataGridSource {
     "Patient Id",
     "Operator",
     "Paid",
+    "Remove Payment"
   ];
 
   List<PaymentLogModel> models = <PaymentLogModel>[];
@@ -85,6 +87,10 @@ class PaymentLogDataSrouce extends DataGridSource {
       DataGridCell<int>(columnName: 'Patient Id', value: e.patientId!),
       DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
       DataGridCell<int>(columnName: 'Paid', value: e.paidAmount),
+      DataGridCell<Widget>(columnName: 'Remove Payment', value: IconButton(onPressed: ()async{
+        await PatientAPI.RemovePayment(e.id!);
+        loadData(id: _id, receiptId: _recId);
+      },icon: Icon(Icons.remove),)),
     ]))
         .toList();
   }
@@ -100,15 +106,18 @@ class PaymentLogDataSrouce extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
           return Container(
             alignment: Alignment.center,
-            child: Text(
+            child: e.value is Widget? e.value: Text(
               e.value.toString(),
 
             ),
           );
         }).toList());
   }
-
+  int _id = 0;
+  int _recId = 0;
   Future<bool> loadData({required int id,required int receiptId}) async {
+    _id = id;
+    _recId = receiptId;
     late API_Response response;
     response = await PatientAPI.GetPaymentLogsForAReceipt(id,receiptId);
     if (response.statusCode == 200)

@@ -188,6 +188,11 @@ class ProstheticTreatmentModel {
     data['finalProthesisFullArchDeliveryNextVisit'] = this.finalProthesisFullArchDeliveryNextVisit != null ? this.finalProthesisFullArchDeliveryNextVisit!.index : null;
     return data;
   }
+
+  Compare(ProstheticTreatmentModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
 }
 
 class DiagnosticImpressionModel extends _ProstheticTreatmentDiagnosticParentModel {

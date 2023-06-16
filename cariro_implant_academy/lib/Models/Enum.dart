@@ -141,4 +141,5 @@ UpperPosterior,
 LowerPosterior
 }
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-enum EnumNotificationType { Patient,TreatmentPlan }
+enum EnumNotificationType { Patient, TreatmentPlan, Complains }
+enum EnumComplainStatus { InQueue, Untouched, Resolved }

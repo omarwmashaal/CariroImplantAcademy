@@ -61,7 +61,7 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 redirect: (context, state) async {
-                  var res = await AuthenticationAPI.Login(null,null);
+                  var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
                       !(
@@ -484,7 +484,7 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 redirect: (context, state) async {
-                  var res = await AuthenticationAPI.Login(null,null);
+                  var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
                       !(
@@ -647,7 +647,7 @@ class _Authorize extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
     return FutureBuilder(
-      future: AuthenticationAPI.Login(null,null),
+      future: AuthenticationAPI.VerifyToken(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (siteController.getRole()=="admin"|| roles.contains(siteController.getRole()))

@@ -1338,6 +1338,7 @@ class _PatientComplainsState extends State<PatientComplains> {
                           children: [
                             Divider(),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
                                   child: Text(
@@ -1346,30 +1347,82 @@ class _PatientComplainsState extends State<PatientComplains> {
                                   ),
                                 ),
                                 SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    "Notes: "+ (e.notes ?? ""),
+                                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    RoundCheckBox(
-                                      onTap: e.resolved!
-                                          ? null
-                                          : (value) async {
-                                              await PatientAPI.ResolveComplain(e.id!).then((value) {
+                                    e.status == EnumComplainStatus.Untouched
+                                        ? CIA_SecondaryButton(
+                                            label: "Start working on complain",
+                                            onTab: () async {
+                                              await PatientAPI.InQueueComplain(e.id!, null).then((value) {
                                                 if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
                                                 setState(() {});
                                               });
                                             },
-                                      size: 30,
-                                      disabledColor: Colors.green,
-                                      checkedColor: Colors.green,
-                                      borderColor: Colors.red,
-                                      isRound: true,
-                                      isChecked: e.resolved,
-                                    ),
-                                    FormTextValueWidget(
-                                      text: "Mark as resolved",
-                                      secondaryInfo: true,
-                                      smallFont: true,
-                                    )
+                                          )
+                                        : e.status == EnumComplainStatus.InQueue
+                                            ? Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  CIA_SecondaryButton(
+                                                    label: "Update Notes",
+                                                    onTab: () async {
+                                                      CIA_ShowPopUp(
+                                                        context: context,
+                                                        onSave: ()async{
+                                                          await PatientAPI.UpdateComplainNotes(e.id!, e.notes??"").then((value) {
+                                                            if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                        child: CIA_TextFormField(
+                                                          label: "Notes",
+                                                          controller: TextEditingController(text: e.notes),
+                                                          onChange: (v)=>e.notes=v,
+                                                          maxLines: 5,
+                                                        ),
+                                                      );
+
+                                                    },
+                                                  ),
+                                                  CIA_PrimaryButton(
+                                                    label: "Resolve",
+                                                    isLong: true,
+                                                    onTab: () async {
+                                                      await PatientAPI.ResolveComplain(e.id!).then((value) {
+                                                        if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
+                                                        setState(() {});
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                            : RoundCheckBox(
+                                                onTap: e.status==EnumComplainStatus.Resolved!
+                                                    ? null
+                                                    : (value) async {
+                                                        await PatientAPI.ResolveComplain(e.id!).then((value) {
+                                                          if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
+                                                          setState(() {});
+                                                        });
+                                                      },
+                                                size: 30,
+                                                disabledColor: Colors.green,
+                                                checkedColor: Colors.green,
+                                                borderColor: Colors.red,
+                                                isRound: true,
+                                                isChecked: e.status==EnumComplainStatus.Resolved,
+                                              ),
+
                                   ],
                                 ),
                               ],

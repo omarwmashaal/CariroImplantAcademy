@@ -156,6 +156,26 @@ class PatientAPI {
     return response;
   }
 
+  static Future<API_Response> InQueueComplain(int id,String? notes) async {
+    var query = "id=$id";
+    if(notes!=null) query+= "&notes=$notes";
+    var response = await HTTPRequest.Put("PatientInfo/InQueueComplain?$query", null);
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
+  static Future<API_Response> UpdateComplainNotes(int id,String notes) async {
+    var response = await HTTPRequest.Put("PatientInfo/UpdateComplainNotes?id=$id&notes=$notes", null);
+
+    if (response.statusCode == 200) {
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ComplainsModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return response;
+  }
+
   static Future<API_Response> AddComplain(ComplainsModel model) async {
     var response = await HTTPRequest.Post("PatientInfo/AddComplain", model.toJson());
 
@@ -165,13 +185,13 @@ class PatientAPI {
     return response;
   }
 
-  static Future<API_Response> GetComplains({int? id, String? search, bool? resolved}) async {
+  static Future<API_Response> GetComplains({int? id, String? search, EnumComplainStatus? status}) async {
     API_Response response = API_Response();
     if (id != null)
       response = await HTTPRequest.Get("PatientInfo/GetComplains?id=$id");
     else {
       var query = "";
-      if (resolved != null) query = "resolved=$resolved";
+      if (status != null) query = "status=${status.index}";
       if (search != null && search != "") {
         query = query == "" ? query + "search=$search" : query + "&search=$search";
       }
@@ -232,6 +252,11 @@ class PatientAPI {
 
   static Future<API_Response> AddPayment(int id, int receiptId, int paidAmount) async {
     var response = await HTTPRequest.Post("PatientInfo/AddPayment?id=$id&receiptId=$receiptId&paidAmount=$paidAmount", null);
+    return response;
+  }
+
+  static Future<API_Response> RemovePayment(int id) async {
+    var response = await HTTPRequest.Post("PatientInfo/RemovePayment?id=$id", null);
     return response;
   }
 

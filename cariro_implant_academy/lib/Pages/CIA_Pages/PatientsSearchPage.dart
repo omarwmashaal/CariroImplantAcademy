@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
@@ -117,10 +118,11 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
 */
 
 class PatientsSearchPage extends StatefulWidget {
-  PatientsSearchPage({Key? key, this.myPatients=false}) : super(key: key);
+  PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
   static String routeName = "Patients";
   static String myPatientsRouteName = "MyPatients";
   bool myPatients;
+
   @override
   State<PatientsSearchPage> createState() => _PatientsSearchPageState();
 }
@@ -128,22 +130,17 @@ class PatientsSearchPage extends StatefulWidget {
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
   PatientDataSource dataSource = PatientDataSource();
 
-
   @override
-  void initState() {
-
-
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-              child:  TitleWidget(
+              child: TitleWidget(
                 title: "Patients Search",
                 showBackButton: false,
               ),
@@ -170,7 +167,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                           icon: Icons.search,
                           onChange: (value) {
                             _getXController.search.value = value;
-                            dataSource.loadData(search: value, filter: _getXController.searchFilter.value,myPatients: widget.myPatients);
+                            dataSource.loadData(search: value, filter: _getXController.searchFilter.value, myPatients: widget.myPatients);
                           },
                         ),
                       ),
@@ -199,18 +196,16 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                 flex: 5,
                 child: CIA_Table(
                   columnNames: dataSource.columns,
-                  loadFunction: ()async{
+                  loadFunction: () async {
                     return await dataSource.loadData(myPatients: widget.myPatients);
                   },
                   dataSource: dataSource,
                   onCellClick: (value) {
-
                     setState(() {
                       selectedPatientID = dataSource.models[value - 1].id!;
-
                     });
                     //internalPagesController.jumpToPage(1);
-                    context.goNamed(CIA_Router.routeConst_PatientInfo,pathParameters: {"id":dataSource.models[value - 1].id!.toString()});
+                    context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": dataSource.models[value - 1].id!.toString()});
                   },
                 ),
               ),
@@ -225,14 +220,16 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
 class PatientsComplainsPage extends StatefulWidget {
   const PatientsComplainsPage({Key? key}) : super(key: key);
   static String routeName = "PatientsComplains";
+
   @override
   State<PatientsComplainsPage> createState() => _PatientsComplainsPageState();
 }
 
 class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
   ComplainsDataSource complainsDataSource = ComplainsDataSource();
-  bool? resolved;
+  EnumComplainStatus? status;
   String? complainSearch;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -254,9 +251,9 @@ class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
                         child: CIA_TextField(
                           label: "Search",
                           icon: Icons.search,
-                          onChange: (value) async{
+                          onChange: (value) async {
                             complainSearch = value;
-                            await complainsDataSource.loadData(resolved: resolved,search: complainSearch);
+                            await complainsDataSource.loadData(status: status, search: complainSearch);
                           },
                         ),
                       ),
@@ -267,11 +264,17 @@ class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
                               flex: 8,
                               child: HorizontalRadioButtons(
                                 groupValue: "All",
-                                names: ["All", "Resolved", "Unresolved"],
-                                onChange: (value) async{
-                                  resolved = value=="All"?null:value=="Resolved";
-                                  await complainsDataSource.loadData(resolved: resolved,search: complainSearch);
-
+                                names: ["All", "Untouched", "In Queue", "Resolved"],
+                                onChange: (value) async {
+                                  if (value == "Untouched")
+                                    status = EnumComplainStatus.Untouched;
+                                  else if (value == "In Queue")
+                                    status = EnumComplainStatus.InQueue;
+                                  else if (value == "Resolved")
+                                    status = EnumComplainStatus.Resolved;
+                                  else
+                                    status = null;
+                                  await complainsDataSource.loadData(status: status, search: complainSearch);
                                 },
                               ),
                             ),
@@ -290,11 +293,9 @@ class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
                   loadFunction: complainsDataSource.loadData,
                   dataSource: complainsDataSource,
                   onCellClick: (value) {
-
                     setState(() {
                       selectedPatientID = complainsDataSource.models[value - 1].patientID!;
                     });
-
                   },
                 ),
               ),
@@ -305,6 +306,3 @@ class _PatientsComplainsPageState extends State<PatientsComplainsPage> {
     );
   }
 }
-
-
-

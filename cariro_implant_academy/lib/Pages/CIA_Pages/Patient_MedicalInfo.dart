@@ -2804,17 +2804,17 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
         try {
           if (fullArchModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisFullArch(widget.patientId, fullArchModel!);
         } on Exception catch (e) {
-          // TODO
+          print(e);
         }
         try {
           if (diagnosticModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentDiagnostic(widget.patientId, diagnosticModel!);
         } on Exception catch (e) {
-          // TODO
+          print(e);
         }
         try {
           if (singleBridgeModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisSingleBridge(widget.patientId, singleBridgeModel!);
         } on Exception catch (e) {
-          // TODO
+          print(e);
         }
       });
 

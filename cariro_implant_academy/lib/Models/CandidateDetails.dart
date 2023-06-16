@@ -1,3 +1,4 @@
+import 'package:calendar_view/calendar_view.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/ImplantModel.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ class CandidateDetails{
   int? patientId;
   DropDownDTO? patient;
   String? procedure;
-  String? date;
+  DateTime? date;
   int? implantCount;
   List<String>? otherProcedures;
   int? totalImplantCounts;
@@ -26,13 +27,15 @@ class CandidateDetails{
     patientId = json['patientId'];
     patient=  DropDownDTO.fromJson(json['patient']??Map<String,dynamic>());
     procedure = json['procedure']??"";
-    date = CIA_DateConverters.fromBackendToDateTime(json['date']);
+
+    date = json['date']==null?null: DateTime.parse(json['date']);
     implantCount = json['implantCount'];
     otherProcedures = json['otherProcedures']??[];
     totalImplantCounts = json['totalImplantCounts'];
     tooth = json['tooth'];
     implantId = json['implantId'];
     implant = ImplantModel.fromJson(json['implant']??Map<String,dynamic>());
+
   }
 
 }
@@ -67,7 +70,7 @@ class CandidateDetailsDataSource extends DataGridSource {
           DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name),
           DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
           DataGridCell<int>(columnName: 'Tooth', value: e.tooth),
-          DataGridCell<DateTime>(columnName: 'Date', value: e.date==null?null: DateTime.parse(e.date!)),
+          DataGridCell<DateTime>(columnName: 'Date', value: e.date),
           DataGridCell<String>(columnName: 'Implant', value: e.implant!.size),
           DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
          // DataGridCell<List<String>>(columnName: 'Other Procedures', value: e.otherProcedures),
@@ -86,11 +89,13 @@ class CandidateDetailsDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          if (e.value is Widget) return e.value;
+          var returnedValue = e.value;
+          if (returnedValue is Widget) return returnedValue;
+          if(e.columnName=="Date")returnedValue = CIA_DateConverters.fromBackendToDateTime(e.value.toString()) ;
           return Container(
             alignment: Alignment.center,
             child: Text(
-              e.value == null ? "" : e.value.toString(),
+              returnedValue == null ? "" : returnedValue.toString(),
               style: TextStyle(fontSize: 12),
               textAlign: TextAlign.center,
             ),

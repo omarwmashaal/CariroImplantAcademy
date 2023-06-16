@@ -66,6 +66,11 @@ class DentalExaminationModel {
     return data;
   }
 
+  Compare(DentalExaminationModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
+
 }
 
 class DentalExaminations {

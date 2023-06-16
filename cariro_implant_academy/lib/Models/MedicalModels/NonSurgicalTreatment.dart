@@ -44,6 +44,11 @@ class NonSurgicalTreatmentModel {
     return data;
   }
 
+  Compare(NonSurgicalTreatmentModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
+
   static List<String> columns = [
     "Date",
     "Treatment",

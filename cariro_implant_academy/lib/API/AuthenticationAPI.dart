@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signalr_netcore/hub_connection.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/DTOs/LoginResponseDTO.dart';
@@ -21,9 +22,6 @@ class AuthenticationAPI {
       });
       siteController.setUser(loginResponse.user!);
       await SignalR.runConfig();
-      var newToken = await siteController.getToken();
-      if(tempToken!=newToken)
-        await SignalR.AssignConnection();
       if(siteController.notifications.value.isEmpty)
         await NotificationsAPI.GetNotifications();
     }
@@ -46,6 +44,26 @@ class AuthenticationAPI {
     return response;
   }
 
+  static Future<API_Response> VerifyToken() async {
+    var response = await HTTPRequest.Get("Authentication/VerifyToken");
+    if(response.statusCode==200)
+      {
+        siteController.setRole((response.result as Map<String,dynamic>)['role'] as String);
+        var user = siteController.getUser();
+        user.name = (response.result as Map<String,dynamic>)['name'] as String;
+        user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
+        if(!SignalR.checkConnection())
+          {
+            await SignalR.runConfig();
+          }
+      }
+    else {
+      siteController.setRole("");
+      siteController.setUser(ApplicationUserModel());
+      await siteController.removeToken();
+    }
+    return response;
+  }
 
   static Future<API_Response> Test() async {
     var response = await HTTPRequest.Get(r"Authentication/Register?password=Pa$$word1");

@@ -337,4 +337,9 @@ class SurgicalTreatmentModel {
     data['date'] = this.date;
     return data;
   }
+
+  Compare(SurgicalTreatmentModel model)
+  {
+    return this.toJson()==model.toJson();
+  }
 }

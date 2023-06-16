@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import 'Enum.dart';
+
 class ComplainsModel {
   int? id;
   String? comment;
@@ -22,9 +24,10 @@ class ComplainsModel {
   int? entryById;
   DropDownDTO? entryBy;
   String? entryTime;
-  bool? resolved;
+  EnumComplainStatus? status;
   int? resolvedById;
   DropDownDTO? resolvedBy;
+  String? notes;
 
   ComplainsModel(
       {this.id,
@@ -34,6 +37,7 @@ class ComplainsModel {
       this.lastDoctorId,
       this.lastDoctor,
       this.lastSupervisorId,
+      this.notes,
       this.lastSupervisor,
       this.lastCandidateId,
       this.lastCandidate,
@@ -46,7 +50,8 @@ class ComplainsModel {
   ComplainsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     comment = json['comment'];
-    resolved = json['resolved'] ?? false;
+    notes = json['queueNotes']??"";
+    status = json['status'] ==null ? EnumComplainStatus.Untouched:EnumComplainStatus.values[json['status']];
     patientID = json['patientID'];
     patient = DropDownDTO.fromJson((json['patient'] ?? Map<String, dynamic>()) as Map<String, dynamic>);
     lastDoctorId = json['lastDoctorId'];
@@ -83,8 +88,9 @@ class ComplainsDataSource extends DataGridSource {
     "Last Supervisor",
     "Last Doctor",
     "Mentioned Doctor",
-    "Resolved",
-    "Resolved By",
+    "Notes",
+    "Status",
+    "Operator",
   ];
 
   /// Creates the visit data source class with required details.
@@ -101,8 +107,9 @@ class ComplainsDataSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Last Supervisor', value: e.lastSupervisor!.name??""),
               DataGridCell<String>(columnName: 'Last Doctor', value: e.lastDoctor!.name??""),
               DataGridCell<String>(columnName: 'Mentioned Doctor', value: e.mentionedDoctor!.name??""),
-              DataGridCell<Widget>(columnName: 'Resolved', value: e.resolved!? Icon(Icons.check,color: Colors.green,):Icon(Icons.circle,color: Colors.red,)),
-              DataGridCell<String>(columnName: 'Resolved By', value: e.resolvedBy!.name??""),
+              DataGridCell<String>(columnName: 'Notes', value: e.notes),
+              DataGridCell<String>(columnName: 'Status', value: e.status!.name),
+              DataGridCell<String>(columnName: 'Operator', value: e.resolvedBy!.name??""),
             ]))
         .toList();
   }
@@ -128,8 +135,8 @@ class ComplainsDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> loadData({String? search,bool? resolved}) async {
-    var response = await PatientAPI.GetComplains(search: search,resolved: resolved);
+  Future<bool> loadData({String? search,EnumComplainStatus? status}) async {
+    var response = await PatientAPI.GetComplains(search: search,status: status);
     if (response.statusCode == 200) {
       models = response.result as List<ComplainsModel>;
     }
