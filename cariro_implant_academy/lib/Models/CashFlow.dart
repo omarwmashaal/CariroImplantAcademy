@@ -61,7 +61,14 @@ class CashFlowModel {
     this.implantCompany,
     this.implantLine,
     this.implant,
-  });
+  }){
+    if(this.paymentMethod==null)
+      this.paymentMethod = DropDownDTO();
+    if(this.supplier==null)
+      this.supplier = DropDownDTO();
+    if(this.category==null)
+      this.category = DropDownDTO();
+  }
 
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

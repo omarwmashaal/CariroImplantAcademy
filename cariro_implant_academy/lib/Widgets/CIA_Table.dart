@@ -66,6 +66,8 @@ class _CIA_TableState extends State<CIA_Table> {
             horizontalScrollPhysics: ScrollPhysics(),
 
             allowSorting: widget.allowSorting,
+            allowTriStateSorting: widget.allowSorting,
+            allowMultiColumnSorting: widget.allowSorting,
             highlightRowOnHover: true,
             gridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
             headerGridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
@@ -131,6 +133,7 @@ class _CIA_TableState extends State<CIA_Table> {
             // allowFiltering: true,
             navigationMode: GridNavigationMode.row,
             onCellTap: (value) {
+
               if (widget.onCellClick != null && value.rowColumnIndex.rowIndex!=0) {
                 widget.onCellClick!(value.rowColumnIndex.rowIndex);
               }

@@ -12,9 +12,6 @@ class LAB_StockSearchPage extends StatefulWidget {
 }
 
 class _LAB_StockSearchPageState extends State<LAB_StockSearchPage> {
-  StockLogsDataSource logs_dataSource = StockLogsDataSource();
-  StockDataSource stocks_dataSource = StockDataSource();
-
   @override
   Widget build(BuildContext context) {
     return StockListSharedPage(

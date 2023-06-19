@@ -548,7 +548,7 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
 
                     CIA_ShowPopUp(
                         context: context,
-                        width: 700,
+                        width: 1000,
                         height: 500,
                         title: "Add new Expenses",
                         onSave: () async {
@@ -652,6 +652,7 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                           CIA_MultiSelectChipWidgeModel(label: "Membranes", isSelected: medicalType == "Membranes"),
                                                           CIA_MultiSelectChipWidgeModel(label: "Screws", isSelected: medicalType == "Screws"),
                                                           CIA_MultiSelectChipWidgeModel(label: "Implants", isSelected: medicalType == "Implants"),
+                                                          CIA_MultiSelectChipWidgeModel(label: "Other", isSelected: medicalType == "Other"),
                                                         ],
                                                         onChange: (item, isSelected) {
                                                           if (isSelected)
@@ -859,7 +860,8 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            } else if (medicalType == "Membranes") {
+                                            }
+                                            else if (medicalType == "Membranes") {
                                               r.addAll(models
                                                   .map((model) => Column(
                                                         children: [
@@ -952,7 +954,8 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            } else if (medicalType == "Implants") {
+                                            }
+                                            else if (medicalType == "Implants") {
                                               r.addAll(models
                                                   .map((model) => Column(
                                                         children: [
@@ -1066,7 +1069,8 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            } else if (medicalType == "Screws") {
+                                            }
+                                            else if (medicalType == "Screws") {
                                               models = [models.first];
                                               models.first.name = "Screws";
 
@@ -1111,6 +1115,90 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                 ),
                                               );
                                             }
+                                            else{
+                                              r.addAll(models
+                                                  .map((model) => Column(
+                                                children: [
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: CIA_TextFormField(
+                                                            onChange: (value) => model.name = value,
+                                                            label: "Name",
+                                                            controller: TextEditingController(text: model.name ?? "")),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_TextFormField(
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            if (value == null || value == "") value = "0";
+                                                            model.price = int.parse(value);
+                                                            total = 0;
+                                                            models.forEach((element) {
+                                                              total += element.price ?? 0;
+                                                            });
+                                                            _setState(() {});
+                                                          },
+                                                          label: "Price",
+                                                          controller: TextEditingController(text: (model.price ?? 0).toString()),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Visibility(
+                                                        visible: expCategory != EnumExpenseseCategoriesType.Service,
+                                                        child: Expanded(
+                                                          child: CIA_TextFormField(
+                                                            isNumber: true,
+                                                            onChange: (value) {
+                                                              if (value == null || value == "") value = "0";
+                                                              model.count = int.parse(value);
+                                                              _setState(() {});
+                                                            },
+                                                            label: "Count",
+                                                            controller: TextEditingController(text: (model.count ?? 0).toString()),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: expCategory != EnumExpenseseCategoriesType.Service ? 10 : 0),
+                                                      Expanded(
+                                                        child: CIA_TextFormField(
+                                                          onChange: (value) => model.notes = value,
+                                                          label: "Notes",
+                                                          controller: TextEditingController(text: model.notes ?? ""),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            int index = 0;
+                                                            index = models.indexWhere((element) => element == model);
+                                                            models.insert(
+                                                                index + 1,
+                                                                CashFlowModel(
+                                                                  category: dummyModel.category,
+                                                                  categoryId: dummyModel.categoryId,
+                                                                  paymentMethod: dummyModel.paymentMethod,
+                                                                  paymentMethodId: dummyModel.paymentMethodId,
+                                                                  supplier: dummyModel.supplier,
+                                                                  supplierId: dummyModel.supplierId,
+                                                                ));
+                                                            _setState(() {});
+                                                          },
+                                                          icon: Icon(Icons.add)),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            models.remove(model);
+                                                            _setState(() {});
+                                                          },
+                                                          icon: Icon(Icons.remove))
+                                                    ],
+                                                  )
+                                                ],
+                                              ))
+                                                  .toList());
+                                            }
                                           } else {
                                             r.addAll(models
                                                 .map((model) => Column(
@@ -1142,22 +1230,19 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                               ),
                                                             ),
                                                             SizedBox(width: 10),
-                                                            Visibility(
-                                                              visible: expCategory != EnumExpenseseCategoriesType.Service,
-                                                              child: Expanded(
-                                                                child: CIA_TextFormField(
-                                                                  isNumber: true,
-                                                                  onChange: (value) {
-                                                                    if (value == null || value == "") value = "0";
-                                                                    model.count = int.parse(value);
-                                                                    _setState(() {});
-                                                                  },
-                                                                  label: "Count",
-                                                                  controller: TextEditingController(text: (model.count ?? 0).toString()),
-                                                                ),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  if (value == null || value == "") value = "0";
+                                                                  model.count = int.parse(value);
+                                                                  _setState(() {});
+                                                                },
+                                                                label: "Count",
+                                                                controller: TextEditingController(text: (model.count ?? 0).toString()),
                                                               ),
                                                             ),
-                                                            SizedBox(width: expCategory != EnumExpenseseCategoriesType.Service ? 10 : 0),
+                                                            SizedBox(width: 10),
                                                             Expanded(
                                                               child: CIA_TextFormField(
                                                                 onChange: (value) => model.notes = value,

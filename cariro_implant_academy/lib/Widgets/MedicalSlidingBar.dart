@@ -29,13 +29,14 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
         if (e.isSelected)
           return Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: CIA_PrimaryButton(label: e.name, height: 50, onTab: () {}),
+            child: CIA_PrimaryButton(label: e.name, height: 50,width: 100, onTab: () {}),
           );
         return Padding(
           padding: const EdgeInsets.only(right: 10),
           child: CIA_SecondaryButton(
               label: e.name,
               height: 50,
+              width: 100,
               onTab: () async {
                 bool changePage = true;
                 if (widget.pages.firstWhere((element) => element.isSelected == true).onSave != null)

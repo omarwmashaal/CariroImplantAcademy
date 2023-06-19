@@ -107,10 +107,11 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
           if (!addNew && (snapshot.data as API_Response).statusCode == 200) {
             patient = (snapshot.data as API_Response).result as PatientInfoModel;
           }
-          PatientAPI.GetNextAvailableId().then((value) {
-            _getxController.nextAvailableId.value = value.result as int;
-            patient.id = value.result as int;
-          });
+          if (addNew)
+            PatientAPI.GetNextAvailableId().then((value) {
+              _getxController.nextAvailableId.value = value.result as int;
+              patient.id = value.result as int;
+            });
           return Padding(
             padding: EdgeInsets.only(top: 5),
             child: Column(
@@ -846,8 +847,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                     PatientAPI.GetNextAvailableId().then((value) {
                                       if (value.statusCode == 200) {
                                         {
-                                          patient = PatientInfoModel(id:  value.result as int);
-                                          setState((){});
+                                          if (addNew) patient = PatientInfoModel(id: value.result as int);
+                                          setState(() {});
                                           _getxController.nextAvailableId.value = value.result as int;
                                           PatientAPI.CheckDuplicateId(patient.id!).then((_) {
                                             _getxController.duplicateId.value = (_.statusCode == 200 && _.result != null);

@@ -12,8 +12,6 @@ class Clinic_StockPage extends StatefulWidget {
 }
 
 class _Clinic_StockPageState extends State<Clinic_StockPage> {
-  StockLogsDataSource logs_dataSource = StockLogsDataSource();
-  StockDataSource stocks_dataSource = StockDataSource();
 
   @override
   Widget build(BuildContext context) {

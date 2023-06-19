@@ -31,7 +31,7 @@ class StockListSharedPage extends StatefulWidget {
   static String routeCIAname = "CIAStock";
   static String routeLABname = "LabStock";
   static String routeClinicName = "ClinicStock";
-  StockDataSource stock_dataSource = StockDataSource();
+
 
   @override
   State<StockListSharedPage> createState() => _StockListSharedPageState();
@@ -40,6 +40,7 @@ class StockListSharedPage extends StatefulWidget {
 class _StockListSharedPageState extends State<StockListSharedPage> {
   int selectedPage = 0;
   String? search = null;
+  late StockDataSource stock_dataSource ;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,7 +75,7 @@ class _StockListSharedPageState extends State<StockListSharedPage> {
                             ShowSnackBar(context,isSuccess: true, title: "Success", message: "Added Succesffuly");
                           else
                             ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
-                          await widget.stock_dataSource.loadData();
+                          await stock_dataSource.loadData();
                         },
                         child: StatefulBuilder(builder: (context, setState) {
                           return Column(
@@ -184,12 +185,12 @@ class _StockListSharedPageState extends State<StockListSharedPage> {
           icon: Icons.search,
           onChange: (value) {
             search = value;
-            widget.stock_dataSource.loadData(search: value);
+            stock_dataSource.loadData(search: value);
           },
         ),
         Expanded(
-          child: CIA_Table(columnNames: widget.stock_dataSource.columns, dataSource: widget.stock_dataSource,loadFunction: ()async{
-            return widget.stock_dataSource.loadData(search:search);
+          child: CIA_Table(columnNames: stock_dataSource.columns, dataSource: stock_dataSource,loadFunction: ()async{
+            return stock_dataSource.loadData(search:search);
           },),
         ),
 
@@ -264,6 +265,7 @@ class _StockListSharedPageState extends State<StockListSharedPage> {
 
   @override
   void initState() {
+    stock_dataSource = StockDataSource(context: context);
     //todo:fix this
     //siteController.setAppBarWidget(tabs: ["Stock", "Logs"]);
   }

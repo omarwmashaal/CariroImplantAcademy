@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Models/CashFlow.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/StockModel.dart';
 
@@ -47,6 +48,10 @@ class StockAPI{
       "category":(model.category??DropDownDTO()).name,
     };
     var response = await HTTPRequest.Post("Stock/AddItem?",t);
+    return response;
+  }
+  static Future<API_Response> AddItemNumber(CashFlowModel model) async {
+    var response = await HTTPRequest.Put("Stock/AddItemNumber?",model.toJson());
     return response;
   }
   static Future<API_Response> ConsumeItem(int id, int count) async {

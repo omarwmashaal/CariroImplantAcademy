@@ -121,4 +121,5 @@ class CandidateDetailsDataSource extends DataGridSource {
 
     return true;
   }
+
 }
