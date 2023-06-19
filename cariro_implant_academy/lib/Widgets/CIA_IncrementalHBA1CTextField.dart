@@ -73,7 +73,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                           widget.onChange!(items);
                         }
                         setState(() {
-                          items.add(HbA1c());
+                          items.add(HbA1c(reading: 0));
                         });
                       },
                       icon: Icon(Icons.add))

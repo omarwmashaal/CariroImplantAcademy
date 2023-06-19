@@ -57,38 +57,38 @@ class MedicalExaminationModel {
   MedicalExaminationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     patientId = json['patientId'];
-    generalHealth = GeneralHealthEnum.values[json['generalHealth'] ?? 0];
-    pregnancyStatus = PregnancyEnum.values[json['pregnancyStatus'] ?? 0];
-    areYouTreatedFromAnyThing = json['areYouTreatedFromAnyThing'] ?? "";
-    recentSurgery = json['recentSurgery'] ?? "";
-    comment = json['comment'] ?? "";
+    generalHealth = json['generalHealth']==null?null:GeneralHealthEnum.values[json['generalHealth']];
+    pregnancyStatus = json['pregnancyStatus']==null?null:PregnancyEnum.values[json['pregnancyStatus']];
+    areYouTreatedFromAnyThing = json['areYouTreatedFromAnyThing'];
+    recentSurgery = json['recentSurgery'];
+    comment = json['comment'];
     diseases = json['diseases']!=null?
-    (json['diseases'] as List<dynamic>).map((e) => DiseasesEnum.values[e as int]).toList():[];
+    (json['diseases'] as List<dynamic>).map((e) => DiseasesEnum.values[e as int]).toList():null;
     bloodPressure = json['bloodPressure'] != null
         ? new BloodPressure.fromJson(json['bloodPressure'])
-        : BloodPressure();
+        : null;
     diabetic = json['diabetic'] != null
         ? new Diabetic.fromJson(json['diabetic'])
-        : Diabetic();
+        : null;
     if (json['hbA1c'] != null) {
       hbA1c = <HbA1c>[];
       json['hbA1c'].forEach((v) {
         hbA1c!.add(new HbA1c.fromJson(v));
       });
     } else {
-      hbA1c = [];
+      hbA1c = null;
     }
-    penicillin = json['penicillin'] ?? false;
-    sulfa = json['sulfa'] ?? false;
-    otherAllergy = json['otherAllergy'] ?? false;
-    otherAllergyComment = json['otherAllergyComment'] ?? "";
-    prolongedBleedingOrAspirin = json['prolongedBleedingOrAspirin'] ?? false;
-    chronicDigestion = json['chronicDigestion'] ?? false;
-    illegalDrugs = json['illegalDrugs'] ?? "";
-    operatorComments = json['operatorComments'] ?? "";
+    penicillin = json['penicillin'] ;
+    sulfa = json['sulfa'];
+    otherAllergy = json['otherAllergy'];
+    otherAllergyComment = json['otherAllergyComment'] ;
+    prolongedBleedingOrAspirin = json['prolongedBleedingOrAspirin'];
+    chronicDigestion = json['chronicDigestion'];
+    illegalDrugs = json['illegalDrugs'];
+    operatorComments = json['operatorComments'] ;
     drugsTaken = json['drugsTaken']!=null?
     (json['drugsTaken'] as List<dynamic>).map((e) => e as String).toList():
-        []
+        null
     ;
     operatorId = json['operatorId'];
     operator = json['operator'] != null
@@ -101,12 +101,12 @@ class MedicalExaminationModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['patientId'] = this.patientId;
-    data['generalHealth'] = this.generalHealth!.index;
-    data['pregnancyStatus'] = this.pregnancyStatus!.index;
+    data['generalHealth'] = this.generalHealth==null?null:this.generalHealth!.index;
+    data['pregnancyStatus'] = this.pregnancyStatus==null?null:this.pregnancyStatus!.index;
     data['areYouTreatedFromAnyThing'] = this.areYouTreatedFromAnyThing;
     data['recentSurgery'] = this.recentSurgery;
     data['comment'] = this.comment;
-    data['diseases'] = this.diseases!.map((e) => e.index).toList();
+    data['diseases'] = this.diseases==null?null:this.diseases!.map((e) => e.index).toList();
     if (this.bloodPressure != null) {
       data['bloodPressure'] = this.bloodPressure!.toJson();
     }
@@ -142,18 +142,18 @@ class BloodPressure {
   BloodPressureEnum? status;
 
   BloodPressure(
-      {this.lastReading = "",
-      this.when = "",
-      this.drug = "",
-      this.readingInClinic = "",
-      this.status = BloodPressureEnum.Normal});
+      {this.lastReading ,
+      this.when,
+      this.drug,
+      this.readingInClinic ,
+      this.status });
 
   BloodPressure.fromJson(Map<String, dynamic> json) {
-    lastReading = json['lastReading'] ?? "";
+    lastReading = json['lastReading'] ;
     when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
-    drug = json['drug'] ?? "";
-    readingInClinic = json['readingInClinic'] ?? "";
-    status = BloodPressureEnum.values[json['status'] ?? 0];
+    drug = json['drug'];
+    readingInClinic = json['readingInClinic'];
+    status =json['status']==null?null: BloodPressureEnum.values[json['status'] ];
   }
 
   Map<String, dynamic> toJson() {
@@ -162,7 +162,7 @@ class BloodPressure {
     data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
     data['drug'] = this.drug;
     data['readingInClinic'] = this.readingInClinic;
-    data['status'] = this.status!.index;
+    data['status'] = this.status==null?null:this.status!.index;
     return data;
   }
 }
@@ -175,18 +175,18 @@ class Diabetic {
   DiabetesMeasureType? type;
 
   Diabetic(
-      {this.lastReading = 0,
-      this.when = "",
-      this.randomInClinic = 0,
-      this.status = DiabetesEnum.Normal,
-      this.type = DiabetesMeasureType.Random});
+      {this.lastReading ,
+      this.when ,
+      this.randomInClinic,
+      this.status ,
+      this.type });
 
   Diabetic.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'];
     when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
-    randomInClinic = json['randomInClinic'] ?? 0;
-    status = DiabetesEnum.values[json["status"] ?? 0];
-    type = DiabetesMeasureType.values[json['type'] ?? 0];
+    randomInClinic = json['randomInClinic'];
+    status = json["status"] ==null?null:DiabetesEnum.values[json["status"]];
+    type = json['type']==null?null:DiabetesMeasureType.values[json['type'] ];
   }
 
   Map<String, dynamic> toJson() {
@@ -194,8 +194,8 @@ class Diabetic {
     data['lastReading'] = this.lastReading;
     data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
     data['randomInClinic'] = this.randomInClinic;
-    data['status'] = this.status!.index;
-    data['type'] = this.type!.index;
+    data['status'] = this.status==null?null:this.status!.index;
+    data['type'] = this.type==null?null:this.type!.index;
     return data;
   }
 }
@@ -204,11 +204,11 @@ class HbA1c {
   String? date;
   int? reading;
 
-  HbA1c({this.date = "", this.reading = 0});
+  HbA1c({this.date, this.reading});
 
   HbA1c.fromJson(Map<String, dynamic> json) {
     date =  CIA_DateConverters.fromBackendToDateOnly(json['date']);
-    reading = json['reading'] == null? 0:json['reading'];
+    reading = json['reading'] == null? null:json['reading'];
   }
 
   Map<String, dynamic> toJson() {
