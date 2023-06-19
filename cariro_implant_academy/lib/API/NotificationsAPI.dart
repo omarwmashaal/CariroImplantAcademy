@@ -20,4 +20,9 @@ class NotificationsAPI{
 
     return response;
   }
+  static Future<API_Response> DeleteNotification(int id) async {
+    var response = await HTTPRequest.Delete("Notifications/DeleteNotification?id=$id");
+
+    return response;
+  }
 }

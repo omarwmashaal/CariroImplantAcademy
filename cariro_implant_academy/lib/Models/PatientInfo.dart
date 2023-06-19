@@ -75,6 +75,7 @@ class PatientInfoModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['id'] = this.id;
     data['idBackImageId'] = this.idBackImageId;
     data['idFrontImageId'] = this.idFrontImageId;
     data['profileImageId'] = this.profileImageId;

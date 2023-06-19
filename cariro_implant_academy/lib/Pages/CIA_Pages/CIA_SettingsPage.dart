@@ -242,6 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 IconButton(
                                                     onPressed: () async {
                                                       list.removeWhere((element) => element.id == e.id);
+                                                      list.removeWhere((element) => element.name==""||element.name==null);
                                                       await SettingsAPI.AddTacsCompanies!(list);
                                                       setState(() {});
                                                     },
@@ -406,6 +407,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                         IconButton(
                                             onPressed: () async {
                                               list.removeWhere((element) => element.id == e.id);
+                                              list.removeWhere((element) => element.name==""||element.name==null);
+
                                               await SettingsAPI.EditRooms!(list);
                                               setState(() {});
                                             },
@@ -635,6 +638,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           onChange: (v) => prices.rootCanalTreatment = int.parse(v),
                         ),
                         Expanded(child: SizedBox()),
+                        CIA_TextFormField(
+                          label: "Other",
+                          controller: TextEditingController(
+                            text: (prices.other ?? 0).toString(),
+                          ),
+                          isNumber: true,
+                          suffix: "EGP",
+                          onChange: (v) => prices.other = int.parse(v),
+                        ),
+                        Expanded(child: SizedBox()),
                         CIA_PrimaryButton(
                             label: "Save",
                             onTab: () async {
@@ -785,6 +798,8 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                         label: "Delete",
                                         onTab: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
+                                          widget.list1.removeWhere((element) => element.name==""||element.name==null);
+
                                           if (widget.addFunction1 != null)
                                             await widget.addFunction1!(widget.list1).then((value) {
                                               if (value.statusCode == 200)
@@ -862,6 +877,8 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                           IconButton(
                                               onPressed: () async {
                                                 widget.list2.removeWhere((element) => element.id == e.id);
+                                                widget.list2.removeWhere((element) => element.name==""||element.name==null);
+
                                                 if (widget.addFunction2 != null)
                                                   await widget.addFunction2!(widget.selectedList1Id, widget.list2).then((value) {
                                                     if (value.statusCode == 200)
@@ -952,6 +969,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                           IconButton(
                                               onPressed: () async {
                                                 widget.list1.removeWhere((element) => element.id == e.id);
+                                                widget.list1.removeWhere((element) => element.name==""||element.name==null);
                                                 if (widget.addFunction1 != null)
                                                   await widget.addFunction1!(widget.list1).then((value) {
                                                     if (value.statusCode == 200)

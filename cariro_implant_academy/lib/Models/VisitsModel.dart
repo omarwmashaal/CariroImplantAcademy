@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/PatientAPI.dart';
+import '../API/UserAPI.dart';
 import 'API_Response.dart';
 import 'CIA_RoomModel.dart';
 import 'PatientInfo.dart';
@@ -49,6 +50,8 @@ class VisitsModel {
   VisitsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     status = json['status'];
+
+    treatment = json['treatment'];
     reservationTime = CIA_DateConverters.fromBackendToDateTime(json['reservationTime']);
     realVisitTime = CIA_DateConverters.fromBackendToDateTime(json['realVisitTime']);
     entersClinicTime = CIA_DateConverters.fromBackendToDateTime(json['entersClinicTime']);
@@ -60,9 +63,10 @@ class VisitsModel {
     title = json['title'];
     roomId = json['roomId'] ?? 0;
     patientId = json['patientId'] ?? 0;
-    patientName= json['patientName']??"";
+    patientName = json['patientName'] ?? "";
     duration = CIA_DateConverters.fromBackendToTimeSpan(json['duration']) ?? "";
     room = json['room'] != null ? CIA_RoomModel.fromJson(json['room'] as Map<String, dynamic>) : CIA_RoomModel();
+    print(this.toJson());
   }
 
   Map<String, dynamic> toJson() {
@@ -86,6 +90,7 @@ class VisitsModel {
 
 class VisitDataSource extends DataGridSource {
   List<VisitsModel> models = <VisitsModel>[];
+  bool sessions;
   List<String> columns = [
     "Patient",
     "Status",
@@ -95,27 +100,69 @@ class VisitDataSource extends DataGridSource {
     "Leave Time",
     "Duration",
     "Doctor Name",
-    //"Treatment",
+    "Treatment",
   ];
 
   /// Creates the visit data source class with required details.
-  VisitDataSource() {
+  VisitDataSource({this.sessions=false}) {
     init();
   }
 
   init() {
-    _visitData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<String>(columnName: 'Patient', value: e.patientName),
-              DataGridCell<String>(columnName: 'Status', value: e.status),
-              DataGridCell<String>(columnName: 'Reservation Time', value: e.reservationTime),
-              DataGridCell<String>(columnName: 'Real Visit Time', value: e.realVisitTime),
-              DataGridCell<String>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-              DataGridCell<String>(columnName: 'Leave Time', value: e.leaveTime),
-              DataGridCell<String>(columnName: 'Duration', value: e.duration),
-              DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName),
-            ]))
-        .toList();
+    if(sessions)
+      {
+       columns = [
+          "Patient",
+       //   "Status",
+        //  "Reservation Time",
+          "Real Visit Time",
+          "Enters Clinic Time",
+          "Leave Time",
+          "Duration",
+          "Doctor Name",
+          "Treatment",
+        ];
+        _visitData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<String>(columnName: 'Patient', value: e.patientName??""),
+         // DataGridCell<String>(columnName: 'Status', value: e.status??""),
+         // DataGridCell<String>(columnName: 'Reservation Time', value: e.reservationTime??""),
+          DataGridCell<String>(columnName: 'Real Visit Time', value: e.realVisitTime??""),
+          DataGridCell<String>(columnName: 'Enters Clinic Time', value: e.entersClinicTime??""),
+          DataGridCell<String>(columnName: 'Leave Time', value: e.leaveTime??""),
+          DataGridCell<String>(columnName: 'Duration', value: e.duration??""),
+          DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName??""),
+          DataGridCell<String>(columnName: 'Treatment', value: e.treatment??""),
+        ]))
+            .toList();
+      }
+    else
+      { columns = [
+        "Patient",
+        "Status",
+        "Reservation Time",
+        "Real Visit Time",
+        "Enters Clinic Time",
+        "Leave Time",
+        "Duration",
+        "Doctor Name",
+        "Treatment",
+      ];
+        _visitData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+          DataGridCell<String>(columnName: 'Patient', value: e.patientName??""),
+          DataGridCell<String>(columnName: 'Status', value: e.status??""),
+          DataGridCell<String>(columnName: 'Reservation Time', value: e.reservationTime??""),
+          DataGridCell<String>(columnName: 'Real Visit Time', value: e.realVisitTime??""),
+          DataGridCell<String>(columnName: 'Enters Clinic Time', value: e.entersClinicTime??""),
+          DataGridCell<String>(columnName: 'Leave Time', value: e.leaveTime??""),
+          DataGridCell<String>(columnName: 'Duration', value: e.duration??""),
+          DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName??""),
+          DataGridCell<String>(columnName: 'Treatment', value: e.treatment??""),
+        ]))
+            .toList();
+      }
+
   }
 
   List<DataGridRow> _visitData = [];
@@ -139,8 +186,10 @@ class VisitDataSource extends DataGridSource {
 
   Future<bool> loadData({int? id}) async {
     late API_Response response;
-    if (id != null) response = await PatientAPI.GetVisitsLogs(id!);
-    else response = await PatientAPI.GetAllSchedules();
+    if (id != null)
+      response = await PatientAPI.GetVisitsLogs(id!);
+    else
+      response = await PatientAPI.GetAllSchedules();
     if (response.statusCode == 200) {
       models = response.result as List<VisitsModel>;
     }
@@ -148,6 +197,26 @@ class VisitDataSource extends DataGridSource {
     notifyListeners();
 
     return true;
+  }
+
+  Future<Duration> loadSessions({required int id, String? from, String? to}) async {
+    late API_Response response;
+
+      response = await UserAPI.GetSessionsDurations(id: id, from: from, to: to);
+
+    if (response.statusCode == 200) {
+      models = response.result as List<VisitsModel>;
+    }
+    var duration = Duration(seconds: 0);
+    for(var m in models)
+      {
+        var temp = CIA_DateConverters.parseDuration(m.duration??"00:00:00");
+        duration+= temp;
+      }
+    init();
+    notifyListeners();
+
+    return duration;
   }
 
   Future<bool> setData(List<VisitsModel> model) async {

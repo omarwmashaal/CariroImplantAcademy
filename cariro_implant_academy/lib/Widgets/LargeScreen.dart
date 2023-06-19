@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.d
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
+import 'package:cariro_implant_academy/Pages/NotificationsPage.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,6 +56,12 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          GestureDetector(
+                            onTap:(){
+                              context.goNamed(NotificationsPage.routeName);
+                            },
+                            child: Text("View All Notifications"),
+                          ),
                           Obx(() => CIA_NotificationsWidget(
                                 customButton: Icon(
                                   Icons.notifications,

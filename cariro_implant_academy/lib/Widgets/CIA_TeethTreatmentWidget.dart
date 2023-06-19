@@ -1928,44 +1928,54 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
                             Expanded(child: FormTextValueWidget(text: "Bone Particle")),
                             Expanded(
                               flex: 4,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: CIA_MultiSelectChipWidget(
-                                      onChange: (item, isSelected) {
-                                        switch (item) {
-                                          case "100% Autogenous":
-                                            surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous = isSelected;
-                                            break;
-                                          case "100% Xenograft":
-                                            surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft = isSelected;
-                                            break;
-                                        }
-                                        setState(() {});
-                                      },
-                                      labels: [
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "100% Autogenous", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous!),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "100% Xenograft", isSelected: surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft!),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: CIA_TextFormField(
-                                      label: "Auto Xeno %",
-                                      suffix: "%",
-                                      onChange: (value) {
-                                        surgicalTreatmentModel.guidedBoneRegenerationBoneParticleXenograftPercent = value;
-                                      },
-                                      controller: TextEditingController(
-                                        text: surgicalTreatmentModel.guidedBoneRegenerationBoneParticleXenograftPercent ?? "",
+                              child: StatefulBuilder(
+                                builder: (context,_setSatate) {
+                                  return Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_TextFormField(
+                                          label: "Autogenous %",
+                                          suffix: "%",
+                                          isNumber: true,
+                                          onChange: (value) {
+                                            surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous = int.parse(value);
+                                            if(surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous!>100)surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous = 100;
+                                            surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft = 100-(surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous??0);
+
+                                            _setSatate((){});
+                                          },
+                                          validator: (value) {
+                                            if(int.parse(value)>100) {
+                                              surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous = 100;
+                                              surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft = 100-(surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous??0);
+
+                                            return "100";
+                                          }
+                                          return value;
+                                          },
+                                          controller: TextEditingController(
+                                            text: (surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Autogenous ??0).toString(),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Expanded(child: SizedBox()),
-                                ],
+                                      SizedBox(width:10),
+                                      Expanded(
+                                        child: CIA_TextFormField(
+                                          enabled: false,
+                                          label: "Xenograft %",
+                                          suffix: "%",
+                                          isNumber: true,
+                                          controller: TextEditingController(
+                                            text: (surgicalTreatmentModel.guidedBoneRegenerationBoneParticle100Xenograft ??0).toString(),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width:10),
+
+                                      Expanded(child: SizedBox()),
+                                    ],
+                                  );
+                                }
                               ),
                             ),
                           ],

@@ -156,6 +156,7 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
         scrollbarThickness: 6,
         scrollbarAlwaysShow: true,
         offset: const Offset(-20, 0),
+
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
@@ -27,6 +28,7 @@ import '../../Widgets/Title.dart';
 
 class _getx extends GetxController {
   static RxInt totalImplants = 0.obs;
+  static Rx<Duration> duration = Duration().obs;
 }
 
 class ViewUserData extends StatefulWidget {
@@ -101,70 +103,167 @@ class _ViewUserDataState extends State<ViewUserData> {
                                                   CIA_ShowPopUp(
                                                       context: context,
                                                       height: 300,
-                                                      onSave: ()async{
-                                                        if(newPassword2!=newPassword1)
-                                                          {
-                                                            ShowSnackBar(context, isSuccess: false,message: "Passwords dont match");
+                                                      onSave: () async {
+                                                        if (newPassword2 != newPassword1) {
+                                                          ShowSnackBar(context, isSuccess: false, message: "Passwords dont match");
+                                                          return false;
+                                                        } else {
+                                                          var res = await AuthenticationAPI.ResetPassword(oldPassword, newPassword1, newPassword2);
+                                                          ShowSnackBar(context,
+                                                              isSuccess: res.statusCode == 200,
+                                                              message: res.statusCode == 200
+                                                                  ? "Password reset successfully"
+                                                                  : "Failed to reset password: ${res.errorMessage}");
+                                                          if (res.statusCode == 200)
+                                                            return true;
+                                                          else
                                                             return false;
-                                                          }
-                                                        else
-                                                          {
-                                                           var res =  await AuthenticationAPI.ResetPassword(oldPassword,newPassword1,newPassword2);
-                                                           ShowSnackBar(context, isSuccess: res.statusCode==200,message: res.statusCode==200?"Password reset successfully":"Failed to reset password: ${res.errorMessage}");
-                                                           if(res.statusCode==200) return true;
-                                                           else return false;
-                                                          }
-                                                      },
-                                                      child: StatefulBuilder(
-                                                        builder: (context,_setState) {
-                                                          return Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                            children: [
-                                                              CIA_TextFormField(
-                                                                label: "Old Password",
-                                                                controller: TextEditingController(text: oldPassword),
-                                                                isObscure: true,
-                                                                onChange: (v)=>_setState((){oldPassword=v;}),
-                                                              ),
-                                                              SizedBox(height: 10),
-                                                              CIA_TextFormField(
-                                                                label: "New Password",
-                                                                controller: TextEditingController(text: newPassword1),
-                                                                isObscure: true,
-                                                                onChange: (v) {
-                                                                  if(v.contains(RegExp(r'[A-Z]'))) capital = true; else capital = false;
-                                                                  if(v.contains(RegExp(r'[a-z]'))) small = true; else small = false;
-                                                                  if(v.contains(RegExp(r'[0-9]'))) number = true; else number = false;
-                                                                  if(v.contains(RegExp(r'(?=.*?[!@#\$&*~.])'))) symbol = true; else symbol = false;
-                                                                  _setState(()=>newPassword1=v);
-                                                                },
-                                                              ),
-                                                              SizedBox(height: 10),
-                                                              CIA_TextFormField(
-                                                                label: "Repeat New Password",
-                                                                controller: TextEditingController(text: newPassword2),
-                                                                isObscure: true,
-                                                                errorFunction: (value) {
-                                                                  return value!=newPassword1;
-                                                                },
-                                                                onChange: (v)=>_setState(()=>newPassword2=v),
-                                                              ),
-                                                              SizedBox(height: 10),
-                                                            Text(newPassword1.isEmpty?"Password can't be empty": newPassword2==newPassword1?"Passwords match":"Passwords don't match",style: TextStyle(color: newPassword2==newPassword1 && newPassword1.isNotEmpty?Colors.green: Colors.red,fontSize: 15),),
-                                                          Text("Contains at least 1 Capital Letter", style: TextStyle( color:capital? Colors.green: Colors.red,fontSize: 15,),textAlign: TextAlign.start,),
-                                                          Text("Contains at least 1 Small Letter",style: TextStyle(color:small? Colors.green: Colors.red,fontSize: 15),),
-                                                          Text("Contains at least 1 Number",style: TextStyle(color:number? Colors.green: Colors.red,fontSize: 15),),
-                                                          Text("Contains at least 1 Symbol",style: TextStyle(color:symbol? Colors.green: Colors.red,fontSize: 15),),
-                                                          SizedBox(height: 10),
-
-                                                            ],
-                                                          );
                                                         }
-                                                      ));
+                                                      },
+                                                      child: StatefulBuilder(builder: (context, _setState) {
+                                                        return Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                          children: [
+                                                            CIA_TextFormField(
+                                                              label: "Old Password",
+                                                              controller: TextEditingController(text: oldPassword),
+                                                              isObscure: true,
+                                                              onChange: (v) => _setState(() {
+                                                                oldPassword = v;
+                                                              }),
+                                                            ),
+                                                            SizedBox(height: 10),
+                                                            CIA_TextFormField(
+                                                              label: "New Password",
+                                                              controller: TextEditingController(text: newPassword1),
+                                                              isObscure: true,
+                                                              onChange: (v) {
+                                                                if (v.contains(RegExp(r'[A-Z]')))
+                                                                  capital = true;
+                                                                else
+                                                                  capital = false;
+                                                                if (v.contains(RegExp(r'[a-z]')))
+                                                                  small = true;
+                                                                else
+                                                                  small = false;
+                                                                if (v.contains(RegExp(r'[0-9]')))
+                                                                  number = true;
+                                                                else
+                                                                  number = false;
+                                                                if (v.contains(RegExp(r'(?=.*?[!@#\$&*~.])')))
+                                                                  symbol = true;
+                                                                else
+                                                                  symbol = false;
+                                                                _setState(() => newPassword1 = v);
+                                                              },
+                                                            ),
+                                                            SizedBox(height: 10),
+                                                            CIA_TextFormField(
+                                                              label: "Repeat New Password",
+                                                              controller: TextEditingController(text: newPassword2),
+                                                              isObscure: true,
+                                                              errorFunction: (value) {
+                                                                return value != newPassword1;
+                                                              },
+                                                              onChange: (v) => _setState(() => newPassword2 = v),
+                                                            ),
+                                                            SizedBox(height: 10),
+                                                            Text(
+                                                              newPassword1.isEmpty
+                                                                  ? "Password can't be empty"
+                                                                  : newPassword2 == newPassword1
+                                                                      ? "Passwords match"
+                                                                      : "Passwords don't match",
+                                                              style: TextStyle(
+                                                                  color: newPassword2 == newPassword1 && newPassword1.isNotEmpty ? Colors.green : Colors.red,
+                                                                  fontSize: 15),
+                                                            ),
+                                                            Text(
+                                                              "Contains at least 1 Capital Letter",
+                                                              style: TextStyle(
+                                                                color: capital ? Colors.green : Colors.red,
+                                                                fontSize: 15,
+                                                              ),
+                                                              textAlign: TextAlign.start,
+                                                            ),
+                                                            Text(
+                                                              "Contains at least 1 Small Letter",
+                                                              style: TextStyle(color: small ? Colors.green : Colors.red, fontSize: 15),
+                                                            ),
+                                                            Text(
+                                                              "Contains at least 1 Number",
+                                                              style: TextStyle(color: number ? Colors.green : Colors.red, fontSize: 15),
+                                                            ),
+                                                            Text(
+                                                              "Contains at least 1 Symbol",
+                                                              style: TextStyle(color: symbol ? Colors.green : Colors.red, fontSize: 15),
+                                                            ),
+                                                            SizedBox(height: 10),
+                                                          ],
+                                                        );
+                                                      }));
                                                 });
                                           } else
                                             return Container();
-                                        }()
+                                        }(),
+                                        SizedBox(width: 10),
+                                        CIA_SecondaryButton(
+                                            label: "Sessions Duration",
+                                            onTab: () async {
+                                              String? from;
+                                              String? to;
+                                              VisitDataSource dataSource = VisitDataSource(sessions: true);
+                                              CIA_ShowPopUp(
+                                                width: 1000,
+                                                height: 900,
+                                                context: context,
+                                                child: StatefulBuilder(
+                                                  builder: (context,_setState) {
+                                                    return Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Expanded(
+                                                              child: CIA_DateTimeTextFormField(
+                                                                label: "From",
+                                                                controller: TextEditingController(text: from ?? ""),
+                                                                onChange: (v) => _setState(()=>from=v),
+                                                              ),
+                                                            ),
+                                                            IconButton(onPressed: ()=>_setState(()=>from=null), icon: Icon(Icons.remove)),
+                                                            SizedBox(width:10),
+                                                            Expanded(
+                                                              child: CIA_DateTimeTextFormField(
+                                                                label: "To",
+                                                                controller: TextEditingController(text: to ?? ""),
+                                                                onChange: (v) => _setState(()=>to=v),
+                                                              ),
+                                                            ),
+                                                            IconButton(onPressed: ()=>_setState(()=>to=null), icon: Icon(Icons.remove)),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height:10),
+                                                        Obx(() => Container(width:double.infinity, child: Center(child: FormTextKeyWidget(text:"Duration: ${ _getx.duration.value.toString()}")))),
+                                                        SizedBox(height:10),
+                                                        Expanded(
+                                                          child: CIA_Table(
+                                                            columnNames: dataSource.columns,
+                                                            dataSource: dataSource,
+                                                            loadFunction: () async{
+                                                              var res = await dataSource.loadSessions(id: widget.userId, from: from, to: to);
+                                                              _getx.duration.value = res;
+                                                              return res;
+                                                            },
+                                                          ),
+                                                        )
+                                                      ],
+                                                    );
+                                                  }
+                                                ),
+                                              );
+                                            })
                                       ],
                                     ),
                                     SizedBox(height: 10),

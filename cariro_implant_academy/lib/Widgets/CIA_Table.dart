@@ -153,7 +153,7 @@ class _CIA_TableState extends State<CIA_Table> {
     if (widget.dataSource.rows.isNotEmpty)
       for (var r in widget.dataSource.rows[0].getCells()) {
         returnValue.add(GridColumn(
-            width: widget.columnNames.length > 9 ? 200 : double.nan,
+            width: widget.columnNames.length > 12 ? 200 : double.nan,
             columnName: r.columnName,
             columnWidthMode: r.columnName == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
             label: Container(
@@ -167,7 +167,7 @@ class _CIA_TableState extends State<CIA_Table> {
     else
       for (String name in widget.columnNames) {
         returnValue.add(GridColumn(
-            width: widget.columnNames.length > 9 ? 200 : double.nan,
+            width: widget.columnNames.length > 12 ? 200 : double.nan,
             columnName: name,
             columnWidthMode: name == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
             label: Container(

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 
 import '../Models/API_Response.dart';
 import 'HTTP.dart';
@@ -10,6 +11,17 @@ import 'HTTP.dart';
 class UserAPI {
 
 
+  static Future<API_Response> GetSessionsDurations({required int id, String?from,String? to}) async {
+    var query = "id=$id";
+    if(from!=null) query += "&from=$from";
+    if(to!=null) query += "&to=$to";
+    var response = await HTTPRequest.Get("User/GetSessionsDurations?$query");
+
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = ((response.result??[]) as List<dynamic>).map((e) => VisitsModel.fromJson(e as Map<String,dynamic>)).toList();
+    }
+    return response;
+  }
   static Future<API_Response> SearchUsersByWorkplace({required String search, required EnumLabRequestSources source}) async {
     var response = await HTTPRequest.Get("User/SearchUsersByWorkplace?search=$search&source=${source.index}");
 

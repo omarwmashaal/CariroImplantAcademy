@@ -24,6 +24,20 @@ class PatientAPI {
     return response;
   }
 
+  static Future<API_Response> GetNextAvailableId() async {
+    var response = await HTTPRequest.Get("PatientInfo/GetNextAvailableId?");
+    if (response.statusCode! > 199 && response.statusCode! < 300) {
+      response.result = response.result as int;
+    }
+    return response;
+  }
+
+  static Future<API_Response> CheckDuplicateId(int id) async {
+    var response = await HTTPRequest.Get("PatientInfo/CheckDuplicateId?id=$id");
+
+    return response;
+  }
+
   static Future<API_Response> UpdatePatientDate(PatientInfoModel patient) async {
     var response = await HTTPRequest.Put("PatientInfo/UpdatePatientsInfo", patient.toJson());
 
@@ -285,6 +299,10 @@ class PatientAPI {
 
   static Future<API_Response> AddToMyPatients(int id) async {
     var response = await HTTPRequest.Post("PatientInfo/AddToMyPatients?id=$id", null);
+    return response;
+  }
+  static Future<API_Response> AddRangeToMyPatients(int from,int to) async {
+    var response = await HTTPRequest.Post("PatientInfo/AddRangeToMyPatients?from=$from&to=$to", null);
     return response;
   }
   static Future<API_Response> RemoveFromMyPatients(int id) async {

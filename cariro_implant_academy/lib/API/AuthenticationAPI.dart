@@ -44,6 +44,12 @@ class AuthenticationAPI {
     return response;
   }
 
+  static Future<API_Response> ResetPasswordForUser(int id) async {
+    var response = await HTTPRequest.Post("Authentication/ResetPasswordForUser?id=$id",null);
+
+    return response;
+  }
+
   static Future<API_Response> VerifyToken() async {
     var response = await HTTPRequest.Get("Authentication/VerifyToken");
     if(response.statusCode==200)
@@ -56,6 +62,7 @@ class AuthenticationAPI {
           {
             await SignalR.runConfig();
           }
+        NotificationsAPI.GetNotifications();
       }
     else {
       siteController.setRole("");

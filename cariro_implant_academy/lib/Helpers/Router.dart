@@ -30,6 +30,7 @@ import '../Pages/CIA_Pages/PatientVisits.dart';
 import '../Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import '../Pages/CIA_Pages/ViewUserPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
+import '../Pages/NotificationsPage.dart';
 import '../Pages/SharedPages/PatientSharedPages.dart';
 
 class CIA_Router {
@@ -331,6 +332,15 @@ class CIA_Router {
                             child: _Authorize(allowedRoles: [
                               UserRoles.Admin,
                             ], child: UsersSettingsPage()),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: NotificationsPage.routePath,
+                        name: NotificationsPage.routeName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: NotificationsPage(),
                           );
                         },
                       ),

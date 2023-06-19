@@ -4,7 +4,9 @@ import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../Controllers/PatientMedicalController.dart';
 import '../../Models/PatientInfo.dart';
+import '../../Widgets/CIA_SecondaryButton.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
+import '../../Widgets/SnackBar.dart';
 import '../../Widgets/Title.dart';
 import '../SharedPages/PatientSharedPages.dart';
 import 'Patient_MedicalInfo.dart';
@@ -145,6 +149,42 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                 showBackButton: false,
               ),
             ),
+            CIA_SecondaryButton(
+                label: "Add Range to my patients",
+                onTab: () {
+                  int fromId = 0;
+                  int toId = 0;
+                  CIA_ShowPopUp(
+                    context: context,
+                    onSave: () async {
+                      var res = await PatientAPI.AddRangeToMyPatients(fromId, toId);
+                      ShowSnackBar(context, isSuccess: res.statusCode == 200);
+                      dataSource.loadData(myPatients: widget.myPatients);
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "From Id",
+                            isNumber: true,
+                            controller: TextEditingController(),
+                            onChange: (v) => fromId = int.parse(v),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: CIA_TextFormField(
+                            label: "To Id",
+                            isNumber: true,
+                            controller: TextEditingController(),
+                            onChange: (v) => toId = int.parse(v),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+            SizedBox(width: 10),
             CIA_PrimaryButton(
                 label: "Add Patient",
                 onTab: () {

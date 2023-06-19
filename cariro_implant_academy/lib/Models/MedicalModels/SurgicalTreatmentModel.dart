@@ -19,9 +19,8 @@ class SurgicalTreatmentModel {
   bool? guidedBoneRegenerationCutByScrews;
   int? guidedBoneRegenerationCutByScrewsNumber;
   bool? guidedBoneRegenerationBoneParticle;
-  bool? guidedBoneRegenerationBoneParticle100Autogenous;
-  bool? guidedBoneRegenerationBoneParticle100Xenograft;
-  String? guidedBoneRegenerationBoneParticleXenograftPercent;
+  int? guidedBoneRegenerationBoneParticle100Autogenous;
+  int? guidedBoneRegenerationBoneParticle100Xenograft;
   bool? guidedBoneRegenerationACMBur;
   String? guidedBoneRegenerationACMBurArea;
   String? guidedBoneRegenerationACMBurNotes;
@@ -102,9 +101,8 @@ class SurgicalTreatmentModel {
       this.guidedBoneRegenerationCutByScrews = false,
       this.guidedBoneRegenerationCutByScrewsNumber=0,
       this.guidedBoneRegenerationBoneParticle = false,
-      this.guidedBoneRegenerationBoneParticle100Autogenous = false,
-      this.guidedBoneRegenerationBoneParticle100Xenograft = false,
-      this.guidedBoneRegenerationBoneParticleXenograftPercent,
+      this.guidedBoneRegenerationBoneParticle100Autogenous = 0,
+      this.guidedBoneRegenerationBoneParticle100Xenograft = 0,
       this.guidedBoneRegenerationACMBur = false,
       this.guidedBoneRegenerationACMBurArea,
       this.guidedBoneRegenerationACMBurNotes,
@@ -186,9 +184,8 @@ class SurgicalTreatmentModel {
     guidedBoneRegenerationCutByScrews = json['guidedBoneRegeneration_CutBy_Screws'] ?? false;
     guidedBoneRegenerationCutByScrewsNumber = json['guidedBoneRegeneration_CutBy_ScrewsNumber']??0;
     guidedBoneRegenerationBoneParticle = json['guidedBoneRegeneration_BoneParticle'] ?? false;
-    guidedBoneRegenerationBoneParticle100Autogenous = json['guidedBoneRegeneration_BoneParticle_100Autogenous'] ?? false;
-    guidedBoneRegenerationBoneParticle100Xenograft = json['guidedBoneRegeneration_BoneParticle_100Xenograft'] ?? false;
-    guidedBoneRegenerationBoneParticleXenograftPercent = json['guidedBoneRegeneration_BoneParticle_XenograftPercent']??"";
+    guidedBoneRegenerationBoneParticle100Autogenous = json['guidedBoneRegeneration_BoneParticle_100Autogenous'] ?? 0;
+    guidedBoneRegenerationBoneParticle100Xenograft = json['guidedBoneRegeneration_BoneParticle_100Xenograft'] ?? 100-(guidedBoneRegenerationBoneParticle100Autogenous??0);
     guidedBoneRegenerationACMBur = json['guidedBoneRegeneration_ACMBur'] ?? false;
     guidedBoneRegenerationACMBurArea = json['guidedBoneRegeneration_ACMBur_Area']??"";
     guidedBoneRegenerationACMBurNotes = json['guidedBoneRegeneration_ACMBur_Notes']??"";
@@ -271,9 +268,8 @@ class SurgicalTreatmentModel {
     data['guidedBoneRegeneration_CutBy_Screws'] = this.guidedBoneRegenerationCutByScrews;
     data['guidedBoneRegeneration_CutBy_ScrewsNumber'] = this.guidedBoneRegenerationCutByScrewsNumber;
     data['guidedBoneRegeneration_BoneParticle'] = this.guidedBoneRegenerationBoneParticle;
-    data['guidedBoneRegeneration_BoneParticle_100Autogenous'] = this.guidedBoneRegenerationBoneParticle100Autogenous;
-    data['guidedBoneRegeneration_BoneParticle_100Xenograft'] = this.guidedBoneRegenerationBoneParticle100Xenograft;
-    data['guidedBoneRegeneration_BoneParticle_XenograftPercent'] = this.guidedBoneRegenerationBoneParticleXenograftPercent;
+    data['guidedBoneRegeneration_BoneParticle_100Autogenous'] = this.guidedBoneRegenerationBoneParticle100Autogenous??0;
+    data['guidedBoneRegeneration_BoneParticle_100Xenograft'] = this.guidedBoneRegenerationBoneParticle100Xenograft??100-(this.guidedBoneRegenerationBoneParticle100Autogenous??0);
     data['guidedBoneRegeneration_ACMBur'] = this.guidedBoneRegenerationACMBur;
     data['guidedBoneRegeneration_ACMBur_Area'] = this.guidedBoneRegenerationACMBurArea;
     data['guidedBoneRegeneration_ACMBur_Notes'] = this.guidedBoneRegenerationACMBurNotes;

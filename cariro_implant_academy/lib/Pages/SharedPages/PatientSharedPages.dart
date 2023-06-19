@@ -42,6 +42,8 @@ import '../../Widgets/SnackBar.dart';
 class _getxController extends GetxController {
   static Rx<PatientInfoModel> duplicateFound = PatientInfoModel().obs;
   static RxList<DropDownDTO> searchList = <DropDownDTO>[].obs;
+  static RxBool duplicateId = false.obs;
+  static RxInt nextAvailableId = 0.obs;
 }
 
 class PatientInfo_SharedPage extends StatefulWidget {
@@ -105,6 +107,10 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
           if (!addNew && (snapshot.data as API_Response).statusCode == 200) {
             patient = (snapshot.data as API_Response).result as PatientInfoModel;
           }
+          PatientAPI.GetNextAvailableId().then((value) {
+            _getxController.nextAvailableId.value = value.result as int;
+            patient.id = value.result as int;
+          });
           return Padding(
             padding: EdgeInsets.only(top: 5),
             child: Column(
@@ -403,6 +409,46 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   Expanded(child: SizedBox())
                                 ],
                               ),
+                              addNew
+                                  ? Row(
+                                      children: [
+                                        Obx(
+                                          () => Expanded(
+                                            child: CIA_TextFormField(
+                                              isNumber: true,
+                                              onChange: (value) async {
+                                                patient.id = int.parse(value);
+                                                var res = await PatientAPI.CheckDuplicateId(patient.id!);
+                                                if (res.statusCode == 200) _getxController.duplicateId.value = res.result != null;
+                                              },
+                                              label: "Id",
+                                              controller: TextEditingController(text: _getxController.nextAvailableId.value.toString()),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        FormTextKeyWidget(text: "Next Available Id"),
+                                        SizedBox(width: 10),
+                                        Obx(
+                                          () => FormTextValueWidget(text: _getxController.nextAvailableId.value.toString()),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Obx(
+                                          () => _getxController.duplicateId.value
+                                              ? FormTextValueWidget(
+                                                  text: "Duplicate Id",
+                                                  color: Colors.red,
+                                                )
+                                              : FormTextValueWidget(text: "Valid Id", color: Colors.green),
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Expanded(child: FormTextKeyWidget(text: "ID")),
+                                        Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
+                                      ],
+                                    ),
                               Visibility(
                                   child: Row(
                                     children: [
@@ -453,11 +499,14 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       },
                                       isNumber: true,
                                       label: "National ID",
+                                      errorFunction: (value) {
+                                        return value.length != 14;
+                                      },
                                       controller: TextEditingController(text: patient?.nationalId == null ? "" : patient?.nationalId),
                                     )
                                   : Row(
                                       children: [
-                                        Expanded(child: FormTextKeyWidget(text: "nationalId")),
+                                        Expanded(child: FormTextKeyWidget(text: "National Id")),
                                         Expanded(child: FormTextValueWidget(text: patient?.nationalId == null ? "" : patient?.nationalId))
                                       ],
                                     ),
@@ -787,9 +836,25 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                 label: "Save",
                                 isLong: true,
                                 onTab: () async {
-                                  var response = patient.id == null ? await PatientAPI.CreatePatient(patient) : API_Response(statusCode: 200, result: patient);
+                                  if (_getxController.duplicateId.value) {
+                                    ShowSnackBar(context, isSuccess: false, message: "Duplicate Id");
+                                    return;
+                                  }
+                                  var response = await PatientAPI.CreatePatient(patient);
                                   if (response.statusCode == 200) {
                                     patient = response.result as PatientInfoModel;
+                                    PatientAPI.GetNextAvailableId().then((value) {
+                                      if (value.statusCode == 200) {
+                                        {
+                                          patient = PatientInfoModel(id:  value.result as int);
+                                          setState((){});
+                                          _getxController.nextAvailableId.value = value.result as int;
+                                          PatientAPI.CheckDuplicateId(patient.id!).then((_) {
+                                            _getxController.duplicateId.value = (_.statusCode == 200 && _.result != null);
+                                          });
+                                        }
+                                      }
+                                    });
                                   }
                                   if (widget.onSave != null) widget.onSave!(response);
                                   if (response.statusCode == 200) {
@@ -997,7 +1062,11 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
                                             context: context,
                                             title: "Receipt",
                                             onSave: () async {
-                                              if (newPayment != 0) await PatientAPI.AddPayment(widget.patientID, receipt.id!, newPayment);
+                                              if (newPayment != 0) {
+                                                PatientAPI.AddPayment(widget.patientID, receipt.id!, newPayment).then((value) => ShowSnackBar(context,
+                                                    isSuccess: value.statusCode == 200,
+                                                    message: value.statusCode == 200 ? "Added Payment" : "Failed to add payment"));
+                                              }
                                             },
                                             child: Column(
                                               children: [
@@ -1349,7 +1418,7 @@ class _PatientComplainsState extends State<PatientComplains> {
                                 SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    "Notes: "+ (e.notes ?? ""),
+                                    "Notes: " + (e.notes ?? ""),
                                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                                   ),
                                 ),
@@ -1370,16 +1439,16 @@ class _PatientComplainsState extends State<PatientComplains> {
                                           )
                                         : e.status == EnumComplainStatus.InQueue
                                             ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: [
                                                   CIA_SecondaryButton(
                                                     label: "Update Notes",
                                                     onTab: () async {
                                                       CIA_ShowPopUp(
                                                         context: context,
-                                                        onSave: ()async{
-                                                          await PatientAPI.UpdateComplainNotes(e.id!, e.notes??"").then((value) {
+                                                        onSave: () async {
+                                                          await PatientAPI.UpdateComplainNotes(e.id!, e.notes ?? "").then((value) {
                                                             if (value.statusCode == 200) complains = value.result as List<ComplainsModel>;
                                                             setState(() {});
                                                           });
@@ -1387,11 +1456,10 @@ class _PatientComplainsState extends State<PatientComplains> {
                                                         child: CIA_TextFormField(
                                                           label: "Notes",
                                                           controller: TextEditingController(text: e.notes),
-                                                          onChange: (v)=>e.notes=v,
+                                                          onChange: (v) => e.notes = v,
                                                           maxLines: 5,
                                                         ),
                                                       );
-
                                                     },
                                                   ),
                                                   CIA_PrimaryButton(
@@ -1407,7 +1475,7 @@ class _PatientComplainsState extends State<PatientComplains> {
                                                 ],
                                               )
                                             : RoundCheckBox(
-                                                onTap: e.status==EnumComplainStatus.Resolved!
+                                                onTap: e.status == EnumComplainStatus.Resolved!
                                                     ? null
                                                     : (value) async {
                                                         await PatientAPI.ResolveComplain(e.id!).then((value) {
@@ -1420,9 +1488,8 @@ class _PatientComplainsState extends State<PatientComplains> {
                                                 checkedColor: Colors.green,
                                                 borderColor: Colors.red,
                                                 isRound: true,
-                                                isChecked: e.status==EnumComplainStatus.Resolved,
+                                                isChecked: e.status == EnumComplainStatus.Resolved,
                                               ),
-
                                   ],
                                 ),
                               ],
