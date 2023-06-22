@@ -2,9 +2,11 @@ import 'package:cariro_implant_academy/API/CashFlowAPI.dart';
 import 'package:cariro_implant_academy/API/LoadinAPI.dart';
 import 'package:cariro_implant_academy/API/SettingsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
 import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Models/TacCompanyModel.dart';
+import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -19,6 +21,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../API/PatientAPI.dart';
 import '../../API/StockAPI.dart';
@@ -135,174 +138,177 @@ class _CashFlowIncomeSharedPageState extends State<CashFlowIncomeSharedPage> {
               dataSource: widget.i_dataSource,
               loadFunction: () async => widget.i_dataSource.loadData(from: from, to: to, catId: catId, paymentMethodId: paymentMethodId),
               onCellClick: (value) async {
-                PaymentLogDataSrouce dataSource = PaymentLogDataSrouce();
-                var recRes = await PatientAPI.GetReceiptById(widget.i_dataSource.models[value - 1]!.receiptID!);
-                ReceiptModel receipt = ReceiptModel();
-                if (recRes.statusCode == 200) receipt = recRes.result as ReceiptModel;
-
-                await CIA_ShowPopUp(
-                    width: 1000,
-                    context: context,
-                    title: "Receipt And Payment Logs",
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: Column(
+                if (siteController.getSite() == Website.Lab) {
+                  context.goNamed(CIA_Router.routeConst_LabView,pathParameters: {"id":widget.i_dataSource.models[value-1].labRequestId.toString()});
+                } else {
+                  PaymentLogDataSrouce dataSource = PaymentLogDataSrouce();
+                  var recRes = await PatientAPI.GetReceiptById(widget.i_dataSource.models[value - 1]!.receiptID!);
+                  ReceiptModel receipt = ReceiptModel();
+                  if (recRes.statusCode == 200) receipt = recRes.result as ReceiptModel;
+                  await CIA_ShowPopUp(
+                      width: 1000,
+                      context: context,
+                      title: "Receipt And Payment Logs",
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Expanded(child: FormTextKeyWidget(text: "Date")),
+                                            Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Expanded(child: FormTextKeyWidget(text: "Patient ID")),
+                                            Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Expanded(child: FormTextKeyWidget(text: "Patient Name")),
+                                            Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            Expanded(child: FormTextKeyWidget(text: "Operator")),
+                                            Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        Column(
+                                          children: () {
+                                            List<Widget> r = [];
+                                            receipt.toothReceiptData!.forEach((element) {
+                                              r.add(Visibility(
+                                                visible: (element.crown ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
+                                                      Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                              r.add(Visibility(
+                                                visible: (element.scaling ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
+                                                      Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                              r.add(Visibility(
+                                                visible: (element.extraction ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
+                                                      Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                              r.add(Visibility(
+                                                visible: (element.restoration ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
+                                                      Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                              r.add(Visibility(
+                                                visible: (element.rootCanalTreatment ?? 0) != 0,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(bottom: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
+                                                      Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ));
+                                              r.add(Divider());
+                                            });
+                                            return r;
+                                          }(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Row(
                                     children: [
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(child: FormTextKeyWidget(text: "Date")),
-                                          Expanded(child: FormTextValueWidget(text: receipt.date ?? "")),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(child: FormTextKeyWidget(text: "Patient ID")),
-                                          Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(child: FormTextKeyWidget(text: "Patient Name")),
-                                          Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(child: FormTextKeyWidget(text: "Operator")),
-                                          Expanded(child: FormTextValueWidget(text: receipt.operator!.name ?? "")),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      Column(
-                                        children: () {
-                                          List<Widget> r = [];
-                                          receipt.toothReceiptData!.forEach((element) {
-                                            r.add(Visibility(
-                                              visible: (element.crown ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Visibility(
-                                              visible: (element.scaling ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Visibility(
-                                              visible: (element.extraction ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Visibility(
-                                              visible: (element.restoration ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Visibility(
-                                              visible: (element.rootCanalTreatment ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Divider());
-                                          });
-                                          return r;
-                                        }(),
-                                      ),
+                                      Expanded(child: FormTextKeyWidget(text: "Total")),
+                                      Expanded(child: FormTextValueWidget(text: (receipt.total ?? 0).toString())),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Divider(),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: FormTextKeyWidget(text: "Total")),
-                                    Expanded(child: FormTextValueWidget(text: (receipt.total ?? 0).toString())),
-                                  ],
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: FormTextKeyWidget(text: "Paid amount")),
+                                      Expanded(child: FormTextValueWidget(color: Colors.green, text: (receipt.paid ?? 0).toString())),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: FormTextKeyWidget(text: "Paid amount")),
-                                    Expanded(child: FormTextValueWidget(color: Colors.green, text: (receipt.paid ?? 0).toString())),
-                                  ],
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: FormTextKeyWidget(text: "Unpaid amount")),
+                                      Expanded(
+                                          child: FormTextValueWidget(
+                                              color: receipt.unpaid != 0 ? Colors.red : Colors.black, text: (receipt.unpaid ?? 0).toString())),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: FormTextKeyWidget(text: "Unpaid amount")),
-                                    Expanded(
-                                        child: FormTextValueWidget(
-                                            color: receipt.unpaid != 0 ? Colors.red : Colors.black, text: (receipt.unpaid ?? 0).toString())),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: CIA_Table(
-                            columnNames: dataSource.columns,
-                            dataSource: dataSource,
-                            loadFunction: () async {
-                              return await dataSource.loadData(
-                                  id: widget.i_dataSource!.models[value - 1]!.patientId!, receiptId: widget.i_dataSource!.models[value - 1]!.receiptID!);
-                            },
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
-                      ],
-                    ));
+                          Expanded(
+                            child: CIA_Table(
+                              columnNames: dataSource.columns,
+                              dataSource: dataSource,
+                              loadFunction: () async {
+                                return await dataSource.loadData(
+                                    id: widget.i_dataSource!.models[value - 1]!.patientId!, receiptId: widget.i_dataSource!.models[value - 1]!.receiptID!);
+                              },
+                            ),
+                          ),
+                        ],
+                      ));
+                }
               }),
         ),
       ],
@@ -860,8 +866,7 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            }
-                                            else if (medicalType == "Membranes") {
+                                            } else if (medicalType == "Membranes") {
                                               r.addAll(models
                                                   .map((model) => Column(
                                                         children: [
@@ -954,8 +959,7 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            }
-                                            else if (medicalType == "Implants") {
+                                            } else if (medicalType == "Implants") {
                                               r.addAll(models
                                                   .map((model) => Column(
                                                         children: [
@@ -1069,8 +1073,7 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                         ],
                                                       ))
                                                   .toList());
-                                            }
-                                            else if (medicalType == "Screws") {
+                                            } else if (medicalType == "Screws") {
                                               models = [models.first];
                                               models.first.name = "Screws";
 
@@ -1114,89 +1117,88 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                   ],
                                                 ),
                                               );
-                                            }
-                                            else{
+                                            } else {
                                               r.addAll(models
                                                   .map((model) => Column(
-                                                children: [
-                                                  SizedBox(height: 10),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: CIA_TextFormField(
-                                                            onChange: (value) => model.name = value,
-                                                            label: "Name",
-                                                            controller: TextEditingController(text: model.name ?? "")),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: CIA_TextFormField(
-                                                          isNumber: true,
-                                                          onChange: (value) {
-                                                            if (value == null || value == "") value = "0";
-                                                            model.price = int.parse(value);
-                                                            total = 0;
-                                                            models.forEach((element) {
-                                                              total += element.price ?? 0;
-                                                            });
-                                                            _setState(() {});
-                                                          },
-                                                          label: "Price",
-                                                          controller: TextEditingController(text: (model.price ?? 0).toString()),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Visibility(
-                                                        visible: expCategory != EnumExpenseseCategoriesType.Service,
-                                                        child: Expanded(
-                                                          child: CIA_TextFormField(
-                                                            isNumber: true,
-                                                            onChange: (value) {
-                                                              if (value == null || value == "") value = "0";
-                                                              model.count = int.parse(value);
-                                                              _setState(() {});
-                                                            },
-                                                            label: "Count",
-                                                            controller: TextEditingController(text: (model.count ?? 0).toString()),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: expCategory != EnumExpenseseCategoriesType.Service ? 10 : 0),
-                                                      Expanded(
-                                                        child: CIA_TextFormField(
-                                                          onChange: (value) => model.notes = value,
-                                                          label: "Notes",
-                                                          controller: TextEditingController(text: model.notes ?? ""),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            int index = 0;
-                                                            index = models.indexWhere((element) => element == model);
-                                                            models.insert(
-                                                                index + 1,
-                                                                CashFlowModel(
-                                                                  category: dummyModel.category,
-                                                                  categoryId: dummyModel.categoryId,
-                                                                  paymentMethod: dummyModel.paymentMethod,
-                                                                  paymentMethodId: dummyModel.paymentMethodId,
-                                                                  supplier: dummyModel.supplier,
-                                                                  supplierId: dummyModel.supplierId,
-                                                                ));
-                                                            _setState(() {});
-                                                          },
-                                                          icon: Icon(Icons.add)),
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            models.remove(model);
-                                                            _setState(() {});
-                                                          },
-                                                          icon: Icon(Icons.remove))
-                                                    ],
-                                                  )
-                                                ],
-                                              ))
+                                                        children: [
+                                                          SizedBox(height: 10),
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child: CIA_TextFormField(
+                                                                    onChange: (value) => model.name = value,
+                                                                    label: "Name",
+                                                                    controller: TextEditingController(text: model.name ?? "")),
+                                                              ),
+                                                              SizedBox(width: 10),
+                                                              Expanded(
+                                                                child: CIA_TextFormField(
+                                                                  isNumber: true,
+                                                                  onChange: (value) {
+                                                                    if (value == null || value == "") value = "0";
+                                                                    model.price = int.parse(value);
+                                                                    total = 0;
+                                                                    models.forEach((element) {
+                                                                      total += element.price ?? 0;
+                                                                    });
+                                                                    _setState(() {});
+                                                                  },
+                                                                  label: "Price",
+                                                                  controller: TextEditingController(text: (model.price ?? 0).toString()),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 10),
+                                                              Visibility(
+                                                                visible: expCategory != EnumExpenseseCategoriesType.Service,
+                                                                child: Expanded(
+                                                                  child: CIA_TextFormField(
+                                                                    isNumber: true,
+                                                                    onChange: (value) {
+                                                                      if (value == null || value == "") value = "0";
+                                                                      model.count = int.parse(value);
+                                                                      _setState(() {});
+                                                                    },
+                                                                    label: "Count",
+                                                                    controller: TextEditingController(text: (model.count ?? 0).toString()),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: expCategory != EnumExpenseseCategoriesType.Service ? 10 : 0),
+                                                              Expanded(
+                                                                child: CIA_TextFormField(
+                                                                  onChange: (value) => model.notes = value,
+                                                                  label: "Notes",
+                                                                  controller: TextEditingController(text: model.notes ?? ""),
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 10),
+                                                              IconButton(
+                                                                  onPressed: () {
+                                                                    int index = 0;
+                                                                    index = models.indexWhere((element) => element == model);
+                                                                    models.insert(
+                                                                        index + 1,
+                                                                        CashFlowModel(
+                                                                          category: dummyModel.category,
+                                                                          categoryId: dummyModel.categoryId,
+                                                                          paymentMethod: dummyModel.paymentMethod,
+                                                                          paymentMethodId: dummyModel.paymentMethodId,
+                                                                          supplier: dummyModel.supplier,
+                                                                          supplierId: dummyModel.supplierId,
+                                                                        ));
+                                                                    _setState(() {});
+                                                                  },
+                                                                  icon: Icon(Icons.add)),
+                                                              IconButton(
+                                                                  onPressed: () {
+                                                                    models.remove(model);
+                                                                    _setState(() {});
+                                                                  },
+                                                                  icon: Icon(Icons.remove))
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ))
                                                   .toList());
                                             }
                                           } else {
@@ -1579,9 +1581,9 @@ class _CashFlowSummarySharedPageState extends State<CashFlowSummarySharedPage> {
                       FormTextKeyWidget(text: "Total: "),
                       Obx(() => FormTextValueWidget(
                             text: () {
-                              int total  = 0;
+                              int total = 0;
                               widget.iS_dataSource!.models.forEach((element) {
-                                total+= element.total ?? 0;
+                                total += element.total ?? 0;
                               });
                               _getXController.incomeSum.value = total;
                               return _getXController.incomeSum.value.toString();
@@ -1617,17 +1619,19 @@ class _CashFlowSummarySharedPageState extends State<CashFlowSummarySharedPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FormTextKeyWidget(text: "Net profit: "),
-            Obx(() =>               FormTextValueWidget(text: "${_getXController.incomeSum.value-_getXController.expensesSum.value} EGP"),
-            )            ],
+            Obx(
+              () => FormTextValueWidget(text: "${_getXController.incomeSum.value - _getXController.expensesSum.value} EGP"),
+            )
+          ],
         ),
-        SizedBox(height:10),
+        SizedBox(height: 10),
         Center(
           child: Wrap(
             children: [
               CIA_PrimaryButton(
                   label: "Add Settlement",
                   onTab: () {
-                    int newValue = _getXController.expensesSum.value-_getXController.incomeSum.value;
+                    int newValue = _getXController.expensesSum.value - _getXController.incomeSum.value;
                     String filter = "This month";
                     CIA_ShowPopUp(
                       onSave: () async {
@@ -1652,7 +1656,7 @@ class _CashFlowSummarySharedPageState extends State<CashFlowSummarySharedPage> {
                           CIA_TextFormField(
                             isNumber: true,
                             label: "Value",
-                            controller: TextEditingController(text:"${_getXController.expensesSum.value-_getXController.incomeSum.value}"),
+                            controller: TextEditingController(text: "${_getXController.expensesSum.value - _getXController.incomeSum.value}"),
                             onChange: (v) => newValue = int.parse(v),
                           )
                         ],

@@ -1,6 +1,8 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -36,6 +38,7 @@ class CashFlowModel {
   DropDownDTO? implantCompany;
   DropDownDTO? implantLine;
   DropDownDTO? implant;
+  int? labRequestId;
 
   CashFlowModel({
     this.id,
@@ -61,18 +64,16 @@ class CashFlowModel {
     this.implantCompany,
     this.implantLine,
     this.implant,
-  }){
-    if(this.paymentMethod==null)
-      this.paymentMethod = DropDownDTO();
-    if(this.supplier==null)
-      this.supplier = DropDownDTO();
-    if(this.category==null)
-      this.category = DropDownDTO();
+  }) {
+    if (this.paymentMethod == null) this.paymentMethod = DropDownDTO();
+    if (this.supplier == null) this.supplier = DropDownDTO();
+    if (this.category == null) this.category = DropDownDTO();
   }
 
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     receiptID = json['receiptID'];
+    labRequestId = json['labRequestId'];
     receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     name = json['name'];
@@ -156,18 +157,28 @@ class CashFlowDataSource extends DataGridSource {
         "Payment Log Id",
         "Amount",
       ];
-      _cashFlowData = models
-          .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<int>(columnName: 'ID', value: e.id),
-                DataGridCell<String>(columnName: 'Date', value: e.date),
-                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-                DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-                DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
-                DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
-                DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
-                DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
-              ]))
-          .toList();
+      if (siteController.getSite() == Website.Lab) {
+        _cashFlowData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+                  DataGridCell<int>(columnName: 'ID', value: e.id),
+                  DataGridCell<String>(columnName: 'Date', value: e.date),
+                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                  DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
+                ]))
+            .toList();
+      } else
+        _cashFlowData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+                  DataGridCell<int>(columnName: 'ID', value: e.id),
+                  DataGridCell<String>(columnName: 'Date', value: e.date),
+                  DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                  DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
+                  DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
+                  DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
+                  DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
+                ]))
+            .toList();
     } else if (type == CashFlowType.expenses) {
       columns = [
         "ID",
@@ -188,7 +199,7 @@ class CashFlowDataSource extends DataGridSource {
                 DataGridCell<String>(columnName: 'Category', value: e.category!.name),
                 DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
                 DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-                DataGridCell<int>(columnName: 'Amount', value: e.price??0),
+                DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
                 DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
                 DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
               ]))

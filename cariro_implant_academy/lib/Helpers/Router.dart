@@ -591,8 +591,11 @@ class CIA_Router {
                         path: UserSearchPage.techniciansRouteName,
                         name: UserSearchPage.techniciansRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: UserSearchPage(
-                            dataSource: ApplicationUserDataSource(type: UserRoles.Technician),
+                          child: _Authorize(
+                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary],
+                            child: UserSearchPage(
+                              dataSource: ApplicationUserDataSource(type: UserRoles.Technician),
+                            ),
                           ),
                         ),
                       ),

@@ -144,11 +144,14 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
                           children: children,
                         ),
                         SizedBox(height:10),
-                        IconButton(
-                          icon: Icon(Icons.settings),
-                          onPressed: (){
-                            context.goNamed(SettingsPage.routeName);
-                          },
+                        Visibility(
+                          visible: siteController.getSite()==Website.CIA,
+                          child: IconButton(
+                            icon: Icon(Icons.settings),
+                            onPressed: (){
+                              context.goNamed(SettingsPage.routeName);
+                            },
+                          ),
                         )
                       ],
                     ),

@@ -106,4 +106,9 @@ class LAB_RequestsAPI {
 
     return response;
   }
+  static Future<API_Response> PayForRequest(int id) async {
+    var response = await HTTPRequest.Post("LAB_Requests/PayForRequest?id=$id", null);
+
+    return response;
+  }
 }

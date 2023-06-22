@@ -460,7 +460,7 @@ class LabAllRequestsSearch extends StatelessWidget {
                 from = null;
                 to = null;
                 search = "";
-                var res = await LAB_RequestsAPI.GetAllRequests();
+                var res = await reload();
                 if (res.statusCode == 200)
                   _GetXController.inQueueCount.value = ((res.result) as List<LAB_RequestModel>)
                       .where((element) => element.status == EnumLabRequestStatus.InQueue)
@@ -468,7 +468,7 @@ class LabAllRequestsSearch extends StatelessWidget {
                       .length
                       .toString();
 
-                return reload();
+                return res;
               },
               onCellClick: (value) {
 
@@ -481,8 +481,8 @@ class LabAllRequestsSearch extends StatelessWidget {
   reload() async {
     var res = await dataSource.loadData(
       search: search,
-      from: DateTime.now().toString(),
-      to: DateTime.now().toString(),
+      from: from,
+      to: to,
       source: sourceEnum,
       status: statusEnum,
       paid: paid,
