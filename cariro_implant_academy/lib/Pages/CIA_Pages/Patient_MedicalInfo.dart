@@ -86,8 +86,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   @override
   void initState() {
     patient = PatientInfoModel();
-
-
   }
 
   int index = 0;
@@ -164,7 +162,6 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                         CIA_SecondaryButton(
                             label: "View more info",
                             onTab: () {
-
                               context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
                             }),
                         SizedBox(
@@ -173,15 +170,27 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                         CIA_SecondaryButton(
                             label: "Create LAB Request",
                             icon: Icon(Icons.document_scanner_outlined),
-                            onTab: () {
-                              CIA_ShowPopUp(
-                                hideButton: true,
-                                context: context,
-                                width: 1100,
-                                height: 650,
-                                onSave: () {},
-                                child: LabCreateNewRequestSharedPage(isDoctor: true, patient: patient),
-                              );
+                            onTab: () async {
+                              var checkLabRequests = await MedicalAPI.CheckLabRequests(widget.patientId);
+                              bool showRequestPage = false;
+                              if (checkLabRequests.statusCode != 200) {
+                                await CIA_ShowPopUpYesNo(
+                                    width: 800,
+                                    context: context,
+                                    title: "Patient has incomplete requests are you sure you want to create new request?",
+                                    onSave: () {
+                                      showRequestPage = true;
+                                    });
+                              } else
+                                showRequestPage = true;
+                              if (showRequestPage)
+                                CIA_ShowPopUp(
+                                  hideButton: true,
+                                  context: context,
+                                  width: 1100,
+                                  height: 650,
+                                  child: LabCreateNewRequestSharedPage(isDoctor: true, patient: patient),
+                                );
                             }),
                         SizedBox(
                           height: 10,
@@ -200,12 +209,17 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                                 child: CIA_Table(
                                   columnNames: dataSource.columns,
                                   dataSource: dataSource,
-                                  loadFunction: ()async{
-                                    return  dataSource.loadPatientRequests(patient!.id!);
+                                  loadFunction: () async {
+                                    return dataSource.loadPatientRequests(patient!.id!);
                                   },
                                   onCellClick: (index) {
-                                    CIA_ShowPopUp(width: 1100,
-                                        height: 650,context: context,child: LAB_ViewTaskPage(id: dataSource.models[index-1].id!,));
+                                    CIA_ShowPopUp(
+                                        width: 1100,
+                                        height: 650,
+                                        context: context,
+                                        child: LAB_ViewTaskPage(
+                                          id: dataSource.models[index - 1].id!,
+                                        ));
                                   },
                                 ),
                               );
@@ -359,26 +373,28 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                         medicalExaminationModel.pregnancyStatus = PregnancyEnum.None;
                       }
                     },
-                    groupValue:medicalExaminationModel.pregnancyStatus==null?"": medicalExaminationModel.pregnancyStatus == PregnancyEnum.Pregnant
-                        ? "Pregnant"
-                        : medicalExaminationModel.pregnancyStatus == PregnancyEnum.Lactating
-                            ? "Lactating"
-                            : "None",
+                    groupValue: medicalExaminationModel.pregnancyStatus == null
+                        ? ""
+                        : medicalExaminationModel.pregnancyStatus == PregnancyEnum.Pregnant
+                            ? "Pregnant"
+                            : medicalExaminationModel.pregnancyStatus == PregnancyEnum.Lactating
+                                ? "Lactating"
+                                : "None",
                   )),
                 ],
               ),
               CIA_TextFormField(
                   label: "Are you treated for anything now?",
                   onChange: (value) => medicalExaminationModel.areYouTreatedFromAnyThing = value,
-                  controller: TextEditingController(text: medicalExaminationModel.areYouTreatedFromAnyThing??"")),
+                  controller: TextEditingController(text: medicalExaminationModel.areYouTreatedFromAnyThing ?? "")),
               CIA_TextFormField(
                   onChange: (value) => medicalExaminationModel.recentSurgery = value,
                   label: "Recent Surgery",
-                  controller: TextEditingController(text: medicalExaminationModel.recentSurgery??"")),
+                  controller: TextEditingController(text: medicalExaminationModel.recentSurgery ?? "")),
               CIA_TextFormField(
                   onChange: (value) => medicalExaminationModel.comment = value,
                   label: "Comment",
-                  controller: TextEditingController(text: medicalExaminationModel.comment??"")),
+                  controller: TextEditingController(text: medicalExaminationModel.comment ?? "")),
               FormTextKeyWidget(text: "Did you have ever?"),
               CIA_MultiSelectChipWidget(
                 onChange: (value, isSelected) {
@@ -426,10 +442,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                   }
                   if (isSelected) {
                     medicalExaminationModel.diseases?.add(disease!);
-
                   } else {
                     medicalExaminationModel.diseases?.remove(disease);
-
                   }
                 },
                 redFlags: true,
@@ -577,7 +591,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.bloodPressure?.lastReading = value;
                           },
                           label: "Last Reading ",
-                          controller: TextEditingController(text: medicalExaminationModel.bloodPressure !=null?(medicalExaminationModel.bloodPressure?.lastReading??""):"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.bloodPressure != null ? (medicalExaminationModel.bloodPressure?.lastReading ?? "") : "")),
                     ),
                   ),
                   Expanded(
@@ -591,7 +606,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.bloodPressure?.when = value;
                           },
                           label: "When? ",
-                          controller: TextEditingController(text: medicalExaminationModel.bloodPressure!=null?(medicalExaminationModel.bloodPressure?.when??""):"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.bloodPressure != null ? (medicalExaminationModel.bloodPressure?.when ?? "") : "")),
                     ),
                   ),
                   Expanded(
@@ -605,7 +621,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.bloodPressure?.drug = value;
                           },
                           label: "Drug ",
-                          controller: TextEditingController(text: medicalExaminationModel.bloodPressure!=null?(medicalExaminationModel.bloodPressure?.drug??""):"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.bloodPressure != null ? (medicalExaminationModel.bloodPressure?.drug ?? "") : "")),
                     ),
                   ),
                   Expanded(
@@ -646,7 +663,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.bloodPressure?.readingInClinic = value;
                           },
                           label: "Reading in clinic ",
-                          controller: TextEditingController(text: medicalExaminationModel.bloodPressure!=null?(medicalExaminationModel.bloodPressure?.readingInClinic??""):"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.bloodPressure != null ? (medicalExaminationModel.bloodPressure?.readingInClinic ?? "") : "")),
                     ),
                   ),
                 ],
@@ -700,10 +718,11 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                           else if (value.name.toString().toLowerCase() == "fasting") medicalExaminationModel.diabetic?.type = DiabetesMeasureType.Fasting;
                         },
                         label: 'Type',
-                        items: [DropDownDTO(name:"Random"), DropDownDTO(name:"Fasting")],
-                        selectedItem: DropDownDTO(name: medicalExaminationModel.diabetic != null && medicalExaminationModel.diabetic?.type!=null ?
-                        medicalExaminationModel.diabetic?.type!.name??"" : "")
-                       ,
+                        items: [DropDownDTO(name: "Random"), DropDownDTO(name: "Fasting")],
+                        selectedItem: DropDownDTO(
+                            name: medicalExaminationModel.diabetic != null && medicalExaminationModel.diabetic?.type != null
+                                ? medicalExaminationModel.diabetic?.type!.name ?? ""
+                                : ""),
                       ),
                     ),
                   ),
@@ -719,7 +738,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.diabetic?.lastReading = int.parse(value);
                           },
                           label: "Last Reading ",
-                          controller: TextEditingController(text: medicalExaminationModel.diabetic!=null  &&medicalExaminationModel.diabetic?.lastReading!=null? medicalExaminationModel.diabetic?.lastReading.toString():"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.diabetic != null && medicalExaminationModel.diabetic?.lastReading != null
+                                  ? medicalExaminationModel.diabetic?.lastReading.toString()
+                                  : "")),
                     ),
                   ),
                   Expanded(
@@ -733,7 +755,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.diabetic?.when = value;
                           },
                           label: "When? ",
-                          controller: TextEditingController(text: medicalExaminationModel.diabetic!=null ? medicalExaminationModel.diabetic?.when??"":"")),
+                          controller:
+                              TextEditingController(text: medicalExaminationModel.diabetic != null ? medicalExaminationModel.diabetic?.when ?? "" : "")),
                     ),
                   ),
                   Expanded(
@@ -748,7 +771,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             medicalExaminationModel.diabetic?.randomInClinic = int.parse(value);
                           },
                           label: "Random in clinic ",
-                          controller: TextEditingController(text: medicalExaminationModel.diabetic!=null?(medicalExaminationModel.diabetic?.randomInClinic??"").toString():"")),
+                          controller: TextEditingController(
+                              text: medicalExaminationModel.diabetic != null ? (medicalExaminationModel.diabetic?.randomInClinic ?? "").toString() : "")),
                     ),
                   ),
                 ],
@@ -805,8 +829,14 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                       },
                       singleSelect: true,
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected: medicalExaminationModel.prolongedBleedingOrAspirin!=null && medicalExaminationModel.prolongedBleedingOrAspirin as bool),
-                        CIA_MultiSelectChipWidgeModel(label: "No", isSelected: medicalExaminationModel.prolongedBleedingOrAspirin!=null && !(medicalExaminationModel.prolongedBleedingOrAspirin as bool)),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Yes",
+                            isSelected:
+                                medicalExaminationModel.prolongedBleedingOrAspirin != null && medicalExaminationModel.prolongedBleedingOrAspirin as bool),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "No",
+                            isSelected:
+                                medicalExaminationModel.prolongedBleedingOrAspirin != null && !(medicalExaminationModel.prolongedBleedingOrAspirin as bool)),
                       ]),
                 ],
               ),
@@ -824,8 +854,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                       },
                       singleSelect: true,
                       labels: [
-                        CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected:medicalExaminationModel.chronicDigestion!=null&& (medicalExaminationModel.chronicDigestion as bool)),
-                        CIA_MultiSelectChipWidgeModel(label: "No", isSelected: medicalExaminationModel.chronicDigestion!=null && !(medicalExaminationModel.chronicDigestion as bool)),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "Yes", isSelected: medicalExaminationModel.chronicDigestion != null && (medicalExaminationModel.chronicDigestion as bool)),
+                        CIA_MultiSelectChipWidgeModel(
+                            label: "No", isSelected: medicalExaminationModel.chronicDigestion != null && !(medicalExaminationModel.chronicDigestion as bool)),
                       ]),
                 ],
               ),
@@ -834,7 +866,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                 borderColorOnChange: Colors.red,
                 borderColor: illegalDrugs,
                 label: "Illegal Drugs",
-                controller: TextEditingController(text: medicalExaminationModel.illegalDrugs??""),
+                controller: TextEditingController(text: medicalExaminationModel.illegalDrugs ?? ""),
                 onChange: (value) {
                   medicalExaminationModel.illegalDrugs = value;
                 },
@@ -842,13 +874,13 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
               CIA_TextFormField(
                   onChange: (value) => medicalExaminationModel.operatorComments = value,
                   label: "Operator Comments",
-                  controller: TextEditingController(text: medicalExaminationModel.operatorComments??"")),
+                  controller: TextEditingController(text: medicalExaminationModel.operatorComments ?? "")),
               FormTextKeyWidget(text: "Drugs Taken by patient"),
               StatefulBuilder(
                 builder: (context, setState) {
                   int index = 0;
 
-                  if (medicalExaminationModel.drugsTaken==null) medicalExaminationModel.drugsTaken =[];
+                  if (medicalExaminationModel.drugsTaken == null) medicalExaminationModel.drugsTaken = [];
                   if (medicalExaminationModel.drugsTaken!.isEmpty) medicalExaminationModel.drugsTaken!.add("");
                   return Column(
                     children: medicalExaminationModel.drugsTaken!
@@ -865,7 +897,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                 Expanded(
                                   child: CIA_TextFormField(
                                     label: "Drug",
-                                    controller: TextEditingController(text: e??""),
+                                    controller: TextEditingController(text: e ?? ""),
                                     onChange: (v) {
                                       e = v;
                                       medicalExaminationModel.drugsTaken![index - 1] = v;
@@ -1000,9 +1032,9 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
                           child: Obx(() => FormTextValueWidget(text: () {
                                 var returnValue = "";
                                 //if (dentalHistoryModel.smokingStatus != null && _getxClass.tobacco.value != 2000) {
-                                 // return (dentalHistoryModel.smokingStatus)!.name;
-                               // } else
-                                  if ((_getxClass.tobacco.value) == 0) {
+                                // return (dentalHistoryModel.smokingStatus)!.name;
+                                // } else
+                                if ((_getxClass.tobacco.value) == 0) {
                                   returnValue = "Non Smoker";
                                   dentalHistoryModel.smokingStatus = SmokingStatus.NoneSmoker;
                                 } else if ((_getxClass.tobacco.value) < 10) {
@@ -1510,7 +1542,6 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   @override
   void dispose() {
     if (!siteController.disableMedicalEdit.value) {
-
       MedicalAPI.AddPatientNonSurgicalTreatment(widget.patientId, nonSurgicalTreatment);
       MedicalAPI.UpdatePatientDentalExamination(widget.patientId, tempDentalExamination);
     }

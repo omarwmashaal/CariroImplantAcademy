@@ -48,10 +48,20 @@ class LabCreateNewRequestSharedPage extends StatefulWidget {
 }
 
 class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestSharedPage> {
-  LAB_RequestModel labRequest = LAB_RequestModel(steps: [
-    LAB_StepModel(step: DropDownDTO(name: "Scan",),),
-    LAB_StepModel(step: DropDownDTO(name: "Design",),),
-  ],);
+  LAB_RequestModel labRequest = LAB_RequestModel(
+    steps: [
+      LAB_StepModel(
+        step: DropDownDTO(
+          name: "Scan",
+        ),
+      ),
+      LAB_StepModel(
+        step: DropDownDTO(
+          name: "Design",
+        ),
+      ),
+    ],
+  );
 
   late Function globalSetState;
 
@@ -87,174 +97,176 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                               onTap: widget.isDoctor
                                   ? null
                                   : () {
-                                {
-                                  EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
-                                  String search = "";
-                                  _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Doctors);
-                                  CIA_ShowPopUp(
-                                    width: 900,
-                                    height: 600,
-                                    context: context,
-                                    onSave: () => setState(() {}),
-                                    child: StatefulBuilder(builder: (context, setState) {
-                                      return Column(
-                                        children: [
-                                          CIA_PrimaryButton(
-                                            label: "Add New Customer",
-                                            onTab: () {
-                                              ApplicationUserModel newCustomer = ApplicationUserModel();
-                                              bool newWorkPlace = false;
-                                              Alert(
-                                                context: context,
-                                                title: "Add new customer",
-                                                content: StatefulBuilder(builder: (context, setState) {
-                                                  return Column(
-                                                    children: [
-                                                      CIA_TextFormField(
-                                                        label: "Name",
-                                                        controller: TextEditingController(text: newCustomer.name ?? ""),
-                                                        onChange: (v) => newCustomer.name = v,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      CIA_TextFormField(
-                                                        label: "Phone Number 1",
-                                                        isNumber: true,
-                                                        controller: TextEditingController(text: newCustomer.phoneNumber ?? ""),
-                                                        onChange: (v) => newCustomer.phoneNumber = v,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      CIA_TextFormField(
-                                                        label: "Phone Number 2",
-                                                        isNumber: true,
-                                                        controller: TextEditingController(text: newCustomer.phoneNumber2 ?? ""),
-                                                        onChange: (v) => newCustomer.phoneNumber2 = v,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Expanded(
-                                                            child: CIA_MultiSelectChipWidget(
-                                                                onChange: (item, isSelected) {
-                                                                  newWorkPlace = isSelected;
-                                                                  setState(() {});
-                                                                },
-                                                                labels: [CIA_MultiSelectChipWidgeModel(label: "New Work Place")]),
-                                                          ),
-                                                          Expanded(
-                                                            flex: 2,
-                                                            child: newWorkPlace
-                                                                ? CIA_TextFormField(
-                                                              label: "New Work Place Name",
-                                                              controller: TextEditingController(
-                                                                  text: newCustomer.workPlace == null ? "" : newCustomer.workPlace!.name ?? ""),
-                                                              onChange: (v) {
-                                                                newCustomer.workPlace = DropDownDTO(name: v);
-                                                                newCustomer.workPlaceId = null;
-                                                              },
-                                                            )
-                                                                : CIA_DropDownSearch(
-                                                              asyncItems: Lab_CustomerAPI.GetAllWorkPlaces,
-                                                              onSelect: (value) {
-                                                                newCustomer.workPlace = value;
-                                                                newCustomer.workPlaceId = value.id;
-                                                              },
+                                      {
+                                        EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
+                                        String search = "";
+                                        _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Doctors);
+                                        CIA_ShowPopUp(
+                                          width: 900,
+                                          height: 600,
+                                          context: context,
+                                          onSave: () => setState(() {}),
+                                          child: StatefulBuilder(builder: (context, setState) {
+                                            return Column(
+                                              children: [
+                                                CIA_PrimaryButton(
+                                                  label: "Add New Customer",
+                                                  onTab: () {
+                                                    ApplicationUserModel newCustomer = ApplicationUserModel();
+                                                    bool newWorkPlace = false;
+                                                    Alert(
+                                                      context: context,
+                                                      title: "Add new customer",
+                                                      content: StatefulBuilder(builder: (context, setState) {
+                                                        return Column(
+                                                          children: [
+                                                            CIA_TextFormField(
+                                                              label: "Name",
+                                                              controller: TextEditingController(text: newCustomer.name ?? ""),
+                                                              onChange: (v) => newCustomer.name = v,
                                                             ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                    ],
-                                                  );
-                                                }),
-                                                buttons: [
-                                                  DialogButton(
-                                                    color: Color_Accent,
-                                                    width: 150,
-                                                    onPressed: () async {
-                                                      newCustomer.workPlaceEnum = EnumLabRequestSources.OutSource;
-                                                      var res = await Lab_CustomerAPI.AddCustomer(newCustomer);
-                                                      if (res.statusCode == 200) {
-                                                        ShowSnackBar(context,isSuccess: true, title: "Success", message: "Customer Added!");
-                                                        labRequest.customer = res.result as ApplicationUserModel;
-                                                        labRequest.customerId = labRequest.customer!.idInt;
-                                                        globalSetState(() {});
-                                                        Navigator.of(context, rootNavigator: true).pop();
-                                                        Navigator.of(context, rootNavigator: true).pop();
-                                                        Navigator.of(context, rootNavigator: true).pop();
-                                                      } else
-                                                        ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
-                                                    },
-                                                    child: Text(
-                                                      "Ok",
-                                                      style: TextStyle(color: Colors.white, fontSize: 20),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ).show();
-                                            },
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_MultiSelectChipWidget(
-                                            key:GlobalKey(),
-                                            singleSelect: true,
-                                            onChange: (item, isSelected) {
-                                              if (item == "CIA Doctors")
-                                                selectedSource = EnumLabRequestSources.CIA;
-                                              else if (item == "Clinic Doctors")
-                                                selectedSource = EnumLabRequestSources.Clinic;
-                                              else if (item == "Outsource Doctors") selectedSource = EnumLabRequestSources.OutSource;
-                                              dataSource.models = [];
-                                              dataSource.init();
-                                              dataSource.notifyListeners();
-                                            },
-                                            labels: [
-                                              CIA_MultiSelectChipWidgeModel(label: "CIA Doctors", isSelected: selectedSource == EnumLabRequestSources.CIA),
-                                              CIA_MultiSelectChipWidgeModel(label: "Clinic Doctors", isSelected: selectedSource == EnumLabRequestSources.Clinic),
-                                              CIA_MultiSelectChipWidgeModel(
-                                                  label: "Outsource Doctors", isSelected: selectedSource == EnumLabRequestSources.OutSource),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_TextFormField(
-                                            label: "Search",
-                                            controller: TextEditingController(text: search),
-                                            onChange: (v) {
-                                              dataSource.loadData(search: v ?? "", source: selectedSource);
-                                            },
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_Table(
-                                            columnNames: dataSource.columns,
-                                            dataSource: dataSource,
-                                            loadFunction: () async {
-                                              return dataSource.loadData(search: "", source: selectedSource);
-                                            },
-                                            onCellClick: (index) async {
-                                              var p = dataSource.models[index - 1];
-                                              labRequest.customer!.name = p.name;
-                                              labRequest.customer!.idInt = p.id;
-                                              labRequest.customerId = p.id;
-                                              var res = await UserAPI.GetUserData(p.id!);
-                                              if (res.statusCode == 200) labRequest.customer = res.result as ApplicationUserModel;
-                                              Navigator.of(context, rootNavigator: true).pop();
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            CIA_TextFormField(
+                                                              label: "Phone Number 1",
+                                                              isNumber: true,
+                                                              controller: TextEditingController(text: newCustomer.phoneNumber ?? ""),
+                                                              onChange: (v) => newCustomer.phoneNumber = v,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            CIA_TextFormField(
+                                                              label: "Phone Number 2",
+                                                              isNumber: true,
+                                                              controller: TextEditingController(text: newCustomer.phoneNumber2 ?? ""),
+                                                              onChange: (v) => newCustomer.phoneNumber2 = v,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: CIA_MultiSelectChipWidget(
+                                                                      onChange: (item, isSelected) {
+                                                                        newWorkPlace = isSelected;
+                                                                        setState(() {});
+                                                                      },
+                                                                      labels: [CIA_MultiSelectChipWidgeModel(label: "New Work Place")]),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 2,
+                                                                  child: newWorkPlace
+                                                                      ? CIA_TextFormField(
+                                                                          label: "New Work Place Name",
+                                                                          controller: TextEditingController(
+                                                                              text: newCustomer.workPlace == null ? "" : newCustomer.workPlace!.name ?? ""),
+                                                                          onChange: (v) {
+                                                                            newCustomer.workPlace = DropDownDTO(name: v);
+                                                                            newCustomer.workPlaceId = null;
+                                                                          },
+                                                                        )
+                                                                      : CIA_DropDownSearch(
+                                                                          asyncItems: Lab_CustomerAPI.GetAllWorkPlaces,
+                                                                          onSelect: (value) {
+                                                                            newCustomer.workPlace = value;
+                                                                            newCustomer.workPlaceId = value.id;
+                                                                          },
+                                                                        ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }),
+                                                      buttons: [
+                                                        DialogButton(
+                                                          color: Color_Accent,
+                                                          width: 150,
+                                                          onPressed: () async {
+                                                            newCustomer.workPlaceEnum = EnumLabRequestSources.OutSource;
+                                                            var res = await Lab_CustomerAPI.AddCustomer(newCustomer);
+                                                            if (res.statusCode == 200) {
+                                                              ShowSnackBar(context, isSuccess: true, title: "Success", message: "Customer Added!");
+                                                              labRequest.customer = res.result as ApplicationUserModel;
+                                                              labRequest.customerId = labRequest.customer!.idInt;
+                                                              globalSetState(() {});
+                                                              Navigator.of(context, rootNavigator: true).pop();
+                                                              Navigator.of(context, rootNavigator: true).pop();
+                                                              Navigator.of(context, rootNavigator: true).pop();
+                                                            } else
+                                                              ShowSnackBar(context, isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                                                          },
+                                                          child: Text(
+                                                            "Ok",
+                                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ).show();
+                                                  },
+                                                ),
+                                                SizedBox(height: 10),
+                                                CIA_MultiSelectChipWidget(
+                                                  key: GlobalKey(),
+                                                  singleSelect: true,
+                                                  onChange: (item, isSelected) {
+                                                    if (item == "CIA Doctors")
+                                                      selectedSource = EnumLabRequestSources.CIA;
+                                                    else if (item == "Clinic Doctors")
+                                                      selectedSource = EnumLabRequestSources.Clinic;
+                                                    else if (item == "Outsource Doctors") selectedSource = EnumLabRequestSources.OutSource;
+                                                    dataSource.models = [];
+                                                    dataSource.init();
+                                                    dataSource.notifyListeners();
+                                                  },
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "CIA Doctors", isSelected: selectedSource == EnumLabRequestSources.CIA),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Clinic Doctors", isSelected: selectedSource == EnumLabRequestSources.Clinic),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Outsource Doctors", isSelected: selectedSource == EnumLabRequestSources.OutSource),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10),
+                                                CIA_TextFormField(
+                                                  label: "Search",
+                                                  controller: TextEditingController(text: search),
+                                                  onChange: (v) {
+                                                    dataSource.loadData(search: v ?? "", source: selectedSource);
+                                                  },
+                                                ),
+                                                SizedBox(height: 10),
+                                                CIA_Table(
+                                                  columnNames: dataSource.columns,
+                                                  dataSource: dataSource,
+                                                  loadFunction: () async {
+                                                    return dataSource.loadData(search: "", source: selectedSource);
+                                                  },
+                                                  onCellClick: (index) async {
+                                                    var p = dataSource.models[index - 1];
+                                                    labRequest.customer!.name = p.name;
+                                                    labRequest.customer!.idInt = p.id;
+                                                    labRequest.customerId = p.id;
+                                                    var res = await UserAPI.GetUserData(p.id!);
+                                                    if (res.statusCode == 200) labRequest.customer = res.result as ApplicationUserModel;
+                                                    Navigator.of(context, rootNavigator: true).pop();
 
-                                              globalSetState(() {});
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    }),
-                                  );
-                                }
-                              },
+                                                    globalSetState(() {});
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }),
+                                        );
+                                      }
+                                    },
                             ),
                           ),
                           SizedBox(
@@ -289,19 +301,17 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                           SizedBox(
                             width: 10,
                           ),
-                          Expanded(child: CIA_DropDownSearch(
-
-                            label: "Next Step",
-                            selectedItem: labRequest.steps![1].step,
-                            asyncItems: LAB_RequestsAPI.GetDefaultSteps,
-                            onSelect: (value)
-                            {
-                              labRequest.steps![1].step = value;
-                              labRequest.steps![1].stepId = value.id;
-                            },
-
-                          ),),
-
+                          Expanded(
+                            child: CIA_DropDownSearch(
+                              label: "Next Step",
+                              selectedItem: labRequest.steps![1].step,
+                              asyncItems: LAB_RequestsAPI.GetDefaultSteps,
+                              onSelect: (value) {
+                                labRequest.steps![1].step = value;
+                                labRequest.steps![1].stepId = value.id;
+                              },
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -317,96 +327,98 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                               onTap: widget.isDoctor
                                   ? null
                                   : () {
-                                {
-                                  EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
-                                  String search = "";
-                                  _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Patients);
-                                  CIA_ShowPopUp(
-                                    width: 900,
-                                    height: 600,
-                                    context: context,
-                                    onSave: () => setState(() {}),
-                                    child: StatefulBuilder(builder: (context, setState) {
-                                      return Column(
-                                        children: [
-                                          CIA_PrimaryButton(
-                                            label: "Create New Patient",
-                                            onTab: () {
-                                              PatientInfoModel newPatient = PatientInfoModel();
-                                              CIA_ShowPopUp(
-                                                width: 600,
-                                                height: 800,
-                                                hideButton: true,
-                                                context: context,
-                                                onSave: () {},
-                                                child: PatientInfo_SharedPage(
-                                                  patientID: 0,
-                                                  onSave: (response) {
-                                                    if (response.statusCode == 200) {
-                                                      var res = response.result as PatientInfoModel;
-                                                      labRequest.patientId = res.id;
-                                                      labRequest.patient = DropDownDTO(name: res.name, id: res.id);
-                                                    }
-                                                    Navigator.of(context, rootNavigator: true).pop();
-                                                    Navigator.of(context, rootNavigator: true).pop();
-                                                    globalSetState(() {});
+                                      {
+                                        EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
+                                        String search = "";
+                                        _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Patients);
+                                        CIA_ShowPopUp(
+                                          width: 900,
+                                          height: 600,
+                                          context: context,
+                                          onSave: () => setState(() {}),
+                                          child: StatefulBuilder(builder: (context, setState) {
+                                            return Column(
+                                              children: [
+                                                CIA_PrimaryButton(
+                                                  label: "Create New Patient",
+                                                  onTab: () {
+                                                    PatientInfoModel newPatient = PatientInfoModel();
+                                                    CIA_ShowPopUp(
+                                                      width: 600,
+                                                      height: 800,
+                                                      hideButton: true,
+                                                      context: context,
+                                                      onSave: () {},
+                                                      child: PatientInfo_SharedPage(
+                                                        patientID: 0,
+                                                        onSave: (response) {
+                                                          if (response.statusCode == 200) {
+                                                            var res = response.result as PatientInfoModel;
+                                                            labRequest.patientId = res.id;
+                                                            labRequest.patient = DropDownDTO(name: res.name, id: res.id);
+                                                          }
+                                                          Navigator.of(context, rootNavigator: true).pop();
+                                                          Navigator.of(context, rootNavigator: true).pop();
+                                                          globalSetState(() {});
+                                                        },
+                                                      ),
+                                                    );
                                                   },
                                                 ),
-                                              );
-                                            },
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_MultiSelectChipWidget(
-                                            key:GlobalKey(),
-                                            singleSelect: true,
-                                            onChange: (item, isSelected) {
-                                              if (item == "CIA Patients")
-                                                selectedSource = EnumLabRequestSources.CIA;
-                                              else if (item == "Clinic Patients")
-                                                selectedSource = EnumLabRequestSources.Clinic;
-                                              else if (item == "Outsource Patients") selectedSource = EnumLabRequestSources.OutSource;
-                                              dataSource.models = [];
-                                              dataSource.init();
-                                              dataSource.notifyListeners();
-                                            },
-                                            labels: [
-                                              CIA_MultiSelectChipWidgeModel(label: "CIA Patients", isSelected: selectedSource == EnumLabRequestSources.CIA),
-                                              CIA_MultiSelectChipWidgeModel(label: "Clinic Patients", isSelected: selectedSource == EnumLabRequestSources.Clinic),
-                                              CIA_MultiSelectChipWidgeModel(
-                                                  label: "Outsource Patients", isSelected: selectedSource == EnumLabRequestSources.OutSource),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_TextFormField(
-                                            label: "Search",
-                                            controller: TextEditingController(text: search),
-                                            onChange: (v) {
-                                              dataSource.loadData(search: v ?? "", source: selectedSource);
-                                            },
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_Table(
-                                            columnNames: dataSource.columns,
-                                            dataSource: dataSource,
-                                            loadFunction: () async {
-                                              return dataSource.loadData(search: "", source: selectedSource);
-                                            },
-                                            onCellClick: (index) {
-                                              var p = dataSource.models[index - 1];
-                                              labRequest.patient!.name = p.name;
-                                              labRequest.patient!.id = p.id;
-                                              labRequest.patientId = p.id;
-                                              Navigator.of(context, rootNavigator: true).pop();
-                                              //context.goNamed(LabTodaysRequestsSearch.routeName);
-                                              globalSetState(() {});
-                                            },
-                                          )
-                                        ],
-                                      );
-                                    }),
-                                  );
-                                }
-                              },
+                                                SizedBox(height: 10),
+                                                CIA_MultiSelectChipWidget(
+                                                  key: GlobalKey(),
+                                                  singleSelect: true,
+                                                  onChange: (item, isSelected) {
+                                                    if (item == "CIA Patients")
+                                                      selectedSource = EnumLabRequestSources.CIA;
+                                                    else if (item == "Clinic Patients")
+                                                      selectedSource = EnumLabRequestSources.Clinic;
+                                                    else if (item == "Outsource Patients") selectedSource = EnumLabRequestSources.OutSource;
+                                                    dataSource.models = [];
+                                                    dataSource.init();
+                                                    dataSource.notifyListeners();
+                                                  },
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "CIA Patients", isSelected: selectedSource == EnumLabRequestSources.CIA),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Clinic Patients", isSelected: selectedSource == EnumLabRequestSources.Clinic),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Outsource Patients", isSelected: selectedSource == EnumLabRequestSources.OutSource),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10),
+                                                CIA_TextFormField(
+                                                  label: "Search",
+                                                  controller: TextEditingController(text: search),
+                                                  onChange: (v) {
+                                                    dataSource.loadData(search: v ?? "", source: selectedSource);
+                                                  },
+                                                ),
+                                                SizedBox(height: 10),
+                                                CIA_Table(
+                                                  columnNames: dataSource.columns,
+                                                  dataSource: dataSource,
+                                                  loadFunction: () async {
+                                                    return dataSource.loadData(search: "", source: selectedSource);
+                                                  },
+                                                  onCellClick: (index) {
+                                                    var p = dataSource.models[index - 1];
+                                                    labRequest.patient!.name = p.name;
+                                                    labRequest.patient!.id = p.id;
+                                                    labRequest.patientId = p.id;
+                                                    Navigator.of(context, rootNavigator: true).pop();
+                                                    //context.goNamed(LabTodaysRequestsSearch.routeName);
+                                                    globalSetState(() {});
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          }),
+                                        );
+                                      }
+                                    },
                             ),
                           ),
                           SizedBox(
@@ -437,23 +449,17 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                                   if (item == "Scan") {
                                     labRequest.initStatus = EnumLabRequestInitStatus.Scan;
                                     labRequest.steps![1] = LAB_StepModel(step: DropDownDTO(name: "Waiting lab approval"));
-
-                                  }
-                                  else if (item == "Physical") {
+                                  } else if (item == "Physical") {
                                     labRequest.initStatus = EnumLabRequestInitStatus.Physical;
                                     labRequest.steps![1] = LAB_StepModel(step: DropDownDTO(name: "Cast"));
-                                  }
-                                  else if (item == "Cast") {
+                                  } else if (item == "Cast") {
                                     labRequest.initStatus = EnumLabRequestInitStatus.Cast;
                                     labRequest.steps![1] = LAB_StepModel(step: DropDownDTO(name: "Design"));
-                                  }
-                                  else if (item == "Remake") {
+                                  } else if (item == "Remake") {
                                     labRequest.initStatus = EnumLabRequestInitStatus.Remake;
                                     labRequest.steps![1] = LAB_StepModel(step: DropDownDTO(name: ""));
                                   }
-                                  setState(() {
-
-                                  });
+                                  setState(() {});
                                 }
                               },
                               labels: [
@@ -469,10 +475,7 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                             child: FormTextKeyWidget(
                               text: () {
                                 if (labRequest.customer != null && labRequest.customer!.workPlaceEnum != null)
-                                  return EnumLabRequestSources.values[labRequest.customer!.workPlaceEnum!.index!]
-                                      .toString()
-                                      .split(".")
-                                      .last + " Customer";
+                                  return EnumLabRequestSources.values[labRequest.customer!.workPlaceEnum!.index!].toString().split(".").last + " Customer";
                                 else
                                   return "";
                               }(),
@@ -681,9 +684,7 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                             width: 10,
                           ),
                           FormTextValueWidget(
-                            text: siteController
-                                .getUser()
-                                .name ?? "",
+                            text: siteController.getUser().name ?? "",
                             secondaryInfo: true,
                           ),
                         ],
@@ -694,19 +695,20 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
                           onTab: () async {
                             var step = await LAB_RequestsAPI.GetDefaultStepByName(labRequest.steps![0].step!.name!);
                             if (step.statusCode == 200) labRequest.steps![0] = LAB_StepModel(stepId: (step.result as DropDownDTO).id);
-                            if(labRequest.steps![1].stepId==null) {
+                            if (labRequest.steps![1].stepId == null) {
                               step = await LAB_RequestsAPI.GetDefaultStepByName(labRequest.steps![1].step!.name!);
                               if (step.statusCode == 200) labRequest.steps![1] = LAB_StepModel(stepId: (step.result as DropDownDTO).id);
                             }
                             var res = await LAB_RequestsAPI.AddRequest(labRequest);
                             if (res.statusCode == 200) {
-                              ShowSnackBar(context,isSuccess: true, title: "Success", message: "Request Added!");
-                            //  if (!widget.isDoctor)
-                                Navigator.of(context, rootNavigator: true).pop();
+                              ShowSnackBar(context, isSuccess: true, title: "Success", message: "Request Added!");
+                              //  if (!widget.isDoctor)
+                              Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.of(context, rootNavigator: true).pop();
 
-                               // internalPagesController.goBack();
+                              // internalPagesController.goBack();
                             } else {
-                              ShowSnackBar(context,isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                              ShowSnackBar(context, isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
                             }
                           },
                           isLong: true,
@@ -728,9 +730,7 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
     globalSetState = setState;
     if (widget.isDoctor) {
       labRequest.customer = siteController.getUser();
-      labRequest.customerId = siteController
-          .getUser()
-          .idInt;
+      labRequest.customerId = siteController.getUser().idInt;
       if (widget.patient != null) {
         labRequest.patient = DropDownDTO(name: widget.patient!.name, id: widget.patient!.id);
         labRequest.patientId = widget.patient!.id;
@@ -768,12 +768,11 @@ class _PatientDoctorsSearchDataSource extends DataGridSource {
 
   init() {
     _data = models
-        .map<DataGridRow>((e) =>
-        DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'ID', value: e.id),
-          DataGridCell<String>(columnName: 'Name', value: e.name),
-          DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber ?? ""),
-        ]))
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<String>(columnName: 'Name', value: e.name),
+              DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber ?? ""),
+            ]))
         .toList();
   }
 
@@ -786,12 +785,12 @@ class _PatientDoctorsSearchDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          return Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(right: 50),
-            child: Text(e.value.toString()),
-          );
-        }).toList());
+      return Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(right: 50),
+        child: Text(e.value.toString()),
+      );
+    }).toList());
   }
 
   Future<bool> loadData({required String search, required EnumLabRequestSources source}) async {

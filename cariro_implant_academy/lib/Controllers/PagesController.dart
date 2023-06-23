@@ -274,7 +274,7 @@ class PagesController extends PageController {
           }
           return [
             SidebarXItem(
-                label: 'Lab Requests',
+                label: 'equests',
                 onTap: () {
                   context.goNamed(LabTodaysRequestsSearch.routeName);
                   controller.notifyListeners();
@@ -287,7 +287,21 @@ class PagesController extends PageController {
                       )),
                     ))),
             SidebarXItem(
-                label: 'Technicians',
+                label: 'oderators',
+                onTap: () {
+                  context.goNamed(UserSearchPage.labModeratorsRouteName);
+                  controller.notifyListeners();
+                },
+
+                iconWidget: Container(
+                    child:Tooltip(
+                      message: "Moderators",
+                      child: Icon(IconDataSolid(
+                        int.parse('0x0004D'),
+                      )),
+                    ))),
+            SidebarXItem(
+                label: 'echnicians',
                 onTap: () {
                   context.goNamed(UserSearchPage.techniciansRouteName);
                   controller.notifyListeners();
@@ -301,7 +315,7 @@ class PagesController extends PageController {
                       )),
                     ))),
             SidebarXItem(
-                label: 'Customers',
+                label: 'ustomers',
                 onTap: () {
                   context.goNamed(UserSearchPage.outSourceRouteName);
                   controller.notifyListeners();

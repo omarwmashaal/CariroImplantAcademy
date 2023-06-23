@@ -10,25 +10,33 @@ import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../Models/Lab_StepModel.dart';
+import '../../Widgets/CIA_DropDown.dart';
 import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
+import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
+import '../CIA_Pages/Patient_MedicalInfo.dart';
 
 class LAB_ViewRequestPage extends StatefulWidget {
   LAB_ViewRequestPage({Key? key, required this.id}) : super(key: key);
   int id;
   static String routeName = "ViewRequest";
   static String routePath = "ViewRequest";
-
+  static String routeCIAName = "ViewLabRequest";
+  static String routeCIAPath = "ViewLabRequest/:id";
   @override
   State<LAB_ViewRequestPage> createState() => _LAB_ViewRequestPageState();
 }
 
 class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
   late LAB_RequestModel request;
+  int? nextAssignId;
+  int? nextTaskId;
+  String? thisStepNotes = "";
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +89,62 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                             ],
                           ),
                         );
-                      })
+                      }),
+                  SizedBox(width: 10),
+                  Visibility(
+                    visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUser().idInt,
+                    child: CIA_PrimaryButton(
+                      label: "Waiting your action",
+                      onTab: () async {
+                        if (request.steps != null && request.steps!.isNotEmpty) {
+                          if (request.steps!.length >= 2) nextAssignId = request.steps![request.steps!.length - 2].technicianId;
+                          else nextAssignId = null;
+                        }
+                        await CIA_ShowPopUp(
+                            context: context,
+                            onSave: () async {
+                              var res = await LAB_RequestsAPI.FinishTask(id: widget.id, nextTaskId: nextTaskId, assignToId: nextAssignId, notes: thisStepNotes);
+                              thisStepNotes = null;
+                              nextAssignId = null;
+                              nextTaskId = null;
+                              ShowSnackBar(context, isSuccess: res.statusCode == 200);
+                              return true;
+                              //setState(() {});
+                            },
+                            child: Column(
+                              children: [
+                                CIA_TextFormField(
+                                  label: "Notes",
+                                  maxLines: 5,
+                                  onChange: (v) => thisStepNotes = v,
+                                  controller: TextEditingController(
+                                    text: thisStepNotes,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                CIA_DropDownSearch(
+                                  asyncItems: LAB_RequestsAPI.GetDefaultSteps,
+                                  label: "Next Step",
+                                  onSelect: (value) {
+                                    nextTaskId = value.id!;
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ));
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Visibility(
+                    visible: request.patientId != null && siteController.getSite() == Website.CIA,
+                    child: CIA_SecondaryButton(
+                        label: "Go To Patient",
+                        onTab: () {
+                          context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": request.patientId.toString()});
+                        }),
+                  ),
                 ],
               ),
             ),
@@ -275,8 +338,9 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                       suffix: "EGP",
                                     ),
                                     Visibility(
-                                      visible: request.paid==false &&( request.status == EnumLabRequestStatus.FinishedAndHandeled ||
-                                          request.status == EnumLabRequestStatus.FinishedNotHandeled),
+                                      visible: request.paid == false &&
+                                          (request.status == EnumLabRequestStatus.FinishedAndHandeled ||
+                                              request.status == EnumLabRequestStatus.FinishedNotHandeled),
                                       child: CIA_SecondaryButton(
                                         label: "Pay",
                                         onTab: () {
@@ -322,10 +386,9 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                           context: context,
                                                           onSave: () async {
                                                             var res = await LAB_RequestsAPI.PayForRequest(widget.id);
-                                                            if(res.statusCode==200)
-                                                              Navigator.of(context, rootNavigator: true).pop();
-                                                            ShowSnackBar(context, isSuccess: res.statusCode==200);
-                                                            setState((){});
+                                                            if (res.statusCode == 200) Navigator.of(context, rootNavigator: true).pop();
+                                                            ShowSnackBar(context, isSuccess: res.statusCode == 200);
+                                                            setState(() {});
                                                           },
                                                         );
                                                       }),
@@ -378,7 +441,11 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                       child: Container(
                         alignment: Alignment.topCenter,
                         padding: EdgeInsets.only(top: 50),
-                        child: SingleChildScrollView(child: CIA_LAB_StepTimelineWidget(steps: request.steps!)),
+                        child: SingleChildScrollView(
+                            child: CIA_LAB_StepTimelineWidget(
+                          steps: request.steps!,
+                          customerId: request.customerId!,
+                        )),
                       ),
                     )
                   ],

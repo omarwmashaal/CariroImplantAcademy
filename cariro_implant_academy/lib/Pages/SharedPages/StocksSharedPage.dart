@@ -51,12 +51,14 @@ class _StockListSharedPageState extends State<StockListSharedPage> {
               title: "Stock",
               showBackButton: false,
             ),
-            Expanded(
+          /*  Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CIA_PrimaryButton(
-                    onTab: () {},
+                    onTab: () {
+
+                    },
                     label: "Remove Item",
                     isLong: true,
                     color: Colors.red,
@@ -177,7 +179,7 @@ class _StockListSharedPageState extends State<StockListSharedPage> {
                   SizedBox(width: 30),
                 ],
               ),
-            )
+            )*/
           ],
         ),
         CIA_TextField(

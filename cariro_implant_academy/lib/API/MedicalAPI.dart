@@ -235,4 +235,10 @@ class MedicalAPI {
     return response;
   }
 
+
+  static Future<API_Response> CheckLabRequests(int id) async {
+    var response = await HTTPRequest.Get("Medical/CheckLabRequests?id=$id");
+    return response;
+  }
+
 }

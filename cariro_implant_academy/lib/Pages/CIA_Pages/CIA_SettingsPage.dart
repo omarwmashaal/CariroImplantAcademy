@@ -1338,6 +1338,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
               else if (tabController.index == 3)
                 role = "candidate";
               else if (tabController.index == 4) role = "secretary";
+              else if (tabController.index == 5) role = "labmoderator";
               ApplicationUserModel newUser = ApplicationUserModel(role: role, gender: "Male");
               bool newBatch = false;
               CIA_ShowPopUp(
@@ -1522,6 +1523,9 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                     Tab(
                       text: "Secretaries",
                     ),
+                    Tab(
+                      text: "Lab Moderators",
+                    ),
                   ],
                 ),
               ),
@@ -1534,6 +1538,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                     _buildWidget(UserRoles.Assistant),
                     _buildWidget(UserRoles.Candidate),
                     _buildWidget(UserRoles.Secretary),
+                    _buildWidget(UserRoles.LabModerator),
                   ],
                 ),
               ),
@@ -1561,6 +1566,6 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
 
   @override
   void initState() {
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(length: 6, vsync: this);
   }
 }

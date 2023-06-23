@@ -339,11 +339,13 @@ CIA_ShowPopUpYesNo(
     required Function onSave,
     Function? onDontSave,
     Function? onCancel,
+    double? width,
     String? buttonText,
     double? size}) async {
   await Alert(
     context: context,
     title: title,
+    //content: SizedBox(width: width??120,),
     buttons: [
       DialogButton(
         color: Color_Background,

@@ -178,6 +178,8 @@ class LAB_RequestModel {
     notes = json['notes'] ?? "";
     requiredStep = json['requiredStep'] ?? "";
     steps = ((json['steps'] ?? []) as List<dynamic>).map((e) => LAB_StepModel.fromJson(e as Map<String, dynamic>)).toList();
+    if(steps!=null && steps!.isNotEmpty && this.customerId==steps!.last.technicianId)
+      assignedTo!.name = "Customer";
     fileId = json['fileId'];
     file = DropDownDTO.fromJson(json['file'] ?? Map<String, dynamic>());
     fullZireonCrown = json['full_zireon_crown'] ?? false;
@@ -311,7 +313,7 @@ class LabRequestDataSource extends DataGridSource {
     ];
     _labRequestData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              //DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<int>(columnName: 'ID', value: e.id),
               DataGridCell<String>(columnName: 'Date', value: e.date ?? ""),
               DataGridCell<String>(columnName: 'Source', value: e.source!.name),
               DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),

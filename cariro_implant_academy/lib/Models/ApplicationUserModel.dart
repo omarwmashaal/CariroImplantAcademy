@@ -238,17 +238,17 @@ class ApplicationUserDataSource extends DataGridSource {
                           await loadData();
                         },
                       )),
-          DataGridCell<Widget>(
-              columnName: "Reset Password",
-              value: IconButton(
-                icon: Icon(Icons.lock),
-                onPressed: () async {
-                  await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
-                },
-              )),
+                  DataGridCell<Widget>(
+                      columnName: "Reset Password",
+                      value: IconButton(
+                        icon: Icon(Icons.lock),
+                        onPressed: () async {
+                          await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                        },
+                      )),
                 ]))
             .toList();
-      } else if (type == UserRoles.Technician || type == UserRoles.OutSource) {
+      } else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -265,14 +265,14 @@ class ApplicationUserDataSource extends DataGridSource {
                           await loadData();
                         },
                       )),
-          DataGridCell<Widget>(
-              columnName: "Reset Password",
-              value: IconButton(
-                icon: Icon(Icons.lock),
-                onPressed: () async {
-                  await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
-                },
-              )),
+                  DataGridCell<Widget>(
+                      columnName: "Reset Password",
+                      value: IconButton(
+                        icon: Icon(Icons.lock),
+                        onPressed: () async {
+                          await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                        },
+                      )),
                 ]))
             .toList();
       } else {
@@ -311,14 +311,14 @@ class ApplicationUserDataSource extends DataGridSource {
                           await loadData();
                         },
                       )),
-          DataGridCell<Widget>(
-              columnName: "Reset Password",
-              value: IconButton(
-                icon: Icon(Icons.lock),
-                onPressed: () async {
-                  await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
-                },
-              )),
+                  DataGridCell<Widget>(
+                      columnName: "Reset Password",
+                      value: IconButton(
+                        icon: Icon(Icons.lock),
+                        onPressed: () async {
+                          await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                        },
+                      )),
                 ]))
             .toList();
       }

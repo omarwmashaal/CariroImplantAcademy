@@ -23,6 +23,7 @@ class UserSearchPage extends StatefulWidget {
   static String instructorsRouteName = "Users/Instructors";
   static String techniciansRouteName = "Users/Technicians";
   static String outSourceRouteName = "Users/Customers";
+  static String labModeratorsRouteName = "Users/LabModerators";
 
   String? type;
 
@@ -57,6 +58,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
             else if (widget.dataSource.type == UserRoles.Technician)
               return "Technicians Data";
             else if (widget.dataSource.type == UserRoles.OutSource) return "Customers Data";
+            else if (widget.dataSource.type == UserRoles.LabModerator) return "Moderators Data";
             return "";
           }(),
         ),

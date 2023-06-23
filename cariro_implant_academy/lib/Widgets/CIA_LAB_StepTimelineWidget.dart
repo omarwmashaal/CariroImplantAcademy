@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import '../Models/Lab_StepModel.dart';
 
 class CIA_LAB_StepTimelineWidget extends StatelessWidget {
-  CIA_LAB_StepTimelineWidget({Key? key, required this.steps, this.isTask = false})
-      : super(key: key);
+  CIA_LAB_StepTimelineWidget({Key? key, required this.steps,required this.customerId, this.isTask = false}) : super(key: key);
   List<LAB_StepModel> steps;
   bool isTask;
+  int customerId;
 
   List<StepperData> _stepperData = <StepperData>[];
 
@@ -22,7 +22,7 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
     int activeIndex = 0;
     int index = 0;
     for (LAB_StepModel step in steps) {
-      if (step.status == LabStepStatus.InProgress||step.status == LabStepStatus.Done) activeIndex = index;
+      if (step.status == LabStepStatus.InProgress || step.status == LabStepStatus.Done) activeIndex = index;
       _stepperData.add(
         StepperData(
           title: StepperText(
@@ -31,22 +31,20 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
                 : (step.status == LabStepStatus.InProgress
                     ? step.step!.name! +
                         " assigned to" +
-                (step.step!.id==10?" Customer": step.step!.id==11?"Lab": (isTask && step.technicianId == siteController.getUser().idInt ? " you" : ": " + (step.technician!.name!)) )
+                        (step.technicianId==customerId
+                            ? " Customer"
+                            : step.step!.id == 11
+                                ? " Lab"
+                                : (isTask && step.technicianId == siteController.getUser().idInt ? " you" : ": " + (step.technician!.name!)))
                     : step.step!.name!),
           ),
           subtitle: StepperText(step.status == LabStepStatus.Done
-              ? (step.date??"") + " || Notes: ${step.notes??""}"
-              : (step.status == LabStepStatus.InProgress
-                  ? "In Progress"
-                  : "Not Yet") + " || Notes: ${step.notes??""}"),
+              ? (step.date ?? "") + " || Notes: ${step.notes ?? ""}"
+              : (step.status == LabStepStatus.InProgress ? "In Progress" : "Not Yet") + " || Notes: ${step.notes ?? ""}"),
           iconWidget: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: step.status == LabStepStatus.Done
-                    ? Colors.green
-                    : (step.status == LabStepStatus.InProgress
-                        ? Colors.orange
-                        : Colors.grey),
+                color: step.status == LabStepStatus.Done ? Colors.green : (step.status == LabStepStatus.InProgress ? Colors.orange : Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(30))),
           ),
         ),

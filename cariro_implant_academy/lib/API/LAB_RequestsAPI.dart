@@ -82,6 +82,10 @@ class LAB_RequestsAPI {
 
     return response;
   }
+ static Future<API_Response> AssignToTechnician(int id, int technicianId) async {
+    var response = await HTTPRequest.Post("LAB_Requests/AssignToTechnician?id=$id&technicianId=$technicianId", null);
+    return response;
+  }
 
   static Future<API_Response> FinishTask({required int id, int? nextTaskId, int? assignToId, String? notes = ""}) async {
     var query = "id=$id";

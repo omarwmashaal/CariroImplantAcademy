@@ -14,6 +14,7 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
@@ -23,6 +24,7 @@ import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
+import '../CIA_Pages/Patient_MedicalInfo.dart';
 
 class _getx extends GetxController {
   static RxInt totalPrice = 0.obs;
@@ -34,6 +36,8 @@ class LAB_ViewTaskPage extends StatefulWidget {
   int id;
   static String routeName = "ViewTask";
   static String routePath = "ViewTask";
+
+
 
   @override
   State<LAB_ViewTaskPage> createState() => _LAB_ViewTaskPageState();
@@ -184,6 +188,19 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                         ]),
                       );
                     }),
+                Visibility(
+                  visible: request.patientId != null && siteController.getSite() == Website.CIA,
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10),
+                      CIA_SecondaryButton(
+                          label: "Go To Patient",
+                          onTab: () {
+                            context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": request.patientId.toString()});
+                          }),
+                    ],
+                  ),
+                ),
                 SizedBox(width: 10),
                 Column(
                   children: [
@@ -297,7 +314,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                   label: "Save Receipt",
                                                   onTab: () async {
                                                     var res = await LAB_RequestsAPI.AddOrUpdateRequestReceipt(widget.id, request.steps ?? []);
-                                                    ShowSnackBar(context, isSuccess: res.statusCode == 200);
+                                                    ShowSnackBar(context, isSuccess: res.statusCode == 200, message: res.errorMessage ?? "");
                                                     setState(() {});
                                                   }),
                                             ],
@@ -362,10 +379,10 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                       ),
                                     ),
                                   )
-                                : request.steps!.last.stepId == 10
+                                : request.steps!.last.technicianId == request.customerId
                                     ? Row(
                                         children: [
-                                          Text("Waiting for Customer Approval!"),
+                                          Text("Waiting for Customer Action!"),
                                           SizedBox(width: 10),
                                           CIA_PrimaryButton(
                                             label: "Customer Approved?",
@@ -417,22 +434,41 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                 },
                                               ),
                                               SizedBox(height: 10),
-                                              CIA_DropDownSearch(
-                                                asyncItems: () async {
-                                                  var res = await UserAPI.SearcshUsersByRole(role: UserRoles.Technician);
-                                                  var r = <DropDownDTO>[];
-                                                  if (res.statusCode == 200) {
-                                                    List<ApplicationUserModel> t = [];
-                                                    t = res.result as List<ApplicationUserModel>;
-                                                    r = t.map((e) => DropDownDTO(name: e.name, id: e.idInt)).toList();
-                                                  }
-                                                  res.result = r;
-                                                  return Future.value(res);
-                                                },
-                                                label: "Assign next step to",
-                                                onSelect: (value) {
-                                                  nextAssignId = value.id!;
-                                                },
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: CIA_DropDownSearch(
+                                                      asyncItems: () async {
+                                                        var res = await UserAPI.SearcshUsersByRole(role: UserRoles.Technician);
+                                                        var r = <DropDownDTO>[];
+                                                        if (res.statusCode == 200) {
+                                                          List<ApplicationUserModel> t = [];
+                                                          t = res.result as List<ApplicationUserModel>;
+                                                          r = t.map((e) => DropDownDTO(name: e.name, id: e.idInt)).toList();
+                                                        }
+                                                        res.result = r;
+                                                        return Future.value(res);
+                                                      },
+                                                      label: "Assign next step to another one",
+                                                      onSelect: (value) {
+                                                        nextAssignId = value.id!;
+                                                        setState(() {});
+                                                      },
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  FormTextKeyWidget(text: "Or Assign to customer?"),
+                                                  SizedBox(width: 10),
+                                                  RoundCheckBox(
+                                                    isChecked: nextAssignId == request.customerId,
+                                                    onTap: (isSelected) {
+                                                      if (isSelected == true)
+                                                        nextAssignId = request.customerId;
+                                                      else
+                                                        nextAssignId = null;
+                                                    },
+                                                  ),
+                                                ],
                                               ),
                                               SizedBox(height: 10),
                                               CIA_PrimaryButton(
@@ -441,7 +477,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                   var res = await LAB_RequestsAPI.FinishTask(
                                                       id: widget.id,
                                                       nextTaskId: nextTaskId,
-                                                      assignToId: nextTaskId == 10 ? null : nextAssignId,
+                                                      assignToId: nextAssignId ?? siteController.getUser().idInt,
                                                       notes: thisStepNotes);
                                                   thisStepNotes = null;
                                                   nextAssignId = null;
@@ -452,7 +488,9 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                               ),
                                             ],
                                           )
-                                        : CIA_PrimaryButton(
+                                        : FormTextKeyWidget(text: "Assigned to ${(request.assignedTo) != null ? request.assignedTo!.name! : "Nobody"}")
+                            /*
+                            CIA_PrimaryButton(
                                             icon: Icon(
                                               Icons.play_circle,
                                               color: Colors.white,
@@ -462,23 +500,81 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                               await LAB_RequestsAPI.AddToMyTasks(widget.id);
                                               setState(() {});
                                             },
-                                          ),
+                                          )*/
+                            ,
                           ),
                         ),
                         Visibility(
-                          visible: request.steps!.last.stepId == 10 && request.customerId == siteController.getUser().idInt,
+                          visible: siteController.getRole() == "labmoderator",
+                          child: Expanded(
+                            child: Column(
+                              children: [
+                                FormTextKeyWidget(text: "Assigned to ${(request.assignedTo) != null ? request.assignedTo!.name! : "Nobody"}"),
+                                SizedBox(height: 10,),
+                                CIA_DropDownSearch(
+                                  asyncItems: () async {
+                                    var res = await UserAPI.SearcshUsersByRole(role: UserRoles.Technician);
+                                    var r = <DropDownDTO>[];
+                                    if (res.statusCode == 200) {
+                                      List<ApplicationUserModel> t = [];
+                                      t = res.result as List<ApplicationUserModel>;
+                                      r = t.map((e) => DropDownDTO(name: e.name, id: e.idInt)).toList();
+                                    }
+                                    res.result = r;
+                                    return Future.value(res);
+                                  },
+                                  label: "Assign next step to technician",
+                                  onSelect: (value) {
+                                    nextAssignId = value.id!;
+                                    //setState(() {});
+                                  },
+                                  selectedItem: request.assignedTo,
+                                ),
+                                SizedBox(height: 10,),
+                                CIA_PrimaryButton(
+                                  label: 'Assign to technician',
+                                  onTab: () async{
+                                    if(nextAssignId==null)
+                                      ShowSnackBar(context, isSuccess: false,message: "Please choose a technician!");
+                                    else
+                                      {
+                                        var res = await LAB_RequestsAPI.AssignToTechnician(request.id!, nextAssignId!);
+                                        ShowSnackBar(context, isSuccess: res.statusCode==200);
+
+                                        setState(() {
+
+                                        });
+                                      }
+
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUser().idInt,
                           child: CIA_PrimaryButton(
-                            label: "Approve last step?",
+                            label: "Waiting your action",
                             onTab: () async {
-                              CIA_ShowPopUp(
+                              if (request.steps != null && request.steps!.isNotEmpty) {
+                                if (request.steps!.length >= 2)
+                                  nextAssignId = request.steps![request.steps!.length - 2].technicianId;
+                                else
+                                  nextAssignId = null;
+                              }
+                              await CIA_ShowPopUp(
                                   context: context,
                                   onSave: () async {
-                                    var res = await LAB_RequestsAPI.FinishTask(id: widget.id, nextTaskId: nextTaskId, assignToId: null, notes: thisStepNotes);
+                                    var res =
+                                        await LAB_RequestsAPI.FinishTask(id: widget.id, nextTaskId: nextTaskId, assignToId: nextAssignId, notes: thisStepNotes);
                                     thisStepNotes = null;
                                     nextAssignId = null;
                                     nextTaskId = null;
                                     ShowSnackBar(context, isSuccess: res.statusCode == 200);
-                                    Navigator.of(context, rootNavigator: true).pop();                                    setState(() {});
+                                    Navigator.of(context, rootNavigator: true).pop();
+                                    return true;
+                                    //setState(() {});
                                   },
                                   child: Column(
                                     children: [
@@ -490,7 +586,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                           text: thisStepNotes,
                                         ),
                                       ),
-                                      SizedBox(height:10),
+                                      SizedBox(height: 10),
                                       CIA_DropDownSearch(
                                         asyncItems: LAB_RequestsAPI.GetDefaultSteps,
                                         label: "Next Step",
@@ -501,6 +597,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                       SizedBox(height: 10),
                                     ],
                                   ));
+                              setState(() {});
                             },
                           ),
                         ),
@@ -516,6 +613,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       child: CIA_LAB_StepTimelineWidget(
                         steps: request!.steps ?? [],
                         isTask: true,
+                        customerId: request.customerId!,
                       ),
                     ),
                   )

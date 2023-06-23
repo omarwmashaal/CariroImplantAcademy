@@ -43,7 +43,7 @@ enum EnumPatientType { CIA, Clinic, OutSource }
 
 enum EnumLabRequestSources { CIA, Clinic, OutSource }
 
-enum UserRoles { Admin, Assistant, Instructor, Secretary, Technician, OutSource, Candidate }
+enum UserRoles { Admin, Assistant, Instructor, Secretary, Technician, OutSource, Candidate, LabModerator }
 
 enum EnumOralHygieneRating {
   BadHygiene,
@@ -141,5 +141,5 @@ UpperPosterior,
 LowerPosterior
 }
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-enum EnumNotificationType { Patient, TreatmentPlan, Complains }
+enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest }
 enum EnumComplainStatus { InQueue, Untouched, Resolved }

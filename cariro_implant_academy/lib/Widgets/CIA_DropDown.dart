@@ -74,7 +74,7 @@ class _CIA_DropDownState extends State<CIA_DropDown> {
   }
 }
 
-class CIA_DropDownSearch extends StatefulWidget {
+class CIA_DropDownSearch extends StatelessWidget {
   CIA_DropDownSearch({Key? key, this.items, this.asyncItems,this.label,this.disableSearch = false, this.selectedItem, this.enabled=true, this.emptyString="No results found", this.onSelect}) : super(key: key);
   List<DropDownDTO>? items;
   Future<API_Response> Function()? asyncItems;
@@ -86,36 +86,31 @@ class CIA_DropDownSearch extends StatefulWidget {
   Function(DropDownDTO value)? onSelect;
 
   @override
-  State<CIA_DropDownSearch> createState() => _CIA_DropDownSearchState();
-}
-
-class _CIA_DropDownSearchState extends State<CIA_DropDownSearch> {
-  @override
   Widget build(BuildContext context) {
 
     return DropdownSearch<DropDownDTO>(
-      enabled: widget.enabled,
+      enabled: enabled,
       popupProps: PopupProps.menu(
-        showSearchBox: !widget.disableSearch,
+        showSearchBox: !disableSearch,
         emptyBuilder: (context, searchEntry) {
-          return Text(widget.emptyString);
+          return Text(emptyString);
         },
 
       ),
-      selectedItem: widget.selectedItem,
+      selectedItem: selectedItem,
       asyncItems: (c)async{
 
-        if(widget.asyncItems==null) return [];
-        var res  = await widget.asyncItems!();
+        if(asyncItems==null) return [];
+        var res  = await asyncItems!();
         if(res.statusCode == 200)
           return res.result as List<DropDownDTO>;
         return [];
       },
       filterFn: (item, filter) =>item.name!.toLowerCase().contains(filter.toLowerCase()),
       itemAsString: (DropDownDTO u) => u.name!,
-      items: widget.items ?? [],
+      items: items ?? [],
       onChanged: (DropDownDTO) {
-        if(widget.onSelect!=null) widget.onSelect!(DropDownDTO!);
+        if(onSelect!=null) onSelect!(DropDownDTO!);
       },
       dropdownDecoratorProps: DropDownDecoratorProps(
         textAlign: TextAlign.start,
@@ -134,7 +129,7 @@ class _CIA_DropDownSearchState extends State<CIA_DropDownSearch> {
               color:  Color_Accent ,
               fontWeight: FontWeight.bold),
           filled: true,
-          labelText: widget.label??"",
+          labelText: label??"",
           fillColor: Color_Background,
           isDense: true,
         )

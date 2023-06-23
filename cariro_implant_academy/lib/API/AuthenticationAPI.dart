@@ -58,6 +58,7 @@ class AuthenticationAPI {
         var user = siteController.getUser();
         user.name = (response.result as Map<String,dynamic>)['name'] as String;
         user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
+        user.phoneNumber = (((response.result as Map<String,dynamic>)['phoneNumber'])??"") as String;
         if(!SignalR.checkConnection())
           {
             await SignalR.runConfig();

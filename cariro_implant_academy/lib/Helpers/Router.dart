@@ -344,6 +344,17 @@ class CIA_Router {
                           );
                         },
                       ),
+                      GoRoute(
+                        path: LAB_ViewRequestPage.routeCIAPath,
+                        name: LAB_ViewRequestPage.routeCIAName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: LAB_ViewRequestPage(
+                              id: int.parse(state.pathParameters['id']!),
+                            ),
+                          );
+                        },
+                      ),
                       ShellRoute(
                           pageBuilder: (context, state, child) {
                             return NoTransitionPage(
@@ -482,6 +493,7 @@ class CIA_Router {
                                 );
                               },
                             ),
+
                           ]),
                     ],
                   )
@@ -500,7 +512,8 @@ class CIA_Router {
                       !(
                           siteController.getRole()=="admin"||
                               siteController.getRole()=="secretary"||
-                              siteController.getRole()=="technician"
+                              siteController.getRole()=="technician"||
+                              siteController.getRole()=="labmoderator"
                       )
 
                   ) {
@@ -558,7 +571,9 @@ class CIA_Router {
                           path: "Requests/:id",
                           name: routeConst_LabView,
                           redirect: (context, state) {
-                            if (siteController.getRole() == "technician")
+                            if(siteController.getSite()==Website.CIA)
+                              return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
+                            else if (siteController.getRole() == "technician" || siteController.getRole()=="labmoderator")
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewTaskPage.routePath}";
                             else
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewRequestPage.routePath}";
@@ -592,9 +607,21 @@ class CIA_Router {
                         name: UserSearchPage.techniciansRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: _Authorize(
-                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary],
+                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
                             child: UserSearchPage(
                               dataSource: ApplicationUserDataSource(type: UserRoles.Technician),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: UserSearchPage.labModeratorsRouteName,
+                        name: UserSearchPage.labModeratorsRouteName,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: _Authorize(
+                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
+                            child: UserSearchPage(
+                              dataSource: ApplicationUserDataSource(type: UserRoles.LabModerator),
                             ),
                           ),
                         ),
