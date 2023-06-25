@@ -260,6 +260,163 @@ class StockDataSource extends DataGridSource {
                       );
                     },
                     icon: Icon(Icons.add),
+                  )),DataGridCell<Widget>(
+                  columnName: 'Add More',
+                  value: IconButton(
+                    onPressed: () {
+                      var newExpense = CashFlowModel();
+                      CIA_ShowPopUp(
+                        context: context,
+                        width: 1000,
+                        height: 400,
+                        title: "Add Item Number",
+                        onSave: () async {
+                          var res = await StockAPI.AddItemNumber(newExpense);
+                          if (res.statusCode == 200) {
+                            ShowSnackBar(context, isSuccess: true, title: "Success", message: "Entries Added!");
+                          } else
+                            ShowSnackBar(context, isSuccess: false, title: "Failed", message: res.errorMessage ?? "");
+                          loadData(search: search);
+                        },
+                        child: CIA_FutureBuilder(
+                          loadFunction: StockAPI.GetStockById(e.id!),
+                          onSuccess: (data) {
+                            var stockItem = (data as StockModel);
+                            newExpense.id = stockItem.id;
+                            newExpense.name = stockItem.name;
+                            newExpense.count = 0;
+                            newExpense.category = stockItem.category;
+                            newExpense.categoryId = stockItem.categoryId;
+
+                            bool newPaymentMethod = false;
+                            bool newSupplier = false;
+                            return StatefulBuilder(builder: (context, _setState) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  SizedBox(height: 10),
+                                  CIA_TextFormField(
+                                    label: "Category",
+                                    enabled: false,
+                                    controller: TextEditingController(text: stockItem.category!.name ?? ""),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_MultiSelectChipWidget(
+                                          onChange: (item, isSelected) => _setState(() => newPaymentMethod = isSelected),
+                                          labels: [
+                                            CIA_MultiSelectChipWidgeModel(label: "New Payment Method"),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: newPaymentMethod
+                                            ? CIA_TextFormField(
+                                                label: "Payment Method",
+                                                onChange: (value) {
+                                                  newExpense.paymentMethod = DropDownDTO(name: value);
+                                                  newExpense.paymentMethodId = null;
+                                                },
+                                                controller: TextEditingController(text: newExpense.paymentMethod!.name ?? ""),
+                                              )
+                                            : CIA_DropDownSearch(
+                                                label: "Payment Method",
+                                                asyncItems: SettingsAPI.GetPaymentMethods,
+                                                onSelect: (value) {
+                                                  newExpense.paymentMethod = value;
+                                                  newExpense.paymentMethodId = value.id;
+                                                },
+                                                selectedItem: newExpense.paymentMethod,
+                                              ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_MultiSelectChipWidget(
+                                          onChange: (item, isSelected) => _setState(() => newSupplier = isSelected),
+                                          labels: [
+                                            CIA_MultiSelectChipWidgeModel(label: "New Supplier"),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: newSupplier
+                                            ? CIA_TextFormField(
+                                                label: "Supplier",
+                                                onChange: (value) {
+                                                  newExpense.supplier = DropDownDTO(name: value);
+                                                  newExpense.supplierId = null;
+                                                },
+                                                controller: TextEditingController(text: newExpense.supplier!.name ?? ""),
+                                              )
+                                            : CIA_DropDownSearch(
+                                                label: "Supplier",
+                                                asyncItems: SettingsAPI.GetSuppliers,
+                                                onSelect: (value) {
+                                                  newExpense.supplier = value;
+                                                  newExpense.supplierId = value.id;
+                                                },
+                                                selectedItem: newExpense.supplier,
+                                              ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_TextFormField(label: "Name", enabled: false, controller: TextEditingController(text: newExpense.name ?? "")),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: CIA_TextFormField(
+                                          isNumber: true,
+                                          onChange: (value) {
+                                            if (value == null || value == "") value = "0";
+                                            newExpense.price = int.parse(value);
+                                          },
+                                          label: "Price",
+                                          controller: TextEditingController(text: (newExpense.price ?? 0).toString()),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: CIA_TextFormField(
+                                          isNumber: true,
+                                          onChange: (value) {
+                                            if (value == null || value == "") value = "0";
+                                            newExpense.count = int.parse(value);
+                                          },
+                                          label: "Count",
+                                          controller: TextEditingController(text: (newExpense.count ?? 0).toString()),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: CIA_TextFormField(
+                                          onChange: (value) => newExpense.notes = value,
+                                          label: "Notes",
+                                          controller: TextEditingController(text: newExpense.notes ?? ""),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  )
+                                ],
+                              );
+                            });
+                          },
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.add),
                   )),
             ]))
         .toList();
