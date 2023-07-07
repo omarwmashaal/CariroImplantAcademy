@@ -23,6 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:logging/logging.dart';
+
 
 import '../../Widgets/Title.dart';
 
@@ -369,12 +371,14 @@ class _ViewUserDataState extends State<ViewUserData> {
                                 flex: 3,
                                 child: CIA_FutureBuilder(
                                   loadFunction: () async {
-                                    if (user.profileImageId != null)
+                                    if (user.profileImageId != null) {
+                                      Logger("").log(Level.INFO, "Download Image from VIEW USER screen");
                                       await UserAPI.DownloadImage(user.profileImageId!).then(
                                         (value) {
                                           if (value.statusCode == 200) profileImageBytes = base64Decode(value.result as String);
                                         },
                                       );
+                                    }
                                     return Future.value(API_Response(statusCode: 200));
                                   }(),
                                   onSuccess: (data) {

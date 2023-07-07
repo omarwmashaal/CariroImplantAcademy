@@ -139,7 +139,7 @@ class _CashFlowIncomeSharedPageState extends State<CashFlowIncomeSharedPage> {
               loadFunction: () async => widget.i_dataSource.loadData(from: from, to: to, catId: catId, paymentMethodId: paymentMethodId),
               onCellClick: (value) async {
                 if (siteController.getSite() == Website.Lab) {
-                  context.goNamed(CIA_Router.routeConst_LabView,pathParameters: {"id":widget.i_dataSource.models[value-1].labRequestId.toString()});
+                  context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": widget.i_dataSource.models[value - 1].labRequestId.toString()});
                 } else {
                   PaymentLogDataSrouce dataSource = PaymentLogDataSrouce();
                   var recRes = await PatientAPI.GetReceiptById(widget.i_dataSource.models[value - 1]!.receiptID!);
@@ -595,13 +595,19 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                 CIA_MultiSelectChipWidgeModel(
                                                     label: "Paid for buying items?",
                                                     isSelected: expCategory == EnumExpenseseCategoriesType.BoughtItem ||
-                                                        expCategory == EnumExpenseseCategoriesType.BoughtMedical),
+                                                        expCategory == EnumExpenseseCategoriesType.BoughtMedical
+
+                                                ),
                                               ],
                                               onChange: (item, isSelected) {
                                                 if (item == "Paid for service?")
                                                   expCategory = EnumExpenseseCategoriesType.Service;
                                                 else
-                                                  expCategory = EnumExpenseseCategoriesType.BoughtItem;
+                                                  {
+
+                                                    expCategory = EnumExpenseseCategoriesType.BoughtItem;
+                                                  }
+
                                                 _setState(() {});
                                               },
                                             ),
@@ -610,8 +616,8 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                           r.add(SizedBox(height: 10));
                                           r.add(
                                             Visibility(
-                                              visible: expCategory == EnumExpenseseCategoriesType.BoughtItem ||
-                                                  expCategory == EnumExpenseseCategoriesType.BoughtMedical,
+                                              visible: siteController.getSite()!=Website.Lab&& (expCategory == EnumExpenseseCategoriesType.BoughtItem ||
+                                                  expCategory == EnumExpenseseCategoriesType.BoughtMedical),
                                               child: Padding(
                                                 padding: const EdgeInsets.only(bottom: 10),
                                                 child: CIA_MultiSelectChipWidget(
@@ -1118,6 +1124,18 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                 ),
                                               );
                                             } else {
+                                              CashFlowAPI.GetExpenesesCategoryByName("Other Medical").then((value) {
+                                                if (value.statusCode == 200) {
+                                                  var tempCat = value.result as DropDownDTO?;
+                                                  if (tempCat != null) {
+                                                    dummyModel.category = tempCat;
+                                                    dummyModel.categoryId = tempCat.id;
+                                                  }
+                                                  else{
+                                                    dummyModel.category =DropDownDTO(name:"Other Medical");
+                                                  }
+                                                }
+                                              });
                                               r.addAll(models
                                                   .map((model) => Column(
                                                         children: [
@@ -1201,7 +1219,8 @@ class _CashFlowExpensesSharedPageState extends State<CashFlowExpensesSharedPage>
                                                       ))
                                                   .toList());
                                             }
-                                          } else {
+                                          }
+                                          else {
                                             r.addAll(models
                                                 .map((model) => Column(
                                                       children: [

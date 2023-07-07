@@ -103,6 +103,7 @@ class ApplicationUserModel {
     phoneNumber2 = json['phoneNumber2'];
     workPlace = DropDownDTO.fromJson(json['workPlace'] ?? Map<String, dynamic>());
     workPlaceId = json['workPlaceId'];
+    role = json['role'];
   }
 
   Map<String, dynamic> toJson() {

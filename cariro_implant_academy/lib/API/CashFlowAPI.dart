@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
+import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 
 import '../Models/API_Response.dart';
@@ -87,6 +88,14 @@ class CashFlowAPI {
   static Future<API_Response> AddSettlement(String filter, int value) async {
     var response = await HTTPRequest.Post("CashFlow/AddSettlement?filter=$filter&value=$value",null);
 
+    return response;
+  }
+  static Future<API_Response> GetExpenesesCategoryByName(String name) async {
+    var response = await HTTPRequest.Get("CashFlow/GetExpenesesCategoryByName?name=$name");
+  if(response.statusCode==200)
+    {
+      response.result = response.result ==null?null:DropDownDTO.fromJson((response.result) as Map<String,dynamic> );
+    }
     return response;
   }
 }

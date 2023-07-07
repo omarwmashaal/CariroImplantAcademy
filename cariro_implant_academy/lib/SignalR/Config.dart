@@ -1,6 +1,14 @@
 // Import the library.
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
+import 'package:f_logs/model/flog/flog.dart';
+import 'package:f_logs/model/flog/flog_config.dart';
+import 'package:f_logs/utils/formatter/field_name.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 import 'package:logging/logging.dart';
@@ -18,12 +26,17 @@ class SignalR {
 // When the connection is closed, print out a message to the console.
 
   static runConfig() async {
-// Configer the logging
+
+    // Configer the logging
     Logger.root.level = Level.ALL;
-// Writes the log messages to the console
-    Logger.root.onRecord.listen((LogRecord rec) {
-     //   print('${rec.level.name}: ${rec.time}: ${rec.message}');
-    });
+    // Writes the log messages to the console
+    Logger.root.onRecord.listen(
+      (LogRecord rec) {
+        //print('${rec.level.name}: ${rec.time}: ${rec.message}');
+      //  siteController.logs.add('${rec.level.name}: ${rec.time}: ${rec.message}');
+      },
+    );
+
 
 // If you want only to log out the message for the higer level hub protocol:
     final hubProtLogger = Logger("SignalR - hub");
@@ -39,7 +52,7 @@ class SignalR {
           signalRHost,
           options: HttpConnectionOptions(
             logger: transportProtLogger,
-         //   headers: headers,
+            //   headers: headers,
             accessTokenFactory: () async => await siteController.getToken(),
           ),
         )
@@ -60,10 +73,8 @@ class SignalR {
       // TODO
     }
   }
-  static bool checkConnection(){
 
-    return hubConnection!=null&& hubConnection!.state == HubConnectionState.Connected;
-
+  static bool checkConnection() {
+    return hubConnection != null && hubConnection!.state == HubConnectionState.Connected;
   }
-
 }

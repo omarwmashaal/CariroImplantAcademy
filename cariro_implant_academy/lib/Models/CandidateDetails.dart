@@ -91,7 +91,7 @@ class CandidateDetailsDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
           var returnedValue = e.value;
           if (returnedValue is Widget) return returnedValue;
-          if(e.columnName=="Date")returnedValue = CIA_DateConverters.fromBackendToDateTime(e.value.toString()) ;
+          if(e.columnName=="Date")returnedValue = CIA_DateConverters.fromBackendToDateOnly(e.value==null?null: (e.value??"").toString())??"" ;
           return Container(
             alignment: Alignment.center,
             child: Text(

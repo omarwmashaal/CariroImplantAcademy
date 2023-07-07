@@ -66,7 +66,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 children: (notifications as List<NotificationModel>)
                     .map((item) => GestureDetector(
                   onTap: () {
-                    if (item.onClickAction != null) context.goNamed(item.onClickAction!(), pathParameters: {'id': (item.infoId ?? "").toString()});
+                    if (item.onClickAction != null)
+                      context.goNamed(item.onClickAction!(), pathParameters: {'id': (item.infoId ?? "").toString()});
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),

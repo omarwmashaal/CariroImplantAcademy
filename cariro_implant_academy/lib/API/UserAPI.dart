@@ -60,8 +60,8 @@ class UserAPI {
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = ApplicationUserModel.fromJson ((response.result??Map<String,dynamic>()) as Map<String,dynamic>);
-      var res  = await GetRoleById((response.result as ApplicationUserModel).idInt!);
-      if(res.statusCode==200) ((response.result) as ApplicationUserModel).role = res.result as String;
+    //  var res  = await GetRoleById((response.result as ApplicationUserModel).idInt!);
+     // if(res.statusCode==200) ((res.result) as ApplicationUserModel).role = res.result as String;
     }
     return response;
   }
@@ -97,6 +97,10 @@ static Future<API_Response> GetCandidateDetails(int id,{String? from,String? to}
   static Future<API_Response> UploadImage(int id, EnumImageType type, Uint8List imageBytess) async {
     var response = await HTTPRequest.UploadImage("User/UploadImage?id=$id&type=${type.index}", imageBytess);
     return response;
+  }
+  static SaveLogFile(String data) async {
+ await HTTPRequest.Post("User/SaveLogFile", data);
+
   }
 
 }

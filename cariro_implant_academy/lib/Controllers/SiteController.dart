@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
@@ -44,9 +45,12 @@ class SiteController extends GetxController {
   Rx<bool> newNotification = false.obs;
   RxList<NotificationModel> notifications = <NotificationModel>[].obs;
   ApplicationUserModel getUser() => _applicationUser;
-
+  Uint8List? _profilePicture = null;
+  setProfilePicture(Uint8List p)=> _profilePicture=p;
+  getProfilePicture()=> _profilePicture;
   setUser(ApplicationUserModel user) => _applicationUser = user;
 
+  List<String> logs = [];
   Widget appBarWidget = Container();
   String selectedTitle = "";
   String title = "";

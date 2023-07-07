@@ -95,189 +95,197 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
   @override
   Widget build(BuildContext context) {
     patient?.gender = "Male";
-    return CIA_FutureBuilder(loadFunction: () async {
-      var res = await PatientAPI.GetPatientData(widget.patientId);
-      if (res.statusCode == 200) {
-        var temp = res.result as PatientInfoModel;
-        if (temp.profileImageId != null)
-          await PatientAPI.DownloadImage(temp.profileImageId!).then(
-            (value) {
-              if (value.statusCode == 200) personalImageBytes = base64Decode(value.result as String);
-            },
-          );
-      }
-      return res;
-    }(), onSuccess: (data) {
-      patient = data as PatientInfoModel;
-      return Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 7,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: TitleWidget(
-                      showBackButton: true,
-                      title: siteController.title,
-                    ),
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 7,
+            child: Column(
+              children: [
+                Expanded(
+                  child: TitleWidget(
+                    showBackButton: true,
+                    title: siteController.title,
                   ),
-                  Expanded(
-                    flex: 10,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2),
-                      child: widget.child,
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Expanded(
+                  flex: 10,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: widget.child,
+                  ),
+                )
+              ],
             ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(child: SizedBox()),
-                  Expanded(
-                    flex: 10,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        personalImageBytes == null
-                            ? Image(
-                                image: AssetImage("assets/ProfileImage.png"),
-                                height: 100,
-                                width: 100,
-                              )
-                            : Image(
-                                image: MemoryImage(personalImageBytes!),
-                                height: 100,
-                                width: 100,
-                              ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CIA_SecondaryButton(
-                            label: "View more info",
-                            onTab: () {
-                              context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
-                            }),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CIA_SecondaryButton(
-                            label: "Create LAB Request",
-                            icon: Icon(Icons.document_scanner_outlined),
-                            onTab: () async {
-                              var checkLabRequests = await MedicalAPI.CheckLabRequests(widget.patientId);
-                              bool showRequestPage = false;
-                              if (checkLabRequests.statusCode != 200) {
-                                await CIA_ShowPopUpYesNo(
-                                    width: 800,
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(child: SizedBox()),
+                CIA_FutureBuilder(
+                  loadFunction: () async {
+                    var res = await PatientAPI.GetPatientData(widget.patientId);
+                    return res;
+                  }(),
+                  onSuccess: (data) {
+                    patient = data as PatientInfoModel;
+                    return Expanded(
+                      flex: 10,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CIA_FutureBuilder(
+                            loadFunction: () async {
+                              //if (patient.profileImageId != null) {
+                            //    await PatientAPI.DownloadImage(patient.profileImageId!).then(
+                             //     (value) {
+                            //        if (value.statusCode == 200) personalImageBytes = base64Decode(value.result as String);
+                             //     },
+                            //    );
+                            //  }
+                              return API_Response(statusCode: 200);
+                            }(),
+                            onSuccess: (data) => Container(
+                              child: personalImageBytes == null
+                                  ? Image(
+                                      image: AssetImage("assets/ProfileImage.png"),
+                                      height: 100,
+                                      width: 100,
+                                    )
+                                  : Image(
+                                      image: MemoryImage(personalImageBytes!),
+                                      height: 100,
+                                      width: 100,
+                                    ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CIA_SecondaryButton(
+                              label: "View more info",
+                              onTab: () {
+                                context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
+                              }),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CIA_SecondaryButton(
+                              label: "Create LAB Request",
+                              icon: Icon(Icons.document_scanner_outlined),
+                              onTab: () async {
+                                var checkLabRequests = await MedicalAPI.CheckLabRequests(widget.patientId);
+                                bool showRequestPage = false;
+                                if (checkLabRequests.statusCode != 200) {
+                                  await CIA_ShowPopUpYesNo(
+                                      width: 800,
+                                      context: context,
+                                      title: "Patient has incomplete requests are you sure you want to create new request?",
+                                      onSave: () {
+                                        showRequestPage = true;
+                                      });
+                                } else
+                                  showRequestPage = true;
+                                if (showRequestPage)
+                                  CIA_ShowPopUp(
+                                    hideButton: true,
                                     context: context,
-                                    title: "Patient has incomplete requests are you sure you want to create new request?",
-                                    onSave: () {
-                                      showRequestPage = true;
-                                    });
-                              } else
-                                showRequestPage = true;
-                              if (showRequestPage)
+                                    width: 1100,
+                                    height: 650,
+                                    child: LabCreateNewRequestSharedPage(isDoctor: true, patient: patient),
+                                  );
+                              }),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CIA_SecondaryButton(
+                              label: "View LAB Request",
+                              icon: Icon(Icons.document_scanner_outlined),
+                              onTab: () {
+                                LabRequestDataSource dataSource = LabRequestDataSource();
                                 CIA_ShowPopUp(
                                   hideButton: true,
                                   context: context,
                                   width: 1100,
                                   height: 650,
-                                  child: LabCreateNewRequestSharedPage(isDoctor: true, patient: patient),
+                                  onSave: () {},
+                                  child: CIA_Table(
+                                    columnNames: dataSource.columns,
+                                    dataSource: dataSource,
+                                    loadFunction: () async {
+                                      return dataSource.loadPatientRequests(patient!.id!);
+                                    },
+                                    onCellClick: (index) {
+                                      CIA_ShowPopUp(
+                                          width: 1100,
+                                          height: 650,
+                                          context: context,
+                                          child: LAB_ViewTaskPage(
+                                            id: dataSource.models[index - 1].id!,
+                                          ));
+                                    },
+                                  ),
                                 );
-                            }),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CIA_SecondaryButton(
-                            label: "View LAB Request",
-                            icon: Icon(Icons.document_scanner_outlined),
-                            onTab: () {
-                              LabRequestDataSource dataSource = LabRequestDataSource();
-                              CIA_ShowPopUp(
-                                hideButton: true,
-                                context: context,
-                                width: 1100,
-                                height: 650,
-                                onSave: () {},
-                                child: CIA_Table(
-                                  columnNames: dataSource.columns,
-                                  dataSource: dataSource,
-                                  loadFunction: () async {
-                                    return dataSource.loadPatientRequests(patient!.id!);
-                                  },
-                                  onCellClick: (index) {
-                                    CIA_ShowPopUp(
-                                        width: 1100,
-                                        height: 650,
-                                        context: context,
-                                        child: LAB_ViewTaskPage(
-                                          id: dataSource.models[index - 1].id!,
-                                        ));
-                                  },
+                              }),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Obx(() => !siteController.disableMedicalEdit.value
+                              ? CIA_SecondaryButton(label: "View mode", onTab: () => siteController.disableMedicalEdit.value = true)
+                              : CIA_PrimaryButton(label: "Edit mode", onTab: () => siteController.disableMedicalEdit.value = false)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: FormTextKeyWidget(text: "ID")),
+                              Expanded(
+                                child: FormTextValueWidget(
+                                  text: patient?.id.toString() == null ? "" : patient?.id.toString(),
                                 ),
-                              );
-                            }),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Obx(() => !siteController.disableMedicalEdit.value
-                            ? CIA_SecondaryButton(label: "View mode", onTab: () => siteController.disableMedicalEdit.value = true)
-                            : CIA_PrimaryButton(label: "Edit mode", onTab: () => siteController.disableMedicalEdit.value = false)),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: FormTextKeyWidget(text: "ID")),
-                            Expanded(
-                              child: FormTextValueWidget(
-                                text: patient?.id.toString() == null ? "" : patient?.id.toString(),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: FormTextKeyWidget(text: "Name")),
-                            Expanded(
-                              child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: FormTextKeyWidget(text: "Gender")),
-                            Expanded(
-                              child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: FormTextKeyWidget(text: "Name")),
+                              Expanded(
+                                child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: FormTextKeyWidget(text: "Gender")),
+                              Expanded(
+                                child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -307,8 +315,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientMedicalExamination(widget.patientId, medicalExaminationModel);
-    siteController.disableMedicalEdit.value = true;
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
+      MedicalAPI.UpdatePatientMedicalExamination(widget.patientId, medicalExaminationModel);
+    }
     super.dispose();
   }
 
@@ -955,8 +965,10 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientDentalHistory(widget.patientId, dentalHistoryModel);
-    siteController.disableMedicalEdit.value = true;
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
+      MedicalAPI.UpdatePatientDentalHistory(widget.patientId, dentalHistoryModel);
+    }
     super.dispose();
   }
 
@@ -1133,8 +1145,10 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientDentalExamination(widget.patientId, dentalExaminationModel);
-    siteController.disableMedicalEdit.value = true;
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
+      MedicalAPI.UpdatePatientDentalExamination(widget.patientId, dentalExaminationModel);
+    }
     super.dispose();
   }
 
@@ -1542,10 +1556,11 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   @override
   void dispose() {
     if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
       MedicalAPI.AddPatientNonSurgicalTreatment(widget.patientId, nonSurgicalTreatment);
       MedicalAPI.UpdatePatientDentalExamination(widget.patientId, tempDentalExamination);
     }
-    siteController.disableMedicalEdit.value = true;
+
     super.dispose();
   }
 
@@ -1872,8 +1887,11 @@ class _PatientTreatmentPlanState extends State<PatientTreatmentPlan> {
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientTreatmentPlan(widget.patientId, treatmentPlanModel!.treatmentPlan!);
-    siteController.disableMedicalEdit.value = true;
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
+      MedicalAPI.UpdatePatientTreatmentPlan(widget.patientId, treatmentPlanModel!.treatmentPlan!);
+    }
+
     super.dispose();
   }
 }
@@ -1899,9 +1917,13 @@ class _PatientSurgicalTreatmentState extends State<PatientSurgicalTreatment> {
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value) MedicalAPI.UpdatePatientSurgicalTreatment(widget.patientId, surgicalTreatmentModel);
-    siteController.disableMedicalEdit.value = true;
-    super.dispose();
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
+      MedicalAPI.UpdatePatientSurgicalTreatment(widget.patientId, surgicalTreatmentModel).then((value) {
+        super.dispose();
+      });
+    } else
+      super.dispose();
   }
 }
 
@@ -2835,26 +2857,27 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
 
   @override
   void dispose() {
-    if (!siteController.disableMedicalEdit.value)
+    if (!siteController.disableMedicalEdit.value) {
+      siteController.disableMedicalEdit.value = true;
       Future.delayed(Duration.zero, () async {
         try {
           if (fullArchModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisFullArch(widget.patientId, fullArchModel!);
         } on Exception catch (e) {
-          print(e);
+          // print(e);
         }
         try {
           if (diagnosticModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentDiagnostic(widget.patientId, diagnosticModel!);
         } on Exception catch (e) {
-          print(e);
+          // print(e);
         }
         try {
           if (singleBridgeModel != null) await MedicalAPI.UpdatePatientProstheticTreatmentFinalProthesisSingleBridge(widget.patientId, singleBridgeModel!);
         } on Exception catch (e) {
-          print(e);
+          //print(e);
         }
       });
+    }
 
-    siteController.disableMedicalEdit.value = true;
     super.dispose();
   }
 }

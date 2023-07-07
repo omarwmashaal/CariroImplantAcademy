@@ -18,8 +18,9 @@ void ShowSnackBar(BuildContext context, {required bool isSuccess, String title =
       style: TextStyle(fontSize: 12),
     ),
     animationType: AnimationType.fromBottom,
-    dismissable: true,
-  );
+     dismissable: false,
+     toastDuration: Duration(seconds: 2),
+   );
   else
    toast = MotionToast.error(
     title: Text(
@@ -31,13 +32,15 @@ void ShowSnackBar(BuildContext context, {required bool isSuccess, String title =
       style: TextStyle(fontSize: 12),
     ),
     animationType: AnimationType.fromBottom,
-    dismissable: true,
+    dismissable: false,
+     toastDuration: Duration(seconds: 2),
+
   );
   toast.show(context);
-  Future.delayed(const Duration(seconds: 4)).then((value) {
+  /*Future.delayed(const Duration(seconds: 4)).then((value) {
     toast.dismiss();
   });
-  /*
+
   Get.snackbar(
     title,
     message,

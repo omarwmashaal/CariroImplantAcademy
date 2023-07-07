@@ -32,6 +32,8 @@ import '../Pages/CIA_Pages/ViewUserPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/NotificationsPage.dart';
 import '../Pages/SharedPages/PatientSharedPages.dart';
+import 'package:logging/logging.dart';
+
 
 class CIA_Router {
   static var shellNavigationKey = GlobalKey<NavigatorState>();
@@ -40,6 +42,7 @@ class CIA_Router {
   static var routeConst_LabView = "GoToLabRequest";
 
   static GoRouter routes = GoRouter(
+    debugLogDiagnostics: true,
     initialLocation: "/",
     routes: [
       GoRoute(
@@ -62,6 +65,7 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 redirect: (context, state) async {
+                  Logger.root.log(Level.INFO, "Called verify from main routing redirect");
                   var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
@@ -505,7 +509,7 @@ class CIA_Router {
                   siteController.setSite(Website.Lab);
                   return Scaffold(body: AuthenticationPage());
                 },
-                redirect: (context, state) async {
+               /* redirect: (context, state) async {
                   var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
@@ -519,7 +523,7 @@ class CIA_Router {
                   ) {
                     return "/";
                   }
-                },
+                },*/
                 routes: [
                   ShellRoute(
                     builder: (context, state, child) {
@@ -571,6 +575,7 @@ class CIA_Router {
                           path: "Requests/:id",
                           name: routeConst_LabView,
                           redirect: (context, state) {
+                         //   print("here");
                             if(siteController.getSite()==Website.CIA)
                               return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
                             else if (siteController.getRole() == "technician" || siteController.getRole()=="labmoderator")
@@ -675,6 +680,7 @@ class CIA_Router {
                 ]),
           ]),
     ],
+
   );
 }
 
@@ -686,6 +692,7 @@ class _Authorize extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
+    Logger.root.log(Level.INFO, "Called verify from main routing redirect");
     return FutureBuilder(
       future: AuthenticationAPI.VerifyToken(),
       builder: (context, snapshot) {

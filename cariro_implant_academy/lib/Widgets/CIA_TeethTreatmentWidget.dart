@@ -74,6 +74,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.simpleImplant == null) currentTooth.simpleImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.simpleImplant!.status = true;
+              currentTooth.simpleImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.simpleImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.simpleImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -92,6 +93,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.immediateImplant == null) currentTooth.immediateImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.immediateImplant!.status = true;
+              currentTooth.immediateImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.immediateImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.immediateImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -109,6 +111,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.guidedImplant == null) currentTooth.guidedImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.guidedImplant!.status = true;
+              currentTooth.guidedImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.guidedImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.guidedImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -126,6 +129,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.expansionWithImplant == null) currentTooth.expansionWithImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.expansionWithImplant!.status = true;
+              currentTooth.expansionWithImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.expansionWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.expansionWithImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -143,6 +147,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.splittingWithImplant == null) currentTooth.splittingWithImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.splittingWithImplant!.status = true;
+              currentTooth.splittingWithImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.splittingWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.splittingWithImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -160,6 +165,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.gbrWithImplant == null) currentTooth.gbrWithImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.gbrWithImplant!.status = true;
+              currentTooth.gbrWithImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.gbrWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.gbrWithImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -177,6 +183,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.openSinusWithImplant == null) currentTooth.openSinusWithImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.openSinusWithImplant!.status = true;
+              currentTooth.openSinusWithImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.openSinusWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.openSinusWithImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -194,6 +201,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.closedSinusWithImplant == null) currentTooth.closedSinusWithImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.closedSinusWithImplant!.status = true;
+              currentTooth.closedSinusWithImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.closedSinusWithImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.closedSinusWithImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -211,6 +219,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.expansionWithoutImplant == null) currentTooth.expansionWithoutImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.expansionWithoutImplant!.status = true;
+              currentTooth.expansionWithoutImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.expansionWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.expansionWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -221,6 +230,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.splittingWithoutImplant == null) currentTooth.splittingWithoutImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.splittingWithoutImplant!.status = true;
+              currentTooth.splittingWithoutImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.splittingWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
 
               currentTooth.splittingWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
@@ -232,6 +242,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.gbrWithoutImplant == null) currentTooth.gbrWithoutImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.gbrWithoutImplant!.status = true;
+              currentTooth.gbrWithoutImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.gbrWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.gbrWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -242,6 +253,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.openSinusWithoutImplant == null) currentTooth.openSinusWithoutImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.openSinusWithoutImplant!.status = true;
+              currentTooth.openSinusWithoutImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.openSinusWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.openSinusWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -252,6 +264,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.closedSinusWithoutImplant == null) currentTooth.closedSinusWithoutImplant = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.closedSinusWithoutImplant!.status = true;
+              currentTooth.closedSinusWithoutImplant!.date = DateTime.now().toUtc().toString();
               currentTooth.closedSinusWithoutImplant!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.closedSinusWithoutImplant!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -263,6 +276,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.pontic == null) currentTooth.pontic = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.pontic!.status = true;
+              currentTooth.pontic!.date = DateTime.now().toUtc().toString();
               currentTooth.pontic!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.pontic!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -273,6 +287,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.extraction == null) currentTooth.extraction = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.extraction!.status = true;
+              currentTooth.extraction!.date = DateTime.now().toUtc().toString();
               currentTooth.extraction!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.extraction!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -283,6 +298,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.restoration == null) currentTooth.restoration = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.restoration!.status = true;
+              currentTooth.restoration!.date = DateTime.now().toUtc().toString();
               currentTooth.restoration!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.restoration!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -293,6 +309,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.rootCanalTreatment == null) currentTooth.rootCanalTreatment = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.rootCanalTreatment!.status = true;
+              currentTooth.rootCanalTreatment!.date = DateTime.now().toUtc().toString();
               currentTooth.rootCanalTreatment!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.rootCanalTreatment!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -303,6 +320,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.scaling == null) currentTooth.scaling = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.scaling!.status = true;
+              currentTooth.scaling!.date = DateTime.now().toUtc().toString();
               currentTooth.scaling!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.scaling!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -313,6 +331,7 @@ class _CIA_TeethTreatmentPlanWidgetState extends State<CIA_TeethTreatmentPlanWid
             if (currentTooth.crown == null) currentTooth.crown = TreatmentPlanFieldsModel();
             if (isSurgical) {
               currentTooth.crown!.status = true;
+              currentTooth.crown!.date = DateTime.now().toUtc().toString();
               currentTooth.crown!.doneByAssistant = DropDownDTO(name: siteController.getUser().name, id: siteController.getUser().idInt);
               currentTooth.crown!.doneByAssistantID = siteController.getUser().idInt;
             }
@@ -2115,7 +2134,7 @@ class _PostSurgeryWidgetState extends State<_PostSurgeryWidget> {
                                             selectedItem: () {
                                               if (surgicalTreatmentModel.openSinusLift_Membrane != null)
                                                 return DropDownDTO(
-                                                    name: surgicalTreatmentModel.openSinusLift_Membrane!.size,
+                                                    name: surgicalTreatmentModel.openSinusLift_Membrane!.name??surgicalTreatmentModel.openSinusLift_Membrane!.size,
                                                     id: surgicalTreatmentModel.openSinusLift_Membrane!.id);
                                               return null;
                                             }(),

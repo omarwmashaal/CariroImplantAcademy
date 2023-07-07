@@ -7,17 +7,20 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
 import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' ;
 
 import '../Constants/Connection.dart';
 import '../Models/API_Response.dart';
+import 'package:logging/logging.dart';
 
 
 
 
 class HTTPRequest {
 
+
   static Future<API_Response> Get(String url) async {
+    Logger("Called Server").log(Level.INFO, "$url");
     API_Response apiResponse = API_Response();
     Response response = await get(Uri.parse("$serverHost/$url"),
         headers: {"Authorization": "Bearer ${await siteController.getToken()}",
@@ -58,6 +61,8 @@ class HTTPRequest {
   }
 
   static Future<API_Response> Post(String url, Object? body) async {
+    Logger("Called Server").log(Level.INFO, "$url with body: $body");
+    Logger.root.log(Level.INFO, "message");
     API_Response apiResponse = API_Response();
     Response response = await post(
       Uri.parse("$serverHost/$url"),
@@ -108,6 +113,7 @@ class HTTPRequest {
   }
 
   static Future<API_Response> Put(String url, Object? body) async {
+    Logger("Called Server").log(Level.INFO, "$url with body: $body");
     API_Response apiResponse = API_Response();
     Response response = await put(
       Uri.parse("$serverHost/$url"),
@@ -158,6 +164,7 @@ class HTTPRequest {
   }
 
   static Future<API_Response> Delete(String url) async {
+    Logger("Called Server").log(Level.INFO, url);
     API_Response apiResponse = API_Response();
     Response response = await delete(Uri.parse("$serverHost/$url"),
         headers: {"Authorization": "Bearer ${await siteController.getToken()}",

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
@@ -8,6 +10,7 @@ import '../Models/API_Response.dart';
 import '../Models/DTOs/LoginResponseDTO.dart';
 import '../SignalR/Config.dart';
 import 'HTTP.dart';
+import 'UserAPI.dart';
 
 class AuthenticationAPI {
   static Future<API_Response> Login(String? email, String? password) async {
@@ -59,6 +62,8 @@ class AuthenticationAPI {
         user.name = (response.result as Map<String,dynamic>)['name'] as String;
         user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
         user.phoneNumber = (((response.result as Map<String,dynamic>)['phoneNumber'])??"") as String;
+        user.profileImageId = (((response.result as Map<String,dynamic>)['profileImageId'])??"") as int;
+
         if(!SignalR.checkConnection())
           {
             await SignalR.runConfig();

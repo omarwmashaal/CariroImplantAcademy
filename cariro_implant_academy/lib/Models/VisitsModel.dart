@@ -66,7 +66,7 @@ class VisitsModel {
     patientName = json['patientName'] ?? "";
     duration = CIA_DateConverters.fromBackendToTimeSpan(json['duration']) ?? "";
     room = json['room'] != null ? CIA_RoomModel.fromJson(json['room'] as Map<String, dynamic>) : CIA_RoomModel();
-    print(this.toJson());
+
   }
 
   Map<String, dynamic> toJson() {
@@ -223,7 +223,6 @@ class VisitDataSource extends DataGridSource {
     models = model;
     init();
     notifyListeners();
-
     return true;
   }
 }

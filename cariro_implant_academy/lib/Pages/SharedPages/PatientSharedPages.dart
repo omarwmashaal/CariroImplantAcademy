@@ -104,7 +104,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
       future: widget.loadFunction != null ? widget.loadFunction!(widget.patientID ?? 0) : Future(() => API_Response()),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (!addNew && (snapshot.data as API_Response).statusCode == 200) {
+          if (!edit && !addNew && (snapshot.data as API_Response).statusCode == 200) {
             patient = (snapshot.data as API_Response).result as PatientInfoModel;
           }
           if (addNew)
@@ -347,6 +347,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                                                                     if (res.statusCode == 200) {
                                                                                       ShowSnackBar(context, isSuccess: true);
                                                                                       setState(() {});
+                                                                                      Navigator.of(context, rootNavigator: true).pop();
+
                                                                                     }
                                                                                   },
                                                                                   child: CIA_TextFormField(
@@ -450,14 +452,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
                                       ],
                                     ),
-                              Visibility(
-                                  child: Row(
-                                    children: [
-                                      Expanded(child: FormTextKeyWidget(text: "ID")),
-                                      Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
-                                    ],
-                                  ),
-                                  visible: !addNew),
+
                               Visibility(
                                 visible: addNew && siteController.getSite() == Website.Lab,
                                 child: CIA_MultiSelectChipWidget(
@@ -712,19 +707,19 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                           flex: 3,
                           child: CIA_FutureBuilder(
                             loadFunction: () async {
-                              if (patient.profileImageId != null)
+                              if (!edit && !addNew && patient.profileImageId != null)
                                 await PatientAPI.DownloadImage(patient.profileImageId!).then(
                                   (value) {
                                     if (value.statusCode == 200) personalImageBytes = base64Decode(value.result as String);
                                   },
                                 );
-                              if (patient.idFrontImageId != null)
+                              if (!edit && !addNew && patient.idFrontImageId != null)
                                 await PatientAPI.DownloadImage(patient.idFrontImageId!).then(
                                   (value) {
                                     if (value.statusCode == 200) frontIdImageBytes = base64Decode(value.result as String);
                                   },
                                 );
-                              if (patient.idBackImageId != null)
+                              if (!edit && !addNew && patient.idBackImageId != null)
                                 await PatientAPI.DownloadImage(patient.idBackImageId!).then(
                                   (value) {
                                     if (value.statusCode == 200) backIdImageBytes = base64Decode(value.result as String);
@@ -844,18 +839,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   var response = await PatientAPI.CreatePatient(patient);
                                   if (response.statusCode == 200) {
                                     patient = response.result as PatientInfoModel;
-                                    PatientAPI.GetNextAvailableId().then((value) {
-                                      if (value.statusCode == 200) {
-                                        {
-                                          if (addNew) patient = PatientInfoModel(id: value.result as int);
-                                          setState(() {});
-                                          _getxController.nextAvailableId.value = value.result as int;
-                                          PatientAPI.CheckDuplicateId(patient.id!).then((_) {
-                                            _getxController.duplicateId.value = (_.statusCode == 200 && _.result != null);
-                                          });
-                                        }
-                                      }
-                                    });
+
                                   }
                                   if (widget.onSave != null) widget.onSave!(response);
                                   if (response.statusCode == 200) {
@@ -872,6 +856,23 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       ShowSnackBar(context, isSuccess: false, title: "Failed!", message: "Patient added but failed to upload images");
                                   } else
                                     ShowSnackBar(context, isSuccess: false, title: "Failed!", message: response.errorMessage!);
+
+                                  if (response.statusCode == 200) {
+
+                                    PatientAPI.GetNextAvailableId().then((value) {
+                                      if (value.statusCode == 200) {
+                                        {
+                                          if (addNew) patient = PatientInfoModel(id: value.result as int);
+                                          setState(() {});
+                                          _getxController.nextAvailableId.value = value.result as int;
+                                          PatientAPI.CheckDuplicateId(patient.id!).then((_) {
+                                            _getxController.duplicateId.value = (_.statusCode == 200 && _.result != null);
+                                          });
+                                        }
+                                      }
+                                    });
+                                  }
+
                                 }),
                           )
                         : edit
