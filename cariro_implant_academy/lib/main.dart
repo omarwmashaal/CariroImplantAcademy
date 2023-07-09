@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html' as html;
 import 'dart:io';
 
 import 'package:cariro_implant_academy/API/LoadinAPI.dart';
@@ -36,12 +35,16 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
+import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:f_logs/model/flog/flog_config.dart';
 import 'package:f_logs/utils/formatter/field_name.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -64,42 +67,51 @@ import 'Widgets/CIA_TeethTreatmentWidget.dart';
 import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
 import 'package:logging/logging.dart';
-void main() async{
-  html.window.onUnload.listen((event) async {
-  });
+
+import 'core/injection_contianer.dart';
+import 'core/presentation/widgets/LoadingWidget.dart';
+
+void main() async {
+  /*html.window.onUnload.listen((event) async {
+  });*/
   //Get.put(NavigationController());
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
   Get.put(SiteController());
+
+  /*
   List<String> logData = [];
   Logger.root.level = Level.INFO;
   // Writes the log messages to the console
   Logger.root.onRecord.listen(
-        (LogRecord rec) {
-          logData.add('${rec.level.name}: ${rec.time}: ${rec.message}');
+    (LogRecord rec) {
+      logData.add('${rec.level.name}: ${rec.time}: ${rec.message}');
       //print('${rec.level.name}: ${rec.time}: ${rec.message}');
       //  siteController.logs.add('${rec.level.name}: ${rec.time}: ${rec.message}');
     },
   );
 
   Timer? timer;
-  timer = Timer.periodic(Duration(seconds: 15), (Timer t) async{
+  timer = Timer.periodic(Duration(seconds: 15), (Timer t) async {
     print("timer executed");
-    String data="";
+    String data = "";
     logData.forEach((element) {
-      data+=(element)+"\n";
+      data += (element) + "\n";
     });
     logData = [];
 
     UserAPI.SaveLogFile(data);
 
-
-
     print("log exported");
-  });
-
-  runApp(const MyApp());
+  });*/
+  init();
+  runApp(
+    BlocProvider<SiteChangeBloc>(
+      create: (context) => sl<SiteChangeBloc>(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -107,20 +119,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Future(() async=> {
-
-    });
-    return MaterialApp.router(
-      title: 'CIA',
-      theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
-      debugShowCheckedModeBanner: false,
-      //routeInformationParser:CIA_Router.routes.routeInformationParser ,
-      // routerDelegate: CIA_Router.routes.routerDelegate,
-      routerConfig: CIA_Router.routes,
+    Future(() async => {});
+    return GlobalLoaderOverlay(
+      overlayWholeScreen: false,
+      overlayWidget: LoadingWidget(),
+      overlayOpacity: 0,
+      useDefaultLoading: false,
+      child: MaterialApp.router(
+        title: 'CIA',
+        theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
+        debugShowCheckedModeBanner: false,
+        //routeInformationParser:CIA_Router.routes.routeInformationParser ,
+        // routerDelegate: CIA_Router.routes.routerDelegate,
+        routerConfig: CIA_Router.routes,
+      ),
     );
   }
-
 }
 
 class MyHomePage extends StatefulWidget {
@@ -136,14 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController page = PageController();
 
   @override
-  void initState() {
-
-
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         //body: DashBoardPage(),
 

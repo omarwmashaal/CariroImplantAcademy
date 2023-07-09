@@ -30,9 +30,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-
-
+  build_runner: any
+  equatable: ^2.0.5
+  flutter_bloc: any
+  dartz: ^0.10.1
+  mockito: any
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -79,6 +81,8 @@ dependencies:
   shared_preferences: ^2.1.2
   signalr_netcore: ^1.3.3
   f_logs: ^2.0.1
+  get_it: any
+  loader_overlay: ^2.2.0
 
 
 
@@ -91,6 +95,7 @@ dev_dependencies:
     sdk: flutter
 
   shared_preferences: ^2.1.2
+  bloc_test: any
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -112,28 +117,28 @@ flutter:
   fonts:
     - family: Inter-Thin
       fonts:
-          - asset: fonts/inter/Inter-Thin.ttf
+        - asset: fonts/inter/Inter-Thin.ttf
     - family: Inter-SemiBold
       fonts:
-          - asset: fonts/inter/Inter-SemiBold.ttf
+        - asset: fonts/inter/Inter-SemiBold.ttf
     - family: Inter-Regular
       fonts:
-          - asset: fonts/inter/Inter-Regular.ttf
+        - asset: fonts/inter/Inter-Regular.ttf
     - family: Inter-Medium
       fonts:
-          - asset: fonts/inter/Inter-Medium.ttf
+        - asset: fonts/inter/Inter-Medium.ttf
     - family: Inter-Light
       fonts:
-          - asset: fonts/inter/Inter-Light.ttf
+        - asset: fonts/inter/Inter-Light.ttf
     - family: Inter-ExtraLight
       fonts:
-          - asset: fonts/inter/Inter-ExtraLight.ttf
+        - asset: fonts/inter/Inter-ExtraLight.ttf
     - family: Inter-ExtraBold
       fonts:
-          - asset: fonts/inter/Inter-ExtraBold.ttf
+        - asset: fonts/inter/Inter-ExtraBold.ttf
     - family: Inter-Bold
       fonts:
-          - asset: fonts/inter/Inter-Bold.ttf
+        - asset: fonts/inter/Inter-Bold.ttf
 
 
 

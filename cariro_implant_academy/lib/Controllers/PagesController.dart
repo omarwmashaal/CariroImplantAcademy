@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';

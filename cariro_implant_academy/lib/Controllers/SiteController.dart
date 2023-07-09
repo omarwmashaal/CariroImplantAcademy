@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';

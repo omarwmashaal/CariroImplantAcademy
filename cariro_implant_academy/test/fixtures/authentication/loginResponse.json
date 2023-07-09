@@ -1,0 +1,9 @@
+{
+  "phoneNumber": "string",
+  "phone": "string",
+  "name": "string",
+  "idInt": 0,
+  "role": "string",
+  "token": "string"
+}
+

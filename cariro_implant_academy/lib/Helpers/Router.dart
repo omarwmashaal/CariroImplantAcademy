@@ -5,7 +5,7 @@ import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
-import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
+//import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
@@ -34,6 +34,8 @@ import '../Pages/NotificationsPage.dart';
 import '../Pages/SharedPages/PatientSharedPages.dart';
 import 'package:logging/logging.dart';
 
+import '../presentation/authentication/pages/authentication_page.dart';
+
 
 class CIA_Router {
   static var shellNavigationKey = GlobalKey<NavigatorState>();
@@ -51,11 +53,13 @@ class CIA_Router {
           builder: (context, state) {
             return Scaffold(body: AuthenticationPage());
           },
+          //todo: fix this
+          /*
           redirect: (context, state) async {
             if (await siteController.getToken() == "") {
               return "/";
             }
-          },
+          },*/
           routes: [
             GoRoute(
                 name: "CIA",
@@ -64,6 +68,8 @@ class CIA_Router {
                   siteController.setSite(Website.CIA);
                   return Scaffold(body: AuthenticationPage());
                 },
+                //todo: fix this
+                /*
                 redirect: (context, state) async {
                   Logger.root.log(Level.INFO, "Called verify from main routing redirect");
                   var res = await AuthenticationAPI.VerifyToken();
@@ -79,7 +85,7 @@ class CIA_Router {
                   ) {
                     return "/";
                   }
-                },
+                },*/
                 routes: [
                   ShellRoute(
                     builder: (context, state, child) {
@@ -693,6 +699,8 @@ class _Authorize extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
     Logger.root.log(Level.INFO, "Called verify from main routing redirect");
+    //todo: return this
+    return child;
     return FutureBuilder(
       future: AuthenticationAPI.VerifyToken(),
       builder: (context, snapshot) {
