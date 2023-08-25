@@ -22,6 +22,7 @@ import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/SnackBar.dart';
 import '../../Widgets/Title.dart';
+import '../../presentation/patients/pages/createOrViewPatientPage.dart';
 import '../SharedPages/PatientSharedPages.dart';
 import 'Patient_MedicalInfo.dart';
 
@@ -121,17 +122,17 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
 }
 */
 
-class PatientsSearchPage extends StatefulWidget {
-  PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
-  static String routeName = "Patients";
-  static String myPatientsRouteName = "MyPatients";
+class PatientsSearchPagess extends StatefulWidget {
+  PatientsSearchPagess({Key? key, this.myPatients = false}) : super(key: key);
+  static String routeName = "Patientsss";
+  static String myPatientsRouteName = "MyPatientsss";
   bool myPatients;
 
   @override
-  State<PatientsSearchPage> createState() => _PatientsSearchPageState();
+  State<PatientsSearchPagess> createState() => _PatientsSearchPagessState();
 }
 
-class _PatientsSearchPageState extends State<PatientsSearchPage> {
+class _PatientsSearchPagessState extends State<PatientsSearchPagess> {
   PatientDataSource dataSource = PatientDataSource();
 
   @override
@@ -188,7 +189,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
             CIA_PrimaryButton(
                 label: "Add Patient",
                 onTab: () {
-                  context.goNamed(PatientInfo_SharedPage.addPatientRouteName);
+                  context.goNamed(CreateOrViewPatientPage.addPatientRouteName);
                 })
           ],
         ),

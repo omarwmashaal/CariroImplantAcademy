@@ -123,6 +123,6 @@ class _UserSearchPageState extends State<UserSearchPage> {
   @override
   void initState() {
 
-    siteController.setAppBarWidget();
+    siteController.setAppBarWidget(context: context);
   }
 }

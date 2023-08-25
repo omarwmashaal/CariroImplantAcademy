@@ -7,7 +7,6 @@ import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
@@ -16,8 +15,11 @@ import 'package:cariro_implant_academy/Pages/SharedPages/LapCreateNewRequestShar
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/LargeScreen.dart';
 import 'package:cariro_implant_academy/Widgets/SiteLayout.dart';
+import 'package:cariro_implant_academy/presentation/patients/pages/createOrViewPatientPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,13 +30,19 @@ import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import '../Pages/CIA_Pages/PatientVisits.dart';
 import '../Pages/CIA_Pages/Patient_MedicalInfo.dart';
+import '../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../Pages/CIA_Pages/ViewUserPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/NotificationsPage.dart';
-import '../Pages/SharedPages/PatientSharedPages.dart';
 import 'package:logging/logging.dart';
 
+import '../Pages/SharedPages/PatientSharedPages.dart';
+import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import '../presentation/authentication/pages/authentication_page.dart';
+import '../presentation/patients/pages/patientsSearchPage.dart';
+import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
+import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
+import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 
 
 class CIA_Router {
@@ -107,11 +115,11 @@ class CIA_Router {
                           },
                           routes: [
                             GoRoute(
-                              name: PatientInfo_SharedPage.addPatientRouteName,
-                              path: PatientInfo_SharedPage.addPatientRoutePath,
+                              name: CreateOrViewPatientPage.addPatientRouteName,
+                              path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
-                                    child: PatientInfo_SharedPage(
+                                    child: const CreateOrViewPatientPage(
                                   patientID: 0,
                                 ));
                               },
@@ -187,18 +195,17 @@ class CIA_Router {
                         name: routeConst_PatientInfo,
                         path: "CIA/Patients/:id",
                         redirect: (context, state) {
-                          if (siteController.getRole() == "secretary") return PatientInfo_SharedPage.getPathViewPatient(state.pathParameters['id'].toString());
+                          if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
                           return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
                         },
                       ),
                       GoRoute(
-                        path: PatientInfo_SharedPage.viewPatientRoutePath,
-                        name: PatientInfo_SharedPage.viewPatientRouteName,
+                        path: CreateOrViewPatientPage.viewPatientRoutePath,
+                        name: CreateOrViewPatientPage.viewPatientRouteName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: PatientInfo_SharedPage(
+                            child:  CreateOrViewPatientPage(
                               patientID: int.parse(state.pathParameters['id'].toString()),
-                              loadFunction: PatientAPI.GetPatientData,
                             ),
                           );
                         },
@@ -372,7 +379,7 @@ class CIA_Router {
                                 UserRoles.Instructor,
                                 UserRoles.Assistant,
                                 UserRoles.Admin,
-                              ], child: PatientMedicalInfoPage(patientId: int.parse(state.pathParameters['id'].toString()), child: child)),
+                              ], child: MedicalInfoShellPage(patientId: int.parse(state.pathParameters['id'].toString()), child: child)),
                             );
                           },
                           routes: [
@@ -396,8 +403,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              name: PatientDentalHistory.routeName,
-                              path: PatientDentalHistory.routePath,
+                              name: DentalHistoryPage.routeName,
+                              path: DentalHistoryPage.routePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: _Authorize(
@@ -406,7 +413,7 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child: PatientDentalHistory(
+                                    child: DentalHistoryPage(
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
                                   ),
@@ -414,8 +421,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              name: PatientDentalExamination.routeName,
-                              path: PatientDentalExamination.routePath,
+                              name: DentalExaminationPage.routeName,
+                              path: DentalExaminationPage.routePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: _Authorize(
@@ -424,7 +431,7 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child: PatientDentalExamination(
+                                    child: DentalExaminationPage(
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
                                   ),

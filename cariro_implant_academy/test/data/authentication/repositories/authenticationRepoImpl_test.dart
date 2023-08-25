@@ -13,6 +13,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../fixtures/fixture.dart';
 import 'authenticationRepoImpl_test.mocks.dart';
 
@@ -28,12 +29,13 @@ void main() {
   final loginResponse = UserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
   final UserEntity loginResponseEntity = loginResponse;
   setUpSuccess() {
+    SharedPreferences.setMockInitialValues({});
     when(mockDataSource.login(loginParams)).thenAnswer(
       (realInvocation) async => loginResponse,
     );
   }
   setUpServerException() {
-    when(mockDataSource.login(loginParams)).thenThrow(ServerException());
+    when(mockDataSource.login(loginParams)).thenThrow(HttpInternalServerErrorException());
   }
   setUpLoginLogOutException() {
     when(mockDataSource.login(loginParams)).thenThrow(LoginException());
@@ -57,11 +59,38 @@ void main() {
     },
   );
   test(
+    "Should Save token if success",
+    () async {
+      final pref = await SharedPreferences.getInstance();
+      setUpSuccess();
+     await repoImpl.login(loginParams);
+      expect(pref.getString("token"), loginResponse.token);
+    },
+  );
+  test(
+    "Should Save role if success",
+    () async {
+      final pref = await SharedPreferences.getInstance();
+      setUpSuccess();
+     await repoImpl.login(loginParams);
+      expect(pref.getString("role"), loginResponse.role);
+    },
+  );
+  test(
+    "Should Save userid if success",
+    () async {
+      final pref = await SharedPreferences.getInstance();
+      setUpSuccess();
+     await repoImpl.login(loginParams);
+      expect(pref.getInt("userid"), loginResponse.idInt);
+    },
+  );
+  test(
     "Should return ServerFailure if serverException",
     () async {
       setUpServerException();
       final result = await repoImpl.login(loginParams);
-      expect(result, Left(ServerFailure()));
+      expect(result, Left(HttpInternalServerErrorFailure()));
     },
   );
   test(

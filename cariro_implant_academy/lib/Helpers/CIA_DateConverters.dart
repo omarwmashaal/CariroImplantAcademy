@@ -63,9 +63,9 @@ class CIA_DateConverters {
       formatedDateTime =  DateFormat("dd-MM-yyyy hh:mm a").parse(dateTime!);
     }catch(e){
       try {
-        formatedDateTime =  DateFormat("yyyy-MM-dd H:mm:SS").parse(dateTime!);
+        formatedDateTime =  DateFormat("dd-MM-yyyy H:mm:SS").parse(dateTime!);
       } on Exception catch (e) {
-        formatedDateTime =  DateFormat("yyyy-MM-dd").parse(dateTime!);
+        formatedDateTime =  DateFormat("dd-MM-yyyy").parse(dateTime!);
       }
     }
     final DateFormat formatter = DateFormat('yyyy-MM-dd');

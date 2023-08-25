@@ -24,9 +24,10 @@ class AuthenticationBloc extends Bloc<Authentication_blocEvent, Authentication_b
         final result = await loginUseCase(event.loginParams);
         result.fold(
           (l) {
-            if (l is ServerFailure)
+            if (l is HttpInternalServerErrorFailure)
               emit(ErrorState(message: SERVER_FAILURE_MESSAGE));
             else if (l is LoginFailure) emit(ErrorState(message: LOGIN_FAILURE_MESSAGE));
+            else emit(ErrorState(message: l.message??""));
           },
           (r) {
             emit(LoggedIn(user: r));

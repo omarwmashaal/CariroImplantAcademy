@@ -44,7 +44,7 @@ void main() {
     when(mockCheckLoginStatusRepo.checkLoginStatus()).thenAnswer((realInvocation) async => Right(tLoginResponse));
     when(mockLoginStatusDataSource.checkLoginStatus()).thenAnswer((realInvocation) async => tLoginResponseModel);
     when(mockClient.post(host: anyNamed("host"), body: anyNamed("body")))
-        .thenAnswer((realInvocation) async => StandardHttpResponse(body: fixture("authentication/loginResponse.json"), statusCode: 200));
+        .thenAnswer((realInvocation) async => StandardHttpResponse(body: json.decode(fixture("authentication/loginResponse.json")), statusCode: 200));
   }
 
   setUpUserLoggedOut() {
@@ -57,9 +57,9 @@ void main() {
 
   setUpFailure() {
     SharedPreferences.setMockInitialValues({"token": ""});
-    when(mockCheckLoginStatusRepo.checkLoginStatus()).thenAnswer((realInvocation) async => Left(ServerFailure()));
-    when(mockLoginStatusDataSource.checkLoginStatus()).thenThrow(ServerException());
-    when(mockClient.post(host: anyNamed("host"), body: anyNamed("body"))).thenThrow(ServerException());
+    when(mockCheckLoginStatusRepo.checkLoginStatus()).thenAnswer((realInvocation) async => Left(HttpInternalServerErrorFailure()));
+    when(mockLoginStatusDataSource.checkLoginStatus()).thenThrow(HttpInternalServerErrorException());
+    when(mockClient.post(host: anyNamed("host"), body: anyNamed("body"))).thenThrow(HttpInternalServerErrorException());
   }
 
   group(
@@ -94,7 +94,7 @@ void main() {
         () async {
           setUpFailure();
           final result = await useCase(NoParams());
-          expect(result, Left(ServerFailure()));
+          expect(result, Left(HttpInternalServerErrorFailure()));
         },
       );
     },
@@ -132,7 +132,7 @@ void main() {
         () async {
           setUpFailure();
           final result = await repoImpl.checkLoginStatus();
-          expect(result, Left(ServerFailure()));
+          expect(result, Left(HttpInternalServerErrorFailure()));
         },
       );
     },
@@ -187,7 +187,7 @@ void main() {
         () async {
           setUpFailure();
           final call = dataSourceImpl.checkLoginStatus;
-          expect(() => call(), throwsA(TypeMatcher<ServerException>()));
+          expect(() => call(), throwsA(TypeMatcher<HttpInternalServerErrorException>()));
         },
       );
     },

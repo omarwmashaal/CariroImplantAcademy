@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
@@ -12,17 +11,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
 import '../../../Constants/Colors.dart';
 import '../../../Constants/Controllers.dart';
-import '../../../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../../../Routes/Routes.dart';
 import '../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../Widgets/CIA_TextFormField.dart';
 import '../../../core/injection_contianer.dart';
 import '../../../core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import '../../../core/presentation/bloc/siteChange/siteChange_blocStates.dart';
+import '../../patients/pages/patientsSearchPage.dart';
+import '../../widgets/customeLoader.dart';
 
 class AuthenticationPage extends StatelessWidget {
   AuthenticationPage({Key? key}) : super(key: key);
@@ -37,13 +36,14 @@ class AuthenticationPage extends StatelessWidget {
       child: BlocListener<AuthenticationBloc, Authentication_blocState>(
         listener: (context, state) {
           if (state is LoggingInState)
-            context.loaderOverlay.show();
+            CustomLoader.show(context);
           else if (state is ErrorState)
             ShowSnackBar(context, isSuccess: false, message: state.message);
           else if (state is LoggedIn) context.goNamed(PatientsSearchPage.routeName);
-          if (state is! LoggingInState) context.loaderOverlay.hide();
+          if (state is! LoggingInState) CustomLoader.hide();
         },
-        child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(builder: (context, state) {
+        child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(
+            builder: (context, state) {
           return Column(
             children: [
               Expanded(child: SizedBox()),

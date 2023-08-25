@@ -1,0 +1,30 @@
+{
+  "id": 3,
+  "patientId": 3,
+  "dentalExaminations": [
+    {
+      "tooth": 15,
+      "carious": false,
+      "filled": true,
+      "missed": false,
+      "notSure": false,
+      "mobilityI": false,
+      "mobilityII": false,
+      "mobilityIII": false,
+      "hopelessteeth": false,
+      "implantPlaced": false,
+      "implantFailed": false,
+      "previousState": "missed"
+    }
+  ],
+  "interarchspaceRT": 0,
+  "interarchspaceLT": 0,
+  "oralHygieneRating": 2,
+  "date": "13-06-2023 16:22",
+  "operatorImplantNotes": "",
+  "operatorId": null,
+  "operator": {
+    "name": "Admin",
+    "idInt": 101
+  }
+}

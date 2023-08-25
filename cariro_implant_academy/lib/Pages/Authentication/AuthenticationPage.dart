@@ -41,7 +41,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             var login = await AuthenticationAPI.Login(email, password);
             if (login.statusCode == 200) {
               if(siteController.getSite()==Website.CIA)
-                context.goNamed(PatientsSearchPage.routeName);
+                context.goNamed(PatientsSearchPagess.routeName);
               else if(siteController.getSite()==Website.Lab)
                 context.goNamed(LabTodaysRequestsSearch.routeName);
               if(siteController.getSite()==Website.Clinic)

@@ -44,7 +44,7 @@ class PagesController extends PageController {
             controller: pagesController,
             children: [
               Container(
-                child: PatientsSearchPage(),
+                child: PatientsSearchPagess(),
               ),
               Container(
                 child: Center(
@@ -176,7 +176,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'atients',
               onTap: () {
-                context.goNamed(PatientsSearchPage.routeName);
+                context.goNamed(PatientsSearchPagess.routeName);
                 controller.notifyListeners();
               },
               iconWidget: Container(

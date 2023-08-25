@@ -55,6 +55,7 @@ import '../../Widgets/MultiSelectChipWidget.dart';
 import 'package:collection/collection.dart';
 
 import '../../Widgets/SnackBar.dart';
+import '../../presentation/patients/pages/createOrViewPatientPage.dart';
 import '../LAB_Pages/LAB_ViewTask.dart';
 import '../SharedPages/LapCreateNewRequestSharedPage.dart';
 
@@ -169,7 +170,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
                           CIA_SecondaryButton(
                               label: "View more info",
                               onTab: () {
-                                context.goNamed(PatientInfo_SharedPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
+                                context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
                               }),
                           SizedBox(
                             height: 10,
@@ -288,7 +289,7 @@ class _PatientMedicalInfoPageState extends State<PatientMedicalInfoPage> {
     );
   }
 }
-
+/*
 class PatientMedicalHistory extends StatefulWidget {
   PatientMedicalHistory({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "MedicalHistory";
@@ -947,18 +948,19 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
         });
   }
 }
-
-class PatientDentalHistory extends StatefulWidget {
-  PatientDentalHistory({Key? key, required this.patientId}) : super(key: key);
+*/
+/*
+class DentalHistoryPage extends StatefulWidget {
+  DentalHistoryPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "DentalHistory";
   static String routePath = "Patients/:id/DentalHistory";
   int patientId;
 
   @override
-  State<PatientDentalHistory> createState() => _PatientDentalHistoryState();
+  State<DentalHistoryPage> createState() => _DentalHistoryPageState();
 }
 
-class _PatientDentalHistoryState extends State<PatientDentalHistory> {
+class _DentalHistoryPageState extends State<DentalHistoryPage> {
   Color clench = Color_TextFieldBorder;
   String tobacco = "0";
   late Future<API_Response> load;
@@ -1126,6 +1128,8 @@ class _PatientDentalHistoryState extends State<PatientDentalHistory> {
   }
 }
 
+*/
+/*
 class PatientDentalExamination extends StatefulWidget {
   PatientDentalExamination({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "DentalExamination";
@@ -1537,7 +1541,7 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
         });
   }
 }
-
+*/
 class PatientNonSurgicalTreatment extends StatefulWidget {
   PatientNonSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "NonSurgicalTreatment";

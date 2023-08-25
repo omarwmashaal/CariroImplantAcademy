@@ -83,7 +83,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
             onTap: () {
               siteController.setSite(Website.CIA);
               widget.onSiteChange();
-              context.goNamed(PatientsSearchPage.routeName);
+              context.goNamed(PatientsSearchPagess.routeName);
 
             },
             child: Image(

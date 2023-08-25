@@ -60,7 +60,7 @@ void main() {
     build: () => tbloc,
     act: (bloc) => tbloc.add(LogInEvent(tLoginParams)),
     expect: () => [LoggingInState(),ErrorState(message: SERVER_FAILURE_MESSAGE)],
-    setUp: () => when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Left(ServerFailure())),
+    setUp: () => when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Left(HttpInternalServerErrorFailure())),
   );
   blocTest(
     "Should emit Logged out if check login failed",

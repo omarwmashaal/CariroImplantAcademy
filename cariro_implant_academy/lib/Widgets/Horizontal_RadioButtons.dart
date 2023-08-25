@@ -35,8 +35,8 @@ class _HorizontalRadioButtonsState extends State<HorizontalRadioButtons> {
                     ? Color_Accent
                     : widget.selectionColor,
                 visualDensity: VisualDensity.compact,
-                value: name,
-                groupValue: widget.groupValue,
+                value: name.toLowerCase(),
+                groupValue: widget.groupValue.toLowerCase(),
                 onChanged: (value) {
                   setState(() {
                     widget.groupValue = value as String;

@@ -1,0 +1,39 @@
+{
+  "id": 583,
+  "patientId": 562,
+  "generalHealth": 2,
+  "pregnancyStatus": null,
+  "areYouTreatedFromAnyThing": null,
+  "recentSurgery": null,
+  "comment": null,
+  "diseases": null,
+  "otherDiseases": null,
+  "bloodPressure": null,
+  "diabetic": null,
+  "hbA1c": [
+    {
+      "date": null,
+      "reading": 0
+    }
+  ],
+  "penicillin": null,
+  "sulfa": null,
+  "otherAllergy": null,
+  "otherAllergyComment": null,
+  "prolongedBleedingOrAspirin": null,
+  "chronicDigestion": null,
+  "illegalDrugs": null,
+  "operatorComments": null,
+  "drugsTaken": [],
+  "operatorId": null,
+  "operator": {
+    "idInt": 101,
+    "name": "Admin",
+    "phone": "01262573559",
+    "phoneNumber": "01262573559",
+    "token": null,
+    "role": null
+  },
+  "date": "2023-07-23T15:43:35.80004Z",
+  "hasChanges": false
+}

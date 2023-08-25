@@ -24,11 +24,11 @@ class Auth_ASP_DataSourceImpl implements Auth_ASP_DataSource {
     try {
       result = await client.post(host: "$serverHost/$authenticationController/Login", body: loginParams.toJson());
 
-    } on Exception {
-      throw ServerException();
+    } catch(e) {
+      throw mapException(e);
     }
-    if (result.statusCode == 200)
-      return UserModel.fromJson(json.decode(result.body));
+    if (result.statusCode == 200 && result.body!=null)
+      return UserModel.fromJson(result.body! as Map<String,dynamic>);
     else
       throw LoginException();
 

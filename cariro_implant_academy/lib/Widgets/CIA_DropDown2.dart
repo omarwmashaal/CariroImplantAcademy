@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../Models/NotificationModel.dart';
+import '../core/domain/entities/notificationEntity.dart';
 
 class CIA_NotificationsWidget extends StatefulWidget {
   CIA_NotificationsWidget({
@@ -20,7 +21,7 @@ class CIA_NotificationsWidget extends StatefulWidget {
   String? hint;
   Widget? customButton;
   List<String>? childrenString;
-  List<NotificationModel>? notifications;
+  List<NotificationEntity>? notifications;
 
   @override
   State<CIA_NotificationsWidget> createState() => _CIA_NotificationsWidgetState();
@@ -28,12 +29,12 @@ class CIA_NotificationsWidget extends StatefulWidget {
 
 class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
   String? selectedValue;
-  NotificationModel? selectedValueNot;
+  NotificationEntity? selectedValueNot;
   bool _isOpen = false;
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2<NotificationModel>(
+      child: DropdownButton2<NotificationEntity>(
         isExpanded: true,
         customButton: widget.customButton,
         hint: widget.hint != null
@@ -61,8 +62,8 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
                 ],
               )
             : null,
-        items:(widget.notifications as List<NotificationModel>)
-                .map((item) => DropdownMenuItem<NotificationModel>(
+        items:(widget.notifications as List<NotificationEntity>)
+                .map((item) => DropdownMenuItem<NotificationEntity>(
                       value: item,
                       child: Container(
                         padding: EdgeInsets.all(5),
@@ -113,7 +114,7 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
         onChanged: (value) async {
           if(value!=null && value.onClickAction!=null && value.infoId!=null)
             {
-              context.goNamed(value.onClickAction!(),pathParameters: {'id':value.infoId!.toString()});
+              //context.goNamed(value.onClickAction!(),pathParameters: {'id':value.infoId!.toString()});
             }
 
         },

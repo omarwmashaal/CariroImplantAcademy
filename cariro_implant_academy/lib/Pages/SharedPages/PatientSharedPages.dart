@@ -49,18 +49,18 @@ class _getxController extends GetxController {
 class PatientInfo_SharedPage extends StatefulWidget {
   PatientInfo_SharedPage({Key? key, required this.patientID, this.loadFunction, this.hideSaveButton = false, this.onSave}) : super(key: key);
 
-  static String getPathViewPatient(String id) {
+  static String getPatshViewPatient(String id) {
     return "/CIA/Patients/$id/ViewPatient";
   }
 
-  static String getPathAddPatient(String id) {
+  static String getPasthAddPatient(String id) {
     return "/CIA/Patients/AddPatient";
   }
 
-  static String viewPatientRouteName = "ViewPatient";
-  static String viewPatientRoutePath = "Patients/:id/ViewPatient";
-  static String addPatientRouteName = "AddPatient";
-  static String addPatientRoutePath = "AddPatient";
+  static String viewPsatientRouteName = "ViewPatient";
+  static String viewPsatientRoutePath = "Patients/:id/ViewPatient";
+  static String addPatsientRouteName = "AddPatient";
+  static String addPastientRoutePath = "AddPatient";
 
   int patientID;
   Function? loadFunction;

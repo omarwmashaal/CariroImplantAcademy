@@ -35,3 +35,6 @@ setSite(Website site) => _site=site;
  * Authentication
  *****************/
 const authenticationController = "Authentication";
+const patientInfoController= "PatientInfo";
+const notificationController= "Notifications";
+const medicalController= "Medical";

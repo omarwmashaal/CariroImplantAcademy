@@ -19,8 +19,8 @@ class LoginStatusRepoImpl implements CheckLoginStatusRepo {
       return Right(result);
     } on LoginException {
       return Left(LoginFailure());
-    } on ServerException {
-      return Left(ServerFailure());
+    } on HttpInternalServerErrorException {
+      return Left(HttpInternalServerErrorFailure());
     }
   }
 }

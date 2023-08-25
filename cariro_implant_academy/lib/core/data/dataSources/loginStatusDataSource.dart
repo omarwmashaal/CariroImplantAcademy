@@ -30,10 +30,10 @@ class LoginStatusDataSourceImpl implements LoginStatusDataSource {
         host: "$serverHost/$authenticationController/VerifyToken",
       );
     } on Exception {
-      throw ServerException();
+      throw HttpInternalServerErrorException();
     }
-    if (result.statusCode == 200)
-      return (UserModel.fromJson(json.decode(result.body)));
+    if (result.statusCode == 200 && result.body!=null)
+      return (UserModel.fromJson(result.body! as Map<String,dynamic>));
     else
       throw LoginException();
   }

@@ -27,6 +27,7 @@ import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart'
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
+import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -37,6 +38,15 @@ import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
+import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
+import 'package:cariro_implant_academy/presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
+import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
+import 'package:cariro_implant_academy/presentation/patients/bloc/patientSearchBloc.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalPagesStatesChangesBloc.dart';
 import 'package:f_logs/model/flog/flog.dart';
 import 'package:f_logs/model/flog/flog_config.dart';
 import 'package:f_logs/utils/formatter/field_name.dart';
@@ -44,7 +54,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -120,14 +129,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future(() async => {});
-    return GlobalLoaderOverlay(
-      overlayWholeScreen: false,
-      overlayWidget: LoadingWidget(),
-      overlayOpacity: 0,
-      useDefaultLoading: false,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<PatientSearchBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<AddToMyPatientsRangeBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<CreateOrViewPatientBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<ImageBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<AppBarBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<MedicalInfoShellBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<MedicalHistoryBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DentalHistoryBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<DentalExaminationBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<MedicalPagesStatesChangesBloc>(),
+        ),
+      ],
       child: MaterialApp.router(
         title: 'CIA',
-        theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
+        theme: ThemeData(
+          primaryColor: Colors.red,
+          //accentColor: Color_Accent,
+
+          primarySwatch: Colors.lightGreen,
+        ),
         debugShowCheckedModeBanner: false,
         //routeInformationParser:CIA_Router.routes.routeInformationParser ,
         // routerDelegate: CIA_Router.routes.routerDelegate,

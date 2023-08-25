@@ -18,7 +18,7 @@ PageView MainPageRoutes() {
     controller: pagesController,
     children: [
       Container(
-        child: PatientsSearchPage(),
+        child: PatientsSearchPagess(),
       ),
       Container(
         child:  Center(

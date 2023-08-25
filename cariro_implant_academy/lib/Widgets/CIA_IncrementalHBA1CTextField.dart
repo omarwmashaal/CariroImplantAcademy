@@ -3,11 +3,13 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../features/patientsMedical/medicalExamination/domain/entities/hba1cEntity.dart';
+
 class CIA_IncrementalHBA1CTextField extends StatefulWidget {
   CIA_IncrementalHBA1CTextField({Key? key, required this.model, this.onChange})
       : super(key: key);
 
-  List<HbA1c> model;
+  List<HbA1cEntity> model;
   Function? onChange;
 
   @override
@@ -17,7 +19,7 @@ class CIA_IncrementalHBA1CTextField extends StatefulWidget {
 
 class _CIA_IncrementalHBA1CTextFieldState
     extends State<CIA_IncrementalHBA1CTextField> {
-  List<HbA1c> items = [];
+  List<HbA1cEntity> items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class _CIA_IncrementalHBA1CTextFieldState
   List<Widget> _buildColumn() {
     List<Widget> returnValue = [];
     int index = 1;
-    for (HbA1c item in items) {
+    for (HbA1cEntity item in items) {
       returnValue.add(const SizedBox(height: 10));
       returnValue.add(Row(
         key: GlobalKey(),
@@ -73,7 +75,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                           widget.onChange!(items);
                         }
                         setState(() {
-                          items.add(HbA1c(reading: 0));
+                          items.add(HbA1cEntity(reading: 0));
                         });
                       },
                       icon: Icon(Icons.add))
@@ -104,6 +106,6 @@ class _CIA_IncrementalHBA1CTextFieldState
   void initState() {
     items = widget.model;
     if (items == null || items.length == 0)
-      items.add(HbA1c(reading: 0, date: ""));
+      items.add(HbA1cEntity(reading: 0, date: ""));
   }
 }

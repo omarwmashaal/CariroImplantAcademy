@@ -1,0 +1,55 @@
+{
+  "id": 4,
+  "patientId": 4,
+  "generalHealth": 2,
+  "pregnancyStatus": 2,
+  "areYouTreatedFromAnyThing": null,
+  "recentSurgery": null,
+  "comment": null,
+  "diseases": [
+    10,
+    11
+  ],
+  "otherDiseases": null,
+  "bloodPressure": {
+    "lastReading": "118/57",
+    "when": "2019-10-25",
+    "drug": "Nifedipine",
+    "readingInClinic": "140/98",
+    "status": 3
+  },
+  "diabetic": {
+    "lastReading": 173,
+    "when": "2020-10-21",
+    "randomInClinic": 95,
+    "status": 0,
+    "type": 1
+  },
+  "hbA1c": [
+    {
+      "date": "1979-10-11",
+      "reading": 6
+    },
+    {
+      "date": "1998-04-24",
+      "reading": 6
+    },
+    {
+      "date": "1982-08-17",
+      "reading": 6
+    }
+  ],
+  "penicillin": false,
+  "sulfa": null,
+  "otherAllergy": null,
+  "otherAllergyComment": null,
+  "prolongedBleedingOrAspirin": null,
+  "chronicDigestion": null,
+  "illegalDrugs": "Yes",
+  "operatorComments": null,
+  "drugsTaken": null,
+  "operatorId": null,
+  "operator": null,
+  "date": null,
+  "hasChanges": false
+}

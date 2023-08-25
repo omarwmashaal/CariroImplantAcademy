@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "name": "Maher Khattab",
+  "phone": "01297587030",
+  "maritalStatus": "Married",
+  "gender": "Female",
+  "relativePatient": "Omar",
+  "doctorID": 101,
+  "dateOfBirth": "1998-04-15",
+  "doctor": "doctor name",
+  "city": "city",
+  "address": "address",
+  "idBackImageId": 1234,
+  "idFrontImageId": 897,
+  "nationalID": "568",
+  "phone2": "21214124214",
+  "profileImageId": 12412,
+  "registeredBy": "registeredBy",
+  "registrationDate": "2001-04-15",
+  "relativePatientID": 689
+}

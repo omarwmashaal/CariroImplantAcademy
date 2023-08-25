@@ -27,7 +27,7 @@ void main() {
   setUpLoginSuccess() {
     SharedPreferences.setMockInitialValues({});
     when(mockClient.post( host: anyNamed("host"), body: anyNamed("body"))).thenAnswer(
-      (realInvocation) async => StandardHttpResponse(body: fixture("authentication/loginResponse.json"), statusCode: 200),
+      (realInvocation) async => StandardHttpResponse(body: json.decode(fixture("authentication/loginResponse.json")), statusCode: 200),
     );
   }
 
@@ -67,7 +67,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       setUpLoginException();
       final call = dataSource.login;
-      expect(() => call(loginParams), throwsA(TypeMatcher<ServerException>()));
+      expect(() => call(loginParams), throwsA(TypeMatcher<HttpInternalServerErrorException>()));
     },
   );
 

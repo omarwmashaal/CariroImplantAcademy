@@ -8,15 +8,15 @@ import '../Controllers/PatientMedicalController.dart';
 import 'FormTextWidget.dart';
 
 class CIA_TagsInputWidget extends StatefulWidget {
-  CIA_TagsInputWidget(
-      {Key? key,
-      required this.label,
-      this.initialValue,
-      this.strikeValues,
-      this.onDelete,
-      this.onChange = null,
-        this.dynamicVisibility = false,})
-      : super(key: key);
+  CIA_TagsInputWidget({
+    Key? key,
+    required this.label,
+    this.initialValue,
+    this.strikeValues,
+    this.onDelete,
+    this.onChange = null,
+    this.dynamicVisibility = false,
+  }) : super(key: key);
   String label;
   Function(List<String>)? onChange;
   Function(String)? onDelete;
@@ -35,63 +35,65 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
 
   @override
   void initState() {
-    widget.initialValue=widget.initialValue??[];
+    widget.initialValue = widget.initialValue ?? [];
     if (widget.strikeValues != null) {
       for (int i = 0; i < widget.strikeValues!.length; i++) {
         widget.strikeValues![i] = "strike" + widget.strikeValues![i];
       }
 
-      if (widget.initialValue != null)
-        widget.initialValue?.addAll(widget.strikeValues!);
+      if (widget.initialValue != null) widget.initialValue?.addAll(widget.strikeValues!);
     }
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    bool show = widget.dynamicVisibility?widget.initialValue!.isNotEmpty :true;
-     return
-       show?Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-       children: [
-         FormTextKeyWidget(text: widget.label),
-         Container(
-           padding: EdgeInsets.all(8),
-           decoration: BoxDecoration(
-               border: Border.fromBorderSide(
-                 BorderSide(
-                     color: Color_TextFieldBorder, width: 0.0),
-               ),
-               borderRadius: BorderRadius.all(Radius.circular(8))
-           ),
-           child: Row(
-             children: widget.initialValue!.map((e) =>
-                 Chip(
-               labelPadding: const EdgeInsets.only(left: 8.0),
-               label: Text(
-                 e.replaceAll("strike", ""),
-                 style: TextStyle(
-                     decoration: e.contains("strike")
-                         ? TextDecoration.lineThrough
-                         : null,
-                     color: e.contains("strike") ? Colors.red : Colors.black),
-               ),
-               deleteIcon: Icon(
-                 Icons.close,
-                 size: 10,
-               ),
-               onDeleted: () {
-                 if (widget.onDelete != null) widget.onDelete!(e);
-               },
-             )).toList(),
-           ),
-         ),
-       ],
-     ):SizedBox(height: 1,);
-  }
-  buildChips()
-  {
+    bool show = widget.dynamicVisibility ? widget.initialValue!.isNotEmpty : true;
+    return show
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FormTextKeyWidget(text: widget.label),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    border: Border.fromBorderSide(
+                      BorderSide(color: Color_TextFieldBorder, width: 0.0),
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+                child: Row(
+                  children: widget.initialValue!
+                      .map((e) => Chip(
+                            labelPadding: const EdgeInsets.only(left: 8.0),
+                            label: Text(
+                              e.replaceAll("strike", ""),
+                              style: TextStyle(
+                                  decoration: e.contains("strike") ? TextDecoration.lineThrough : null,
+                                  color: e.contains("strike") ? Colors.red : Colors.black),
+                            ),
+                            deleteIcon: Icon(
+                              Icons.close,
+                              size: 10,
+                            ),
+                            onDeleted: () {
+                              if (widget.initialValue != null) {
+                                widget.initialValue!.remove(e);
+                                setState(() {
 
+                                });
+                              }
+                              if (widget.onDelete != null) widget.onDelete!(e);
+                            },
+                          ))
+                      .toList(),
+                ),
+              ),
+              SizedBox(height: 10,)
+            ],
+          )
+        : SizedBox(
+            height: 1,
+          );
   }
+
+  buildChips() {}
 }
