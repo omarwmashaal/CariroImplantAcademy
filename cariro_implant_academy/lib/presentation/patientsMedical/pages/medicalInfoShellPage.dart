@@ -10,6 +10,7 @@ import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPa
 import 'package:cariro_implant_academy/presentation/patients/bloc/patientSeachBlocStates.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/patientSearchBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,18 +28,35 @@ import '../../../Widgets/FormTextWidget.dart';
 import '../../../Widgets/Title.dart';
 import '../../patients/pages/createOrViewPatientPage.dart';
 
-class MedicalInfoShellPage extends StatelessWidget {
+class MedicalInfoShellPage extends StatefulWidget {
   MedicalInfoShellPage({Key? key, required this.patientId, required this.child}) : super(key: key);
   int patientId;
   Widget child;
-//TODO: KEEp state if same patient
+
+  @override
+  State<MedicalInfoShellPage> createState() => _MedicalInfoShellPageState();
+}
+
+class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
+  late MedicalInfoShellBloc medicalShellBloc;
+  late CreateOrViewPatientBloc blocInfo;
+  late ImageBloc blocImage;
+
+  @override
+  void initState() {
+    medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
+    blocInfo = BlocProvider.of<CreateOrViewPatientBloc>(context);
+    blocImage = BlocProvider.of<ImageBloc>(context);
+
+    blocInfo.add(GetPatientInfoEvent(id: widget.patientId));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    final blocInfo = BlocProvider.of<CreateOrViewPatientBloc>(context);
-    final blocImage = BlocProvider.of<ImageBloc>(context);
-    blocInfo.add(GetPatientInfoEvent(id: patientId));
-    context.read<MedicalInfoShellBloc>().changeViewEdit(edit: false);
-    return Container(
+
+    medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: false));
+
+      return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,7 +79,7 @@ class MedicalInfoShellPage extends StatelessWidget {
                   flex: 10,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: child,
+                    child: widget.child,
                   ),
                 )
               ],
@@ -108,7 +126,7 @@ class MedicalInfoShellPage extends StatelessWidget {
                             CIA_SecondaryButton(
                                 label: "View more info",
                                 onTab: () {
-                                  context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": patientId.toString()});
+                                  context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
                                 }),
                             const SizedBox(
                               height: 10,
@@ -180,14 +198,10 @@ class MedicalInfoShellPage extends StatelessWidget {
                                 if (state is MedicalInfoBlocChangeViewEditState && state.edit)
                                   return CIA_SecondaryButton(
                                       label: "View mode",
-                                      onTab: () => context.read<MedicalInfoShellBloc>().changeViewEdit(
-                                            edit: false,
-                                          ));
+                                      onTab: () => medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: false)));
                                 return CIA_PrimaryButton(
                                   label: "Edit mode",
-                                  onTab: () => context.read<MedicalInfoShellBloc>().changeViewEdit(
-                                        edit: true,
-                                      ),
+                                  onTab: () =>  medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: true)),
                                 );
                               },
                             ),

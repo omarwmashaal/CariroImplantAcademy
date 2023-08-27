@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -130,7 +131,8 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function onCh
             navigationMode: DateRangePickerNavigationMode.snap,
             onSelectionChanged: (value) {
               setState(() {
-                date = value.value.toString().replaceAll(" 00:00:00.000", "");
+                date = DateFormat("dd-MM-yyyy").format(value.value);
+               // date = value.value.toString().replaceAll(" 00:00:00.000", "");
                 onChange(date);
               });
             },

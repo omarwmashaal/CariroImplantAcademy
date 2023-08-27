@@ -52,7 +52,7 @@ class HttpClientImpl implements HttpRepo {
   Future<StandardHttpResponse> get({required String host}) async {
     try {
       final result = await http.get(Uri.parse(host), headers: await headers());
-      return StandardHttpResponse.fromHttpResponse(result);
+       return StandardHttpResponse.fromHttpResponse(result);
     } on Exception {
       throw Exception();
     }

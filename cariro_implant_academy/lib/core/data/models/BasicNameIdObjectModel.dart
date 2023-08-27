@@ -18,4 +18,9 @@ class BasicNameIdObjectModel extends BasicNameIdObjectEntity {
       }(),
     );
   }
+  factory BasicNameIdObjectModel.fromEntity(BasicNameIdObjectEntity entity) {
+    return BasicNameIdObjectModel(
+        name:entity. name, id:entity. id,
+    );
+  }
 }

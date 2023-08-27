@@ -2,7 +2,12 @@ import 'package:equatable/equatable.dart';
 
 abstract class MedicalInfoShellBloc_State extends Equatable{}
 
-class MedicalInfoBlocChangeViewEditState extends MedicalInfoShellBloc_State{
+class MedicalInfoBlocInitState extends MedicalInfoShellBloc_State{
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}class MedicalInfoBlocChangeViewEditState extends MedicalInfoShellBloc_State{
   final bool edit;
   MedicalInfoBlocChangeViewEditState({required this.edit});
 

@@ -28,7 +28,10 @@ class DentalExaminationBaseEntity extends Equatable{
     this.operatorId,
     this.operator,
     this.oralHygieneRating,
-  });
+  }){
+    if(dentalExaminations==null)
+      dentalExaminations = [];
+  }
 
   @override
 

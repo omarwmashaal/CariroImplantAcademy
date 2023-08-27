@@ -14,6 +14,7 @@ import '../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../core/presentation/widgets/LoadingWidget.dart';
+import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import '../../../../../presentation/widgets/bigErrorPageWidget.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
@@ -50,7 +51,7 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MedicalInfoShellBloc>().changeTitle(title: "Dental History");
+    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Dental History"));
     bloc.add(DentalHistoryBloc_GetDentalHistoryEvent(patientId: widget.patientId));
     return BlocConsumer<DentalHistoryBloc, DentalHistoryBloc_States>(
       listener: (context, state) {},

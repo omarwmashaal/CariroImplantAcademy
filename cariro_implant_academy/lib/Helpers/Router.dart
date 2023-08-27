@@ -38,6 +38,7 @@ import 'package:logging/logging.dart';
 
 import '../Pages/SharedPages/PatientSharedPages.dart';
 import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
+import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
 import '../presentation/authentication/pages/authentication_page.dart';
 import '../presentation/patients/pages/patientsSearchPage.dart';
 import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
@@ -439,8 +440,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              name: PatientNonSurgicalTreatment.routeName,
-                              path: PatientNonSurgicalTreatment.routePath,
+                              name: NonSurgicalTreatmentPage.routeName,
+                              path: NonSurgicalTreatmentPage.routePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: _Authorize(
@@ -449,7 +450,7 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child: PatientNonSurgicalTreatment(
+                                    child: NonSurgicalTreatmentPage(
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
                                   ),

@@ -63,7 +63,7 @@ late MedicalExaminationModel medicalExaminationModel;
 late DentalHistoryModel dentalHistoryModel;
 late DentalExaminationModel dentalExaminationModel;
 late DentalExaminationModel tempDentalExamination;
-late NonSurgicalTreatmentModel nonSurgicalTreatment;
+//late NonSurgicalTreatmentModel nonSurgicalTreatment;
 late TreatmentPlanModel treatmentPlanModel;
 late SurgicalTreatmentModel surgicalTreatmentModel;
 
@@ -1542,7 +1542,8 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   }
 }
 */
-class PatientNonSurgicalTreatment extends StatefulWidget {
+
+/*class PatientNonSurgicalTreatment extends StatefulWidget {
   PatientNonSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "NonSurgicalTreatment";
   static String routePath = "Patient/:id/NonSurgicalTreatment";
@@ -1870,7 +1871,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
     return ss;
   }
 }
-
+*/
 class PatientTreatmentPlan extends StatefulWidget {
   PatientTreatmentPlan({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "TreatmentPlan";

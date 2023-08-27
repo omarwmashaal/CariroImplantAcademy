@@ -38,3 +38,5 @@ const authenticationController = "Authentication";
 const patientInfoController= "PatientInfo";
 const notificationController= "Notifications";
 const medicalController= "Medical";
+const userController= "User";
+const settingsController= "Settings";

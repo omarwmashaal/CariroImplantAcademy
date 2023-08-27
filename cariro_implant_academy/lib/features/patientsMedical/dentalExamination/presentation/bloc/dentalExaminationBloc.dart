@@ -21,7 +21,9 @@ class DentalExaminationBloc extends Bloc<DentalExaminationBloc_Events, DentalExa
     }
     on<DentalExaminationBloc_GetDataEvent>(
       (event, emit) async {
+
         emit(DentalExaminationBloc_LoadingDataState());
+        await  Future.delayed(Duration(milliseconds: 500));
         final result = await getDentalExaminationUseCase(event.patientId);
         result.fold(
           (l) => emit(DentalExaminationBloc_ErrorState(message: l.message ?? "")),

@@ -22,6 +22,7 @@ import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../core/injection_contianer.dart';
+import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import '../../domain/entities/bloodPressureEntity.dart';
 import '../../domain/entities/diabeticEntity.dart';
 import '../../domain/entities/hba1cEntity.dart';
@@ -56,7 +57,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MedicalInfoShellBloc>().changeTitle(title: "Medical History");
+    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Medical History"));
     bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
     return BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
       listener: (context, state) {},

@@ -1,13 +1,23 @@
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'medicalInfoShellBloc_States.dart';
 
-class MedicalInfoShellBloc extends Cubit<MedicalInfoShellBloc_State> {
-  MedicalInfoShellBloc(super.initialState);
+class MedicalInfoShellBloc extends Bloc<MedicalInfoShellBloc_Event, MedicalInfoShellBloc_State> {
   bool allowEdit = false;
-  changeTitle({required String title}) => emit(MedicalInfoBlocChangeTitleState(title: title));
-  changeViewEdit({required bool edit}) {
-    allowEdit =edit;
-    emit(MedicalInfoBlocChangeViewEditState(edit: edit));
+  MedicalInfoShellBloc() : super(MedicalInfoBlocInitState()) {
+    on<MedicalInfoShell_ChangeTitleEvent>(
+            (event, emit) => emit(MedicalInfoBlocChangeTitleState(title: event.title))
+    );
+    on<MedicalInfoShell_ChangeViewEditEvent>(
+            (event, emit) {
+              allowEdit = event.allowEdit;
+              emit(MedicalInfoBlocChangeViewEditState(edit: event.allowEdit));
+            }
+    );
   }
+
+
+
+
 }

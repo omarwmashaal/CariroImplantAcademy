@@ -38,9 +38,11 @@ import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
+import 'package:cariro_implant_academy/features/patientVisits/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
@@ -160,6 +162,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<MedicalPagesStatesChangesBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<NonSurgicalTreatmentBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<CalendarBloc>(),
         ),
       ],
       child: MaterialApp.router(

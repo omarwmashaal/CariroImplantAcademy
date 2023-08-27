@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/dentalExaminatio
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
 
   @override
   void dispose() {
-    if (bloc.isInitialized) {
+    if (bloc.isInitialized && medicalShellBloc.allowEdit) {
       bloc.add(DentalExaminationBloc_SaveDataEvent(dentalExaminationEntity: dentalExaminationEntity));
     }
 
@@ -55,7 +56,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
     bloc = BlocProvider.of<DentalExaminationBloc>(context);
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
-    medicalShellBloc.changeTitle(title: "Dental Examination");
+    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Dental Examination"));
     // load = MedicalAPI.GetPatientDentalExamination(widget.patientId);
   }
 

@@ -14,6 +14,7 @@ import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -174,7 +175,7 @@ class SiteController extends GetxController {
           path == DentalExaminationPage.routeName ||
           path == PatientProstheticTreatment.routeName ||
           path == DentalHistoryPage.routeName ||
-          path == PatientNonSurgicalTreatment.routeName ||
+          path == NonSurgicalTreatmentPage.routeName ||
           path == PatientTreatmentPlan.routeName ||
           path == PatientSurgicalTreatment.routeName)
         setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
@@ -219,12 +220,12 @@ class SiteController extends GetxController {
       MedicalSlidingModel(name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.routeName, pathParameters: {"id": id.toString()})),
       MedicalSlidingModel(
           name: "Non Surgical Treatment",
-          onTap: () => context.goNamed(PatientNonSurgicalTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onTap: () => context.goNamed(NonSurgicalTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () async {
-            if (!siteController.disableMedicalEdit.value) {
-              await MedicalAPI.AddPatientNonSurgicalTreatment(id, nonSurgicalTreatment);
-              await MedicalAPI.UpdatePatientDentalExamination(id, tempDentalExamination);
-            }
+         //   if (!siteController.disableMedicalEdit.value) {
+          //    await MedicalAPI.AddPatientNonSurgicalTreatment(id, nonSurgicalTreatment);
+           //   await MedicalAPI.UpdatePatientDentalExamination(id, tempDentalExamination);
+           // }
           }),
       MedicalSlidingModel(
           name: "Treatment Plan",
