@@ -2,8 +2,8 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 
 class BasicNameIdObjectModel extends BasicNameIdObjectEntity {
   BasicNameIdObjectModel({
-    required name,
-    required id,
+    name="",
+     id,
   }) : super(name: name, id: id);
 
   factory BasicNameIdObjectModel.fromJson(Map<String, dynamic> map) {

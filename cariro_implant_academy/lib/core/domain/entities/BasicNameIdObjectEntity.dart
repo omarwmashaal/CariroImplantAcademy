@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class BasicNameIdObjectEntity extends Equatable{
-  final String name;
-  final int id;
+  final String? name;
+  final int? id;
 
   const BasicNameIdObjectEntity({
-    required this.name,
-    required this.id,
+    this.name ="",
+     this.id,
   });
 
   @override

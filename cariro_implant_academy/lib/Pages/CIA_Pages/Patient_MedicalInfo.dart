@@ -1542,7 +1542,6 @@ class _PatientDentalExaminationState extends State<PatientDentalExamination> {
   }
 }
 */
-
 /*class PatientNonSurgicalTreatment extends StatefulWidget {
   PatientNonSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "NonSurgicalTreatment";
@@ -1872,6 +1871,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   }
 }
 */
+
 class PatientTreatmentPlan extends StatefulWidget {
   PatientTreatmentPlan({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "TreatmentPlan";
