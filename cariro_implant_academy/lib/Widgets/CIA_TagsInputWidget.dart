@@ -42,7 +42,7 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
       }
 
       if (widget.initialValue != null)
-        widget.initialValue?.addAll(widget.strikeValues!);
+        widget.initialValue!.addAll(widget.strikeValues!);
     }
 
 

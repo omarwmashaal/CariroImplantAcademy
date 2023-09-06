@@ -58,18 +58,18 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                     Expanded(
                                         child: FormTextValueWidget(
                                             text:
-                                                candidate?.ID.toString() == null
+                                                candidate!.ID.toString() == null
                                                     ? ""
-                                                    : candidate?.ID.toString()))
+                                                    : candidate!.ID.toString()))
                                   ],
                                 ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Name",
                                         controller: TextEditingController(
-                                            text: candidate?.Name == null
+                                            text: candidate!.Name == null
                                                 ? ""
-                                                : candidate?.Name),
+                                                : candidate!.Name),
                                       )
                                     : Row(
                                         children: [
@@ -78,18 +78,18 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                                   text: "Name")),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                  text: candidate?.Name == null
+                                                  text: candidate!.Name == null
                                                       ? ""
-                                                      : candidate?.Name))
+                                                      : candidate!.Name))
                                         ],
                                       ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Date of birth",
                                         controller: TextEditingController(
-                                            text: candidate?.DateOfBirth == null
+                                            text: candidate!.DateOfBirth == null
                                                 ? ""
-                                                : candidate?.DateOfBirth),
+                                                : candidate!.DateOfBirth),
                                       )
                                     : Row(
                                         children: [
@@ -99,19 +99,19 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                           Expanded(
                                               child: FormTextValueWidget(
                                                   text: candidate
-                                                              ?.DateOfBirth ==
+                                                              !.DateOfBirth ==
                                                           null
                                                       ? ""
-                                                      : candidate?.DateOfBirth))
+                                                      : candidate!.DateOfBirth))
                                         ],
                                       ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Phone",
                                         controller: TextEditingController(
-                                            text: candidate?.Phone == null
+                                            text: candidate!.Phone == null
                                                 ? ""
-                                                : candidate?.Phone),
+                                                : candidate!.Phone),
                                       )
                                     : Row(
                                         children: [
@@ -120,18 +120,18 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                                   text: "Phone")),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                  text: candidate?.Phone == null
+                                                  text: candidate!.Phone == null
                                                       ? ""
-                                                      : candidate?.Phone))
+                                                      : candidate!.Phone))
                                         ],
                                       ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Gender",
                                         controller: TextEditingController(
-                                            text: candidate?.Gender == null
+                                            text: candidate!.Gender == null
                                                 ? ""
-                                                : candidate?.Gender),
+                                                : candidate!.Gender),
                                       )
                                     : Row(
                                         children: [
@@ -141,9 +141,9 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                           Expanded(
                                               child: FormTextValueWidget(
                                                   text:
-                                                      candidate?.Gender == null
+                                                      candidate!.Gender == null
                                                           ? ""
-                                                          : candidate?.Gender))
+                                                          : candidate!.Gender))
                                         ],
                                       ),
                                 edit
@@ -151,9 +151,9 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                         label: "Graduated From",
                                         controller: TextEditingController(
                                             text:
-                                                candidate?.GraduatedFrom == null
+                                                candidate!.GraduatedFrom == null
                                                     ? ""
-                                                    : candidate?.GraduatedFrom),
+                                                    : candidate!.GraduatedFrom),
                                       )
                                     : Row(
                                         children: [
@@ -163,20 +163,20 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                           Expanded(
                                               child: FormTextValueWidget(
                                                   text: candidate
-                                                              ?.GraduatedFrom ==
+                                                              !.GraduatedFrom ==
                                                           null
                                                       ? ""
                                                       : candidate
-                                                          ?.GraduatedFrom))
+                                                          !.GraduatedFrom))
                                         ],
                                       ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Class Year",
                                         controller: TextEditingController(
-                                            text: candidate?.ClassYear == null
+                                            text: candidate!.ClassYear == null
                                                 ? ""
-                                                : candidate?.ClassYear),
+                                                : candidate!.ClassYear),
                                       )
                                     : Row(
                                         children: [
@@ -185,19 +185,19 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                                   text: "Class Year")),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                  text: candidate?.ClassYear ==
+                                                  text: candidate!.ClassYear ==
                                                           null
                                                       ? ""
-                                                      : candidate?.ClassYear))
+                                                      : candidate!.ClassYear))
                                         ],
                                       ),
                                 edit
                                     ? CIA_TextFormField(
                                         label: "Speciality",
                                         controller: TextEditingController(
-                                            text: candidate?.Speciality == null
+                                            text: candidate!.Speciality == null
                                                 ? ""
-                                                : candidate?.Speciality),
+                                                : candidate!.Speciality),
                                       )
                                     : Row(
                                         children: [
@@ -206,10 +206,10 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                                   text: "Speciality")),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                  text: candidate?.Speciality ==
+                                                  text: candidate!.Speciality ==
                                                           null
                                                       ? ""
-                                                      : candidate?.Speciality))
+                                                      : candidate!.Speciality))
                                         ],
                                       ),
                                 Row(
@@ -217,9 +217,9 @@ class _ViewCandidatePageState extends State<ViewCandidatePage> {
                                     Expanded(
                                         child: FormTextKeyWidget(
                                       text: "Registration: " +
-                                          (candidate?.Name == null
+                                          (candidate!.Name == null
                                               ? ""
-                                              : candidate?.Name as String),
+                                              : candidate!.Name as String),
                                       secondaryInfo: true,
                                     )),
                                     Expanded(

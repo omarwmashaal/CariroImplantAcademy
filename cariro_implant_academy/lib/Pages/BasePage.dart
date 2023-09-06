@@ -108,7 +108,7 @@ class _BasePageState extends State<BasePage> {
                             onPressed: () async {
                               var picked = await (await ImagePicker()
                                       .pickImage(source: ImageSource.gallery))
-                                  ?.readAsBytes();
+                                  !.readAsBytes();
 
                               setState(() {
                                 myImageBytes = picked;

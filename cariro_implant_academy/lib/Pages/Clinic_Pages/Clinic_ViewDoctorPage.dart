@@ -58,11 +58,11 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                           child: FormTextKeyWidget(text: "ID")),
                                       Expanded(
                                           child: FormTextValueWidget(
-                                              text: widget.doctor?.ID
+                                              text: widget.doctor!.ID
                                                           .toString() ==
                                                       null
                                                   ? ""
-                                                  : widget.doctor?.ID
+                                                  : widget.doctor!.ID
                                                       .toString()))
                                     ],
                                   ),
@@ -70,9 +70,9 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                       ? CIA_TextFormField(
                                           label: "Name",
                                           controller: TextEditingController(
-                                              text: widget.doctor?.Name == null
+                                              text: widget.doctor!.Name == null
                                                   ? ""
-                                                  : widget.doctor?.Name),
+                                                  : widget.doctor!.Name),
                                         )
                                       : Row(
                                           children: [
@@ -81,10 +81,10 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                                     text: "Name")),
                                             Expanded(
                                                 child: FormTextValueWidget(
-                                                    text: widget.doctor?.Name ==
+                                                    text: widget.doctor!.Name ==
                                                             null
                                                         ? ""
-                                                        : widget.doctor?.Name))
+                                                        : widget.doctor!.Name))
                                           ],
                                         ),
                                   edit
@@ -92,10 +92,10 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                           label: "Date of birth",
                                           controller: TextEditingController(
                                               text: widget.doctor
-                                                          ?.DateOfBirth ==
+                                                          !.DateOfBirth ==
                                                       null
                                                   ? ""
-                                                  : widget.doctor?.DateOfBirth),
+                                                  : widget.doctor!.DateOfBirth),
                                         )
                                       : Row(
                                           children: [
@@ -105,20 +105,20 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.doctor
-                                                                ?.DateOfBirth ==
+                                                                !.DateOfBirth ==
                                                             null
                                                         ? ""
                                                         : widget.doctor
-                                                            ?.DateOfBirth))
+                                                            !.DateOfBirth))
                                           ],
                                         ),
                                   edit
                                       ? CIA_TextFormField(
                                           label: "Phone",
                                           controller: TextEditingController(
-                                              text: widget.doctor?.Phone == null
+                                              text: widget.doctor!.Phone == null
                                                   ? ""
-                                                  : widget.doctor?.Phone),
+                                                  : widget.doctor!.Phone),
                                         )
                                       : Row(
                                           children: [
@@ -128,10 +128,10 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.doctor
-                                                                ?.Phone ==
+                                                                !.Phone ==
                                                             null
                                                         ? ""
-                                                        : widget.doctor?.Phone))
+                                                        : widget.doctor!.Phone))
                                           ],
                                         ),
                                   edit
@@ -139,9 +139,9 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                           label: "Gender",
                                           controller: TextEditingController(
                                               text:
-                                                  widget.doctor?.Gender == null
+                                                  widget.doctor!.Gender == null
                                                       ? ""
-                                                      : widget.doctor?.Gender),
+                                                      : widget.doctor!.Gender),
                                         )
                                       : Row(
                                           children: [
@@ -151,11 +151,11 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text:
-                                                        widget.doctor?.Gender ==
+                                                        widget.doctor!.Gender ==
                                                                 null
                                                             ? ""
                                                             : widget.doctor
-                                                                ?.Gender))
+                                                                !.Gender))
                                           ],
                                         ),
                                   edit
@@ -163,11 +163,11 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                           label: "Graduated From",
                                           controller: TextEditingController(
                                               text: widget.doctor
-                                                          ?.GraduatedFrom ==
+                                                          !.GraduatedFrom ==
                                                       null
                                                   ? ""
                                                   : widget
-                                                      .doctor?.GraduatedFrom),
+                                                      .doctor!.GraduatedFrom),
                                         )
                                       : Row(
                                           children: [
@@ -177,21 +177,21 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.doctor
-                                                                ?.GraduatedFrom ==
+                                                                !.GraduatedFrom ==
                                                             null
                                                         ? ""
                                                         : widget.doctor
-                                                            ?.GraduatedFrom))
+                                                            !.GraduatedFrom))
                                           ],
                                         ),
                                   edit
                                       ? CIA_TextFormField(
                                           label: "Class Year",
                                           controller: TextEditingController(
-                                              text: widget.doctor?.ClassYear ==
+                                              text: widget.doctor!.ClassYear ==
                                                       null
                                                   ? ""
-                                                  : widget.doctor?.ClassYear),
+                                                  : widget.doctor!.ClassYear),
                                         )
                                       : Row(
                                           children: [
@@ -201,21 +201,21 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.doctor
-                                                                ?.ClassYear ==
+                                                                !.ClassYear ==
                                                             null
                                                         ? ""
                                                         : widget
-                                                            .doctor?.ClassYear))
+                                                            .doctor!.ClassYear))
                                           ],
                                         ),
                                   edit
                                       ? CIA_TextFormField(
                                           label: "Speciality",
                                           controller: TextEditingController(
-                                              text: widget.doctor?.Speciality ==
+                                              text: widget.doctor!.Speciality ==
                                                       null
                                                   ? ""
-                                                  : widget.doctor?.Speciality),
+                                                  : widget.doctor!.Speciality),
                                         )
                                       : Row(
                                           children: [
@@ -225,11 +225,11 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.doctor
-                                                                ?.Speciality ==
+                                                                !.Speciality ==
                                                             null
                                                         ? ""
                                                         : widget.doctor
-                                                            ?.Speciality))
+                                                            !.Speciality))
                                           ],
                                         ),
                                   Row(
@@ -237,9 +237,9 @@ class _Clinic_ViewDoctorPageState extends State<Clinic_ViewDoctorPage> {
                                       Expanded(
                                           child: FormTextKeyWidget(
                                         text: "Registration: " +
-                                            (widget.doctor?.Name == null
+                                            (widget.doctor!.Name == null
                                                 ? ""
-                                                : widget.doctor?.Name
+                                                : widget.doctor!.Name
                                                     as String),
                                         secondaryInfo: true,
                                       )),

@@ -56,11 +56,11 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                           child: FormTextKeyWidget(text: "id")),
                                       Expanded(
                                           child: FormTextValueWidget(
-                                              text: widget.customer?.id
+                                              text: widget.customer!.id
                                                           .toString() ==
                                                       null
                                                   ? ""
-                                                  : widget.customer?.id
+                                                  : widget.customer!.id
                                                       .toString()))
                                     ],
                                   ),
@@ -69,9 +69,9 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                           label: "Name",
                                           controller: TextEditingController(
                                               text:
-                                                  widget.customer?.name == null
+                                                  widget.customer!.name == null
                                                       ? ""
-                                                      : widget.customer?.name),
+                                                      : widget.customer!.name),
                                         )
                                       : Row(
                                           children: [
@@ -81,11 +81,11 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text:
-                                                        widget.customer?.name ==
+                                                        widget.customer!.name ==
                                                                 null
                                                             ? ""
                                                             : widget.customer
-                                                                ?.name))
+                                                                !.name))
                                           ],
                                         ),
                                   edit
@@ -93,9 +93,9 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                           label: "Phone",
                                           controller: TextEditingController(
                                               text:
-                                                  widget.customer?.phoneNumber == null
+                                                  widget.customer!.phoneNumber == null
                                                       ? ""
-                                                      : widget.customer?.phoneNumber),
+                                                      : widget.customer!.phoneNumber),
                                         )
                                       : Row(
                                           children: [
@@ -105,21 +105,21 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.customer
-                                                                ?.phoneNumber ==
+                                                                !.phoneNumber ==
                                                             null
                                                         ? ""
                                                         : widget
-                                                            .customer?.phoneNumber))
+                                                            .customer!.phoneNumber))
                                           ],
                                         ),
                                   edit
                                       ? CIA_TextFormField(
                                           label: "Phone 2",
                                           controller: TextEditingController(
-                                              text: widget.customer?.phoneNumber2 ==
+                                              text: widget.customer!.phoneNumber2 ==
                                                       null
                                                   ? ""
-                                                  : widget.customer?.phoneNumber2),
+                                                  : widget.customer!.phoneNumber2),
                                         )
                                       : Row(
                                           children: [
@@ -129,11 +129,11 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.customer
-                                                                ?.phoneNumber2 ==
+                                                                !.phoneNumber2 ==
                                                             null
                                                         ? ""
                                                         : widget
-                                                            .customer?.phoneNumber2))
+                                                            .customer!.phoneNumber2))
                                           ],
                                         ),
                                   edit
@@ -141,11 +141,11 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                           label: "Clinic Name",
                                           controller: TextEditingController(
                                               text:
-                                                  widget.customer?.workPlace!.name ==
+                                                  widget.customer!.workPlace!.name ==
                                                           null
                                                       ? ""
                                                       : widget.customer
-                                                          ?.workPlace!.name),
+                                                          !.workPlace!.name),
                                         )
                                       : Row(
                                           children: [
@@ -155,11 +155,11 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                             Expanded(
                                                 child: FormTextValueWidget(
                                                     text: widget.customer
-                                                                ?.workPlace!.name ==
+                                                                !.workPlace!.name ==
                                                             null
                                                         ? ""
                                                         : widget.customer
-                                                            ?.workPlace!.name))
+                                                            !.workPlace!.name))
                                           ],
                                         ),
 
@@ -168,9 +168,9 @@ class _LAB_ViewCustomerPageState extends State<LAB_ViewCustomerPage> {
                                       Expanded(
                                           child: FormTextKeyWidget(
                                         text: "Registration: " +
-                                            (widget.customer?.name == null
+                                            (widget.customer!.name == null
                                                 ? ""
-                                                : widget.customer?.name
+                                                : widget.customer!.name
                                                     as String),
                                         secondaryInfo: true,
                                       )),

@@ -58,9 +58,11 @@ class HTTPRequest {
   }
 
   static Future<API_Response> Post(String url, Object? body) async {
+    print("uri parse:"+Uri.parse("$serverHost/$url").toString()!);
+    print("base url: $serverHost/$url");
     API_Response apiResponse = API_Response();
     Response response = await post(
-      Uri.parse("$serverHost/$url"),
+     Uri.parse("$serverHost/$url"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",

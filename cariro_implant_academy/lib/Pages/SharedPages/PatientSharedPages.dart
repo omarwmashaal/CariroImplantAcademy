@@ -447,14 +447,14 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "ID")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
+                                        Expanded(child: FormTextValueWidget(text: patient!.id.toString() == null ? "" : patient!.id.toString()))
                                       ],
                                     ),
                               Visibility(
                                   child: Row(
                                     children: [
                                       Expanded(child: FormTextKeyWidget(text: "ID")),
-                                      Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
+                                      Expanded(child: FormTextValueWidget(text: patient!.id.toString() == null ? "" : patient!.id.toString()))
                                     ],
                                   ),
                                   visible: !addNew),
@@ -485,12 +485,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         patient.name = value;
                                       },
                                       label: "Name",
-                                      controller: TextEditingController(text: patient?.name == null ? "" : patient?.name),
+                                      controller: TextEditingController(text: patient!.name == null ? "" : patient!.name),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Name")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.name == null ? "" : patient?.name))
+                                        Expanded(child: FormTextValueWidget(text: patient!.name == null ? "" : patient!.name))
                                       ],
                                     ),
                               addNew
@@ -503,12 +503,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       errorFunction: (value) {
                                         return value.length != 14;
                                       },
-                                      controller: TextEditingController(text: patient?.nationalId == null ? "" : patient?.nationalId),
+                                      controller: TextEditingController(text: patient!.nationalId == null ? "" : patient!.nationalId),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "National Id")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.nationalId == null ? "" : patient?.nationalId))
+                                        Expanded(child: FormTextValueWidget(text: patient!.nationalId == null ? "" : patient!.nationalId))
                                       ],
                                     ),
                               addNew
@@ -522,7 +522,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Gender")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.gender == null ? "" : patient?.gender))
+                                        Expanded(child: FormTextValueWidget(text: patient!.gender == null ? "" : patient!.gender))
                                       ],
                                     ),
                               edit || addNew
@@ -539,12 +539,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       },
                                       isPhoneNumber: true,
                                       label: "Phone Number",
-                                      controller: TextEditingController(text: patient?.phone == null ? "" : patient?.phone),
+                                      controller: TextEditingController(text: patient!.phone == null ? "" : patient!.phone),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Phone Number")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.phone == null ? "" : patient?.phone))
+                                        Expanded(child: FormTextValueWidget(text: patient!.phone == null ? "" : patient!.phone))
                                       ],
                                     ),
                               Obx(() => Visibility(
@@ -560,12 +560,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                       },
                                       isPhoneNumber: true,
                                       label: "Another Phone Number",
-                                      controller: TextEditingController(text: patient?.phone2 == null ? "" : patient?.phone2),
+                                      controller: TextEditingController(text: patient!.phone2 == null ? "" : patient!.phone2),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Another Phone Number")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.phone2 == null ? "" : patient?.phone2))
+                                        Expanded(child: FormTextValueWidget(text: patient!.phone2 == null ? "" : patient!.phone2))
                                       ],
                                     ),
                               addNew
@@ -580,12 +580,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         patient.dateOfBirth = value;
                                       },
                                       label: "Date Of Birth",
-                                      controller: TextEditingController(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth),
+                                      controller: TextEditingController(text: patient!.dateOfBirth == null ? "" : patient!.dateOfBirth),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Date Of Birth")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth))
+                                        Expanded(child: FormTextValueWidget(text: patient!.dateOfBirth == null ? "" : patient!.dateOfBirth))
                                       ],
                                     ),
                               edit || addNew
@@ -599,7 +599,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Marital Status")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.maritalStatus == null ? "" : patient?.maritalStatus))
+                                        Expanded(child: FormTextValueWidget(text: patient!.maritalStatus == null ? "" : patient!.maritalStatus))
                                       ],
                                     ),
                               edit || addNew
@@ -608,12 +608,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         patient.address = value;
                                       },
                                       label: "Address",
-                                      controller: TextEditingController(text: patient?.address == null ? "" : patient?.address),
+                                      controller: TextEditingController(text: patient!.address == null ? "" : patient!.address),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Address")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.address == null ? "" : patient?.address))
+                                        Expanded(child: FormTextValueWidget(text: patient!.address == null ? "" : patient!.address))
                                       ],
                                     ),
                               edit || addNew
@@ -622,12 +622,12 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
                                         patient.city = value;
                                       },
                                       label: "City",
-                                      controller: TextEditingController(text: patient?.city == null ? "" : patient?.city),
+                                      controller: TextEditingController(text: patient!.city == null ? "" : patient!.city),
                                     )
                                   : Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "City")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.city == null ? "" : patient?.city))
+                                        Expanded(child: FormTextValueWidget(text: patient!.city == null ? "" : patient!.city))
                                       ],
                                     ),
                               addNew

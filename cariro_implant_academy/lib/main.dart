@@ -57,15 +57,13 @@ import 'Widgets/CIA_TeethTreatmentWidget.dart';
 import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
 
-void main() async{
-  html.window.onUnload.listen((event) async {
-  });
+void main() async {
+  html.window.onUnload.listen((event) async {});
   Get.put(NavigationController());
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
   Get.put(SiteController());
-
 
   runApp(const MyApp());
 }
@@ -75,20 +73,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    Future(() async=> {
-
-    });
+    Future(() async => {});
     return MaterialApp.router(
       title: 'CIA',
-      theme: ThemeData(primaryColor: Colors.red, accentColor: Color_Accent, primarySwatch: Colors.lightGreen),
+      theme: ThemeData(
+        primaryColor: Colors.red,
+
+      //  accentColor: Color_Accent,
+        primarySwatch: Colors.lightGreen,
+      ),
       debugShowCheckedModeBanner: false,
       //routeInformationParser:CIA_Router.routes.routeInformationParser ,
       // routerDelegate: CIA_Router.routes.routerDelegate,
       routerConfig: CIA_Router.routes,
     );
   }
-
 }
 
 class MyHomePage extends StatefulWidget {
@@ -104,14 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController page = PageController();
 
   @override
-  void initState() {
-
-
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         //body: DashBoardPage(),
 

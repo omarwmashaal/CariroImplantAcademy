@@ -288,7 +288,7 @@ class _ViewUserDataState extends State<ViewUserData> {
                                     Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Date of birth")),
-                                        Expanded(child: FormTextValueWidget(text: user.dateOfBirth == null ? "" : user?.dateOfBirth))
+                                        Expanded(child: FormTextValueWidget(text: user.dateOfBirth == null ? "" : user!.dateOfBirth))
                                       ],
                                     ),
                                     edit
@@ -319,7 +319,7 @@ class _ViewUserDataState extends State<ViewUserData> {
                                         : Row(
                                             children: [
                                               Expanded(child: FormTextKeyWidget(text: "Graduated From")),
-                                              Expanded(child: FormTextValueWidget(text: user?.graduatedFrom == null ? "" : user?.graduatedFrom))
+                                              Expanded(child: FormTextValueWidget(text: user!.graduatedFrom == null ? "" : user!.graduatedFrom))
                                             ],
                                           ),
                                     edit
@@ -343,7 +343,7 @@ class _ViewUserDataState extends State<ViewUserData> {
                                         : Row(
                                             children: [
                                               Expanded(child: FormTextKeyWidget(text: "Speciality")),
-                                              Expanded(child: FormTextValueWidget(text: user?.speciality == null ? "" : user.speciality))
+                                              Expanded(child: FormTextValueWidget(text: user!.speciality == null ? "" : user.speciality))
                                             ],
                                           ),
                                     Row(

@@ -233,11 +233,6 @@ class SiteController extends GetxController {
           onSave: () {
 
           }),
-      MedicalSlidingModel(
-          name: "Photos and CBCTs",
-          onSave: () {
-
-          }),
     ];
     for (var element in pages) {
       if (element!.name!.removeAllWhitespace.toString().toLowerCase() == path.toLowerCase()) {
