@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/treatmentPlan/domain/entities/trearmentPlanPropertyEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
 import 'package:intl/intl.dart';
 
 class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
@@ -20,7 +20,6 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     doneByCandidateBatch,
     implantID,
     price,
-    planPrice,
     implant,
 }):super(
       value:value,
@@ -37,8 +36,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
       doneByCandidateBatchID:doneByCandidateBatchID,
       doneByCandidateBatch:doneByCandidateBatch,
       implantID:implantID,
-      price:price,
-      planPrice:planPrice,
+      planPrice:price,
       implant:implant,
   );
   
@@ -59,8 +57,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
       doneByCandidateBatchID: entity.doneByCandidateBatchID,
       doneByCandidateBatch: entity.doneByCandidateBatch,
       implantID: entity.implantID,
-      price: entity.price,
-      planPrice: entity.planPrice,
+      price: entity.planPrice,
       implant: entity.implant,
     );
   }
@@ -69,7 +66,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     status = json['status'] ?? false;
     assignedToID = json['assignedToID'];
     assignedTo = json['assignedTo'] != null ? new BasicNameIdObjectModel.fromJson(json['assignedTo']) : null;
-    date =  DateTime.tryParse(json['date']) ;
+    date =  DateTime.tryParse(json['date']??"") ;
     doneByAssistantID = json['doneByAssistantID'];
     doneByAssistant = json['doneByAssistant'] != null ? new BasicNameIdObjectModel.fromJson(json['doneByAssistant']) : BasicNameIdObjectModel();
     doneBySupervisorID = json['doneBySupervisorID'];
@@ -79,8 +76,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     doneByCandidateBatchID = json['doneByCandidateBatchID'];
     doneByCandidateBatch = json['doneByCandidateBatch'] != null ? new BasicNameIdObjectModel.fromJson(json['doneByCandidateBatch']) : BasicNameIdObjectModel();
     implantID = json['implantID'];
-    price = json['price'] ?? 0;
-    planPrice = json['planPrice'];
+    planPrice = json['planPrice'] ?? 0;
     implant = json['implant'] != null ? new BasicNameIdObjectModel.fromJson(json['implant']) : BasicNameIdObjectModel();
   }
 
@@ -88,8 +84,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['value'] = this.value;
     data['status'] = this.status;
-    data['price'] = this.price;
-    data['planPrice'] = this.planPrice ?? this.price;
+    data['planPrice'] = this.planPrice;
     data['assignedToID'] = this.assignedToID;
     data['date'] = this.date != null ? this.date!.toIso8601String() : null;
     data['doneByAssistantID'] = this.doneByAssistantID;

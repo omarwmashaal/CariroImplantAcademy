@@ -42,7 +42,7 @@ abstract class HttpRepo {
 
   Future<StandardHttpResponse> post({required String host, Map<String, dynamic>? body});
 
-  Future<StandardHttpResponse> put({required String host, Map<String, dynamic>? body});
+  Future<StandardHttpResponse> put({required String host, dynamic? body});
 
   Future<StandardHttpResponse> uploadImage({required String url, required Uint8List imageBytes});
 }
@@ -69,7 +69,7 @@ class HttpClientImpl implements HttpRepo {
   }
 
   @override
-  Future<StandardHttpResponse> put({required String host, Map<String, dynamic>? body}) async {
+  Future<StandardHttpResponse> put({required String host, dynamic? body}) async {
     try {
       final result = await http.put(Uri.parse(host), headers: await headers(), body: json.encode(body));
       return StandardHttpResponse.fromHttpResponse(result);

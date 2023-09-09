@@ -27,7 +27,6 @@ import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPa
 import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/patientSeachBlocStates.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
-import 'package:f_logs/f_logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

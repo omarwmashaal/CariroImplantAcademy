@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/treatmentPlan/domain/entities/trearmentPlanPropertyEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
 import 'package:equatable/equatable.dart';
 
 class TeethTreatmentPlanEntity extends Equatable {

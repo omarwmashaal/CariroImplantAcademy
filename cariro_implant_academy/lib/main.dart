@@ -43,15 +43,14 @@ import 'package:cariro_implant_academy/features/patientsMedical/dentalExaminatio
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentPlanBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/patientSearchBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalPagesStatesChangesBloc.dart';
-import 'package:f_logs/model/flog/flog.dart';
-import 'package:f_logs/model/flog/flog_config.dart';
-import 'package:f_logs/utils/formatter/field_name.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -168,6 +167,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => sl<CalendarBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<TreatmentPlanBloc>(),
         ),
       ],
       child: MaterialApp.router(

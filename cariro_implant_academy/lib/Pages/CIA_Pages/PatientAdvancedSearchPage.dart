@@ -26,6 +26,7 @@ import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/Title.dart';
+import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import '../SharedPages/PatientSharedPages.dart';
 import 'Patient_MedicalInfo.dart';
 
@@ -954,7 +955,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                         if (searchTreatmentsDTO.done == true)
                           context.goNamed(PatientSurgicalTreatment.routeName, pathParameters: {"id": dataSource_treatments.models[value - 1].id!.toString()});
                         else
-                          context.goNamed(PatientTreatmentPlan.routeName, pathParameters: {"id": dataSource_treatments.models[value - 1].id!.toString()});
+                          context.goNamed(TreatmentPlanPage.routeName, pathParameters: {"id": dataSource_treatments.models[value - 1].id!.toString()});
                       },
                     ),
                   ),

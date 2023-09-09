@@ -17,7 +17,6 @@ class TreatmentPlanPropertyEntity extends Equatable {
   BasicNameIdObjectEntity? doneByCandidateBatch;
   int? implantID;
   BasicNameIdObjectEntity? implant;
-  int? price;
   int? planPrice;
 
   TreatmentPlanPropertyEntity(
@@ -35,7 +34,6 @@ class TreatmentPlanPropertyEntity extends Equatable {
       this.doneByCandidateBatchID,
       this.doneByCandidateBatch,
       this.implantID,
-      this.price = 0,
       this.planPrice = 0,
       this.implant}) {
     doneByAssistant = BasicNameIdObjectEntity();
@@ -63,7 +61,6 @@ class TreatmentPlanPropertyEntity extends Equatable {
         doneByCandidateBatchID,
       //  doneByCandidateBatch,
         implantID,
-        price,
         planPrice,
      //   implant
       ];

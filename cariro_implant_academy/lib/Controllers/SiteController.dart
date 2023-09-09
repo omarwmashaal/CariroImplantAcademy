@@ -15,6 +15,7 @@ import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -176,7 +177,7 @@ class SiteController extends GetxController {
           path == PatientProstheticTreatment.routeName ||
           path == DentalHistoryPage.routeName ||
           path == NonSurgicalTreatmentPage.routeName ||
-          path == PatientTreatmentPlan.routeName ||
+          path == TreatmentPlanPage.routeName ||
           path == PatientSurgicalTreatment.routeName)
         setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
       else
@@ -229,9 +230,9 @@ class SiteController extends GetxController {
           }),
       MedicalSlidingModel(
           name: "Treatment Plan",
-          onTap: () => context.goNamed(PatientTreatmentPlan.routeName, pathParameters: {"id": id.toString()}),
+          onTap: () => context.goNamed(TreatmentPlanPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () async {
-            if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
+         //   if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
           }),
       MedicalSlidingModel(
           name: "Surgical Treatment",

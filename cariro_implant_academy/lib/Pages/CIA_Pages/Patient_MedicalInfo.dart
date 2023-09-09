@@ -1871,7 +1871,7 @@ class _PatientNonSurgicalTreatmentState extends State<PatientNonSurgicalTreatmen
   }
 }
 */
-
+/*
 class PatientTreatmentPlan extends StatefulWidget {
   PatientTreatmentPlan({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "TreatmentPlan";
@@ -1900,7 +1900,7 @@ class _PatientTreatmentPlanState extends State<PatientTreatmentPlan> {
     super.dispose();
   }
 }
-
+*/
 class PatientSurgicalTreatment extends StatefulWidget {
   PatientSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "SurgicalTreatment";

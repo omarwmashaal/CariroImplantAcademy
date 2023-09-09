@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/PatientSharedPages.dart';
 
 import '../Helpers/Router.dart';
+import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import 'Enum.dart';
 
 class NotificationModel {
@@ -29,7 +30,7 @@ class NotificationModel {
     infoId = json['infoId'];
     type = json['type'] == null ? null : EnumNotificationType.values[json['type']];
     if (type == EnumNotificationType.Patient) onClickAction = () => CIA_Router.routeConst_PatientInfo;
-    else if (type == EnumNotificationType.TreatmentPlan) onClickAction = () => PatientTreatmentPlan.routeName;
+    else if (type == EnumNotificationType.TreatmentPlan) onClickAction = () => TreatmentPlanPage.routeName;
     else if (type == EnumNotificationType.Complains) onClickAction = () => PatientComplains.routeName;
     else if (type == EnumNotificationType.LabRequest) onClickAction = () => CIA_Router.routeConst_LabView;
   }

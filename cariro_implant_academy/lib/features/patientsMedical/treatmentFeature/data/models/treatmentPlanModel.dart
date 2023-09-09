@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/treatmentPlan/data/models/teethTreatmentPlanModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/treatmentPlan/domain/entities/treatmentPlanEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 
 class TreatmentPlanModel extends TreatmentPlanEntity {
   TreatmentPlanModel({

@@ -19,6 +19,10 @@ import 'package:cariro_implant_academy/core/domain/useCases/getNotificationsUseC
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/selectImageUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/data/datasources/settingsDatasource.dart';
+import 'package:cariro_implant_academy/core/features/settings/data/repositories/settingsRepoImpl.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
@@ -56,6 +60,12 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getNonSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/treatmentPlanDataSource.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/treatmentPlanRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentPlanBloc.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
@@ -93,7 +103,7 @@ import 'data/repositories/imageRepoImpl.dart';
 
 final sl = GetIt.instance;
 
-init()async {
+init() async {
   //Shared preferences
   sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
   await sl.isReady<SharedPreferences>(); // Add this line
@@ -117,9 +127,9 @@ init()async {
   sl.registerFactory(() => CalendarBloc(
         getAllSchedulesUseCase: sl(),
         getRoomsUseCase: sl(),
-    getAvailableRoomsUseCase: sl(),
-    getMySchedulesUseCase: sl(),
-    scheNewVisitUseCase: sl(),
+        getAvailableRoomsUseCase: sl(),
+        getMySchedulesUseCase: sl(),
+        scheNewVisitUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetAllSchedulesUseCase(visitsRepo: sl()));
@@ -133,6 +143,16 @@ init()async {
   //datasource
   sl.registerLazySingleton<VisitsDataSource>(() => VisitsDatasourceImpl(httpRepo: sl()));
   sl.registerLazySingleton<RoomDatasource>(() => RoomDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Settings
+   */
+  //usecases
+  sl.registerLazySingleton(() => GetTreatmentPricesUseCase(settingsRepository: sl()));
+  //repositories
+  sl.registerLazySingleton<SettingsRepository>(()=> SettingsRepoImpl( settingsDatasource: sl()));
+  //datasources
+  sl.registerLazySingleton<SettingsDatasource>(() => SettingsDatasourceImpl(httpRepo: sl()));
   /*************************
    * Features
    **************************/
@@ -309,4 +329,21 @@ init()async {
   sl.registerLazySingleton<NonSurgicalTreatmentRepo>(() => NonSurgicalTreatmentRepoImpl(nonSurgicalTreatmentDatasource: sl()));
   //datasource
   sl.registerLazySingleton<NonSurgicalTreatmentDatasource>(() => NonSurgicalTreatmentDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Treatment
+   */
+  //bloc
+  sl.registerFactory(() => TreatmentPlanBloc(
+        saveTreatmentPlanUseCase: sl(),
+        getTreatmentPlanUseCase: sl(),
+        getTreatmentPricesUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
+  //repositories
+  sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));
+  //datasources
+  sl.registerLazySingleton<TreatmentPlanDataSource>(() => TreatmentPlanDatasourceImpl(httpRepo: sl()));
 }

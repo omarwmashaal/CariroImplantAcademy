@@ -3,8 +3,10 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_blocEvents.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_blocStates.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/domain/useCases/checkLogInStatus.dart';
+import '../../../core/injection_contianer.dart';
 import '../../../domain/authentication/useCases/loginUseCase.dart';
 
 const LOGIN_FAILURE_MESSAGE = "Wrong credentials";
@@ -30,7 +32,9 @@ class AuthenticationBloc extends Bloc<Authentication_blocEvent, Authentication_b
             else emit(ErrorState(message: l.message??""));
           },
           (r) {
+
             emit(LoggedIn(user: r));
+
           },
         );
       },
