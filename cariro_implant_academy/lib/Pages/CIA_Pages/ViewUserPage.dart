@@ -27,6 +27,8 @@ import 'package:logging/logging.dart';
 
 
 import '../../Widgets/Title.dart';
+import '../../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
+import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 
 class _getx extends GetxController {
   static RxInt totalImplants = 0.obs;
@@ -548,7 +550,7 @@ class _ViewCandidateDataState extends State<ViewCandidateData> {
                 onCellClick: (index) {
 
                   if (index != 0)
-                    context.goNamed(PatientSurgicalTreatment.routeName, pathParameters: {'id': dataSource.effectiveRows.elementAt(index-1).getCells().first.value.toString()});
+                    context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {'id': dataSource.effectiveRows.elementAt(index-1).getCells().first.value.toString()});
                 },
               ),
             ),

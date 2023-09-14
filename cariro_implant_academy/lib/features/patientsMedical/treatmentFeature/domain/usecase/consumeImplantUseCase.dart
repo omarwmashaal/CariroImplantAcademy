@@ -1,0 +1,24 @@
+import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
+import 'package:dartz/dartz.dart';
+
+class ConsumeImplantUseCase extends UseCases<NoParams, int> {
+  final TreatmentPlanRepo treatmentPlanRepo;
+
+  ConsumeImplantUseCase({required this.treatmentPlanRepo});
+
+  @override
+  Future<Either<Failure, NoParams>> call(int id) async {
+    return await treatmentPlanRepo.consumeImplant(id).then(
+          (value) => value.fold(
+            (l) => Left(l..message = "Consume Implant: ${l.message ?? ""}"),
+            (r) => Right(r),
+          ),
+        );
+  }
+}
+
+

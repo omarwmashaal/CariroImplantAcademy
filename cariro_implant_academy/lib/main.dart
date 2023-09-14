@@ -43,7 +43,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/dentalExaminatio
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentPlanBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
 import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
@@ -169,7 +169,7 @@ class MyApp extends StatelessWidget {
           create: (context) => sl<CalendarBloc>(),
         ),
         BlocProvider(
-          create: (context) => sl<TreatmentPlanBloc>(),
+          create: (context) => sl<TreatmentBloc>(),
         ),
       ],
       child: MaterialApp.router(

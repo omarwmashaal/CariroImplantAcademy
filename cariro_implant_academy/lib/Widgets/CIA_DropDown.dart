@@ -198,7 +198,7 @@ class CIA_DropDownSearchClean extends StatelessWidget {
   }
 }
 
-class CIA_DropDownSearchBasicIdName<T extends Enum> extends StatelessWidget {
+class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
   CIA_DropDownSearchBasicIdName(
       {Key? key,
       this.items,
@@ -208,12 +208,12 @@ class CIA_DropDownSearchBasicIdName<T extends Enum> extends StatelessWidget {
       this.selectedItem,
       this.enabled = true,
       this.emptyString = "No results found",
-        this.searchType,
+        this.searchParams,
       this.onSelect})
       : super(key: key);
   List<BasicNameIdObjectEntity>? items;
-  UseCases<List<BasicNameIdObjectEntity>,LoadParams<T>>? asyncUseCase;
-  T? searchType;
+  LoadingUseCases? asyncUseCase;
+  T? searchParams;
 
   String? label;
   BasicNameIdObjectEntity? selectedItem;
@@ -238,9 +238,9 @@ class CIA_DropDownSearchBasicIdName<T extends Enum> extends StatelessWidget {
           ),
           selectedItem: selectedItem,
           asyncItems: (c) async {
-            if (asyncUseCase == null || searchType== null) return [];
+            if (asyncUseCase == null) return [];
             var res = await bloc.searchString(
-              LoadParams<T>(type: searchType!, query: c),
+              searchParams??NoParams(),
               asyncUseCase!,
             );
             return res;
@@ -273,3 +273,4 @@ class CIA_DropDownSearchBasicIdName<T extends Enum> extends StatelessWidget {
     );
   }
 }
+

@@ -39,6 +39,7 @@ import 'package:logging/logging.dart';
 import '../Pages/SharedPages/PatientSharedPages.dart';
 import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
+import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import '../presentation/authentication/pages/authentication_page.dart';
 import '../presentation/patients/pages/patientsSearchPage.dart';
@@ -459,8 +460,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              name: TreatmentPlanPage.routeName,
-                              path: TreatmentPlanPage.routePath,
+                              name: TreatmentPage.routeName,
+                              path: TreatmentPage.routePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: _Authorize(
@@ -469,7 +470,8 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child: TreatmentPlanPage(
+                                    child:new  TreatmentPage(
+                                      key: GlobalKey(),
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
                                   ),
@@ -477,8 +479,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              name: PatientSurgicalTreatment.routeName,
-                              path: PatientSurgicalTreatment.routePath,
+                              name: SurgicalTreatmentPage.routeName,
+                              path: SurgicalTreatmentPage.routePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: _Authorize(
@@ -487,7 +489,8 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child: PatientSurgicalTreatment(
+                                    child: new SurgicalTreatmentPage(
+                                      key: GlobalKey(),
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
                                   ),

@@ -7,7 +7,10 @@ import '../../domain/useCases/loadUsersUseCase.dart';
 import '../../error/exception.dart';
 
 abstract class LoadingDatasource {
-  Future<List<BasicNameIdObjectEntity>> loadUsers({required LoadUsersEnum userType, required String query});
+  Future<List<BasicNameIdObjectEntity>> loadUsers({required LoadUsersEnum userType});
+  Future<List<BasicNameIdObjectEntity>> loadCandidateBatches();
+  Future<List<BasicNameIdObjectEntity>> loadCandidatesByBatchId( int id);
+
 }
 
 class LoadingDataSourceImpl implements LoadingDatasource {
@@ -16,7 +19,7 @@ class LoadingDataSourceImpl implements LoadingDatasource {
   LoadingDataSourceImpl({required this.httpRepo});
 
   @override
-  Future<List<BasicNameIdObjectEntity>> loadUsers({required LoadUsersEnum userType, required String query}) async {
+  Future<List<BasicNameIdObjectEntity>> loadUsers({required LoadUsersEnum userType}) async {
     late StandardHttpResponse response;
     String searchHost = "";
     switch (userType) {
@@ -40,6 +43,40 @@ class LoadingDataSourceImpl implements LoadingDatasource {
     }
     try {
       response = await httpRepo.get(host: "$serverHost/$userController/$searchHost");
+    } catch (e) {
+      throw HttpInternalServerErrorException();
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    try {
+      return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<BasicNameIdObjectEntity>> loadCandidateBatches()async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.get(host: "$serverHost/$userController/LoadCandidatesBatches");
+    } catch (e) {
+      throw HttpInternalServerErrorException();
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    try {
+      return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<BasicNameIdObjectEntity>> loadCandidatesByBatchId( int id) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.get(host: "$serverHost/$userController/LoadCandidatesByBatchID?id=$id");
     } catch (e) {
       throw HttpInternalServerErrorException();
     }

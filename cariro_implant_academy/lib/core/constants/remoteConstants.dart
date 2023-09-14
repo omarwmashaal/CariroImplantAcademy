@@ -40,3 +40,4 @@ const notificationController= "Notifications";
 const medicalController= "Medical";
 const userController= "User";
 const settingsController= "Settings";
+const stockController= "Stock";

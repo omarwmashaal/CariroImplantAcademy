@@ -5,5 +5,7 @@ import 'package:dartz/dartz.dart';
 import '../../error/failure.dart';
 
 abstract class LoadingRepo{
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadUsers({required LoadUsersEnum userType, required String query});
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadUsers({required LoadUsersEnum userType});
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadCandidateBatches();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadCandidatesByBatchId({required int id});
 }

@@ -778,7 +778,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                     )),
                 items: widget.list1
                     .map((e) => SidebarXItem(
-                        label: e.name,
+                        label: e.id,
                         onTap: () {
                           widget.selectedList1Id = e.id!;
                           widget.list2 = [];
@@ -798,7 +798,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                         label: "Delete",
                                         onTab: () async {
                                           widget.list1.removeWhere((element) => element.id == e.id);
-                                          widget.list1.removeWhere((element) => element.name==""||element.name==null);
+                                          widget.list1.removeWhere((element) => element.id==""||element.id==null);
 
                                           if (widget.addFunction1 != null)
                                             await widget.addFunction1!(widget.list1).then((value) {
@@ -820,11 +820,11 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                               context: context,
                                               child: CIA_TextFormField(
                                                 label: "New Name",
-                                                controller: TextEditingController(text: e.name),
+                                                controller: TextEditingController(text: e.id),
                                                 onChange: (value) => tempName = value,
                                               ),
                                               onSave: () async {
-                                                widget.list1.firstWhere((element) => element.id == e.id).name = tempName;
+                                                widget.list1.firstWhere((element) => element.id == e.id).id = tempName;
                                                 if (widget.addFunction1 != null)
                                                   await widget.addFunction1!(widget.list1).then((value) {
                                                     if (value.statusCode == 200)
@@ -969,7 +969,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                           IconButton(
                                               onPressed: () async {
                                                 widget.list1.removeWhere((element) => element.id == e.id);
-                                                widget.list1.removeWhere((element) => element.name==""||element.name==null);
+                                                widget.list1.removeWhere((element) => element.id==""||element.id==null);
                                                 if (widget.addFunction1 != null)
                                                   await widget.addFunction1!(widget.list1).then((value) {
                                                     if (value.statusCode == 200)
@@ -983,12 +983,12 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                                           Expanded(
                                               child: CIA_TextFormField(
                                             label: widget.field ?? "Value",
-                                            controller: TextEditingController(text: e.name ?? ""),
-                                            onChange: (v) => e.name = v,
+                                            controller: TextEditingController(text: e.id ?? ""),
+                                            onChange: (v) => e.id = v,
                                           )),
                                           IconButton(
                                               onPressed: ()  {
-                                                if(widget.list1.last.name!=null&&widget.list1.last.name!="")
+                                                if(widget.list1.last.id!=null&&widget.list1.last.id!="")
                                                   {
                                                     widget.list1.add(DropDownDTO());
                                                     mySetState((){});
@@ -1007,7 +1007,7 @@ class _CommonSettingsWidgetState extends State<_CommonSettingsWidget> {
                         label: "Save Changes",
                         isLong: true,
                         onTab: () async {
-                          widget.list1.removeWhere((element) => element.name==""||element.name==null);
+                          widget.list1.removeWhere((element) => element.id==""||element.id==null);
                           if (widget.addFunction1 != null)
                             await widget.addFunction1!(widget.list1).then((value) {
                               if (value.statusCode == 200)

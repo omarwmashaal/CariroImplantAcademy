@@ -34,4 +34,16 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo{
 
   }
 
+  @override
+  Future<Either<Failure, NoParams>> consumeImplant(int id) async{
+    try{
+      final result = await  treatmentPlanDataSource.consumeImplant(id);
+      return Right(result);
+    }
+    on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
 }

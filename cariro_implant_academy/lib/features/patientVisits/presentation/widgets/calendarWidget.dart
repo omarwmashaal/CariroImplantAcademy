@@ -249,7 +249,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     height: 10,
                   ),
                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                    searchType: LoadUsersEnum.assistants,
+                    searchParams: LoadUsersEnum.assistants,
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     selectedItem: !widget.getForDoctor
                         ? null

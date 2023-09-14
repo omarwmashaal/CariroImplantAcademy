@@ -12,6 +12,8 @@ abstract class TreatmentPlanDataSource {
   Future<TreatmentPlanEntity> getTreatmentPlanData(int id);
 
   Future<NoParams> saveTreatmentPlanData(int id, List<TeethTreatmentPlanEntity> data);
+
+  Future<NoParams> consumeImplant(int id);
 }
 
 class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
@@ -45,6 +47,21 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
       response = await httpRepo.put(
         host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id",
         body: data.map((e) => TeethTreatmentPlanModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> consumeImplant(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$medicalController/ConsumeImplant?id=$id",
+        //body: data.map((e) => TeethTreatmentPlanModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

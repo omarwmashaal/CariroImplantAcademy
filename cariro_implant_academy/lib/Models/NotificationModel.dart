@@ -30,7 +30,7 @@ class NotificationModel {
     infoId = json['infoId'];
     type = json['type'] == null ? null : EnumNotificationType.values[json['type']];
     if (type == EnumNotificationType.Patient) onClickAction = () => CIA_Router.routeConst_PatientInfo;
-    else if (type == EnumNotificationType.TreatmentPlan) onClickAction = () => TreatmentPlanPage.routeName;
+    else if (type == EnumNotificationType.TreatmentPlan) onClickAction = () => TreatmentPage.routeName;
     else if (type == EnumNotificationType.Complains) onClickAction = () => PatientComplains.routeName;
     else if (type == EnumNotificationType.LabRequest) onClickAction = () => CIA_Router.routeConst_LabView;
   }

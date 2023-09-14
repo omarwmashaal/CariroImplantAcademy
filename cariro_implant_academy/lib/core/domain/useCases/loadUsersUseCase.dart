@@ -5,12 +5,12 @@ import 'package:dartz/dartz.dart';
 
 import '../repositories/loadingRepo.dart';
 
-class LoadUsersUseCase extends UseCases<List<BasicNameIdObjectEntity>, LoadParams<LoadUsersEnum>> {
+class LoadUsersUseCase extends LoadingUseCases<LoadUsersEnum> {
   final LoadingRepo loadingRepo;
   LoadUsersUseCase({required this.loadingRepo});
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(LoadParams<LoadUsersEnum> params) async{
-    return await loadingRepo.loadUsers(userType: params.type, query: params.query);
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(LoadUsersEnum params) async{
+    return await loadingRepo.loadUsers(userType: params);
 
   }
 }
@@ -21,11 +21,7 @@ enum LoadUsersEnum {
   admins,
   supervisors,
   instructorsAndAssistants,
+  candidates,
 }
 
-class LoadParams<T extends Enum> {
-  final T type;
-  final String query;
 
-  LoadParams({required this.type, required this.query});
-}

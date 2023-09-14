@@ -37,6 +37,7 @@ import '../Pages/UsersSearchPage.dart';
 import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
+import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../presentation/patients/pages/createOrViewPatientPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
@@ -177,8 +178,8 @@ class SiteController extends GetxController {
           path == PatientProstheticTreatment.routeName ||
           path == DentalHistoryPage.routeName ||
           path == NonSurgicalTreatmentPage.routeName ||
-          path == TreatmentPlanPage.routeName ||
-          path == PatientSurgicalTreatment.routeName)
+          path == TreatmentPage.routeName ||
+          path == SurgicalTreatmentPage.routeName)
         setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
       else
         setAppBarWidget(context: context);
@@ -230,15 +231,15 @@ class SiteController extends GetxController {
           }),
       MedicalSlidingModel(
           name: "Treatment Plan",
-          onTap: () => context.goNamed(TreatmentPlanPage.routeName, pathParameters: {"id": id.toString()}),
+          onTap: () => context.goNamed(TreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () async {
          //   if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
           }),
       MedicalSlidingModel(
           name: "Surgical Treatment",
-          onTap: () => context.goNamed(PatientSurgicalTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onTap: () => context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () async {
-            if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
+           // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
           }),
       MedicalSlidingModel(
           name: "Prosthetic Treatment",

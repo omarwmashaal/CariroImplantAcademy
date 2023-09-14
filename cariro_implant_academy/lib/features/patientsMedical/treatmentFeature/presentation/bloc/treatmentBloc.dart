@@ -1,64 +1,92 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemByName.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentPlanBloc_Events.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentPlanBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../core/injection_contianer.dart';
+import '../../../../../core/features/coreStock/domain/usecases/consumeItemById.dart';
+import '../../domain/usecase/consumeImplantUseCase.dart';
 import '../../domain/usecase/getTreatmentPlanUseCase.dart';
+import '../../domain/usecase/saveSurgicalTreatmentUseCase.dart';
 import '../../domain/usecase/saveTreatmentPlanUseCase.dart';
 
-class TreatmentPlanBloc extends Bloc<TreatmentPlanBloc_Events, TreatmentPlanBloc_States> {
+class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final GetTreatmentPlanUseCase getTreatmentPlanUseCase;
   final SaveTreatmentPlanUseCase saveTreatmentPlanUseCase;
   final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
+  final ConsumeImplantUseCase consumeImplantUseCase;
+
+  final GetSurgicalTreatmentUseCase getSurgicalTreatmentUseCase;
+  final SaveSurgicalTreatmentUseCase saveSurgicalTreatmentUseCase;
+  final ConsumeItemByNameUseCase consumeItemByNameUseCase;
+  final ConsumeItemByIdUseCase consumeItemByIdUseCase;
   TreatmentPricesEntity _prices = TreatmentPricesEntity();
   bool editMode = true;
 
-  TreatmentPlanBloc({
+  TreatmentBloc({
     required this.saveTreatmentPlanUseCase,
     required this.getTreatmentPlanUseCase,
     required this.getTreatmentPricesUseCase,
-  }) : super(TreatmentPlanBloc_LoadingTreatmentPlanDataState()) {
-    on<TreatmentPlanBloc_GetTreatmentPrices>(
+    required this.consumeImplantUseCase,
+    required this.saveSurgicalTreatmentUseCase,
+    required this.getSurgicalTreatmentUseCase,
+    required this.consumeItemByIdUseCase,
+    required this.consumeItemByNameUseCase,
+  }) : super(TreatmentBloc_LoadingTreatmentDataState()) {
+    on<TreatmentBloc_ConsumeImplantEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_ConsumingItemState());
+        final result = await consumeImplantUseCase(event.id);
+        result.fold(
+          (l) => emit(TreatmentBloc_ConsumeItemErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_ConsumedItemSuccessfullyState()),
+        );
+      },
+    );
+
+    on<TreatmentBloc_GetTreatmentPrices>(
       (event, emit) async {
         final pricesResult = await getTreatmentPricesUseCase(NoParams());
         pricesResult.fold(
           (l) => null,
           (r) {
             _prices = r;
-            emit(TreatmentPlanBloc_LoadedTreatmentPricesState(prices: _prices));
+            emit(TreatmentBloc_LoadedTreatmentPricesState(prices: _prices));
           },
         );
       },
     );
-    on<TreatmentPlanBloc_GetDataEvent>(
+    on<TreatmentBloc_GetTreatmentPlanDataEvent>(
       (event, emit) async {
-        emit(TreatmentPlanBloc_LoadingTreatmentPlanDataState());
+        emit(TreatmentBloc_LoadingTreatmentDataState());
+        await  Future.delayed(Duration(milliseconds: 500));
         final result = await getTreatmentPlanUseCase(event.id);
         result.fold(
-          (l) => emit(TreatmentPlanBloc_LoadingTreatmentPlanDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentPlanBloc_LoadedTreatmentPlanDataSuccessfullyState(data: r)),
+          (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState(data: r)),
         );
       },
     );
-    on<TreatmentPlanBloc_SaveDataEvent>(
+    on<TreatmentBloc_SaveTreatmentPlanDataEvent>(
       (event, emit) async {
         final result = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.data));
         result.fold(
-          (l) => emit(TreatmentPlanBloc_SavingTreatmentPlanDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentPlanBloc_SavedTreatmentPlanDataSuccessfullyState()),
+          (l) => emit(TreatmentBloc_SavingTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState()),
         );
       },
     );
-    on<TreatmentPlanBloc_SwitchEditAndSummaryViewsEvent>(
+    on<TreatmentBloc_SwitchEditAndSummaryViewsEvent>(
       (event, emit) {
         editMode = !editMode;
         int total = 0;
@@ -71,10 +99,10 @@ class TreatmentPlanBloc extends Bloc<TreatmentPlanBloc_Events, TreatmentPlanBloc
             if (element.extraction != null) total += element.extraction!.planPrice ?? 0;
           });
         }
-        emit(TreatmentPlanBloc_ChangedViewState(edit: editMode, total: total));
+        emit(TreatmentBloc_ChangedViewState(edit: editMode, total: total));
       },
     );
-    on<TreatmentPlanBloc_UpdateTeethStatusEvent>(
+    on<TreatmentBloc_UpdateTeethStatusEvent>(
       (event, emit) {
         event.teethData = event.teethData
             .map((e) => TeethTreatmentPlanEntity(
@@ -440,7 +468,52 @@ class TreatmentPlanBloc extends Bloc<TreatmentPlanBloc_Events, TreatmentPlanBloc
           }
         }
 
-        emit(TreatmentPlanBloc_UpdatedToothState(data: event.teethData));
+        emit(TreatmentBloc_UpdatedToothState(data: event.teethData));
+      },
+    );
+
+    on<TreatmentBloc_GetSurgicalTreatmentDataEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_LoadingTreatmentDataState());
+        await  Future.delayed(Duration(milliseconds: 500));
+        final result = await getSurgicalTreatmentUseCase(event.id);
+        result.fold(
+          (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState(data: r)),
+        );
+      },
+    );
+
+    on<TreatmentBloc_SaveSurgicalTreatmentDataEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_SavingTreatmentDataState());
+        final result = await saveSurgicalTreatmentUseCase(SaveSurgicalTreatmentParams(id: event.id, data: event.data));
+        result.fold(
+          (l) => emit(TreatmentBloc_SavingTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState()),
+        );
+      },
+    );
+
+    on<TreatmentBloc_ConsumeItemByNameEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_ConsumingItemState());
+        final result = await consumeItemByNameUseCase(ConsumeItemByNameParams(name: event.name, count: event.count));
+        result.fold(
+          (l) => emit(TreatmentBloc_ConsumeItemErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_ConsumedItemSuccessfullyState(message: "${event.name} consumed successfully" )),
+        );
+      },
+    );
+
+    on<TreatmentBloc_ConsumeItemByIdEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_ConsumingItemState());
+        final result = await consumeItemByIdUseCase(ConsumeItemByIdParams(id: event.id, count: event.count));
+        result.fold(
+          (l) => emit(TreatmentBloc_ConsumeItemErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_ConsumedItemSuccessfullyState(message: "Item consumed Successfully")),
+        );
       },
     );
   }

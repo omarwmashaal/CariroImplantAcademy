@@ -7,11 +7,33 @@ import 'package:dartz/dartz.dart';
 
 class LoadingRepoImpl implements LoadingRepo {
   final LoadingDatasource loadingDatasource;
+
   LoadingRepoImpl({required this.loadingDatasource});
+
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadUsers({required LoadUsersEnum userType, required String query}) async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadUsers({required LoadUsersEnum userType}) async {
     try {
-      final result = await loadingDatasource.loadUsers(userType: userType,query:  query);
+      final result = await loadingDatasource.loadUsers(userType: userType);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadCandidateBatches() async {
+    try {
+      final result = await loadingDatasource.loadCandidateBatches();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadCandidatesByBatchId({required int id}) async {
+    try {
+      final result = await loadingDatasource.loadCandidatesByBatchId(id);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

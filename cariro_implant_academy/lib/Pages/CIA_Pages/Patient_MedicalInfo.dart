@@ -1901,10 +1901,11 @@ class _PatientTreatmentPlanState extends State<PatientTreatmentPlan> {
   }
 }
 */
+/*
 class PatientSurgicalTreatment extends StatefulWidget {
   PatientSurgicalTreatment({Key? key, required this.patientId}) : super(key: key);
-  static String routeName = "SurgicalTreatment";
-  static String routePath = "Patient/:id/SurgicalTreatment";
+  static String surgeryRouteName = "SurgicalTreatment";
+  static String surgeryRoutePath = "Patient/:id/SurgicalTreatment";
   int patientId;
 
   @override
@@ -1931,7 +1932,7 @@ class _PatientSurgicalTreatmentState extends State<PatientSurgicalTreatment> {
       super.dispose();
   }
 }
-
+*/
 class PatientProstheticTreatment extends StatefulWidget {
   PatientProstheticTreatment({Key? key, required this.patientId}) : super(key: key);
   int patientId;
