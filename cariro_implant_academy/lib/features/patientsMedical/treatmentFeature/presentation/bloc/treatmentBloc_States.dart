@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
@@ -133,4 +134,10 @@ class TreatmentBloc_UpdateAvailableTacsState extends TreatmentBloc_States {
   TreatmentBloc_UpdateAvailableTacsState({required this.count});
   @override
   List<Object?> get props => [count];
+}
+class TreatmentBloc_LoadedTacsState extends TreatmentBloc_States {
+  final List<TacCompanyEntity> tacs;
+  TreatmentBloc_LoadedTacsState({required this.tacs});
+  @override
+  List<Object?> get props => [tacs];
 }

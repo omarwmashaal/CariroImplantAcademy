@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemByName.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
@@ -30,6 +31,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final SaveSurgicalTreatmentUseCase saveSurgicalTreatmentUseCase;
   final ConsumeItemByNameUseCase consumeItemByNameUseCase;
   final ConsumeItemByIdUseCase consumeItemByIdUseCase;
+  final GetTacsUseCase getTacsUseCase;
   TreatmentPricesEntity _prices = TreatmentPricesEntity();
   bool editMode = true;
 
@@ -42,6 +44,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     required this.getSurgicalTreatmentUseCase,
     required this.consumeItemByIdUseCase,
     required this.consumeItemByNameUseCase,
+    required this.getTacsUseCase,
   }) : super(TreatmentBloc_LoadingTreatmentDataState()) {
     on<TreatmentBloc_ConsumeImplantEvent>(
       (event, emit) async {
@@ -516,5 +519,10 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         );
       },
     );
+
+    on<TreatmentBloc_GetTacsEvent>((event, emit) async{
+      final result = await getTacsUseCase(NoParams());
+      result.fold((l) => null, (r) => emit(TreatmentBloc_LoadedTacsState(tacs: r)));
+    },);
   }
 }

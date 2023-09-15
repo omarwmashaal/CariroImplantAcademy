@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
   @override
   void initState() {
     bloc = BlocProvider.of<TreatmentBloc>(context);
+    bloc.add(TreatmentBloc_GetTacsEvent());
     super.initState();
   }
 
@@ -135,7 +137,7 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                     widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal = isSelected;
                                     break;
                                 }
-                                  setState(() {});
+                                setState(() {});
                               },
                               singleSelect: true,
                               labels: [
@@ -251,11 +253,9 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                 CIA_MultiSelectChipWidgeModel(
                                     label: "Crown", isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryCrown!),
                                 CIA_MultiSelectChipWidgeModel(
-                                    label: "Maryland Bridge",
-                                    isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryMarylandBridge!),
+                                    label: "Maryland Bridge", isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryMarylandBridge!),
                                 CIA_MultiSelectChipWidgeModel(
-                                    label: "Bridge on teeth",
-                                    isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth!),
+                                    label: "Bridge on teeth", isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth!),
                                 CIA_MultiSelectChipWidgeModel(
                                     label: "Denture with glass fiber",
                                     isSelected: widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber!),
@@ -589,25 +589,31 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: CIA_DropDownSearchBasicIdName(
-                                      asyncUseCase: sl<GetTacsUseCase>(),
-                                      label: "Tacs Company",
-                                      selectedItem: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany != null
-                                          ? BasicNameIdObjectEntity(
-                                              id: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany!.id,
-                                              name: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany!.name)
-                                          : null,
-                                      onSelect: (value) {
-                                        widget.surgicalTreatmentEntity.openSinusLiftTacsNumber = 0;
-                                        widget.surgicalTreatmentEntity.openSinusLift_TacsCompanyID = value.id;
-                                        widget.surgicalTreatmentEntity.openSinusLift_TacsCompany = TacCompanyEntity(
-                                          name: value.name,
-                                          id: value.id,
-                                        ); //tacs.firstWhere((element) => element.id == value.id);
-                                        bloc.emit(TreatmentBloc_UpdateAvailableTacsState(
-                                            count: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany!.count ?? 0));
-                                      },
-                                    ),
+                                    child: BlocBuilder<TreatmentBloc, TreatmentBloc_States>(
+                                        buildWhen: (previous, current) => current is TreatmentBloc_LoadedTacsState,
+                                        builder: (context, state) {
+                                          List<TacCompanyEntity> tacs = [];
+                                          if (state is TreatmentBloc_LoadedTacsState) tacs = state.tacs;
+                                          return CIA_DropDownSearchBasicIdName(
+                                            asyncUseCase: sl<GetTacsUseCase>(),
+                                            label: "Tacs Company",
+                                            selectedItem: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany != null
+                                                ? BasicNameIdObjectEntity(
+                                                    id: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany!.id,
+                                                    name: widget.surgicalTreatmentEntity.openSinusLift_TacsCompany!.name)
+                                                : null,
+                                            onSelect: (value) {
+                                              widget.surgicalTreatmentEntity.openSinusLiftTacsNumber = 0;
+                                              widget.surgicalTreatmentEntity.openSinusLift_TacsCompanyID = value.id;
+                                              widget.surgicalTreatmentEntity.openSinusLift_TacsCompany = TacCompanyEntity(
+                                                name: value.name,
+                                                id: value.id,
+                                              ); //tacs.firstWhere((element) => element.id == value.id);
+                                              bloc.emit(TreatmentBloc_UpdateAvailableTacsState(
+                                                  count: tacs.firstWhereOrNull((element) => element.id == value.id)?.count ?? 0));
+                                            },
+                                          );
+                                        }),
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(

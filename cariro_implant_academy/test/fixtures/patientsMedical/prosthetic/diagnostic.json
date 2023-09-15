@@ -1,0 +1,60 @@
+{
+  "id": 1,
+  "prostheticDiagnostic_DiagnosticImpression": [
+    {
+      "diagnostic": 0,
+      "nextStep": 0,
+      "id": 1,
+      "prostheticTreatmentId": 2,
+      "prostheticTreatment": null,
+      "patientId": 1,
+      "patient": null,
+      "date": "2023-06-13T18:15:16.406086Z",
+      "operatorId": 101,
+      "operator": null,
+      "needsRemake": false
+    },
+    {
+      "diagnostic": 0,
+      "nextStep": 2,
+      "id": 2,
+      "prostheticTreatmentId": 2,
+      "prostheticTreatment": null,
+      "patientId": 1,
+      "patient": null,
+      "date": "2023-06-13T18:15:16.517195Z",
+      "operatorId": 101,
+      "operator": null,
+      "needsRemake": false
+    },
+    {
+      "diagnostic": 0,
+      "nextStep": 3,
+      "id": 3,
+      "prostheticTreatmentId": 2,
+      "prostheticTreatment": null,
+      "patientId": 1,
+      "patient": null,
+      "date": "2023-06-13T18:18:35.480885Z",
+      "operatorId": 101,
+      "operator": null,
+      "needsRemake": true
+    }
+  ],
+  "prostheticDiagnostic_Bite": [
+    {
+      "diagnostic": 0,
+      "nextStep": null,
+      "id": 4,
+      "prostheticTreatmentId": 2,
+      "prostheticTreatment": null,
+      "patientId": 1,
+      "patient": null,
+      "date": "2023-08-28T18:23:29.172091Z",
+      "operatorId": 107,
+      "operator": null,
+      "needsRemake": false
+    }
+  ],
+  "prostheticDiagnostic_ScanAppliance": []
+}

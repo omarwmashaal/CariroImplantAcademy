@@ -71,6 +71,13 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getNonSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/datasources/prostheticDatasource.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/repositories/prostheticRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/repositories/prostheticRepository.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentDiagnosticUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/surgicalTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/treatmentPlanDataSource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/surgicalTreatmentRepoImpl.dart';
@@ -113,6 +120,9 @@ import '../features/patientsMedical/dentalHistroy/domain/repositories/dentalHist
 import '../features/patientsMedical/dentalHistroy/domain/useCases/saveDentalHistoryUseCsae.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import '../features/patientsMedical/medicalExamination/domain/usecases/saveMedicalExaminationUseCsae.dart';
+import '../features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisSingleBridge.dart';
+import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentDiagnosticUseCase.dart';
+import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase.dart';
 import '../presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
 import '../presentation/patients/bloc/createOrViewPatientBloc.dart';
 import '../presentation/patients/bloc/patientSearchBloc.dart';
@@ -190,7 +200,7 @@ init() async {
   //repositoies
   sl.registerLazySingleton<CoreStockRepository>(() => CoreStockRepoImpl(coreStockDatasource: sl()));
   //datsource
-  sl.registerLazySingleton<CoreStockDatasource>(()=>CoreStockDatasourceImpl(httpRepo: sl()));
+  sl.registerLazySingleton<CoreStockDatasource>(() => CoreStockDatasourceImpl(httpRepo: sl()));
   /*************************
    * Features
    **************************/
@@ -381,13 +391,14 @@ init() async {
         consumeItemByNameUseCase: sl(),
         getSurgicalTreatmentUseCase: sl(),
         saveSurgicalTreatmentUseCase: sl(),
+        getTacsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));
-  sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase( surgicalTreatmentRepo: sl()));
-  sl.registerLazySingleton(() => SaveSurgicalTreatmentUseCase( surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => SaveSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
 
   //repositories
   sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));
@@ -395,4 +406,29 @@ init() async {
   //datasources
   sl.registerLazySingleton<TreatmentPlanDataSource>(() => TreatmentPlanDatasourceImpl(httpRepo: sl()));
   sl.registerLazySingleton<SurgicalTreatmentDatasource>(() => SurgicalTreatmentDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Prosthetic Treatment
+   */
+  //bloc
+  sl.registerFactory(() => ProstheticBloc(
+        getPatientProstheticTreatmentFinalProthesisSingleBridgeUseCase: sl(),
+        getPatientProstheticTreatmentFinalProthesisFullArchUseCase: sl(),
+        getPatientProstheticTreatmentDiagnosticUseCase: sl(),
+        updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase: sl(),
+        updatePatientProstheticTreatmentFinalProthesisFullArchUseCase: sl(),
+        updatePatientProstheticTreatmentDiagnosticUseCase: sl(),
+      ));
+
+  //usecases
+  sl.registerLazySingleton(() => GetPatientProstheticTreatmentDiagnosticUseCase(prostheticRepository: sl()));
+  sl.registerLazySingleton(() => GetPatientProstheticTreatmentFinalProthesisSingleBridgeUseCase(prostheticRepository: sl()));
+  sl.registerLazySingleton(() => GetPatientProstheticTreatmentFinalProthesisFullArchUseCase(prostheticRepository: sl()));
+  sl.registerLazySingleton(() => UpdatePatientProstheticTreatmentDiagnosticUseCase(prostheticRepository: sl()));
+  sl.registerLazySingleton(() => UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase(prostheticRepository: sl()));
+  sl.registerLazySingleton(() => UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase(prostheticRepository: sl()));
+  //respositories
+  sl.registerLazySingleton<ProstheticRepository>(() => ProstheticRepoImpl(prostheticDatasource: sl()));
+  //datasource
+  sl.registerLazySingleton<ProstheticDatasource>(() => ProstheticDatasourceImpl(httpRepo: sl()));
 }

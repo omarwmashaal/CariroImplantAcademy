@@ -13,6 +13,7 @@ import '../../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
 import '../../../../../../presentation/widgets/bigErrorPageWidget.dart';
+import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import '../../domain/entities/surgicalTreatmentEntity.dart';
 import '../../domain/entities/treatmentPlanEntity.dart';
 import '../bloc/treatmentBloc.dart';
@@ -57,6 +58,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
         bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(id: widget.patientId, data: treatmentPlanEntity.treatmentPlan ?? []));
       }
     }
+    super.dispose();
   }
 
   @override
@@ -68,6 +70,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
     else
       bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
     bloc.add(TreatmentBloc_GetTreatmentPrices());
+    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical?"Surgical Treatment": "Treatment Plan"));
+
   }
 
   @override

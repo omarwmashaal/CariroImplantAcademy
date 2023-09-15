@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'package:cariro_implant_academy/data/patientsMedical/models/bloodPressureModel.dart';
-import 'package:cariro_implant_academy/data/patientsMedical/models/diabeticModel.dart';
-import 'package:cariro_implant_academy/data/patientsMedical/models/hba1cModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/models/bloodPressureModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/models/diabeticModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/models/hba1cModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/models/medicalExaminationModel.dart';
-import 'package:cariro_implant_academy/domain/patientsMedical/entities/diabeticEntity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/fixture.dart';

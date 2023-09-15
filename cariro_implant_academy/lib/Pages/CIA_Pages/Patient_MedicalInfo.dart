@@ -55,6 +55,7 @@ import '../../Widgets/MultiSelectChipWidget.dart';
 import 'package:collection/collection.dart';
 
 import '../../Widgets/SnackBar.dart';
+import '../../features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import '../../presentation/patients/pages/createOrViewPatientPage.dart';
 import '../LAB_Pages/LAB_ViewTask.dart';
 import '../SharedPages/LapCreateNewRequestSharedPage.dart';
@@ -1933,6 +1934,7 @@ class _PatientSurgicalTreatmentState extends State<PatientSurgicalTreatment> {
   }
 }
 */
+/*
 class PatientProstheticTreatment extends StatefulWidget {
   PatientProstheticTreatment({Key? key, required this.patientId}) : super(key: key);
   int patientId;
@@ -2887,7 +2889,7 @@ class _PatientProstheticTreatmentState extends State<PatientProstheticTreatment>
     super.dispose();
   }
 }
-
+*/
 class _Patient_CBCTandPhotos extends StatefulWidget {
   const _Patient_CBCTandPhotos({Key? key}) : super(key: key);
 

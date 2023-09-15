@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cariro_implant_academy/data/patientsMedical/models/dentalExaminationModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/data/models/dentalExaminationModel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/fixture.dart';

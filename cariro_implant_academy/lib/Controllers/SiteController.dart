@@ -15,6 +15,7 @@ import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -175,7 +176,7 @@ class SiteController extends GetxController {
         ]);
       else if (path == PatientMedicalHistory.routeName ||
           path == DentalExaminationPage.routeName ||
-          path == PatientProstheticTreatment.routeName ||
+          path == ProstheticTreatmentPage.routeName ||
           path == DentalHistoryPage.routeName ||
           path == NonSurgicalTreatmentPage.routeName ||
           path == TreatmentPage.routeName ||
@@ -243,7 +244,7 @@ class SiteController extends GetxController {
           }),
       MedicalSlidingModel(
           name: "Prosthetic Treatment",
-          onTap: () => context.goNamed(PatientProstheticTreatment.routeName, pathParameters: {"id": id.toString()}),
+          onTap: () => context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () {}),
       MedicalSlidingModel(name: "Photos and CBCTs", onSave: () {}),
     ];

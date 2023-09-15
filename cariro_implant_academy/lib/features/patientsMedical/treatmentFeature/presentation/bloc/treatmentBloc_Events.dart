@@ -81,6 +81,12 @@ class TreatmentBloc_SwitchEditAndSummaryViewsEvent extends TreatmentBloc_Events 
 }
 
 
+class TreatmentBloc_GetTacsEvent extends TreatmentBloc_Events {
+  @override
+  List<Object?> get props => [];
+}
+
+
 class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
   List<TeethTreatmentPlanEntity> teethData;
   final List<int> selectedTeeth;

@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 
+import '../../features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import '../Enum.dart';
 
 class ProstheticTreatmentModel {

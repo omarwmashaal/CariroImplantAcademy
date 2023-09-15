@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentPlan/data/models/teethTreatmentPlanModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentPlan/data/models/treatmentPlanModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentPlan/data/models/treatmentPlanPropertyModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentPlan/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentPlanModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentPlanPropertyModel.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../fixtures/fixture.dart';
@@ -27,8 +26,7 @@ void main() {
               value: "",
               status: false,
               assignedToID: null,
-              planPrice: 300,
-              planPrice: 300,
+
               assignedTo: null,
               date: DateTime.parse("2021-05-01T21:00:00Z"),
               doneByAssistantID: null,
@@ -45,8 +43,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: 3,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2015-05-20T21:00:00Z"),
               doneByAssistantID: 42,
@@ -61,8 +59,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: null,
-              planPrice: 100,
-              planPrice: 100,
+
+
               assignedTo: null,
               date: DateTime.parse("2016-06-02T21:00:00Z"),
               doneByAssistantID: null,
@@ -77,8 +75,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2018-11-17T22:00:00Z"),
               doneByAssistantID: 79,
@@ -111,8 +109,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 300,
-              planPrice: 300,
+
+
               assignedTo: null,
               date: DateTime.parse("2022-03-15T21:00:00Z"),
               doneByAssistantID: 42,
@@ -130,8 +128,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: 96,
-              planPrice: 100,
-              planPrice: 100,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 96,
                 name: "Elsawy Khattab",
@@ -149,8 +147,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2021-12-31T22:00:00Z"),
               doneByAssistantID: 89,
@@ -169,8 +167,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: null,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2021-01-09T22:00:00Z"),
               doneByAssistantID: null,
@@ -197,8 +195,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 200,
-              planPrice: 200,
+
+
               assignedTo: null,
               date: DateTime.parse("2017-11-21T22:00:00Z"),
               doneByAssistantID: 73,
@@ -213,8 +211,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: null,
-              planPrice: 300,
-              planPrice: 300,
+
+
               assignedTo: null,
               date: DateTime.parse("2022-08-12T21:00:00Z"),
               doneByAssistantID: null,
@@ -229,8 +227,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: 91,
-              planPrice: 500,
-              planPrice: 500,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 91,
                 name: "Zaki Mokhtar",
@@ -248,8 +246,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: 45,
-              planPrice: 400,
-              planPrice: 400,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 45,
                 name: "Saied Ezz",
@@ -288,8 +286,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 300,
-              planPrice: 300,
+
+
               assignedTo: null,
               date: DateTime.parse("2015-08-17T21:00:00Z"),
               doneByAssistantID: 89,
@@ -306,8 +304,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: null,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2022-12-04T21:00:00Z"),
               doneByAssistantID: 98,
@@ -322,8 +320,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: 98,
-              planPrice: 100,
-              planPrice: 100,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 98,
                 name: "Shehata Naser",
@@ -341,8 +339,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: null,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2019-01-21T22:00:00Z"),
               doneByAssistantID: null,
@@ -374,8 +372,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: 93,
-              planPrice: 200,
-              planPrice: 200,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 93,
                 name: "Naser Shaban",
@@ -393,8 +391,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: 57,
-              planPrice: 300,
-              planPrice: 300,
+
+
               assignedTo: BasicNameIdObjectModel(
                 id: 57,
                 name: "Mido Yasser",
@@ -414,8 +412,8 @@ void main() {
               value: "",
               status: false,
               assignedToID: 3,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2017-04-13T21:00:00Z"),
               doneByAssistantID: null,
@@ -434,8 +432,8 @@ void main() {
               value: "",
               status: true,
               assignedToID: 100,
-              planPrice: 0,
-              planPrice: 0,
+
+
               assignedTo: null,
               date: DateTime.parse("2015-08-13T21:00:00Z"),
               doneByAssistantID: 89,

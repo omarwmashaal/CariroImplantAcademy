@@ -8,12 +8,12 @@ class BasicNameIdObjectModel extends BasicNameIdObjectEntity {
 
   factory BasicNameIdObjectModel.fromJson(Map<String, dynamic> map) {
     return BasicNameIdObjectModel(
-      name: map['name'] as String,
+      name: map['name'] as String?,
       id: (){
         try{
-          return map['id'] as int;
+          return map['id'] as int?;
         }catch(e){
-          return map['idInt'] as int;
+          return map['idInt'] as int?;
         }
       }(),
     );
