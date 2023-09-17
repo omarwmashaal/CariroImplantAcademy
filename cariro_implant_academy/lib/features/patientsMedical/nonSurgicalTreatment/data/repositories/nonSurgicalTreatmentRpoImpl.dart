@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/entities/nonSurgialTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/repositories/nonSurgicalTreatmentRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:dartz/dartz.dart';
 
 class NonSurgicalTreatmentRepoImpl implements NonSurgicalTreatmentRepo{
@@ -49,6 +50,18 @@ class NonSurgicalTreatmentRepoImpl implements NonSurgicalTreatmentRepo{
   Future<Either<Failure, NoParams>> saveNonSurgicalTreatment(SaveNonSurgicalTreatmentParams data) async{
     try{
       final result = await  nonSurgicalTreatmentDatasource.saveNonSurgicalTreatment(data);
+      return Right(result);
+    }
+    on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TeethTreatmentPlanEntity?>> getPaidPlanItem({required int patientId, required int tooth}) async{
+    try{
+      final result = await  nonSurgicalTreatmentDatasource.getPaidPlanItem(patientId,tooth);
       return Right(result);
     }
     on Exception catch(e)

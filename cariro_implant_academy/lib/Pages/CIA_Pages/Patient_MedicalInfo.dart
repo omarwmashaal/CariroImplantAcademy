@@ -56,7 +56,7 @@ import 'package:collection/collection.dart';
 
 import '../../Widgets/SnackBar.dart';
 import '../../features/patientsMedical/prosthetic/domain/enums/enum.dart';
-import '../../presentation/patients/pages/createOrViewPatientPage.dart';
+import '../../features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import '../LAB_Pages/LAB_ViewTask.dart';
 import '../SharedPages/LapCreateNewRequestSharedPage.dart';
 

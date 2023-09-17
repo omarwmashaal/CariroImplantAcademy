@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/data/patients/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 

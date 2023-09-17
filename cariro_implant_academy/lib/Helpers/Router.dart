@@ -19,7 +19,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/LargeScreen.dart';
 import 'package:cariro_implant_academy/Widgets/SiteLayout.dart';
-import 'package:cariro_implant_academy/presentation/patients/pages/createOrViewPatientPage.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,13 +37,14 @@ import '../Pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
 import '../Pages/SharedPages/PatientSharedPages.dart';
+import '../features/patient/presentation/presentation/visitsPage.dart';
 import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
 import '../features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import '../presentation/authentication/pages/authentication_page.dart';
-import '../presentation/patients/pages/patientsSearchPage.dart';
+import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
@@ -146,11 +147,11 @@ class CIA_Router {
                         },
                       ),
                        GoRoute(
-                        path: PatientVisits.routeName,
-                        name: PatientVisits.routePath,
+                        path: VisitsPage.routeName,
+                        name: VisitsPage.routePath,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: PatientVisits(),
+                            child: VisitsPage(),
                           );
                         },
                       ),
@@ -215,12 +216,12 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: PatientVisits_SharedPage.routePath,
-                        name: PatientVisits_SharedPage.routeName,
+                        path: VisitsPage.routePathProfile,
+                        name: VisitsPage.routeNameProfile,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: PatientVisits_SharedPage(
-                              patientID: int.parse(state.pathParameters['id'].toString()),
+                            child: VisitsPage(
+                              patientId: int.parse(state.pathParameters['id'].toString()),
                             ),
                           );
                         },

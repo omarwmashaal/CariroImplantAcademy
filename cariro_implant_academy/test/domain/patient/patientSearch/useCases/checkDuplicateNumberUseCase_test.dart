@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:cariro_implant_academy/core/domain/repositories/inputValidationRepo.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/checkDuplicateNumberUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateNumberUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

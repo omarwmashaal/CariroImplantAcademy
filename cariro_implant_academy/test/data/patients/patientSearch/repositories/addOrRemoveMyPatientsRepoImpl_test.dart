@@ -1,8 +1,8 @@
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/data/patients/dataSrouces/addOrRemoveMyPatientsDataSource.dart';
-import 'package:cariro_implant_academy/data/patients/repositories/addOrRemoveMyPatientsRepoImpl.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/addRangeToMyPatientsUseCase.dart';import 'package:dartz/dartz.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/addOrRemoveMyPatientsRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/addRangeToMyPatientsUseCase.dart';import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

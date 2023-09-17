@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
-import 'package:cariro_implant_academy/features/patientVisits/presentation/widgets/calendarWidget.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/widgets/calendarWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationBaseEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/entities/nonSurgialTreatmentEntity.dart';
@@ -13,10 +13,12 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../API/LoadinAPI.dart';
 import '../../../../../Models/VisitsModel.dart';
@@ -31,6 +33,7 @@ import '../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../core/injection_contianer.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
+import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 class NonSurgicalTreatmentPage extends StatefulWidget {
   NonSurgicalTreatmentPage({Key? key, required this.patientId}) : super(key: key);
@@ -85,17 +88,127 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
         if (state is NonSurgicalTreatmentBloc_DentalExaminationDataLoadedSuccessfully) {
           dentalExaminationEntity = state.dentalExaminationEntity;
           //  bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: nonSurgicalTreatment.treatment??""));
-
         } else if (state is NonSurgicalTreatmentBloc_CheckingTeethStatusError)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is NonSurgicalTreatmentBloc_DataLoadingError)
           ShowSnackBar(context, isSuccess: false, message: state.message);
-        else if (state is NonSurgicalTreatmentBloc_DataSavingError) ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is NonSurgicalTreatmentBloc_DataSavingError)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem)
+          CustomLoader.show(context);
+        else if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItemError)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully)
+          ShowSnackBar(context, isSuccess: true, message: "Receipt updated!");
+        else if (state is NonSurgicalTreatmentBloc_AddingPatientReceiptError)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully) {
+          if (state.data == null) return;
+          TeethTreatmentPlanEntity model = state.data!;
+          if (state.action == "Missed") {
+            if (model.extraction != null) {
+              CIA_ShowPopUpYesNo(
+                context: context,
+                onSave: () async {
+                  bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                    patientId: widget.patientId,
+                    tooth: state.tooth,
+                    action: "extraction",
+                  ));
+
+                },
+                title: "Extraction done at price ${model.extraction!.planPrice!.toString()}?",
+              );
+            }
+          } else if (state.action == "Filled") {
+              bool crown = false;
+              bool rootCanalTreatment = false;
+              bool restoration = false;
+
+               CIA_ShowPopUp(
+                context: context,
+                onSave: () async {
+                  if (crown)
+                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                      patientId: widget.patientId,
+                      tooth: state.tooth,
+                      action: "crown",
+                    ));
+                  if (rootCanalTreatment)
+                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                      patientId: widget.patientId,
+                      tooth: state.tooth,
+                      action: "rootCanaltreatment",
+                    ));
+                  if (restoration)
+                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                      patientId: widget.patientId,
+                      tooth: state.tooth,
+                      action: "restoration",
+                    ));
 
 
+
+                },
+                child: Column(
+                  children: [
+                    model.crown != null
+                        ? Row(
+                            children: [
+                              FormTextKeyWidget(text: "Crown at price ${model.crown!.planPrice!.toString()}"),
+                              SizedBox(width: 10),
+                              CIA_MultiSelectChipWidget(
+                                onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
+                                singleSelect: true,
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                ],
+                              )
+                            ],
+                          )
+                        : SizedBox(),
+                    model.restoration != null
+                        ? Row(
+                            children: [
+                              FormTextKeyWidget(text: "Restoration at price ${model.restoration!.planPrice!.toString()}"),
+                              SizedBox(width: 10),
+                              CIA_MultiSelectChipWidget(
+                                singleSelect: true,
+                                onChange: (item, isSelected) => restoration = item == "Yes" && isSelected,
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                ],
+                              )
+                            ],
+                          )
+                        : SizedBox(),
+                    model.rootCanalTreatment != null
+                        ? Row(
+                            children: [
+                              FormTextKeyWidget(text: "Root Canal Treatment at price ${model.rootCanalTreatment!.planPrice!.toString()}"),
+                              SizedBox(width: 10),
+                              CIA_MultiSelectChipWidget(
+                                singleSelect: true,
+                                onChange: (item, isSelected) => rootCanalTreatment = item == "Yes" && isSelected,
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                                ],
+                              )
+                            ],
+                          )
+                        : SizedBox(),
+                  ],
+                ),
+              );
+            }
+
+        }
       },
       buildWhen: (previous, current) =>
-      current is NonSurgicalTreatmentBloc_LoadingData ||
+          current is NonSurgicalTreatmentBloc_LoadingData ||
           current is NonSurgicalTreatmentBloc_DataLoadedSuccessfully ||
           current is NonSurgicalTreatmentBloc_DataLoadingError,
       builder: (context, state) {
@@ -114,7 +227,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               Row(
                 children: [
                   FormTextKeyWidget(text: "Next Visit: "),
-                  FormTextValueWidget(text:  nonSurgicalTreatment.nextVisit ?? ""),
+                  FormTextValueWidget(
+                      text: nonSurgicalTreatment.nextVisit == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(nonSurgicalTreatment.nextVisit!)),
                 ],
               ),
               SizedBox(
@@ -175,28 +289,27 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                       label: "Schedule Next Visit",
                       width: 600,
                       onTab: () async {
-                        VisitsCalendarDataSource dataSource = VisitsCalendarDataSource();
                         CIA_ShowPopUp(
-                          context: context,
-                          width: 900,
-                          height: 600,
-                          title: "Schedule Next Visit",
-                          child: CalendarWidget(
-                            // dataSource: dataSource,
-                            getForDoctor: true,
-                            patientID: widget.patientId,
-                            onNewVisit: (newVisit) {
-                              nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
-                              bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(nonSurgicalTreatmentEntity: nonSurgicalTreatment,
-                                dentalExaminationEntity: dentalExaminationEntity,
-                                patientId: widget.patientId,));
-
-                            },
-                          ),
-                          onSave: (){
-                            bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
-                          }
-                        );
+                            context: context,
+                            width: 900,
+                            height: 600,
+                            title: "Schedule Next Visit",
+                            child: CalendarWidget(
+                              // dataSource: dataSource,
+                              getForDoctor: true,
+                              patientID: widget.patientId,
+                              onNewVisit: (newVisit) {
+                                nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
+                                bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
+                                  nonSurgicalTreatmentEntity: nonSurgicalTreatment,
+                                  dentalExaminationEntity: dentalExaminationEntity,
+                                  patientId: widget.patientId,
+                                ));
+                              },
+                            ),
+                            onSave: () {
+                              bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
+                            });
                       }),
                 ],
               ),
@@ -318,102 +431,13 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           }
           if (isSelected) {
             currentToothDentalExamination.updateToothStatus(value);
-            /*if (value == "Missed") {
-              var res = await MedicalAPI.GetPaidPlanItem(widget.patientId, currentToothDentalExamination.tooth!, value);
-              if (res.statusCode == 200) {
-                var model = res.result as Map<String, TreatmentPlanFieldsModel?>;
-                if (model['extraction'] != null) {
-                  await CIA_ShowPopUpYesNo(
-                    context: context,
-                    onSave: () async {
-                      var res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "extraction");
-                      if (res.statusCode == 200)
-                        ShowSnackBar(context, isSuccess: true, message: "Receipt updated!");
-                      else
-                        ShowSnackBar(context, isSuccess: false);
-                    },
-                    title: "Extraction done at price ${model['extraction']!.planPrice!.toString()}?",
-                  );
-                }
-              }
+            if (value == "Missed" || value == "Filled") {
+              bloc.add(NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent(
+                patientId: widget.patientId,
+                tooth: tooth,
+                action: value,
+              ));
             }
-            else if (value == "Filled") {
-              var res = await MedicalAPI.GetPaidPlanItem(widget.patientId, currentToothDentalExamination.tooth!, value);
-              if (res.statusCode == 200) {
-                var model = res.result as Map<String, TreatmentPlanFieldsModel?>;
-                bool crown = false;
-                bool rootCanalTreatment = false;
-                bool restoration = false;
-
-                await CIA_ShowPopUp(
-                  context: context,
-                  onSave: () async {
-                    API_Response res = API_Response();
-                    if (crown) res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "crown");
-                    if (rootCanalTreatment)
-                      res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "rootCanaltreatment");
-                    if (restoration) res = await MedicalAPI.AddPatientReceipt(widget.patientId, currentToothDentalExamination!.tooth!, "restoration");
-
-                    if (res.statusCode == 200)
-                      ShowSnackBar(context, isSuccess: true, message: "Receipt updated!");
-                    else
-                      ShowSnackBar(context, isSuccess: false);
-                  },
-                  child: Column(
-                    children: [
-                      model['crown'] != null
-                          ? Row(
-                              children: [
-                                FormTextKeyWidget(text: "Crown at price ${model['crown']!.planPrice!.toString()}"),
-                                SizedBox(width: 10),
-                                CIA_MultiSelectChipWidget(
-                                  onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
-                                  singleSelect: true,
-                                  labels: [
-                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                  ],
-                                )
-                              ],
-                            )
-                          : SizedBox(),
-                      model['restoration'] != null
-                          ? Row(
-                              children: [
-                                FormTextKeyWidget(text: "Restoration at price ${model['restoration']!.planPrice!.toString()}"),
-                                SizedBox(width: 10),
-                                CIA_MultiSelectChipWidget(
-                                  singleSelect: true,
-                                  onChange: (item, isSelected) => restoration = item == "Yes" && isSelected,
-                                  labels: [
-                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                  ],
-                                )
-                              ],
-                            )
-                          : SizedBox(),
-                      model['rootCanalTreatment'] != null
-                          ? Row(
-                              children: [
-                                FormTextKeyWidget(text: "Root Canal Treatment at price ${model['rootCanalTreatment']!.planPrice!.toString()}"),
-                                SizedBox(width: 10),
-                                CIA_MultiSelectChipWidget(
-                                  singleSelect: true,
-                                  onChange: (item, isSelected) => rootCanalTreatment = item == "Yes" && isSelected,
-                                  labels: [
-                                    CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                    CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                  ],
-                                )
-                              ],
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
-                );
-              }
-            }*/
           }
         },
       ));

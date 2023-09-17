@@ -12,6 +12,7 @@ import 'package:sidebarx/sidebarx.dart';
 
 import '../Models/Enum.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
+import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import 'FormTextWidget.dart';
 
 List<String> roles = ["Secretary", "Admin", "Instructor"];
@@ -83,7 +84,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
             onTap: () {
               siteController.setSite(Website.CIA);
               widget.onSiteChange();
-              context.goNamed(PatientsSearchPagess.routeName);
+              context.goNamed(PatientsSearchPage.routeName);
 
             },
             child: Image(

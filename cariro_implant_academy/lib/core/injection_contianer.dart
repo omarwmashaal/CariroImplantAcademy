@@ -21,6 +21,20 @@ import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatch
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/selectImageUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/data/datasource/receiptsDatasource.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/data/repositories/receiptRepoImpl.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/repositories/receiptReposiotry.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPatientReceiptUseCase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPaymentUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getAllPaymentLogsUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getLastReceiptUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getPaymentLogsForAReceiptUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getReceiptByIdUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getReceipts.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getTodaysReceiptUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getTotalDeptUseCase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/removePaymentUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/coreStock/data/datasources/coreStockDatasource.dart';
 import 'package:cariro_implant_academy/core/features/coreStock/data/repositories/coreStockRepoImpl.dart';
 import 'package:cariro_implant_academy/core/features/coreStock/domain/repositories/coreStockRepository.dart';
@@ -40,22 +54,28 @@ import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_D
 import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
 import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/addToMyPatientsUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/checkDuplicateIdUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/checkDuplicateNumberUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/createPatientUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/getPatientDataUseCase.dart';
-import 'package:cariro_implant_academy/features/patientVisits/data/datasource/roomDatasource.dart';
-import 'package:cariro_implant_academy/features/patientVisits/data/datasource/visitsDatasource.dart';
-import 'package:cariro_implant_academy/features/patientVisits/data/repositories/roomRepoImpl.dart';
-import 'package:cariro_implant_academy/features/patientVisits/data/repositories/vistisRepoImpl.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/repositories/roomRepo.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/repositories/visitsRepo.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/usecases/getAllSchedulesUseCase.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/usecases/getAvailableRoomsUsecase.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/usecases/getRoomsUsecase.dart';
-import 'package:cariro_implant_academy/features/patientVisits/domain/usecases/scheduleNewVisit.dart';
-import 'package:cariro_implant_academy/features/patientVisits/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/addToMyPatientsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateIdUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateNumberUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/createPatientUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getPatientDataUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getVisitsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientLeavesClinicUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientVisitsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/removeFromMyPatientsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/roomDatasource.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/visitsDatasource.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/roomRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/vistisRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patient/domain/repositories/roomRepo.dart';
+import 'package:cariro_implant_academy/features/patient/domain/repositories/visitsRepo.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getAllSchedulesUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getAvailableRoomsUsecase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/data/datasources/dentalHistoryDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/useCases/getDentalHistoryUseCsae.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/datasources/medicalHistoryDatasource.dart';
@@ -69,6 +89,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/checkNonSurgicalTreatementTeethStatusUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getAllNonSurgicalTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getNonSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getTreatmentPlanItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/datasources/prostheticDatasource.dart';
@@ -99,16 +120,16 @@ import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medical
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/patients/dataSrouces/addOrRemoveMyPatientsDataSource.dart';
-import '../data/patients/dataSrouces/patientSearchDataSource.dart';
-import '../data/patients/repositories/addOrRemoveMyPatientsRepoImpl.dart';
-import '../data/patients/repositories/patientInfoRepoImpl.dart';
-import '../domain/patients/repositories/addOrRemoveMyPatientsRangeRepo.dart';
-import '../domain/patients/repositories/patientInfoRepo.dart';
-import '../domain/patients/usecases/addRangeToMyPatientsUseCase.dart';
-import '../domain/patients/usecases/getNextAvailableIdUseCase.dart';
-import '../domain/patients/usecases/patientSearchUseCase.dart';
-import '../features/patientVisits/domain/usecases/getMySchedulesUseCase.dart';
+import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
+import '../features/patient/data/datasources/patientSearchDataSource.dart';
+import '../features/patient/data/repositories/addOrRemoveMyPatientsRepoImpl.dart';
+import '../features/patient/data/repositories/patientInfoRepoImpl.dart';
+import '../features/patient/domain/repositories/addOrRemoveMyPatientsRangeRepo.dart';
+import '../features/patient/domain/repositories/patientInfoRepo.dart';
+import '../features/patient/domain/usecases/addRangeToMyPatientsUseCase.dart';
+import '../features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
+import '../features/patient/domain/usecases/patientSearchUseCase.dart';
+import '../features/patient/domain/usecases/getMySchedulesUseCase.dart';
 import '../features/patientsMedical/dentalExamination/data/datasources/dentalExaminationDataSource.dart';
 import '../features/patientsMedical/dentalExamination/data/repositories/dentalExaminationRepoImpl.dart';
 import '../features/patientsMedical/dentalExamination/domain/repositories/dentalExaminationRepo.dart';
@@ -123,9 +144,9 @@ import '../features/patientsMedical/medicalExamination/domain/usecases/saveMedic
 import '../features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisSingleBridge.dart';
 import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentDiagnosticUseCase.dart';
 import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase.dart';
-import '../presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
-import '../presentation/patients/bloc/createOrViewPatientBloc.dart';
-import '../presentation/patients/bloc/patientSearchBloc.dart';
+import '../features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
+import '../features/patient/presentation/bloc/createOrViewPatientBloc.dart';
+import '../features/patient/presentation/bloc/patientSearchBloc.dart';
 import 'data/repositories/imageRepoImpl.dart';
 import 'features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantSizesUseCase.dart';
@@ -201,6 +222,34 @@ init() async {
   sl.registerLazySingleton<CoreStockRepository>(() => CoreStockRepoImpl(coreStockDatasource: sl()));
   //datsource
   sl.registerLazySingleton<CoreStockDatasource>(() => CoreStockDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Receipt
+   */
+  //bloc
+  sl.registerFactory(() => ReceiptBloc(
+        getReceiptsUsecase: sl(),
+        getReceiptByIdUseCase: sl(),
+        getPaymentLogsForAReceipt: sl(),
+        removePaymentUseCase: sl(),
+        addPaymentUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => AddPaymentUseCase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetAllPaymentLogsUsecase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetLastReceiptUsecase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetPaymentLogsForAReceiptUseCase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetReceiptByIdUseCase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetReceiptsUsecase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetTodaysReceiptUsecase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => RemovePaymentUseCase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => GetTotalDebtUsecase(receiptRepository: sl()));
+  sl.registerLazySingleton(() => AddPatientReceiptUseCase(receiptRepository: sl()));
+  //REPOS
+  sl.registerLazySingleton<ReceiptRepository>(() => ReceiptRepositoryImpl(receiptDataSource: sl()));
+  //datasource
+  sl.registerLazySingleton<ReceiptsDatasource>(() => ReceiptsDatasourceImpl(httpRepo: sl()));
+
   /*************************
    * Features
    **************************/
@@ -236,11 +285,16 @@ init() async {
 
   //bloc
   sl.registerFactory(() => PatientSearchBloc(searchUseCase: sl()));
-  sl.registerFactory(() => AddToMyPatientsRangeBloc(addRangeUseCase: sl(), addToMyPatientsUseCase: sl()));
+  sl.registerFactory(() => AddToMyPatientsRangeBloc(
+        addRangeUseCase: sl(),
+        addToMyPatientsUseCase: sl(),
+        removeFromMyPatientsUseCase: sl(),
+      ));
   //usecases
   sl.registerLazySingleton(() => PatientSearchUseCase(sl()));
   sl.registerLazySingleton(() => AddRangeToMyPatientsUseCase(sl()));
   sl.registerLazySingleton(() => AddToMyPatientsUseCase(patientInfoRepo: sl(), addOrRemoveMyPatientsRepo: sl()));
+  sl.registerLazySingleton(() => RemoveFromMyPatientsUseCase(patientInfoRepo: sl(), addOrRemoveMyPatientsRepo: sl()));
   //repo
   sl.registerLazySingleton<PatientInfoRepo>(() => PatientInfoRepoImpl(sl()));
   sl.registerLazySingleton<AddOrRemoveMyPatientsRepo>(() => AddOrRemoveMyPatientsRepoImpl(sl()));
@@ -270,6 +324,22 @@ init() async {
   sl.registerLazySingleton<InputValidationRepo>(() => InputValidationRepoImpl());
   //dataSources
 
+  /**
+   * Patient Visits
+   * **/
+  //bloc
+  sl.registerFactory(() => PatientVisitsBloc(
+        getVisitsUseCase: sl(),
+        getPatientDataUseCase: sl(),
+        patientEntersClinicUseCase: sl(),
+        patientLeavesClinicUseCase: sl(),
+        patientVisitsUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => GetVisitsUseCase(visitsRepo: sl()));
+  sl.registerLazySingleton(() => PatientLeavesClinicUseCase(visitsRepo: sl()));
+  sl.registerLazySingleton(() => PatientEntersClinicUseCase(visitsRepo: sl()));
+  sl.registerLazySingleton(() => PatientVisitsUseCase(visitsRepo: sl()));
   /**
    * Image Features
    */
@@ -367,12 +437,15 @@ init() async {
         saveNonSurgicalTreatmentUseCase: sl(),
         getDentalExaminationUseCase: sl(),
         saveDentalExaminationUseCase: sl(),
+        getTreatmentPlanItemUsecase: sl(),
+        addPatientReceiptUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => SaveNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => GetAllNonSurgicalTreatmentsUseCase(nonSurgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => CheckNonSurgicalTreatmentTeethStatusUseCase(nonSurgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentPlanItemUsecase(nonSurgicalTreatmentRepo: sl()));
   //repo
   sl.registerLazySingleton<NonSurgicalTreatmentRepo>(() => NonSurgicalTreatmentRepoImpl(nonSurgicalTreatmentDatasource: sl()));
   //datasource

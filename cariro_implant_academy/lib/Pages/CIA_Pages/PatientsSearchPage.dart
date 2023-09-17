@@ -22,7 +22,7 @@ import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/SnackBar.dart';
 import '../../Widgets/Title.dart';
-import '../../presentation/patients/pages/createOrViewPatientPage.dart';
+import '../../features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import '../SharedPages/PatientSharedPages.dart';
 import 'Patient_MedicalInfo.dart';
 
@@ -121,7 +121,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   }
 }
 */
-
+/*
 class PatientsSearchPagess extends StatefulWidget {
   PatientsSearchPagess({Key? key, this.myPatients = false}) : super(key: key);
   static String routeName = "Patientsss";
@@ -257,7 +257,7 @@ class _PatientsSearchPagessState extends State<PatientsSearchPagess> {
     );
   }
 }
-
+*/
 class PatientsComplainsPage extends StatefulWidget {
   const PatientsComplainsPage({Key? key}) : super(key: key);
   static String routeName = "PatientsComplains";

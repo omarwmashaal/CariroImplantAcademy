@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import '../../API/AuthenticationAPI.dart';
 import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
+import '../../features/patient/presentation/presentation/patientsSearchPage.dart';
 
 class AuthenticationPage extends StatefulWidget {
   AuthenticationPage({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             var login = await AuthenticationAPI.Login(email, password);
             if (login.statusCode == 200) {
               if(siteController.getSite()==Website.CIA)
-                context.goNamed(PatientsSearchPagess.routeName);
+                context.goNamed(PatientsSearchPage.routeName);
               else if(siteController.getSite()==Website.Lab)
                 context.goNamed(LabTodaysRequestsSearch.routeName);
               if(siteController.getSite()==Website.Clinic)

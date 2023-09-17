@@ -1,9 +1,11 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/data/models/nonSurgicalTreatmentModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
 
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../../core/error/exception.dart';
 import '../../../../../core/useCases/useCases.dart';
+import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import '../../domain/entities/nonSurgialTreatmentEntity.dart';
 import '../../domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
 
@@ -15,6 +17,8 @@ abstract class NonSurgicalTreatmentDatasource {
   Future<NoParams> saveNonSurgicalTreatment(SaveNonSurgicalTreatmentParams data);
 
   Future<List<int>> checkNonSurgicalTreatmentTeethStatus(String data);
+
+  Future<TeethTreatmentPlanModel?> getPaidPlanItem(int patientId, int tooth);
 }
 
 class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasource {
@@ -32,7 +36,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
     try {
-      return response.body==null?[]: (response.body as List<dynamic>).map((e) => e as int).toList();
+      return response.body == null ? [] : (response.body as List<dynamic>).map((e) => e as int).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
@@ -64,7 +68,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
     try {
-      return NonSurgicalTreatmentModel.fromMap((response.body ?? Map<String,dynamic>())as Map<String, dynamic>);
+      return NonSurgicalTreatmentModel.fromMap((response.body ?? Map<String, dynamic>()) as Map<String, dynamic>);
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
@@ -84,6 +88,25 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
     return NoParams();
+  }
 
+  @override
+  Future<TeethTreatmentPlanModel?> getPaidPlanItem(int patientId, int tooth) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$medicalController/GetPaidPlanItem?id=$patientId&tooth=$tooth",
+      );
+    } catch (e) {
+      print(e);
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    try {
+      if (response.body == null) return null;
+      return TeethTreatmentPlanModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException();
+    }
   }
 }

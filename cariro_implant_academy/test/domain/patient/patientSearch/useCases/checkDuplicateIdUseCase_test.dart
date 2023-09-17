@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/checkDuplicateIdUseCase.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/getNextAvailableIdUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateIdUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

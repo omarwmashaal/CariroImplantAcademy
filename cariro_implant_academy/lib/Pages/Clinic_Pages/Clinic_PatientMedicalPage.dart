@@ -7,6 +7,7 @@ import '../../Models/PatientInfo.dart';
 import '../../Widgets/CIA_DropDown.dart';
 import '../../Widgets/MultiSelectChipWidget.dart';
 import '../../Widgets/TabsLayout.dart';
+import '../../features/patient/presentation/presentation/visitsPage.dart';
 import '../SharedPages/PatientSharedPages.dart';
 
 class Clinic_PatientMedicalPage extends StatelessWidget {
@@ -28,8 +29,8 @@ class Clinic_PatientMedicalPage extends StatelessWidget {
               PatientInfo_SharedPage(
                 patientID: patientID,
               ),
-              PatientVisits_SharedPage(
-                patientID: patientID,
+              VisitsPage(
+                patientId: patientID,
               ),
               /*_MedicalTreatment(
                 patient: patientID,

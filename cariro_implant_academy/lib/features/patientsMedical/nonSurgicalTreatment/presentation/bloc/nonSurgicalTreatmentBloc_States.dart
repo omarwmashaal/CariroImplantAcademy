@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:equatable/equatable.dart';
 
 import '../../../dentalExamination/domain/entities/dentalExaminationBaseEntity.dart';
+import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 abstract class NonSurgicalTreatmentBloc_States extends Equatable {}
 
@@ -120,4 +121,48 @@ class NonSurgicalTreatmentBloc_DataSavingError extends NonSurgicalTreatmentBloc_
 
   @override
   List<Object?> get props => [message];
+}
+
+class NonSurgicalTreatmentBloc_LoadingTreatmentPlanItemError extends NonSurgicalTreatmentBloc_States {
+  final String message;
+
+  NonSurgicalTreatmentBloc_LoadingTreatmentPlanItemError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem extends NonSurgicalTreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully extends NonSurgicalTreatmentBloc_States {
+  final TeethTreatmentPlanEntity? data;
+  final String action;
+  final int tooth;
+
+  NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully({required this.data, required this.action,required this.tooth});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class NonSurgicalTreatmentBloc_AddingPatientReceiptError extends NonSurgicalTreatmentBloc_States {
+  final String message;
+
+  NonSurgicalTreatmentBloc_AddingPatientReceiptError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class NonSurgicalTreatmentBloc_AddingPatientReceipt extends NonSurgicalTreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully extends NonSurgicalTreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
 }

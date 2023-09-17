@@ -942,24 +942,24 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
     );
   }
 }
+/*
+class VisitsPagse extends StatefulWidget {
+  VisitsPage({Key? key, required this.patientID, this.patientName}) : super(key: key);
 
-class PatientVisits_SharedPage extends StatefulWidget {
-  PatientVisits_SharedPage({Key? key, required this.patientID, this.patientName}) : super(key: key);
-
-  static String getPath(String id) {
+  static String getPathProfile(String id) {
     return "/Patients/$id/VisitsLogs";
   }
 
-  static String routeName = "VisitsLogs";
-  static String routePath = "Patients/:id/VisitsLogs";
+  static String routeNameProfile = "VisitsLogs";
+  static String routePathProfile = "Patients/:id/VisitsLogs";
   int patientID;
   String? patientName;
 
   @override
-  State<PatientVisits_SharedPage> createState() => _PatientVisits_SharedPageState();
+  State<VisitsPage> createState() => _VisitsPageState();
 }
 
-class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
+class _VisitsPageState extends State<VisitsPage> {
   bool edit = false;
 
   VisitDataSource dataSource = VisitDataSource();
@@ -1276,7 +1276,7 @@ class _PatientVisits_SharedPageState extends State<PatientVisits_SharedPage> {
         });
   }
 }
-
+*/
 class PatientComplains extends StatefulWidget {
   PatientComplains({Key? key, required this.patientId}) : super(key: key);
   int patientId;

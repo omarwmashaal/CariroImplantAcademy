@@ -1,14 +1,14 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
-import 'package:cariro_implant_academy/domain/patients/entities/patientInfoEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc_Events.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc_States.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/patientSeachBlocStates.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/patientSearchBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_Events.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_States.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSeachBlocStates.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSearchBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
@@ -26,7 +26,7 @@ import '../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../Widgets/CIA_Table.dart';
 import '../../../Widgets/FormTextWidget.dart';
 import '../../../Widgets/Title.dart';
-import '../../patients/pages/createOrViewPatientPage.dart';
+import '../../../features/patient/presentation/presentation/createOrViewPatientPage.dart';
 
 class MedicalInfoShellPage extends StatefulWidget {
   MedicalInfoShellPage({Key? key, required this.patientId, required this.child}) : super(key: key);

@@ -38,10 +38,12 @@ import '../Pages/UsersSearchPage.dart';
 import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
+import '../features/patient/presentation/presentation/visitsPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
-import '../presentation/patients/pages/createOrViewPatientPage.dart';
+import '../features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
+import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 
 class SiteController extends GetxController {
   static SiteController instance = Get.find();
@@ -130,28 +132,28 @@ class SiteController extends GetxController {
           SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),
           SlidingTabModel(title: "Users", namedDirectory: UsersSettingsPage.routeName),
         ]);
-      else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == PatientVisits_SharedPage.routeName || path == PatientComplains.routeName)
+      else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == VisitsPage.routeNameProfile || path == PatientComplains.routeName)
         siteController.setAppBarWidget(context: context, tabs: [
           SlidingTabModel(title: "Patient Data", namedDirectory: CreateOrViewPatientPage.viewPatientRouteName, pathParameters: pathQueries),
-          SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits_SharedPage.routeName, pathParameters: pathQueries),
+          SlidingTabModel(title: "Patient Visits", namedDirectory: VisitsPage.routeNameProfile, pathParameters: pathQueries),
           SlidingTabModel(title: "Complains", namedDirectory: PatientComplains.routeName, pathParameters: pathQueries),
         ]);
-      else if (path == PatientsSearchPagess.routeName ||
-          path == PatientsSearchPagess.myPatientsRouteName ||
+      else if (path == PatientsSearchPage.routeName ||
+          path == PatientsSearchPage.myPatientsRouteName ||
           path == PatientsComplainsPage.routeName ||
           path == PatientAdvancedSearchPage.routeName ||
           path == PatientAdvancedSearchPage.routeNameTreatments ||
           path == PatientVisits.routeName) {
         if (getRole() == "secretary")
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPagess.routeName),
+            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
             SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
             SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
           ]);
         else
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPagess.routeName),
-            SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPagess.myPatientsRouteName),
+            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
+            SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
             SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
             SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
             path == PatientAdvancedSearchPage.routeNameTreatments
@@ -246,7 +248,6 @@ class SiteController extends GetxController {
           name: "Prosthetic Treatment",
           onTap: () => context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () {}),
-      MedicalSlidingModel(name: "Photos and CBCTs", onSave: () {}),
     ];
     for (var element in pages) {
       if (element!.name!.removeAllWhitespace.toString().toLowerCase() == path.toLowerCase()) {

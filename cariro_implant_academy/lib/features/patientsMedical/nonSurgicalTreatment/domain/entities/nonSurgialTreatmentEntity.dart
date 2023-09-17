@@ -8,7 +8,7 @@ class NonSurgicalTreatmentEntity extends Equatable{
   int? operatorID;
   BasicNameIdObjectEntity? operator;
   DateTime? date;
-  String? nextVisit;
+  DateTime? nextVisit;
 
   NonSurgicalTreatmentEntity({this.treatment,
     this.supervisorID,

@@ -28,6 +28,7 @@ import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 
 class PagesController extends PageController {
   static PagesController instance = Get.find();
@@ -44,7 +45,7 @@ class PagesController extends PageController {
             controller: pagesController,
             children: [
               Container(
-                child: PatientsSearchPagess(),
+                child: PatientsSearchPage(),
               ),
               Container(
                 child: Center(
@@ -176,7 +177,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'atients',
               onTap: () {
-                context.goNamed(PatientsSearchPagess.routeName);
+                context.goNamed(PatientsSearchPage.routeName);
                 controller.notifyListeners();
               },
               iconWidget: Container(

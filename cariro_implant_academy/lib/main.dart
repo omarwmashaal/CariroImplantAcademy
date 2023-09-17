@@ -36,9 +36,11 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
-import 'package:cariro_implant_academy/features/patientVisits/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
@@ -46,9 +48,9 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/addOrRemoveMyPatientsBloc.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/createOrViewPatientBloc.dart';
-import 'package:cariro_implant_academy/presentation/patients/bloc/patientSearchBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSearchBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalPagesStatesChangesBloc.dart';
 
@@ -145,8 +147,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<MedicalPagesStatesChangesBloc>()),
         BlocProvider(create: (context) => sl<NonSurgicalTreatmentBloc>()),
         BlocProvider(create: (context) => sl<CalendarBloc>()),
+        BlocProvider(create: (context) => sl<PatientVisitsBloc>()),
         BlocProvider(create: (context) => sl<TreatmentBloc>()),
         BlocProvider(create: (context) => sl<ProstheticBloc>()),
+        BlocProvider(create: (context) => sl<ReceiptBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

@@ -1,8 +1,8 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/domain/patients/entities/patientInfoEntity.dart';
-import 'package:cariro_implant_academy/domain/patients/repositories/patientInfoRepo.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/patientSearchUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/repositories/patientInfoRepo.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientSearchUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

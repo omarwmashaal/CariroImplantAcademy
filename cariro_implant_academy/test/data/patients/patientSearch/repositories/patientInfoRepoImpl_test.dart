@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/data/patients/dataSrouces/patientSearchDataSource.dart';
-import 'package:cariro_implant_academy/data/patients/models/patientSearchResponseModel.dart';
-import 'package:cariro_implant_academy/data/patients/repositories/patientInfoRepoImpl.dart';
-import 'package:cariro_implant_academy/domain/patients/entities/patientInfoEntity.dart';
-import 'package:cariro_implant_academy/domain/patients/usecases/patientSearchUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/patientSearchDataSource.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/patientInfoRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientSearchUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

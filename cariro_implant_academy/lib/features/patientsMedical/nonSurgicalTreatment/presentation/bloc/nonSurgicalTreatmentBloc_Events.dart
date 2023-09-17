@@ -49,3 +49,40 @@ class NonSurgicalTreatmentBloc_CheckTeethStatusEvent extends NonSurgicalTreatmen
   @override
   List<Object?> get props => [treatment];
 }
+
+class NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent extends NonSurgicalTreatmentBloc_Events {
+  final int patientId;
+  final int tooth;
+  final String action;
+
+  NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent({
+    required this.patientId,
+    required this.tooth,
+    required this.action,
+  });
+
+  @override
+  List<Object?> get props => [
+        patientId,
+        tooth,
+      ];
+}
+
+class NonSurgicalTreatmentBloc_AddPatientReceiptEvent extends NonSurgicalTreatmentBloc_Events {
+  final int patientId;
+  final int tooth;
+  final String action;
+
+  NonSurgicalTreatmentBloc_AddPatientReceiptEvent({
+    required this.patientId,
+    required this.tooth,
+    required this.action,
+  });
+
+  @override
+  List<Object?> get props => [
+        patientId,
+        tooth,
+        action,
+      ];
+}

@@ -35,7 +35,7 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
     patientId = json['patientId'];
     operatorId = json['operatorId'];
     operator = json['operator'] != null ? new BasicNameIdObjectModel.fromJson(json['operator']) : null;
-    date = DateTime.tryParse(json['date']);
+    date = DateTime.tryParse(json['date']??"");
     treatmentPlan = ((json['treatmentPlan'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
   }
 

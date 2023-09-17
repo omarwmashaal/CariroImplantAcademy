@@ -8,6 +8,7 @@ import '../Models/Enum.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/UsersSearchPage.dart';
+import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
 const String RegisterPageRoute = "RegisterPageRoute";
@@ -18,7 +19,7 @@ PageView MainPageRoutes() {
     controller: pagesController,
     children: [
       Container(
-        child: PatientsSearchPagess(),
+        child: PatientsSearchPage(),
       ),
       Container(
         child:  Center(

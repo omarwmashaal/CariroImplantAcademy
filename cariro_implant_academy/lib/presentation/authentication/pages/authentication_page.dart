@@ -20,7 +20,7 @@ import '../../../Widgets/CIA_TextFormField.dart';
 import '../../../core/injection_contianer.dart';
 import '../../../core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import '../../../core/presentation/bloc/siteChange/siteChange_blocStates.dart';
-import '../../patients/pages/patientsSearchPage.dart';
+import '../../../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../../widgets/customeLoader.dart';
 
 class AuthenticationPage extends StatelessWidget {
