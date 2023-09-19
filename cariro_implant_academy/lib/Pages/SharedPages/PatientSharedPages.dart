@@ -38,6 +38,7 @@ import '../../Models/DTOs/DropDownDTO.dart';
 import '../../Models/VisitsModel.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/SnackBar.dart';
+import '../../core/constants/enums/enums.dart';
 
 class _getxController extends GetxController {
   static Rx<PatientInfoModel> duplicateFound = PatientInfoModel().obs;
@@ -1277,6 +1278,7 @@ class _VisitsPageState extends State<VisitsPage> {
   }
 }
 */
+
 class PatientComplains extends StatefulWidget {
   PatientComplains({Key? key, required this.patientId}) : super(key: key);
   int patientId;

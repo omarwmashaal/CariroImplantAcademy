@@ -47,7 +47,7 @@ class FormTextKeyWidget extends StatelessWidget {
 
 class FormTextValueWidget extends StatelessWidget {
   FormTextValueWidget(
-      {Key? key, this.color, required this.text,this.align = TextAlign.start, this.secondaryInfo = false, this.suffix, this.smallFont = false})
+      {Key? key, this.color, this.text="",this.align = TextAlign.start, this.secondaryInfo = false, this.suffix, this.smallFont = false})
       : super(key: key);
   String? text;
   bool secondaryInfo;

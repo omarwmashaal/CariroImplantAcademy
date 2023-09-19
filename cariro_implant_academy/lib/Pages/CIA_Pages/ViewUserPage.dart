@@ -27,6 +27,7 @@ import 'package:logging/logging.dart';
 
 
 import '../../Widgets/Title.dart';
+import '../../core/constants/enums/enums.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 

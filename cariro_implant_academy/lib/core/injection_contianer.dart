@@ -54,10 +54,15 @@ import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_D
 import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
 import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/complainsDatasource.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/complainsRepositoryImpl.dart';
+import 'package:cariro_implant_academy/features/patient/domain/repositories/complainsRepository.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/addComplainUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addToMyPatientsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateIdUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateNumberUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/createPatientUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getComplainsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getPatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getVisitsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
@@ -73,8 +78,11 @@ import 'package:cariro_implant_academy/features/patient/domain/repositories/visi
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getAllSchedulesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getAvailableRoomsUsecase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveComplaiUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/data/datasources/dentalHistoryDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/useCases/getDentalHistoryUseCsae.dart';
@@ -128,6 +136,7 @@ import '../features/patient/domain/repositories/addOrRemoveMyPatientsRangeRepo.d
 import '../features/patient/domain/repositories/patientInfoRepo.dart';
 import '../features/patient/domain/usecases/addRangeToMyPatientsUseCase.dart';
 import '../features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
+import '../features/patient/domain/usecases/inqueueComplaiUseCase.dart';
 import '../features/patient/domain/usecases/patientSearchUseCase.dart';
 import '../features/patient/domain/usecases/getMySchedulesUseCase.dart';
 import '../features/patientsMedical/dentalExamination/data/datasources/dentalExaminationDataSource.dart';
@@ -354,7 +363,28 @@ init() async {
   sl.registerLazySingleton<ImageRepo>(() => ImageRepoImpl(dataSource: sl()));
   //dataSources
   sl.registerLazySingleton<ImageDataSource>(() => ImageDataSourceImpl(httpRepo: sl()));
-
+  /**
+   * Complains
+   */
+  sl.registerFactory(() => ComplainsBloc(
+        getComplainsUseCase: sl(),
+        updateComplainNotesUseCase: sl(),
+        inqueueComplainUseCase: sl(),
+        resolveComplainUseCase: sl(),
+        addComplainUseCase: sl(),
+        getPatientDataUseCase: sl(),
+        getAllNonSurgicalTreatmentsUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => GetComplainsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateComplainNotesUseCase(sl()));
+  sl.registerLazySingleton(() => InqueueComplainUseCase(sl()));
+  sl.registerLazySingleton(() => ResolveComplainUseCase(sl()));
+  sl.registerLazySingleton(() => AddComplainUseCase(sl()));
+  //respo
+  sl.registerLazySingleton<ComplainsRepository>(() => ComplainsRepositoryImpl(complainsDatasource: sl()));
+  //datasource
+  sl.registerLazySingleton<ComplainsDatasource>(() => ComplainDatasourceImpl(httpRepo: sl()));
   /**
    * AppBar
    */

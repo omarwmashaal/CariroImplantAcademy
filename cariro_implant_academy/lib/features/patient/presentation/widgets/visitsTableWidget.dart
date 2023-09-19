@@ -37,6 +37,11 @@ class VisitsTableWidget extends StatelessWidget {
       height: 200,
       child: Column(
         children: [
+
+          TitleWidget(
+            title: "Visits",
+            showBackButton: true,
+          ),
           Visibility(
               visible: patientId != null,
               child: BlocBuilder<PatientVisitsBloc, PatientVisitsBloc_States>(

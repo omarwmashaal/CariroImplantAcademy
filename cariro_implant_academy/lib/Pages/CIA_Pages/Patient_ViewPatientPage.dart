@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
 import '../../features/patient/presentation/presentation/visitsPage.dart';
 import '../SharedPages/PatientSharedPages.dart';
 
@@ -28,7 +29,7 @@ class _ViewPatientPageState extends State<ViewPatientPage> {
           patientId: widget.patientID,
           //loadFunction: PatientAPI.GetVisitsLogs,
         ),
-        PatientComplains(patientId: widget.patientID,
+        PatientProfileComplainsPage(patientId: widget.patientID,
 
         )
       ],

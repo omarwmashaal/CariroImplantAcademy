@@ -38,6 +38,8 @@ import '../Pages/UsersSearchPage.dart';
 import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
+import '../features/patient/presentation/presentation/complainsSearchPage.dart';
+import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/presentation/visitsPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../features/patient/presentation/presentation/createOrViewPatientPage.dart';
@@ -132,15 +134,15 @@ class SiteController extends GetxController {
           SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),
           SlidingTabModel(title: "Users", namedDirectory: UsersSettingsPage.routeName),
         ]);
-      else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == VisitsPage.routeNameProfile || path == PatientComplains.routeName)
+      else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == VisitsPage.routeNameProfile || path == PatientProfileComplainsPage.routeName)
         siteController.setAppBarWidget(context: context, tabs: [
           SlidingTabModel(title: "Patient Data", namedDirectory: CreateOrViewPatientPage.viewPatientRouteName, pathParameters: pathQueries),
           SlidingTabModel(title: "Patient Visits", namedDirectory: VisitsPage.routeNameProfile, pathParameters: pathQueries),
-          SlidingTabModel(title: "Complains", namedDirectory: PatientComplains.routeName, pathParameters: pathQueries),
+          SlidingTabModel(title: "Complains", namedDirectory: PatientProfileComplainsPage.routeName, pathParameters: pathQueries),
         ]);
       else if (path == PatientsSearchPage.routeName ||
           path == PatientsSearchPage.myPatientsRouteName ||
-          path == PatientsComplainsPage.routeName ||
+          path == ComplainsSearchPage.routeName ||
           path == PatientAdvancedSearchPage.routeName ||
           path == PatientAdvancedSearchPage.routeNameTreatments ||
           path == PatientVisits.routeName) {
@@ -148,14 +150,14 @@ class SiteController extends GetxController {
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
             SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
-            SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
+            SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
           ]);
         else
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
             SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
             SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
-            SlidingTabModel(title: "Complains", namedDirectory: PatientsComplainsPage.routeName),
+            SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
             path == PatientAdvancedSearchPage.routeNameTreatments
                 ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
                 : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../core/constants/enums/enums.dart';
 import 'Enum.dart';
 
 class ComplainsModel {

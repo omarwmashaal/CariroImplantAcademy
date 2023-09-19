@@ -56,3 +56,6 @@ enum EnumOralHygieneRating {
   GoodHygiene,
   ExcellentHygiene,
 }
+
+
+enum EnumComplainStatus { InQueue, Untouched, Resolved }

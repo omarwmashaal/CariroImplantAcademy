@@ -7,12 +7,12 @@ import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Models/PaymentLogModel.dart';
 import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 
 import '../Models/VisitsModel.dart';
+import '../core/constants/enums/enums.dart';
 
 class PatientAPI {
   static Future<API_Response> GetPatientData(int id) async {

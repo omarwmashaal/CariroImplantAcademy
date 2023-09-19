@@ -59,13 +59,7 @@ enum EnumLabRequestInitStatus {
   Remake,
 }
 
-enum EnumImageType {
-  PatientProfile,
-  IdBack,
-  IdFront,
-  UserProfile,
-  Pros
-}
+
 enum EnumGender
 {
   Male,
@@ -87,4 +81,3 @@ LowerPosterior
 }
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
 enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest }
-enum EnumComplainStatus { InQueue, Untouched, Resolved }

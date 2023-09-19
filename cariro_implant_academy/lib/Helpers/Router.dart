@@ -37,6 +37,8 @@ import '../Pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
 import '../Pages/SharedPages/PatientSharedPages.dart';
+import '../features/patient/presentation/presentation/complainsSearchPage.dart';
+import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/presentation/visitsPage.dart';
 import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
@@ -157,11 +159,11 @@ class CIA_Router {
                       ),
 
                       GoRoute(
-                        path: PatientsComplainsPage.routeName,
-                        name: PatientsComplainsPage.routeName,
+                        path: ComplainsSearchPage.routeName,
+                        name: ComplainsSearchPage.routeName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: PatientsComplainsPage(),
+                            child: ComplainsSearchPage(),
                           );
                         },
                       ),
@@ -227,11 +229,11 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: PatientComplains.routePath,
-                        name: PatientComplains.routeName,
+                        path: PatientProfileComplainsPage.routePath,
+                        name: PatientProfileComplainsPage.routeName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: PatientComplains(
+                            child: PatientProfileComplainsPage(
                               patientId: int.parse(state.pathParameters['id'].toString()),
                             ),
                           );
