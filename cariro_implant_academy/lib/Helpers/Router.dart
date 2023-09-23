@@ -45,6 +45,8 @@ import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonS
 import '../features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../features/stock/presentation/pages/stockLogsSearchPage.dart';
+import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
@@ -300,17 +302,17 @@ class CIA_Router {
                         ),
                       ),
                       GoRoute(
-                        path: StockListSharedPage.routePath,
-                        name: StockListSharedPage.routeCIAname,
+                        path: StockSearchPage.routePath,
+                        name: StockSearchPage.routeCIAname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: StockListSharedPage(),
+                          child: StockSearchPage(),
                         ),
                       ),
                       GoRoute(
-                        path: StockLogsSharedPage.routePath,
-                        name: StockLogsSharedPage.routeCIAname,
+                        path: StockLogsSearchPage.routePath,
+                        name: StockLogsSearchPage.routeCIAname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: StockLogsSharedPage(),
+                          child: StockLogsSearchPage(),
                         ),
                       ),
                       GoRoute(
@@ -672,17 +674,17 @@ class CIA_Router {
                         ),
                       ),
                       GoRoute(
-                        path: StockListSharedPage.routePath,
-                        name: StockListSharedPage.routeLABname,
+                        path: StockSearchPage.routePath,
+                        name: StockSearchPage.routeLABname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: StockListSharedPage(),
+                          child: StockSearchPage(),
                         ),
                       ),
                       GoRoute(
-                        path: StockLogsSharedPage.routePath,
-                        name: StockLogsSharedPage.routeLABname,
+                        path: StockLogsSearchPage.routePath,
+                        name: StockLogsSearchPage.routeLABname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: StockLogsSharedPage(),
+                          child: StockLogsSearchPage(),
                         ),
                       ),
                       GoRoute(

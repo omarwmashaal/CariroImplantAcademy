@@ -48,6 +48,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/medicalExaminati
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
+import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
@@ -155,6 +156,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<ReceiptBloc>()),
         BlocProvider(create: (context) => sl<ComplainsBloc>()),
         BlocProvider(create: (context) => sl<UsersBloc>()),
+        BlocProvider(create: (context) => sl<StockBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

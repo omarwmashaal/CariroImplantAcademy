@@ -29,6 +29,7 @@ import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';
 
@@ -235,7 +236,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Stock',
               onTap: () {
-                context.goNamed(StockListSharedPage.routeCIAname);
+                context.goNamed(StockSearchPage.routeCIAname);
                 controller.notifyListeners();
               },
               iconWidget: Container(
@@ -332,7 +333,7 @@ class PagesController extends PageController {
             SidebarXItem(
                 label: 'Stock',
                 onTap: () {
-                  context.goNamed(StockListSharedPage.routeLABname);
+                  context.goNamed(StockSearchPage.routeLABname);
                   controller.notifyListeners();
                 },
               iconWidget: Container(

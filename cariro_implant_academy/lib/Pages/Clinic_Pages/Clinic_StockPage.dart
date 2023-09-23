@@ -15,7 +15,7 @@ class _Clinic_StockPageState extends State<Clinic_StockPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StockListSharedPage(
+    return Container(
 
     );
   }

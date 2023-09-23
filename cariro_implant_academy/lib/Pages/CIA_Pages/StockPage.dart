@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../Models/StockModel.dart';
 
-class StockSearchPage extends StatefulWidget {
-  const StockSearchPage({Key? key}) : super(key: key);
+class StockSearchPages extends StatefulWidget {
+  const StockSearchPages({Key? key}) : super(key: key);
 
   @override
-  State<StockSearchPage> createState() => _StockSearchPageState();
+  State<StockSearchPages> createState() => _StockSearchPageState();
 }
 
-class _StockSearchPageState extends State<StockSearchPage> {
+class _StockSearchPageState extends State<StockSearchPages> {
   @override
   Widget build(BuildContext context) {
-    return StockListSharedPage(
+    return Container(
 
     );
   }

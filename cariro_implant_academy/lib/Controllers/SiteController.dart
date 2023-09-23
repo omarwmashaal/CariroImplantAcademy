@@ -46,6 +46,8 @@ import '../features/patient/presentation/presentation/createOrViewPatientPage.da
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/stock/presentation/pages/stockLogsSearchPage.dart';
+import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
 
 class SiteController extends GetxController {
@@ -174,10 +176,10 @@ class SiteController extends GetxController {
           SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesSharedPage.routeCIAname, compareName: CashFlowExpensesSharedPage.routeName),
           SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummarySharedPage.routeCIAname, compareName: CashFlowSummarySharedPage.routeName),
         ]);
-      else if (path == StockListSharedPage.routeName || path == StockLogsSharedPage.routeName)
+      else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
         siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Stock", namedDirectory: StockListSharedPage.routeCIAname, compareName: StockListSharedPage.routeName),
-          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSharedPage.routeCIAname, compareName: StockLogsSharedPage.routeName),
+          SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeCIAname, compareName: StockSearchPage.routeName),
+          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeCIAname, compareName: StockLogsSearchPage.routeName),
         ]);
       else if (path == PatientMedicalHistory.routeName ||
           path == DentalExaminationPage.routeName ||
@@ -203,10 +205,10 @@ class SiteController extends GetxController {
             SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
           ]);
         }
-      } else if (path == StockListSharedPage.routeName || path == StockLogsSharedPage.routeName)
+      } else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
         siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Stock", namedDirectory: StockListSharedPage.routeLABname, compareName: StockListSharedPage.routeName),
-          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSharedPage.routeLABname, compareName: StockLogsSharedPage.routeName),
+          SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeLABname, compareName: StockSearchPage.routeName),
+          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeLABname, compareName: StockLogsSearchPage.routeName),
         ]);
       else if (path == CashFlowIncomeSharedPage.routeName || path == CashFlowExpensesSharedPage.routeName || path == CashFlowSummarySharedPage.routeName)
         siteController.setAppBarWidget(context: context, tabs: [

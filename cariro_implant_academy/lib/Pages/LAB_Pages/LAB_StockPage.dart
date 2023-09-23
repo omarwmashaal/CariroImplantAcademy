@@ -14,7 +14,7 @@ class LAB_StockSearchPage extends StatefulWidget {
 class _LAB_StockSearchPageState extends State<LAB_StockSearchPage> {
   @override
   Widget build(BuildContext context) {
-    return StockListSharedPage(
+    return Container(
 
     );
   }

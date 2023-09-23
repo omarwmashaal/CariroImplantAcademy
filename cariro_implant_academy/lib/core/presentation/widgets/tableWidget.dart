@@ -74,7 +74,7 @@ class TableWidget extends StatelessWidget {
 
   List<GridColumn> _buildColumns() {
     List<GridColumn> returnValue = <GridColumn>[];
-    final columns = ["ID","Name","Phone","Gender","Age","Marital Status","Relative",'Add to my patients'];
+    final columns = [];
     if (dataSource.rows.isNotEmpty)
       for (var r in dataSource.rows[0].getCells()) {
         returnValue.add(GridColumn(

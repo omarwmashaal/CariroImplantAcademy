@@ -119,6 +119,11 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
+import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
+import 'package:cariro_implant_academy/features/stock/data/repositories/stockRepoImpl.dart';
+import 'package:cariro_implant_academy/features/stock/domain/repositories/stockRepository.dart';
+import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockUseCase.dart';
+import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc.dart';
 import 'package:cariro_implant_academy/features/user/data/datasource/userDatasource.dart';
 import 'package:cariro_implant_academy/features/user/data/repositories/userRepository.dart';
 import 'package:cariro_implant_academy/features/user/domain/repositories/userRepository.dart';
@@ -165,6 +170,7 @@ import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientPros
 import '../features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
 import '../features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import '../features/patient/presentation/bloc/patientSearchBloc.dart';
+import '../features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'data/repositories/imageRepoImpl.dart';
 import 'features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantSizesUseCase.dart';
@@ -566,4 +572,17 @@ init() async {
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
   //DATASOURCE
   sl.registerLazySingleton<UserDatasource>(() => UserDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Stock
+   */
+  //bloc
+  sl.registerFactory(() => StockBloc(getStockLogUseCase: sl(), getStockUseCase: sl()));
+  //usecases
+  sl.registerLazySingleton(() => GetStockUseCase(stockRepository: sl()));
+  sl.registerLazySingleton(() => GetStockLogUseCase(stockRepository: sl()));
+  //repo
+  sl.registerLazySingleton<StockRepository>(() => StockRepoImpl(stockDatasource: sl()));
+  //datasource
+  sl.registerLazySingleton<StockDatasource>(() => StockDatasourceImpl(httpRepo: sl()));
 }
