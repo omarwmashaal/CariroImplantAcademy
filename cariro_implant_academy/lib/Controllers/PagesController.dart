@@ -29,6 +29,8 @@ import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/user/domain/entities/enum.dart';
+import '../features/user/presentation/pages/userSearchPage.dart';
 
 class PagesController extends PageController {
   static PagesController instance = Get.find();
@@ -49,14 +51,14 @@ class PagesController extends PageController {
               ),
               Container(
                 child: Center(
-                  child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
+                  child: UserSearchPage(type:UserRoles.Assistant),
                 ),
               ),
               Container(
-                child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
+                child: Center(child: UserSearchPage(type:UserRoles.Instructor)),
               ),
               Container(
-                child: Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),
+                child: Center(child: UserSearchPage(type:UserRoles.Candidate)),
               ),
               Container(
                 child: Center(
@@ -85,7 +87,7 @@ class PagesController extends PageController {
                 ),
                 Container(
                   child: Center(
-                    child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
+                    child: UserSearchPage(type:UserRoles.OutSource),
                   ),
                 ),
                 Container(
@@ -111,11 +113,11 @@ class PagesController extends PageController {
                 child:Container()// LabRequestsSearchPage(),
               ),
               Container(
-                child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Technician)),
+                child: UserSearchPage(type:UserRoles.Technician),
               ),
               Container(
                 child: Center(
-                  child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.OutSource)),
+                  child: UserSearchPage(type:UserRoles.OutSource),
                 ),
               ),
               Container(

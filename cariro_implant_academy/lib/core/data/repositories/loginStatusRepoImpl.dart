@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/core/data/dataSources/loginStatusDataSource.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 
 import 'package:dartz/dartz.dart';
 
@@ -13,7 +13,7 @@ class LoginStatusRepoImpl implements CheckLoginStatusRepo {
   LoginStatusRepoImpl(this.dataSource);
 
   @override
-  Future<Either<Failure, UserEntity>> checkLoginStatus() async {
+  Future<Either<Failure, AuthenticationUserEntity>> checkLoginStatus() async {
     try {
       final result = await dataSource.checkLoginStatus();
       return Right(result);

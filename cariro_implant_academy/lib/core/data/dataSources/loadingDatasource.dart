@@ -10,6 +10,8 @@ abstract class LoadingDatasource {
   Future<List<BasicNameIdObjectEntity>> loadUsers({required LoadUsersEnum userType});
   Future<List<BasicNameIdObjectEntity>> loadCandidateBatches();
   Future<List<BasicNameIdObjectEntity>> loadCandidatesByBatchId( int id);
+  Future<List<BasicNameIdObjectEntity>> loadCandidatesBatches();
+
 
 }
 
@@ -46,7 +48,7 @@ class LoadingDataSourceImpl implements LoadingDatasource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -63,7 +65,7 @@ class LoadingDataSourceImpl implements LoadingDatasource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -80,7 +82,24 @@ class LoadingDataSourceImpl implements LoadingDatasource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    try {
+      return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<BasicNameIdObjectEntity>> loadCandidatesBatches() async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.get(host: "$serverHost/$userController/LoadCandidatesBatches");
+    } catch (e) {
+      throw HttpInternalServerErrorException();
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body==null?[]:(response.body as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {

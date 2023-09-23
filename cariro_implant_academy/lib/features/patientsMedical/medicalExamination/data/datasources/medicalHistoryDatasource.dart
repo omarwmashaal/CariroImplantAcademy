@@ -27,7 +27,7 @@ class MedicalHistoryDatasourceImpl implements MedicalHistoryDatasource {
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return MedicalExaminationModel.fromJson(response.body as Map<String, dynamic>);
     } catch (e) {
@@ -46,7 +46,7 @@ class MedicalHistoryDatasourceImpl implements MedicalHistoryDatasource {
     }catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 

@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 
 import '../Models/API_Response.dart';
 import '../core/constants/enums/enums.dart';
+import '../features/user/domain/entities/enum.dart';
 import 'HTTP.dart';
 
 class UserAPI {

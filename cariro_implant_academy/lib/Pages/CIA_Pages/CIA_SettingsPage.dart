@@ -36,6 +36,7 @@ import '../../Models/TacCompanyModel.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_SecondaryButton.dart';
 import '../../Widgets/Title.dart';
+import '../../features/user/domain/entities/enum.dart';
 
 class CIA_SettingsPage extends StatefulWidget {
   const CIA_SettingsPage({Key? key}) : super(key: key);

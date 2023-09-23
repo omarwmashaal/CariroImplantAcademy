@@ -14,9 +14,11 @@ import 'package:go_router/go_router.dart';
 import '../../Widgets/Title.dart';
 import '../Models/Enum.dart';
 import '../Widgets/CIA_TextField.dart';
+import '../features/user/domain/entities/enum.dart';
+import '../features/user/presentation/pages/viewUserProfile.dart';
 
-class UserSearchPage extends StatefulWidget {
-  UserSearchPage({Key? key, required this.dataSource, this.type}) : super(key: key);
+class UserSearchsPage extends StatefulWidget {
+  UserSearchsPage({Key? key, required this.dataSource, this.type}) : super(key: key);
   ApplicationUserDataSource dataSource;
   static String assistantsRouteName = "Users/Assistants";
   static String candidatesRouteName = "Candidates";
@@ -28,10 +30,10 @@ class UserSearchPage extends StatefulWidget {
   String? type;
 
   @override
-  State<UserSearchPage> createState() => _UserSearchPageState();
+  State<UserSearchsPage> createState() => _UserSearchPageState();
 }
 
-class _UserSearchPageState extends State<UserSearchPage> {
+class _UserSearchPageState extends State<UserSearchsPage> {
   String search = "";
   int batchId = 0;
 
@@ -111,7 +113,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
             onCellClick: (index) {
               var d = widget.dataSource.models[index - 1];
               selectedUserId = d.idInt ?? 0;
-              context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserData.candidateRouteName:ViewUserData.routeName,pathParameters: {"id":selectedUserId.toString()});
+              context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserProfilePage.candidateRouteName:ViewUserProfilePage.routeName,pathParameters: {"id":selectedUserId.toString()});
 
             },
           ),

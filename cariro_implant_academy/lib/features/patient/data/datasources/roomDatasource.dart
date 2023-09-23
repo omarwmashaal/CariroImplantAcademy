@@ -24,7 +24,7 @@ class RoomDatasourceImpl implements RoomDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body==null?[]: (response.body as List<dynamic>).map((e) => RoomModel.fromJson(e)).toList();
     } catch (e) {
@@ -38,7 +38,7 @@ class RoomDatasourceImpl implements RoomDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body==null?[]: (response.body as List<dynamic>).map((e) => RoomModel.fromJson(e)).toList();
     } catch (e) {

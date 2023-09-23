@@ -35,7 +35,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => VisitModel.fromJson(e)).toList();
     } catch (e) {
@@ -51,7 +51,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => VisitModel.fromJson(e)).toList();
     } catch (e) {
@@ -67,7 +67,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => VisitModel.fromJson(e)).toList();
     } catch (e) {
@@ -83,7 +83,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => VisitModel.fromJson(e)).toList();
     } catch (e) {
@@ -101,7 +101,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
    return NoParams();
   }
 
@@ -113,7 +113,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
 
   }
@@ -126,7 +126,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
 
 
@@ -140,7 +140,7 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
 
   }

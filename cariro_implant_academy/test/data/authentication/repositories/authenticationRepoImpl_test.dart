@@ -4,9 +4,9 @@ import 'dart:math';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
-import 'package:cariro_implant_academy/data/authentication/models/UserModel.dart';
+import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
 import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
 import 'package:dartz/dartz.dart';
@@ -26,8 +26,8 @@ void main() {
     repoImpl = AuthenticationRepoImpl(mockDataSource);
   });
   final loginParams = LoginParams(email: "email", password: "password");
-  final loginResponse = UserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
-  final UserEntity loginResponseEntity = loginResponse;
+  final loginResponse = AuthenticationUserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
+  final AuthenticationUserEntity loginResponseEntity = loginResponse;
   setUpSuccess() {
     SharedPreferences.setMockInitialValues({});
     when(mockDataSource.login(loginParams)).thenAnswer(

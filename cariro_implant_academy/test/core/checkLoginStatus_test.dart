@@ -8,8 +8,8 @@ import 'package:cariro_implant_academy/core/domain/useCases/checkLogInStatus.dar
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
-import 'package:cariro_implant_academy/data/authentication/models/UserModel.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -37,8 +37,8 @@ void main() {
     dataSourceImpl = LoginStatusDataSourceImpl(mockClient);
   });
 
-  final tLoginResponseModel = UserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
-  final UserEntity tLoginResponse = tLoginResponseModel;
+  final tLoginResponseModel = AuthenticationUserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
+  final AuthenticationUserEntity tLoginResponse = tLoginResponseModel;
   setUpUserLoggedIn() {
     SharedPreferences.setMockInitialValues({"token": ""});
     when(mockCheckLoginStatusRepo.checkLoginStatus()).thenAnswer((realInvocation) async => Right(tLoginResponse));

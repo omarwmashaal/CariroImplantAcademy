@@ -44,7 +44,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       throw mapException(e);
     }
     if (result.statusCode != 200)
-      throw getHttpException(statusCode: result.statusCode);
+      throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
 
     try {
       return (result.body! as List<dynamic>).map((e) => PatientInfoModel.fromMap(e as Map<String, dynamic>)).toList();
@@ -63,7 +63,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return PatientInfoModel.fromMap(result.body! as Map<String,dynamic>);
     } catch (e) {
@@ -81,7 +81,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return int.parse(result.body! as String);
     } catch (e) {
@@ -99,7 +99,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return result.body != null;
   }
 
@@ -111,7 +111,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try{
       return PatientInfoModel.fromMap(result.body! as Map<String,dynamic>);
     }catch(e)
@@ -125,7 +125,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     StandardHttpResponse response;
     try {
       response = await client.post(host: "$serverHost/$patientInfoController/CompareDuplicateNumber?number=$number");
-      if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+      if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
       return (response.body! as String);
     } catch (e) {
       throw HttpInternalServerErrorException();

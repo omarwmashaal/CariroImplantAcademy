@@ -34,7 +34,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => e as int).toList();
     } catch (e) {
@@ -50,7 +50,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return (response.body as List<dynamic>).map((e) => NonSurgicalTreatmentModel.fromMap(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -66,7 +66,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return NonSurgicalTreatmentModel.fromMap((response.body ?? Map<String, dynamic>()) as Map<String, dynamic>);
     } catch (e) {
@@ -86,7 +86,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
       print(e);
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 
@@ -101,7 +101,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
       print(e);
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       if (response.body == null) return null;
       return TeethTreatmentPlanModel.fromJson(response.body! as Map<String, dynamic>);

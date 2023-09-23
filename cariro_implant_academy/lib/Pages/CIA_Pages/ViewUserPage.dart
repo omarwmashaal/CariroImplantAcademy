@@ -30,12 +30,13 @@ import '../../Widgets/Title.dart';
 import '../../core/constants/enums/enums.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../../features/user/domain/entities/enum.dart';
 
 class _getx extends GetxController {
   static RxInt totalImplants = 0.obs;
   static Rx<Duration> duration = Duration().obs;
 }
-
+/*
 class ViewUserData extends StatefulWidget {
   ViewUserData({Key? key, required this.userId, this.role}) : super(key: key);
   static String routeName = "UserProfile";
@@ -477,7 +478,7 @@ class _ViewUserDataState extends State<ViewUserData> {
     //if (widget.role == UserRoles.Candidate) siteController.setAppBarWidget(tabs: ["Profile", "Data"]);
   }
 }
-
+*/
 class ViewCandidateData extends StatefulWidget {
   ViewCandidateData({Key? key, required this.userId}) : super(key: key);
   int userId;

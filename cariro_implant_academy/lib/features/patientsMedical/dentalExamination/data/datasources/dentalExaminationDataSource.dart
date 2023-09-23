@@ -25,7 +25,7 @@ class DentalExaminationDatasourceImpl implements DentalExaminationDataSource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return DentalExaminationBaseModel.fromMap(response.body as Map<String, dynamic>);
     } catch (e) {
@@ -44,7 +44,7 @@ class DentalExaminationDatasourceImpl implements DentalExaminationDataSource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 }

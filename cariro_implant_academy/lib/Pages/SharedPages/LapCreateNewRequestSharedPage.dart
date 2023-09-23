@@ -32,6 +32,7 @@ import '../../Widgets/CIA_CheckBoxWidget.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
+import '../../features/user/domain/entities/enum.dart';
 import '../LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'PatientSharedPages.dart';
 

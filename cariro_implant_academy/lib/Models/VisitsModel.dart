@@ -87,7 +87,7 @@ class VisitsModel {
     return data;
   }
 }
-
+/*
 class VisitDataSource extends DataGridSource {
   List<VisitsModel> models = <VisitsModel>[];
   bool sessions;
@@ -226,7 +226,7 @@ class VisitDataSource extends DataGridSource {
     return true;
   }
 }
-
+*/
 class VisitsCalendarDataSource extends CalendarDataSource {
   /// Creates a meeting data source, which used to set the appointment
   /// collection to the calendar

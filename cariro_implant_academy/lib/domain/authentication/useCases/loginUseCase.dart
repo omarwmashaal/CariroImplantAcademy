@@ -3,14 +3,14 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
-import '../entities/UserEntity.dart';
+import '../entities/authenticationUserEntity.dart';
 import '../repositories/authenticationRepo.dart';
 
-class LoginUseCase extends UseCases<UserEntity, LoginParams>{
+class LoginUseCase extends UseCases<AuthenticationUserEntity, LoginParams>{
   AuthenticationRepo authenticationRepo;
   LoginUseCase(this.authenticationRepo);
   @override
-  Future<Either<Failure,UserEntity>> call(params) async{
+  Future<Either<Failure,AuthenticationUserEntity>> call(params) async{
     return await authenticationRepo.login(params);
   }
 

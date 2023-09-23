@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
-import 'package:cariro_implant_academy/data/authentication/models/UserModel.dart';
+import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -58,7 +58,7 @@ void main() {
     () async {
       setUpLoginSuccess();
       final result = await dataSource.login(loginParams);
-      expect(result, UserModel.fromJson(json.decode(tLoginResponse)));
+      expect(result, AuthenticationUserModel.fromJson(json.decode(tLoginResponse)));
     },
   );
   test(

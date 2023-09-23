@@ -43,7 +43,6 @@ enum EnumPatientType { CIA, Clinic, OutSource }
 
 enum EnumLabRequestSources { CIA, Clinic, OutSource }
 
-enum UserRoles { Admin, Assistant, Instructor, Secretary, Technician, OutSource, Candidate, LabModerator }
 
 enum EnumOralHygieneRating {
   BadHygiene,

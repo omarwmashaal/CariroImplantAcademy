@@ -26,7 +26,7 @@ class DentalHistoryDataSrouceImpl implements DentalHistoryDataSource {
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return DentalHistoryModel.fromJson(response.body as Map<String, dynamic>);
     } catch (e) {
@@ -45,7 +45,7 @@ class DentalHistoryDataSrouceImpl implements DentalHistoryDataSource {
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 }

@@ -34,7 +34,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return TreatmentPricesModel.fromJson(response.body as Map<String, dynamic>);
     } catch (e) {
@@ -50,7 +50,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -66,7 +66,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -82,7 +82,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => ImplantModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -98,7 +98,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => MembraneCompanyModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -114,7 +114,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => TacCompanyModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {
@@ -130,7 +130,7 @@ class SettingsDatasourceImpl implements SettingsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       return ((response.body??[]) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String,dynamic>)).toList();
     } catch (e) {

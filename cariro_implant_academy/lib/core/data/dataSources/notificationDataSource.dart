@@ -31,7 +31,7 @@ class NotificationDataSourceImpl implements NotificationDataSource{
       throw HttpInternalServerErrorException();
     }
     if(response.statusCode!=200)
-      throw getHttpException(statusCode: response.statusCode);
+      throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try{
       return (response.body as List<dynamic>).map((e) => NotificationModel.fromJson(e as Map<String,dynamic>)).toList();
     }

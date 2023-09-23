@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 
@@ -23,12 +24,12 @@ class ImageDataSourceImpl implements ImageDataSource {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(
-        host: "$serverHost/$patientInfoController/DownloadImage?id=$id",
+        host: "$serverHost/$imageController/DownloadImage?id=$id",
       );
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
 
     try {
       return base64Decode(response.body as String);
@@ -42,13 +43,13 @@ class ImageDataSourceImpl implements ImageDataSource {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.uploadImage(
-        url: "$serverHost/$patientInfoController/UploadImage?type=${imageParams.type.index}&id=${imageParams.id}",
+        url: "$serverHost/$imageController/UploadImage?type=${imageParams.type.index}&id=${imageParams.id}",
         imageBytes: imageParams.data,
       );
     } catch (e) {
       throw HttpInternalServerErrorException();
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return true;
   }
 }

@@ -19,7 +19,7 @@ class CoreStockDatasourceImpl implements CoreStockDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 
@@ -31,7 +31,7 @@ class CoreStockDatasourceImpl implements CoreStockDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 

@@ -46,6 +46,7 @@ import '../features/patient/presentation/presentation/createOrViewPatientPage.da
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/user/presentation/pages/viewUserProfile.dart';
 
 class SiteController extends GetxController {
   static SiteController instance = Get.find();
@@ -162,9 +163,9 @@ class SiteController extends GetxController {
                 ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
                 : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),
           ]);
-      } else if (path == ViewUserData.candidateRouteName || path == ViewCandidateData.routeName)
+      } else if (path == ViewUserProfilePage.candidateRouteName || path == ViewCandidateData.routeName)
         siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Profile", namedDirectory: ViewUserData.candidateRouteName, pathParameters: pathQueries),
+          SlidingTabModel(title: "Profile", namedDirectory: ViewUserProfilePage.candidateRouteName, pathParameters: pathQueries),
           SlidingTabModel(title: "Data", namedDirectory: ViewCandidateData.routeName, pathParameters: pathQueries),
         ]);
       else if (path == CashFlowIncomeSharedPage.routeName || path == CashFlowExpensesSharedPage.routeName || path == CashFlowSummarySharedPage.routeName)

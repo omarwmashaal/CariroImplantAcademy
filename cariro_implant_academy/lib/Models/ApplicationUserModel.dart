@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../API/UserAPI.dart';
+import '../features/user/domain/entities/enum.dart';
 import 'API_Response.dart';
 import 'DTOs/DropDownDTO.dart';
 

@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
 import 'package:dartz/dartz.dart';
@@ -22,7 +22,7 @@ void main() {
     },
   );
   final tLoginParams = LoginParams(email: "email", password: "password");
-  final tLoginResponse = UserEntity(
+  final tLoginResponse = AuthenticationUserEntity(
     name: "string",
     token: "string",
     idInt: 0,

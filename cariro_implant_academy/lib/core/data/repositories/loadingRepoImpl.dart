@@ -39,4 +39,14 @@ class LoadingRepoImpl implements LoadingRepo {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadCandidatesBatches()  async {
+    try {
+      final result = await loadingDatasource.loadCandidatesBatches();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

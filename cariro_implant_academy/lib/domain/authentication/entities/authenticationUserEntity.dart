@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../core/domain/entities/BasicNameIdObjectEntity.dart';
 
-class UserEntity extends Equatable {
+class AuthenticationUserEntity extends Equatable {
   final String name;
   final int idInt;
   final String phoneNumber;
@@ -22,7 +22,7 @@ class UserEntity extends Equatable {
         phone,
       ];
 
-  const UserEntity({
+  const AuthenticationUserEntity({
     required this.name,
     required this.token,
     required this.idInt,

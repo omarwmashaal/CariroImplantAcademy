@@ -25,7 +25,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       if (response.body != null)
         return SurgicalTreatmentModel.fromJson(response.body as Map<String, dynamic>);
@@ -47,7 +47,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 }

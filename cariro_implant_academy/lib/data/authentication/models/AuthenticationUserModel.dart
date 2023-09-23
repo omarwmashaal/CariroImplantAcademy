@@ -1,11 +1,11 @@
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 
 import '../../../Models/Enum.dart';
 import '../../../core/data/models/BasicNameIdObjectModel.dart';
 import '../../../core/domain/entities/BasicNameIdObjectEntity.dart';
 
-class UserModel extends UserEntity {
-  UserModel({
+class AuthenticationUserModel extends AuthenticationUserEntity {
+  AuthenticationUserModel({
     required name,
     required idInt,
     required phoneNumber,
@@ -21,8 +21,8 @@ class UserModel extends UserEntity {
           phone: phone,
         );
 
-  factory UserModel.fromJson(Map<String, dynamic> map) {
-    return UserModel(
+  factory AuthenticationUserModel.fromJson(Map<String, dynamic> map) {
+    return AuthenticationUserModel(
         name: map['name'] as String,
         token: map['token'] as String,
         idInt: map['idInt'] as int,

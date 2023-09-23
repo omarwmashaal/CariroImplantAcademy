@@ -25,6 +25,7 @@ import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 import '../../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
+import '../../features/user/domain/entities/enum.dart';
 import '../CIA_Pages/Patient_MedicalInfo.dart';
 
 class _getx extends GetxController {

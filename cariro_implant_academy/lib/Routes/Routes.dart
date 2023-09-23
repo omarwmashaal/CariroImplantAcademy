@@ -9,6 +9,8 @@ import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/UsersSearchPage.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/user/domain/entities/enum.dart';
+import '../features/user/presentation/pages/userSearchPage.dart';
 
 const String LoginPageRoute = "LoginPageRoute";
 const String RegisterPageRoute = "RegisterPageRoute";
@@ -23,13 +25,13 @@ PageView MainPageRoutes() {
       ),
       Container(
         child:  Center(
-          child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Assistant)),
+          child: UserSearchPage(type:UserRoles.Assistant),
         ),
       ),
       Container(
-        child:  Center(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Instructor))),
+        child:  Center(child: UserSearchPage(type:UserRoles.Instructor)),
       ),
-      Container(child: UserSearchPage(dataSource: ApplicationUserDataSource(type: UserRoles.Candidate))),
+      Container(child: UserSearchPage(type:UserRoles.Candidate)),
       Container(
         child: const Center(
           child: Text(

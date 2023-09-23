@@ -45,6 +45,9 @@ import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonS
 import '../features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../features/user/domain/entities/enum.dart';
+import '../features/user/presentation/pages/userSearchPage.dart';
+import '../features/user/presentation/pages/viewUserProfile.dart';
 import '../presentation/authentication/pages/authentication_page.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
@@ -244,7 +247,8 @@ class CIA_Router {
                         name: UserSearchPage.assistantsRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
-                            dataSource: ApplicationUserDataSource(type: UserRoles.Assistant),
+                            key: GlobalKey(),
+                            type:UserRoles.Assistant,
                           ),
                         ),
                       ),
@@ -253,7 +257,8 @@ class CIA_Router {
                         name: UserSearchPage.instructorsRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
-                            dataSource: ApplicationUserDataSource(type: UserRoles.Instructor),
+                            key: GlobalKey(),
+                            type:UserRoles.Instructor,
                           ),
                         ),
                       ),
@@ -262,24 +267,25 @@ class CIA_Router {
                         name: UserSearchPage.candidatesRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
-                            dataSource: ApplicationUserDataSource(type: UserRoles.Candidate),
+                            key: GlobalKey(),
+                            type:UserRoles.Candidate,
                           ),
                         ),
                       ),
                       GoRoute(
-                        path: ViewUserData.routePath,
-                        name: ViewUserData.routeName,
+                        path: ViewUserProfilePage.routePath,
+                        name: ViewUserProfilePage.routeName,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: ViewUserData(
+                          child: ViewUserProfilePage(
                             userId: int.parse(state.pathParameters['id']!),
                           ),
                         ),
                       ),
                       GoRoute(
-                        path: ViewUserData.candidateRoutePath,
-                        name: ViewUserData.candidateRouteName,
+                        path: ViewUserProfilePage.candidateRoutePath,
+                        name: ViewUserProfilePage.candidateRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: ViewUserData(
+                          child: ViewUserProfilePage(
                             userId: int.parse(state.pathParameters['id']!),
                           ),
                         ),
@@ -636,7 +642,8 @@ class CIA_Router {
                           child: _Authorize(
                             allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
                             child: UserSearchPage(
-                              dataSource: ApplicationUserDataSource(type: UserRoles.Technician),
+                              key: GlobalKey(),
+                              type:UserRoles.Technician,
                             ),
                           ),
                         ),
@@ -648,7 +655,8 @@ class CIA_Router {
                           child: _Authorize(
                             allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
                             child: UserSearchPage(
-                              dataSource: ApplicationUserDataSource(type: UserRoles.LabModerator),
+                              key: GlobalKey(),
+                              type:UserRoles.LabModerator,
                             ),
                           ),
                         ),
@@ -658,7 +666,8 @@ class CIA_Router {
                         name: UserSearchPage.outSourceRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
-                            dataSource: ApplicationUserDataSource(type: UserRoles.OutSource),
+                            key: GlobalKey(),
+                            type:UserRoles.OutSource,
                           ),
                         ),
                       ),

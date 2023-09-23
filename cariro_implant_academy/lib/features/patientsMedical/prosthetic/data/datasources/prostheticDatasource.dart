@@ -27,7 +27,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       if(response.body==null)
         return ProstheticTreatmentModel();
@@ -45,7 +45,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       if(response.body==null)
         return ProstheticTreatmentModel();
@@ -63,7 +63,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     try {
       if(response.body==null)
         return ProstheticTreatmentModel();
@@ -85,7 +85,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
       print(e);
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
 
   }
@@ -102,7 +102,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
       print(e);
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 
@@ -118,7 +118,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource{
       print(e);
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
   }
 

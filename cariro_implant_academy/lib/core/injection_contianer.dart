@@ -119,6 +119,15 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
+import 'package:cariro_implant_academy/features/user/data/datasource/userDatasource.dart';
+import 'package:cariro_implant_academy/features/user/data/repositories/userRepository.dart';
+import 'package:cariro_implant_academy/features/user/domain/repositories/userRepository.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/getUserDataUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByRoleUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/updateUserInfoUseCase.dart';
+import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
@@ -176,6 +185,7 @@ init() async {
   sl.registerLazySingleton(() => LoadUsersUseCase(loadingRepo: sl()));
   sl.registerLazySingleton(() => LoadCandidateBatchesUseCase(loadingRepo: sl()));
   sl.registerLazySingleton(() => LoadCandidatesByBatchId(loadingRepo: sl()));
+  //sl.registerLazySingleton(() => LoadCandidateBatchesUseCase(loadingRepo: sl()));
   //repo
   sl.registerLazySingleton<LoadingRepo>(() => LoadingRepoImpl(loadingDatasource: sl()));
   //datasource
@@ -534,4 +544,26 @@ init() async {
   sl.registerLazySingleton<ProstheticRepository>(() => ProstheticRepoImpl(prostheticDatasource: sl()));
   //datasource
   sl.registerLazySingleton<ProstheticDatasource>(() => ProstheticDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Users
+   */
+  //bloc
+  sl.registerFactory(() => UsersBloc(
+        updateUserInfoUseCase: sl(),
+        searchUsersByRoleUseCase: sl(),
+        getUserInfoUseCase: sl(),
+    resetPasswordUseCase: sl(),
+    getUsersSessionsUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => SearchUsersByRoleUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => GetUserDataUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => ResetPasswordUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => GetUsersSessionsUseCase(usersRepository: sl()));
+  //repo
+  sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
+  //DATASOURCE
+  sl.registerLazySingleton<UserDatasource>(() => UserDatasourceImpl(httpRepo: sl()));
 }

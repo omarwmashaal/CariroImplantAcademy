@@ -43,7 +43,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
@@ -57,7 +57,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -75,7 +75,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -94,7 +94,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -112,7 +112,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -131,7 +131,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => ReceiptModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -149,7 +149,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -168,7 +168,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       return (result.body ?? 0) as int;
     } catch (e) {
@@ -186,7 +186,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
@@ -200,7 +200,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 }

@@ -4,8 +4,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/checkLogInStatus.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
-import 'package:cariro_implant_academy/data/authentication/models/UserModel.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/UserEntity.dart';
+import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
+import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_blocEvents.dart';
@@ -30,8 +30,8 @@ void main() {
     tbloc = AuthenticationBloc(loginUseCase: mockLoginUseCase, checkLoginStatusUseCase: mockCheckLoginStatusUseCase);
   });
   final tLoginParams = LoginParams(email: "email", password: "password");
-  final tLoginResponseModel = UserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
-  final UserEntity tLoginRespinse = tLoginResponseModel;
+  final tLoginResponseModel = AuthenticationUserModel.fromJson(json.decode(fixture("authentication/loginResponse.json")));
+  final AuthenticationUserEntity tLoginRespinse = tLoginResponseModel;
   test("Should initial state LoggedOut", () {
     expect(tbloc.state, LoggedOutState());
   });

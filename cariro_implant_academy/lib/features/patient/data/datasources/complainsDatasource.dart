@@ -30,7 +30,7 @@ class ComplainDatasourceImpl implements ComplainsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
@@ -48,7 +48,7 @@ class ComplainDatasourceImpl implements ComplainsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     try {
       if(result.body==null)
         return [];
@@ -68,7 +68,7 @@ class ComplainDatasourceImpl implements ComplainsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
@@ -82,7 +82,7 @@ class ComplainDatasourceImpl implements ComplainsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
@@ -96,7 +96,7 @@ class ComplainDatasourceImpl implements ComplainsDatasource{
     } catch(e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
     return NoParams();
   }
 
