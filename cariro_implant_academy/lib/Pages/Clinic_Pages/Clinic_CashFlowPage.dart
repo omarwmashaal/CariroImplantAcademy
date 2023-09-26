@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../Models/CashFlow.dart';
 import '../../Models/CashFlowSummaryModel.dart';
+import '../../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../SharedPages/CashFlowSharedPage.dart';
 
 class Clinic_CashFlowPage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _Clinic_CashFlowPageState extends State<Clinic_CashFlowPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CashFlowIncomeSharedPage(
+    return CashFlowIncomePage(
       //e_dataSource: e_dataSource,
     );
   }

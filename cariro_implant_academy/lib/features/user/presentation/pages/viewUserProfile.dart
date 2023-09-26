@@ -313,7 +313,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                     controller:
                                                                     TextEditingController(text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
                                                                     onChange: (v) {
-                                                                      from = DateFormat("dd-MM-yyyy").parse(v);
+                                                                      from = v;
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
                                                                             id: widget.userId,
@@ -342,7 +342,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                     controller:
                                                                     TextEditingController(text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
                                                                     onChange: (v) {
-                                                                      to = DateFormat("dd-MM-yyyy").parse(v);
+                                                                      to = v;
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
                                                                             id: widget.userId,

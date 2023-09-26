@@ -1,4 +1,6 @@
 
+import 'package:intl/intl.dart';
+
 import '../../../../../Helpers/CIA_DateConverters.dart';
 import '../../domain/entities/hba1cEntity.dart';
 
@@ -12,7 +14,7 @@ class HBA1CModel extends HbA1cEntity {
         );
 
   HBA1CModel.fromJson(Map<String, dynamic> json) {
-    date =  CIA_DateConverters.fromBackendToDateOnly(json['date']);
+    date =  DateTime.tryParse(json['date']??"")?.toLocal();
     reading = json['reading'] == null? null:json['reading'];
   }
 
@@ -23,7 +25,7 @@ class HBA1CModel extends HbA1cEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = CIA_DateConverters.fromDateOnlyToBackend(this.date);
+    data['date'] = this.date==null?null:DateFormat("yyyy-MM-dd").format(this.date!);
     data['reading'] = this.reading;
     return data;
   }

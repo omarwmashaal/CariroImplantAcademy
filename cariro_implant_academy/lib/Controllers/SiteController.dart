@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
+import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
@@ -38,6 +40,7 @@ import '../Pages/UsersSearchPage.dart';
 import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
+import '../features/cashflow/presentation/pages/cashFlowSummaryPage.dart';
 import '../features/patient/presentation/presentation/complainsSearchPage.dart';
 import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/presentation/visitsPage.dart';
@@ -131,95 +134,100 @@ class SiteController extends GetxController {
 
   setDynamicAppBar({required BuildContext context, Map<String, String>? pathQueries}) {
     var path = GoRouter.of(context).location.split("/").last;
-    if (siteController.getSite() == Website.CIA) {
-      if ((path == SettingsPage.routeName && getRole() == "admin") || (path == UsersSettingsPage.routeName && getRole() == "admin"))
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),
-          SlidingTabModel(title: "Users", namedDirectory: UsersSettingsPage.routeName),
-        ]);
-      else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == VisitsPage.routeNameProfile || path == PatientProfileComplainsPage.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Patient Data", namedDirectory: CreateOrViewPatientPage.viewPatientRouteName, pathParameters: pathQueries),
-          SlidingTabModel(title: "Patient Visits", namedDirectory: VisitsPage.routeNameProfile, pathParameters: pathQueries),
-          SlidingTabModel(title: "Complains", namedDirectory: PatientProfileComplainsPage.routeName, pathParameters: pathQueries),
-        ]);
-      else if (path == PatientsSearchPage.routeName ||
-          path == PatientsSearchPage.myPatientsRouteName ||
-          path == ComplainsSearchPage.routeName ||
-          path == PatientAdvancedSearchPage.routeName ||
-          path == PatientAdvancedSearchPage.routeNameTreatments ||
-          path == PatientVisits.routeName) {
-        if (getRole() == "secretary")
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+      if (siteController.getSite() == Website.CIA) {
+        if ((path == SettingsPage.routeName && getRole() == "admin") || (path == UsersSettingsPage.routeName && getRole() == "admin"))
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
-            SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
-            SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
+            SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),
+            SlidingTabModel(title: "Users", namedDirectory: UsersSettingsPage.routeName),
+          ]);
+        else if (path == CreateOrViewPatientPage.viewPatientRouteName || path == VisitsPage.routeNameProfile || path == PatientProfileComplainsPage.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Patient Data", namedDirectory: CreateOrViewPatientPage.viewPatientRouteName, pathParameters: pathQueries),
+            SlidingTabModel(title: "Patient Visits", namedDirectory: VisitsPage.routeNameProfile, pathParameters: pathQueries),
+            SlidingTabModel(title: "Complains", namedDirectory: PatientProfileComplainsPage.routeName, pathParameters: pathQueries),
+          ]);
+        else if (path == PatientsSearchPage.routeName ||
+            path == PatientsSearchPage.myPatientsRouteName ||
+            path == ComplainsSearchPage.routeName ||
+            path == PatientAdvancedSearchPage.routeName ||
+            path == PatientAdvancedSearchPage.routeNameTreatments ||
+            path == PatientVisits.routeName) {
+          if (getRole() == "secretary")
+            siteController.setAppBarWidget(context: context, tabs: [
+              SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
+              SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
+              SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
+            ]);
+          else
+            siteController.setAppBarWidget(context: context, tabs: [
+              SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
+              SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
+              SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
+              SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
+              path == PatientAdvancedSearchPage.routeNameTreatments
+                  ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
+                  : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),
+            ]);
+        } else if (path == ViewUserProfilePage.candidateRouteName || path == ViewCandidateData.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Profile", namedDirectory: ViewUserProfilePage.candidateRouteName, pathParameters: pathQueries),
+            SlidingTabModel(title: "Data", namedDirectory: ViewCandidateData.routeName, pathParameters: pathQueries),
+          ]);
+        else if (path == CashFlowIncomePage.routeName || path == CashFlowExpensesPage.routeName || path == CashFlowSummaryPage.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.routeCIAname, compareName: CashFlowIncomePage.routeName),
+            SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesPage.routeCIAname, compareName: CashFlowExpensesPage.routeName),
+            SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.routeCIAname, compareName: CashFlowSummaryPage.routeName),
+          ]);
+        else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeCIAname, compareName: StockSearchPage.routeName),
+            SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeCIAname, compareName: StockLogsSearchPage.routeName),
+          ]);
+        else if (path == PatientMedicalHistory.routeName ||
+            path == DentalExaminationPage.routeName ||
+            path == ProstheticTreatmentPage.routeName ||
+            path == DentalHistoryPage.routeName ||
+            path == NonSurgicalTreatmentPage.routeName ||
+            path == TreatmentPage.routeName ||
+            path == SurgicalTreatmentPage.routeName)
+          setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
+        else
+          setAppBarWidget(context: context);
+      }
+      else if (siteController.getSite() == Website.Lab) {
+        if (path == LabTodaysRequestsSearch.routeName || path == LabAllRequestsSearch.routeName || path == LabAllRequestsSearch.routeMyName) {
+          if (siteController.getRole() == "technician") {
+            siteController.setAppBarWidget(context: context, tabs: [
+              SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
+              SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
+              SlidingTabModel(title: "My Requests", namedDirectory: LabAllRequestsSearch.routeMyName),
+            ]);
+          } else {
+            siteController.setAppBarWidget(context: context, tabs: [
+              SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
+              SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
+            ]);
+          }
+        } else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeLABname, compareName: StockSearchPage.routeName),
+            SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeLABname, compareName: StockLogsSearchPage.routeName),
+          ]);
+        else if (path == CashFlowIncomePage.routeName || path == CashFlowExpensesPage.routeName || path == CashFlowSummaryPage.routeName)
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.routeLABname, compareName: CashFlowIncomePage.routeName),
+            SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesPage.routeLABname, compareName: CashFlowExpensesPage.routeName),
+            SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.routeLABname, compareName: CashFlowSummaryPage.routeName),
           ]);
         else
-          siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Patient Data", namedDirectory: PatientsSearchPage.routeName),
-            SlidingTabModel(title: "My Patients", namedDirectory: PatientsSearchPage.myPatientsRouteName),
-            SlidingTabModel(title: "Patient Visits", namedDirectory: PatientVisits.routeName),
-            SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
-            path == PatientAdvancedSearchPage.routeNameTreatments
-                ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
-                : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),
-          ]);
-      } else if (path == ViewUserProfilePage.candidateRouteName || path == ViewCandidateData.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Profile", namedDirectory: ViewUserProfilePage.candidateRouteName, pathParameters: pathQueries),
-          SlidingTabModel(title: "Data", namedDirectory: ViewCandidateData.routeName, pathParameters: pathQueries),
-        ]);
-      else if (path == CashFlowIncomeSharedPage.routeName || path == CashFlowExpensesSharedPage.routeName || path == CashFlowSummarySharedPage.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomeSharedPage.routeCIAname, compareName: CashFlowIncomeSharedPage.routeName),
-          SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesSharedPage.routeCIAname, compareName: CashFlowExpensesSharedPage.routeName),
-          SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummarySharedPage.routeCIAname, compareName: CashFlowSummarySharedPage.routeName),
-        ]);
-      else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeCIAname, compareName: StockSearchPage.routeName),
-          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeCIAname, compareName: StockLogsSearchPage.routeName),
-        ]);
-      else if (path == PatientMedicalHistory.routeName ||
-          path == DentalExaminationPage.routeName ||
-          path == ProstheticTreatmentPage.routeName ||
-          path == DentalHistoryPage.routeName ||
-          path == NonSurgicalTreatmentPage.routeName ||
-          path == TreatmentPage.routeName ||
-          path == SurgicalTreatmentPage.routeName)
-        setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
+          setAppBarWidget(context: context);
+      }
       else
         setAppBarWidget(context: context);
-    } else if (siteController.getSite() == Website.Lab) {
-      if (path == LabTodaysRequestsSearch.routeName || path == LabAllRequestsSearch.routeName || path == LabAllRequestsSearch.routeMyName) {
-        if (siteController.getRole() == "technician") {
-          siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
-            SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
-            SlidingTabModel(title: "My Requests", namedDirectory: LabAllRequestsSearch.routeMyName),
-          ]);
-        } else {
-          siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
-            SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
-          ]);
-        }
-      } else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.routeLABname, compareName: StockSearchPage.routeName),
-          SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.routeLABname, compareName: StockLogsSearchPage.routeName),
-        ]);
-      else if (path == CashFlowIncomeSharedPage.routeName || path == CashFlowExpensesSharedPage.routeName || path == CashFlowSummarySharedPage.routeName)
-        siteController.setAppBarWidget(context: context, tabs: [
-          SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomeSharedPage.routeLABname, compareName: CashFlowIncomeSharedPage.routeName),
-          SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesSharedPage.routeLABname, compareName: CashFlowExpensesSharedPage.routeName),
-          SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummarySharedPage.routeLABname, compareName: CashFlowSummarySharedPage.routeName),
-        ]);
-      else
-        setAppBarWidget(context: context);
-    } else
-      setAppBarWidget(context: context);
+    });
+
   }
 
   setMedicalAppBar({required int id, required BuildContext context}) async {

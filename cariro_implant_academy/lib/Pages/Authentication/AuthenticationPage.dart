@@ -13,10 +13,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/AuthenticationAPI.dart';
 import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
+import '../../core/injection_contianer.dart';
 import '../../features/patient/presentation/presentation/patientsSearchPage.dart';
 
 class AuthenticationPage extends StatefulWidget {
@@ -34,6 +36,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
         child: LoginPage(
           onLogin: (email, password) async {

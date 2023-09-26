@@ -52,3 +52,12 @@ class ChangePageStateEvent extends CreateOrViewPatientBloc_Events{
   // TODO: implement props
   List<Object?> get props => [pageState];
 }
+
+class UpdatePatientDataEvent extends CreateOrViewPatientBloc_Events{
+  final PatientInfoEntity patient;
+  UpdatePatientDataEvent({required this.patient});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [patient];
+}

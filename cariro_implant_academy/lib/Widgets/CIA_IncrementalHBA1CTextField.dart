@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Models/MedicalModels/MedicalExaminationMo
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../features/patientsMedical/medicalExamination/domain/entities/hba1cEntity.dart';
 
@@ -10,7 +11,7 @@ class CIA_IncrementalHBA1CTextField extends StatefulWidget {
       : super(key: key);
 
   List<HbA1cEntity> model;
-  Function? onChange;
+  Function( List<HbA1cEntity>)? onChange;
 
   @override
   State<CIA_IncrementalHBA1CTextField> createState() =>
@@ -65,7 +66,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                   }
                 },
                 label: "Date",
-                controller: TextEditingController(text: item.date??""),
+                controller: TextEditingController(text: item.date==null?"":DateFormat("dd-MM-yyyy").format(item.date!)),
               )),
           Expanded(
               child: items.last == item
@@ -106,6 +107,6 @@ class _CIA_IncrementalHBA1CTextFieldState
   void initState() {
     items = widget.model;
     if (items == null || items.length == 0)
-      items.add(HbA1cEntity(reading: 0, date: ""));
+      items.add(HbA1cEntity(reading: 0, date: null));
   }
 }

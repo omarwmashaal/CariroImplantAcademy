@@ -53,7 +53,7 @@ class LoadedGetNextId extends CreateOrViewPatientBloc_State{
   List<Object?> get props => [message];
 }
 class ChangedDateOfBirthState extends CreateOrViewPatientBloc_State{
-  final String? date;
+  final DateTime? date;
   ChangedDateOfBirthState({this.date});
   @override
   // TODO: implement props
@@ -95,4 +95,30 @@ class ChangePageState extends CreateOrViewPatientBloc_State{
   // TODO: implement props
   List<Object?> get props => [message];
 }
+
+
+class UpdatingPatientState extends CreateOrViewPatientBloc_State{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
+class UpdatingPatientErrorState extends CreateOrViewPatientBloc_State{
+  final String message;
+  UpdatingPatientErrorState({required this.message});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
+
+}
+class UpdatedPatientSuccessfully extends CreateOrViewPatientBloc_State{
+  final PatientInfoEntity patient;
+  UpdatedPatientSuccessfully({required this.patient});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [patient];
+
+}
+
 enum PageState{addNew,edit,view}

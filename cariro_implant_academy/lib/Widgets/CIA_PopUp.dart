@@ -110,7 +110,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
   ).show();
 }
 
-CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function onChange) async {
+CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange) async {
   String date = "";
   Alert(
     context: context,
@@ -132,8 +132,8 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function onCh
             onSelectionChanged: (value) {
               setState(() {
                 date = DateFormat("dd-MM-yyyy").format(value.value);
-               // date = value.value.toString().replaceAll(" 00:00:00.000", "");
-                onChange(date);
+                // date = value.value.toString().replaceAll(" 00:00:00.000", "");
+                onChange(value.value);
               });
             },
           ),

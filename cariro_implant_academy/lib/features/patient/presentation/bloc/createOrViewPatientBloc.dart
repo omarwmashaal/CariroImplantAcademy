@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,16 +22,18 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
   final GetNextAvailableIdUseCase getNextAvailableIdUseCase;
   final PatientSearchUseCase patientSearchUseCase;
   final GetPatientDataUseCase getPatientDataUseCase;
-  PageState pageState= PageState.view;
-  CreateOrViewPatientBloc(
-      {required this.createPatientUseCase,
-      required this.checkDuplicateNumberUseCase,
-      required this.checkDuplicateIdUseCase,
-      required this.getNextAvailableIdUseCase,
-      required this.patientSearchUseCase,
-      required this.getPatientDataUseCase
-      })
-      : super(LoadingPatientInfoState()) {
+  final UpdatePatientDataUseCase updatePatientDataUseCase;
+  PageState pageState = PageState.view;
+
+  CreateOrViewPatientBloc({
+    required this.createPatientUseCase,
+    required this.checkDuplicateNumberUseCase,
+    required this.checkDuplicateIdUseCase,
+    required this.getNextAvailableIdUseCase,
+    required this.patientSearchUseCase,
+    required this.getPatientDataUseCase,
+    required this.updatePatientDataUseCase,
+  }) : super(LoadingPatientInfoState()) {
     on<CheckDuplicateNumberEvent>(
       (event, emit) async {
         emit(LoadingDuplicateNumber());
@@ -40,7 +43,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
             if (l is HttpInternalServerErrorFailure)
               emit(Error(SERVER_FAILURE_MESSAGE));
             else if (l is InputValidationFailure)
-              emit(Error(l.message??""));
+              emit(Error(l.message ?? ""));
             else
               emit(Error(UNKNOWN_FAILURE_MESSAGE));
           },
@@ -74,11 +77,10 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
         final result = await createPatientUseCase(event.patient);
         result.fold(
           (l) {
-            emit(Error(l.message??""));
+            emit(Error(l.message ?? ""));
           },
           (r) {
-            if(r == true)
-              emit(CreatedPatientState());
+            if (r == true) emit(CreatedPatientState());
           },
         );
       },
@@ -111,19 +113,31 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
       },
     );
     on<GetPatientInfoEvent>(
-      (event, emit)async {
+      (event, emit) async {
         emit(LoadingPatientInfoState());
         final result = await getPatientDataUseCase(event.id);
-        result.fold((l) => emit(Error(l.message??"")), (r) {
+        result.fold((l) => emit(Error(l.message ?? "")), (r) {
           emit(LoadedPatientInfoState(patient: r));
         });
       },
     );
-    on<ChangePageStateEvent>((event, emit) {
-      this.pageState = event.pageState;
-      print("current state is ${pageState.name}");
-      emit(ChangePageState(this.pageState.name));
-    },);
+    on<ChangePageStateEvent>(
+      (event, emit) {
+        this.pageState = event.pageState;
+        print("current state is ${pageState.name}");
+        emit(ChangePageState(this.pageState.name));
+      },
+    );
 
+    on<UpdatePatientDataEvent>(
+      (event, emit) async {
+        emit(UpdatingPatientState());
+        final result = await updatePatientDataUseCase(event.patient);
+        result.fold(
+          (l) => emit(UpdatingPatientErrorState(message: l.message ?? "")),
+          (r) => emit(UpdatedPatientSuccessfully(patient: r)),
+        );
+      },
+    );
   }
 }

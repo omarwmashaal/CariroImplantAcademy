@@ -34,7 +34,7 @@ class PaymentLogModel extends PaymentLogEntity {
     patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     operatorId = json['operatorId'];
     operator = BasicNameIdObjectModel.fromJson(json['operator'] ?? Map<String, dynamic>());
-    date = DateTime.tryParse(json['date']);
+    date = DateTime.tryParse(json['date'])?.toLocal();
     receiptId = json['receiptId'];
     //receipt = json['receipt'];
     paidAmount = json['paidAmount'];

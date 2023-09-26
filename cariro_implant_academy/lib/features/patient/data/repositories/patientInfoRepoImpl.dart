@@ -29,7 +29,7 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   @override
   Future<Either<Failure, PatientInfoEntity>> createPatient(PatientInfoEntity patient)async {
     try{
-      final result = await dataSource.createPatient(PatientInfoModel.fromEntity(patient));
+      final result = await dataSource.createPatient(patient);
       return Right(result);
     }on Exception catch(e)
     {
@@ -74,6 +74,17 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   Future<Either<Failure, String?>> compareDuplicateNumber(String number) async{
     try {
       final result = await dataSource.checkDuplicateNumber(number);
+      return Right(result);
+    }on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PatientInfoEntity>> updatePatientData(PatientInfoEntity patient) async{
+    try {
+      final result = await dataSource.updatePatientData(patient);
       return Right(result);
     }on Exception catch(e)
     {

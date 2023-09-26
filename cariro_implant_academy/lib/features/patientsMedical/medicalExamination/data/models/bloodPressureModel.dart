@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/domain/entities/bloodPressureEntity.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
 import '../../../../../Models/Enum.dart';
@@ -22,7 +23,7 @@ class BloodPressureModel extends BloodPressureEntity {
     drug = map['drug'];
     lastReading = map['lastReading'];
     readingInClinic = map['readingInClinic'];
-    when = CIA_DateConverters.fromBackendToDateOnly(map['when']);
+    when = DateTime.tryParse(map['when']??"")?.toLocal();
     status=mapToEnum(BloodPressureEnum.values, map['status']);
   }
   BloodPressureModel.fromEntity(BloodPressureEntity bloodPressureEntity)
@@ -37,7 +38,7 @@ class BloodPressureModel extends BloodPressureEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
+    data['when'] = this.when==null?null:DateFormat("yyyy-MM-dd").format(this.when!);
     data['drug'] = this.drug;
     data['readingInClinic'] = this.readingInClinic;
     data['status'] = getEnumIndex<BloodPressureEnum>(BloodPressureEnum.values, this.status);

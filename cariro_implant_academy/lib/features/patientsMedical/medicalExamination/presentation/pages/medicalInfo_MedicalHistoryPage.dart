@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../Constants/Colors.dart';
 import '../../../../../Models/DTOs/DropDownDTO.dart';
@@ -51,7 +52,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
 
   @override
   void initState() {
-    bloc =BlocProvider.of<MedicalHistoryBloc>(context);
+    bloc = BlocProvider.of<MedicalHistoryBloc>(context);
     medicalShellBloc = context.read<MedicalInfoShellBloc>();
   }
 
@@ -78,7 +79,6 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                   bloc: medicalShellBloc,
                   buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                   builder: (context, stateShell) {
-
                     return AbsorbPointer(
                       absorbing: () {
                         if (stateShell is MedicalInfoBlocChangeViewEditState) {
@@ -93,7 +93,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           FormTextKeyWidget(text: "General Health"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_MultiSelectChipWidget(
                             singleSelect: true,
                             onChange: (value, isSelected) {
@@ -128,7 +130,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   label: "Fail", selectedColor: Colors.red, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Fail),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Flex(
                             direction: Axis.horizontal,
                             children: [
@@ -142,24 +146,34 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               )),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_TextFormField(
                               label: "Are you treated for anything now?",
                               onChange: (value) => medicalHistoryData.areYouTreatedFromAnyThing = value,
                               controller: TextEditingController(text: medicalHistoryData.areYouTreatedFromAnyThing ?? "")),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_TextFormField(
                               onChange: (value) => medicalHistoryData.recentSurgery = value,
                               label: "Recent Surgery",
                               controller: TextEditingController(text: medicalHistoryData.recentSurgery ?? "")),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_TextFormField(
                               onChange: (value) => medicalHistoryData.comment = value,
                               label: "Comment",
                               controller: TextEditingController(text: medicalHistoryData.comment ?? "")),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "Did you have ever?"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_MultiSelectChipWidget(
                             onChange: (value, isSelected) {
                               DiseasesEnum? disease;
@@ -262,9 +276,13 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.Other))
                             ],
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "Blood Pressure"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_MultiSelectChipWidget(
                             onChange: (value, isSelected) {
                               BloodPressureEnum? bloodPressure;
@@ -315,7 +333,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       medicalHistoryData.bloodPressure?.status == BloodPressureEnum.HypotensiveUncontrolled),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -373,7 +393,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       },
                                       label: "When? ",
                                       controller: TextEditingController(
-                                          text: medicalHistoryData.bloodPressure != null ? (medicalHistoryData.bloodPressure?.when ?? "") : "")),
+                                          text: medicalHistoryData?.bloodPressure?.when == null
+                                              ? ""
+                                              : DateFormat("dd-MM-yyyy").format(medicalHistoryData!.bloodPressure!.when!))),
                                 ),
                               ),
                               Expanded(
@@ -435,9 +457,13 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "Glucose Status"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_MultiSelectChipWidget(
                             onChange: (value, isSelected) {
                               DiabetesEnum? diabetese;
@@ -471,7 +497,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   isSelected: medicalHistoryData.diabetic != null && medicalHistoryData.diabetic?.status == DiabetesEnum.DiabeticUncontrolled),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -526,7 +554,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       },
                                       label: "When? ",
                                       controller:
-                                          TextEditingController(text: medicalHistoryData.diabetic != null ? medicalHistoryData.diabetic?.when ?? "" : "")),
+                                          TextEditingController(text: medicalHistoryData?.diabetic?.when != null ? DateFormat("dd-MM-yyyy").format(medicalHistoryData.diabetic!.when!) : "")),
                                 ),
                               ),
                               Expanded(
@@ -547,15 +575,21 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "HBA1c"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_IncrementalHBA1CTextField(
                               onChange: (value) {
                                 medicalHistoryData.hbA1c = value;
                               },
                               model: medicalHistoryData.hbA1c != null ? medicalHistoryData.hbA1c as List<HbA1cEntity> : []),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "Are you allergic to?"),
                           Row(
                             children: [
@@ -589,7 +623,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               )
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
                               FormTextKeyWidget(text: "Are you Subjected to prolonged bleeding or taking aspirin?"),
@@ -615,7 +651,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   ]),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
                               FormTextKeyWidget(text: "Do you have chronic problem with digestion?"),
@@ -637,7 +675,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   ]),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_TextFormField(
                             changeColorIfFilled: true,
                             borderColorOnChange: Colors.red,
@@ -648,14 +688,20 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               medicalHistoryData.illegalDrugs = value;
                             },
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           CIA_TextFormField(
                               onChange: (value) => medicalHistoryData.operatorComments = value,
                               label: "Operator Comments",
                               controller: TextEditingController(text: medicalHistoryData.operatorComments ?? "")),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                           FormTextKeyWidget(text: "Drugs Taken by patient"),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           StatefulBuilder(
                             builder: (context, setState) {
                               int index = 0;
@@ -723,9 +769,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
 
   @override
   void dispose() {
-
-    if (bloc.isInitialized && edit)
-      bloc.add(MedicalHistoryBloc_SaveMedicalHistoryEvent(medicalExaminationEntity: medicalHistoryData));
+    if (bloc.isInitialized && edit) bloc.add(MedicalHistoryBloc_SaveMedicalHistoryEvent(medicalExaminationEntity: medicalHistoryData));
     super.dispose();
   }
 }

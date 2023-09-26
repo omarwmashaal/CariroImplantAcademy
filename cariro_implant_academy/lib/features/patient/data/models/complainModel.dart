@@ -61,7 +61,7 @@ class ComplainModel extends ComplainsEntity {
     entryBy = BasicNameIdObjectModel.fromJson((json['entryBy'] ?? Map<String, dynamic>()) as Map<String, dynamic>);
     resolvedById = json['resolvedById'];
     resolvedBy = BasicNameIdObjectModel.fromJson((json['resolvedBy'] ?? Map<String, dynamic>()) as Map<String, dynamic>);
-    entryTime = DateTime.tryParse(json['entryTime']??"");
+    entryTime = DateTime.tryParse(json['entryTime']??"")?.toLocal();
   }
 
   Map<String, dynamic> toJson() {

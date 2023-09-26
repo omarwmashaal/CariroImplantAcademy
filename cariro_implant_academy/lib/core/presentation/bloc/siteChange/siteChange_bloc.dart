@@ -5,6 +5,8 @@ import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteCha
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../injection_contianer.dart';
+
 class SiteChangeBloc extends Bloc<SiteChangeBlocEvents,SiteChangeBlocStates>{
   SiteChangeBloc():super(CIA_SiteState()){
     on<GetSiteEvent>((event, emit) async {
@@ -30,6 +32,7 @@ class SiteChangeBloc extends Bloc<SiteChangeBlocEvents,SiteChangeBlocStates>{
     });
     on<SetSiteEvent>((event, emit) {
       siteController.setSite(event.site);
+      sl<SharedPreferences>().setInt("Website", event.site.index);
       if(event.site == Website.CIA) {
         emit(CIA_SiteState());
       } else if(event.site == Website.Lab) {

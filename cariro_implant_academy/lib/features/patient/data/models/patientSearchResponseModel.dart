@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/constants/enums/enums.dart';
 import 'package:age_calculator/age_calculator.dart';
@@ -103,7 +104,7 @@ class PatientInfoModel extends PatientInfoEntity {
       doctorId: map['doctorID'] as int?,
       nationalId: map['nationalID'] as String?,
       phone2: map['phone2'] as String?,
-      dateOfBirth: map['dateOfBirth'] as String?,
+      dateOfBirth:DateTime.tryParse(map['dateOfBirth'] )?.toLocal(),
       address: map['address'] as String?,
       city: map['city'] as String?,
       profileImageId: map['profileImageId'] as int?,
@@ -111,9 +112,9 @@ class PatientInfoModel extends PatientInfoEntity {
       idBackImageId: map['idBackImageId'] as int?,
       registrationDate: map['registrationDate'] as String?,
       registeredBy: map['registeredBy'] as String?,
-      profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
-      idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),
-      idFrontImage: map['idFrontImage'] == null ? null : Uint8List.fromList((map['idFrontImage'] as List<dynamic>).map((e) => e as int).toList()),
+     // profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
+     // idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),
+     // idFrontImage: map['idFrontImage'] == null ? null : Uint8List.fromList((map['idFrontImage'] as List<dynamic>).map((e) => e as int).toList()),
     );
   }
 
@@ -130,7 +131,7 @@ class PatientInfoModel extends PatientInfoEntity {
       'doctorID': this.doctorId,
       'nationalId': this.nationalId,
       'phone2': this.phone2,
-      'dateOfBirth': this.dateOfBirth,
+      'dateOfBirth': this.dateOfBirth==null?null:DateFormat("yyyy-MM-dd").format(this.dateOfBirth!),
       'address': this.address,
       'city': this.city,
     };

@@ -5,7 +5,7 @@ import '../../../../../Models/Enum.dart';
 
 class DiabeticEntity extends Equatable {
   int? lastReading;
-  String? when;
+  DateTime? when;
   int? randomInClinic;
   DiabetesEnum? status;
   DiabetesMeasureType? type;

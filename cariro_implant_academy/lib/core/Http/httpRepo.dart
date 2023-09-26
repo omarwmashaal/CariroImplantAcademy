@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
@@ -17,7 +18,7 @@ class StandardHttpResponse {
     return StandardHttpResponse(
       body: map['result'],
       statusCode: response.statusCode,
-      errorMessage: response.statusCode != 200 ? map['errorMessage'] : "",
+      errorMessage: response.statusCode != 200 ? map['errorMessage']??map['title'] : "",
     );
   }
 
@@ -40,7 +41,7 @@ class StandardHttpResponse {
 abstract class HttpRepo {
   Future<StandardHttpResponse> get({required String host});
 
-  Future<StandardHttpResponse> post({required String host, Map<String, dynamic>? body});
+  Future<StandardHttpResponse> post({required String host, dynamic? body});
 
   Future<StandardHttpResponse> put({required String host, dynamic? body});
 
@@ -50,31 +51,38 @@ abstract class HttpRepo {
 class HttpClientImpl implements HttpRepo {
   @override
   Future<StandardHttpResponse> get({required String host}) async {
+    late http.Response result;
     try {
-      final result = await http.get(Uri.parse(host), headers: await headers());
+      result  = await http.get(Uri.parse(host), headers: headers());
        return StandardHttpResponse.fromHttpResponse(result);
     } on Exception {
-      throw Exception();
+      return StandardHttpResponse(statusCode:result!.statusCode,errorMessage: result.reasonPhrase);
     }
   }
 
   @override
-  Future<StandardHttpResponse> post({required String host, Map<String, dynamic>? body}) async {
+  Future<StandardHttpResponse> post({required String host, dynamic? body}) async {
+    late http.Response result;
     try {
-      final result = await http.post(Uri.parse(host), headers: await headers(), body: json.encode(body));
+       result = await http.post(Uri.parse(host), headers: headers(), body: json.encode(body));
       return StandardHttpResponse.fromHttpResponse(result);
     } catch (e) {
-      throw e;
+      return StandardHttpResponse(statusCode:result!.statusCode,errorMessage: result.reasonPhrase);
+
     }
   }
 
   @override
   Future<StandardHttpResponse> put({required String host, dynamic? body}) async {
+    late http.Response result;
+    print("put");
     try {
-      final result = await http.put(Uri.parse(host), headers: await headers(), body: json.encode(body));
+      result  = await http.put(Uri.parse(host), headers: headers(), body: json.encode(body));
+      print(result);
       return StandardHttpResponse.fromHttpResponse(result);
     } catch (e) {
-      throw e;
+
+      return StandardHttpResponse(statusCode:result!.statusCode,errorMessage: result.reasonPhrase);
     }
   }
 

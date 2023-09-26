@@ -29,4 +29,13 @@ class StockRepoImpl implements StockRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, StockEntity>> getStockByName(String name)async {
+    try {
+      final result = await stockDatasource.getStockByName(name);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }}
 }

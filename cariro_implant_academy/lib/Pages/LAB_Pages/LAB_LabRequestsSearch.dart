@@ -245,7 +245,8 @@ class LabAllRequestsSearch extends StatelessWidget {
   String search = "";
   @override
   Widget build(BuildContext context) {
-    return  Column(
+   return Container();
+    /*return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -476,7 +477,7 @@ class LabAllRequestsSearch extends StatelessWidget {
               }),
         ),
       ],
-    );
+    );*/
   }
   reload() async {
     var res = await dataSource.loadData(

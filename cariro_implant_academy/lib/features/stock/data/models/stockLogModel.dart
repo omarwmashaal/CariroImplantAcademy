@@ -22,7 +22,7 @@ class StockLogModel extends StockLogEntity {
     count = json['count'] ?? 0;
     categoryId = json['categoryId'];
     category = BasicNameIdObjectModel.fromJson(json['category'] ?? Map<String, dynamic>());
-    date = DateTime.tryParse(json['date']??"");
+    date = DateTime.tryParse(json['date']??"")?.toLocal();
     status = json['status'];
     operatorID = json['operatorID'];
     operator = BasicNameIdObjectModel.fromJson(json['operator'] ?? Map<String, dynamic>());

@@ -185,6 +185,7 @@ class _StockSearchPageState extends State<StockSearchPage> {
         ),
         Expanded(
           child: BlocConsumer<StockBloc, StockBloc_States>(
+            buildWhen: (previous, current) => current is StockBloc_LoadingErrorState || current is StockBloc_LoadedStockSuccessfullyState,
             builder: (context, state) {
               if (state is StockBloc_LoadingState)
                 return LoadingWidget();

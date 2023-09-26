@@ -9,6 +9,7 @@ import '../../Models/CashFlowSummaryModel.dart';
 import '../../Models/ReceiptModel.dart';
 import '../../Widgets/CIA_PopUp.dart';
 import '../../Widgets/FormTextWidget.dart';
+import '../../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../SharedPages/CashFlowSharedPage.dart';
 
 class CashFlowsSearchPage extends StatefulWidget {
@@ -21,14 +22,14 @@ class CashFlowsSearchPage extends StatefulWidget {
 class _CashFlowsSearchPageState extends State<CashFlowsSearchPage> {
   CashFlowDataSource i_dataSource = CashFlowDataSource(type: CashFlowType.income);
   CashFlowDataSource e_dataSource = CashFlowDataSource(type: CashFlowType.expenses);
-  CashFlowSummaryDataSource eS_dataSource = CashFlowSummaryDataSource(type: CashFlowType.income);
-  CashFlowSummaryDataSource iS_dataSource = CashFlowSummaryDataSource(type: CashFlowType.expenses);
+ // CashFlowSummaryDataSource eS_dataSource = CashFlowSummaryDataSource(type: CashFlowType.income);
+ // CashFlowSummaryDataSource iS_dataSource = CashFlowSummaryDataSource(type: CashFlowType.expenses);
 
   int selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return CashFlowIncomeSharedPage(
+    return CashFlowIncomePage(
     );
   }
 }

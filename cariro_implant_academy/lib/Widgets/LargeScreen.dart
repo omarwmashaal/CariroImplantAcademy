@@ -66,7 +66,8 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                     child: BlocListener<AppBarBloc, AppBarBlocState>(
                       bloc: sl<AppBarBloc>(),
                       listener: (context, state) {
-                        if (state is AppBarNewNotificationState) BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
+                        if (state is AppBarNewNotificationState)
+                          BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,

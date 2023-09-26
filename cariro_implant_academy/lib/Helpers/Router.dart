@@ -37,6 +37,9 @@ import '../Pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
 import '../Pages/SharedPages/PatientSharedPages.dart';
+import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
+import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
+import '../features/cashflow/presentation/pages/cashFlowSummaryPage.dart';
 import '../features/patient/presentation/presentation/complainsSearchPage.dart';
 import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/presentation/visitsPage.dart';
@@ -316,24 +319,24 @@ class CIA_Router {
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowIncomeSharedPage.routePath,
-                        name: CashFlowIncomeSharedPage.routeCIAname,
+                        path: CashFlowIncomePage.routePath,
+                        name: CashFlowIncomePage.routeCIAname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowIncomeSharedPage(),
+                          child: CashFlowIncomePage(),
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowExpensesSharedPage.routePath,
-                        name: CashFlowExpensesSharedPage.routeCIAname,
+                        path: CashFlowExpensesPage.routePath,
+                        name: CashFlowExpensesPage.routeCIAname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowExpensesSharedPage(),
+                          child: CashFlowExpensesPage(),
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowSummarySharedPage.routePath,
-                        name: CashFlowSummarySharedPage.routeCIAname,
+                        path: CashFlowSummaryPage.routePath,
+                        name: CashFlowSummaryPage.routeCIAname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowSummarySharedPage(),
+                          child: CashFlowSummaryPage(),
                         ),
                       ),
                       GoRoute(
@@ -688,24 +691,24 @@ class CIA_Router {
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowIncomeSharedPage.routePath,
-                        name: CashFlowIncomeSharedPage.routeLABname,
+                        path: CashFlowIncomePage.routePath,
+                        name: CashFlowIncomePage.routeLABname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowIncomeSharedPage(),
+                          child: CashFlowIncomePage(),
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowExpensesSharedPage.routePath,
-                        name: CashFlowExpensesSharedPage.routeLABname,
+                        path: CashFlowExpensesPage.routePath,
+                        name: CashFlowExpensesPage.routeLABname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowExpensesSharedPage(),
+                          child: CashFlowExpensesPage(),
                         ),
                       ),
                       GoRoute(
-                        path: CashFlowSummarySharedPage.routePath,
-                        name: CashFlowSummarySharedPage.routeLABname,
+                        path: CashFlowSummaryPage.routePath,
+                        name: CashFlowSummaryPage.routeLABname,
                         pageBuilder: (context, state) => NoTransitionPage(
-                          child: CashFlowSummarySharedPage(),
+                          child: CashFlowSummaryPage(),
                         ),
                       ),
                     ],

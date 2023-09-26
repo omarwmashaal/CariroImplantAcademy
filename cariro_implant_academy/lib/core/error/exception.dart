@@ -10,6 +10,8 @@ Exception getHttpException({required int statusCode, String? message}) {
       return HttpForbiddenException(message: message??'');
     case 404:
       return HttpNotFoundException(message: message??"");
+    case 405:
+      return HttpMethodNotAllowedException(message: message??"");
     case 500:
       return HttpInternalServerErrorException(message: message??"");
     case 501:
@@ -77,6 +79,11 @@ class HttpInternalServerErrorException implements Exceptions {
   final String? message;
 
   HttpInternalServerErrorException({this.message});}
+
+class HttpMethodNotAllowedException implements Exceptions {
+  final String? message;
+
+  HttpMethodNotAllowedException({this.message});}
 
 class DataConversionException implements Exceptions {
   final String? message;

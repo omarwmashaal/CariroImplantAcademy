@@ -44,8 +44,13 @@ import 'package:cariro_implant_academy/core/features/settings/data/datasources/s
 import 'package:cariro_implant_academy/core/features/settings/data/repositories/settingsRepoImpl.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getIncomeCategoriesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMedicalExpensesCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembraneCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembranesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getNonMedicalNonStockExpensesCategories.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
@@ -54,6 +59,17 @@ import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_D
 import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
 import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/data/datasources/cashFlowDatasources.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cashFlowRepository.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addIncomeUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addSettlementUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getExpensesCategoryByNameUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getIncomeByCategoryUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getSummaryUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listExpensesUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/complainsDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/repositories/complainsRepositoryImpl.dart';
 import 'package:cariro_implant_academy/features/patient/domain/repositories/complainsRepository.dart';
@@ -81,6 +97,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/getRooms
 import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveComplaiUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
@@ -122,6 +139,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
 import 'package:cariro_implant_academy/features/stock/data/repositories/stockRepoImpl.dart';
 import 'package:cariro_implant_academy/features/stock/domain/repositories/stockRepository.dart';
+import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockByNameUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc.dart';
 import 'package:cariro_implant_academy/features/user/data/datasource/userDatasource.dart';
@@ -142,6 +160,8 @@ import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medical
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../features/cashflow/data/repositories/cashFlowRepoImpl.dart';
+import '../features/cashflow/domain/useCases/getExpensesByCategoryUseCase.dart';
 import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import '../features/patient/data/datasources/patientSearchDataSource.dart';
 import '../features/patient/data/repositories/addOrRemoveMyPatientsRepoImpl.dart';
@@ -172,8 +192,10 @@ import '../features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import '../features/patient/presentation/bloc/patientSearchBloc.dart';
 import '../features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'data/repositories/imageRepoImpl.dart';
+import 'features/settings/domain/useCases/getExpensesCategoriesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantSizesUseCase.dart';
+import 'features/settings/domain/useCases/getNonMedicalStockCategories.dart';
 
 final sl = GetIt.instance;
 
@@ -232,6 +254,14 @@ init() async {
   sl.registerLazySingleton(() => GetMembranesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetMembraneCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetTacsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetIncomeCategoriesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetExpensesCategoriesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetPaymentMethodsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetMedicalExpensesCategoriesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetNonMedicalNonStockExpensesCategoriesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetNonMedicalStockCategoriesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetSuppliersUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetExpensesCategoryByNameUseCase(cashFlowRepository: sl()));
   //repositories
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepoImpl(settingsDatasource: sl()));
   //datasources
@@ -338,6 +368,7 @@ init() async {
         getNextAvailableIdUseCase: sl(),
         patientSearchUseCase: sl(),
         getPatientDataUseCase: sl(),
+    updatePatientDataUseCase:  sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => CreatePatientUseCase(patientInfoRepo: sl(), imageRepo: sl()));
@@ -345,6 +376,7 @@ init() async {
   sl.registerLazySingleton(() => CheckDuplicateIdUseCase(sl()));
   sl.registerLazySingleton(() => GetNextAvailableIdUseCase(sl()));
   sl.registerLazySingleton(() => GetPatientDataUseCase(patientRepo: sl()));
+  sl.registerLazySingleton(()=>UpdatePatientDataUseCase(patientInfoRepo: sl()));
   //repos
   sl.registerLazySingleton<InputValidationRepo>(() => InputValidationRepoImpl());
   //dataSources
@@ -559,8 +591,8 @@ init() async {
         updateUserInfoUseCase: sl(),
         searchUsersByRoleUseCase: sl(),
         getUserInfoUseCase: sl(),
-    resetPasswordUseCase: sl(),
-    getUsersSessionsUseCase: sl(),
+        resetPasswordUseCase: sl(),
+        getUsersSessionsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -581,8 +613,38 @@ init() async {
   //usecases
   sl.registerLazySingleton(() => GetStockUseCase(stockRepository: sl()));
   sl.registerLazySingleton(() => GetStockLogUseCase(stockRepository: sl()));
+  sl.registerLazySingleton(() => GetStockByNameUseCase(stockRepository: sl()));
   //repo
   sl.registerLazySingleton<StockRepository>(() => StockRepoImpl(stockDatasource: sl()));
   //datasource
   sl.registerLazySingleton<StockDatasource>(() => StockDatasourceImpl(httpRepo: sl()));
+
+  /**
+   * Cash Flow
+   */
+  //bloc
+  sl.registerFactory(() => CashFlowBloc(
+        listIncomeUseCase: sl(),
+        listExpensesUseCase: sl(),
+        getSummaryUseCase: sl(),
+        getIncomeByCategoryUseCase: sl(),
+        getExpensesByCategoryUseCase: sl(),
+        addSettlementUseCase: sl(),
+        addExpensesUseCase: sl(),
+        addIncomeUseCase: sl(),
+      ));
+
+  //use cases
+  sl.registerLazySingleton(() => ListIncomeUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => ListExpensesUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => GetSummaryUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => GetIncomeByCategoryUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => GetExpensesByCategoryUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => AddSettlementUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => AddExpensesUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => AddIncomeUseCase(cashFlowRepository: sl()));
+  //repos
+  sl.registerLazySingleton<CashFlowRepository>(() => CashFlowRepoImpl(cashFlowDatasource: sl()));
+  //datasources
+  sl.registerLazySingleton<CashFlowDatasource>(() => CashFlowDataSourceImpl(httpRepo: sl()));
 }

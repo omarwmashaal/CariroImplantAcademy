@@ -6,8 +6,9 @@ const DATACONVERSION_FAILURE_MESSAGE = "Couldn't convert data";
 
 abstract class Failure extends Equatable {
   String? message;
-  
+
   Failure({this.message});
+
   static Failure exceptionToFailure(Exception exception) {
     if (exception is HttpInternalServerErrorException)
       return HttpInternalServerErrorFailure(failureMessage: exception.message);
@@ -31,18 +32,21 @@ abstract class Failure extends Equatable {
       return InputValidationFailure(failureMessage: exception.message);
     else if (exception is ServerUnReachableException)
       return ServerUnreachablFailure(failureMessage: exception.message);
+    else if (exception is HttpMethodNotAllowedException)
+      return HttpMethodNotAllowedFailure(failureMessage: exception.message);
     else
       return UnknownFailure();
   }
-
 }
 
 class HttpInternalServerErrorFailure extends Failure {
   String? message;
-  HttpInternalServerErrorFailure({String? failureMessage}){
+
+  HttpInternalServerErrorFailure({String? failureMessage}) {
     this.message = "InternalServerError: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -50,10 +54,12 @@ class HttpInternalServerErrorFailure extends Failure {
 
 class LoginFailure extends Failure {
   String? message;
-  LoginFailure({String? failureMessage}){
+
+  LoginFailure({String? failureMessage}) {
     this.message = "Login: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -61,10 +67,12 @@ class LoginFailure extends Failure {
 
 class InputValidationFailure extends Failure {
   String? message;
-  InputValidationFailure({String? failureMessage}){
+
+  InputValidationFailure({String? failureMessage}) {
     this.message = "InputValidation: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -72,10 +80,12 @@ class InputValidationFailure extends Failure {
 
 class BadRequestFailure extends Failure {
   String? message;
-  BadRequestFailure({String? failureMessage}){
+
+  BadRequestFailure({String? failureMessage}) {
     this.message = "BadRequest: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -83,23 +93,25 @@ class BadRequestFailure extends Failure {
 
 class NetworkFailure extends Failure {
   String? message;
-  NetworkFailure({String? failureMessage}){    
+
+  NetworkFailure({String? failureMessage}) {
     this.message = "Network: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
 }
 
-
-
 class HttpBadRequestFailure extends Failure {
   String? message;
-  HttpBadRequestFailure({String? failureMessage}){
+
+  HttpBadRequestFailure({String? failureMessage}) {
     this.message = "BadRequest: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -107,10 +119,12 @@ class HttpBadRequestFailure extends Failure {
 
 class HttpUnauthorizedFailure extends Failure {
   String? message;
-  HttpUnauthorizedFailure({String? failureMessage}){
+
+  HttpUnauthorizedFailure({String? failureMessage}) {
     this.message = "Unauthorized: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -118,10 +132,12 @@ class HttpUnauthorizedFailure extends Failure {
 
 class HttpForbiddenFailure extends Failure {
   String? message;
-  HttpForbiddenFailure({String? failureMessage}){
+
+  HttpForbiddenFailure({String? failureMessage}) {
     this.message = "Forbidden: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -129,10 +145,12 @@ class HttpForbiddenFailure extends Failure {
 
 class HttpNotFoundFailure extends Failure {
   String? message;
-  HttpNotFoundFailure({String? failureMessage}){
+
+  HttpNotFoundFailure({String? failureMessage}) {
     this.message = "NotFound: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -140,10 +158,25 @@ class HttpNotFoundFailure extends Failure {
 
 class HttpNotImplementedFailure extends Failure {
   String? message;
-  HttpNotImplementedFailure({String? failureMessage}){
+
+  HttpNotImplementedFailure({String? failureMessage}) {
     this.message = "NotImplemented: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
+}
+
+class HttpMethodNotAllowedFailure extends Failure {
+  String? message;
+
+  HttpMethodNotAllowedFailure({String? failureMessage}) {
+    this.message = "Method Not Allowed: $failureMessage";
+    super.message = this.message;
+  }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -151,10 +184,12 @@ class HttpNotImplementedFailure extends Failure {
 
 class DataConversionFailure extends Failure {
   String? message;
-  DataConversionFailure({String? failureMessage}){
+
+  DataConversionFailure({String? failureMessage}) {
     this.message = "DataConversion: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
@@ -162,50 +197,64 @@ class DataConversionFailure extends Failure {
 
 class UnknownFailure extends Failure {
   String? message;
-  UnknownFailure({String? failureMessage}){
+
+  UnknownFailure({String? failureMessage}) {
     this.message = "Unknown: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
 }
+
 class DataVerificationFailure extends Failure {
   String? message;
-  DataVerificationFailure({String? failureMessage}){
+
+  DataVerificationFailure({String? failureMessage}) {
     this.message = "DataVerification: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
 }
+
 class UploadImageFailure extends Failure {
   String? message;
-  UploadImageFailure({String? failureMessage}){
+
+  UploadImageFailure({String? failureMessage}) {
     this.message = "UploadImage: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
 }
+
 class SelectingImageFailure extends Failure {
   String? message;
-  SelectingImageFailure({String? failureMessage}){
+
+  SelectingImageFailure({String? failureMessage}) {
     this.message = "SelectingImage: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];
 }
+
 class ServerUnreachablFailure extends Failure {
   String? message;
-  ServerUnreachablFailure({String? failureMessage}){
+
+  ServerUnreachablFailure({String? failureMessage}) {
     this.message = "Server unreachable: $failureMessage";
-    super.message=this.message;
+    super.message = this.message;
   }
+
   @override
   // TODO: implement props
   List<Object?> get props => [message];

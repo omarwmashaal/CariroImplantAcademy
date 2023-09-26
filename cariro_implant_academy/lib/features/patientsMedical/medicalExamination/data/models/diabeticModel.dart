@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
 import '../../../../../Models/Enum.dart';
@@ -21,7 +22,7 @@ class DiabeticModel extends DiabeticEntity {
 
   DiabeticModel.fromJson(Map<String, dynamic> json) {
     lastReading = json['lastReading'] as int?;
-    when = CIA_DateConverters.fromBackendToDateOnly(json['when']);
+    when = DateTime.tryParse(json['when']??"")?.toLocal();
     randomInClinic = json['randomInClinic'];
     status = mapToEnum(DiabetesEnum.values, json["status"]);
     type = mapToEnum(DiabetesMeasureType.values, json["type"]);
@@ -38,7 +39,7 @@ class DiabeticModel extends DiabeticEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastReading'] = this.lastReading;
-    data['when'] = CIA_DateConverters.fromDateOnlyToBackend(this.when);
+    data['when'] = this.when==null?null:DateFormat("yyyy-MM-dd").format(this.when!);
     data['randomInClinic'] = this.randomInClinic;
     data['status'] = this.status == null ? null : this.status!.index;
     data['type'] = this.type == null ? null : this.type!.index;

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +12,7 @@ class ImageBloc extends Cubit<ImageBloc_State> {
   final UploadImageUseCase uploadImageUseCase;
   final SelectImageUseCase selectImageUseCase;
   final DownloadImageUseCase downloadImageUseCase;
-
+  Uint8List?_image;
   ImageBloc({required this.uploadImageUseCase, required this.downloadImageUseCase, required this.selectImageUseCase}) : super(ImageInitialState());
 
   void selectImage() async {
@@ -23,6 +25,7 @@ class ImageBloc extends Cubit<ImageBloc_State> {
   }
 
   void uploadImageEvent(UploadImageParams params) async {
+    if(params.data==_image)return;
     emit(ImageUploadingState());
     final result = await uploadImageUseCase(params);
     result.fold(
@@ -30,7 +33,7 @@ class ImageBloc extends Cubit<ImageBloc_State> {
         emit(ImageUploadErrorState(message: l.message ?? ""));
       },
       (r) {
-        emit(ImageUploadedState());
+        emit(ImageLoadedState(image:params.data));
       },
     );
   }
@@ -40,7 +43,10 @@ class ImageBloc extends Cubit<ImageBloc_State> {
     final result = await downloadImageUseCase(id);
     result.fold(
       (l) => emit(ImageLoadingErrorState(message: "Failed to download image")),
-      (r) => emit(ImageLoadedState(image: r)),
+      (r) {
+        _image = r;
+        emit(ImageLoadedState(image: r));
+      },
     );
   }
 }

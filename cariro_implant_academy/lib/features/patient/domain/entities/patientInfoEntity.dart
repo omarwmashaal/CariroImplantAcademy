@@ -16,7 +16,7 @@ class PatientInfoEntity extends Equatable {
   int? doctorId;
   String? nationalId;
   String? phone2;
-  String? dateOfBirth;
+  DateTime? dateOfBirth;
   String? address;
   String? city;
   int? profileImageId;

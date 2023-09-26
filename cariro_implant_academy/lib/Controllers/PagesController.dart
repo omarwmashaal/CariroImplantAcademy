@@ -28,6 +28,7 @@ import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
@@ -246,7 +247,7 @@ class PagesController extends PageController {
             SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                context.goNamed(CashFlowIncomeSharedPage.routeCIAname);
+                context.goNamed(CashFlowIncomePage.routeCIAname);
                 controller.notifyListeners();
               },
               iconWidget: Container(
@@ -342,7 +343,7 @@ class PagesController extends PageController {
             SidebarXItem(
                 label: 'Cash Flow',
                 onTap: () {
-                  context.goNamed(CashFlowIncomeSharedPage.routeLABname);
+                  context.goNamed(CashFlowIncomePage.routeLABname);
                   controller.notifyListeners();
                 },
               iconWidget: Container(

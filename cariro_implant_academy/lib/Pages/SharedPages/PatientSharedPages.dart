@@ -101,7 +101,8 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return Container();
+    /*return FutureBuilder(
       future: widget.loadFunction != null ? widget.loadFunction!(widget.patientID ?? 0) : Future(() => API_Response()),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
@@ -940,7 +941,7 @@ class _PatientInfo_SharedPageState extends State<PatientInfo_SharedPage> {
             ),
           );
       },
-    );
+    );*/
   }
 }
 /*

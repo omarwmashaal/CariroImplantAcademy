@@ -1,0 +1,187 @@
+import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
+import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowModel.dart';
+import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowSummaryModel.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
+
+import '../../../../Models/Enum.dart';
+import '../../../../core/Http/httpRepo.dart';
+import '../../../../core/constants/enums/enums.dart';
+import '../../../../core/constants/remoteConstants.dart';
+import '../../../../core/error/exception.dart';
+import '../../../../core/useCases/useCases.dart';
+
+abstract class CashFlowDatasource {
+  Future<List<CashFlowModel>> listIncome({String? from, String? to, int? catId, int? paymentMethodId});
+
+  Future<List<CashFlowModel>> listExpenses({String? from, String? to, int? catId, int? paymentMethodId});
+
+  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter);
+
+  Future<CashFlowSummaryModel> getIncomeByCategory(int categoryID, String filter);
+
+  Future<CashFlowSummaryModel> getExpensesByCategory(int categoryID, String filter);
+
+  Future<NoParams> addIncome(CashFlowEntity model);
+
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type);
+
+  Future<NoParams> addSettlement(String filter, int value);
+
+  Future<BasicNameIdObjectModel> getExpenesesCategoryByName(String name);
+}
+
+class CashFlowDataSourceImpl implements CashFlowDatasource {
+  final HttpRepo httpRepo;
+
+  CashFlowDataSourceImpl({required this.httpRepo});
+
+  @override
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$cashFlowController/addExpense?type=${type.index}",
+        body: models.map((e) => CashFlowModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addIncome(CashFlowEntity model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$cashFlowController/AddIncome?",
+        body: CashFlowModel.fromEntity(model).toJson(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addSettlement(String filter, int value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(host: "$serverHost/$cashFlowController/AddSettlement?value=$value&filter=$filter");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<BasicNameIdObjectModel> getExpenesesCategoryByName(String name) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getExpenesesCategoryByName?name=$name");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return BasicNameIdObjectModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<CashFlowSummaryModel> getExpensesByCategory(int categoryID, String filter) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getExpensesByCategory?categoryID=$categoryID&filter=$filter");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return CashFlowSummaryModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<CashFlowSummaryModel> getIncomeByCategory(int categoryID, String filter) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getIncomeByCategory?categoryID=$categoryID&filter=$filter");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return CashFlowSummaryModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter)async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getSummary?filter=${filter.index}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return CashFlowSummaryModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<CashFlowModel>> listExpenses({String? from, String? to, int? catId, int? paymentMethodId}) async {
+    late StandardHttpResponse response;
+    try {
+      var query = "";
+      if(from!=null) query+= "${query==""?"":"&"}from=$from";
+      if(to!=null) query+= "${query==""?"":"&"}to=$to";
+      if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
+      if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/listExpenses?$query");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body??[]) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String,dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<CashFlowModel>> listIncome({String? from, String? to, int? catId, int? paymentMethodId}) async {
+    late StandardHttpResponse response;
+    try {
+      var query = "";
+      if(from!=null) query+= "${query==""?"":"&"}from=$from";
+      if(to!=null) query+= "${query==""?"":"&"}to=$to";
+      if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
+      if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/listIncome?$query");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body??[]) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String,dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+}

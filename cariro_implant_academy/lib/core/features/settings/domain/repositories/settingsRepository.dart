@@ -15,4 +15,11 @@ abstract class SettingsRepository{
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getImplantCompanies();
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getImplantLines(int id);
   Future<Either<Failure,List<ImplantEntity>>> getImplants(int id);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getIncomeCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getExpensesCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getPaymentMethods();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getSuppliers();
 }

@@ -499,6 +499,7 @@ class _ViewCandidateDataState extends State<ViewCandidateData> {
 
   @override
   Widget build(BuildContext context) {
+    return Container();/*
     return CIA_FutureBuilder(
       loadFunction: UserAPI.GetUserData(widget.userId),
       onSuccess: (data) {
@@ -570,6 +571,6 @@ class _ViewCandidateDataState extends State<ViewCandidateData> {
           ],
         );
       },
-    );
+    );*/
   }
 }

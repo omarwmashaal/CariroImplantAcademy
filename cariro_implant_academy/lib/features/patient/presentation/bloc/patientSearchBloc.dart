@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../core/injection_contianer.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../../domain/usecases/patientSearchUseCase.dart';
 
@@ -56,14 +57,14 @@ class MyPatientsSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchB
 
 class PatientSearchDataSourceTable extends DataGridSource {
   //List<PatientSearchResponseEntity> models = <PatientSearchResponseEntity>[];
-  late SharedPreferences pref;
   BuildContext context;
   /// Creates the patient data source class with required details.
   PatientSearchDataSourceTable(this.context) ;
 
-  init(List<PatientInfoEntity> models) async {
-    pref = await SharedPreferences.getInstance();
-    if (pref.getString("role") != "secretary") {
+
+  init(List<PatientInfoEntity> models)  {
+
+    if (sl<SharedPreferences>().getString("role") != "secretary") {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<int>(columnName: 'ID', value: e.id),
@@ -76,7 +77,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
                 DataGridCell<Widget>(
                   columnName: 'Add to my patients',
                   value: Center(
-                    child: e.doctorId == pref.getInt("userid")
+                    child: e.doctorId == sl<SharedPreferences>().getInt("userid")
                         ? IconButton(
                             icon: Icon(Icons.remove),
                             onPressed: () async {
@@ -128,9 +129,9 @@ class PatientSearchDataSourceTable extends DataGridSource {
     }).toList());
   }
 
-  Future update(List<PatientInfoEntity> models) async {
+   update(List<PatientInfoEntity> models)  {
 
-    await init(models);
+     init(models);
     notifyListeners();
     //notifyDataSourceListeners();
 

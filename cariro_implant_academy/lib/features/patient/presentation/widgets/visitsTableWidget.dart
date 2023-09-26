@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/patientI
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -186,9 +187,11 @@ class VisitsTableWidget extends StatelessWidget {
                 ShowSnackBar(context, isSuccess: true);
                 bloc.add(PatientVisitsBloc_GetVisitsEvent(id: patientId));
               }
+               if(state is PatientVisitsBloc_LoadingVisitsState)
+                CustomLoader.show(context);
+              else CustomLoader.hide();
             },
             buildWhen: (previous, current) =>
-                current is PatientVisitsBloc_LoadingVisitsState ||
                 current is PatientVisitsBloc_LoadingErrorState ||
                 current is PatientVisitsBloc_LoadedPatientDataSuccessfullyState ||
                 current is PatientVisitsBloc_LoadedVisitsSuccessfullyState,

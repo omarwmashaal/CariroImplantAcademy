@@ -57,7 +57,7 @@ class UserModel extends UserEntity{
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     profileImageId = json['profileImageId'];
-    dateOfBirth = DateTime.tryParse(json['dateOfBirth']??"");
+    dateOfBirth = DateTime.tryParse(json['dateOfBirth']??"")?.toLocal();
     gender = json['gender'];
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
@@ -79,7 +79,7 @@ class UserModel extends UserEntity{
 
     registeredById = json['registeredById'];
     registeredBy = json['registeredBy'] == null ?null : BasicNameIdObjectModel.fromJson(json['registeredBy']);
-    registerationDate = DateTime.tryParse(json['registerationDate']??"");
+    registerationDate = DateTime.tryParse(json['registerationDate']??"")?.toLocal();
     workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum'] ?? 0];
     /*try{
       id = json['id'];

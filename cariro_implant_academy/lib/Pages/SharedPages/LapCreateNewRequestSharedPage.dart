@@ -68,6 +68,8 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
 
   @override
   Widget build(BuildContext context) {
+    return Container();
+    /*
     return Column(
       children: [
         TitleWidget(
@@ -723,7 +725,7 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
           ),
         ),
       ],
-    );
+    );*/
   }
 
   @override

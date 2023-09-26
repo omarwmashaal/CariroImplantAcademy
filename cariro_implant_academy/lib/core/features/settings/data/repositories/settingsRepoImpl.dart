@@ -82,4 +82,74 @@ class SettingsRepoImpl implements SettingsRepository{
     }
   }
 
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getExpensesCategories() async {
+    try {
+      final result = await settingsDatasource.getExpensesCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getIncomeCategories() async {
+    try {
+      final result = await settingsDatasource.getIncomeCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getPaymentMethods() async {
+    try {
+      final result = await settingsDatasource.getPaymentMethods();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories() async {
+    try {
+      final result = await settingsDatasource.getMedicalExpensesCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories()async {
+    try {
+      final result = await settingsDatasource.getNonMedicalNonStockExpensesCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories() async {
+    try {
+      final result = await settingsDatasource.getNonMedicalStockCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers() async {
+    try {
+      final result = await settingsDatasource.getSuppliers();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
 }

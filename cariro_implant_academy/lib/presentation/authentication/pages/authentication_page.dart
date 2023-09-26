@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Constants/Colors.dart';
 import '../../../Constants/Controllers.dart';
@@ -31,6 +32,8 @@ class AuthenticationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(sl<SharedPreferences>().getInt("Website")==null)
+      sl<SharedPreferences>().setInt("Website", Website.CIA.index);
     return BlocProvider<AuthenticationBloc>(
       create: (context) => sl<AuthenticationBloc>(),
       child: BlocListener<AuthenticationBloc, Authentication_blocState>(

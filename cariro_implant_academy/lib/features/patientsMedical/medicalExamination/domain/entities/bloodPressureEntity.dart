@@ -4,7 +4,7 @@ import '../../../../../Models/Enum.dart';
 
 class BloodPressureEntity extends Equatable {
   String? lastReading;
-  String? when;
+  DateTime? when;
   String? drug;
   String? readingInClinic;
   BloodPressureEnum? status;

@@ -7,7 +7,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 /// The home page of the application which hosts the datagrid.
 late Function GlobalLoadFunction;
 
-class TableWidget extends StatelessWidget {
+class TableWidget extends StatefulWidget {
   TableWidget(
       {Key? key,
 
@@ -29,18 +29,27 @@ class TableWidget extends StatelessWidget {
   bool allowSorting;
 
   @override
+  State<TableWidget> createState() => _TableWidgetState();
+}
+
+class _TableWidgetState extends State<TableWidget> {
+  @override
   Widget build(BuildContext context) {
+    widget.dataSource.addListener(() {
+     setState(() {
+     });
+    });
     return SfDataGrid(
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
       horizontalScrollPhysics: ScrollPhysics(),
-      allowSorting: allowSorting,
-      allowTriStateSorting: allowSorting,
-      allowMultiColumnSorting: allowSorting,
+      allowSorting: widget.allowSorting,
+      allowTriStateSorting: widget.allowSorting,
+      allowMultiColumnSorting: widget.allowSorting,
       highlightRowOnHover: true,
-      gridLinesVisibility: showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
-      headerGridLinesVisibility: showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
-      tableSummaryRows: showSum
+      gridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
+      headerGridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
+      tableSummaryRows: widget.showSum
           ? [
               GridTableSummaryRow(
                   showSummaryInRow: false,
@@ -58,12 +67,12 @@ class TableWidget extends StatelessWidget {
               ])
             ]
           : [],*/
-      source: dataSource,
-      columnWidthMode: isTreatment! ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.fill,
+      source: widget.dataSource,
+      columnWidthMode: widget.isTreatment! ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.fill,
       navigationMode: GridNavigationMode.row,
       onCellTap: (value) {
-        if (onCellClick != null && value.rowColumnIndex.rowIndex != 0) {
-          onCellClick!(dataSource.effectiveRows.elementAt(value.rowColumnIndex.rowIndex-1).getCells().firstWhere((element) => element.columnName.toLowerCase()=="id").value as int);
+        if (widget.onCellClick != null && value.rowColumnIndex.rowIndex != 0) {
+          widget.onCellClick!(widget.dataSource.effectiveRows.elementAt(value.rowColumnIndex.rowIndex-1).getCells().firstWhere((element) => element.columnName.toLowerCase()=="id").value as int);
 
 
         }
@@ -74,9 +83,9 @@ class TableWidget extends StatelessWidget {
 
   List<GridColumn> _buildColumns() {
     List<GridColumn> returnValue = <GridColumn>[];
-    final columns = [];
-    if (dataSource.rows.isNotEmpty)
-      for (var r in dataSource.rows[0].getCells()) {
+    final columns =[];// ["ID","Name","Phone","Gender","Age","Marital Status","Relative",'Add to my patients'];
+    if (widget.dataSource.rows.isNotEmpty)
+      for (var r in widget.dataSource.rows[0].getCells()) {
         returnValue.add(GridColumn(
            // width: columnNames.length > 12 ? 200 : double.nan,
             columnName: r.columnName,

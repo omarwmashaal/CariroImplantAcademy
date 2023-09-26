@@ -102,6 +102,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Container();/*
     return Row(
       children: [
         SidebarX(
@@ -671,7 +672,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         )
       ],
-    );
+    );*/
   }
 }
 
@@ -1324,6 +1325,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
+    return Container();/*
     return Column(
       children: [
         CIA_SecondaryButton(
@@ -1553,7 +1555,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
 
         ),*/
       ],
-    );
+    );*/
   }
 
   _buildWidget(UserRoles type) {

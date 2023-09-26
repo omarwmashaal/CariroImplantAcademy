@@ -20,6 +20,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/Horizontal_RadioButtons.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/receiptTableWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
@@ -68,28 +69,28 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   final int patientID;
 
- final double imageWidth = 200;
+  final double imageWidth = 200;
   final double imageHeight = 200;
-
 
   //PatientInfoModel patient = PatientInfoModel(patientType: EnumPatientType.CIA);
 
   @override
   Widget build(BuildContext context) {
-    PatientInfoEntity patient = PatientInfoEntity();
-    final createPatientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
+    PatientInfoEntity patient = PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married);
+    final createOrViewPatientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     final imageBlocProfile = sl<ImageBloc>();
     final imageBlocIdBack = sl<ImageBloc>();
     final imageBlocIdFront = sl<ImageBloc>();
     if (patientID == 0) {
-      createPatientBloc.add(ChangePageStateEvent(pageState: PageState.addNew));
-      createPatientBloc.add(InitialEvent());
+      createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.addNew));
+      createOrViewPatientBloc.add(InitialEvent());
+      createOrViewPatientBloc.emit(LoadedPatientInfoState(patient: patient));
     } else
-      createPatientBloc.add(GetPatientInfoEvent(id: patientID));
+      createOrViewPatientBloc.add(GetPatientInfoEvent(id: patientID));
 
     return BlocConsumer<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
       listener: (context, state) {
-        if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew) {
+        if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew) {
           patient.maritalStatus = EnumMaritalStatus.Married;
           patient.gender = EnumGender.Male;
         } else if (state is LoadedPatientInfoState) {
@@ -101,10 +102,20 @@ class CreateOrViewPatientPage extends StatelessWidget {
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is CreatedPatientState) {
           ShowSnackBar(context, isSuccess: true);
-          createPatientBloc.add(InitialEvent());
+          createOrViewPatientBloc.add(InitialEvent());
+          createOrViewPatientBloc.emit(LoadedPatientInfoState(
+              patient: PatientInfoEntity(
+            gender: EnumGender.Male,
+            maritalStatus: EnumMaritalStatus.Married,
+          )));
+        } else if (state is UpdatingPatientErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is UpdatedPatientSuccessfully) {
+          patient = state.patient;
+          ShowSnackBar(context, isSuccess: true);
         }
 
-        if (state is CreatingPatientState)
+        if (state is CreatingPatientState || state is UpdatingPatientState)
           CustomLoader.show(context);
         // context.loaderOverlay.show();
         else
@@ -112,7 +123,6 @@ class CreateOrViewPatientPage extends StatelessWidget {
       },
       buildWhen: (previous, current) => current is LoadedPatientInfoState,
       builder: (context, state) {
-
         if (state is LoadedPatientInfoState) {
           patient = state.patient;
         }
@@ -141,13 +151,13 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                   BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                     buildWhen: (previous, current) => current is ChangePageState,
                                     builder: (context, state) {
-                                      if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew)
+                                      if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)
                                         return Container();
                                       else
                                         return CIA_PrimaryButton(
                                             label: "Show Receipts and Payments",
                                             onTab: () {
-                                              ReceiptTableWidget(patientId: patientID,context: context)();
+                                              ReceiptTableWidget(patientId: patientID, context: context)();
                                             });
                                     },
                                   ),
@@ -157,7 +167,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
-                                  if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew)
+                                  if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)
                                     return Row(
                                       children: [
                                         Expanded(
@@ -169,7 +179,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                                 isNumber: true,
                                                 onChange: (value) async {
                                                   patient.id = int.parse(value);
-                                                  createPatientBloc.add(CheckAvailableIdEvent(int.parse(value)));
+                                                  createOrViewPatientBloc.add(CheckAvailableIdEvent(int.parse(value)));
                                                 },
                                                 label: "Id",
                                                 controller: TextEditingController(text: (patient.id ?? "").toString()),
@@ -242,7 +252,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
-                                  if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew)
+                                  if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)
                                     return CIA_TextFormField(
                                       onChange: (value) {
                                         patient.name = value;
@@ -262,7 +272,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
-                                  if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew)
+                                  if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)
                                     return CIA_TextFormField(
                                       onChange: (value) {
                                         patient.nationalId = value;
@@ -286,7 +296,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
-                                  if (state is ChangePageState && createPatientBloc.pageState == PageState.addNew)
+                                  if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)
                                     return HorizontalRadioButtons(
                                       names: ["Male", "Female"],
                                       groupValue: "Male",
@@ -307,10 +317,10 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
                                   if (state is ChangePageState &&
-                                      (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit))
+                                      (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))
                                     return CIA_TextFormField(
                                       onChange: (value) async {
-                                        createPatientBloc.add(CheckDuplicateNumberEvent(value));
+                                        createOrViewPatientBloc.add(CheckDuplicateNumberEvent(value));
                                         patient.phone = value;
                                       },
                                       isPhoneNumber: true,
@@ -342,7 +352,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
                                   if (state is ChangePageState &&
-                                      (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit))
+                                      (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))
                                     return CIA_TextFormField(
                                       onChange: (value) {
                                         patient.phone2 = value;
@@ -363,25 +373,28 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState || current is ChangedDateOfBirthState,
                                 builder: (context, state) {
-                                  if (state is ChangedDateOfBirthState || (state is ChangePageState && createPatientBloc.pageState == PageState.addNew))
+                                  if (state is ChangedDateOfBirthState || (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew))
                                     return CIA_DateTimeTextFormField(
                                       onTap: () {
                                         CIA_PopupDialog_DateOnlyPicker(context, "Date of birth", (date) {
                                           patient.dateOfBirth = date;
-                                          createPatientBloc.emit(ChangedDateOfBirthState(date: date));
+                                          createOrViewPatientBloc.emit(ChangedDateOfBirthState(date: date));
                                         });
                                       },
                                       onChange: (value) {
                                         patient.dateOfBirth = value;
                                       },
                                       label: "Date Of Birth",
-                                      controller: TextEditingController(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth),
+                                      controller: TextEditingController(
+                                          text: patient?.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy").format(patient!.dateOfBirth!)),
                                     );
                                   else
                                     return Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "Date Of Birth")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.dateOfBirth == null ? "" : patient?.dateOfBirth))
+                                        Expanded(
+                                            child: FormTextValueWidget(
+                                                text: patient?.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy").format(patient!.dateOfBirth!)))
                                       ],
                                     );
                                 },
@@ -390,7 +403,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
                                   if (state is ChangePageState &&
-                                      (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit))
+                                      (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))
                                     return HorizontalRadioButtons(
                                       names: ["Married", "Single"],
                                       onChange: (v) {
@@ -411,7 +424,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
                                   if (state is ChangePageState &&
-                                      (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit))
+                                      (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))
                                     return CIA_TextFormField(
                                       onChange: (value) {
                                         patient.address = value;
@@ -432,7 +445,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
                                   if (state is ChangePageState &&
-                                      (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit))
+                                      (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))
                                     return CIA_TextFormField(
                                       onChange: (value) {
                                         patient.city = value;
@@ -452,7 +465,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState || current is ChangedPatientRelative,
                                 builder: (context, state) {
-                                  if (state is ChangedPatientRelative || (state is ChangePageState && createPatientBloc.pageState == PageState.addNew))
+                                  if (state is ChangedPatientRelative || (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew))
                                     return CIA_TextFormField(
                                       onTap: () {
                                         CIA_ShowPopUp(
@@ -464,7 +477,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                                   label: "Search",
                                                   controller: TextEditingController(),
                                                   onChange: (value) async {
-                                                    createPatientBloc.add(SearchPatientsEvent(query: value));
+                                                    createOrViewPatientBloc.add(SearchPatientsEvent(query: value));
                                                   },
                                                 ),
                                                 SizedBox(
@@ -479,7 +492,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                                               if (state is LoadedPatients) {
                                                                 patient.relative = state.patients[index].name;
                                                                 patient.relativePatientId = state.patients[index].id;
-                                                                createPatientBloc.emit(ChangedPatientRelative());
+                                                                createOrViewPatientBloc.emit(ChangedPatientRelative());
                                                               }
                                                             },
                                                             title: Column(
@@ -544,8 +557,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 BlocBuilder<ImageBloc, ImageBloc_State>(
                                   bloc: imageBlocProfile,
                                   builder: (context, state) {
-
-                                    if (state is ImageLoadingState)
+                                    if (state is ImageLoadingState || state is ImageUploadingState)
                                       return LoadingWidget();
                                     else if (state is ImageLoadedState) {
                                       patient.profileImage = state.image;
@@ -568,7 +580,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                   builder: (context, state) {
                                     return Visibility(
                                       visible: state is ChangePageState &&
-                                          (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit),
+                                          (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit),
                                       child: CIA_SecondaryButton(
                                           label: "Upload Image",
                                           onTab: () async {
@@ -590,7 +602,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                       BlocBuilder<ImageBloc, ImageBloc_State>(
                                         bloc: imageBlocIdFront,
                                         builder: (context, state) {
-                                          if (state is ImageLoadingState)
+                                          if (state is ImageLoadingState || state is ImageUploadingState)
                                             return LoadingWidget();
                                           else if (state is ImageLoadedState) {
                                             patient.idFrontImage = state.image;
@@ -613,7 +625,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                         builder: (context, state) {
                                           return Visibility(
                                             visible: state is ChangePageState &&
-                                                (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit),
+                                                (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit),
                                             child: CIA_SecondaryButton(
                                                 label: "Upload Image",
                                                 onTab: () async {
@@ -630,7 +642,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                       BlocBuilder<ImageBloc, ImageBloc_State>(
                                         bloc: imageBlocIdBack,
                                         builder: (context, state) {
-                                          if (state is ImageLoadingState)
+                                          if (state is ImageLoadingState || state is ImageUploadingState)
                                             return LoadingWidget();
                                           else if (state is ImageLoadedState) {
                                             patient.idBackImage = state.image;
@@ -653,7 +665,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                         builder: (context, state) {
                                           return Visibility(
                                             visible: state is ChangePageState &&
-                                                (createPatientBloc.pageState == PageState.addNew || createPatientBloc.pageState == PageState.edit),
+                                                (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit),
                                             child: CIA_SecondaryButton(
                                                 label: "Upload Image",
                                                 onTab: () async {
@@ -670,40 +682,58 @@ class CreateOrViewPatientPage extends StatelessWidget {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ),
                 BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                   buildWhen: (previous, current) => current is ChangePageState,
-                  bloc: createPatientBloc,
+                  bloc: createOrViewPatientBloc,
                   builder: (context, state) {
-                    if (state is ChangePageState && (createPatientBloc.pageState == PageState.addNew))
+                    if (state is ChangePageState && (createOrViewPatientBloc.pageState == PageState.addNew))
                       return Center(
                         child: CIA_PrimaryButton(
                             label: "Save",
                             isLong: true,
                             onTab: () async {
-                              createPatientBloc.add(CreatePatientEvent(patient: patient));
-
+                              createOrViewPatientBloc.add(CreatePatientEvent(patient: patient));
                             }),
                       );
-                    else if(state is ChangePageState && (createPatientBloc.pageState == PageState.edit))
+                    else if (state is ChangePageState && (createOrViewPatientBloc.pageState == PageState.edit))
                       return Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(child: SizedBox()),
                             Flexible(
-                              child: CIA_SecondaryButton(label: "Cancel", onTab: () => createPatientBloc.add(ChangePageStateEvent(pageState: PageState.view))),
+                              child: CIA_SecondaryButton(
+                                  label: "Cancel", onTab: () => createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.view))),
                             ),
                             Flexible(
                               child: CIA_PrimaryButton(
                                   label: "Save",
                                   isLong: true,
-                                  onTab: () async {
-                                    createPatientBloc.add(ChangePageStateEvent(pageState: PageState.view));
-                                  }/*{
+                                  onTab: () {
+                                    createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.view));
+                                    createOrViewPatientBloc.add(UpdatePatientDataEvent(patient: patient));
+                                    if (patient.idBackImage != null)
+                                      imageBlocIdBack.uploadImageEvent(UploadImageParams(
+                                        id: patientID,
+                                        type: EnumImageType.IdBack,
+                                        data: patient.idBackImage!,
+                                      ));
+                                    if (patient.idFrontImage != null)
+                                      imageBlocIdFront.uploadImageEvent(UploadImageParams(
+                                        id: patientID,
+                                        type: EnumImageType.IdFront,
+                                        data: patient.idFrontImage!,
+                                      ));
+                                    if (patient.profileImage != null)
+                                      imageBlocProfile.uploadImageEvent(UploadImageParams(
+                                        id: patientID,
+                                        type: EnumImageType.PatientProfile,
+                                        data: patient.profileImage!,
+                                      ));
+                                  } /*{
                                           var response = await PatientAPI.UpdatePatientDate(patient);
 
                                           if (response.statusCode == 200) {
@@ -725,16 +755,18 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                           setState(() {
                                             edit = false;
                                           });
-                                        }*/),
+                                        }*/
+                                  ),
                             ),
                             Expanded(child: SizedBox()),
                           ],
                         ),
                       );
-                    else return Center(
+                    else
+                      return Center(
                         child: CIA_SecondaryButton(
                           onTab: () {
-                            createPatientBloc.add(ChangePageStateEvent(pageState: PageState.edit));
+                            createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.edit));
                           },
                           label: "Edit Info",
                         ),

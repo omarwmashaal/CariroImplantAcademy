@@ -33,7 +33,7 @@ class ReceiptModel extends ReceiptEntity {
   }
   ReceiptModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    date = DateTime.tryParse(json['date']);
+    date = DateTime.tryParse(json['date']??"")?.toLocal();
     patientId = json['patientId'];
     patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     operatorId = json['operatorId'];

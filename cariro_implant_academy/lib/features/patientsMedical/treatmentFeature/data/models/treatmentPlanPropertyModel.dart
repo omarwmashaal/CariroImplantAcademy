@@ -66,7 +66,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     status = json['status'] ?? false;
     assignedToID = json['assignedToID'];
     assignedTo = json['assignedTo'] != null ? new BasicNameIdObjectModel.fromJson(json['assignedTo']) : null;
-    date =  DateTime.tryParse(json['date']??"") ;
+    date =  DateTime.tryParse(json['date']??"") ?.toLocal();
     doneByAssistantID = json['doneByAssistantID'];
     doneByAssistant = json['doneByAssistant'] != null ? new BasicNameIdObjectModel.fromJson(json['doneByAssistant']) : BasicNameIdObjectModel();
     doneBySupervisorID = json['doneBySupervisorID'];
