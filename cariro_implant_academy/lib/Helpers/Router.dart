@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
@@ -14,6 +15,7 @@ import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart
 import 'package:cariro_implant_academy/Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
+import 'package:cariro_implant_academy/SignalR/SignalR.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
@@ -28,15 +30,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
-import '../Pages/CIA_Pages/PatientVisits.dart';
-import '../Pages/CIA_Pages/Patient_MedicalInfo.dart';
-import '../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../Pages/CIA_Pages/ViewUserPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
-import '../Pages/SharedPages/PatientSharedPages.dart';
+import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
+import '../core/injection_contianer.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowSummaryPage.dart';
@@ -59,7 +59,6 @@ import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 
-
 class CIA_Router {
   static var shellNavigationKey = GlobalKey<NavigatorState>();
   static var rootNavigationKey = GlobalKey<NavigatorState>();
@@ -77,12 +76,12 @@ class CIA_Router {
             return Scaffold(body: AuthenticationPage());
           },
           //todo: fix this
-          /*
+
           redirect: (context, state) async {
-            if (await siteController.getToken() == "") {
+            if ((siteController.getToken().isBlank ?? true) || (siteController.getUserName().isBlank ?? true) || ((siteController.getUserId() ?? 0) == 0)) {
               return "/";
             }
-          },*/
+          },
           routes: [
             GoRoute(
                 name: "CIA",
@@ -92,10 +91,10 @@ class CIA_Router {
                   return Scaffold(body: AuthenticationPage());
                 },
                 //todo: fix this
-                /*
+
                 redirect: (context, state) async {
-                  Logger.root.log(Level.INFO, "Called verify from main routing redirect");
-                  var res = await AuthenticationAPI.VerifyToken();
+                 // Logger.root.log(Level.INFO, "Called verify from main routing redirect");
+                  /*var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
                       !(
@@ -107,12 +106,19 @@ class CIA_Router {
 
                   ) {
                     return "/";
-                  }
-                },*/
+                  }*/
+                  /*if(
+                  !(siteController.getUserId().isBlank??true) &&
+                   !   (siteController.getUserName().isBlank??true) &&
+                    !  (siteController.getRole().isBlank??true)
+
+                  ) return "/";*/
+                },
                 routes: [
                   ShellRoute(
                     builder: (context, state, child) {
                       siteController.setDynamicAppBar(context: context, pathQueries: state.pathParameters);
+                      sl<SignalR>();
                       return SiteLayout(
                           largeScreen: Scaffold(
                               body: CIA_LargeScreen(
@@ -156,7 +162,7 @@ class CIA_Router {
                           );
                         },
                       ),
-                       GoRoute(
+                      GoRoute(
                         path: VisitsPage.routeName,
                         name: VisitsPage.routePath,
                         pageBuilder: (context, state) {
@@ -165,7 +171,6 @@ class CIA_Router {
                           );
                         },
                       ),
-
                       GoRoute(
                         path: ComplainsSearchPage.routeName,
                         name: ComplainsSearchPage.routeName,
@@ -219,7 +224,7 @@ class CIA_Router {
                         name: CreateOrViewPatientPage.viewPatientRouteName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child:  CreateOrViewPatientPage(
+                            child: CreateOrViewPatientPage(
                               patientID: int.parse(state.pathParameters['id'].toString()),
                             ),
                           );
@@ -253,7 +258,7 @@ class CIA_Router {
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
                             key: GlobalKey(),
-                            type:UserRoles.Assistant,
+                            type: UserRoles.Assistant,
                           ),
                         ),
                       ),
@@ -263,7 +268,7 @@ class CIA_Router {
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
                             key: GlobalKey(),
-                            type:UserRoles.Instructor,
+                            type: UserRoles.Instructor,
                           ),
                         ),
                       ),
@@ -273,7 +278,7 @@ class CIA_Router {
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
                             key: GlobalKey(),
-                            type:UserRoles.Candidate,
+                            type: UserRoles.Candidate,
                           ),
                         ),
                       ),
@@ -405,7 +410,6 @@ class CIA_Router {
                               name: PatientMedicalHistory.routeName,
                               path: PatientMedicalHistory.routePath,
                               pageBuilder: (context, state) {
-
                                 return NoTransitionPage(
                                   child: _Authorize(
                                     allowedRoles: [
@@ -485,7 +489,7 @@ class CIA_Router {
                                       UserRoles.Assistant,
                                       UserRoles.Admin,
                                     ],
-                                    child:new  TreatmentPage(
+                                    child: new TreatmentPage(
                                       key: GlobalKey(),
                                       patientId: int.parse(state.pathParameters['id'].toString()),
                                     ),
@@ -530,7 +534,6 @@ class CIA_Router {
                                 );
                               },
                             ),
-
                           ]),
                     ],
                   )
@@ -542,7 +545,7 @@ class CIA_Router {
                   siteController.setSite(Website.Lab);
                   return Scaffold(body: AuthenticationPage());
                 },
-               /* redirect: (context, state) async {
+                /* redirect: (context, state) async {
                   var res = await AuthenticationAPI.VerifyToken();
                   if (
                   await siteController.getToken() == "" ||
@@ -608,10 +611,10 @@ class CIA_Router {
                           path: "Requests/:id",
                           name: routeConst_LabView,
                           redirect: (context, state) {
-                         //   print("here");
-                            if(siteController.getSite()==Website.CIA)
+                            //   print("here");
+                            if (siteController.getSite() == Website.CIA)
                               return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
-                            else if (siteController.getRole() == "technician" || siteController.getRole()=="labmoderator")
+                            else if (siteController.getRole() == "technician" || siteController.getRole() == "labmoderator")
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewTaskPage.routePath}";
                             else
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewRequestPage.routePath}";
@@ -645,10 +648,10 @@ class CIA_Router {
                         name: UserSearchPage.techniciansRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: _Authorize(
-                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
+                            allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
                             child: UserSearchPage(
                               key: GlobalKey(),
-                              type:UserRoles.Technician,
+                              type: UserRoles.Technician,
                             ),
                           ),
                         ),
@@ -658,10 +661,10 @@ class CIA_Router {
                         name: UserSearchPage.labModeratorsRouteName,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: _Authorize(
-                            allowedRoles: [UserRoles.Admin,UserRoles.Secretary,UserRoles.LabModerator],
+                            allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
                             child: UserSearchPage(
                               key: GlobalKey(),
-                              type:UserRoles.LabModerator,
+                              type: UserRoles.LabModerator,
                             ),
                           ),
                         ),
@@ -672,7 +675,7 @@ class CIA_Router {
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: UserSearchPage(
                             key: GlobalKey(),
-                            type:UserRoles.OutSource,
+                            type: UserRoles.OutSource,
                           ),
                         ),
                       ),
@@ -716,7 +719,6 @@ class CIA_Router {
                 ]),
           ]),
     ],
-
   );
 }
 
@@ -735,18 +737,14 @@ class _Authorize extends StatelessWidget {
       future: AuthenticationAPI.VerifyToken(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (siteController.getRole()=="admin"|| roles.contains(siteController.getRole()))
+          if (siteController.getRole() == "admin" || roles.contains(siteController.getRole()))
             return child;
           else {
             return Center(
               child: Text(
                 "Sorry you don't have access to this page",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 100,
-                  color: Colors.grey
-                ),
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 100, color: Colors.grey),
               ),
             );
           }

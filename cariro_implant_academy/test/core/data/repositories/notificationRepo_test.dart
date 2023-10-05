@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:cariro_implant_academy/core/data/dataSources/notificationDataSource.dart';
-import 'package:cariro_implant_academy/core/data/models/notificationModel.dart';
-import 'package:cariro_implant_academy/core/data/repositories/notificationRepoImpl.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/datasource/notificationDataSource.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/models/notificationModel.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/repositories/notificationRepoImpl.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:dartz/dartz.dart';

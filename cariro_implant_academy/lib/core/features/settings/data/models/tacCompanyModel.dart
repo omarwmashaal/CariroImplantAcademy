@@ -7,6 +7,14 @@ class TacCompanyModel extends TacCompanyEntity {
     super.name,
   });
 
+  factory TacCompanyModel.fromEntity(TacCompanyEntity entity)
+  {
+    return TacCompanyModel(
+     id: entity.id,
+     name: entity.name,
+     count: entity.count
+    );
+  }
   factory TacCompanyModel.fromJson(Map<String, dynamic> json) {
     return TacCompanyModel(
       id: json['id'],

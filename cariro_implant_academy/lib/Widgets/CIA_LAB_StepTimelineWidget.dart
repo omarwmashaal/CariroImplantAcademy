@@ -18,7 +18,8 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _stepperData.clear();
+    return Container();
+    /*_stepperData.clear();
     int activeIndex = 0;
     int index = 0;
     for (LAB_StepModel step in steps) {
@@ -35,7 +36,7 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
                             ? " Customer"
                             : step.step!.id == 11
                                 ? " Lab"
-                                : (isTask && step.technicianId == siteController.getUser().idInt ? " you" : ": " + (step.technician!.name!)))
+                                : (isTask && step.technicianId == siteController.getUserId() ? " you" : ": " + (step.technician!.name!)))
                     : step.step!.name!),
           ),
           subtitle: StepperText(step.status == LabStepStatus.Done
@@ -62,6 +63,6 @@ class CIA_LAB_StepTimelineWidget extends StatelessWidget {
       iconWidth: 40,
       // Height that will be applied to all the stepper icons
       iconHeight: 40, // Width that will be applied to all the stepper icons
-    );
+    );*/
   }
 }

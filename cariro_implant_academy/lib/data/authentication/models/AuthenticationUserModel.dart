@@ -12,6 +12,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
     required role,
     required token,
     required phone,
+    profileId,
   }) : super(
           name: name,
           token: token,
@@ -19,6 +20,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
           phoneNumber: phoneNumber,
           role: role,
           phone: phone,
+          profileId: profileId,
         );
 
   factory AuthenticationUserModel.fromJson(Map<String, dynamic> map) {
@@ -28,6 +30,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
         idInt: map['idInt'] as int,
         phoneNumber: map['phoneNumber'] as String,
         role: map['role'] as String,
+        profileId: map['profileImageId'] as int?,
         phone: map['phone'] as String);
   }
 }

@@ -298,7 +298,7 @@ class _CIA_MyProfilePageState extends State<CIA_MyProfilePage> {
   @override
   void initState() {
     // siteController.setAppBarWidget(tabs: ["My Profile", "Calendar"]);
-    siteController.setAppBarWidget(context: context);
+   // siteController.setAppBarWidget(context: context);
   }
 }
 

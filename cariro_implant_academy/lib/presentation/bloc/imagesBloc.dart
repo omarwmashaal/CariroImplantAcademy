@@ -12,8 +12,11 @@ class ImageBloc extends Cubit<ImageBloc_State> {
   final UploadImageUseCase uploadImageUseCase;
   final SelectImageUseCase selectImageUseCase;
   final DownloadImageUseCase downloadImageUseCase;
+  bool reDownload = true;
   Uint8List?_image;
-  ImageBloc({required this.uploadImageUseCase, required this.downloadImageUseCase, required this.selectImageUseCase}) : super(ImageInitialState());
+  ImageBloc({required this.uploadImageUseCase, required this.downloadImageUseCase, required this.selectImageUseCase}) : super(ImageInitialState()){
+    _image = null;
+  }
 
   void selectImage() async {
     emit(ImageLoadingState());
@@ -39,6 +42,7 @@ class ImageBloc extends Cubit<ImageBloc_State> {
   }
 
   void downloadImageEvent(int id) async {
+    //if(!reDownload && _image!=null) return;
     emit(ImageLoadingState());
     final result = await downloadImageUseCase(id);
     result.fold(

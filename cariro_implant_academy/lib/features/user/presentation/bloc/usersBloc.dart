@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../Constants/Controllers.dart';
+import '../../../../Controllers/SiteController.dart';
 import '../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../core/injection_contianer.dart';
 import '../../domain/entities/enum.dart';
@@ -116,7 +118,7 @@ class UsersDataGridSource extends DataGridSource {
   }
 
   init() {
-    String? role = sl<SharedPreferences>().getString("role");
+    String? role = siteController.getRole();
     if (role == "admin") {
       if (type == UserRoles.Candidate) {
         columns = ["ID", "Name", "Batch", "Email", "Phone", "Remove"];

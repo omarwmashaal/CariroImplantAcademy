@@ -9,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../Constants/Controllers.dart';
+import '../../../../Controllers/SiteController.dart';
 import '../../../../core/injection_contianer.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../../domain/usecases/patientSearchUseCase.dart';
@@ -64,7 +66,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
 
   init(List<PatientInfoEntity> models)  {
 
-    if (sl<SharedPreferences>().getString("role") != "secretary") {
+    if (siteController.getRole != "secretary") {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<int>(columnName: 'ID', value: e.id),

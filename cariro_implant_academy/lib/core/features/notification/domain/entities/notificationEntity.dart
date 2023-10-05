@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../Helpers/CIA_DateConverters.dart';
-import '../../../Models/Enum.dart';
+import '../../../../../Helpers/CIA_DateConverters.dart';
+import '../../../../../Models/Enum.dart';
 
 class NotificationEntity  extends Equatable{
   int? id;

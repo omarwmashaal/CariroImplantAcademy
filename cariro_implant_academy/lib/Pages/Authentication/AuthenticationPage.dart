@@ -5,7 +5,6 @@ import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/LoginPage.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/RegsiterPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'package:cariro_implant_academy/Routes/Routes.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';

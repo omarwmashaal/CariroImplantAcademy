@@ -1,16 +1,22 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
 
+import '../../../../../features/patient/domain/entities/roomEntity.dart';
 import '../../../../constants/remoteConstants.dart';
 import '../../../../data/models/BasicNameIdObjectModel.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 import '../../../../error/exception.dart';
+import '../../../../useCases/useCases.dart';
 import '../../domain/entities/implantEntity.dart';
 import '../../domain/entities/membraneCompanyEnity.dart';
 import '../../domain/entities/tacEntity.dart';
 import '../../domain/entities/treatmentPricesEntity.dart';
+import '../../domain/useCases/addImplantsUseCase.dart';
+import '../../domain/useCases/addMembranesUseCase.dart';
 import '../models/ImplantModel.dart';
 import '../models/membraneCompanyModel.dart';
+import '../models/membraneModel.dart';
 import '../models/tacCompanyModel.dart';
 
 abstract class SettingsDatasource {
@@ -18,9 +24,10 @@ abstract class SettingsDatasource {
 
   Future<List<TacCompanyModel>> getTacs();
 
+
   Future<List<MembraneCompanyModel>> getMembraneCompanies();
 
-  Future<List<BasicNameIdObjectModel>> getMembranes(int id);
+  Future<List<MembraneModel>> getMembranes(int id);
 
   Future<List<BasicNameIdObjectModel>> getImplantCompanies();
 
@@ -28,19 +35,50 @@ abstract class SettingsDatasource {
 
   Future<List<ImplantModel>> getImplants(int id);
 
-  Future<List<BasicNameIdObjectEntity>> getIncomeCategories();
+  Future<List<BasicNameIdObjectModel>> getIncomeCategories();
 
-  Future<List<BasicNameIdObjectEntity>> getExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getExpensesCategories();
 
-  Future<List<BasicNameIdObjectEntity>> getPaymentMethods();
+  Future<List<BasicNameIdObjectModel>> getPaymentMethods();
 
-  Future<List<BasicNameIdObjectEntity>> getMedicalExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories();
 
-  Future<List<BasicNameIdObjectEntity>> getNonMedicalNonStockExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories();
 
-  Future<List<BasicNameIdObjectEntity>> getNonMedicalStockCategories();
+  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories();
+  Future<List<BasicNameIdObjectModel>> getStockCategories();
 
-  Future<List<BasicNameIdObjectEntity>> getSuppliers();
+  Future<List<BasicNameIdObjectModel>> getSuppliers();
+
+  Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
+
+  Future<NoParams> changeImplantLineName(BasicNameIdObjectEntity value);
+
+  Future<NoParams> addImplants(UpdateImplantsParams value);
+
+  Future<NoParams> addImplantLines(BasicNameIdObjectEntity value);
+
+  Future<NoParams> addImplantCompanies(String name);
+
+  Future<NoParams> addMembranes(AddMembraneParams value);
+
+  Future<NoParams> addTacsCompanies(List<TacCompanyEntity> model);
+
+  Future<NoParams> addMembraneCompanies(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> addExpensesCategories(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> addIncomeCategories(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> addStockCategories(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> addPaymentMethods(List<BasicNameIdObjectEntity> model);
+
+  Future<NoParams> editRooms(List<RoomEntity> model);
+
+  Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices);
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -145,7 +183,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getMembranes(int id) async {
+  Future<List<MembraneModel>> getMembranes(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/GetMembranes?id=$id");
@@ -154,14 +192,14 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => MembraneModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getExpensesCategories() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getExpensesCategories");
@@ -177,7 +215,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getIncomeCategories() async {
+  Future<List<BasicNameIdObjectModel>> getIncomeCategories() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getIncomeCategories");
@@ -193,7 +231,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getPaymentMethods() async {
+  Future<List<BasicNameIdObjectModel>> getPaymentMethods() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getPaymentMethods");
@@ -209,7 +247,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getMedicalExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getMedicalExpensesCategories");
@@ -225,7 +263,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getNonMedicalNonStockExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalNonStockExpensesCategories");
@@ -241,7 +279,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getNonMedicalStockCategories() async {
+  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalStockCategories");
@@ -257,7 +295,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectEntity>> getSuppliers()async {
+  Future<List<BasicNameIdObjectModel>> getSuppliers() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getSuppliers");
@@ -271,4 +309,238 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
+
+  @override
+  Future<NoParams> addExpensesCategories(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/addExpensesCategories",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addImplantCompanies(String name) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/ImplantCompanies?name=$name",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addImplantLines(BasicNameIdObjectEntity value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(host: "$serverHost/$settingsController/implantLines?id=${value.id}&name=${value.name}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addImplants(UpdateImplantsParams value) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/implants?id=${value.lineId}",
+        body: value.data.map((e) => ImplantModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addIncomeCategories(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/addIncomeCategories",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addMembraneCompanies(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/AddMembraneCompanies",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addMembranes(AddMembraneParams value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/AddMembranes?id=${value.companyId}",
+        body: value.data.map((e) => MembraneModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addPaymentMethods(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/AddPaymentMethods",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addStockCategories(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/addStockCategories",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/addSuppliers",
+        body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> addTacsCompanies(List<TacCompanyEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/addTacsCompanies",
+        body: model.map((e) => TacCompanyModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(host: "$serverHost/$settingsController/changeImplantCompanyName?id=${value.id}&name=${value.name}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> changeImplantLineName(BasicNameIdObjectEntity value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(host: "$serverHost/$settingsController/changeImplantLineName?id=${value.id}&name=${value.name}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> editRooms(List<RoomEntity> model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/editRooms",
+        body: model.map((e) => RoomModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/editTreatmentPrices",
+        body: TreatmentPricesModel.fromEntity(prices).toJson(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getStockCategories() async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/GetStockCategories");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+
 }

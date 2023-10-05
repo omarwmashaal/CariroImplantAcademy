@@ -10,7 +10,6 @@ import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/Models/PaymentLogModel.dart';
 import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';

@@ -15,6 +15,8 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../../core/injection_contianer.dart';
+import '../../../../../Constants/Controllers.dart';
+import '../../../../../Controllers/SiteController.dart';
 import '../../../../../core/features/coreStock/domain/usecases/consumeItemById.dart';
 import '../../domain/usecase/consumeImplantUseCase.dart';
 import '../../domain/usecase/getTreatmentPlanUseCase.dart';
@@ -149,7 +151,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.simpleImplant!.status = true;
                     currentTooth.simpleImplant!.date = DateTime.now();
                     currentTooth.simpleImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.simpleImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -171,7 +173,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.immediateImplant!.status = true;
                     currentTooth.immediateImplant!.date = DateTime.now();
                     currentTooth.immediateImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.immediateImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -192,7 +194,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.guidedImplant!.status = true;
                     currentTooth.guidedImplant!.date = DateTime.now();
                     currentTooth.guidedImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.guidedImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -213,7 +215,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.expansionWithImplant!.status = true;
                     currentTooth.expansionWithImplant!.date = DateTime.now();
                     currentTooth.expansionWithImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.expansionWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -234,7 +236,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.splittingWithImplant!.status = true;
                     currentTooth.splittingWithImplant!.date = DateTime.now();
                     currentTooth.splittingWithImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.splittingWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -255,7 +257,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.gbrWithImplant!.status = true;
                     currentTooth.gbrWithImplant!.date = DateTime.now();
                     currentTooth.gbrWithImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.gbrWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -276,7 +278,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.openSinusWithImplant!.status = true;
                     currentTooth.openSinusWithImplant!.date = DateTime.now();
                     currentTooth.openSinusWithImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.openSinusWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -297,7 +299,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.closedSinusWithImplant!.status = true;
                     currentTooth.closedSinusWithImplant!.date = DateTime.now();
                     currentTooth.closedSinusWithImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.closedSinusWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -318,7 +320,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.expansionWithoutImplant!.status = true;
                     currentTooth.expansionWithoutImplant!.date = DateTime.now();
                     currentTooth.expansionWithoutImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.expansionWithoutImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -332,7 +334,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.splittingWithoutImplant!.status = true;
                     currentTooth.splittingWithoutImplant!.date = DateTime.now();
                     currentTooth.splittingWithoutImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
 
@@ -347,7 +349,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.gbrWithoutImplant!.status = true;
                     currentTooth.gbrWithoutImplant!.date = DateTime.now();
                     currentTooth.gbrWithoutImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.gbrWithoutImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -361,7 +363,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.openSinusWithoutImplant!.status = true;
                     currentTooth.openSinusWithoutImplant!.date = DateTime.now();
                     currentTooth.openSinusWithoutImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.openSinusWithoutImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -375,7 +377,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.closedSinusWithoutImplant!.status = true;
                     currentTooth.closedSinusWithoutImplant!.date = DateTime.now();
                     currentTooth.closedSinusWithoutImplant!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.closedSinusWithoutImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -390,7 +392,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.pontic!.status = true;
                     currentTooth.pontic!.date = DateTime.now();
                     currentTooth.pontic!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.pontic!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -404,7 +406,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.extraction!.status = true;
                     currentTooth.extraction!.date = DateTime.now();
                     currentTooth.extraction!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.extraction!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -418,7 +420,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.restoration!.status = true;
                     currentTooth.restoration!.date = DateTime.now();
                     currentTooth.restoration!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.restoration!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -432,7 +434,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.rootCanalTreatment!.status = true;
                     currentTooth.rootCanalTreatment!.date = DateTime.now();
                     currentTooth.rootCanalTreatment!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.rootCanalTreatment!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -446,7 +448,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.scaling!.status = true;
                     currentTooth.scaling!.date = DateTime.now();
                     currentTooth.scaling!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.scaling!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -460,7 +462,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.crown!.status = true;
                     currentTooth.crown!.date = DateTime.now();
                     currentTooth.crown!.doneByAssistant = BasicNameIdObjectEntity(
-                      name: sl<SharedPreferences>().getString("userName"),
+                      name: siteController.getUserName(),
                       id: sl<SharedPreferences>().getInt("userid"),
                     );
                     currentTooth.crown!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");

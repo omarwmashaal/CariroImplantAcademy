@@ -1,5 +1,4 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 import '../../Models/PatientInfo.dart';
-import 'Clinic_PatientMedicalPage.dart';
 
 class Clinic_PatientsSearchPage extends StatefulWidget {
   const Clinic_PatientsSearchPage({Key? key}) : super(key: key);
@@ -23,6 +21,7 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    return Container();/*
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: internalPagesController,
@@ -62,6 +61,6 @@ class _Clinic_PatientsSearchPageState extends State<Clinic_PatientsSearchPage> {
           patientID: patientID,
         )
       ],
-    );
+    );*/
   }
 }

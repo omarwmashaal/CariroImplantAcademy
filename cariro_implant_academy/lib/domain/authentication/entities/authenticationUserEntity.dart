@@ -10,6 +10,7 @@ class AuthenticationUserEntity extends Equatable {
   final String phone;
   final String role;
   final String token;
+  final int? profileId;
 
   @override
   // TODO: implement props
@@ -29,5 +30,6 @@ class AuthenticationUserEntity extends Equatable {
     required this.phoneNumber,
     required this.role,
     required this.phone,
+     this.profileId,
   });
 }

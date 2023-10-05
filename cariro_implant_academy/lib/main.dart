@@ -23,7 +23,6 @@ import 'package:cariro_implant_academy/Models/StockModel.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
@@ -37,6 +36,7 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
@@ -71,16 +71,12 @@ import 'Controllers/RolesController.dart';
 import 'Helpers/Router.dart';
 import 'Models/Enum.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
-import 'Pages/CIA_Pages/Patient_ViewPatientPage.dart';
-import 'Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
 import 'Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
-import 'Pages/SharedPages/PatientSharedPages.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
-import 'SignalR/Config.dart';
+import 'SignalR/SignalR.dart';
 import 'Widgets/CIA_PopUp.dart';
-import 'Widgets/CIA_TeethTreatmentWidget.dart';
 import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
 import 'package:logging/logging.dart';
@@ -95,7 +91,7 @@ void main() async {
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
-  Get.put(SiteController());
+  //Get.put(SiteController());
 
   /*
   List<String> logData = [];
@@ -123,6 +119,7 @@ void main() async {
     print("log exported");
   });*/
   init();
+  siteController = sl<SiteController>();
   runApp(
     BlocProvider<SiteChangeBloc>(
       create: (context) => sl<SiteChangeBloc>(),
@@ -159,6 +156,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<UsersBloc>()),
         BlocProvider(create: (context) => sl<StockBloc>()),
         BlocProvider(create: (context) => sl<CashFlowBloc>()),
+        BlocProvider(create: (context) => sl<SettingsBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

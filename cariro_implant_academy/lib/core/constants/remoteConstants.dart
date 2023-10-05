@@ -2,6 +2,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants/Colors.dart';
+import '../../Constants/Controllers.dart';
+import '../../Controllers/SiteController.dart';
 import '../../Models/Enum.dart';
 import '../injection_contianer.dart';
 
@@ -15,7 +17,7 @@ Map<String, String> headers() => <String, String>{
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-      "Authorization": "Bearer ${sl<SharedPreferences>().getString("token")}",
+      "Authorization": "Bearer ${siteController.getToken()}",
       "Site": sl<SharedPreferences>().getInt("Website").toString(),
     };
 

@@ -20,7 +20,6 @@ import '../../Widgets/CIA_TextFormField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 import '../../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
-import '../CIA_Pages/Patient_MedicalInfo.dart';
 
 class LAB_ViewRequestPage extends StatefulWidget {
   LAB_ViewRequestPage({Key? key, required this.id}) : super(key: key);
@@ -93,7 +92,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                       }),
                   SizedBox(width: 10),
                   Visibility(
-                    visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUser().idInt,
+                    visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
                     child: CIA_PrimaryButton(
                       label: "Waiting your action",
                       onTab: () async {

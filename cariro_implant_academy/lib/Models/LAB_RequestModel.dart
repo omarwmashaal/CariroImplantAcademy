@@ -320,7 +320,7 @@ class LabRequestDataSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
-              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUser().idInt ? "You" : e.assignedTo!.name),
+              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo!.name),
               DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
               DataGridCell<String>(columnName: 'Step', value: (e.steps ?? []).last.step!.name),
             ]))

@@ -34,8 +34,6 @@ import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 import '../../features/user/domain/entities/enum.dart';
 import '../LAB_Pages/LAB_LabRequestsSearch.dart';
-import 'PatientSharedPages.dart';
-
 class LabCreateNewRequestSharedPage extends StatefulWidget {
   LabCreateNewRequestSharedPage({Key? key, this.isDoctor = false, this.onChange, this.patient}) : super(key: key);
   static String routeName = "CreateRequest";
@@ -732,8 +730,8 @@ class _LabCreateNewRequestSharedPageState extends State<LabCreateNewRequestShare
   void initState() {
     globalSetState = setState;
     if (widget.isDoctor) {
-      labRequest.customer = siteController.getUser();
-      labRequest.customerId = siteController.getUser().idInt;
+     // labRequest.customer = siteController.getUser();
+      labRequest.customerId = siteController.getUserId();
       if (widget.patient != null) {
         labRequest.patient = DropDownDTO(name: widget.patient!.name, id: widget.patient!.id);
         labRequest.patientId = widget.patient!.id;

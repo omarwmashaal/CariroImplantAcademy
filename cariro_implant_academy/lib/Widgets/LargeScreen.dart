@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
@@ -7,7 +8,6 @@ import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_MyProfilePage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/Pages/NotificationsPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
@@ -16,6 +16,9 @@ import 'package:cariro_implant_academy/Widgets/AppBarBloc_States.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/features/user/presentation/pages/viewUserProfile.dart';
+import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
+import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +30,7 @@ import '../API/UserAPI.dart';
 import '../Constants/Colors.dart';
 import '../Models/NotificationModel.dart';
 import '../core/injection_contianer.dart';
+import '../core/presentation/widgets/LoadingWidget.dart';
 import 'CIA_DropDown2.dart';
 
 //TODO: Return to stateless
@@ -39,12 +43,23 @@ class CIA_LargeScreen extends StatefulWidget {
 }
 
 class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
+  late AppBarBloc appBarBloc;
+  late ImageBloc imageBlocProfilesss;
+
+  @override
+  void initState() {
+    imageBlocProfilesss = sl<ImageBloc>();
+    imageBlocProfilesss.reDownload = false;
+    if (siteController.getProfileImageId() != null)
+      imageBlocProfilesss.downloadImageEvent(siteController.getProfileImageId()!);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (pagesController.hasClients) pagesController.jumpToPage(0);
 
     if (GoRouter.of(context).location == "/") return AuthenticationPage();
-
     Logger("").log(Level.INFO, "Rebuilding large screen");
     return Row(
       children: [
@@ -66,8 +81,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                     child: BlocListener<AppBarBloc, AppBarBlocState>(
                       bloc: sl<AppBarBloc>(),
                       listener: (context, state) {
-                        if (state is AppBarNewNotificationState)
-                          BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
+                        if (state is AppBarNewNotificationState) BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -83,60 +97,65 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                           //GetBuilder<SiteController>(builder: (siteController) => siteController.appBarWidget),
                           Expanded(
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      context.goNamed(NotificationsPage.routeName);
-                                    },
-                                    child: Text("View All Notifications"),
-                                  ),
-                                  BlocBuilder<AppBarBloc,AppBarBlocState>(
-                                    buildWhen: (previous, current) => current is AppBarNewNotificationState || current is AppBarNotificationsLoadedState,
-                                    builder:(context, state) {
-                                      var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
-                                      return CIA_NotificationsWidget(
-                                        customButton: Icon(
-                                          Icons.notifications,
-                                          color: state is AppBarNewNotificationState ? Colors.red
-                                              : null,
-                                        ),
-                                        hint: "omar",
-                                        notifications:notifications ,
-                                      );
-                                    },),
-
-                                  SizedBox(width: 30),
-                                  /*CIA_FutureBuilder(loadFunction: () async {
-                              if (siteController.getUser().profileImageId != null && siteController.getProfilePicture() == null)
-                                Logger("").log(Level.INFO, "Download Image from large screen");
-                              await UserAPI.DownloadImage(siteController.getUser().profileImageId!).then(
-                                (value) {
-                                  if (value.statusCode == 200) siteController.setProfilePicture(base64Decode(value.result as String));
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  context.goNamed(NotificationsPage.routeName);
                                 },
-                              );
-                              return API_Response(statusCode: 200);
-                            }(), onSuccess: (data) {
-                              return GestureDetector(
-                                  onTap: () {
-                                    context.goNamed(ViewUserData.routeName, pathParameters: {"id": siteController.getUser().idInt.toString()});
-                                  },
-                                  child: siteController.getProfilePicture() == null
-                                      ? Image.asset("assets/user.png")
-                                      : ClipRRect(
-                                          borderRadius: BorderRadius.circular(500.0),
-                                          child: Image(
-                                            image: MemoryImage(
-                                              siteController.getProfilePicture()!,
-                                            ),
-                                          ),
-                                        ));
-                            }),*/
-                                  SizedBox(
-                                    width: 20,
-                                  )
-                                ],
-                              ))
+                                child: Text("View All Notifications"),
+                              ),
+                              BlocConsumer<AppBarBloc, AppBarBlocState>(
+                                listener: (context, state) {
+                                  if (state is AppBarMarkedNotificationsAsReadState) sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
+                                },
+                                buildWhen: (previous, current) => current is AppBarNewNotificationState || current is AppBarNotificationsLoadedState,
+                                builder: (context, state) {
+                                  var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
+                                  return CIA_NotificationsWidget(
+                                    markAsRead: () {
+                                      sl<AppBarBloc>().add(AppBarMarkAllNotificationsAsReadEvent());
+                                    },
+                                    customButton: Icon(
+                                      Icons.notifications,
+                                      color: state is AppBarNewNotificationState ? Colors.red : null,
+                                    ),
+                                    hint: "omar",
+                                    notifications: notifications,
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 30),
+                              BlocBuilder<ImageBloc, ImageBloc_State>(
+                                bloc: imageBlocProfilesss,
+                                builder: (context, state) {
+                                  Uint8List? image;
+                                  if (state is ImageLoadedState)
+                                    image = state.image;
+                                  else if (state is ImageDownloadingState)
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(500.0),
+                                      child: LoadingWidget(),
+                                    );
+                                  return GestureDetector(
+                                      onTap: () {
+                                        context.goNamed(ViewUserProfilePage.routeName, pathParameters: {"id": siteController.getUserId().toString()});
+                                      },
+                                      child: CircleAvatar(
+                                        //borderRadius: BorderRadius.circular(500.0),
+                                        backgroundImage: image == null ?
+                                            AssetImage("assets/user.png") as ImageProvider
+                                            : MemoryImage(
+                                                image!,
+                                              ),
+                                      ));
+                                },
+                              ),
+                              SizedBox(
+                                width: 20,
+                              )
+                            ],
+                          ))
                         ],
                       ),
                     ),

@@ -18,7 +18,6 @@ import '../Constants/Controllers.dart';
 import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
-import '../Pages/CIA_Pages/PatientsSearchPage.dart';
 import '../Pages/CIA_Pages/StockPage.dart';
 import '../Pages/Clinic_Pages/Clinic_CashFlowPage.dart';
 import '../Pages/Clinic_Pages/Clinic_DoctorsSearchPage.dart';
@@ -40,7 +39,7 @@ class PagesController extends PageController {
   static int previousIndex = 0;
 
   PageView MainPageRoutes() {
-    String role = siteController.getRole();
+    String role = siteController.getRole()!;
     switch (siteController.getSite()) {
       case Website.CIA:
         {
@@ -172,7 +171,7 @@ class PagesController extends PageController {
   }
 
   static List<SidebarXItem> DrawerItems(BuildContext context,SidebarXController controller) {
-    String role = siteController.getRole();
+    String role = siteController.getRole()!;
 
     switch (siteController.getSite()) {
       case Website.CIA:

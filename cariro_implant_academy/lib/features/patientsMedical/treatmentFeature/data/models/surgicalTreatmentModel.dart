@@ -202,7 +202,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     openSinusLiftFillMaterial = json['openSinusLift_FillMaterial'] ?? false;
     openSinusLiftFillMaterialString = json['openSinusLift_FillMaterial_String']??"";
     openSinusLift_MembraneID = json['openSinusLift_MembraneID'];
-    openSinusLift_Membrane = MembraneCompanyModel.fromJson(json['openSinusLift_Membrane']??Map<String,dynamic>());
+    openSinusLift_Membrane = MembraneModel.fromJson(json['openSinusLift_Membrane']??Map<String,dynamic>());
     openSinusLift_Membrane_CompanyID = json['openSinusLift_Membrane_CompanyID'];
     openSinusLift_Membrane_Company = json['openSinusLift_Membrane_Company'] != null ? new BasicNameIdObjectModel.fromJson(json['openSinusLift_Membrane_Company']) : null;
     openSinusLift_TacsCompany = TacCompanyModel.fromJson(json['openSinusLift_TacsCompany']??Map<String,dynamic>());

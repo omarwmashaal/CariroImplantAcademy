@@ -1,9 +1,7 @@
 import 'dart:ui';
 
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
-import 'package:cariro_implant_academy/Pages/SharedPages/PatientSharedPages.dart';
 
 import '../Helpers/Router.dart';
 import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';

@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                     padding: EdgeInsets.symmetric(horizontal: 20),
                                     child: GestureDetector(
                                       onTap:()async{
-                                        await siteController.removeToken();
+                                        await siteController.clearCach();
                                         setState(() {
                                         });
                                       },
@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Text("Welcome ",style: TextStyle(fontSize: 20),),
-                                                Text(siteController.getUser().name!,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                                //Text(siteController.getUser().name!,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
                                               ],
                                             ),
                                             Text("Click to log in with different account",style: TextStyle(fontSize: 15))

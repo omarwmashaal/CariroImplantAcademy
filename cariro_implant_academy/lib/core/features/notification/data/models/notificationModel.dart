@@ -1,8 +1,8 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/core/domain/entities/notificationEntity.dart';
+import 'package:cariro_implant_academy/core/features/notification/domain/entities/notificationEntity.dart';
 
-import '../../../Helpers/CIA_DateConverters.dart';
-import '../../../Models/Enum.dart';
+import '../../../../../Helpers/CIA_DateConverters.dart';
+import '../../../../../Models/Enum.dart';
 
 class NotificationModel extends NotificationEntity {
   NotificationModel({title, content, id, read, date, type, onClickAction, infoId})

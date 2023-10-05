@@ -9,7 +9,6 @@ import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -95,7 +94,7 @@ class _ViewUserDataState extends State<ViewUserData> {
                                         TitleWidget(title: "User Profile"),
                                         SizedBox(width: 10),
                                         () {
-                                          if (widget.userId == siteController.getUser().idInt) {
+                                          if (widget.userId == siteController.getUserId()) {
                                             return CIA_SecondaryButton(
                                                 label: "Reset Password",
                                                 onTab: () {

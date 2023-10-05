@@ -18,6 +18,14 @@ class RoomModel extends RoomEntity {
     name = json['name'] ?? "Unspecified";
     color = Color(json['color'] ?? 4288585374); //0xd3d3d3
   }
+  factory RoomModel.fromEntity(RoomEntity entity)
+  {
+    return RoomModel(
+      id: entity.id,
+      name: entity.name,
+      color: entity.color,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -1,10 +1,10 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
-import 'package:cariro_implant_academy/core/data/models/notificationModel.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/models/notificationModel.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 
-import '../../useCases/useCases.dart';
+import '../../../../useCases/useCases.dart';
 
 abstract class NotificationDataSource{
   Future<List<NotificationModel>> getNotifications();
@@ -42,9 +42,16 @@ class NotificationDataSourceImpl implements NotificationDataSource{
   }
 
   @override
-  Future<NoParams> markAllAsRead() {
-    // TODO: implement markAllAsRead
-    throw UnimplementedError();
+  Future<NoParams> markAllAsRead() async{
+    late StandardHttpResponse response;
+    try{
+      response = await httpRepo.post(host: "$serverHost/$notificationController/MarkAllAsRead");
+    }catch(e){
+      throw HttpInternalServerErrorException();
+    }
+    if(response.statusCode!=200)
+      throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    return NoParams();
   }
 
 }

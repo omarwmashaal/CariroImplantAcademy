@@ -3,10 +3,11 @@ import 'package:cariro_implant_academy/Controllers/RolesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
 
 import '../Controllers/PagesController.dart';
+import '../core/injection_contianer.dart';
 
 NavigationController navigationController = NavigationController.instance;
 PagesController pagesController = PagesController.instance;
 InternalPagesController internalPagesController =
     InternalPagesController.instance;
 RolesController rolesController = RolesController.instance;
-SiteController siteController = SiteController.instance;
+late SiteController siteController ;

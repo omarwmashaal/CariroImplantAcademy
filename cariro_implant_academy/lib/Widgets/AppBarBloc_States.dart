@@ -1,4 +1,4 @@
-import 'package:cariro_implant_academy/core/domain/entities/notificationEntity.dart';
+import 'package:cariro_implant_academy/core/features/notification/domain/entities/notificationEntity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -28,6 +28,19 @@ class AppBarChangedState extends AppBarBlocState{
   List<Object?> get props => [newAppBar];
 }
 class AppBarInitialState extends AppBarBlocState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}class AppBarMarkedNotificationsAsReadState extends AppBarBlocState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}
+class AppBarMarkedNotificationsAsReadErrorState extends AppBarBlocState{
+  final String message;
+  AppBarMarkedNotificationsAsReadErrorState({required this.message});
   @override
   // TODO: implement props
   List<Object?> get props => throw UnimplementedError();

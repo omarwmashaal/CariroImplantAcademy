@@ -20,6 +20,8 @@ import '../../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../../core/injection_contianer.dart';
+import '../../../../../Constants/Controllers.dart';
+import '../../../../../Controllers/SiteController.dart';
 import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
@@ -75,13 +77,13 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                   child: widget.isSurgical
                       ? RoundCheckBox(
                           isChecked: widget.fieldModel.status,
-                          onTap: sl<SharedPreferences>().getString("role") == "secretary"
+                          onTap: siteController.getRole == "secretary"
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
                                   if (selected!) {
                                     widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity(
-                                        name: sl<SharedPreferences>().getString("userName"), id: sl<SharedPreferences>().getInt("userid"));
+                                        name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
                                     widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                                     widget.fieldModel.date = DateTime.now().toUtc();
                                   } else {
@@ -185,13 +187,13 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 child: widget.isSurgical
                     ? RoundCheckBox(
                         isChecked: widget.fieldModel.status,
-                        onTap: sl<SharedPreferences>().getString("role") == "secretary"
+                        onTap: siteController.getRole == "secretary"
                             ? null
                             : (selected) {
                                 widget.fieldModel.status = selected;
                                 if (selected!) {
                                   widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity(
-                                      name: sl<SharedPreferences>().getString("userName"), id: sl<SharedPreferences>().getInt("userid"));
+                                      name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
                                   widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                                   widget.fieldModel.date = DateTime.now().toUtc();
                                 } else {

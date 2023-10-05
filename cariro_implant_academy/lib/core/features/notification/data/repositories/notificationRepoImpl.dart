@@ -1,6 +1,6 @@
-import 'package:cariro_implant_academy/core/data/dataSources/notificationDataSource.dart';
-import 'package:cariro_implant_academy/core/data/models/notificationModel.dart';
-import 'package:cariro_implant_academy/core/domain/repositories/notificationRepo.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/datasource/notificationDataSource.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/models/notificationModel.dart';
+import 'package:cariro_implant_academy/core/features/notification/domain/repositories/notificationRepo.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
@@ -27,9 +27,15 @@ class NotificationRepoImpl implements NotificationRepo{
   }
 
   @override
-  Future<Either<Failure, NoParams>> markAllAsRead() {
-    // TODO: implement markAllAsRead
-    throw UnimplementedError();
+  Future<Either<Failure, NoParams>> markAllAsRead() async {
+    try{
+      final result = await notificationDataSource.markAllAsRead();
+      return Right(result);
+    }
+    on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
   }
 
 }

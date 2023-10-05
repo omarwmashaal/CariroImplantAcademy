@@ -5,7 +5,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../core/domain/entities/notificationEntity.dart';
+import '../core/features/notification/domain/entities/notificationEntity.dart';
 
 class CIA_NotificationsWidget extends StatefulWidget {
   CIA_NotificationsWidget({
@@ -14,12 +14,15 @@ class CIA_NotificationsWidget extends StatefulWidget {
     this.customButton,
     this.childrenString,
     this.notifications,
+    required this.markAsRead,
   }) : super(key: key);
 
   String? hint;
   Widget? customButton;
   List<String>? childrenString;
   List<NotificationEntity>? notifications;
+
+  Function markAsRead;
 
   @override
   State<CIA_NotificationsWidget> createState() => _CIA_NotificationsWidgetState();
@@ -38,75 +41,75 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
         customButton: widget.customButton,
         hint: widget.hint != null
             ? Row(
-          children: [
-            Icon(
-              Icons.list,
-              size: 16,
-              color: Colors.yellow,
-            ),
-            SizedBox(
-              width: 4,
-            ),
-            Expanded(
-              child: Text(
-                widget.hint as String,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.yellow,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        )
-            : null,
-        items: (widget.notifications as List<NotificationEntity>)
-            .map((item) => DropdownMenuItem<NotificationEntity>(
-          value: item,
-          child: Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      item.title as String,
+                children: [
+                  Icon(
+                    Icons.list,
+                    size: 16,
+                    color: Colors.yellow,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.hint as String,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: ((item.read ?? false)) ? Colors.black : Colors.red,
+                        color: Colors.yellow,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Expanded(child: SizedBox()),
-                    Text(
-                      item.date as String,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: ((item.read ?? false)) ? Colors.black : Colors.red,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-                Text(
-                  item.content as String,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: ((item.read ?? false)) ? Colors.black : Colors.red,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Divider(),
-              ],
-            ),
-          ),
-        ))
+                ],
+              )
+            : null,
+        items: (widget.notifications as List<NotificationEntity>)
+            .map((item) => DropdownMenuItem<NotificationEntity>(
+                  value: item,
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              item.title as String,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: ((item.read ?? false)) ? Colors.black : Colors.red,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Expanded(child: SizedBox()),
+                            Text(
+                              item.date as String,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: ((item.read ?? false)) ? Colors.black : Colors.red,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        Text(
+                          item.content as String,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: ((item.read ?? false)) ? Colors.black : Colors.red,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Divider(),
+                      ],
+                    ),
+                  ),
+                ))
             .toList(),
         onChanged: (value) async {
           if (value != null && value.onClickAction != null && value.infoId != null) {
@@ -114,9 +117,8 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
           }
         },
         onMenuStateChange: (isOpen) async {
-          siteController.newNotification.value = false;
-          await NotificationsAPI.MarkAllAsRead();
-          if (!isOpen) await NotificationsAPI.GetNotifications();
+          //siteController.newNotification.value = false;
+          if (isOpen) widget.markAsRead();
         },
         dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
@@ -132,9 +134,7 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
             thumbVisibility: MaterialStateProperty.all<bool>(true),
           ),
         ),
-        menuItemStyleData: MenuItemStyleData(
-            height: 70
-        ),
+        menuItemStyleData: MenuItemStyleData(height: 70),
         /*  icon: widget.hint != null
             ? const Icon(
                 Icons.arrow_forward_ios_outlined,

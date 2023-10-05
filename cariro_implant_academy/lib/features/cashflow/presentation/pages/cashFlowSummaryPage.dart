@@ -59,15 +59,14 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
         if (state is CashFlowBloC_LoadedCashFlowSummarySuccessfullyState) {
           widget.eS_dataSource.updateData(state.data.expenses ?? []);
           widget.iS_dataSource.updateData(state.data.income ?? []);
+        } else if (state is CashFlowBloC_ProcessingCashFlowSuccessfullyState) {
+          Navigator.of(context, rootNavigator: true).pop();
+          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
         }
-        else if(state is CashFlowBloC_ProcessingCashFlowSuccessfullyState)
-          {
-            Navigator.of(context,rootNavigator: true).pop();
-            bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
-          }
-        if(state is CashFlowBloC_ProcessingCashFlowState)
+        if (state is CashFlowBloC_ProcessingCashFlowState)
           CustomLoader.show(context);
-        else CustomLoader.hide();
+        else
+          CustomLoader.hide();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -289,13 +288,13 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
                 CIA_PrimaryButton(
                     label: "Add Settlement",
                     onTab: () {
-                      String _filter="This month";
+                      String _filter = "This month";
                       //                  int newValue = _getXController.expensesSum.value - _getXController.incomeSum.value;
                       int newValue = expensesTotal - incomeTotal;
                       CIA_ShowPopUp(
-                        onSave: ()  {
+                        onSave: () {
                           bloc.add(CashFlowBloc_AddSettlementEvent(filter: _filter, value: newValue));
-return false;
+                          return false;
                         },
                         context: context,
                         child: Column(

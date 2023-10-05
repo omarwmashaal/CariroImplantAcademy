@@ -27,6 +27,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../../../Constants/Controllers.dart';
+import '../../../../Controllers/SiteController.dart';
 import '../../../../Helpers/CIA_DateConverters.dart';
 import '../../../../Widgets/CIA_DropDown.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
@@ -94,7 +96,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             to: element.date!.add(Duration(minutes: 15)),
             patientId: patient.id,
             reservationTime: element.date,
-            doctorName: !widget.getForDoctor ? null : sl<SharedPreferences>().getString("userName"),
+            doctorName: !widget.getForDoctor ? null : siteController.getUserName(),
             doctorId: !widget.getForDoctor ? null : sl<SharedPreferences>().getInt("userid"),
             patientName: patient.name);
 
@@ -259,7 +261,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     selectedItem: !widget.getForDoctor
                         ? null
                         : BasicNameIdObjectEntity(
-                            name: sl<SharedPreferences>().getString("userName") ?? "",
+                            name: siteController.getUserName() ?? "",
                             id: sl<SharedPreferences>().getInt("userid") ?? 0,
                           ),
                     //asyncItems: !widget.getForDoctor ? LoadinAPI.LoadInstructorsAndAssistants : null,

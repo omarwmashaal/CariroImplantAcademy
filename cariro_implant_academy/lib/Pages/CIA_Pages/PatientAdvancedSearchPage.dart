@@ -9,7 +9,6 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_ViewPatientPage.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,8 +27,6 @@ import '../../Widgets/Horizontal_RadioButtons.dart';
 import '../../Widgets/Title.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
-import '../SharedPages/PatientSharedPages.dart';
-import 'Patient_MedicalInfo.dart';
 
 class PatientAdvancedSearchPage extends StatefulWidget {
   PatientAdvancedSearchPage({Key? key, this.treatments = false}) : super(key: key);
@@ -103,7 +100,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                           label: "Load Last Filter",
                           onTab: () {
                             searchDTO = siteController.searchPatientQuery;
-                            columns = siteController.searchPatientColumn;
+                           // columns = siteController.searchPatientColumn;
                             dataSource_patients.loadData(msearchDTO: searchDTO).then((value) => setState(() {
                                   columns = value;
                                 }));
@@ -587,7 +584,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                   dataSource_patients.loadData(msearchDTO: searchDTO).then((value) => setState(() {
                                         columns = value;
                                       }));
-                                  siteController.searchPatientColumn = columns;
+                                 // siteController.searchPatientColumn = columns;
                                   siteController.searchPatientQuery = searchDTO;
                                 });
                           }),

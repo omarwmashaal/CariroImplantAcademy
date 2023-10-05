@@ -34,6 +34,8 @@ import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Constants/Controllers.dart';
+import '../../../../Controllers/SiteController.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
 import '../../../../Widgets/SnackBar.dart';
 import '../../../../core/constants/enums/enums.dart';
@@ -101,7 +103,7 @@ class _PatientProfileComplainsPageState extends State<PatientProfileComplainsPag
                     child: Row(
                       children: [
                         FormTextKeyWidget(secondaryInfo: true, smallFont: true, text: "Entered By: "),
-                        FormTextValueWidget(secondaryInfo: true, smallFont: true, text: sl<SharedPreferences>().getString("userName")),
+                        FormTextValueWidget(secondaryInfo: true, smallFont: true, text: siteController.getUserName()),
                       ],
                     ),
                   ),

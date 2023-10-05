@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BigErrorPageWidget extends StatelessWidget {
-  BigErrorPageWidget({Key? key,required this.message}) : super(key: key);
+  BigErrorPageWidget({Key? key,required this.message,this.fontSize=100}) : super(key: key);
   final String message;
+  double fontSize;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -12,7 +13,7 @@ class BigErrorPageWidget extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
             fontWeight: FontWeight.w800,
-            fontSize: 100,
+            fontSize: fontSize,
             color: Colors.grey
         ),
       ),

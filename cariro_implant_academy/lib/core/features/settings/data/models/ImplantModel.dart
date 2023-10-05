@@ -13,6 +13,18 @@ class ImplantModel extends ImplantEntity {
     super.stockItemId,
   });
 
+  factory ImplantModel.fromEntity(ImplantEntity entity)
+  {
+    return ImplantModel(
+      id: entity.id,
+      name: entity.name,
+      count: entity.count,
+      size: entity.size,
+      stockItem: entity.stockItem,
+      stockItemId: entity.stockItemId,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;

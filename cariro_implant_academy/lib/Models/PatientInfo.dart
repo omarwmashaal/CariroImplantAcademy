@@ -146,7 +146,7 @@ class PatientDataSource extends DataGridSource {
           DataGridCell<Widget>(
             columnName: 'Add to my patients',
             value: Center(
-              child: e.doctorId == siteController.getUser().idInt
+              child: e.doctorId == siteController.getUserId()
                   ? IconButton(
                 icon: Icon(Icons.remove),
                 onPressed: () async {

@@ -103,6 +103,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               height: 10,
                             ),
                             BlocBuilder<ImageBloc, ImageBloc_State>(
+                              bloc: blocImage,
                               builder: (context, state) {
                                 if (state is ImageLoadingState) {
                                   return LoadingWidget();

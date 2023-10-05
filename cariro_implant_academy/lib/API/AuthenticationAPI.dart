@@ -8,7 +8,7 @@ import 'package:signalr_netcore/hub_connection.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/DTOs/LoginResponseDTO.dart';
-import '../SignalR/Config.dart';
+import '../SignalR/SignalR.dart';
 import 'HTTP.dart';
 import 'UserAPI.dart';
 
@@ -23,14 +23,14 @@ class AuthenticationAPI {
       SharedPreferences.getInstance().then((value) {
         value.setString("token", loginResponse!.token!);
       });
-      siteController.setUser(loginResponse.user!);
-      await SignalR.runConfig();
-      if(siteController.notifications.value.isEmpty)
-        await NotificationsAPI.GetNotifications();
+      //siteController.setUser(loginResponse.user!);
+      //await SignalR.runConfig();
+   //   if(siteController.notifications.value.isEmpty)
+     //   await NotificationsAPI.GetNotifications();
     }
     else{
-      await siteController.removeToken();
-      siteController.setUser(ApplicationUserModel());
+      await siteController.clearCach();
+ //     siteController.setUser(ApplicationUserModel());
     }
     return response;
   }
@@ -58,22 +58,22 @@ class AuthenticationAPI {
     if(response.statusCode==200)
       {
         siteController.setRole((response.result as Map<String,dynamic>)['role'] as String);
-        var user = siteController.getUser();
-        user.name = (response.result as Map<String,dynamic>)['name'] as String;
-        user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
-        user.phoneNumber = (((response.result as Map<String,dynamic>)['phoneNumber'])??"") as String;
-        user.profileImageId = (((response.result as Map<String,dynamic>)['profileImageId'])??"") as int;
+   //     var user = siteController.getUser();
+     //   user.name = (response.result as Map<String,dynamic>)['name'] as String;
+      //  user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
+       // user.phoneNumber = (((response.result as Map<String,dynamic>)['phoneNumber'])??"") as String;
+       // user.profileImageId = (((response.result as Map<String,dynamic>)['profileImageId'])??"") as int;
 
-        if(!SignalR.checkConnection())
-          {
-            await SignalR.runConfig();
-          }
+       // if(!SignalR.checkConnection())
+       //   {
+          //  await SignalR.runConfig();
+       //   }
         NotificationsAPI.GetNotifications();
       }
     else {
       siteController.setRole("");
-      siteController.setUser(ApplicationUserModel());
-      await siteController.removeToken();
+     // siteController.setUser(ApplicationUserModel());
+      await siteController.clearCach();
     }
     return response;
   }

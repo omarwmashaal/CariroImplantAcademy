@@ -16,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../Constants/Controllers.dart';
+import '../../../../../Controllers/SiteController.dart';
 import '../../../../../Models/DTOs/DropDownDTO.dart';
 import '../../../../../Widgets/CIA_CheckBoxWidget.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
@@ -198,7 +200,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                         diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity(
                                                             operatorId: sl<SharedPreferences>().getInt("userid"),
                                                             operator: BasicNameIdObjectEntity(
-                                                              name: sl<SharedPreferences>().getString("userName"),
+                                                              name: siteController.getUserName(),
                                                               id: sl<SharedPreferences>().getInt("userid"),
                                                             )));
                                                       });

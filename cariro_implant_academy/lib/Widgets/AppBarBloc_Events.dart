@@ -21,3 +21,8 @@ class AppBarGetNotificationsEvent extends AppBarBlocEvents{
   // TODO: implement props
   List<Object?> get props => [];
 }
+class AppBarMarkAllNotificationsAsReadEvent extends AppBarBlocEvents{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}

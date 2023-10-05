@@ -1,5 +1,8 @@
 
 import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/SignalR/SignalR.dart';
+import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
+import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocEvents.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
@@ -42,7 +45,11 @@ class AuthenticationPage extends StatelessWidget {
             CustomLoader.show(context);
           else if (state is ErrorState)
             ShowSnackBar(context, isSuccess: false, message: state.message);
-          else if (state is LoggedIn) context.goNamed(PatientsSearchPage.routeName);
+          else if (state is LoggedIn) {
+            sl<SignalR>();
+            sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
+            context.goNamed(PatientsSearchPage.routeName);
+          }
           if (state is! LoggingInState) CustomLoader.hide();
         },
         child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(

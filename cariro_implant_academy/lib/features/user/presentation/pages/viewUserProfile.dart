@@ -9,7 +9,6 @@ import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/Patient_MedicalInfo.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -110,6 +109,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
             },
           ),
           BlocListener<ImageBloc, ImageBloc_State>(
+            bloc: imageBloc,
             listener: (context, state) {
               if (state is ImageUploadedState) bloc.add(UsersBloc_GetUserInfoEvent(id: widget.userId));
             },
@@ -526,6 +526,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                       child: Column(
                                         children: [
                                           BlocBuilder<ImageBloc, ImageBloc_State>(
+                                            bloc: imageBloc,
                                             buildWhen: (previous, current) =>
                                             current is ImageDownloadingState ||
                                                 current is ImageLoadedState ||

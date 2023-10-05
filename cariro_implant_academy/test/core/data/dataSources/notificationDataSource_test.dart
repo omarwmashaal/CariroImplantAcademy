@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
-import 'package:cariro_implant_academy/core/data/dataSources/notificationDataSource.dart';
-import 'package:cariro_implant_academy/core/data/models/notificationModel.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/datasource/notificationDataSource.dart';
+import 'package:cariro_implant_academy/core/features/notification/data/models/notificationModel.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

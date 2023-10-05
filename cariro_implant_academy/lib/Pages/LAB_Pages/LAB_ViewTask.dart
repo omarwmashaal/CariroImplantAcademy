@@ -26,7 +26,6 @@ import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Title.dart';
 import '../../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../../features/user/domain/entities/enum.dart';
-import '../CIA_Pages/Patient_MedicalInfo.dart';
 
 class _getx extends GetxController {
   static RxInt totalPrice = 0.obs;
@@ -416,7 +415,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                           ),
                                         ],
                                       )
-                                    : request.assignedToId == siteController.getUser().idInt
+                                    : request.assignedToId == siteController.getUserId()
                                         ? Column(
                                             children: [
                                               CIA_TextFormField(
@@ -479,7 +478,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                   var res = await LAB_RequestsAPI.FinishTask(
                                                       id: widget.id,
                                                       nextTaskId: nextTaskId,
-                                                      assignToId: nextAssignId ?? siteController.getUser().idInt,
+                                                      assignToId: nextAssignId ?? siteController.getUserId(),
                                                       notes: thisStepNotes);
                                                   thisStepNotes = null;
                                                   nextAssignId = null;
@@ -555,7 +554,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                           ),
                         ),
                         Visibility(
-                          visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUser().idInt,
+                          visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
                           child: CIA_PrimaryButton(
                             label: "Waiting your action",
                             onTab: () async {

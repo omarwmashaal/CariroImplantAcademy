@@ -31,7 +31,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return CIA_FutureBuilder(
       loadFunction: NotificationsAPI.GetNotifications(),
       onSuccess: (date) {
-        notifications = siteController.notifications.value;
+      //  notifications = siteController.notifications.value;
         NotificationsAPI.MarkAllAsRead();
         if (notificationType != null) {
           notifications.removeWhere((element) => element.type != notificationType!);

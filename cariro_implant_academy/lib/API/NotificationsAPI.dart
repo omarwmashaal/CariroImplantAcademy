@@ -11,7 +11,7 @@ class NotificationsAPI{
     if(response.statusCode==200)
       {
         response.result = (response.result as List<dynamic>).map((e) => NotificationModel.fromJson(e??Map<String,dynamic>())).toList();
-        siteController.notifications.value = response.result as List<NotificationModel>;
+       // siteController.notifications.value = response.result as List<NotificationModel>;
       }
     return response;
   }
