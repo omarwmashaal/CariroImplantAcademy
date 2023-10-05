@@ -13,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-
 class UserEntity extends Equatable {
   String? name;
   DateTime? dateOfBirth;
@@ -63,11 +62,15 @@ class UserEntity extends Equatable {
     this.profileImageId,
     this.phoneNumber,
     this.workPlaceEnum,
+    this.batch,
+    this.batchId,
+    this.workPlace,
+    this.workPlaceId,
   });
 
   @override
   List<Object?> get props => [
-        this.name ,
+        this.name,
         this.role,
         this.dateOfBirth,
         this.gender,

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
-import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/models/AuthenticationUserModel.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

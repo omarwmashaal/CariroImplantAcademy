@@ -35,6 +35,7 @@ import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
+import '../core/features/settings/pages/presentation/UserSettingsPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../core/injection_contianer.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
@@ -53,7 +54,7 @@ import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
-import '../presentation/authentication/pages/authentication_page.dart';
+import '../core/features/authentication/presentation/pages/authentication_page.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../presentation/patientsMedical/pages/medicalInfoShellPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';

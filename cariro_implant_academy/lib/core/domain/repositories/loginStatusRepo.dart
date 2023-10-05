@@ -1,4 +1,4 @@
-import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../error/failure.dart';

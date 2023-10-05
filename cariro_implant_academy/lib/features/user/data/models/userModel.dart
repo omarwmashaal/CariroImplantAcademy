@@ -4,9 +4,9 @@ import 'package:intl/intl.dart';
 
 import '../../../../Models/Enum.dart';
 
-class UserModel extends UserEntity{
+class UserModel extends UserEntity {
   UserModel({
-    super.name ,
+    super.name,
     super.role,
     super.dateOfBirth,
     super.gender,
@@ -26,38 +26,41 @@ class UserModel extends UserEntity{
     super.profileImageId,
     super.phoneNumber,
     super.workPlaceEnum,
-});
+    super.batch,
+    super.batchId,
+  });
 
-  factory UserModel.fromEntity(UserEntity entity)
-  {
+  factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
-      name:entity.name ,
-      role:entity.role,
-      dateOfBirth:entity.dateOfBirth,
-      gender:entity.gender,
-      graduatedFrom:entity.graduatedFrom,
-      classYear:entity.classYear,
-      speciality:entity.speciality,
-      maritalStatus:entity.maritalStatus,
-      address:entity.address,
-      city:entity.city,
-      idInt:entity.idInt,
-      registeredById:entity.registeredById,
-      registeredBy:entity.registeredBy,
-      registerationDate:entity.registerationDate,
-      id:entity.id,
-      userName:entity.userName,
-      email:entity.email,
-      profileImageId:entity.profileImageId,
-      phoneNumber:entity.phoneNumber,
-      workPlaceEnum:entity.workPlaceEnum,
+      name: entity.name,
+      batch: entity.batch,
+      batchId: entity.batchId,
+      role: entity.role,
+      dateOfBirth: entity.dateOfBirth,
+      gender: entity.gender,
+      graduatedFrom: entity.graduatedFrom,
+      classYear: entity.classYear,
+      speciality: entity.speciality,
+      maritalStatus: entity.maritalStatus,
+      address: entity.address,
+      city: entity.city,
+      idInt: entity.idInt,
+      registeredById: entity.registeredById,
+      registeredBy: entity.registeredBy,
+      registerationDate: entity.registerationDate,
+      id: entity.id,
+      userName: entity.userName,
+      email: entity.email,
+      profileImageId: entity.profileImageId,
+      phoneNumber: entity.phoneNumber,
+      workPlaceEnum: entity.workPlaceEnum,
     );
   }
 
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     profileImageId = json['profileImageId'];
-    dateOfBirth = DateTime.tryParse(json['dateOfBirth']??"")?.toLocal();
+    dateOfBirth = DateTime.tryParse(json['dateOfBirth'] ?? "")?.toLocal();
     gender = json['gender'];
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
@@ -78,8 +81,8 @@ class UserModel extends UserEntity{
     }
 
     registeredById = json['registeredById'];
-    registeredBy = json['registeredBy'] == null ?null : BasicNameIdObjectModel.fromJson(json['registeredBy']);
-    registerationDate = DateTime.tryParse(json['registerationDate']??"")?.toLocal();
+    registeredBy = json['registeredBy'] == null ? null : BasicNameIdObjectModel.fromJson(json['registeredBy']);
+    registerationDate = DateTime.tryParse(json['registerationDate'] ?? "")?.toLocal();
     workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum'] ?? 0];
     /*try{
       id = json['id'];
@@ -100,7 +103,7 @@ class UserModel extends UserEntity{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
-    data['dateOfBirth'] =this.dateOfBirth==null?null:DateFormat("yyyy-MM-dd").format(this.dateOfBirth!);
+    data['dateOfBirth'] = this.dateOfBirth == null ? null : DateFormat("yyyy-MM-dd").format(this.dateOfBirth!);
     data['gender'] = this.gender;
     data['graduatedFrom'] = this.graduatedFrom;
     data['classYear'] = this.classYear;
@@ -117,7 +120,7 @@ class UserModel extends UserEntity{
     data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     data['batchId'] = this.batchId;
-    data['batch'] = this.batch;
+    data['batch'] = this.batch==null?null:BasicNameIdObjectModel.fromEntity(this.batch!).toJson();
     data['role'] = this.role ?? "";
     data['phoneNumber2'] = this.phoneNumber2;
     data['workPlace'] = this.workPlace != null ? BasicNameIdObjectModel.fromEntity(this.workPlace!).toJson() : null;
@@ -125,5 +128,4 @@ class UserModel extends UserEntity{
     data['workPlaceEnum'] = (this.workPlaceEnum ?? EnumLabRequestSources.CIA).index;
     return data;
   }
-
 }

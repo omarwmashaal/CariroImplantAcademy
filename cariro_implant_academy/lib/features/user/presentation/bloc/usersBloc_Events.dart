@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswo
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/enum.dart';
+import '../../domain/usecases/changeRoleUseCase.dart';
 import '../../domain/usecases/getUsersSessions.dart';
 
 abstract class UsersBloc_Events extends Equatable {}
@@ -21,6 +22,22 @@ class UsersBloc_GetUserInfoEvent extends UsersBloc_Events {
   final int id;
 
   UsersBloc_GetUserInfoEvent({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+class UsersBloc_ChangeRoleEvent extends UsersBloc_Events {
+ final ChangeRoleParams params;
+
+  UsersBloc_ChangeRoleEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
+}
+class UsersBloc_ResetPasswordForUserEvent extends UsersBloc_Events {
+  final int id;
+
+  UsersBloc_ResetPasswordForUserEvent({required this.id});
 
   @override
   List<Object?> get props => [id];

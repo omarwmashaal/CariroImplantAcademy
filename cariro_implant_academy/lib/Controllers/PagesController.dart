@@ -27,6 +27,7 @@ import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
@@ -70,7 +71,7 @@ class PagesController extends PageController {
                 child: CashFlowsSearchPage(),
               ),
               Container(
-                child: CIA_SettingsPage(),
+                child: SettingsPage(),
               ),
             ],
           );

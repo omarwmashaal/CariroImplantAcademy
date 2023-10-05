@@ -35,6 +35,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
@@ -157,6 +158,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<StockBloc>()),
         BlocProvider(create: (context) => sl<CashFlowBloc>()),
         BlocProvider(create: (context) => sl<SettingsBloc>()),
+        BlocProvider(create: (context) => sl<AuthenticationBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

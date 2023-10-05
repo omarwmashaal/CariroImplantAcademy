@@ -1,10 +1,11 @@
 enum UserRoles {
   Admin,
-  Assistant,
   Instructor,
+  Assistant,
+
+  Candidate,
   Secretary,
+  LabModerator,
   Technician,
   OutSource,
-  Candidate,
-  LabModerator,
 }

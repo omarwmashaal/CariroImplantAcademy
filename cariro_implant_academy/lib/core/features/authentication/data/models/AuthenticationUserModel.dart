@@ -1,8 +1,8 @@
-import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
 
-import '../../../Models/Enum.dart';
-import '../../../core/data/models/BasicNameIdObjectModel.dart';
-import '../../../core/domain/entities/BasicNameIdObjectEntity.dart';
+import '../../../../../Models/Enum.dart';
+import '../../../../data/models/BasicNameIdObjectModel.dart';
+import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 
 class AuthenticationUserModel extends AuthenticationUserEntity {
   AuthenticationUserModel({

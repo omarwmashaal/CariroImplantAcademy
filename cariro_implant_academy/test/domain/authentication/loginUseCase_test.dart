@@ -1,9 +1,9 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
-import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
-import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/repositories/authenticationRepo.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

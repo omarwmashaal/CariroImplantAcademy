@@ -16,6 +16,8 @@ abstract class UserDatasource {
 
   Future<NoParams> updateUserInfo(int id, UserEntity userData);
 
+  Future<NoParams> changeRole(int id, String role);
+
   Future<NoParams> resetPassword({required String newPassword1, required String newPassword2, required String oldPassword});
 
   Future<List<VisitModel>> getSessionsDurations(DateTime? from, DateTime? to, int id);
@@ -93,8 +95,8 @@ class UserDatasourceImpl extends UserDatasource {
   Future<List<VisitModel>> getSessionsDurations(DateTime? from, DateTime? to, int id) async {
     late StandardHttpResponse response;
     String query = "id=$id";
-    if(from!=null) query+= "${query==""?"":"&"}from=${DateFormat("yyyy-MM-dd").format(from)}";
-    if(to!=null) query+= "${query==""?"":"&"}to=${DateFormat("yyyy-MM-dd").format(to)}";
+    if (from != null) query += "${query == "" ? "" : "&"}from=${DateFormat("yyyy-MM-dd").format(from)}";
+    if (to != null) query += "${query == "" ? "" : "&"}to=${DateFormat("yyyy-MM-dd").format(to)}";
 
     try {
       response = await httpRepo.get(
@@ -104,13 +106,25 @@ class UserDatasourceImpl extends UserDatasource {
       throw mapException(e);
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
-    try{
-      return ((response.body??[]) as List<dynamic>).map((e) => VisitModel.fromJson(e as Map<String,dynamic>)).toList();
-    }
-    catch(e)
-    {
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => VisitModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
+  @override
+  Future<NoParams> changeRole(int id, String role) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$userController/ChangeRole?id=$id&role=$role",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
 }

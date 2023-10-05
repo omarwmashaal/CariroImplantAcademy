@@ -19,6 +19,7 @@ import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatch
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/selectImageUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/registerUserUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/data/datasource/receiptsDatasource.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/data/repositories/receiptRepoImpl.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/repositories/receiptReposiotry.dart';
@@ -60,10 +61,10 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
-import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
-import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
-import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
-import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/datasources/aut_ASP_DataSource.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/repositories/authenticationRepoImpl.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/repositories/authenticationRepo.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/datasources/cashFlowDatasources.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cashFlowRepository.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';
@@ -149,13 +150,14 @@ import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBlo
 import 'package:cariro_implant_academy/features/user/data/datasource/userDatasource.dart';
 import 'package:cariro_implant_academy/features/user/data/repositories/userRepository.dart';
 import 'package:cariro_implant_academy/features/user/domain/repositories/userRepository.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUserDataUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByRoleUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/updateUserInfoUseCase.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc.dart';
-import 'package:cariro_implant_academy/presentation/authentication/bloc/authentication_bloc.dart';
+import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalPagesStatesChangesBloc.dart';
@@ -195,6 +197,7 @@ import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientPros
 import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase.dart';
 import '../features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'data/repositories/imageRepoImpl.dart';
+import 'features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
 import 'features/settings/domain/useCases/addExpensesCategoriesUseCase.dart';
 import 'features/settings/domain/useCases/addImplantCompaniesUseCase.dart';
 import 'features/settings/domain/useCases/addImplantLinesUseCase.dart';
@@ -419,10 +422,13 @@ init() async {
   sl.registerFactory(() => AuthenticationBloc(
         loginUseCase: sl(),
         checkLoginStatusUseCase: sl(),
+    registerUserUseCase: sl(),
       ));
   //use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => CheckLoginStatusUseCase(sl()));
+  sl.registerLazySingleton(() => RegisterUserUseCase(sl()));
+  sl.registerLazySingleton(() => ResetPasswordForUserUseCase(sl()));
   //repos
   sl.registerLazySingleton<AuthenticationRepo>(() => AuthenticationRepoImpl(sl()));
   sl.registerLazySingleton<CheckLoginStatusRepo>(() => LoginStatusRepoImpl(sl()));
@@ -701,6 +707,8 @@ init() async {
         getUserInfoUseCase: sl(),
         resetPasswordUseCase: sl(),
         getUsersSessionsUseCase: sl(),
+    resetPasswordForUserUseCase: sl(),
+    changeRoleUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -708,6 +716,7 @@ init() async {
   sl.registerLazySingleton(() => GetUserDataUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => ResetPasswordUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => GetUsersSessionsUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => ChangeRoleUseCase(usersRepository: sl()));
   //repo
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
   //DATASOURCE

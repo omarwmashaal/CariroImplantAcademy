@@ -11,6 +11,7 @@ abstract class UsersRepository {
   Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch});
 
   Future<Either<Failure, NoParams>> updateUserInfo(int id, UserEntity userData);
+  Future<Either<Failure, NoParams>> changeRole(int id, String role);
 
   Future<Either<Failure, NoParams>> resetPassword({required String newPassword1, required String newPassword2, required String oldPassword});
 

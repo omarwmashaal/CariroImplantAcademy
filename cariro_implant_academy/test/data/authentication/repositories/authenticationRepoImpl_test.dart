@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
-import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
-import 'package:cariro_implant_academy/data/authentication/repositories/authenticationRepoImpl.dart';
-import 'package:cariro_implant_academy/domain/authentication/entities/authenticationUserEntity.dart';
-import 'package:cariro_implant_academy/domain/authentication/repositories/authenticationRepo.dart';
-import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/datasources/aut_ASP_DataSource.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/models/AuthenticationUserModel.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/repositories/authenticationRepoImpl.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/repositories/authenticationRepo.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';

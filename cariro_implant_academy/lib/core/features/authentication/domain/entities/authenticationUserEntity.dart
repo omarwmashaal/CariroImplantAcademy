@@ -1,7 +1,7 @@
-import '../../../../Models/Enum.dart';
+import '../../../../../../Models/Enum.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/domain/entities/BasicNameIdObjectEntity.dart';
+import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 
 class AuthenticationUserEntity extends Equatable {
   final String name;

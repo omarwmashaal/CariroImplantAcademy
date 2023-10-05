@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
-import 'package:cariro_implant_academy/data/authentication/dataSources/aut_ASP_DataSource.dart';
-import 'package:cariro_implant_academy/data/authentication/models/AuthenticationUserModel.dart';
-import 'package:cariro_implant_academy/domain/authentication/useCases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/datasources/aut_ASP_DataSource.dart';
+import 'package:cariro_implant_academy/core/features/authentication/data/models/AuthenticationUserModel.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:http/http.dart' as http;

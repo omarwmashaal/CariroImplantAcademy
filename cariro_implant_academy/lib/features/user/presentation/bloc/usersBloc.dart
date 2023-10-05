@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_Events.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_States.dart';
@@ -24,6 +26,8 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
   final UpdateUserInfoUseCase updateUserInfoUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final GetUsersSessionsUseCase getUsersSessionsUseCase;
+  final ResetPasswordForUserUseCase resetPasswordForUserUseCase;
+  final ChangeRoleUseCase changeRoleUseCase;
   bool edit = false;
 
   UsersBloc({
@@ -32,6 +36,8 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
     required this.getUserInfoUseCase,
     required this.resetPasswordUseCase,
     required this.getUsersSessionsUseCase,
+    required this.changeRoleUseCase,
+    required this.resetPasswordForUserUseCase,
   }) : super(UsersBloc_LoadingUserState()) {
     on<UsersBloc_GetUserInfoEvent>(
       (event, emit) async {
@@ -91,10 +97,33 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
         );
       },
     );
-    on<UsersBloc_SwitchEditViewEvent>((event, emit) {
-      edit = event.edit;
-      emit(UsersBloc_SwitchEditViewModeState(edit: edit,user: event.user));
-    },);
+    on<UsersBloc_SwitchEditViewEvent>(
+      (event, emit) {
+        edit = event.edit;
+        emit(UsersBloc_SwitchEditViewModeState(edit: edit, user: event.user));
+      },
+    );
+
+    on<UsersBloc_ResetPasswordForUserEvent>(
+      (event, emit) async {
+        emit(UsersBloc_ResettingPasswordForUserState());
+        final result = await resetPasswordForUserUseCase(event.id);
+        result.fold(
+          (l) => emit(UsersBloc_ResettingPasswordForUserErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_ResetPasswordForUserSuccessfullyState()),
+        );
+      },
+    );
+    on<UsersBloc_ChangeRoleEvent>(
+      (event, emit) async {
+        emit(UsersBloc_ChangingRoleState());
+        final result = await changeRoleUseCase(event.params);
+        result.fold(
+          (l) => emit(UsersBloc_ChangingRoleErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_ChangedRoleSuccessfullyState()),
+        );
+      },
+    );
   }
 }
 
@@ -109,7 +138,7 @@ class UsersDataGridSource extends DataGridSource {
     "Phone",
   ];
 
-  /// Creates the visit data source class with required details.
+  ///Creates the visit data source class with required details.
   UsersDataGridSource({
     required this.type,
     required this.usersBloc,
@@ -135,7 +164,7 @@ class UsersDataGridSource extends DataGridSource {
                         icon: Icon(Icons.delete_forever),
                         onPressed: () async {
                           //await UserAPI.RemoveUser(e.idInt!);
-                          //  await loadData();
+                          //await loadData();
                         },
                       )),
                 ]))
@@ -153,8 +182,8 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.delete_forever),
                         onPressed: () async {
-                          // await UserAPI.RemoveUser(e.idInt!);
-                          //  await loadData();
+                          //await UserAPI.RemoveUser(e.idInt!);
+                          //await loadData();
                         },
                       )),
                   DataGridCell<Widget>(
@@ -162,7 +191,7 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
-                          //    await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                          usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
                         },
                       )),
                 ]))
@@ -192,8 +221,8 @@ class UsersDataGridSource extends DataGridSource {
                                       ? "Secretary"
                                       : "",
                       onChange: (value) async {
-                        //await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
-                        //   await loadData();
+                        usersBloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: e.idInt!)));
+                        //await loadData();
                       },
                     ),
                   ),
@@ -202,8 +231,8 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.delete_forever),
                         onPressed: () async {
-                          // await UserAPI.RemoveUser(e.idInt!);
-                          //     await loadData();
+                          //await UserAPI.RemoveUser(e.idInt!);
+                          //await loadData();
                         },
                       )),
                   DataGridCell<Widget>(
@@ -211,7 +240,7 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
-                          //   await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                          usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
                         },
                       )),
                 ]))
@@ -229,8 +258,8 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.delete_forever),
                         onPressed: () async {
-                          //   await UserAPI.RemoveUser(e.idInt!);
-                          //    await loadData();
+                          //await UserAPI.RemoveUser(e.idInt!);
+                          //await loadData();
                         },
                       )),
                   DataGridCell<Widget>(
@@ -238,7 +267,7 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
-                          // await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                          usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
                         },
                       )),
                 ]))
@@ -265,8 +294,8 @@ class UsersDataGridSource extends DataGridSource {
                                       ? "Secretary"
                                       : "",
                       onChange: (value) async {
-                        //  await UserAPI.ChangeRole(e.idInt!, value.toLowerCase());
-                        //  await loadData();
+                        usersBloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: e.idInt!)));
+                        //await loadData();
                       },
                     ),
                   ),
@@ -275,8 +304,8 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.delete_forever),
                         onPressed: () async {
-                          //  await UserAPI.RemoveUser(e.idInt!);
-                          //     await loadData();
+                          //await UserAPI.RemoveUser(e.idInt!);
+                          //await loadData();
                         },
                       )),
                   DataGridCell<Widget>(
@@ -284,7 +313,7 @@ class UsersDataGridSource extends DataGridSource {
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
-                          //  await AuthenticationAPI.ResetPasswordForUser(e.idInt!);
+                          usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
                         },
                       )),
                 ]))

@@ -71,4 +71,14 @@ class UsersRepositoryImpl extends UsersRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, NoParams>> changeRole(int id, String role)async {
+    try {
+      final result = await userDatasource.changeRole(id, role);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }
