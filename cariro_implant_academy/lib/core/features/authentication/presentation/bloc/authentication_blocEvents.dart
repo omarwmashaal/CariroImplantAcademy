@@ -2,15 +2,15 @@ import 'package:cariro_implant_academy/core/features/authentication/domain/useca
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 
 abstract class Authentication_blocEvent{}
-class LogInEvent extends Authentication_blocEvent{
+class logInEvent extends Authentication_blocEvent{
   final LoginParams loginParams;
-  LogInEvent(this.loginParams);
+  logInEvent(this.loginParams);
 }
 class LogOutEvent extends Authentication_blocEvent{}
 
-class CheckLogInStatusEvent extends Authentication_blocEvent{}
+class checkLogInStatusEvent extends Authentication_blocEvent{}
 
-class RegisterUserEvent extends Authentication_blocEvent{
+class registerUserEvent extends Authentication_blocEvent{
   final UserEntity user;
-  RegisterUserEvent({required this.user});
+  registerUserEvent({required this.user});
 }

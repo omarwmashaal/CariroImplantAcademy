@@ -83,6 +83,7 @@ import 'Widgets/LargeScreen.dart';
 import 'Widgets/SiteLayout.dart';
 import 'package:logging/logging.dart';
 
+import 'core/features/authentication/presentation/pages/authentication_page.dart';
 import 'core/injection_contianer.dart';
 import 'core/presentation/widgets/LoadingWidget.dart';
 
@@ -176,30 +177,5 @@ class MyApp extends StatelessWidget {
         routerConfig: CIA_Router.routes,
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  PageController page = PageController();
-
-  @override
-  void initState() {}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        //body: DashBoardPage(),
-
-        backgroundColor: Color_Background,
-        body: AuthenticationPage());
   }
 }

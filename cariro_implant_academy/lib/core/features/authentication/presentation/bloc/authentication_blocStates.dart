@@ -4,6 +4,11 @@ import 'package:equatable/equatable.dart';
 abstract class Authentication_blocState extends Equatable{
   Authentication_blocState([List props = const<dynamic>[]]);
 }
+class AuthInitState extends Authentication_blocState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 class LoggedOutState extends Authentication_blocState{
   @override
   // TODO: implement props

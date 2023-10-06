@@ -557,6 +557,7 @@ init() async {
    * AppBar
    */
   //bloc
+
   sl.registerLazySingleton(() => AppBarBloc(
         getNotificationsUseCase: sl(),
         markAllNotificationsAsReadUseCase: sl(),

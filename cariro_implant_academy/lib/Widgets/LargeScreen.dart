@@ -29,6 +29,7 @@ import 'package:logging/logging.dart';
 import '../API/UserAPI.dart';
 import '../Constants/Colors.dart';
 import '../Models/NotificationModel.dart';
+import '../core/features/authentication/presentation/pages/authentication_page.dart';
 import '../core/injection_contianer.dart';
 import '../core/presentation/widgets/LoadingWidget.dart';
 import '../core/features/notification/presentation/widgets/notificationDropDownWidget.dart';

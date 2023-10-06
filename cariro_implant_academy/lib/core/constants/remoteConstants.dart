@@ -18,7 +18,7 @@ Map<String, String> headers() => <String, String>{
       "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
       "Authorization": "Bearer ${siteController.getToken()}",
-      "Site": sl<SharedPreferences>().getInt("Website").toString(),
+      "Site":siteController.getSite()!.index!.toString(),
     };
 
 

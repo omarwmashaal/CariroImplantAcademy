@@ -57,7 +57,6 @@ class SiteController  {
   List<String> _CIA_Roles = ["admin", "instructor", "secretary", "assistant"];
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
-  
   AdvancedPatientSearchEntity searchPatientQuery = AdvancedPatientSearchEntity();
   AdvancedTreatmentSearchEntity searchTreatmentQuery = AdvancedTreatmentSearchEntity(done: false);
 
@@ -283,6 +282,11 @@ class SiteController  {
 
   }
 
+
+  bool isLoggedIn()
+  {
+    return getRole()!=null && getUserName()!=null && getUserId()!=null && getToken()!=null;
+  }
   clearCach() async {
     sl<SharedPreferences>().clear();
   }
@@ -293,6 +297,7 @@ class SiteController  {
 
   String? getRole() => sl<SharedPreferences>().getString("role");
   int? getProfileImageId() => sl<SharedPreferences>().getInt("profileImageId");
+   setProfileImageId(int id) => sl<SharedPreferences>().setInt("profileImageId",id);
 
   List<String> getRoles() {
     if (getSite() == Website.CIA)

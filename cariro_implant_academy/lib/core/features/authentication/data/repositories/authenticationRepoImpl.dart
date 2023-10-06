@@ -20,6 +20,7 @@ class AuthenticationRepoImpl implements AuthenticationRepo
 
     try {
       final result = await dataSource.login(loginParams);
+
       sl<SharedPreferences>().setString("token", result.token);
       sl<SharedPreferences>().setString("role", result.role);
       sl<SharedPreferences>().setInt("userid", result.idInt);

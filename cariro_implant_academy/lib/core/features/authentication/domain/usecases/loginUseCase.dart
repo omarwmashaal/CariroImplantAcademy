@@ -16,9 +16,9 @@ class LoginUseCase extends UseCases<AuthenticationUserEntity, LoginParams>{
 
 }
 class LoginParams extends Equatable{
-  final String email;
-  final String password;
-  LoginParams({required this.email, required this.password});
+  final String? email;
+  final String? password;
+  LoginParams({this.email, this.password});
   @override
   // TODO: implement props
   List<Object?> get props => [email,password];

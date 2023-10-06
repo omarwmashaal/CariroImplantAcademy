@@ -48,7 +48,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
   @override
   void initState() {
     type = UserRoles.Admin;
-    authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    authenticationBloc = context.read<AuthenticationBloc>();// BlocProvider.of<AuthenticationBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);
     dataSource = UsersDataGridSource(
       type: type,
@@ -248,7 +248,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                   );
                 }),
                 onSave: () {
-                  authenticationBloc.add(RegisterUserEvent(user: newUser));
+                  authenticationBloc.registerUserEvent( newUser);
                   return false;
                 },
               );

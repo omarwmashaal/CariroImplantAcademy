@@ -19,7 +19,7 @@ import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
 import '../../core/injection_contianer.dart';
 import '../../features/patient/presentation/pages/patientsSearchPage.dart';
-
+/*
 class AuthenticationPage extends StatefulWidget {
   AuthenticationPage({Key? key}) : super(key: key);
 
@@ -60,4 +60,4 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               setState(() => CurrentPage = RegisterPageRoute),
         ));
   }
-}
+}*/

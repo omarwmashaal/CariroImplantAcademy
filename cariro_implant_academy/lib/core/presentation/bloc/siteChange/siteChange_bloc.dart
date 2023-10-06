@@ -10,11 +10,9 @@ import '../../../injection_contianer.dart';
 class SiteChangeBloc extends Bloc<SiteChangeBlocEvents,SiteChangeBlocStates>{
   SiteChangeBloc():super(CIA_SiteState()){
     on<GetSiteEvent>((event, emit) async {
-      final pref = await SharedPreferences.getInstance();
-      final site = pref.get("site");
+      final site = siteController.getSite();
       if(site == null)
         {
-          pref.setString("site", Website.CIA.index.toString());
           siteController.setSite(Website.CIA);
           emit(CIA_SiteState());
         }

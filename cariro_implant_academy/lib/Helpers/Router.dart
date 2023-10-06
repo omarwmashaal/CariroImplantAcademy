@@ -5,6 +5,9 @@ import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
@@ -22,8 +25,11 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/LargeScreen.dart';
 import 'package:cariro_implant_academy/Widgets/SiteLayout.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/createOrViewPatientPage.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,7 +85,7 @@ class CIA_Router {
           //todo: fix this
 
           redirect: (context, state) async {
-            if ((siteController.getToken().isBlank ?? true) || (siteController.getUserName().isBlank ?? true) || ((siteController.getUserId() ?? 0) == 0)) {
+            if (!siteController.isLoggedIn()) {
               return "/";
             }
           },
@@ -93,28 +99,6 @@ class CIA_Router {
                 },
                 //todo: fix this
 
-                redirect: (context, state) async {
-                 // Logger.root.log(Level.INFO, "Called verify from main routing redirect");
-                  /*var res = await AuthenticationAPI.VerifyToken();
-                  if (
-                  await siteController.getToken() == "" ||
-                      !(
-                          siteController.getRole()=="admin"||
-                          siteController.getRole()=="secretary"||
-                          siteController.getRole()=="instructor"||
-                          siteController.getRole()=="assistant"
-                      )
-
-                  ) {
-                    return "/";
-                  }*/
-                  /*if(
-                  !(siteController.getUserId().isBlank??true) &&
-                   !   (siteController.getUserName().isBlank??true) &&
-                    !  (siteController.getRole().isBlank??true)
-
-                  ) return "/";*/
-                },
                 routes: [
                   ShellRoute(
                     builder: (context, state, child) {
@@ -727,30 +711,33 @@ class _Authorize extends StatelessWidget {
   _Authorize({Key? key, required this.child, required this.allowedRoles}) : super(key: key);
   Widget child;
   List<UserRoles> allowedRoles;
+  late AuthenticationBloc authenticationBloc;
 
   @override
   Widget build(BuildContext context) {
+        authenticationBloc = sl<AuthenticationBloc>();
+    authenticationBloc.logInEvent(LoginParams());
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
-    Logger.root.log(Level.INFO, "Called verify from main routing redirect");
-    //todo: return this
-    return child;
-    return FutureBuilder(
-      future: AuthenticationAPI.VerifyToken(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
+    //Logger.root.log(Level.INFO, "Called verify from main routing redirect");
+    return BlocConsumer<AuthenticationBloc, Authentication_blocState>(
+      bloc: authenticationBloc,
+      listener: (context, state) {
+        if (state is ErrorState) context.go("/");
+
+        if (state is LoggingInState)
+          CustomLoader.show(context);
+        else
+          CustomLoader.hide();
+      },
+      buildWhen: (previous, current) => current is LoggedIn ,
+      builder: (context, state) {
+        if (state is LoggedIn) {
           if (siteController.getRole() == "admin" || roles.contains(siteController.getRole()))
             return child;
-          else {
-            return Center(
-              child: Text(
-                "Sorry you don't have access to this page",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 100, color: Colors.grey),
-              ),
-            );
-          }
-        } else
-          return Container();
+          else
+            return BigErrorPageWidget(message: "Sorry you don't have access to this page");
+        }
+        return Container();
       },
     );
   }

@@ -18,7 +18,7 @@ import '../../Widgets/CIA_PrimaryButton.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/FormTextWidget.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
-
+/*
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, required this.onLogin, required this.onRegister}) : super(key: key);
   Auth_NavigationController auth_navigationController = Get.put(Auth_NavigationController());
@@ -188,3 +188,4 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     },);
   }
 }
+*/

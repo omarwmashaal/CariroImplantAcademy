@@ -37,42 +37,42 @@ void main() {
   });
   test("Should run usecase login on login even", () async {
     when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Right(tLoginRespinse));
-    tbloc.add(LogInEvent(tLoginParams));
+    tbloc.add(logInEvent(tLoginParams));
     await untilCalled(mockLoginUseCase(any));
     verify(mockLoginUseCase(tLoginParams));
   });
   blocTest(
     "Should emit logged in state if successful log in",
     build: () => tbloc,
-    act: (bloc) => tbloc.add(LogInEvent(tLoginParams)),
+    act: (bloc) => tbloc.add(logInEvent(tLoginParams)),
     expect: () => [LoggingInState(),LoggedIn(user: tLoginRespinse)],
     setUp: () => when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Right(tLoginRespinse)),
   );
   blocTest(
     "Should emit ErrorState with login message in state if failed log in",
     build: () => tbloc,
-    act: (bloc) => tbloc.add(LogInEvent(tLoginParams)),
+    act: (bloc) => tbloc.add(logInEvent(tLoginParams)),
     expect: () => [LoggingInState(),ErrorState(message: LOGIN_FAILURE_MESSAGE)],
     setUp: () => when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Left(LoginFailure())),
   );
   blocTest(
     "Should emit ErrorState with login message in state if Server error log in",
     build: () => tbloc,
-    act: (bloc) => tbloc.add(LogInEvent(tLoginParams)),
+    act: (bloc) => tbloc.add(logInEvent(tLoginParams)),
     expect: () => [LoggingInState(),ErrorState(message: SERVER_FAILURE_MESSAGE)],
     setUp: () => when(mockLoginUseCase(tLoginParams)).thenAnswer((realInvocation) async => Left(HttpInternalServerErrorFailure())),
   );
   blocTest(
     "Should emit Logged out if check login failed",
     build: () => tbloc,
-    act: (bloc) => tbloc.add(CheckLogInStatusEvent()),
+    act: (bloc) => tbloc.add(checkLogInStatusEvent()),
     expect: () => [LoggedOutState()],
     setUp: () => when(mockCheckLoginStatusUseCase(NoParams())).thenAnswer((realInvocation) async => Left(LoginFailure())),
   );
   blocTest(
     "Should emit Logged in if check login success",
     build: () => tbloc,
-    act: (bloc) => tbloc.add(CheckLogInStatusEvent()),
+    act: (bloc) => tbloc.add(checkLogInStatusEvent()),
     expect: () => [LoggedIn(user: tLoginRespinse)],
     setUp: () => when(mockCheckLoginStatusUseCase(NoParams())).thenAnswer((realInvocation) async => Right(tLoginRespinse)),
   );
