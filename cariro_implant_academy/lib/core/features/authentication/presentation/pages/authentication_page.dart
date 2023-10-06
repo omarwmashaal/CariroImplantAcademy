@@ -24,7 +24,7 @@ import '../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../injection_contianer.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_bloc.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_blocStates.dart';
-import '../../../../../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../../../../../features/patient/presentation/pages/patientsSearchPage.dart';
 import '../../../../../presentation/widgets/customeLoader.dart';
 
 class AuthenticationPage extends StatelessWidget {

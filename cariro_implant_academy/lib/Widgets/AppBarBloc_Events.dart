@@ -16,6 +16,13 @@ class AppBarRemoveAppBarEvent extends AppBarBlocEvents{
   // TODO: implement props
   List<Object?> get props => [];
 }
+class AppBarDeleteNotificationEvent extends AppBarBlocEvents{
+  final int id;
+  AppBarDeleteNotificationEvent({required this.id});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
+}
 class AppBarGetNotificationsEvent extends AppBarBlocEvents{
   @override
   // TODO: implement props

@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
 
 import '../Helpers/Router.dart';
-import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
+import '../features/patient/presentation/pages/patientProfileComplainsPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import 'Enum.dart';
 

@@ -1,32 +1,37 @@
-import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
-import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_Events.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../Controllers/PatientMedicalController.dart';
-import '../../Models/PatientInfo.dart';
-import '../../Widgets/CIA_SecondaryButton.dart';
-import '../../Widgets/CIA_Table.dart';
-import '../../Widgets/CIA_TextField.dart';
-import '../../Widgets/CIA_TextFormField.dart';
-import '../../Widgets/Horizontal_RadioButtons.dart';
-import '../../Widgets/Title.dart';
-import '../../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
-import '../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../../../../Models/PatientInfo.dart';
+import '../../../../Widgets/CIA_SecondaryButton.dart';
+import '../../../../Widgets/CIA_Table.dart';
+import '../../../../Widgets/CIA_TextField.dart';
+import '../../../../Widgets/CIA_TextFormField.dart';
+import '../../../../Widgets/Horizontal_RadioButtons.dart';
+import '../../../../Widgets/Title.dart';
+import '../../../patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
+import '../../../patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../bloc/advancedSearchBloc.dart';
 
 class PatientAdvancedSearchPage extends StatefulWidget {
   PatientAdvancedSearchPage({Key? key, this.treatments = false}) : super(key: key);
@@ -41,14 +46,19 @@ class PatientAdvancedSearchPage extends StatefulWidget {
 }
 
 class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with TickerProviderStateMixin {
-  AdvancedPatientSearchDataSource dataSource_patients = AdvancedPatientSearchDataSource();
-  AdvancedTreatmentSearchDataSource dataSource_treatments = AdvancedTreatmentSearchDataSource();
-  AdvancedPatientSearchDTO searchDTO = AdvancedPatientSearchDTO();
-  AdvancedTreatmentSearchDTO searchTreatmentsDTO = AdvancedTreatmentSearchDTO(done: false);
+  AdvancedPatientSearchDataGridSource dataSource_patients = AdvancedPatientSearchDataGridSource();
+  AdvancedTreatmentSearchDataGridSource dataSource_treatments = AdvancedTreatmentSearchDataGridSource();
+  AdvancedPatientSearchEntity searchDTO = AdvancedPatientSearchEntity();
+  AdvancedTreatmentSearchEntity searchTreatmentsDTO = AdvancedTreatmentSearchEntity(done: false);
   List<String> columns = [];
+
+  late AdvancedSearchBloc bloc;
 
   @override
   void initState() {
+    bloc = BlocProvider.of<AdvancedSearchBloc>(context);
+    bloc.add(
+        widget.treatments ? AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO) : AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
     tabController = TabController(length: 2, vsync: this);
     tabController.index = (widget.treatments ? 1 : 0);
   }
@@ -63,11 +73,13 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
           height: 60,
           child: TabBar(
             onTap: (value) {
-              if (widget.treatments)
+              if (widget.treatments) {
                 context.goNamed(PatientAdvancedSearchPage.routeName);
-              else
+                bloc.add(AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
+              } else {
                 context.goNamed(PatientAdvancedSearchPage.routeNameTreatments);
-              //setState(() {});
+                bloc.add(AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO));
+              } //setState(() {});
             },
             controller: tabController,
             labelColor: Colors.black,
@@ -99,17 +111,14 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       CIA_SecondaryButton(
                           label: "Load Last Filter",
                           onTab: () {
-                            searchDTO = siteController.searchPatientQuery;
-                           // columns = siteController.searchPatientColumn;
-                            dataSource_patients.loadData(msearchDTO: searchDTO).then((value) => setState(() {
-                                  columns = value;
-                                }));
+                            searchDTO = bloc.searchPatientQuery;
+                            bloc.add(AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
                           }),
                       SizedBox(
                         width: 10,
                       ),
                       CIA_PrimaryButton(
-                        isLong: true,
+                          isLong: true,
                           label: "Show filter",
                           onTab: () {
                             CIA_ShowPopUp(
@@ -581,34 +590,38 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                   ],
                                 ),
                                 onSave: () {
-                                  dataSource_patients.loadData(msearchDTO: searchDTO).then((value) => setState(() {
-                                        columns = value;
-                                      }));
-                                 // siteController.searchPatientColumn = columns;
-                                  siteController.searchPatientQuery = searchDTO;
+                                  bloc.add(AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
+                                  bloc.searchPatientQuery = searchDTO;
                                 });
                           }),
                     ],
                   ),
                   Expanded(
-                    child: CIA_Table(
-                      key: GlobalKey(),
-                      columnNames: columns,
-                      loadFunction: () async {
-                        columns = await dataSource_patients.loadData(msearchDTO: searchDTO);
-                        return columns;
-                      },
-                      dataSource: dataSource_patients,
-                      onCellClick: (value) {
+                    child: BlocConsumer<AdvancedSearchBloc, AdvancedSearchBloc_States>(listener: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadedPatientsSuccessfullyState)
+                        dataSource_patients.updateData(
+                          searchQuery: searchDTO,
+                          searchResults: state.data,
+                        );
+                    }, builder: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadingErrorState)
+                        return BigErrorPageWidget(message: state.message);
+                      else if (state is AdvancedSearchBloc_LoadingState) return LoadingWidget();
+                      return TableWidget(
+                        key: GlobalKey(),
+                        allowSorting: true,
+                        dataSource: dataSource_patients,
+                        onCellClick: (value) {
+                          // setState(() {
+                          //selectedPatientID = dataSource.models[value - 1].id!;
 
-                        // setState(() {
-                        //selectedPatientID = dataSource.models[value - 1].id!;
-
-                        //});
-                        //internalPagesController.jumpToPage(1);
-                        context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": dataSource_patients.models[value - 1].id!.toString()});
-                      },
-                    ),
+                          //});
+                          //internalPagesController.jumpToPage(1);
+                          print(value);
+                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": value.toString()});
+                        },
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -622,15 +635,35 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                           showBackButton: false,
                         ),
                       ),
+                      Row(
+                        children: [
+                          FormTextValueWidget(text: "Done"),
+                          SizedBox(width: 10),
+                          Container(
+                            color: Colors.green,
+                            width: 10,
+                            height: 10,
+                          ),
+                          SizedBox(width: 10),
+                          FormTextValueWidget(text: "Planned"),
+                          SizedBox(width: 10),
+                          Container(
+                            color: Colors.orange,
+                            width: 10,
+                            height: 10,
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      ),
                       CIA_SecondaryButton(
                           label: "Load Last Filter",
                           onTab: () {
-                            searchTreatmentsDTO = siteController.searchTreatmentQuery;
-                            dataSource_treatments.loadData(msearchDTO: searchTreatmentsDTO);
+                            searchTreatmentsDTO = bloc.searchTreatmentQuery;
+                            bloc.add(AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO));
                           }),
-                      SizedBox(width:10),
+                      SizedBox(width: 10),
                       CIA_PrimaryButton(
-                        isLong: true,
+                          isLong: true,
                           label: "Show filter",
                           onTab: () {
                             CIA_ShowPopUp(
@@ -931,31 +964,56 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                   ],
                                 ),
                                 onSave: () async {
-                                  siteController.searchTreatmentQuery = searchTreatmentsDTO;
-                                  await dataSource_treatments.loadData(msearchDTO: searchTreatmentsDTO);
+                                  bloc.searchTreatmentQuery = searchTreatmentsDTO;
+                                  bloc.add(AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO));
                                 });
                           }),
                     ],
                   ),
                   Expanded(
-                    child: CIA_Table(
-                      key: GlobalKey(),
-                      columnNames: dataSource_treatments.columns,
-                      loadFunction: () => dataSource_treatments.loadData(msearchDTO: searchTreatmentsDTO),
-                      dataSource: dataSource_treatments,
-                      onCellClick: (value) {
+                    child: BlocConsumer<AdvancedSearchBloc, AdvancedSearchBloc_States>(listener: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState) dataSource_treatments.updateData(state.data);
+                    }, builder: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadingErrorState)
+                        return BigErrorPageWidget(message: state.message);
+                      else if (state is AdvancedSearchBloc_LoadingState) return LoadingWidget();
 
-                        // setState(() {
-                        //selectedPatientID = dataSource.models[value - 1].id!;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: TableWidget(
+                              key: GlobalKey(),
+                              headerHeight: 60,
+                              headerStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              dataSource: dataSource_treatments,
+                              onCellClick: (value) {
+                                // setState(() {
+                                //selectedPatientID = dataSource.models[value - 1].id!;
 
-                        //});
-                        //internalPagesController.jumpToPage(1);
-                        if (searchTreatmentsDTO.done == true)
-                          context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id": dataSource_treatments.models[value - 1].id!.toString()});
-                        else
-                          context.goNamed(TreatmentPage.routeName, pathParameters: {"id": dataSource_treatments.models[value - 1].id!.toString()});
-                      },
-                    ),
+                                //});
+                                //internalPagesController.jumpToPage(1);
+                                if (searchTreatmentsDTO.done == true)
+                                  context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id": value.toString()});
+                                else
+                                  context.goNamed(TreatmentPage.routeName, pathParameters: {"id": value.toString()});
+                              },
+                            ),
+                          ),
+                          Divider(),
+                          Container(
+                            height: 40,
+                            child: Row(
+                              children: [
+                                Expanded(child: SizedBox()),
+                                FormTextKeyWidget(text: "Total: "),
+                                FormTextValueWidget(text: dataSource_treatments.models.length.toString()),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ],
               ),

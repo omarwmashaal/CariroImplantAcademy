@@ -1,8 +1,10 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/exception.dart';
+import '../../domain/entities/advancedPatientSearchEntity.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../../domain/repositories/patientInfoRepo.dart';
 import '../../domain/usecases/patientSearchUseCase.dart';
@@ -88,6 +90,26 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
       return Right(result);
     }on Exception catch(e)
     {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AdvancedPatientSearchEntity>>> advancedSearchPatients(AdvancedPatientSearchEntity params) async {
+    try {
+      final result = await dataSource.advancedSearchPatients(params);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AdvancedTreatmentSearchEntity>>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params) async {
+    try {
+      final result = await dataSource.advancedTreatmentSearch(params);
+      return Right(result);
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }

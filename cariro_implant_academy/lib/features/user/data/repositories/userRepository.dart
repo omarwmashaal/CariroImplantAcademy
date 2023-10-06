@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/visitEntity.dart';
 import 'package:cariro_implant_academy/features/user/data/datasource/userDatasource.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
@@ -73,7 +74,7 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> changeRole(int id, String role)async {
+  Future<Either<Failure, NoParams>> changeRole(int id, String role) async {
     try {
       final result = await userDatasource.changeRole(id, role);
       return Right(result);
@@ -81,4 +82,5 @@ class UsersRepositoryImpl extends UsersRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
 }

@@ -5,10 +5,10 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../core/features/notification/domain/entities/notificationEntity.dart';
+import '../../domain/entities/notificationEntity.dart';
 
-class CIA_NotificationsWidget extends StatefulWidget {
-  CIA_NotificationsWidget({
+class NotificationDropDownWidget extends StatefulWidget {
+  NotificationDropDownWidget({
     Key? key,
     this.hint,
     this.customButton,
@@ -25,10 +25,10 @@ class CIA_NotificationsWidget extends StatefulWidget {
   Function markAsRead;
 
   @override
-  State<CIA_NotificationsWidget> createState() => _CIA_NotificationsWidgetState();
+  State<NotificationDropDownWidget> createState() => _NotificationDropDownWidgetState();
 }
 
-class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
+class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget> {
   String? selectedValue;
   NotificationEntity? selectedValueNot;
   bool _isOpen = false;
@@ -113,7 +113,8 @@ class _CIA_NotificationsWidgetState extends State<CIA_NotificationsWidget> {
             .toList(),
         onChanged: (value) async {
           if (value != null && value.onClickAction != null && value.infoId != null) {
-            //context.goNamed(value.onClickAction!(), pathParameters: {'id': value.infoId!.toString()});
+              value.onClickAction!(context);
+
           }
         },
         onMenuStateChange: (isOpen) async {

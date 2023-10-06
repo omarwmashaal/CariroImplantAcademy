@@ -16,6 +16,8 @@ class TableWidget extends StatefulWidget {
       required this.dataSource,
       this.title,
       this.showSum = false,
+        this.headerStyle,
+        this.headerHeight,
       this.allowSorting = false,
       this.showGridLines = false})
       : super(key: key);
@@ -27,6 +29,8 @@ class TableWidget extends StatefulWidget {
   bool showGridLines;
   bool showSum;
   bool allowSorting;
+  TextStyle? headerStyle;
+  double? headerHeight;
 
   @override
   State<TableWidget> createState() => _TableWidgetState();
@@ -78,6 +82,7 @@ class _TableWidgetState extends State<TableWidget> {
         }
       },
       columns: _buildColumns(),
+      headerRowHeight: widget.headerHeight??double.nan,
     );
   }
 
@@ -89,13 +94,14 @@ class _TableWidgetState extends State<TableWidget> {
         returnValue.add(GridColumn(
            // width: columnNames.length > 12 ? 200 : double.nan,
             columnName: r.columnName,
+
             columnWidthMode: r.columnName == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
             label: Container(
 //padding: EdgeInsets.all(16.0),
                 alignment: Alignment.center,
-                child: Text(
+                child:  Text(
                   r.columnName,
-                  style: TextStyle(fontWeight: FontWeight.w900),
+                  style: widget.headerStyle??TextStyle(fontWeight: FontWeight.w900),
                 ))));
       }
     else

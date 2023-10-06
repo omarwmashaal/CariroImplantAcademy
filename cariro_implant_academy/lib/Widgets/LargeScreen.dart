@@ -9,7 +9,7 @@ import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_MyProfilePage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
-import 'package:cariro_implant_academy/Pages/NotificationsPage.dart';
+import 'package:cariro_implant_academy/core/features/notification/presentation/pages/NotificationsPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_States.dart';
@@ -31,7 +31,7 @@ import '../Constants/Colors.dart';
 import '../Models/NotificationModel.dart';
 import '../core/injection_contianer.dart';
 import '../core/presentation/widgets/LoadingWidget.dart';
-import 'CIA_DropDown2.dart';
+import '../core/features/notification/presentation/widgets/notificationDropDownWidget.dart';
 
 //TODO: Return to stateless
 class CIA_LargeScreen extends StatefulWidget {
@@ -112,7 +112,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                 buildWhen: (previous, current) => current is AppBarNewNotificationState || current is AppBarNotificationsLoadedState,
                                 builder: (context, state) {
                                   var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
-                                  return CIA_NotificationsWidget(
+                                  return NotificationDropDownWidget(
                                     markAsRead: () {
                                       sl<AppBarBloc>().add(AppBarMarkAllNotificationsAsReadEvent());
                                     },

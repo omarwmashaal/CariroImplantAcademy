@@ -14,6 +14,7 @@ import '../../../../Constants/Controllers.dart';
 import '../../../../Controllers/SiteController.dart';
 import '../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../core/injection_contianer.dart';
+import '../../../patient/domain/entities/advancedPatientSearchEntity.dart';
 import '../../domain/entities/enum.dart';
 import '../../domain/usecases/getUserDataUseCase.dart';
 import '../../domain/usecases/resetPasswordUseCase.dart';
@@ -406,3 +407,4 @@ class UsersDataGridSource extends DataGridSource {
     return true;
   }
 }
+

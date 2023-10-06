@@ -18,7 +18,7 @@ class AppBarNotificationsLoadedState extends AppBarBlocState{
   AppBarNotificationsLoadedState({required this.notifications});
   @override
   // TODO: implement props
-  List<Object?> get props => [notifications];
+  List<Object?> get props => [notifications,identityHashCode(this)];
 }
 class AppBarChangedState extends AppBarBlocState{
   final Widget? newAppBar;
@@ -26,6 +26,19 @@ class AppBarChangedState extends AppBarBlocState{
   @override
   // TODO: implement props
   List<Object?> get props => [newAppBar];
+}
+class AppBarLoadingNotificationsState extends AppBarBlocState{
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
+}
+class AppBarLoadingNotificationsErrorState extends AppBarBlocState{
+  final String message;
+  AppBarLoadingNotificationsErrorState({required this.message});
+  @override
+  List<Object?> get props => [message];
+
 }
 class AppBarInitialState extends AppBarBlocState{
   @override
@@ -45,4 +58,21 @@ class AppBarMarkedNotificationsAsReadErrorState extends AppBarBlocState{
   // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
 
+}
+
+class AppBarDeletingNotificationsState extends AppBarBlocState{
+  @override
+  List<Object?> get props => [];
+}
+
+class AppBarDeletingNotificationsErrorState extends AppBarBlocState{
+  final String message;
+  AppBarDeletingNotificationsErrorState({required this.message});
+  @override
+  List<Object?> get props => [message];
+}
+
+class AppBarDeletedNotificationsSuccessfullyState extends AppBarBlocState{
+  @override
+  List<Object?> get props => [];
 }

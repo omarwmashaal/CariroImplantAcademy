@@ -18,7 +18,7 @@ import '../../API/AuthenticationAPI.dart';
 import '../../Widgets/LargeScreen.dart';
 import '../../Widgets/SiteLayout.dart';
 import '../../core/injection_contianer.dart';
-import '../../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../../features/patient/presentation/pages/patientsSearchPage.dart';
 
 class AuthenticationPage extends StatefulWidget {
   AuthenticationPage({Key? key}) : super(key: key);

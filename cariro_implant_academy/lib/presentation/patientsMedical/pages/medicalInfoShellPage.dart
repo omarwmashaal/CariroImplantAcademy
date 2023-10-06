@@ -26,7 +26,7 @@ import '../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../Widgets/CIA_Table.dart';
 import '../../../Widgets/FormTextWidget.dart';
 import '../../../Widgets/Title.dart';
-import '../../../features/patient/presentation/presentation/createOrViewPatientPage.dart';
+import '../../../features/patient/presentation/pages/createOrViewPatientPage.dart';
 
 class MedicalInfoShellPage extends StatefulWidget {
   MedicalInfoShellPage({Key? key, required this.patientId, required this.child}) : super(key: key);

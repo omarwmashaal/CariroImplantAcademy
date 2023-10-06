@@ -6,11 +6,10 @@ import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
-import 'package:cariro_implant_academy/Models/DTOs/AdvancedPatientSearchDTO.dart';
-import 'package:cariro_implant_academy/Models/DTOs/AdvancedTreatmentSearchDTO.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/Models/Enum.dart';
 import 'package:cariro_implant_academy/Models/NotificationModel.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/PatientAdvancedSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
@@ -39,14 +38,15 @@ import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
 import '../features/cashflow/presentation/pages/cashFlowSummaryPage.dart';
-import '../features/patient/presentation/presentation/complainsSearchPage.dart';
-import '../features/patient/presentation/presentation/patientProfileComplainsPage.dart';
-import '../features/patient/presentation/presentation/visitsPage.dart';
+import '../features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
+import '../features/patient/presentation/pages/complainsSearchPage.dart';
+import '../features/patient/presentation/pages/createOrViewPatientPage.dart';
+import '../features/patient/presentation/pages/patientProfileComplainsPage.dart';
+import '../features/patient/presentation/pages/patientsSearchPage.dart';
+import '../features/patient/presentation/pages/visitsPage.dart';
 import '../features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
-import '../features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_DentalHistoryPage.dart';
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
-import '../features/patient/presentation/presentation/patientsSearchPage.dart';
 import '../features/stock/presentation/pages/stockLogsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
@@ -58,8 +58,8 @@ class SiteController  {
   List<String> _Lab_Roles = ["Admin", "technician", "Secretary"];
   List<String> _Clinic_Roles = ["Admin", "Secretary", "Doctor"];
   
-  AdvancedPatientSearchDTO searchPatientQuery = AdvancedPatientSearchDTO();
-  AdvancedTreatmentSearchDTO searchTreatmentQuery = AdvancedTreatmentSearchDTO(done: false);
+  AdvancedPatientSearchEntity searchPatientQuery = AdvancedPatientSearchEntity();
+  AdvancedTreatmentSearchEntity searchTreatmentQuery = AdvancedTreatmentSearchEntity(done: false);
 
   _setAppBarWidget(
       {required BuildContext context,

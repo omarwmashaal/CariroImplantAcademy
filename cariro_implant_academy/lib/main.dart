@@ -41,6 +41,7 @@ import 'package:cariro_implant_academy/core/features/settings/pages/bloc/setting
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
@@ -159,6 +160,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<CashFlowBloc>()),
         BlocProvider(create: (context) => sl<SettingsBloc>()),
         BlocProvider(create: (context) => sl<AuthenticationBloc>()),
+        BlocProvider(create: (context) => sl<AdvancedSearchBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

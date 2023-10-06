@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/constants/remoteConstants.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/useCases/useCases.dart';
+import '../../../patient/domain/entities/advancedPatientSearchEntity.dart';
 import '../../../patient/domain/entities/visitEntity.dart';
 import '../../domain/entities/userEntity.dart';
 

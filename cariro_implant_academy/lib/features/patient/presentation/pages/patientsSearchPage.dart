@@ -9,7 +9,6 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
-import 'package:cariro_implant_academy/features/patient/presentation/presentation/createOrViewPatientPage.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ import '../bloc/addOrRemoveMyPatientsBloc_states.dart';
 import '../bloc/patientSeachBlocEvents.dart';
 import '../bloc/patientSeachBlocStates.dart';
 import '../bloc/patientSearchBloc.dart';
+import 'createOrViewPatientPage.dart';
 
 class PatientsSearchPage extends StatelessWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);

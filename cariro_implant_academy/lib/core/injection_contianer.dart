@@ -86,6 +86,8 @@ import 'package:cariro_implant_academy/features/patient/domain/repositories/room
 import 'package:cariro_implant_academy/features/patient/domain/repositories/visitsRepo.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addComplainUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addToMyPatientsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedSearchPatientsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedTreatmentSearchUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateIdUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateNumberUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/createPatientUseCase.dart';
@@ -103,6 +105,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveC
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
@@ -198,6 +201,7 @@ import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientPros
 import '../features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'data/repositories/imageRepoImpl.dart';
 import 'features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
+import 'features/notification/domain/usecases/deleteNotificationsUseCase.dart';
 import 'features/settings/domain/useCases/addExpensesCategoriesUseCase.dart';
 import 'features/settings/domain/useCases/addImplantCompaniesUseCase.dart';
 import 'features/settings/domain/useCases/addImplantLinesUseCase.dart';
@@ -422,7 +426,7 @@ init() async {
   sl.registerFactory(() => AuthenticationBloc(
         loginUseCase: sl(),
         checkLoginStatusUseCase: sl(),
-    registerUserUseCase: sl(),
+        registerUserUseCase: sl(),
       ));
   //use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
@@ -455,7 +459,13 @@ init() async {
         addToMyPatientsUseCase: sl(),
         removeFromMyPatientsUseCase: sl(),
       ));
+  sl.registerLazySingleton(() => AdvancedSearchBloc(
+        advancedTreatmentSearchUseCase: sl(),
+        advancedSearchPatientsUseCase: sl(),
+      ));
   //usecases
+  sl.registerLazySingleton(() => AdvancedTreatmentSearchUseCase(patientInfoRepo: sl()));
+  sl.registerLazySingleton(() => AdvancedSearchPatientsUseCase(patientInfoRepo: sl()));
   sl.registerLazySingleton(() => PatientSearchUseCase(sl()));
   sl.registerLazySingleton(() => AddRangeToMyPatientsUseCase(sl()));
   sl.registerLazySingleton(() => AddToMyPatientsUseCase(patientInfoRepo: sl(), addOrRemoveMyPatientsRepo: sl()));
@@ -550,10 +560,12 @@ init() async {
   sl.registerLazySingleton(() => AppBarBloc(
         getNotificationsUseCase: sl(),
         markAllNotificationsAsReadUseCase: sl(),
+        deleteNotificationsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNotificationsUseCase(notificationRepo: sl()));
   sl.registerLazySingleton(() => MarkAllNotificationsAsReadUseCase(notificationRepo: sl()));
+  sl.registerLazySingleton(() => DeleteNotificationsUseCase(notificationRepo: sl()));
   //repo
   sl.registerLazySingleton<NotificationRepo>(() => NotificationRepoImpl(notificationDataSource: sl()));
   //datasource
@@ -707,8 +719,8 @@ init() async {
         getUserInfoUseCase: sl(),
         resetPasswordUseCase: sl(),
         getUsersSessionsUseCase: sl(),
-    resetPasswordForUserUseCase: sl(),
-    changeRoleUseCase: sl(),
+        resetPasswordForUserUseCase: sl(),
+        changeRoleUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));

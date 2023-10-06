@@ -7,7 +7,7 @@ import '../Models/Enum.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/UsersSearchPage.dart';
-import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';
 

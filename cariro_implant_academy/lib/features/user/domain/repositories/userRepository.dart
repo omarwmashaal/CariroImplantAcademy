@@ -1,8 +1,10 @@
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../../patient/domain/entities/visitEntity.dart';
 
 abstract class UsersRepository {

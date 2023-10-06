@@ -9,9 +9,15 @@ class NotificationRepoImpl implements NotificationRepo{
   final NotificationDataSource notificationDataSource;
   NotificationRepoImpl({required this.notificationDataSource});
   @override
-  Future<Either<Failure, NoParams>> deleteNotification(int id) {
-    // TODO: implement deleteNotification
-    throw UnimplementedError();
+  Future<Either<Failure, NoParams>> deleteNotification(int id) async {
+    try{
+      final result = await notificationDataSource.deleteNotification(id);
+      return Right(result);
+    }
+    on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
   }
 
   @override

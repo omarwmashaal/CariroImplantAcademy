@@ -75,6 +75,7 @@ abstract class HttpRepo {
   Future<StandardHttpResponse> post({required String host, dynamic? body});
 
   Future<StandardHttpResponse> put({required String host, dynamic? body});
+  Future<StandardHttpResponse> delete({required String host, dynamic? body});
 
   Future<StandardHttpResponse> uploadImage({required String url, required Uint8List imageBytes});
 }
@@ -127,6 +128,18 @@ class HttpClientImpl implements HttpRepo {
       return StandardHttpResponse.fromDIOResponse(response);
     } catch (e) {
       throw e;
+    }
+  }
+
+  @override
+  Future<StandardHttpResponse> delete({required String host, body}) async {
+    late http.Response result;
+    try {
+      result = await http.delete(Uri.parse(host), headers: headers(), body: json.encode(body));
+      print(result);
+      return StandardHttpResponse.fromHttpResponse(result);
+    } catch (e) {
+      return StandardHttpResponse(statusCode: result!.statusCode, errorMessage: result.reasonPhrase);
     }
   }
 }

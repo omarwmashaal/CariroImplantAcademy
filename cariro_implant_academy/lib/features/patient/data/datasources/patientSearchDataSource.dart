@@ -2,10 +2,14 @@ import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/advancedSearchPatientsModel.dart';
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../core/error/failure.dart';
+import '../../domain/entities/advancedPatientSearchEntity.dart';
+import '../../domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../../domain/usecases/patientSearchUseCase.dart';
+import '../models/advancedTreatmentSearchModel.dart';
 import '../models/patientSearchResponseModel.dart';
 
 abstract class PatientSearchDataSource {
@@ -17,7 +21,12 @@ abstract class PatientSearchDataSource {
 
   Future<bool> checkDuplicateId(int id);
 
+  Future<List<AdvancedSearchPatientsModel>> advancedSearchPatients(AdvancedPatientSearchEntity params);
+  Future< List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
+
+
   Future<PatientInfoModel> createPatient(PatientInfoEntity patient);
+
   Future<PatientInfoModel> updatePatientData(PatientInfoEntity patient);
 
   Future<String?> checkDuplicateNumber(String number);
@@ -41,11 +50,11 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       result = await client.get(
         host: "$serverHost/$patientInfoController/ListPatients?$_query",
       );
-    } catch(e) {
+    } catch (e) {
       throw mapException(e);
     }
     if (result.statusCode != 200)
-      throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+      throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
 
     try {
       return (result.body! as List<dynamic>).map((e) => PatientInfoModel.fromMap(e as Map<String, dynamic>)).toList();
@@ -61,12 +70,12 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       result = await client.get(
         host: "$serverHost/$patientInfoController/GetPatientInfo?id=$id",
       );
-    } catch(e) {
+    } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
-      return PatientInfoModel.fromMap(result.body! as Map<String,dynamic>);
+      return PatientInfoModel.fromMap(result.body! as Map<String, dynamic>);
     } catch (e) {
       throw DataConversionException(message: DATACONVERSION_FAILURE_MESSAGE);
     }
@@ -79,10 +88,10 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       result = await client.get(
         host: "$serverHost/$patientInfoController/GetNextAvailableId",
       );
-    } catch(e) {
+    } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       return result.body as int;
     } catch (e) {
@@ -97,10 +106,10 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       result = await client.get(
         host: "$serverHost/$patientInfoController/CheckDuplicateId?id=$id",
       );
-    } catch(e) {
+    } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     return result.body != null;
   }
 
@@ -108,15 +117,14 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
   Future<PatientInfoModel> createPatient(PatientInfoEntity patient) async {
     late StandardHttpResponse result;
     try {
-      result = await client.post(host: "$serverHost/$patientInfoController/CreatePatient", body:  PatientInfoModel.fromEntity(patient).toMap());
-    } catch(e) {
+      result = await client.post(host: "$serverHost/$patientInfoController/CreatePatient", body: PatientInfoModel.fromEntity(patient).toMap());
+    } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
-    try{
-      return PatientInfoModel.fromMap(result.body! as Map<String,dynamic>);
-    }catch(e)
-    {
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    try {
+      return PatientInfoModel.fromMap(result.body! as Map<String, dynamic>);
+    } catch (e) {
       throw DataConversionException(message: DATACONVERSION_FAILURE_MESSAGE);
     }
   }
@@ -126,7 +134,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     StandardHttpResponse response;
     try {
       response = await client.post(host: "$serverHost/$patientInfoController/CompareDuplicateNumber?number=$number");
-      if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+      if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
       return (response.body as String?);
     } catch (e) {
       throw HttpInternalServerErrorException();
@@ -134,19 +142,64 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
   }
 
   @override
-  Future<PatientInfoModel> updatePatientData(PatientInfoEntity patient)async {
+  Future<PatientInfoModel> updatePatientData(PatientInfoEntity patient) async {
     late StandardHttpResponse result;
     try {
-      result = await client.put(host: "$serverHost/$patientInfoController/UpdatePatientsInfo", body:   PatientInfoModel.fromEntity(patient).toMap());
-    } catch(e) {
+      result = await client.put(host: "$serverHost/$patientInfoController/UpdatePatientsInfo", body: PatientInfoModel.fromEntity(patient).toMap());
+    } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
-    try{
-      return PatientInfoModel.fromMap(result.body! as Map<String,dynamic>);
-    }catch(e)
-    {
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    try {
+      return PatientInfoModel.fromMap(result.body! as Map<String, dynamic>);
+    } catch (e) {
       throw DataConversionException(message: DATACONVERSION_FAILURE_MESSAGE);
+    }
+  }
+
+  @override
+  Future<List<AdvancedSearchPatientsModel>> advancedSearchPatients(AdvancedPatientSearchEntity params) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await client.post(
+          host: "$serverHost/$patientInfoController/AdvancedSearchPatient",
+          body: AdvancedSearchPatientsModel.fromEntity(params).toJson()
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if (response.body == null) return [];
+      return ((response.body!) as List<dynamic>).map((e) => AdvancedSearchPatientsModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    catch(e)
+    {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await client.post(
+          host: "$serverHost/$patientInfoController/AdvancedSearchTreatment",
+          body: AdvancedTreatmentSearchModel.fromEntity(params).toJson()
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if (response.body == null) return [];
+      return ((response.body!) as List<dynamic>).map((e) => AdvancedTreatmentSearchModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    catch(e)
+    {
+      throw DataConversionException(message: "Couldn't convert data");
     }
   }
 }

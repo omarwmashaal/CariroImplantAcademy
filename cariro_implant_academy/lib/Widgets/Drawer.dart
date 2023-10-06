@@ -12,7 +12,7 @@ import 'package:sidebarx/sidebarx.dart';
 import '../Models/Enum.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
-import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import 'FormTextWidget.dart';
 
 List<String> roles = ["Secretary", "Admin", "Instructor"];

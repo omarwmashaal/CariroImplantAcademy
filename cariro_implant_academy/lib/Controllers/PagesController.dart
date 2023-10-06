@@ -29,7 +29,7 @@ import '../Pages/LAB_Pages/LAB_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
-import '../features/patient/presentation/presentation/patientsSearchPage.dart';
+import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';

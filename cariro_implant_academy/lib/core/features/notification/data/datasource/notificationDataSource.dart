@@ -17,9 +17,16 @@ class NotificationDataSourceImpl implements NotificationDataSource{
   final HttpRepo httpRepo;
   NotificationDataSourceImpl({required this.httpRepo});
   @override
-  Future<NoParams> deleteNotification(int id) {
-    // TODO: implement deleteNotification
-    throw UnimplementedError();
+  Future<NoParams> deleteNotification(int id) async{
+    late StandardHttpResponse response;
+    try{
+      response = await httpRepo.delete(host: "$serverHost/$notificationController/DeleteNotification");
+    }catch(e){
+      throw HttpInternalServerErrorException();
+    }
+    if(response.statusCode!=200)
+      throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    return NoParams();
   }
 
   @override
