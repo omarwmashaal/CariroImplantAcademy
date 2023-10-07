@@ -2,7 +2,7 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';

@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/repositories/authenticationRepo.dart';

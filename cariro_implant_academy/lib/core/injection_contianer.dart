@@ -17,6 +17,7 @@ import 'package:cariro_implant_academy/core/domain/useCases/downloadImageUseCase
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/selectImageUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/registerUserUseCase.dart';
@@ -59,6 +60,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/data/datasources/aut_ASP_DataSource.dart';
@@ -75,6 +77,14 @@ import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getSumm
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/datasource/labCustomerDatasource.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRequestDatasource.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/repositories/labRequestsRepository.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labCustomersRepository.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/complainsDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/roomDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/visitsDatasource.dart';
@@ -158,6 +168,7 @@ import 'package:cariro_implant_academy/features/user/domain/usecases/getUserData
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByRoleUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/updateUserInfoUseCase.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
@@ -170,6 +181,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/cashflow/data/repositories/cashFlowRepoImpl.dart';
 import '../features/cashflow/domain/useCases/getExpensesByCategoryUseCase.dart';
+import '../features/labRequest/data/repositories/labCustomersRepo.dart';
+import '../features/labRequest/domain/usecases/createLabRequestUseCase.dart';
+import '../features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
+import '../features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
+import '../features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import '../features/patient/data/datasources/patientSearchDataSource.dart';
 import '../features/patient/data/repositories/addOrRemoveMyPatientsRepoImpl.dart';
@@ -232,6 +248,11 @@ init() async {
   sl.registerLazySingleton(() => SiteController());
 
   /**
+   * Dialog Helper
+   */
+  sl.registerLazySingleton(() => DialogHelper());
+
+  /**
    * SignalR
    */
 
@@ -249,6 +270,7 @@ init() async {
   sl.registerLazySingleton(() => LoadUsersUseCase(loadingRepo: sl()));
   sl.registerLazySingleton(() => LoadCandidateBatchesUseCase(loadingRepo: sl()));
   sl.registerLazySingleton(() => LoadCandidatesByBatchId(loadingRepo: sl()));
+  sl.registerLazySingleton(() => LoadWorkPlacesCase(loadingRepo: sl()));
   //sl.registerLazySingleton(() => LoadCandidateBatchesUseCase(loadingRepo: sl()));
   //repo
   sl.registerLazySingleton<LoadingRepo>(() => LoadingRepoImpl(loadingDatasource: sl()));
@@ -722,6 +744,7 @@ init() async {
         getUsersSessionsUseCase: sl(),
         resetPasswordForUserUseCase: sl(),
         changeRoleUseCase: sl(),
+        searchUsersByWorkPlaceUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -730,6 +753,7 @@ init() async {
   sl.registerLazySingleton(() => ResetPasswordUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => GetUsersSessionsUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => ChangeRoleUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => SearchUsersByWorkPlaceUseCase(usersRepository: sl()));
   //repo
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
   //DATASOURCE
@@ -777,4 +801,30 @@ init() async {
   sl.registerLazySingleton<CashFlowRepository>(() => CashFlowRepoImpl(cashFlowDatasource: sl()));
   //datasources
   sl.registerLazySingleton<CashFlowDatasource>(() => CashFlowDataSourceImpl(httpRepo: sl()));
+
+  /**
+   * Lab Requests
+   */
+
+  //blocs
+  sl.registerFactory(() => LabRequestsBloc(
+        getAllLabRequestsUseCase: sl(),
+        createNewLabCustomerUseCase: sl(),
+        searchLabPatientsByTypeUseCase: sl(),
+    createLabRequestUseCase: sl(),
+    getDefaultStepByNameUseCase: sl(),
+      ));
+  //useCases
+  sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetDefaultStepsUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => CreateLabRequestUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetDefaultStepByNameUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => CreateNewLabCustomerUseCase(labCustomersRepository: sl()));
+  sl.registerLazySingleton(() => SearchLabPatientsByTypeUseCase(labCustomersRepository: sl()));
+  //repo
+  sl.registerLazySingleton<LabRequestRepository>(() => LabRequestRepoImpl(labRequestDatasource: sl()));
+  sl.registerLazySingleton<LabCustomersRepository>(() => LabCustomerRepoImpl(labCustomerDatasource: sl()));
+  //datasource
+  sl.registerLazySingleton<LabRequestDatasource>(() => LabRequestsDatasourceImpl(httpRepo: sl()));
+  sl.registerLazySingleton<LabCustomerDatasource>(() => LabCustomerDataSourceImpl(httpRepo: sl()));
 }

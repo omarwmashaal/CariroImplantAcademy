@@ -20,7 +20,7 @@ class ProstheticTreatmentDiagnosticParentModel extends ProstheticTreatmentDiagno
 
   factory ProstheticTreatmentDiagnosticParentModel.fromJson(Map<String, dynamic> json) {
     return ProstheticTreatmentDiagnosticParentModel(
-      date: DateTime.tryParse(json['date']??""),
+      date: DateTime.tryParse(json['date']??"")?.toLocal(),
       id: json['id'],
       needsRemake: json['needsRemake'] ?? false,
       operator: BasicNameIdObjectModel.fromJson(json['operator'] ?? Map<String, dynamic>()),

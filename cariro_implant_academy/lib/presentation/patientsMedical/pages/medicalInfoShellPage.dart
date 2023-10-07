@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
@@ -17,9 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../Models/LAB_RequestModel.dart';
+import '../../../features/labRequest/domain/entities/labRequestEntityl.dart';
 import '../../../Pages/LAB_Pages/LAB_ViewTask.dart';
-import '../../../Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
+import '../../../features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import '../../../Widgets/CIA_PopUp.dart';
 import '../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../Widgets/CIA_SecondaryButton.dart';
@@ -136,6 +137,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                 label: "Create LAB Request",
                                 icon: Icon(Icons.document_scanner_outlined),
                                 onTab: () async {
+
                                   /*var checkLabRequests = await MedicalAPI.CheckLabRequests(widget.patientId);
                                   bool showRequestPage = false;
                                   if (checkLabRequests.statusCode != 200) {
@@ -165,7 +167,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                 label: "View LAB Request",
                                 icon: const Icon(Icons.document_scanner_outlined),
                                 onTab: () {
-                                  LabRequestDataSource dataSource = LabRequestDataSource();
+                                  LabRequestDataGridSource dataSource = LabRequestDataGridSource();
                                   CIA_ShowPopUp(
                                     hideButton: true,
                                     context: context,
@@ -176,7 +178,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                       columnNames: dataSource.columns,
                                       dataSource: dataSource,
                                       loadFunction: () async {
-                                        return dataSource.loadPatientRequests(patient!.id!);
+                                        //return dataSource.loadPatientRequests(patient!.id!);
                                       },
                                       onCellClick: (index) {
                                         CIA_ShowPopUp(

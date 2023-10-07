@@ -75,6 +75,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     PatientInfoEntity patient = PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married);
     final createOrViewPatientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     final imageBlocProfile = sl<ImageBloc>();
@@ -225,28 +226,39 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 },
                               ),
 
-                              /*
-                          Visibility(
-                            visible: addNew && siteController.getSite() == Website.Lab,
-                            child: CIA_MultiSelectChipWidget(
-                              key: GlobalKey(),
-                              singleSelect: true,
-                              onChange: (item, isSelected) {
-                                if (isSelected) {
-                                  if (item == "CIA")
-                                    patient.patientType = EnumPatientType.CIA;
-                                  else if (item == "Clinic")
-                                    patient.patientType = EnumPatientType.Clinic;
-                                  else if (item == "OutSource") patient.patientType = EnumPatientType.OutSource;
-                                }
-                              },
-                              labels: [
-                                CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
-                                CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
-                                CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
-                              ],
-                            ),
-                          ),*/
+
+                         BlocBuilder<CreateOrViewPatientBloc,CreateOrViewPatientBloc_State>(
+                           buildWhen: (previous, current) => current is ChangePageState,
+
+                           builder: (context, state) {
+                             bool visible = false;
+                             if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew && siteController.getSite()==Website.Lab)
+                               {
+                                 visible = true;
+                               }
+
+                               return  Visibility(
+                             visible:visible,
+                             child: CIA_MultiSelectChipWidget(
+                               key: GlobalKey(),
+                               singleSelect: true,
+                               onChange: (item, isSelected) {
+                                 if (isSelected) {
+                                   if (item == "CIA")
+                                     patient.patientType = EnumPatientType.CIA;
+                                   else if (item == "Clinic")
+                                     patient.patientType = EnumPatientType.Clinic;
+                                   else if (item == "OutSource") patient.patientType = EnumPatientType.OutSource;
+                                 }
+                               },
+                               labels: [
+                                 CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
+                                 CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
+                                 CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
+                               ],
+                             ),
+                           );
+                         },),
 
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,

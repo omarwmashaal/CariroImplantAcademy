@@ -8,14 +8,14 @@ import '../../../../core/domain/repositories/imagesRepo.dart';
 import '../../../../core/domain/useCases/uploadImageUseCase.dart';
 import '../repositories/patientInfoRepo.dart';
 
-class CreatePatientUseCase extends UseCases<bool, PatientInfoEntity> {
+class CreatePatientUseCase extends UseCases<PatientInfoEntity, PatientInfoEntity> {
   final PatientInfoRepo patientInfoRepo;
   final ImageRepo imageRepo;
 
   CreatePatientUseCase({required this.patientInfoRepo, required this.imageRepo});
 
   @override
-  Future<Either<Failure, bool>> call(PatientInfoEntity params) async {
+  Future<Either<Failure, PatientInfoEntity>> call(PatientInfoEntity params) async {
     if (params.id == null) return Left(InputValidationFailure(failureMessage: "Id can not be null"));
     final duplicateId = await patientInfoRepo.checkDuplicateId(params.id!);
     return duplicateId.fold(
@@ -48,7 +48,7 @@ class CreatePatientUseCase extends UseCases<bool, PatientInfoEntity> {
                   if (imageResponse.isLeft()) imageErrorMessage += " Failed to upload Id Back image";
                 }
                 if(imageErrorMessage!="") return Left(UploadImageFailure(failureMessage: imageErrorMessage));
-                return Right(true);
+                return Right(r);
 
                // return Left(DataVerificationFailure(message: "Failed to save correct data"));
             },

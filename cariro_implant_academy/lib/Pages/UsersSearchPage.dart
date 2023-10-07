@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../Widgets/Title.dart';
-import '../Models/Enum.dart';
+import '../core/constants/enums/enums.dart';
 import '../Widgets/CIA_TextField.dart';
 import '../features/user/domain/entities/enum.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';

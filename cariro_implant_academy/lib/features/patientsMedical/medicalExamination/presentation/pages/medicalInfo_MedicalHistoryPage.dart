@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../../Constants/Colors.dart';
 import '../../../../../Models/DTOs/DropDownDTO.dart';
-import '../../../../../Models/Enum.dart';
+import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_IncrementalHBA1CTextField.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';

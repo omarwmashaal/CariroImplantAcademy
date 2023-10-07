@@ -5,7 +5,7 @@ import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Models/Enum.dart';
+import '../../core/constants/enums/enums.dart';
 import '../../Widgets/Title.dart';
 /*
 class CandidatesSearchPage extends StatefulWidget {

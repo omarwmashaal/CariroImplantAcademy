@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
-import '../../../../../Models/Enum.dart';
+import '../../../../constants/enums/enums.dart';
 
 class NotificationEntity  extends Equatable{
   int? id;

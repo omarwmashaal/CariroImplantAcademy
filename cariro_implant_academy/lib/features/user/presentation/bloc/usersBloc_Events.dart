@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/enum.dart';
@@ -92,5 +93,17 @@ class UsersBloc_SearchUsersByRoleEvent extends UsersBloc_Events {
         batchId,
         search,
         role,
+      ];
+}
+class UsersBloc_SearchUsersByWorkPlaceEvent extends UsersBloc_Events {
+  final SearchUsersByWorkPlaceParams params;
+
+  UsersBloc_SearchUsersByWorkPlaceEvent({
+    required this.params
+  });
+
+  @override
+  List<Object?> get props => [
+        params
       ];
 }

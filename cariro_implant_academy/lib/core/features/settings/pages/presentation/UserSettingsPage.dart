@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../Constants/Controllers.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
@@ -228,7 +229,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                         BlocConsumer<AuthenticationBloc, Authentication_blocState>(
                           listener: (context, state) {
                             if (state is RegisteredUserSuccessfullyState) {
-                              Navigator.of(context, rootNavigator: true).pop();
+                              dialogHelper.dismissSingle(context);
                               reloadUsers();
                             }
                           },

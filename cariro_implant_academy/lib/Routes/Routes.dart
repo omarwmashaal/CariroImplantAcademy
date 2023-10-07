@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../Constants/Controllers.dart';
 import '../Models/ApplicationUserModel.dart';
-import '../Models/Enum.dart';
+import '../core/constants/enums/enums.dart';
 import '../Pages/CIA_Pages/Candidates_SearchPage.dart';
 import '../Pages/CIA_Pages/CashFlowPage.dart';
 import '../Pages/UsersSearchPage.dart';

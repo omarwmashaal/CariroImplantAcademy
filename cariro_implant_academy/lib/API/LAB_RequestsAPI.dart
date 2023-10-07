@@ -1,10 +1,10 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
-import 'package:cariro_implant_academy/Models/Lab_StepModel.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labStepEntity.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/DTOs/DropDownDTO.dart';
-import '../Models/LAB_RequestModel.dart';
+import '../features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'HTTP.dart';
 
 class LAB_RequestsAPI {
@@ -33,7 +33,7 @@ class LAB_RequestsAPI {
      API_Response response = await HTTPRequest.Get("LAB_Requests/GetAllRequests?$query");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e as Map<String, dynamic>)).toList();
+      //response.result = ((response.result ?? []) as List<dynamic>).map((e) => LabRequestEntity.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -42,7 +42,7 @@ class LAB_RequestsAPI {
     var response = await HTTPRequest.Get("LAB_Requests/GetPatientRequests?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e as Map<String, dynamic>)).toList();
+      //response.result = ((response.result ?? []) as List<dynamic>).map((e) => LabRequestEntity.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -50,21 +50,21 @@ class LAB_RequestsAPI {
   static Future<API_Response> GetRequest(int id) async {
     var response = await HTTPRequest.Get("LAB_Requests/GetRequest?id=$id");
     if (response.statusCode == 200) {
-      response.result = LAB_RequestModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      //response.result = LabRequestEntity.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
 
-  static Future<API_Response> AddRequest(LAB_RequestModel model) async {
+  static Future<API_Response> AddRequest(LabRequestEntity model) async {
     model.source = model.customer!.workPlaceEnum;
-    var response = await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());
+    var response ;// await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());
     return response;
   }
 
   static Future<API_Response> GetDefaultStepByName(String name) async {
     var response = await HTTPRequest.Get("LAB_Requests/GetDefaultStepByName?name=$name");
     if (response.statusCode == 200) {
-      response.result = DropDownDTO.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      //response.result = DropDownDTO.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
@@ -72,7 +72,7 @@ class LAB_RequestsAPI {
   static Future<API_Response> GetDefaultSteps() async {
     var response = await HTTPRequest.Get("LAB_Requests/GetDefaultSteps");
     if (response.statusCode == 200) {
-      response.result = ((response.result ?? []) as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
+      //response.result = ((response.result ?? []) as List<dynamic>).map((e) => DropDownDTO.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -105,8 +105,8 @@ class LAB_RequestsAPI {
     return response;
   }
 
-  static Future<API_Response> AddOrUpdateRequestReceipt(int id, List<LAB_StepModel> steps) async {
-    var response = await HTTPRequest.Post("LAB_Requests/AddOrUpdateRequestReceipt?id=$id", steps.map((e) => e.toJson()).toList());
+  static Future<API_Response> AddOrUpdateRequestReceipt(int id, List<LabStepEntity> steps) async {
+    var response ;//= await HTTPRequest.Post("LAB_Requests/AddOrUpdateRequestReceipt?id=$id", steps.map((e) => e.toJson()).toList());
 
     return response;
   }

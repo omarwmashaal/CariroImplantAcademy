@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/models/bloodPressureModel.dart';

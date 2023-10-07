@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../core/constants/enums/enums.dart';
-import 'Enum.dart';
+import '../core/constants/enums/enums.dart';
 
 class ComplainsModel {
   int? id;

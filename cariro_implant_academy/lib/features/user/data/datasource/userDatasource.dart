@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/patient/data/models/visitModel.d
 import 'package:cariro_implant_academy/features/user/data/models/userModel.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/constants/remoteConstants.dart';
 import '../../../../core/error/exception.dart';
 import '../../../../core/useCases/useCases.dart';
@@ -14,6 +15,7 @@ abstract class UserDatasource {
   Future<UserModel> getUserData({required int id});
 
   Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch});
+  Future<List<UserModel>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<NoParams> updateUserInfo(int id, UserEntity userData);
 
@@ -127,5 +129,24 @@ class UserDatasourceImpl extends UserDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
+  }
+
+  @override
+  Future<List<UserModel>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source)  async {
+    late StandardHttpResponse response;
+    try {
+      search = search == "" ? null : search;
+      String query = "source=${source.index}&";
+      query += "${query == "" ? "" : "${search == null ? "" : "&"}"}${search == null ? "" : "search=$search"}";
+      response = await httpRepo.get(host: "$serverHost/$userController/searchUsersByWorkPlace?$query");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return response.body == null ? [] : (response.body as List<dynamic>).map((e) => UserModel.fromJson(e)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
   }
 }

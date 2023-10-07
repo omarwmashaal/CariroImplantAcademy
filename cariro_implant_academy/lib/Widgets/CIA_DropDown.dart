@@ -209,6 +209,7 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
       this.enabled = true,
       this.emptyString = "No results found",
         this.searchParams,
+        this.onLoad,
       this.onSelect})
       : super(key: key);
   List<BasicNameIdObjectEntity>? items;
@@ -220,6 +221,7 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
   bool enabled;
   String emptyString;
   bool disableSearch;
+  Function(List<BasicNameIdObjectEntity> values)? onLoad;
   Function(BasicNameIdObjectEntity value)? onSelect;
 
   @override
@@ -243,6 +245,10 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
               searchParams??NoParams(),
               asyncUseCase!,
             );
+            if(onLoad!=null)
+              {
+                onLoad!(res);
+              }
             return res;
           },
           filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),

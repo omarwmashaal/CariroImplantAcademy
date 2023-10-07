@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
 
-import '../../../../../Models/Enum.dart';
+import '../../../../constants/enums/enums.dart';
 import '../../../../data/models/BasicNameIdObjectModel.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 

@@ -3,7 +3,7 @@ import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowMod
 import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowSummaryModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/Http/httpRepo.dart';
 import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/constants/remoteConstants.dart';

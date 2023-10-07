@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
@@ -17,6 +18,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
   String hour = "";
   String minute = "";
   String timey = "PM";
+  dialogHelper.increaseCount();
   Alert(
     context: context,
     title: title,
@@ -90,7 +92,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        onPressed: () => dialogHelper.dismissSingle(context),
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -99,7 +101,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
       ),
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        onPressed: () => dialogHelper.dismissSingle(context),
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -111,6 +113,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
 
 CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange) async {
   String date = "";
+  dialogHelper.increaseCount();
   Alert(
     context: context,
     title: title,
@@ -142,7 +145,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        onPressed: () => dialogHelper.dismissSingle(context),
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -151,7 +154,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
       ),
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        onPressed: () => dialogHelper.dismissSingle(context),
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -164,6 +167,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
 CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String title, Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
 
+  dialogHelper.increaseCount();
   Alert(
     context: context,
     title: title,
@@ -195,7 +199,7 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
                               buttons: [
                                 DialogButton(
                                   width: 150,
-                                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                  onPressed: () => dialogHelper.dismissSingle(context),
                                   child: Text(
                                     "Ok",
                                     style: TextStyle(color: Colors.white, fontSize: 20),
@@ -223,7 +227,7 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+        onPressed: () => dialogHelper.dismissSingle(context),
         child: Text(
           "Ok",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -242,6 +246,7 @@ CIA_ShowPopUp(
     double? height,
     bool? hideButton = false,
     double? width}) async {
+  dialogHelper.increaseCount();
   await Alert(
     context: context,
     title: title,
@@ -265,7 +270,7 @@ CIA_ShowPopUp(
                   if (s != null && s is bool) close = s;
                 }
 
-                if (close) Navigator.of(context, rootNavigator: true).pop();
+                if (close) dialogHelper.dismissSingle(context);
               },
               child: Text(
                 buttonText == null ? "Ok" : buttonText,
@@ -284,6 +289,7 @@ CIA_ShowPopUpSaveRequest(
     Function? onCancel,
     String? buttonText,
     double? size}) async {
+  dialogHelper.increaseCount();
   await Alert(
     context: context,
     title: title,
@@ -299,7 +305,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () {
           if (onCancel != null) onCancel();
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "Cancel" : buttonText,
@@ -311,7 +317,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () async {
           if (onDontSave != null) onDontSave();
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "Don't Save" : buttonText,
@@ -323,7 +329,7 @@ CIA_ShowPopUpSaveRequest(
         width: 150,
         onPressed: () {
           if (onSave != null) onSave();
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "Save" : buttonText,
@@ -343,6 +349,7 @@ CIA_ShowPopUpYesNo(
     double? width,
     String? buttonText,
     double? size}) async {
+  dialogHelper.increaseCount();
   await Alert(
     context: context,
     title: title,
@@ -353,7 +360,7 @@ CIA_ShowPopUpYesNo(
         width: 150,
         onPressed: () {
           if (onCancel != null) onCancel();
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "No" : buttonText,
@@ -365,7 +372,7 @@ CIA_ShowPopUpYesNo(
         width: 150,
         onPressed: () {
           if (onSave != null) onSave();
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "Yes" : buttonText,
@@ -383,6 +390,7 @@ CIA_PopUpSearch(
     required Future<API_Response> searchFunction(String),
     String? buttonText,
     double? size}) {
+dialogHelper.increaseCount();
   String search = "";
   List<DropDownDTO> results = [];
   TextEditingController controller = TextEditingController();
@@ -425,7 +433,7 @@ CIA_PopUpSearch(
                     title: Text(results[index].name!),
                     onTap: () {
                       if (onChoose != null) onChoose!(results[index]);
-                      Navigator.of(context, rootNavigator: true).pop();
+                      dialogHelper.dismissSingle(context);
                     },
                   );
                 },
@@ -440,7 +448,7 @@ CIA_PopUpSearch(
         color: Color_Accent,
         width: 150,
         onPressed: () {
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
         },
         child: Text(
           buttonText == null ? "Ok" : buttonText,

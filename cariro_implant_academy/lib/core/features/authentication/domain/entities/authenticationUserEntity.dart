@@ -1,4 +1,4 @@
-import '../../../../../../Models/Enum.dart';
+import '../../../../constants/enums/enums.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';

@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/constants/enums/enums.dart';
 import '../../domain/entities/cashFlowEntity.dart';
 

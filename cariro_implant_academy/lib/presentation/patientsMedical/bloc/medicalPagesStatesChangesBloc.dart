@@ -1,4 +1,4 @@
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'medicalPagesStatesChangesBloc_States.dart';

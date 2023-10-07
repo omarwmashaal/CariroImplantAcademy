@@ -1,4 +1,4 @@
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowItemSummaryEntity.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowSummaryEntity.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';

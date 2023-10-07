@@ -80,7 +80,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
             emit(Error(l.message ?? ""));
           },
           (r) {
-            if (r == true) emit(CreatedPatientState());
+             emit(CreatedPatientState(patient: r));
           },
         );
       },

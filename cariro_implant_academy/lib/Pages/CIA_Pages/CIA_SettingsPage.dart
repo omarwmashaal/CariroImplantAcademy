@@ -28,7 +28,7 @@ import '../../API/StockAPI.dart';
 import '../../API/UserAPI.dart';
 import '../../Constants/Controllers.dart';
 import '../../Models/DTOs/DropDownDTO.dart';
-import '../../Models/Enum.dart';
+import '../../core/constants/enums/enums.dart';
 import '../../Models/ImplantModel.dart';
 import '../../Models/MedicalModels/TreatmentPrices.dart';
 import '../../Models/StockModel.dart';

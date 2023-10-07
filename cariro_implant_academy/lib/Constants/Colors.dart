@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:flutter/material.dart';
 
 Color Color_Background = Color(0xFFF4F6FA);

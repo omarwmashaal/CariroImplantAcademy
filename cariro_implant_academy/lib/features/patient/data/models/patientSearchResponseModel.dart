@@ -34,6 +34,7 @@ class PatientInfoModel extends PatientInfoEntity {
           profileImage: patientEntity.profileImage,
           idFrontImage: patientEntity.idFrontImage,
           idBackImage: patientEntity.idBackImage,
+    patientType: patientEntity.patientType,
         );
 
   PatientInfoModel({
@@ -60,6 +61,7 @@ class PatientInfoModel extends PatientInfoEntity {
     profileImage,
     idFrontImage,
     idBackImage,
+    patientType,
   }) : super(
           phone: phone,
           name: name,
@@ -84,11 +86,13 @@ class PatientInfoModel extends PatientInfoEntity {
           profileImage: profileImage,
           idFrontImage: idFrontImage,
           idBackImage: idBackImage,
+    patientType: patientType,
         );
 
   factory PatientInfoModel.fromMap(Map<String, dynamic> map) {
     return PatientInfoModel(
       name: map['name'] as String?,
+      patientType: EnumPatientType.values[map['patientType']??0],
       id: map['id'] as int?,
       gender: mapToEnum(EnumGender.values, map['gender']),
       phone: map['phone'] as String?,
@@ -98,7 +102,17 @@ class PatientInfoModel extends PatientInfoEntity {
         return age;
       }(),
       maritalStatus: mapToEnum(EnumMaritalStatus.values, map['maritalStatus']),
-      relative: map['relativePatient'] as String?,
+      relative: (){
+        if(map['relativePatient']==null)
+          return null;
+        try{
+         return  map['relativePatient'] as String?;
+        }
+        catch(e)
+        {
+          return (map['relativePatient'] as Map<String,dynamic>)['name'];
+        }
+      }(),
       relativePatientId: map['relativePatientID'] as int?,
       doctor: map['doctor'] as String?,
       doctorId: map['doctorID'] as int?,
@@ -134,6 +148,7 @@ class PatientInfoModel extends PatientInfoEntity {
       'dateOfBirth': this.dateOfBirth==null?null:DateFormat("yyyy-MM-dd").format(this.dateOfBirth!),
       'address': this.address,
       'city': this.city,
+      'patientType': this.patientType?.index,
     };
   }
 }

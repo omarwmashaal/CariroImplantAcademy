@@ -256,7 +256,7 @@ class PaymentLogTableWidget {
             ShowSnackBar(context, isSuccess: true);
             CustomLoader.hide();
           } else if (state is ReceiptBloc_AddedPaymentSuccessfullyState) {
-          //  Navigator.of(context, rootNavigator: true).pop();
+          //  dialogHelper.dismissSingle(context);
             bloc.loadPaymentLogTableData(patientId: patientId, receiptId: receiptId);
             ShowSnackBar(context, isSuccess: true);
             CustomLoader.hide();

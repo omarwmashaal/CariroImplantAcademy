@@ -9,4 +9,5 @@ abstract class LoadingRepo{
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadCandidateBatches();
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadCandidatesByBatchId({required int id});
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadCandidatesBatches();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> loadWorkPlaces();
 }

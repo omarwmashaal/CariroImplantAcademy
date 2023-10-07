@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get_state_manager/src/simple/simple_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../Widgets/CIA_DropDown.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../Widgets/MultiSelectChipWidget.dart';

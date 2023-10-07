@@ -1,48 +1,54 @@
-import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Constants/Fonts.dart';
-import 'package:cariro_implant_academy/Helpers/Router.dart';
-import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
-import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
-import 'package:cariro_implant_academy/Widgets/Title.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
-import '../../Widgets/CIA_Table.dart';
-import '../../Widgets/CIA_TextField.dart';
-import '../../Widgets/Horizontal_RadioButtons.dart';
-import '../SharedPages/LapCreateNewRequestSharedPage.dart';
-import 'LAB_ViewTask.dart';
+import '../../../../Constants/Fonts.dart';
+import '../../../../core/constants/enums/enums.dart';
+import 'LapCreateNewRequestPage.dart';
+import '../../../../Widgets/CIA_DropDown.dart';
+import '../../../../Widgets/CIA_PrimaryButton.dart';
+import '../../../../Widgets/CIA_TextField.dart';
+import '../../../../Widgets/Horizontal_RadioButtons.dart';
+import '../../../../Widgets/Title.dart';
+import '../blocs/labRequestBloc.dart';
 
-class _GetXController extends GetxController {
-  static RxString inQueueCount = "0".obs;
-  static RxString from = "".obs;
-  static RxString to = "".obs;
-}
-
-
-class LabTodaysRequestsSearch extends StatelessWidget {
+class LabTodaysRequestsSearch extends StatefulWidget {
   LabTodaysRequestsSearch({Key? key}) : super(key: key);
   static String routeName = "TodaysRequests";
   static String routePath = "Requests/TodaysRequests";
+
+  @override
+  State<LabTodaysRequestsSearch> createState() => _LabTodaysRequestsSearchState();
+}
+
+class _LabTodaysRequestsSearchState extends State<LabTodaysRequestsSearch> {
   String search = "";
-  LabRequestDataSource dataSource = LabRequestDataSource();
+
+  LabRequestDataGridSource dataSource = LabRequestDataGridSource();
+
   EnumLabRequestStatus? statusEnum;
+
   EnumLabRequestSources? sourceEnum;
+
   bool? paid;
+
   String? from;
+
   String? to;
+  late LabRequestsBloc bloc;
+
+  @override
+  void initState() {
+    bloc = BlocProvider.of<LabRequestsBloc>(context);
+    reload();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,7 @@ class LabTodaysRequestsSearch extends StatelessWidget {
               width: 155,
               label: "Add new request",
               onTab: () {
-                context.goNamed(LabCreateNewRequestSharedPage.routeName);
+                context.goNamed(LabCreateNewRequestPage.routeName);
               },
               isLong: true,
             ),
@@ -68,10 +74,17 @@ class LabTodaysRequestsSearch extends StatelessWidget {
               "Requests in Queue ",
               style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
             ),
-            Obx(() => Text(
-                  _GetXController.inQueueCount.value,
+            BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+              buildWhen: (previous, current) => current is LabRequestsBloc_UpdateQueueNumberState,
+              builder: (context, state) {
+                int number = 0;
+                if (state is LabRequestsBloc_UpdateQueueNumberState) number = state.number;
+                return Text(
+                  number.toString(),
                   style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
-                )),
+                );
+              },
+            ),
             SizedBox(
               width: 30,
             )
@@ -88,7 +101,6 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                     label: "Search",
                     icon: Icons.search,
                     onChange: (value) {
-                      Search = value;
                       search = value;
                       reload();
                     },
@@ -112,7 +124,7 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: CIA_DropDownSearch(
+                        child: CIA_DropDownSearchBasicIdName(
                           onSelect: (v) {
                             if (v.name == "CIA")
                               sourceEnum = EnumLabRequestSources.CIA;
@@ -124,12 +136,12 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                             reload();
                           },
                           label: 'Source',
-                          selectedItem: DropDownDTO(name: "None"),
+                          selectedItem: BasicNameIdObjectEntity(name: "None"),
                           items: [
-                            DropDownDTO(name: "None"),
-                            DropDownDTO(name: "CIA"),
-                            DropDownDTO(name: "Clinic"),
-                            DropDownDTO(name: "Outsource"),
+                            BasicNameIdObjectEntity(name: "None"),
+                            BasicNameIdObjectEntity(name: "CIA"),
+                            BasicNameIdObjectEntity(name: "Clinic"),
+                            BasicNameIdObjectEntity(name: "Outsource"),
                           ],
                         ),
                       ),
@@ -137,7 +149,7 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                         width: 10,
                       ),
                       Expanded(
-                        child: CIA_DropDownSearch(
+                        child: CIA_DropDownSearchBasicIdName(
                           onSelect: (v) {
                             if (v.name == "Unpaid")
                               paid = false;
@@ -147,11 +159,11 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                             reload();
                           },
                           label: 'Payment',
-                          selectedItem: DropDownDTO(name: "None"),
+                          selectedItem: BasicNameIdObjectEntity(name: "None"),
                           items: [
-                            DropDownDTO(name: "None"),
-                            DropDownDTO(name: "Paid"),
-                            DropDownDTO(name: "Unpaid"),
+                            BasicNameIdObjectEntity(name: "None"),
+                            BasicNameIdObjectEntity(name: "Paid"),
+                            BasicNameIdObjectEntity(name: "Unpaid"),
                           ],
                         ),
                       ),
@@ -159,7 +171,7 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                         width: 10,
                       ),
                       Expanded(
-                        child: CIA_DropDownSearch(
+                        child: CIA_DropDownSearchBasicIdName(
                           onSelect: (v) {
                             if (v.name == "In Queue")
                               statusEnum = EnumLabRequestStatus.InQueue;
@@ -173,13 +185,13 @@ class LabTodaysRequestsSearch extends StatelessWidget {
                             reload();
                           },
                           label: 'Status',
-                          selectedItem: DropDownDTO(name: "None"),
+                          selectedItem: BasicNameIdObjectEntity(name: "None"),
                           items: [
-                            DropDownDTO(name: "None"),
-                            DropDownDTO(name: "In Queue"),
-                            DropDownDTO(name: "In Progress"),
-                            DropDownDTO(name: "Finished and Handled"),
-                            DropDownDTO(name: "Finished Not Handled"),
+                            BasicNameIdObjectEntity(name: "None"),
+                            BasicNameIdObjectEntity(name: "In Queue"),
+                            BasicNameIdObjectEntity(name: "In Progress"),
+                            BasicNameIdObjectEntity(name: "Finished and Handled"),
+                            BasicNameIdObjectEntity(name: "Finished Not Handled"),
                           ],
                         ),
                       ),
@@ -193,17 +205,10 @@ class LabTodaysRequestsSearch extends StatelessWidget {
         ),
         Expanded(
           flex: 3,
-          child: CIA_Table(
-              columnNames: dataSource.columns,
+          child: TableWidget(
               dataSource: dataSource,
-              loadFunction: () async {
-                sourceEnum = null;
-                statusEnum = null;
-                paid = null;
-                return reload();
-              },
               onCellClick: (value) {
-                 context.goNamed(CIA_Router.routeConst_LabView,pathParameters: {"id":dataSource.models[value - 1].id.toString()});
+                //context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": dataSource.models[value - 1].id.toString()});
               }),
         ),
       ],
@@ -211,24 +216,20 @@ class LabTodaysRequestsSearch extends StatelessWidget {
   }
 
   reload() async {
-    var res = await dataSource.loadData(
+    bloc.add(LabRequestsBloc_GetTodaysRequestsEvent(
+        getAllRequestsParams: GetAllRequestsParams(
       search: search,
       from: DateTime.now().toString(),
       to: DateTime.now().toString(),
       source: sourceEnum,
       status: statusEnum,
       paid: paid,
-    );
-    if (res.statusCode == 200)
-      _GetXController.inQueueCount.value =
-          ((res.result) as List<LAB_RequestModel>).where((element) => element.status == EnumLabRequestStatus.InQueue).toList().length.toString();
-
-    return res;
+    )));
   }
 }
 
 class LabAllRequestsSearch extends StatelessWidget {
-  LabAllRequestsSearch({Key? key, this.myRequests =false}) : super(key: key);
+  LabAllRequestsSearch({Key? key, this.myRequests = false}) : super(key: key);
   static String routeName = "AllRequests";
   static String routePath = "Requests/AllRequests";
 
@@ -236,16 +237,17 @@ class LabAllRequestsSearch extends StatelessWidget {
   static String routeMyPath = "Requests/MyRequests";
 
   bool myRequests;
-  LabRequestDataSource dataSource = LabRequestDataSource();
+  LabRequestDataGridSource dataSource = LabRequestDataGridSource();
   EnumLabRequestStatus? statusEnum;
   EnumLabRequestSources? sourceEnum;
   bool? paid;
   String? from;
   String? to;
   String search = "";
+
   @override
   Widget build(BuildContext context) {
-   return Container();
+    return Container();
     /*return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -479,21 +481,13 @@ class LabAllRequestsSearch extends StatelessWidget {
       ],
     );*/
   }
+
   reload() async {
-    var res = await dataSource.loadData(
-      search: search,
-      from: from,
-      to: to,
-      source: sourceEnum,
-      status: statusEnum,
-      paid: paid,
-      myRequests: myRequests
-    );
-    if (res.statusCode == 200)
-      _GetXController.inQueueCount.value =
-          ((res.result) as List<LAB_RequestModel>).where((element) => element.status == EnumLabRequestStatus.InQueue).toList().length.toString();
+ //   var res = await dataSource.loadData(search: search, from: from, to: to, source: sourceEnum, status: statusEnum, paid: paid, myRequests: myRequests);
+ //   if (res.statusCode == 200)
+ //     _GetXController.inQueueCount.value =
+ //         ((res.result) as List<LabRequestEntity>).where((element) => element.status == EnumLabRequestStatus.InQueue).toList().length.toString();
 
-    return res;
+ //   return res;
   }
-
 }

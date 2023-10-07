@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
 import 'package:cariro_implant_academy/API/UserAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_States.dart';

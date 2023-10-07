@@ -2,7 +2,7 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
@@ -23,6 +23,7 @@ import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../Widgets/Title.dart';
 import '../../../../../core/injection_contianer.dart';
 import '../../../../../core/presentation/widgets/tableWidget.dart';
+import '../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import '../bloc/addOrRemoveMyPatientsBloc.dart';
 import '../bloc/addOrRemoveMyPatientsBloc_states.dart';
 import '../bloc/patientSeachBlocEvents.dart';
@@ -38,6 +39,9 @@ class PatientsSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LabCreateNewRequestPage(
+
+    );
     var dataSource = PatientSearchDataSourceTable(context);
     BlocProvider.of<PatientSearchBloc>(context).add( PatientSearchEvent(myPatients: myPatients));
     return MultiBlocListener(
@@ -130,7 +134,7 @@ class PatientsSearchPage extends StatelessWidget {
                                 CustomLoader.hide();
                               }
                               if (state is DoneState) {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                dialogHelper.dismissSingle(context);
                                 ShowSnackBar(context, isSuccess: true);
                                 BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: myPatients));
                               }

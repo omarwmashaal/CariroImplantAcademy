@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../../Models/Enum.dart';
+import '../../../../../core/constants/enums/enums.dart';
 
 
 class DiabeticEntity extends Equatable {

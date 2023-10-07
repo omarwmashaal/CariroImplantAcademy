@@ -3,7 +3,7 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
@@ -11,11 +11,11 @@ import 'package:cariro_implant_academy/core/features/authentication/presentation
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
-import 'package:cariro_implant_academy/Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/SignalR/SignalR.dart';
@@ -584,11 +584,11 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: LabCreateNewRequestSharedPage.routePath,
-                        name: LabCreateNewRequestSharedPage.routeName,
+                        path: LabCreateNewRequestPage.routePath,
+                        name: LabCreateNewRequestPage.routeName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: LabCreateNewRequestSharedPage(),
+                            child: LabCreateNewRequestPage(),
                           );
                         },
                       ),

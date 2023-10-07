@@ -2,13 +2,13 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import 'ApplicationUserModel.dart';
-import 'Enum.dart';
+import '../core/constants/enums/enums.dart';
 import 'LAB_CustomerModel.dart';
 
 class PatientInfoModel {
@@ -27,7 +27,7 @@ class PatientInfoModel {
   EnumPatientType? patientType;
   int? customerId;
   ApplicationUserModel? customer;
-  List<LAB_RequestModel>? requests;
+  List<LabRequestEntity>? requests;
   String? labDateOfVisit;
   String? profilePhoto;
   String? idBackPhoto;
@@ -68,7 +68,7 @@ class PatientInfoModel {
     patientType = EnumPatientType.values[json['patientType'] ?? 0];
     customerId = json['customerId'];
     customer = ApplicationUserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
-    requests = ((json['requests'] ?? []) as List<dynamic>).map((e) => LAB_RequestModel.fromJson(e)).toList();
+ //   requests = ((json['requests'] ?? []) as List<dynamic>).map((e) => LabRequestEntity.fromJson(e)).toList();
     labDateOfVisit = CIA_DateConverters.fromDateTimeToBackend(json['labDateOfVisit']);
   }
 
@@ -92,7 +92,7 @@ class PatientInfoModel {
     data['patientType'] = (this.patientType ?? EnumPatientType.CIA).index;
     data['customerId'] = this.customerId;
     data['customer'] = this.customer != null ? this.customer!.toJson() : null;
-    data['requests'] = (this.requests ?? []).map((e) => e.toJson()).toList();
+  //  data['requests'] = (this.requests ?? []).map((e) => e.toJson()).toList();
     data['labDateOfVisit'] = CIA_DateConverters.fromDateTimeToBackend(this.labDateOfVisit);
 
     return data;

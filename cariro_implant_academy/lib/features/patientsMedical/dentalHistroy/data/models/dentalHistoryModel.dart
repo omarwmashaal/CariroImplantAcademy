@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/entities/dentalHistoryEntity.dart';
 
-import '../../../../../Models/Enum.dart';
+import '../../../../../core/constants/enums/enums.dart';
 
 class DentalHistoryModel extends DentalHistoryEntity {
   DentalHistoryModel({

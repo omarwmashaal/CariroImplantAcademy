@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Models/CashFlowSummaryModel.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
 import '../../../../Widgets/CIA_PrimaryButton.dart';
@@ -60,7 +61,7 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
           widget.eS_dataSource.updateData(state.data.expenses ?? []);
           widget.iS_dataSource.updateData(state.data.income ?? []);
         } else if (state is CashFlowBloC_ProcessingCashFlowSuccessfullyState) {
-          Navigator.of(context, rootNavigator: true).pop();
+          dialogHelper.dismissSingle(context);
           bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
         }
         if (state is CashFlowBloC_ProcessingCashFlowState)

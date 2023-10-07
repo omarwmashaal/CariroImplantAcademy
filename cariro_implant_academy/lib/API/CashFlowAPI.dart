@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/Models/CashFlow.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/CashFlowSummaryModel.dart';

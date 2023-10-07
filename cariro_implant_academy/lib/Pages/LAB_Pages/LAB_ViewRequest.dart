@@ -1,8 +1,8 @@
 import 'package:cariro_implant_academy/API/LAB_RequestsAPI.dart';
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
-import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../../Models/Lab_StepModel.dart';
+import '../../features/labRequest/domain/entities/labStepEntity.dart';
 import '../../Widgets/CIA_DropDown.dart';
 import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../../Widgets/CIA_TextFormField.dart';
@@ -33,7 +33,7 @@ class LAB_ViewRequestPage extends StatefulWidget {
 }
 
 class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
-  late LAB_RequestModel request;
+  late LabRequestEntity request;
   int? nextAssignId;
   int? nextTaskId;
   String? thisStepNotes = "";
@@ -41,10 +41,12 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
   @override
   Widget build(BuildContext context) {
     //siteController.setAppBarWidget();
-    return CIA_FutureBuilder(
+    return Container();
+
+      /*CIA_FutureBuilder(
       loadFunction: LAB_RequestsAPI.GetRequest(widget.id),
       onSuccess: (data) {
-        request = data as LAB_RequestModel;
+        request = data as LabRequestEntity;
         return Column(
           children: [
             Expanded(
@@ -386,7 +388,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                           context: context,
                                                           onSave: () async {
                                                             var res = await LAB_RequestsAPI.PayForRequest(widget.id);
-                                                            if (res.statusCode == 200) Navigator.of(context, rootNavigator: true).pop();
+                                                            if (res.statusCode == 200) dialogHelper.dismissSingle(context);
                                                             ShowSnackBar(context, isSuccess: res.statusCode == 200);
                                                             setState(() {});
                                                           },
@@ -455,6 +457,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           ],
         );
       },
-    );
+    )*/;
   }
 }

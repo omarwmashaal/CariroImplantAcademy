@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../Helpers/CIA_DateConverters.dart';
 import 'DTOs/DropDownDTO.dart';
-import 'LAB_RequestModel.dart';
+import '../features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'PatientInfo.dart';
 
 

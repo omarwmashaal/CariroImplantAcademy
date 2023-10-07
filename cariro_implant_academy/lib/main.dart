@@ -38,9 +38,11 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
@@ -71,11 +73,11 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Helpers/Router.dart';
-import 'Models/Enum.dart';
+import 'core/constants/enums/enums.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
-import 'Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import 'features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
-import 'Pages/SharedPages/LapCreateNewRequestSharedPage.dart';
+import 'features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
 import 'SignalR/SignalR.dart';
 import 'Widgets/CIA_PopUp.dart';
@@ -123,6 +125,7 @@ void main() async {
   });*/
   init();
   siteController = sl<SiteController>();
+  dialogHelper = sl<DialogHelper>();
   runApp(
     BlocProvider<SiteChangeBloc>(
       create: (context) => sl<SiteChangeBloc>(),
@@ -162,6 +165,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<SettingsBloc>()),
         BlocProvider(create: (context) => sl<AuthenticationBloc>()),
         BlocProvider(create: (context) => sl<AdvancedSearchBloc>()),
+        BlocProvider(create: (context) => sl<LabRequestsBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

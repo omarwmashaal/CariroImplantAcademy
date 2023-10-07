@@ -3,7 +3,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/domain/entities/hba1cEntity.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../../Models/Enum.dart';
+import '../../../../../core/constants/enums/enums.dart';
 import 'bloodPressureEntity.dart';
 import 'diabeticEntity.dart';
 

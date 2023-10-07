@@ -1,0 +1,35 @@
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
+import 'package:dartz/dartz.dart';
+
+import '../entities/labStepEntity.dart';
+import '../usecases/getAllRequestsUseCase.dart';
+
+abstract class LabRequestRepository {
+
+  Future<Either<Failure, List<LabRequestEntity>>> getAllLabRequests(GetAllRequestsParams params);
+
+  Future<Either<Failure, List<LabRequestEntity>>> getPatientLabRequests(int id);
+
+  Future<Either<Failure, LabRequestEntity>> getLabRequest(int id);
+
+  Future<Either<Failure, NoParams>> addRequest(LabRequestEntity model);
+
+  Future<Either<Failure, BasicNameIdObjectEntity>> getDefaultStepByName(String name);
+
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getDefaultSteps();
+
+  Future<Either<Failure, NoParams>> addToMyTasks(int id);
+
+  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId);
+
+  Future<Either<Failure, NoParams>> finishTask(int id, int? nextTaskId, int? assignToId, String? notes);
+
+  Future<Either<Failure, NoParams>> markRequestAsDone(int id, String? notes);
+
+  Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
+
+  Future<Either<Failure, NoParams>> payForRequest(int id);
+}

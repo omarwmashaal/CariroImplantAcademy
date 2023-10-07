@@ -1,4 +1,4 @@
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentLogTableWidget.dart';
@@ -30,6 +30,7 @@ import 'package:get/get_state_manager/src/simple/simple_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Models/CashFlowSummaryModel.dart';
 import '../../../../Widgets/CIA_DropDown.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
@@ -170,7 +171,7 @@ class _CashFlowExpensesPageState extends State<CashFlowExpensesPage> {
             listener: (context, state) {
               if (state is CashFlowBloC_ProcessingCashFlowSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true);
-                Navigator.of(context, rootNavigator: true).pop();
+                dialogHelper.dismissSingle(context);
                 loadData();
               } else if (state is CashFlowBloC_ProcessingCashFlowErrorState)
                 ShowSnackBar(context, isSuccess: false);

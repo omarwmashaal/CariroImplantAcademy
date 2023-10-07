@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
 import '../../../../../Helpers/Router.dart';
-import '../../../../../Models/Enum.dart';
+import '../../../../constants/enums/enums.dart';
 import '../../../../../features/patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 
 class NotificationModel extends NotificationEntity {

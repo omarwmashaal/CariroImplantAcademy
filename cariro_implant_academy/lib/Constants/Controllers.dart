@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/RolesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
+import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 
 import '../Controllers/PagesController.dart';
 import '../core/injection_contianer.dart';
@@ -11,5 +12,7 @@ InternalPagesController internalPagesController =
     InternalPagesController.instance;
 RolesController rolesController = RolesController.instance;
 late SiteController siteController ;
+late DialogHelper dialogHelper;
+
 
 

@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
@@ -77,6 +78,16 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, NoParams>> changeRole(int id, String role) async {
     try {
       final result = await userDatasource.changeRole(id, role);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source)async {
+    try {
+      final result = await userDatasource.searchUsersByWorkPlace(search, source);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

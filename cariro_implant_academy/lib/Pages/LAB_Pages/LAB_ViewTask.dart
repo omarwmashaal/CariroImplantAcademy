@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/LAB_TaskModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
@@ -18,7 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
-import '../../Models/LAB_RequestModel.dart';
+import '../../features/labRequest/domain/entities/labRequestEntityl.dart';
 import '../../Widgets/CIA_DropDown.dart';
 import '../../Widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../../Widgets/CIA_PrimaryButton.dart';
@@ -45,7 +45,7 @@ class LAB_ViewTaskPage extends StatefulWidget {
 }
 
 class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
-  late LAB_RequestModel request;
+  late LabRequestEntity request;
 
   int? nextAssignId;
   int? nextTaskId;
@@ -58,10 +58,11 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CIA_FutureBuilder(
+    return Container();
+    /*return CIA_FutureBuilder(
       loadFunction: LAB_RequestsAPI.GetRequest(widget.id),
       onSuccess: (data) {
-        request = data as LAB_RequestModel;
+        request = data as LabRequestEntity;
         int t = 0;
         request.steps!.forEach((element) {
           t += element.price ?? 0;
@@ -573,7 +574,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     nextAssignId = null;
                                     nextTaskId = null;
                                     ShowSnackBar(context, isSuccess: res.statusCode == 200);
-                                    Navigator.of(context, rootNavigator: true).pop();
+                                    dialogHelper.dismissSingle(context);
                                     return true;
                                     //setState(() {});
                                   },
@@ -624,6 +625,6 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
           ],
         );
       },
-    );
+    );*/
   }
 }

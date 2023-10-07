@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/API/MedicalAPI.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:get/get.dart';
 
 class DentalExaminationModel {

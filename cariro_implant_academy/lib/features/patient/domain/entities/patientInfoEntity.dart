@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/constants/enums/enums.dart';
+
 class PatientInfoEntity extends Equatable {
   String? name;
   int? id;
@@ -27,6 +29,7 @@ class PatientInfoEntity extends Equatable {
   Uint8List? idBackImage;
   String? registrationDate;
   String? registeredBy;
+  EnumPatientType patientType;
 
   PatientInfoEntity(
       { this.name,
@@ -52,6 +55,7 @@ class PatientInfoEntity extends Equatable {
       this.idBackImage,
         this.idFrontImage,
         this.profileImage,
+        this.patientType = EnumPatientType.CIA,
       });
 
   @override
@@ -71,6 +75,7 @@ class PatientInfoEntity extends Equatable {
         address,
       phone2,
         relativePatientId,
+    patientType,
 
       ];
 

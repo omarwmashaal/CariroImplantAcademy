@@ -2,14 +2,14 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-import '../Models/Enum.dart';
+import '../core/constants/enums/enums.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';

@@ -223,7 +223,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                                 if (state is LoadedPatients) {
                                                   newVisit.patientName = state.patients[index].name;
                                                   newVisit.id = state.patients[index].id;
-                                                  Navigator.of(context, rootNavigator: true).pop();
+                                                  dialogHelper.dismissSingle(context);
                                                   setState(() {});
                                                 }
                                               },

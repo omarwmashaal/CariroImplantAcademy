@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants/Colors.dart';
 import '../../Constants/Controllers.dart';
 import '../../Controllers/SiteController.dart';
-import '../../Models/Enum.dart';
+import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
 const _host ="http://localhost:5170/";
@@ -43,3 +43,5 @@ const settingsController= "Settings";
 const stockController= "Stock";
 const imageController= "Image";
 const cashFlowController= "CashFlow";
+const labRequestsController= "LAB_Requests";
+const labCustomerController= "Lab_Customers";

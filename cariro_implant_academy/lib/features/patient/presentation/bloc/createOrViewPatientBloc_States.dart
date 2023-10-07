@@ -77,9 +77,11 @@ class ChangedPatientRelative extends CreateOrViewPatientBloc_State{
   List<Object?> get props => [];
 }
 class CreatedPatientState extends CreateOrViewPatientBloc_State{
+  final PatientInfoEntity patient;
+  CreatedPatientState({required this.patient});
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [patient];
 }
 class Error extends CreateOrViewPatientBloc_State{
   final String message;

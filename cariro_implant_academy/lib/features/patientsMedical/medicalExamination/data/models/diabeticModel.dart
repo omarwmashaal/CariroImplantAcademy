@@ -2,7 +2,7 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
-import '../../../../../Models/Enum.dart';
+import '../../../../../core/constants/enums/enums.dart';
 import '../../domain/entities/diabeticEntity.dart';
 
 class DiabeticModel extends DiabeticEntity {

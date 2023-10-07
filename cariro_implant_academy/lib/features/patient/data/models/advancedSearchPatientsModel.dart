@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 
 class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
   AdvancedSearchPatientsModel({

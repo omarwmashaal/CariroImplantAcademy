@@ -1,16 +1,16 @@
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
-import 'package:cariro_implant_academy/Models/LAB_RequestModel.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/Lab_StepModel.dart';
+import '../features/labRequest/domain/entities/labStepEntity.dart';
 
 class CIA_LAB_StepTimelineWidget extends StatelessWidget {
   CIA_LAB_StepTimelineWidget({Key? key, required this.steps,required this.customerId, this.isTask = false}) : super(key: key);
-  List<LAB_StepModel> steps;
+  List<LabStepEntity> steps;
   bool isTask;
   int customerId;
 

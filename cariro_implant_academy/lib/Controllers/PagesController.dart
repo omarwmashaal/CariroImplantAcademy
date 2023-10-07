@@ -1,7 +1,7 @@
 
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
@@ -26,7 +26,7 @@ import '../Pages/Clinic_Pages/Clinic_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
-import '../Pages/LAB_Pages/LAB_LabRequestsSearch.dart';
+import '../features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';

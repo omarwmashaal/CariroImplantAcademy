@@ -3,7 +3,7 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/Enum.dart';
+import '../core/constants/enums/enums.dart';
 
 class StepModel {
   String name;

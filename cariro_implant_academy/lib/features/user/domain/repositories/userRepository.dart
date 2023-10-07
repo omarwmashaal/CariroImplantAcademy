@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/advanced
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/error/failure.dart';
 import '../../../patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../../patient/domain/entities/visitEntity.dart';
@@ -11,6 +12,7 @@ abstract class UsersRepository {
   Future<Either<Failure, UserEntity>> getUserData({required int id});
 
   Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch});
+  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<Either<Failure, NoParams>> updateUserInfo(int id, UserEntity userData);
   Future<Either<Failure, NoParams>> changeRole(int id, String role);

@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlo
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowSummaryEntity.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/error/failure.dart';
 

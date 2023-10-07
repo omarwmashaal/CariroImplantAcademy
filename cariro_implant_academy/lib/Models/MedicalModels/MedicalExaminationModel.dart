@@ -1,7 +1,7 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 
-import '../Enum.dart';
+import '../../core/constants/enums/enums.dart';
 
 class MedicalExaminationModel {
   int? id;

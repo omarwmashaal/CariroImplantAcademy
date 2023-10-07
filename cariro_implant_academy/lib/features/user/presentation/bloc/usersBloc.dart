@@ -19,11 +19,13 @@ import '../../domain/entities/enum.dart';
 import '../../domain/usecases/getUserDataUseCase.dart';
 import '../../domain/usecases/resetPasswordUseCase.dart';
 import '../../domain/usecases/searchUsersByRoleUseCase.dart';
+import '../../domain/usecases/searchUsersByWorkPlaceUseCase.dart';
 import '../../domain/usecases/updateUserInfoUseCase.dart';
 
 class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
   final GetUserDataUseCase getUserInfoUseCase;
   final SearchUsersByRoleUseCase searchUsersByRoleUseCase;
+  final SearchUsersByWorkPlaceUseCase searchUsersByWorkPlaceUseCase;
   final UpdateUserInfoUseCase updateUserInfoUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
   final GetUsersSessionsUseCase getUsersSessionsUseCase;
@@ -38,6 +40,7 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
     required this.resetPasswordUseCase,
     required this.getUsersSessionsUseCase,
     required this.changeRoleUseCase,
+    required this.searchUsersByWorkPlaceUseCase,
     required this.resetPasswordForUserUseCase,
   }) : super(UsersBloc_LoadingUserState()) {
     on<UsersBloc_GetUserInfoEvent>(
@@ -58,6 +61,16 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
           search: event.search,
           batch: event.batchId,
         ));
+        result.fold(
+          (l) => emit(UsersBloc_LoadingUserErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_LoadedMultiUsersSuccessfullyState(usersData: r)),
+        );
+      },
+    );
+    on<UsersBloc_SearchUsersByWorkPlaceEvent>(
+      (event, emit) async {
+        emit(UsersBloc_LoadingUserState());
+        final result = await searchUsersByWorkPlaceUseCase(event.params);
         result.fold(
           (l) => emit(UsersBloc_LoadingUserErrorState(message: l.message ?? "")),
           (r) => emit(UsersBloc_LoadedMultiUsersSuccessfullyState(usersData: r)),

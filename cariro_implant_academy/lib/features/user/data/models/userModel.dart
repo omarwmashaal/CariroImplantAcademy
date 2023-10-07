@@ -2,7 +2,7 @@ import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.d
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../Models/Enum.dart';
+import '../../../../core/constants/enums/enums.dart';
 
 class UserModel extends UserEntity {
   UserModel({

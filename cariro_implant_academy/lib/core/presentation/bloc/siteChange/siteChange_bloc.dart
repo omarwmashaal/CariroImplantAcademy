@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Models/Enum.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocEvents.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
