@@ -58,6 +58,7 @@ class _SlidingTabState extends State<SlidingTab> {
     switcherIndex =  widget.tabs.indexWhere((element) =>(element.compareName?? element.namedDirectory) ==path) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory) == path);
     //siteController.title = widget.tabs[switcherIndex].title;
     return SlideSwitcher(
+      key: GlobalKey(),
       children: BuildItems(),
       initialIndex: widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory) == path) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory)== path),
       onSelect: (int index) {

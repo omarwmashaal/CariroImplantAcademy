@@ -72,9 +72,9 @@ class SiteController  {
     if (tabs != null) {
       sl<AppBarBloc>().add(AppBarChangeAppBarEvent(
           newAppBar: Container(
-        key: GlobalKey(),
+      //  key: GlobalKey(),
         child: SlidingTab(
-            key: GlobalKey(),
+        //    key: GlobalKey(),
             tabs: tabs,
             weight: tabs.isNotEmpty && tabs.length > 3
                 ? 600
@@ -106,7 +106,7 @@ class SiteController  {
   
   setDynamicAppBar({required BuildContext context, Map<String, String>? pathQueries}) {
     var path = GoRouter.of(context).location.split("/").last;
-    Future.delayed(Duration(milliseconds: 500)).then((value) {
+    Future.delayed(Duration(milliseconds: 0)).then((value) {
       if (siteController.getSite() == Website.CIA) {
         if ((path == SettingsPage.routeName && getRole() == "admin") || (path == UsersSettingsPage.routeName && getRole() == "admin"))
           siteController._setAppBarWidget(context: context, tabs: [

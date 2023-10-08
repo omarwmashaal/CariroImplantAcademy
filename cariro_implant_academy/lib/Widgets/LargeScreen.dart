@@ -66,9 +66,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
       children: [
         //TODO: Remove onrole change
         DrawerItems(
-          onSiteChange: () => setState(
-            () {},
-          ),
+          onSiteChange: () => null,
         ),
         Expanded(
             flex: 7,
