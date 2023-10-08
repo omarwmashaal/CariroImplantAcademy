@@ -84,6 +84,7 @@ class VisitDataSource extends DataGridSource {
   List<VisitEntity> models = <VisitEntity>[];
   bool sessions;
   List<String> columns = [
+    "id",
     "Patient",
     "Status",
     "Reservation Time",
@@ -103,6 +104,7 @@ class VisitDataSource extends DataGridSource {
   init() {
     if (sessions) {
       columns = [
+        "id",
         "Patient",
         //   "Status",
         //  "Reservation Time",
@@ -115,14 +117,15 @@ class VisitDataSource extends DataGridSource {
       ];
       _visitData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'id', value: e.id),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 // DataGridCell<String>(columnName: 'Status', value: e.status??""),
                 // DataGridCell<String>(columnName: 'Reservation Time', value: e.reservationTime??""),
-                DataGridCell<String>(
-                    columnName: 'Real Visit Time', value: e.realVisitTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.realVisitTime!)),
-                DataGridCell<String>(
-                    columnName: 'Enters Clinic Time', value: e.entersClinicTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.entersClinicTime!)),
-                DataGridCell<String>(columnName: 'Leave Time', value: e.leaveTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.leaveTime!)),
+                DataGridCell<DateTime>(
+                    columnName: 'Real Visit Time', value: e.realVisitTime),
+                DataGridCell<DateTime>(
+                    columnName: 'Enters Clinic Time', value: e.entersClinicTime),
+                DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
                 DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
@@ -130,6 +133,7 @@ class VisitDataSource extends DataGridSource {
           .toList();
     } else {
       columns = [
+        "id",
         "Patient",
         "Status",
         "Reservation Time",
@@ -142,13 +146,14 @@ class VisitDataSource extends DataGridSource {
       ];
       _visitData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'id', value: e.id),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
-                DataGridCell<String>(
-                    columnName: 'Real Visit Time', value: e.realVisitTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.realVisitTime!)),
-                DataGridCell<String>(
-                    columnName: 'Enters Clinic Time', value: e.entersClinicTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.entersClinicTime!)),
-                DataGridCell<String>(columnName: 'Leave Time', value: e.leaveTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.leaveTime!)),
+                DataGridCell<DateTime>(
+                    columnName: 'Real Visit Time', value: e.realVisitTime),
+                DataGridCell<DateTime>(
+                    columnName: 'Enters Clinic Time', value: e.entersClinicTime ),
+                DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
                 DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
@@ -169,6 +174,7 @@ class VisitDataSource extends DataGridSource {
       return Container(
         alignment: Alignment.center,
         child: Text(
+          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
           e.value == null ? "" : e.value.toString(),
           style: TextStyle(fontSize: 12),
         ),

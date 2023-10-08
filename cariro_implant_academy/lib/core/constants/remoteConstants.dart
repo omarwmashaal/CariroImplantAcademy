@@ -7,8 +7,8 @@ import '../../Controllers/SiteController.dart';
 import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
-//const _host ="http://localhost:5170/";
-const _host = "http://54.224.105.207/api/";
+const _host ="http://localhost:5170/";
+//const _host = "http://54.224.105.207/api/";
 final serverHost = "${_host}api";
 final signalRHost = "${_host}notificationhub";
 Website _site = Website.CIA;

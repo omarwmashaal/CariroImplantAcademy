@@ -11,8 +11,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../Helpers/Router.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
 import '../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../Widgets/CIA_SecondaryButton.dart';
@@ -205,7 +207,7 @@ class VisitsTableWidget extends StatelessWidget {
                   // loadFunction:()=> dataSource.loadData(),
                   dataSource: dataSource,
                   onCellClick: (index) {
-                    //   context.goNamed(CIA_Router.routeConst_PatientInfo,pathParameters: {'id':dataSource.models[index-1].id.toString()});
+                       context.goNamed(CIA_Router.routeConst_PatientInfo,pathParameters: {'id':dataSource.models.firstWhere((element) => element.id==index).patientId!.toString()});
                   },
                 ),
               );

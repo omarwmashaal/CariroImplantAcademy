@@ -281,7 +281,7 @@ class PaymentLogsTableDataSource extends DataGridSource {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!)),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name),
               DataGridCell<int>(columnName: 'Patient Id', value: e.patientId!),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
@@ -307,7 +307,8 @@ class PaymentLogsTableDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        child: e.value is Widget
+        child:          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
+        e.value is Widget
             ? e.value
             : Text(
                 e.value.toString(),

@@ -52,7 +52,7 @@ class VisitModel extends VisitEntity {
     to = DateTime.tryParse(json['to']??"")?.toLocal();
     title = json['title'];
     roomId = json['roomId'] ?? 0;
-    patientId = json['patientId'] ?? 0;
+    patientId = json['patientID'] ?? 0;
     patientName = json['patientName'] ?? "";
     duration = CIA_DateConverters.fromBackendToTimeSpan(json['duration']) ?? "";
     room = json['room'] != null ? RoomModel.fromJson(json['room'] as Map<String, dynamic>) : RoomModel();

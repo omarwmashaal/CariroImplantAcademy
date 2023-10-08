@@ -18,7 +18,7 @@ class TableWidget extends StatefulWidget {
       this.showSum = false,
         this.headerStyle,
         this.headerHeight,
-      this.allowSorting = false,
+      this.allowSorting = true,
       this.showGridLines = false})
       : super(key: key);
 

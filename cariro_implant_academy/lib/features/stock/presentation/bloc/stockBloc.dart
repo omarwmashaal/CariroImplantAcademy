@@ -297,7 +297,7 @@ class StockLogsDataGridSource extends DataGridSource {
     _stockLogsData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Date', value: e.date==null?"":DateFormat("dd-MM-yyyy hh:mm a").format(e.date!)),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Name', value: e.name),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
               DataGridCell<int>(columnName: 'Count', value: e.count),
@@ -318,8 +318,9 @@ class StockLogsDataGridSource extends DataGridSource {
       if (e.columnName == "Status")
         return Container(
           alignment: Alignment.center,
-          child: Text(
-            e.value.toString(),
+          child: Text(          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
+
+          e.value.toString(),
             style: TextStyle(
                 color: e.value == "Added"
                     ? Colors.green

@@ -81,7 +81,7 @@ class ReceiptTableDataSource extends DataGridSource {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!)),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.date ),
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name),
               DataGridCell<int>(columnName: 'Patient Id', value: e.patientId!),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
@@ -104,6 +104,7 @@ class ReceiptTableDataSource extends DataGridSource {
       return Container(
         alignment: Alignment.center,
         child: Text(
+          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
           e.value.toString(),
           style: TextStyle(color: e.columnName.toLowerCase() == "unpaid" && e.value != 0 ? Colors.red : Colors.black),
         ),
