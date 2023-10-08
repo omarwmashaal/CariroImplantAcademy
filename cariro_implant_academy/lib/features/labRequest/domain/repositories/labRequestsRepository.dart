@@ -14,6 +14,7 @@ abstract class LabRequestRepository {
   Future<Either<Failure, List<LabRequestEntity>>> getPatientLabRequests(int id);
 
   Future<Either<Failure, LabRequestEntity>> getLabRequest(int id);
+  Future<Either<Failure, NoParams>> checkLabRequests(int id);
 
   Future<Either<Failure, NoParams>> addRequest(LabRequestEntity model);
 

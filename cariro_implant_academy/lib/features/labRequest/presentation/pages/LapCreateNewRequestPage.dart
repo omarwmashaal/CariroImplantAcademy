@@ -80,7 +80,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);
     if (widget.isDoctor) {
-      // labRequest.customer = siteController.getUser();
+      labRequest.customer = UserEntity(
+        name: siteController.getUserName(),
+        idInt: siteController.getUserId(),
+        phoneNumber: siteController.getUserPhoneNumber(),
+      );
       labRequest.customerId = siteController.getUserId();
       if (widget.patient != null) {
         labRequest.patient = BasicNameIdObjectEntity(name: widget.patient!.name, id: widget.patient!.id);

@@ -35,7 +35,7 @@ class StockLogModel extends StockLogEntity {
     data['count'] = this.count;
     data['categoryId'] = this.categoryId;
     data['category'] = this.category != null ? BasicNameIdObjectModel.fromEntity(this.category!).toJson() : null;
-    data['date'] = this.date==null?null:this.date!.toIso8601String();
+    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
     data['status'] = this.status;
     data['operatorID'] = this.operatorID;
     data['operator'] = this.operator == null ? null : BasicNameIdObjectModel.fromEntity(this.operator!).toJson();

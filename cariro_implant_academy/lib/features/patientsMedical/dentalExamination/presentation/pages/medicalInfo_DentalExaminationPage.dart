@@ -4,7 +4,9 @@ import 'package:cariro_implant_academy/features/patientsMedical/dentalExaminatio
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,11 +65,16 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DentalExaminationBloc, DentalExaminationBloc_States>(
-      buildWhen: (previous, current) => current is DentalExaminationBloc_LoadingDataState || current is DentalExaminationBloc_LoadedSuccessfullyState,
+      buildWhen: (previous, current) =>
+      current is DentalExaminationBloc_LoadingDataState ||
+          current is DentalExaminationBloc_LoadedSuccessfullyState ||
+          current is DentalExaminationBloc_ErrorState
+      ,
       builder: (context, state) {
         if (state is DentalExaminationBloc_LoadingDataState)
           return LoadingWidget();
-        else if (state is DentalExaminationBloc_LoadedSuccessfullyState) {
+        else if (state is DentalExaminationBloc_LoadedSuccessfullyState)
+        {
           dentalExaminationEntity = state.dentalExaminationEntity;
           bloc.isInitialized = true;
           return ListView(
@@ -573,6 +580,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
             ],
           );
         }
+        else if(state is DentalExaminationBloc_ErrorState)
+        return BigErrorPageWidget(message: state.message);
         return Container();
       },
       listener: (context, state) {

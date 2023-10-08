@@ -20,6 +20,7 @@ abstract class LabRequestDatasource {
   Future<List<LabRequestModel>> getPatientLabRequests(int id);
 
   Future<LabRequestModel> getLabRequest(int id);
+  Future<NoParams> checkLabRequests(int id);
 
   Future<NoParams> addRequest(LabRequestEntity model);
 
@@ -47,7 +48,17 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
 
   @override
   Future<NoParams> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps) async {
-    throw UnimplementedError();
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$labRequestsController/addOrUpdateRequestReceipt?id=$id",
+        body: steps.map((e) => LabStepModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 
   @override
@@ -203,7 +214,7 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     late StandardHttpResponse response;
 
     try {
-      response = await httpRepo.post(host: "$serverHost/$labRequestsController/markRequestAsDone?id=$id&${notes==null?"":"notes=$notes"}");
+      response = await httpRepo.post(host: "$serverHost/$labRequestsController/markRequestAsDone?id=$id&${notes == null ? "" : "notes=$notes"}");
     } catch (e) {
       throw mapException(e);
     }
@@ -213,6 +224,19 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
 
   @override
   Future<NoParams> payForRequest(int id) async {
-   throw UnimplementedError();
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<NoParams> checkLabRequests(int id) async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.post(host: "$serverHost/$labRequestsController/CheckLabRequests?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 }

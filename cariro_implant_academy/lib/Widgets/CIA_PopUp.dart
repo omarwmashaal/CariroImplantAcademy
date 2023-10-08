@@ -20,6 +20,9 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
   String timey = "PM";
   dialogHelper.increaseCount();
   Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
     content: StatefulBuilder(
@@ -115,6 +118,9 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
   String date = "";
   dialogHelper.increaseCount();
   Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
     content: StatefulBuilder(
@@ -169,6 +175,10 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
 
   dialogHelper.increaseCount();
   Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
+    
     context: context,
     title: title,
     content: StatefulBuilder(
@@ -187,6 +197,9 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
                           isTreatment: true,
                           onCellClick: (value) {
                             Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
                               context: context,
                               title: "Treatment Notes",
                               content: SizedBox(
@@ -248,8 +261,12 @@ CIA_ShowPopUp(
     double? width}) async {
   dialogHelper.increaseCount();
   await Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
+
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
         width: width ?? 400,
@@ -291,6 +308,9 @@ CIA_ShowPopUpSaveRequest(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
@@ -351,6 +371,9 @@ CIA_ShowPopUpYesNo(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
     //content: SizedBox(width: width??120,),
@@ -395,6 +418,9 @@ dialogHelper.increaseCount();
   List<DropDownDTO> results = [];
   TextEditingController controller = TextEditingController();
   Alert(
+    closeFunction: (){
+      dialogHelper.dismissSingle(context);
+    },
     context: context,
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {

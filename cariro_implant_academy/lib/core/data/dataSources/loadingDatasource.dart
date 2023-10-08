@@ -41,6 +41,9 @@ class LoadingDataSourceImpl implements LoadingDatasource {
       case LoadUsersEnum.supervisors:
         searchHost = "LoadSupervisors";
         break;
+      case LoadUsersEnum.technicians:
+        searchHost = "LoadTechnicians";
+        break;
       default:
         searchHost = "";
     }

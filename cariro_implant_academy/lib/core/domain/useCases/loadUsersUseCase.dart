@@ -22,6 +22,7 @@ enum LoadUsersEnum {
   supervisors,
   instructorsAndAssistants,
   candidates,
+  technicians,
 }
 
 

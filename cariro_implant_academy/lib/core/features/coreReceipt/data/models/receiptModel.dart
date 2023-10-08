@@ -47,7 +47,7 @@ class ReceiptModel extends ReceiptEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['date'] = this.date==null?null:this.date!.toIso8601String();
+    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
     data['patientId'] = this.patientId;
     //data['patient'] = this.patient == null ? null : BasicNameIdObjectModel.fromEntity(this.patient!).t();
     data['operatorId'] = this.operatorId;

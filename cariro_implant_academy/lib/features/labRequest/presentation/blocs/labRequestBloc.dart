@@ -1,7 +1,11 @@
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createLabRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
@@ -14,6 +18,9 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../../Constants/Controllers.dart';
 import '../../../../core/constants/enums/enums.dart';
 import '../../domain/entities/labRequestEntityl.dart';
+import '../../domain/usecases/checkLabRequestsUseCase.dart';
+import '../../domain/usecases/getPatientRequestsUseCase.dart';
+import '../../domain/usecases/getRequestUseCase.dart';
 
 class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_States> {
   final GetAllLabRequestsUseCase getAllLabRequestsUseCase;
@@ -21,6 +28,14 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final SearchLabPatientsByTypeUseCase searchLabPatientsByTypeUseCase;
   final CreateLabRequestUseCase createLabRequestUseCase;
   final GetDefaultStepByNameUseCase getDefaultStepByNameUseCase;
+  final GetPatientLabRequestsUseCase getPatientLabRequestsUseCase;
+  final GetLabRequestUseCase getLabRequestUseCase;
+  final FinishTaskUseCase finishTaskUseCase;
+  final MarkRequestAsDoneUseCase markRequestAsDoneUseCase;
+  final AddOrUpdateRequestReceiptUseCase addOrUpdateRequestReceiptUseCase;
+  final AssignTaskToTechnicianUseCase assignTaskToTechnicianUseCase;
+
+
 
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
@@ -28,6 +43,12 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.searchLabPatientsByTypeUseCase,
     required this.createLabRequestUseCase,
     required this.getDefaultStepByNameUseCase,
+    required this.getPatientLabRequestsUseCase,
+    required this.getLabRequestUseCase,
+    required this.finishTaskUseCase,
+    required this.markRequestAsDoneUseCase,
+    required this.addOrUpdateRequestReceiptUseCase,
+    required this.assignTaskToTechnicianUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -37,7 +58,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
           ..from = DateFormat("yyyy-MM-dd").format(DateTime.now()));
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? "")),
-          (r) => emit(LabRequestsBloc_LoadedRequestsSuccessfullyState(requests: r)),
+          (r) => emit(LabRequestsBloc_LoadedMultiRequestsSuccessfullyState(requests: r)),
         );
       },
     );
@@ -58,6 +79,66 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         result.fold(
           (l) => emit(LabRequestsBloc_SearchingPatientsErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_LoadedPatientsState(patients: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_GetPatientsRequestsEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_LoadingRequestsState());
+        final result = await getPatientLabRequestsUseCase(event.patientId);
+        result.fold(
+          (l) => emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_LoadedMultiRequestsSuccessfullyState(requests: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_GetRequestEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_LoadingRequestsState());
+        final result = await getLabRequestUseCase(event.id);
+        result.fold(
+          (l) => emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_AssignTaskToATechnicianEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_AssigningTaskToATechnicianState());
+        final result = await assignTaskToTechnicianUseCase(event.params);
+        result.fold(
+          (l) => emit(LabRequestsBloc_AssigningTaskToATechnicianErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_AssignedTaskToATechnicianSuccessfullyState()),
+        );
+      },
+    );
+    on<LabRequestsBloc_FinishTaskEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_FinishingTaskState());
+        final result = await finishTaskUseCase(event.params);
+        result.fold(
+          (l) => emit(LabRequestsBloc_FinishingTaskErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_FinishedTaskSuccessfullyState()),
+        );
+      },
+    );
+    on<LabRequestsBloc_MarkRequestAsDoneEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_MarkingRequestAsDoneState());
+        final result = await markRequestAsDoneUseCase(event.params);
+        result.fold(
+          (l) => emit(LabRequestsBloc_MarkingRequestAsDoneErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_MarkedRequestAsDoneSuccessfullyState()),
+        );
+      },
+    );
+    on<LabRequestsBloc_AddOrUpdateRequestReceiptEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_UpdatingRequestReceiptState());
+        final result = await addOrUpdateRequestReceiptUseCase(event.params);
+        result.fold(
+          (l) => emit(LabRequestsBloc_UpdatingRequestErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_UpdatedRequestReceiptSuccessfullyState()),
         );
       },
     );
@@ -132,14 +213,14 @@ class LabRequestDataGridSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
               DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!)),
-              DataGridCell<String>(columnName: 'Source', value: e.source!.name),
-              DataGridCell<String>(columnName: 'Customer Name', value: e.customer!.name ?? ""),
-              DataGridCell<String>(columnName: 'Customer Phone', value: e.customer!.phoneNumber ?? ""),
-              DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
+              DataGridCell<String>(columnName: 'Source', value: e.source?.name??""),
+              DataGridCell<String>(columnName: 'Customer Name', value: e.customer?.name ?? ""),
+              DataGridCell<String>(columnName: 'Customer Phone', value: e.customer?.phoneNumber ?? ""),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name ?? ""),
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
-              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo!.name),
-              DataGridCell<String>(columnName: 'Status', value: e.status.toString().split(".").last),
-              DataGridCell<String>(columnName: 'Step', value: (e.steps ?? []).last.step!.name),
+              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name??""),
+              DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last??""),
+              DataGridCell<String>(columnName: 'Step', value: e.steps ==null||(e.steps??[]).length==0?"": (e.steps ?? [])?.last?.step?.name??""),
             ]))
         .toList();
   }

@@ -34,7 +34,7 @@ class RoomDatasourceImpl implements RoomDatasource{
   Future<List<RoomModel>> getAvailableRooms(GetAvailableRoomsParams params) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$patientInfoController/GetAvailableRooms?from=${params.from.toIso8601String()}&to=${params.to.toIso8601String()}");
+      response = await httpRepo.get(host: "$serverHost/$patientInfoController/GetAvailableRooms?from=${params.from.toUtc().toIso8601String()}&to=${params.to.toUtc().toIso8601String()}");
     } catch (e) {
       throw mapException(e);
     }

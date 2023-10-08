@@ -47,7 +47,7 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
     if (this.operator != null) {
       //data['operator'] = this.operator!.toJson();
     }
-    data['date'] = this.date==null?null:this.date!.toIso8601String();
+    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
     data['treatmentPlan'] = (this.treatmentPlan ?? <TeethTreatmentPlanModel>[]).map((e) => (TeethTreatmentPlanModel.fromEntity(e)).toJson()).toList();
     return data;
   }

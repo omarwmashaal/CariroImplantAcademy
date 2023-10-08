@@ -86,7 +86,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
     data['status'] = this.status;
     data['planPrice'] = this.planPrice;
     data['assignedToID'] = this.assignedToID;
-    data['date'] = this.date != null ? this.date!.toIso8601String() : null;
+    data['date'] = this.date != null ? this.date!.toUtc().toIso8601String() : null;
     data['doneByAssistantID'] = this.doneByAssistantID;
     data['doneBySupervisorID'] = this.doneBySupervisorID;
     data['doneByCandidateID'] = this.doneByCandidateID;

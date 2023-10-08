@@ -2,7 +2,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
-import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +99,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
               onTap: () {
                 siteController.setSite(Website.Lab);
                 widget.onSiteChange();
-                context.goNamed(LabTodaysRequestsSearch.routeName);
+                context.goNamed(LabRequestsSearchPage.routeName);
 
               },
               child: Image(

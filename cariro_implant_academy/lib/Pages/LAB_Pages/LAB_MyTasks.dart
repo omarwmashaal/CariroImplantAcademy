@@ -8,7 +8,7 @@ import '../../Models/LAB_TaskModel.dart';
 import '../../Widgets/CIA_Table.dart';
 import '../../Widgets/CIA_TextField.dart';
 import '../../Widgets/Horizontal_RadioButtons.dart';
-import 'LAB_ViewTask.dart';
+import '../../features/labRequest/presentation/pages/LAB_ViewTask.dart';
 /*
 class LAB_MyTasksPage extends StatefulWidget {
   const LAB_MyTasksPage({Key? key}) : super(key: key);

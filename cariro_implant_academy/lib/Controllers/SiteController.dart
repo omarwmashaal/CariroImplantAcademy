@@ -10,7 +10,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/advanced
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/NotificationModel.dart';
-import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
@@ -170,17 +170,17 @@ class SiteController  {
           _setAppBarWidget(context: context);
       }
       else if (siteController.getSite() == Website.Lab) {
-        if (path == LabTodaysRequestsSearch.routeName || path == LabAllRequestsSearch.routeName || path == LabAllRequestsSearch.routeMyName) {
+        if (path == LabRequestsSearchPage.routeName || path == LabRequestsSearchPage.routeAllName || path == LabRequestsSearchPage.routeMyName) {
           if (siteController.getRole() == "technician") {
             siteController._setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
-              SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
-              SlidingTabModel(title: "My Requests", namedDirectory: LabAllRequestsSearch.routeMyName),
+              SlidingTabModel(title: "Today's Request", namedDirectory: LabRequestsSearchPage.routeName),
+              SlidingTabModel(title: "All Requests", namedDirectory: LabRequestsSearchPage.routeAllName),
+              SlidingTabModel(title: "My Requests", namedDirectory: LabRequestsSearchPage.routeMyName),
             ]);
           } else {
             siteController._setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Today's Request", namedDirectory: LabTodaysRequestsSearch.routeName),
-              SlidingTabModel(title: "All Requests", namedDirectory: LabAllRequestsSearch.routeName),
+              SlidingTabModel(title: "Today's Request", namedDirectory: LabRequestsSearchPage.routeName),
+              SlidingTabModel(title: "All Requests", namedDirectory: LabRequestsSearchPage.routeAllName),
             ]);
           }
         } else if (path == StockSearchPage.routeName || path == StockLogsSearchPage.routeName)
@@ -310,4 +310,5 @@ class SiteController  {
   
   String? getUserName()=> sl<SharedPreferences>().getString("userName");
   int? getUserId()=> sl<SharedPreferences>().getInt("userid");
+  String? getUserPhoneNumber()=> sl<SharedPreferences>().getString("phoneNumber");
 }

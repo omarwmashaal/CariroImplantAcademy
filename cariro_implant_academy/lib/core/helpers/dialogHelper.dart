@@ -17,6 +17,8 @@ class DialogHelper {
       dismissSingle(context);
     }
   }
+  clear()=>currentDialogueCount=0;
+
 
   increaseCount() => currentDialogueCount++;
 }

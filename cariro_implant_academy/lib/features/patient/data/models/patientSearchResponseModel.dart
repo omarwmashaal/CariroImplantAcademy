@@ -118,7 +118,7 @@ class PatientInfoModel extends PatientInfoEntity {
       doctorId: map['doctorID'] as int?,
       nationalId: map['nationalID'] as String?,
       phone2: map['phone2'] as String?,
-      dateOfBirth:DateTime.tryParse(map['dateOfBirth'] )?.toLocal(),
+      dateOfBirth:DateTime.tryParse(map['dateOfBirth']??"" )?.toLocal(),
       address: map['address'] as String?,
       city: map['city'] as String?,
       profileImageId: map['profileImageId'] as int?,

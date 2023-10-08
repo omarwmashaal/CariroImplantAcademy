@@ -183,7 +183,8 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      } else if (type == UserRoles.Secretary) {
+      }
+      else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -210,7 +211,8 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+      }
+      else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
         columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality", "Role", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -259,7 +261,8 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      } else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
+      }
+      else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [

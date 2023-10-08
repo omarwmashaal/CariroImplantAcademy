@@ -39,9 +39,7 @@ class PatientsSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LabCreateNewRequestPage(
 
-    );
     var dataSource = PatientSearchDataSourceTable(context);
     BlocProvider.of<PatientSearchBloc>(context).add( PatientSearchEvent(myPatients: myPatients));
     return MultiBlocListener(

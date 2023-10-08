@@ -53,14 +53,14 @@ class DentalExaminationBaseModel extends DentalExaminationBaseEntity {
     return DentalExaminationBaseModel(
       id: map['id'] as int?,
       patientId: map['patientId'] as int?,
-      dentalExaminations: jsonToList(jsonList: map['dentalExaminations'], conversionMethod: DentalExaminationModel.fromMap),
+      dentalExaminations: map['dentalExaminations'] ==null?[]:jsonToList(jsonList: map['dentalExaminations'], conversionMethod: DentalExaminationModel.fromMap),
       interarchSpaceRT: map['interarchspaceRT'] as int?,
       interarchSpaceLT: map['interarchspaceLT'] as int?,
-      date: DateTime.parse(map['date']),
+      date: DateTime.tryParse(map['date']??""),
       operatorImplantNotes: map['operatorImplantNotes'] as String?,
       operatorId: map['operatorId'] as int?,
       operator: BasicNameIdObjectModel.fromJson(map['operator']),
-      oralHygieneRating: mapToEnum(EnumOralHygieneRating.values, map['oralHygieneRating']),
+      oralHygieneRating: map['oralHygieneRating']==null?null: mapToEnum(EnumOralHygieneRating.values, map['oralHygieneRating']),
     );
   }
 

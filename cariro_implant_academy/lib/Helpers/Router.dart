@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
@@ -11,9 +12,9 @@ import 'package:cariro_implant_academy/core/features/authentication/presentation
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
-import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewTask.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewTask.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
@@ -80,6 +81,8 @@ class CIA_Router {
           name: "/",
           path: "/",
           builder: (context, state) {
+
+            dialogHelper.clear();
             return Scaffold(body: AuthenticationPage());
           },
           //todo: fix this
@@ -557,29 +560,29 @@ class CIA_Router {
                     },
                     routes: [
                       GoRoute(
-                        path: LabTodaysRequestsSearch.routePath,
-                        name: LabTodaysRequestsSearch.routeName,
+                        path: LabRequestsSearchPage.routePath,
+                        name: LabRequestsSearchPage.routeName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: LabTodaysRequestsSearch(),
+                            child: LabRequestsSearchPage(),
                           );
                         },
                       ),
                       GoRoute(
-                        path: LabAllRequestsSearch.routePath,
-                        name: LabAllRequestsSearch.routeName,
+                        path: LabRequestsSearchPage.routeAllPath,
+                        name: LabRequestsSearchPage.routeAllName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: LabAllRequestsSearch(),
+                            child: LabRequestsSearchPage(all: true),
                           );
                         },
                       ),
                       GoRoute(
-                        path: LabAllRequestsSearch.routeMyPath,
-                        name: LabAllRequestsSearch.routeMyName,
+                        path: LabRequestsSearchPage.routeMyPath,
+                        name: LabRequestsSearchPage.routeMyName,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: LabAllRequestsSearch(myRequests: true),
+                            child: LabRequestsSearchPage(myRequests: true),
                           );
                         },
                       ),

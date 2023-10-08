@@ -26,7 +26,7 @@ import '../Pages/Clinic_Pages/Clinic_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
-import '../features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
+import '../features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';
@@ -263,7 +263,7 @@ class PagesController extends PageController {
               SidebarXItem(
                 label: 'y Tasks',
                 onTap: () {
-                  context.goNamed(LabTodaysRequestsSearch.routeName);
+                  context.goNamed(LabRequestsSearchPage.routeName);
                   controller.notifyListeners();
                 },
                 iconWidget: Container(
@@ -280,7 +280,7 @@ class PagesController extends PageController {
             SidebarXItem(
                 label: 'equests',
                 onTap: () {
-                  context.goNamed(LabTodaysRequestsSearch.routeName);
+                  context.goNamed(LabRequestsSearchPage.routeName);
                   controller.notifyListeners();
                 },
                 iconWidget: Container(

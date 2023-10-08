@@ -88,7 +88,7 @@ class CashFlowModel extends CashFlowEntity {
     data['id'] = this.id;
     data['receiptID'] = this.receiptID;
     data['receipt'] = this.receipt;
-    data['date'] = this.date == null ? null : this.date!.toIso8601String();
+    data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();
     data['name'] = this.name;
     data['categoryId'] = this.categoryId;
     if (this.category != null) {

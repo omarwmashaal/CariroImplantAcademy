@@ -41,7 +41,7 @@ class LabStepModel extends LabStepEntity {
     price = json['price'];
     technicianId = json['technicianId'];
     technician = BasicNameIdObjectModel.fromJson(json['technician'] ?? Map<String, dynamic>());
-    date = DateTime.tryParse(json['date'])?.toLocal();
+    date = DateTime.tryParse(json['date']??"")?.toLocal();
     status = LabStepStatus.values[json['status'] ?? 2];
     requestId = json['requestId'];
     request = BasicNameIdObjectModel.fromJson(json['request'] ?? Map<String, dynamic>());

@@ -25,6 +25,7 @@ class AuthenticationRepoImpl implements AuthenticationRepo
       sl<SharedPreferences>().setString("role", result.role);
       sl<SharedPreferences>().setInt("userid", result.idInt);
       sl<SharedPreferences>().setString("userName", result.name);
+      sl<SharedPreferences>().setString("phoneNumber", result.phoneNumber);
       if(result.profileId!=null)
       sl<SharedPreferences>().setInt("profileImageId", result.profileId!);
       return Right(result);

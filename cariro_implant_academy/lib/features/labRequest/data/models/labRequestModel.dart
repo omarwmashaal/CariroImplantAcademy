@@ -114,8 +114,8 @@ class LabRequestModel extends LabRequestEntity {
     id = json['id'];
     initStatus = json['initStatus'] != null ? EnumLabRequestInitStatus.values[json['initStatus']] : null;
     teeth = ((json['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
-    date = DateTime.tryParse(json['date'])?.toLocal();
-    deliveryDate = DateTime.tryParse(json['deliveryDate'])?.toLocal();
+    date = DateTime.tryParse(json['date']??"")?.toLocal();
+    deliveryDate = DateTime.tryParse(json['deliveryDate']??"")?.toLocal();
     entryById = json['entryById'];
     entryBy = BasicNameIdObjectModel.fromJson(json['entryBy'] ?? Map<String, dynamic>());
     assignedToId = json['assignedToId'];

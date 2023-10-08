@@ -182,9 +182,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../features/cashflow/data/repositories/cashFlowRepoImpl.dart';
 import '../features/cashflow/domain/useCases/getExpensesByCategoryUseCase.dart';
 import '../features/labRequest/data/repositories/labCustomersRepo.dart';
+import '../features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
+import '../features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
+import '../features/labRequest/domain/usecases/checkLabRequestsUseCase.dart';
 import '../features/labRequest/domain/usecases/createLabRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
+import '../features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import '../features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
+import '../features/labRequest/domain/usecases/getPatientRequestsUseCase.dart';
+import '../features/labRequest/domain/usecases/getRequestUseCase.dart';
+import '../features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import '../features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import '../features/patient/data/datasources/patientSearchDataSource.dart';
@@ -811,14 +818,27 @@ init() async {
         getAllLabRequestsUseCase: sl(),
         createNewLabCustomerUseCase: sl(),
         searchLabPatientsByTypeUseCase: sl(),
-    createLabRequestUseCase: sl(),
-    getDefaultStepByNameUseCase: sl(),
+        createLabRequestUseCase: sl(),
+        getDefaultStepByNameUseCase: sl(),
+        getPatientLabRequestsUseCase: sl(),
+        finishTaskUseCase: sl(),
+        getLabRequestUseCase: sl(),
+    addOrUpdateRequestReceiptUseCase: sl(),
+    assignTaskToTechnicianUseCase: sl(),
+    markRequestAsDoneUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetDefaultStepsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => CreateLabRequestUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetDefaultStepByNameUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetPatientLabRequestsUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => AddOrUpdateRequestReceiptUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => AssignTaskToTechnicianUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => MarkRequestAsDoneUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetLabRequestUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => FinishTaskUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => CheckLabRequestsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => CreateNewLabCustomerUseCase(labCustomersRepository: sl()));
   sl.registerLazySingleton(() => SearchLabPatientsByTypeUseCase(labCustomersRepository: sl()));
   //repo

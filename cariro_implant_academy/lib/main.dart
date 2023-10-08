@@ -24,7 +24,7 @@ import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
-import 'package:cariro_implant_academy/Pages/LAB_Pages/LAB_ViewRequest.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
@@ -75,7 +75,7 @@ import 'Controllers/RolesController.dart';
 import 'Helpers/Router.dart';
 import 'core/constants/enums/enums.dart';
 import 'Pages/CIA_Pages/CashFlowPage.dart';
-import 'features/labRequest/presentation/pages/LAB_LabRequestsSearchPage.dart';
+import 'features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'Pages/SharedPages/CashFlowSharedPage.dart';
 import 'features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'Pages/SharedPages/StocksSharedPage.dart';
@@ -167,6 +167,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<AdvancedSearchBloc>()),
         BlocProvider(create: (context) => sl<LabRequestsBloc>()),
       ],
+
       child: MaterialApp.router(
         title: 'CIA',
         theme: ThemeData(
