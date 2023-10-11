@@ -40,38 +40,39 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
                   if(widget.onChange!=null) widget.onChange!(selectedTeeth);
                 },
                 labels: [
+                
                   CIA_MultiSelectChipWidgeModel(
-                    label: "11",
-                    isSelected: widget.selectedTeeth!.contains(11)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "12",
-                      isSelected: widget.selectedTeeth!.contains(12)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "13",
-                      isSelected: widget.selectedTeeth!.contains(13)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "14",
-                      isSelected: widget.selectedTeeth!.contains(14)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "15",
-                      isSelected: widget.selectedTeeth!.contains(15)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "16",
-                      isSelected: widget.selectedTeeth!.contains(16)
+                    label: "18",
+                      isSelected: widget.selectedTeeth!.contains(18)
                   ),
                   CIA_MultiSelectChipWidgeModel(
                     label: "17",
                       isSelected: widget.selectedTeeth!.contains(17)
                   ),
                   CIA_MultiSelectChipWidgeModel(
-                    label: "18",
-                      isSelected: widget.selectedTeeth!.contains(18)
-                  )
+                    label: "16",
+                      isSelected: widget.selectedTeeth!.contains(16)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "15",
+                      isSelected: widget.selectedTeeth!.contains(15)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "14",
+                      isSelected: widget.selectedTeeth!.contains(14)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "13",
+                      isSelected: widget.selectedTeeth!.contains(13)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "12",
+                      isSelected: widget.selectedTeeth!.contains(12)
+                  )  ,
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "11",
+                      isSelected: widget.selectedTeeth!.contains(11)
+                  ),
                 ],
               ),
             ),
@@ -137,38 +138,39 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
                   if(widget.onChange!=null) widget.onChange!(selectedTeeth);
                 },
                 labels: [
+
                   CIA_MultiSelectChipWidgeModel(
-                    label: "31",
-                      isSelected: widget.selectedTeeth!.contains(31)
+                      label: "38",
+                      isSelected: widget.selectedTeeth!.contains(38)
                   ),
                   CIA_MultiSelectChipWidgeModel(
-                    label: "32",
-                      isSelected: widget.selectedTeeth!.contains(32)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "33",
-                      isSelected: widget.selectedTeeth!.contains(33)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "34",
-                      isSelected: widget.selectedTeeth!.contains(34)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "35",
-                      isSelected: widget.selectedTeeth!.contains(35)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "36",
-                      isSelected: widget.selectedTeeth!.contains(36)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                    label: "37",
+                      label: "37",
                       isSelected: widget.selectedTeeth!.contains(37)
                   ),
                   CIA_MultiSelectChipWidgeModel(
-                    label: "38",
-                      isSelected: widget.selectedTeeth!.contains(38)
-                  )
+                      label: "36",
+                      isSelected: widget.selectedTeeth!.contains(36)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "35",
+                      isSelected: widget.selectedTeeth!.contains(35)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "34",
+                      isSelected: widget.selectedTeeth!.contains(34)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "33",
+                      isSelected: widget.selectedTeeth!.contains(33)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "32",
+                      isSelected: widget.selectedTeeth!.contains(32)
+                  )  ,
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "31",
+                      isSelected: widget.selectedTeeth!.contains(31)
+                  ),
                 ],
               ),
             ),
