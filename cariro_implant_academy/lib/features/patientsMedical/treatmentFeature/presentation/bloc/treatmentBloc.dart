@@ -486,6 +486,10 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
           }
         }
 
+        event.teethData.sort((a, b) {
+          return (a.tooth??0).compareTo(b.tooth??0);
+        },);
+
         emit(TreatmentBloc_UpdatedToothState(data: event.teethData));
       },
     );
