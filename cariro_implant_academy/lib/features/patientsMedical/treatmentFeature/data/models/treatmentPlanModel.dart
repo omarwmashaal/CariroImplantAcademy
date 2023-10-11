@@ -9,6 +9,7 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
     operatorId,
     operator,
     date,
+    doctor,
     treatmentPlan,
   }) : super(
           id: id,
@@ -17,6 +18,7 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
           operator: operator,
           date: date,
           treatmentPlan: treatmentPlan,
+    doctor: doctor,
         );
 
   factory TreatmentPlanModel.fromEntity(TreatmentPlanEntity entity)
@@ -28,12 +30,14 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
       operator:entity. operator,
       date: entity.date,
       treatmentPlan: entity.treatmentPlan,
+      doctor: entity.doctor,
     );
   }
   TreatmentPlanModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     patientId = json['patientId'];
     operatorId = json['operatorId'];
+    doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
     operator = json['operator'] != null ? new BasicNameIdObjectModel.fromJson(json['operator']) : null;
     date = DateTime.tryParse(json['date']??"")?.toLocal();
     treatmentPlan = ((json['treatmentPlan'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();

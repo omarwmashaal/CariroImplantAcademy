@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+import '../../domain/usecases/getVisitsUseCase.dart';
+
 abstract class PatientVisitsBloc_Events extends Equatable{}
 
 class PatientVisitsBloc_GetVisitsEvent extends PatientVisitsBloc_Events{
-  final int? id;
-  PatientVisitsBloc_GetVisitsEvent({this.id});
+  final GetVisitsParams params;
+  PatientVisitsBloc_GetVisitsEvent({required this.params});
   @override
   List<Object?> get props => [];
 

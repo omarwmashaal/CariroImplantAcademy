@@ -74,7 +74,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     on<TreatmentBloc_GetTreatmentPlanDataEvent>(
       (event, emit) async {
         emit(TreatmentBloc_LoadingTreatmentDataState());
-        await  Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(Duration(milliseconds: 500));
         final result = await getTreatmentPlanUseCase(event.id);
         result.fold(
           (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
@@ -397,6 +397,9 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.pontic!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+
+                  currentTooth.pontic!.assignedTo = currentTooth.pontic!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.pontic!.assignedToID = currentTooth.pontic!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
               case "Extraction":
@@ -411,6 +414,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.extraction!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+                  currentTooth.extraction!.assignedTo = currentTooth.extraction!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.extraction!.assignedToID = currentTooth.extraction!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
               case "Restoration":
@@ -425,6 +430,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.restoration!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+                  currentTooth.restoration!.assignedTo = currentTooth.restoration!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.restoration!.assignedToID = currentTooth.restoration!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
               case "Root Canal Treatment":
@@ -439,6 +446,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.rootCanalTreatment!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+                  currentTooth.rootCanalTreatment!.assignedTo = currentTooth.rootCanalTreatment!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.rootCanalTreatment!.assignedToID = currentTooth.rootCanalTreatment!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
               case "Scaling":
@@ -453,6 +462,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.scaling!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+                  currentTooth.scaling!.assignedTo = currentTooth.scaling!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.scaling!.assignedToID = currentTooth.scaling!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
               case "Crown":
@@ -467,6 +478,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.crown!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
+                  currentTooth.crown!.assignedTo = currentTooth.crown!.assignedTo ?? event.patientsDoctor;
+                  currentTooth.crown!.assignedToID = currentTooth.crown!.assignedToID ?? event.patientsDoctor?.id;
                   break;
                 }
             }
@@ -480,7 +493,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     on<TreatmentBloc_GetSurgicalTreatmentDataEvent>(
       (event, emit) async {
         emit(TreatmentBloc_LoadingTreatmentDataState());
-        await  Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(Duration(milliseconds: 500));
         final result = await getSurgicalTreatmentUseCase(event.id);
         result.fold(
           (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
@@ -506,7 +519,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         final result = await consumeItemByNameUseCase(ConsumeItemByNameParams(name: event.name, count: event.count));
         result.fold(
           (l) => emit(TreatmentBloc_ConsumeItemErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentBloc_ConsumedItemSuccessfullyState(message: "${event.name} consumed successfully" )),
+          (r) => emit(TreatmentBloc_ConsumedItemSuccessfullyState(message: "${event.name} consumed successfully")),
         );
       },
     );
@@ -522,9 +535,11 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
       },
     );
 
-    on<TreatmentBloc_GetTacsEvent>((event, emit) async{
-      final result = await getTacsUseCase(NoParams());
-      result.fold((l) => null, (r) => emit(TreatmentBloc_LoadedTacsState(tacs: r)));
-    },);
+    on<TreatmentBloc_GetTacsEvent>(
+      (event, emit) async {
+        final result = await getTacsUseCase(NoParams());
+        result.fold((l) => null, (r) => emit(TreatmentBloc_LoadedTacsState(tacs: r)));
+      },
+    );
   }
 }

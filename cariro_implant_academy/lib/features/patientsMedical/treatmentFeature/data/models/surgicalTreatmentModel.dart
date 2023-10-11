@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
   SurgicalTreatmentModel({
     super.id,
+    super.doctor,
     super.patientId,
     super.guidedBoneRegeneration,
     super.guidedBoneRegenerationBlockGraft,
@@ -177,6 +178,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
 
   SurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
     surgicalTreatment = ((json['surgicalTreatment'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
     patientId = json['patientId'];
     guidedBoneRegeneration = json['guidedBoneRegeneration'] ?? false;

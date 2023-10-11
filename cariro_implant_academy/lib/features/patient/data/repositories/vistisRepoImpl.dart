@@ -21,9 +21,9 @@ class VisitsRepoImpl implements VisitsRepo{
   }
 
   @override
-  Future<Either<Failure, List<VisitEntity>>> getAllVisits() async{
+  Future<Either<Failure, List<VisitEntity>>> getAllVisits(String? search) async{
     try{
-      final result = await  visitsDataSource.getAllVisits();
+      final result = await  visitsDataSource.getAllVisits(search);
       return Right(result);
     }
     on Exception catch(e)

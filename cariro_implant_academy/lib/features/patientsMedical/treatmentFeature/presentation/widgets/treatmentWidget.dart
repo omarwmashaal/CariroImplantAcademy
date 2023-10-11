@@ -70,8 +70,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
     else
       bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
     bloc.add(TreatmentBloc_GetTreatmentPrices());
-    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical?"Surgical Treatment": "Treatment Plan"));
-
+    medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical ? "Surgical Treatment" : "Treatment Plan"));
   }
 
   @override
@@ -153,7 +152,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               }
             },
             buildWhen: (previous, current) =>
-            current is TreatmentBloc_LoadingTreatmentDataState ||
+                current is TreatmentBloc_LoadingTreatmentDataState ||
                 current is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
                 current is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState,
             builder: (context, state) {
@@ -204,12 +203,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             },
                             labels: widget.surgical
                                 ? [
-                              CIA_MultiSelectChipWidgeModel(
-                                  label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
-                            ]
+                                    CIA_MultiSelectChipWidgeModel(
+                                        label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
+                                  ]
                                 : [
-                              CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
-                            ],
+                                    CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
+                                  ],
                           ),
                         ],
                       ),
@@ -339,6 +338,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                         selectedTeeth: selectedTeeth,
                                         patientId: widget.patientId,
                                         isSurgical: widget.surgical,
+                                        patientsDoctor: widget.surgical ? surgicalTreatmentEntity.doctor : treatmentPlanEntity.doctor,
                                       ));
                                     },
                                     child: Icon(
@@ -372,13 +372,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             if (state is TreatmentBloc_ChangedViewState) {
                               if (!state.edit) totalPrice = state.total;
                             }
-                            if (state is TreatmentBloc_UpdatedToothState)
-                              if (widget.surgical) {
-                                surgicalTreatmentEntity.surgicalTreatment = state.data;
-                              }
-                              else{
-                                treatmentPlanEntity.treatmentPlan = state.data;
-                              }
+                            if (state is TreatmentBloc_UpdatedToothState) if (widget.surgical) {
+                              surgicalTreatmentEntity.surgicalTreatment = state.data;
+                            } else {
+                              treatmentPlanEntity.treatmentPlan = state.data;
+                            }
                             return ListView(children: _buildTeethWidgets(stateShell));
                           },
                         ),

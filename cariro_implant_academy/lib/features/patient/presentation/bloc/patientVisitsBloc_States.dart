@@ -13,7 +13,7 @@ class PatientVisitsBloc_LoadedVisitsSuccessfullyState extends PatientVisitsBloc_
   final List<VisitEntity> visits;
   PatientVisitsBloc_LoadedVisitsSuccessfullyState({required this.visits});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 class PatientVisitsBloc_LoadedPatientDataSuccessfullyState extends PatientVisitsBloc_States{
   final PatientInfoEntity data;

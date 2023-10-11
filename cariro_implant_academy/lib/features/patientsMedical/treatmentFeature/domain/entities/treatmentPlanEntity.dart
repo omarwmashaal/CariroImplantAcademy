@@ -7,6 +7,7 @@ class TreatmentPlanEntity extends Equatable {
   int? patientId;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
+  BasicNameIdObjectEntity? doctor;
   DateTime? date;
   List<TeethTreatmentPlanEntity>? treatmentPlan;
 
@@ -17,6 +18,7 @@ class TreatmentPlanEntity extends Equatable {
     this.operator,
     this.date,
     this.treatmentPlan,
+    this.doctor,
   });
 
 
@@ -30,5 +32,6 @@ class TreatmentPlanEntity extends Equatable {
         operator,
         date,
         treatmentPlan,
+    doctor,
       ];
 }

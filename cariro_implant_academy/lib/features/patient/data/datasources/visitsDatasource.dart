@@ -9,7 +9,7 @@ import '../models/visitModel.dart';
 abstract class VisitsDataSource {
   Future<List<VisitModel>> getPatientVisits(int patientId);
 
-  Future<List<VisitModel>> getAllVisits();
+  Future<List<VisitModel>> getAllVisits(String? search);
 
   Future<List<VisitModel>> getAllSchedules(int month);
 
@@ -44,10 +44,10 @@ class VisitsDatasourceImpl implements VisitsDataSource {
   }
 
   @override
-  Future<List<VisitModel>> getAllVisits() async {
+  Future<List<VisitModel>> getAllVisits(String? search) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$patientInfoController/ListVisitsLogs");
+      response = await httpRepo.get(host: "$serverHost/$patientInfoController/ListVisitsLogs?${search==null?"":"search=$search"}");
     } catch (e) {
       throw mapException(e);
     }

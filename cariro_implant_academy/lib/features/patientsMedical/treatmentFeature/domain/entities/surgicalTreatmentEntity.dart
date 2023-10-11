@@ -8,6 +8,7 @@ import 'package:equatable/equatable.dart';
 class SurgicalTreatmentEntity extends Equatable{
   int? id;
   int? patientId;
+  BasicNameIdObjectEntity? doctor;
   bool? guidedBoneRegeneration;
   bool? guidedBoneRegenerationBlockGraft;
   bool? guidedBoneRegenerationBlockGraftChin;
@@ -90,6 +91,7 @@ class SurgicalTreatmentEntity extends Equatable{
   SurgicalTreatmentEntity(
       {this.id,
         this.patientId,
+        this.doctor,
         this.guidedBoneRegeneration = false,
         this.guidedBoneRegenerationBlockGraft = false,
         this.guidedBoneRegenerationBlockGraftChin = false,
@@ -173,6 +175,7 @@ class SurgicalTreatmentEntity extends Equatable{
   List<Object?> get props => [
     id,
     patientId,
+    doctor,
     guidedBoneRegeneration ,
     guidedBoneRegenerationBlockGraft ,
     guidedBoneRegenerationBlockGraftChin ,

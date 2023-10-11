@@ -29,13 +29,13 @@ class PatientVisitsBloc extends Bloc<PatientVisitsBloc_Events, PatientVisitsBloc
     on<PatientVisitsBloc_GetVisitsEvent>(
       (event, emit) async {
         emit(PatientVisitsBloc_LoadingVisitsState());
-        final result = await getVisitsUseCase(event.id);
+        final result = await getVisitsUseCase(event.params);
         result.fold(
           (l) => emit(PatientVisitsBloc_LoadingErrorState(message: l.message ?? "")),
           (r) => emit(PatientVisitsBloc_LoadedVisitsSuccessfullyState(visits: r)),
         );
-        if (event.id != null)
-          await getPatientDataUseCase(event.id!).then((value) => value.fold(
+        if (event.params.patientId != null)
+          await getPatientDataUseCase(event.params.patientId!).then((value) => value.fold(
                 (l) => null,
                 (r) => emit(PatientVisitsBloc_LoadedPatientDataSuccessfullyState(data: r)),
               ));
@@ -182,11 +182,12 @@ class VisitDataSource extends DataGridSource {
     }).toList());
   }
 
-  Future<bool> updateData({required List<VisitEntity> newData}) async {
+   updateData({required List<VisitEntity> newData})  {
     models = newData;
     init();
     notifyListeners();
+    notifyDataSourceListeners();
 
-    return true;
+
   }
 }
