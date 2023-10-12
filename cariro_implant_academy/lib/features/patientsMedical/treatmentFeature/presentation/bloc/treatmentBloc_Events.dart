@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:equatable/equatable.dart';
 
@@ -91,6 +92,21 @@ class TreatmentBloc_SwitchEditAndSummaryViewsEvent extends TreatmentBloc_Events 
 class TreatmentBloc_GetTacsEvent extends TreatmentBloc_Events {
   @override
   List<Object?> get props => [];
+}
+
+class TreatmentBloc_AcceptChangesEvent extends TreatmentBloc_Events {
+  final RequestChangeEntity requestChangeEntity;
+  final SurgicalTreatmentEntity surgicalTreatmentEntity;
+  final int patientId;
+
+  TreatmentBloc_AcceptChangesEvent({
+    required this.requestChangeEntity,
+    required this.surgicalTreatmentEntity,
+    required this.patientId,
+  });
+
+  @override
+  List<Object?> get props => [requestChangeEntity];
 }
 
 class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {

@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/tr
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,12 +150,22 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                   },
                   child: PostSurgeryWidget(surgicalTreatmentEntity: surgicalTreatmentEntity),
                 );
+              } else if (state is TreatmentBloc_AcceptingChangesErrorState) {
+                ShowSnackBar(context, isSuccess: false, message: state.message);
+              } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
+                ShowSnackBar(context, isSuccess: true);
+
               }
+              if (state is TreatmentBloc_AcceptingChangesState) {
+                CustomLoader.show(context);
+              } else
+                CustomLoader.hide();
             },
             buildWhen: (previous, current) =>
                 current is TreatmentBloc_LoadingTreatmentDataState ||
                 current is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
-                current is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState,
+                current is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState ||
+                current is TreatmentBloc_LoadingTreatmentDataErrorState,
             builder: (context, state) {
               if (state is TreatmentBloc_LoadingTreatmentDataState)
                 return LoadingWidget();
@@ -409,12 +420,20 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               return true;
             }
           }(),
-          child: new ToothWidget(
+          child: ToothWidget(
             viewOnlyMode: viewOnlyMode,
             key: GlobalKey(),
+            patientId: widget.patientId,
             toothID: model!.tooth!,
             isSurgical: widget.surgical,
             prices: prices,
+            acceptChanges: (request) => bloc.add(
+                TreatmentBloc_AcceptChangesEvent(
+                  requestChangeEntity: request,
+                  patientId: widget.patientId,
+                  surgicalTreatmentEntity: surgicalTreatmentEntity
+                ),
+              ),
             teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
             onChange: () => bloc.emit(TreatmentBloc_UpdatedToothState(
                 data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [])),

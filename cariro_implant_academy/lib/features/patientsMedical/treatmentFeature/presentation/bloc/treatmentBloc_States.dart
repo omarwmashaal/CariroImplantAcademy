@@ -78,6 +78,26 @@ class TreatmentBloc_SavingTreatmentDataErrorState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [message];
 }
+class TreatmentBloc_AcceptingChangesState extends TreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class TreatmentBloc_AcceptedChangesSuccessfullyState extends TreatmentBloc_States {
+  final int id;
+  TreatmentBloc_AcceptedChangesSuccessfullyState({required this.id});
+  @override
+  List<Object?> get props => [id];
+}
+
+class TreatmentBloc_AcceptingChangesErrorState extends TreatmentBloc_States {
+  final String message;
+
+  TreatmentBloc_AcceptingChangesErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
 
 class TreatmentBloc_LoadedTreatmentPricesState extends TreatmentBloc_States {
   final TreatmentPricesEntity prices;

@@ -2,11 +2,13 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:equatable/equatable.dart';
 
 class SurgicalTreatmentEntity extends Equatable{
   int? id;
+  List<RequestChangeEntity>? requestChanges;
   int? patientId;
   BasicNameIdObjectEntity? doctor;
   bool? guidedBoneRegeneration;
@@ -91,6 +93,7 @@ class SurgicalTreatmentEntity extends Equatable{
   SurgicalTreatmentEntity(
       {this.id,
         this.patientId,
+        this.requestChanges,
         this.doctor,
         this.guidedBoneRegeneration = false,
         this.guidedBoneRegenerationBlockGraft = false,
@@ -176,6 +179,7 @@ class SurgicalTreatmentEntity extends Equatable{
     id,
     patientId,
     doctor,
+    requestChanges,
     guidedBoneRegeneration ,
     guidedBoneRegenerationBlockGraft ,
     guidedBoneRegenerationBlockGraftChin ,

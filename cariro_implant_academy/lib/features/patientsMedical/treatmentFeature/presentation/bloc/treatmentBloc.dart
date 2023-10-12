@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
@@ -34,6 +35,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final ConsumeItemByNameUseCase consumeItemByNameUseCase;
   final ConsumeItemByIdUseCase consumeItemByIdUseCase;
   final GetTacsUseCase getTacsUseCase;
+  final AcceptChangesUseCase acceptChangesUseCase;
   TreatmentPricesEntity _prices = TreatmentPricesEntity();
   bool editMode = true;
 
@@ -47,6 +49,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     required this.consumeItemByIdUseCase,
     required this.consumeItemByNameUseCase,
     required this.getTacsUseCase,
+    required this.acceptChangesUseCase,
   }) : super(TreatmentBloc_LoadingTreatmentDataState()) {
     on<TreatmentBloc_ConsumeImplantEvent>(
       (event, emit) async {
@@ -486,9 +489,11 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
           }
         }
 
-        event.teethData.sort((a, b) {
-          return (a.tooth??0).compareTo(b.tooth??0);
-        },);
+        event.teethData.sort(
+          (a, b) {
+            return (a.tooth ?? 0).compareTo(b.tooth ?? 0);
+          },
+        );
 
         emit(TreatmentBloc_UpdatedToothState(data: event.teethData));
       },
@@ -543,6 +548,18 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
       (event, emit) async {
         final result = await getTacsUseCase(NoParams());
         result.fold((l) => null, (r) => emit(TreatmentBloc_LoadedTacsState(tacs: r)));
+      },
+    );
+    on<TreatmentBloc_AcceptChangesEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_AcceptingChangesState());
+        final result = await acceptChangesUseCase(event.requestChangeEntity);
+        result.fold(
+          (l) => emit(TreatmentBloc_AcceptingChangesErrorState(message: l.message ?? "")),
+        (r) => emit(TreatmentBloc_AcceptedChangesSuccessfullyState(id: event.requestChangeEntity.id!)),
+
+        );
+
       },
     );
   }

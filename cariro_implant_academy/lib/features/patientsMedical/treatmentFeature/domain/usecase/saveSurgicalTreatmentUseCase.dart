@@ -16,7 +16,7 @@ class SaveSurgicalTreatmentUseCase extends UseCases<NoParams, SaveSurgicalTreatm
   Future<Either<Failure, NoParams>> call(SaveSurgicalTreatmentParams data) async {
     return await surgicalTreatmentRepo.saveSurgicalTreatment(data.id, data.data).then(
           (value) => value.fold(
-            (l) => Left(l..message = "Save Treatment Plan: ${l.message ?? ""}"),
+            (l) => Left(l..message = "Save Surgical Treatment: ${l.message ?? ""}"),
             (r) => Right(r),
           ),
         );

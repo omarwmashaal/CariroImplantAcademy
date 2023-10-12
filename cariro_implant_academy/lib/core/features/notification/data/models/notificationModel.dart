@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/notification/domain/entities/notificationEntity.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/patientProfileComplainsPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../Helpers/CIA_DateConverters.dart';
@@ -40,6 +41,8 @@ class NotificationModel extends NotificationEntity {
         GoRouter.of( context).goNamed(PatientProfileComplainsPage.routeName, pathParameters: {'id': json['infoId']?.toString()??""});
         else if (type == EnumNotificationType.LabRequest)
         GoRouter.of( context).goNamed(CIA_Router.routeConst_LabView, pathParameters: {'id': json['infoId']?.toString()??""});
+       else if (type == EnumNotificationType.SurgicalTreatment)
+        GoRouter.of( context).goNamed(SurgicalTreatmentPage.routeName, pathParameters: {'id': json['infoId']?.toString()??""});
       },
     );
   }

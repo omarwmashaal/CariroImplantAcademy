@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/membraneModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/tacCompanyModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/requestChangeModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
@@ -9,6 +10,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
   SurgicalTreatmentModel({
     super.id,
     super.doctor,
+    super.requestChanges,
     super.patientId,
     super.guidedBoneRegeneration,
     super.guidedBoneRegenerationBlockGraft,
@@ -94,6 +96,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
   {
     return SurgicalTreatmentModel(
       id:entity.id,
+      requestChanges:entity.requestChanges,
       patientId:entity.patientId,
       guidedBoneRegeneration:entity.guidedBoneRegeneration,
       guidedBoneRegenerationBlockGraft:entity.guidedBoneRegenerationBlockGraft,
@@ -178,6 +181,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
 
   SurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    requestChanges = json['requestChanges']==null?null:((json['requestChanges'] as List<dynamic>).map((e) => RequestChangeModel.fromJson(e as Map<String,dynamic>)).toList());
     doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
     surgicalTreatment = ((json['surgicalTreatment'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
     patientId = json['patientId'];
@@ -263,6 +267,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['requestChanges'] = this.requestChanges==null?null: (this.requestChanges!.map((e) => RequestChangeModel.fromEntity(e).toJson()).toList());
     data['surgicalTreatment'] = (this.surgicalTreatment ?? []).map((e) =>TeethTreatmentPlanModel.fromEntity(e).toJson()).toList();
     data['patientId'] = this.patientId;
     data['guidedBoneRegeneration'] = this.guidedBoneRegeneration;

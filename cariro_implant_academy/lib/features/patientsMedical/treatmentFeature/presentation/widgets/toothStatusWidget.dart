@@ -1,9 +1,12 @@
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
@@ -22,6 +25,7 @@ import '../../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../../core/injection_contianer.dart';
 import '../../../../../Constants/Controllers.dart';
 import '../../../../../Controllers/SiteController.dart';
+import '../../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
@@ -37,7 +41,9 @@ class ToothStatusWidget extends StatefulWidget {
       this.assignButton = false,
       this.isImplant = false,
       this.settingsPrice = 0,
+      required this.patientId,
       required this.isSurgical,
+      required this.acceptChanges,
       this.viewOnlyMode = false})
       : super(key: key);
   TreatmentPlanPropertyEntity fieldModel;
@@ -49,6 +55,8 @@ class ToothStatusWidget extends StatefulWidget {
   bool price;
   int? settingsPrice;
   bool isSurgical;
+  int patientId;
+  Function(RequestChangeEntity request) acceptChanges;
 
   @override
   State<ToothStatusWidget> createState() => _ToothStatusWidgetState();
@@ -82,8 +90,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               : (selected) {
                                   widget.fieldModel.status = selected;
                                   if (selected!) {
-                                    widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity(
-                                        name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
+                                    widget.fieldModel.doneByAssistant =
+                                        BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
                                     widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                                     widget.fieldModel.date = DateTime.now().toUtc();
                                   } else {
@@ -170,98 +178,115 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
         ],
       );
     }
-    return Row(
+
+    return BlocListener<TreatmentBloc,TreatmentBloc_States>(listener: (context, state) {
+      if(state is TreatmentBloc_AcceptedChangesSuccessfullyState && state.id==widget.fieldModel.requestChangeId)
+        {
+          widget.fieldModel.implantID = widget.fieldModel.requestChangeModel!.dataId;
+          widget.fieldModel.implant = BasicNameIdObjectEntity(
+            name: widget.fieldModel.requestChangeModel!.dataName,
+            id: widget.fieldModel.requestChangeModel!.dataId,
+          );
+          widget.fieldModel.requestChangeModel = null;
+          widget.fieldModel.requestChangeId = null;
+          setState(() {
+
+          });
+        }
+    },child: Row(
       children: [
         Expanded(
           child: Row(
             children: [
               Expanded(
                   child: IconButton(
-                onPressed: () {
-                  if (widget.onDelete != null) widget.onDelete!();
-                },
-                icon: Icon(Icons.delete_forever),
-                color: Colors.red,
-              )),
+                    onPressed: () {
+                      if (widget.onDelete != null) widget.onDelete!();
+                    },
+                    icon: Icon(Icons.delete_forever),
+                    color: Colors.red,
+                  )),
               Expanded(
                 child: widget.isSurgical
                     ? RoundCheckBox(
-                        isChecked: widget.fieldModel.status,
-                        onTap: siteController.getRole == "secretary"
-                            ? null
-                            : (selected) {
-                                widget.fieldModel.status = selected;
-                                if (selected!) {
-                                  widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity(
-                                      name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-                                  widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
-                                  widget.fieldModel.date = DateTime.now().toUtc();
-                                } else {
-                                  widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-                                  widget.fieldModel.doneByAssistantID = null;
-                                }
-                                setState(() {});
-                              },
-                        border: null,
-                        borderColor: Colors.transparent,
-                        uncheckedWidget: Icon(
-                          Icons.remove,
-                          color: Colors.red,
-                        ),
-                        size: 30,
-                      )
+                  isChecked: widget.fieldModel.status,
+                  onTap: siteController.getRole == "secretary"
+                      ? null
+                      : (selected) {
+                    widget.fieldModel.status = selected;
+                    if (selected!) {
+                      widget.fieldModel.doneByAssistant =
+                          BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
+                      widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
+                      widget.fieldModel.date = DateTime.now().toUtc();
+                    } else {
+                      widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
+                      widget.fieldModel.doneByAssistantID = null;
+                    }
+                    setState(() {});
+                  },
+                  border: null,
+                  borderColor: Colors.transparent,
+                  uncheckedWidget: Icon(
+                    Icons.remove,
+                    color: Colors.red,
+                  ),
+                  size: 30,
+                )
                     : widget.fieldModel.status!
-                        ? Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        : Icon(
-                            Icons.remove,
-                            color: Colors.red,
-                          ),
+                    ? Icon(
+                  Icons.check,
+                  color: Colors.green,
+                )
+                    : Icon(
+                  Icons.remove,
+                  color: Colors.red,
+                ),
               ),
             ],
           ),
         ),
         Expanded(
           flex: 18,
-          child: Row(
+          child: Column(
             children: [
-              Expanded(
-                flex: widget.isSurgical
-                    ? 7
-                    : widget.price
+              Row(
+                children: [
+                  Expanded(
+                    flex: widget.isSurgical
+                        ? 7
+                        : widget.price
                         ? 2
                         : 3,
-                child: CIA_TextFormField(
-                  onChange: (value) {
-                    widget.fieldModel.value = value;
-                  },
-                  label: widget.title,
-                  controller: TextEditingController(
-                    text: (widget.fieldModel.value),
+                    child: CIA_TextFormField(
+                      onChange: (value) {
+                        widget.fieldModel.value = value;
+                      },
+                      label: widget.title,
+                      controller: TextEditingController(
+                        text: (widget.fieldModel.value),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(width: 10),
-              widget.price
-                  ? Expanded(
+                  SizedBox(width: 10),
+                  widget.price
+                      ? Expanded(
                       child: CIA_TextFormField(
-                      suffix: "EGP",
-                      label: 'Price',
-                      isNumber: true,
-                      onChange: (v) => widget.fieldModel.planPrice = int.parse(v),
-                      controller: TextEditingController(text: () {
-                        if (widget.fieldModel.planPrice != null && widget.fieldModel.planPrice != 0)
-                          return widget.fieldModel.planPrice.toString();
-                        else
-                          return widget.settingsPrice.toString();
-                      }()),
-                    ))
-                  : SizedBox(),
-              SizedBox(width: 10),
-              widget.isSurgical
-                  ? Expanded(
+                        suffix: "EGP",
+                        label: 'Price',
+                        isNumber: true,
+                        onChange: (v) => widget.fieldModel.planPrice = int.parse(v),
+                        controller: TextEditingController(text: () {
+                          if (widget.fieldModel.planPrice != null && widget.fieldModel.planPrice != 0)
+                            return widget.fieldModel.planPrice.toString();
+                          else
+                            return widget.settingsPrice.toString();
+                        }()),
+                      ))
+                      : SizedBox(),
+                  SizedBox(width: 10),
+                  widget.isSurgical
+                      ? Expanded(
                       flex: 9,
                       child: ElevatedButton(
                         onPressed: () {
@@ -312,32 +337,58 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                           ),
                                           Expanded(
                                               child: BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
-                                            listener: (context, state) {
-                                              if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
-                                                ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
-                                              else if (state is TreatmentBloc_ConsumeItemErrorState)
-                                                ShowSnackBar(context, isSuccess: false, message: state.message);
-                                            },
-                                            builder: (context, state) {
-                                              return CIA_DropDownSearchBasicIdName<int>(
-                                                label: "Implant Size",
-                                                asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
-                                                emptyString: "Select implant line first",
-                                                searchParams: companyID,
-                                                selectedItem: widget.fieldModel.implant,
-                                                onSelect: (value) async {
-                                                  widget.fieldModel.implant!.name = value.name;
-                                                  widget.fieldModel.implantID = value.id;
-                                                  await CIA_ShowPopUpYesNo(
-                                                      context: context,
-                                                      title: "Consume Implant ${widget.fieldModel.implant!.name}?",
-                                                      onSave: () => bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
-                                                  setState(() {});
+                                                listener: (context, state) {
+                                                  if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
+                                                    ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
+                                                  else if (state is TreatmentBloc_ConsumeItemErrorState)
+                                                    ShowSnackBar(context, isSuccess: false, message: state.message);
                                                 },
-                                              );
-                                            },
-                                          )),
+                                                builder: (context, state) {
+                                                  return CIA_DropDownSearchBasicIdName<int>(
+                                                    label: "Implant Size",
+                                                    asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
+                                                    emptyString: "Select implant line first",
+                                                    searchParams: companyID,
+                                                    selectedItem: widget.fieldModel.implant,
+                                                    onSelect: (value) async {
+                                                      if (widget.fieldModel.implantID != null) {
+                                                        widget.fieldModel.requestChangeModel = RequestChangeEntity(
+                                                          description: "${widget.fieldModel.implant!.name!} to ${value.name!}",
+                                                          requestEnum: RequestChangeEnum.ImplantChange,
+                                                          patientId: widget.patientId,
+                                                          dataId: value.id,
+                                                          dataName: value.name,
+                                                        );
+                                                      } else {
+                                                        widget.fieldModel.implant!.name = value.name;
+                                                        widget.fieldModel.implantID = value.id;
+                                                        await CIA_ShowPopUpYesNo(
+                                                            context: context,
+                                                            title: "Consume Implant ${widget.fieldModel.implant!.name}?",
+                                                            onSave: () => bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
+                                                      }
+                                                      setState(() {});
+                                                    },
+                                                  );
+                                                },
+                                              )),
                                         ],
+                                      ),
+                                      Flexible(
+                                        child: Visibility(
+                                            visible: widget.fieldModel.requestChangeModel != null,
+                                            child: Row(
+                                              children: [
+                                                Text("Requested Change: ${widget.fieldModel.requestChangeModel?.dataName ?? ""}"),
+                                                CIA_SecondaryButton(
+                                                    label: "Clear Request",
+                                                    onTab: () {
+                                                      widget.fieldModel.requestChangeModel = null;
+                                                      widget.fieldModel.requestChangeId = null;
+                                                      setState(() {});
+                                                    })
+                                              ],
+                                            )),
                                       ),
                                       CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                                         label: "Supervisor",
@@ -361,8 +412,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                       ),
                                       CIA_DropDownSearchBasicIdName<int>(
                                         label: "Candidate",
-                                        asyncUseCase: widget.fieldModel.doneByCandidateBatchID ==null ?null:sl<LoadCandidatesByBatchId>(),
-                                        searchParams: widget.fieldModel.doneByCandidateBatchID??0,
+                                        asyncUseCase: widget.fieldModel.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
+                                        searchParams: widget.fieldModel.doneByCandidateBatchID ?? 0,
                                         selectedItem: widget.fieldModel.doneByCandidate,
                                         onSelect: (value) {
                                           widget.fieldModel.doneByCandidate = value;
@@ -471,32 +522,77 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           ],
                         ),
                       ))
-                  : widget.assignButton
+                      : widget.assignButton
                       ? Expanded(
-                          child: Row(
-                          children: [
-                            Expanded(
-                              child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                asyncUseCase: sl<LoadUsersUseCase>(),
-                                searchParams: LoadUsersEnum.assistants,
-                                label: "Assign to assistant",
-                                onSelect: (value) {
-                                  widget.fieldModel.assignedTo = value;
-                                  widget.fieldModel.assignedToID = value.id;
-                                },
-                                selectedItem: widget.fieldModel.assignedTo,
-                              ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                              asyncUseCase: sl<LoadUsersUseCase>(),
+                              searchParams: LoadUsersEnum.assistants,
+                              label: "Assign to assistant",
+                              onSelect: (value) {
+                                widget.fieldModel.assignedTo = value;
+                                widget.fieldModel.assignedToID = value.id;
+                              },
+                              selectedItem: widget.fieldModel.assignedTo,
                             ),
-                            SizedBox(width: 10)
-                          ],
-                        ))
+                          ),
+                          SizedBox(width: 10)
+                        ],
+                      ))
                       : SizedBox(),
-              //SizedBox(width: 10)
+                  //SizedBox(width: 10)
+                ],
+              ),
+              Visibility(
+                visible: widget.fieldModel.requestChangeModel != null,
+                child: Row(
+                  children: [
+                    Text(
+                      widget.fieldModel.requestChangeModel == null
+                          ? ""
+                          : "User ${widget.fieldModel.requestChangeModel?.user?.name ?? ""} requested to change ${widget.fieldModel.requestChangeModel?.description ?? ""}",
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                        child: Visibility(
+                          visible: siteController.getRole() == "admin" && widget.fieldModel.requestChangeId!=null,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: CIA_SecondaryButton(
+                                      label: "Decline",
+                                      icon: Icon(Icons.cancel_outlined),
+                                      onTab: () {
+                                        widget.fieldModel.requestChangeModel = null;
+                                        widget.fieldModel.requestChangeId = null;
+                                        setState(() {});
+                                      })),
+                              SizedBox(width: 10),
+                              Expanded(
+                                  child: CIA_PrimaryButton(
+                                    isLong: true,
+                                    icon: Icon(Icons.check_circle_outline),
+                                    label: "Accept",
+                                    onTab: () => widget.acceptChanges(widget.fieldModel.requestChangeModel!),
+                                  )),
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ],
-    );
+    ),);
   }
 
   @override

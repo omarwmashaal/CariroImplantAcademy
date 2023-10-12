@@ -83,7 +83,7 @@ UpperPosterior,
 LowerPosterior
 }
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest }
+enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest,SurgicalTreatment }
 
 
 T? mapToEnum<T extends Enum>(List<T> values, dynamic? value) {
@@ -128,4 +128,12 @@ enum EnumSummaryFilter {
   LastMonth,
   ThisMonth,
   ThisYear,
+}
+
+enum RequestChangeEnum
+{
+  ImplantChange,
+  MembraneChange,
+  TacsChange,
+  ScrewChange,
 }

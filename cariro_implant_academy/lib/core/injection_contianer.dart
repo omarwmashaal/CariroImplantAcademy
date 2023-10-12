@@ -148,6 +148,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/treatmentPlanRepoImpl.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/surgicalTreatmentRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
@@ -699,6 +700,7 @@ init() async {
         getSurgicalTreatmentUseCase: sl(),
         saveSurgicalTreatmentUseCase: sl(),
         getTacsUseCase: sl(),
+        acceptChangesUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
@@ -706,6 +708,7 @@ init() async {
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => SaveSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => AcceptChangesUseCase(surgicalTreatmentRepo: sl()));
 
   //repositories
   sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));

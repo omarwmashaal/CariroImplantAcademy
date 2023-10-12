@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:equatable/equatable.dart';
 
 class TreatmentPlanPropertyEntity extends Equatable {
@@ -17,7 +18,11 @@ class TreatmentPlanPropertyEntity extends Equatable {
   BasicNameIdObjectEntity? doneByCandidateBatch;
   int? implantID;
   BasicNameIdObjectEntity? implant;
+  int? implantIDRequest;
+  BasicNameIdObjectEntity? implantRequest;
   int? planPrice;
+  RequestChangeEntity? requestChangeModel;
+  int? requestChangeId;
 
   TreatmentPlanPropertyEntity(
       {this.value = "",
@@ -33,7 +38,11 @@ class TreatmentPlanPropertyEntity extends Equatable {
       this.doneByCandidate,
       this.doneByCandidateBatchID,
       this.doneByCandidateBatch,
+      this.implantIDRequest,
+      this.implantRequest,
       this.implantID,
+      this.requestChangeId,
+      this.requestChangeModel,
       this.planPrice = 0,
       this.implant}) {
     doneByAssistant = BasicNameIdObjectEntity();
@@ -50,6 +59,10 @@ class TreatmentPlanPropertyEntity extends Equatable {
         value,
         status,
         assignedToID,
+    this.implantIDRequest,
+    this.implantRequest,
+    this.requestChangeId,
+    this.requestChangeModel,
         //assignedTo,
         date,
         doneByAssistantID,
