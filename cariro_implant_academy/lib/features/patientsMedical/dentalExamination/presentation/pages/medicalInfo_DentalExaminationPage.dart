@@ -76,6 +76,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
         else if (state is DentalExaminationBloc_LoadedSuccessfullyState)
         {
           dentalExaminationEntity = state.dentalExaminationEntity;
+          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.dentalExaminationEntity.date,data: dentalExaminationEntity));
+
           bloc.isInitialized = true;
           return ListView(
             shrinkWrap: false,

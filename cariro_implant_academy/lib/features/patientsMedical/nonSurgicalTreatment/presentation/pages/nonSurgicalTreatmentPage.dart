@@ -215,6 +215,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           return LoadingWidget();
         else if (state is NonSurgicalTreatmentBloc_DataLoadedSuccessfully) {
           nonSurgicalTreatment = state.nonSurgicalTreatmentEntity;
+          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: nonSurgicalTreatment.date, data: nonSurgicalTreatment));
           bloc.isInitialized = true;
           return FocusTraversalGroup(
             policy: OrderedTraversalPolicy(),

@@ -87,7 +87,7 @@ class SurgicalTreatmentEntity extends Equatable{
   bool? sutureAndTemporizationAndXRayTemporaryMarylandBridge;
   bool? sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth;
   bool? sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber;
-  String? date;
+  DateTime? date;
   List<TeethTreatmentPlanEntity>? surgicalTreatment;
 
   SurgicalTreatmentEntity(

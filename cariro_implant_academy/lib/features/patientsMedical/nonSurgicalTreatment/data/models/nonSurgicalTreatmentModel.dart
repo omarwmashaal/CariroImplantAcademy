@@ -29,6 +29,7 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
       'supervisorID': this.supervisorID,
       //'supervisor': this.supervisor,
       'operatorID': this.operatorID,
+      'date': this.date==null?null:this.date!.toUtc().toIso8601String(),
     //  'operator': this.operator==null?null:BasicNameIdObjectModel.fromEntity(this.operator!).toMap(),
      'nextVisit':this.nextVisit==null?null:this.nextVisit!.toUtc().toIso8601String(),
      // 'nextVisit': this.nextVisit,

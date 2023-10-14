@@ -24,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../features/labRequest/domain/entities/labRequestEntityl.dart';
 import '../../../features/labRequest/presentation/pages/LAB_ViewTask.dart';
@@ -79,16 +80,53 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
               flex: 7,
               child: Column(
                 children: [
-                  BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeTitleState,
-                    builder: (context, state) {
-                      return Expanded(
-                        child: TitleWidget(
-                          showBackButton: true,
-                          title: state is MedicalInfoBlocChangeTitleState ? state.title : "",
-                        ),
-                      );
-                    },
+                  Row(
+                    children: [
+                      BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeTitleState,
+                        builder: (context, state) {
+                          return TitleWidget(
+                            showBackButton: true,
+                            title: state is MedicalInfoBlocChangeTitleState ? state.title : "",
+                          );
+                        },
+                      ),
+                      BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                        builder: (context, state) {
+                          return AbsorbPointer(
+                            absorbing: state is MedicalInfoBlocChangeViewEditState? !state.edit:false,
+                            child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                              buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
+                              builder: (context, state) {
+                                if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
+                                return Expanded(
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      child: Text( "Date: "+
+                                        (state is MedicalInfoBlocChangeDateState
+                                                ? state.date == null
+                                                    ? ""
+                                                    : DateFormat("dd-MM-yyyy").format(state.date!)
+                                                : "") +
+                                            " Click To Edit",
+                                        style: TextStyle(),
+                                      ),
+                                      onTap: () => CIA_PopupDialog_DateOnlyPicker(
+                                          context,
+                                          "Pick Date",
+                                          (date) => medicalShellBloc.emit(
+                                              MedicalInfoBlocChangeDateState(date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      )
+                    ],
                   ),
                   Expanded(
                     flex: 10,
@@ -211,12 +249,11 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                         buildWhen: (previous, current) =>
                                             current is LabRequestsBloc_LoadingRequestsErrorState ||
                                             current is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState ||
-                                                current is LabRequestsBloc_LoadingRequestsState,
+                                            current is LabRequestsBloc_LoadingRequestsState,
                                         builder: (context, state) {
                                           if (state is LabRequestsBloc_LoadingRequestsState)
                                             return LoadingWidget();
-                                          else if (state is LabRequestsBloc_LoadingRequestsErrorState)
-                                            return BigErrorPageWidget(message: state.message);
+                                          else if (state is LabRequestsBloc_LoadingRequestsErrorState) return BigErrorPageWidget(message: state.message);
                                           return TableWidget(
                                             dataSource: dataSource,
                                             onCellClick: (index) {

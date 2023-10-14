@@ -23,3 +23,12 @@ class MedicalInfoBlocChangeTitleState extends MedicalInfoShellBloc_State{
   // TODO: implement props
   List<Object?> get props => [title];
 }
+class MedicalInfoBlocChangeDateState extends MedicalInfoShellBloc_State{
+  final DateTime? date;
+  final dynamic? data;
+  MedicalInfoBlocChangeDateState({required this.date,required this.data});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [date,identityHashCode(this)];
+}

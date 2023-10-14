@@ -15,8 +15,10 @@ class DentalHistoryModel extends DentalHistoryEntity {
     satisfied,
     cooperationScore,
     willingForImplantScore,
+    date,
   }) : super(
           bittingCheweing: bitingChewing,
+    date: date,
           clench: clench,
           cooperationScore: cooperationScore,
     patientId: patientId,
@@ -40,6 +42,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
       smokingStatus: SmokingStatus.values[json['smokingStatus'] ?? 0],
       seriousInjury: json['seriousInjury'] ?? "",
       satisfied: json['satisfied'] ?? "",
+      date:DateTime.tryParse( json['date'] ?? "")?.toLocal(),
       cooperationScore: json['cooperationScore'] ?? 0,
       willingForImplantScore: json['willingForImplantScore'] ?? 0,
     );
@@ -58,6 +61,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
       smoke: entity.smoke,
       smokingStatus: entity.smokingStatus,
       willingForImplantScore: entity.willingForImplantScore,
+      date: entity.date,
     );
   }
 
@@ -74,6 +78,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
     data['satisfied'] = this.satisfied;
     data['cooperationScore'] = this.cooperationScore;
     data['willingForImplantScore'] = this.willingForImplantScore;
+    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
     return data;
   }
 }

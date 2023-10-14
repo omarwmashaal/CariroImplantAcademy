@@ -126,7 +126,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                     if (tacCompany != surgicalTreatmentEntity.openSinusLift_TacsCompanyID) tacsNumber = 0;
                     if (tacsNumber != (surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) {
                       if ((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0) > tacsNumber) {
-                        CIA_ShowPopUpYesNo(
+                       await  CIA_ShowPopUpYesNo(
                             title: "Consume ${((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) - tacsNumber} Tacs?",
                             context: context,
                             onSave: () async {
@@ -170,9 +170,14 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               if (state is TreatmentBloc_LoadingTreatmentDataState)
                 return LoadingWidget();
               else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState || state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
-                if (state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState)
+                if (state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
                   surgicalTreatmentEntity = state.data;
-                else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) treatmentPlanEntity = state.data;
+                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date,data:surgicalTreatmentEntity));
+                } else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
+                  treatmentPlanEntity = state.data;
+                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date,data:treatmentPlanEntity));
+
+                }
                 return FocusTraversalGroup(
                   policy: OrderedTraversalPolicy(),
                   child: Column(

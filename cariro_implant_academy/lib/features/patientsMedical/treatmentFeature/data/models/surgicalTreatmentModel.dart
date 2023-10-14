@@ -261,7 +261,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     sutureAndTemporizationAndXRayTemporaryMarylandBridge = json['sutureAndTemporizationAndXRay_Temporary_MarylandBridge'] ?? false;
     sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth = json['sutureAndTemporizationAndXRay_Temporary_BridgeOnTeeth'] ?? false;
     sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber = json['sutureAndTemporizationAndXRay_Temporary_DentureWithGlassFiber'] ?? false;
-    date = json['date'];
+    date = DateTime.tryParse(json['date']??"")?.toLocal();
   }
 
   Map<String, dynamic> toJson() {
@@ -344,7 +344,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     data['sutureAndTemporizationAndXRay_Temporary_MarylandBridge'] = this.sutureAndTemporizationAndXRayTemporaryMarylandBridge;
     data['sutureAndTemporizationAndXRay_Temporary_BridgeOnTeeth'] = this.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth;
     data['sutureAndTemporizationAndXRay_Temporary_DentureWithGlassFiber'] = this.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber;
-    data['date'] = this.date;
+    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
     return data;
   }
 

@@ -44,6 +44,7 @@ class DentalExaminationBaseModel extends DentalExaminationBaseEntity {
       'date': this.date==null? null:CIA_DateConverters.fromDateTimeToBackend(DateFormat("dd-MM-yyyy HH:mm").format(this.date!)),
       'operatorImplantNotes': this.operatorImplantNotes,
       'operatorId': this.operatorId,
+      'date': this.date==null?null:this.date!.toUtc().toIso8601String(),
      // 'operator': this.operator==null?null:BasicNameIdObjectModel,
       'oralHygieneRating': getEnumIndex(EnumOralHygieneRating.values, this.oralHygieneRating),
     };
@@ -56,10 +57,10 @@ class DentalExaminationBaseModel extends DentalExaminationBaseEntity {
       dentalExaminations: map['dentalExaminations'] ==null?[]:jsonToList(jsonList: map['dentalExaminations'], conversionMethod: DentalExaminationModel.fromMap),
       interarchSpaceRT: map['interarchspaceRT'] as int?,
       interarchSpaceLT: map['interarchspaceLT'] as int?,
-      date: DateTime.tryParse(map['date']??""),
+      date: DateTime.tryParse(map['date']??"")?.toLocal(),
       operatorImplantNotes: map['operatorImplantNotes'] as String?,
       operatorId: map['operatorId'] as int?,
-      operator: BasicNameIdObjectModel.fromJson(map['operator']),
+      operator:map['operator']==null?null: BasicNameIdObjectModel.fromJson(map['operator']),
       oralHygieneRating: map['oralHygieneRating']==null?null: mapToEnum(EnumOralHygieneRating.values, map['oralHygieneRating']),
     );
   }

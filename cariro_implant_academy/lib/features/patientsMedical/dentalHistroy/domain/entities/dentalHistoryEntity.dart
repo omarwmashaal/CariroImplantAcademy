@@ -13,6 +13,7 @@ class DentalHistoryEntity extends Equatable {
   int? cooperationScore;
   int? willingForImplantScore;
   int? patientId;
+  DateTime? date;
 
   DentalHistoryEntity(
       {this.senstiveHotCold,
@@ -24,6 +25,7 @@ class DentalHistoryEntity extends Equatable {
       this.seriousInjury,
       this.satisfied,
       this.cooperationScore,
+      this.date,
       this.patientId,
       this.willingForImplantScore});
 
@@ -35,6 +37,7 @@ class DentalHistoryEntity extends Equatable {
         this.senstiveHotCold,
         this.senstiveSweets,
         this.bittingCheweing,
+        this.date,
         this.clench,
         this.patientId,
         this.smoke,

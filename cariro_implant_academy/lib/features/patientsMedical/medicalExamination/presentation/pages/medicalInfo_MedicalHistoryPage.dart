@@ -60,7 +60,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Medical History"));
     bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
     return BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
-      listener: (context, state) {},
+      listener: (context, state) {
+
+      },
       buildWhen: (previous, current) =>
           current is MedicalHistoryBloc_LoadingState || current is MedicalHistoryBloc_DataLoaded || current is MedicalHistoryBloc_ErrorState,
       builder: (context, state) {
@@ -68,6 +70,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
           return LoadingWidget();
         else if (state is MedicalHistoryBloc_DataLoaded) {
           medicalHistoryData = state.medicalExaminationEntity;
+          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.medicalExaminationEntity.date,data: medicalHistoryData));
+
           bloc.isInitialized = true;
           return ListView(
             shrinkWrap: false,

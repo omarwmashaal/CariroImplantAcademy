@@ -62,6 +62,8 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
           return LoadingWidget();
         else if (state is DentalHistoryBloc_DataLoadedSuccessfullyState) {
           dentalHistoryData = state.dentalHistoryEntity;
+          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.dentalHistoryEntity.date,data: dentalHistoryData));
+
           bloc.isInitialized = true;
           return ListView(
             shrinkWrap: false,
