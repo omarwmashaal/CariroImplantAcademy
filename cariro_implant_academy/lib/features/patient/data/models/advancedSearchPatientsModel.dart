@@ -19,6 +19,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
     super.chewing,
     super.smokingStatus,
     super.cooperationScore,
+    super.noTreatmentPlan,
     super.oralHygieneRating,
   });
 
@@ -29,6 +30,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
       ageRangeFrom:entity.ageRangeFrom,
       ageRangeTo:entity.ageRangeTo,
       gender:entity.gender,
+      noTreatmentPlan:entity.noTreatmentPlan,
       anyDiseases:entity.anyDiseases,
       bloodPressureCategories:entity.bloodPressureCategories,
       diabetesCategories:entity.diabetesCategories,
@@ -58,6 +60,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
     //lastHAB1cFrom = json['lastHAB1c_From'];
     //lastHAB1cTo = json['lastHAB1c_To'];
     lastHAB1c = json['lastHAB1c'];
+    noTreatmentPlan = json['noTreatmentPlan'];
     penecilin = json['penecilin'];
     illegalDrugs = json['illegalDrugs'];
     pregnancy = json['pregnancy'] == null ? null : PregnancyEnum.values[json['pregnancy']];
@@ -81,6 +84,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
     data['illegalDrugs'] = this.illegalDrugs;
     data['pregnancy'] = this.pregnancy == null ? null : this.pregnancy!.index;
     data['chewing'] = this.chewing;
+    data['noTreatmentPlan'] = this.noTreatmentPlan;
     data['smokingStatus'] = this.smokingStatus == null ? null : this.smokingStatus!.index;
     data['oralHygieneRating'] = this.oralHygieneRating == null ? null : this.oralHygieneRating!.index;
     data['cooperationScore'] = this.cooperationScore == null ? null : this.cooperationScore!.index;

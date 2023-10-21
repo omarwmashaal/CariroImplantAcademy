@@ -10,6 +10,7 @@ class AdvancedPatientSearchEntity extends Equatable {
   int? age;
   EnumGender? gender;
   bool? anyDiseases;
+  bool? noTreatmentPlan;
   List<DiseasesEnum>? diseases;
   List<BloodPressureEnum>? bloodPressureCategories;
   BloodPressureEnum? bloodPressure;
@@ -40,6 +41,7 @@ class AdvancedPatientSearchEntity extends Equatable {
       this.illegalDrugs,
       this.pregnancy,
       this.chewing,
+      this.noTreatmentPlan,
       this.smokingStatus,
       this.cooperationScore,
       this.oralHygieneRating});
@@ -51,6 +53,7 @@ class AdvancedPatientSearchEntity extends Equatable {
         this.ageRangeFrom,
         this.ageRangeTo,
         this.gender,
+        this.noTreatmentPlan,
         this.anyDiseases,
         this.bloodPressureCategories,
         this.diabetesCategories,

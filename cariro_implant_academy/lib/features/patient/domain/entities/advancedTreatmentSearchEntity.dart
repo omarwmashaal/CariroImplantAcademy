@@ -32,6 +32,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   bool? gbrWithoutImplant;
   bool? openSinusWithoutImplant;
   bool? closedSinusWithoutImplant;
+  bool? noTreatmentPlan;
 
   String? str_scaling;
   String? str_crown;
@@ -77,6 +78,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.gbrWithoutImplant,
     this.openSinusWithoutImplant,
     this.closedSinusWithoutImplant,
+    this.noTreatmentPlan,
     this.str_scaling,
     this.str_crown,
     this.str_rootCanalTreatment,
@@ -109,6 +111,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.rootCanalTreatment,
     this.restoration,
     this.pontic,
+    this.noTreatmentPlan,
     this.extraction,
     this.simpleImplant,
     this.immediateImplant,

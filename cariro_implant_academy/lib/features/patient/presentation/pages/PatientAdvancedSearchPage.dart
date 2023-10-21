@@ -173,6 +173,17 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                 title: "Filters",
                                 child: ListView(
                                   children: [
+
+                                    CIA_MultiSelectChipWidget(
+                                      key: GlobalKey(),
+                                      labels: [
+                                        CIA_MultiSelectChipWidgeModel(label: "No Treatment Plans Assigned",  isSelected: searchDTO.noTreatmentPlan == true),
+
+                                      ],
+                                      onChange: (item, isSelected) {
+                                        searchDTO.noTreatmentPlan = isSelected;
+                                      },
+                                    ),
                                     Row(
                                       children: [
                                         FormTextKeyWidget(text: "Age Range"),
@@ -719,6 +730,16 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
+                                    CIA_MultiSelectChipWidget(
+                                      key: GlobalKey(),
+                                      labels: [
+                                        CIA_MultiSelectChipWidgeModel(label: "No Treatment Plans Assigned",  isSelected: searchTreatmentsDTO.noTreatmentPlan == true),
+
+                                      ],
+                                      onChange: (item, isSelected) {
+                                        searchTreatmentsDTO.noTreatmentPlan = isSelected;
+                                      },
+                                    ),
                                     CIA_MultiSelectChipWidget(
                                       key: GlobalKey(),
                                       labels: [

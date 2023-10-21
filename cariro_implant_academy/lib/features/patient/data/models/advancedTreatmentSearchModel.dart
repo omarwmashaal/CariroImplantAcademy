@@ -18,6 +18,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     super.gbrWithImplant,
     super.openSinusWithImplant,
     super.closedSinusWithImplant,
+    super.noTreatmentPlan,
     super.guidedImplant,
     super.expansionWithoutImplant,
     super.splittingWithoutImplant,
@@ -53,6 +54,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
       patientName: entity.patientName,
       done: entity.done,
       scaling: entity.scaling,
+      noTreatmentPlan: entity.noTreatmentPlan,
       crown: entity.crown,
       rootCanalTreatment: entity.rootCanalTreatment,
       restoration: entity.restoration,
@@ -81,6 +83,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     done = json['done'];
     str_scaling = json['scaling'];
     str_crown = json['crown'];
+    noTreatmentPlan = json['noTreatmentPlan'];
     str_rootCanalTreatment = json['rootCanalTreatment'];
     str_restoration = json['restoration'];
     str_pontic = json['pontic'];
@@ -112,6 +115,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     data['pontic'] = this.pontic;
     data['extraction'] = this.extraction;
     data['simpleImplant'] = this.simpleImplant;
+    data['noTreatmentPlan'] = this.noTreatmentPlan;
     data['immediateImplant'] = this.immediateImplant;
     data['expansionWithImplant'] = this.expansionWithImplant;
     data['splittingWithImplant'] = this.splittingWithImplant;
