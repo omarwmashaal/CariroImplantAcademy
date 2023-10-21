@@ -189,16 +189,20 @@ class PatientsSearchPage extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 5,
-                  child: TableWidget(
-                    dataSource: dataSource,
-                    onCellClick: (value) {
-                      //    setState(() {
-                      //     selectedPatientID = dataSource.models[value - 1].id!;
-                      //    });
-                      //internalPagesController.jumpToPage(1);
-                         context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":value.toString()});
+                  child: BlocBuilder<PatientSearchBloc,PatientSearchBloc_States>(
+                    builder: (context, state) {
+                      return TableWidget(
+                        dataSource: dataSource,
+                        onCellClick: (value) {
+                          //    setState(() {
+                          //     selectedPatientID = dataSource.models[value - 1].id!;
+                          //    });
+                          //internalPagesController.jumpToPage(1);
+                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":value.toString()});
+                        },
+                      );
                     },
-                  ),
+                  )
                 ),
               ],
             ),

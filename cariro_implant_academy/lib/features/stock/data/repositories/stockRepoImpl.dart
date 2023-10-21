@@ -21,9 +21,9 @@ class StockRepoImpl implements StockRepository {
   }
 
   @override
-  Future<Either<Failure, List<StockLogEntity>>> getStockLogs(String? search)async {
+  Future<Either<Failure, StockEntity>> getStockByName(String name) async {
     try {
-      final result = await stockDatasource.getStockLogs(search);
+      final result = await stockDatasource.getStockByName(name);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -31,11 +31,20 @@ class StockRepoImpl implements StockRepository {
   }
 
   @override
-  Future<Either<Failure, StockEntity>> getStockByName(String name)async {
+  Future<Either<Failure, List<StockLogEntity>>> getStockLogs(
+      String? search, DateTime? from, DateTime? to, int? categoryId, int? operatorId, String? status) async {
     try {
-      final result = await stockDatasource.getStockByName(name);
+      final result = await stockDatasource.getStockLogs(
+        search,
+        from,
+        to,
+        categoryId,
+        operatorId,
+        status,
+      );
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
-    }}
+    }
+  }
 }

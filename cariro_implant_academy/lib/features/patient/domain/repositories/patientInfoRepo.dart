@@ -1,4 +1,5 @@
-import 'package:cariro_implant_academy/core/error/failure.dart';import 'package:dartz/dartz.dart';
+import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';import 'package:dartz/dartz.dart';
 
 import '../entities/advancedPatientSearchEntity.dart';
 import '../entities/advancedTreatmentSearchEntity.dart';
@@ -15,5 +16,6 @@ abstract class PatientInfoRepo{
   Future<Either<Failure,String?>> compareDuplicateNumber(String number);
   Future<Either<Failure,List<AdvancedPatientSearchEntity>>> advancedSearchPatients(AdvancedPatientSearchEntity params);
   Future<Either<Failure, List<AdvancedTreatmentSearchEntity>>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
+  Future<Either<Failure, List<ProstheticTreatmentEntity>>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to);
 
 }

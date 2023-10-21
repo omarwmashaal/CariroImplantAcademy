@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,9 +12,13 @@ class ProstheticTreatmentEntity extends Equatable {
   int? id;
   int? patientId;
   BasicNameIdObjectEntity? patient;
+  EnumTeethClassification? searchTeethClassification;
   List<DiagnosticImpressionEntity>? prostheticDiagnostic_DiagnosticImpression;
   List<BiteEntity>? prostheticDiagnostic_Bite;
   List<ScanApplianceEntity>? prostheticDiagnostic_ScanAppliance;
+  DiagnosticImpressionEntity? searchProstheticDiagnostic_DiagnosticImpression;
+  BiteEntity? searchProstheticDiagnostic_Bite;
+  ScanApplianceEntity? searchProstheticDiagnostic_ScanAppliance;
 
   List<int>? finalProthesisSingleBridgeTeeth;
   bool? finalProthesisSingleBridgeHealingCollar;
@@ -46,6 +51,7 @@ class ProstheticTreatmentEntity extends Equatable {
     this.id,
     this.patientId,
     this.patient,
+    this.searchTeethClassification,
     this.prostheticDiagnostic_DiagnosticImpression,
     this.prostheticDiagnostic_Bite,
     this.prostheticDiagnostic_ScanAppliance,
@@ -74,6 +80,9 @@ class ProstheticTreatmentEntity extends Equatable {
     this.finalProthesisFullArchDelivery,
     this.finalProthesisFullArchDeliveryStatus,
     this.finalProthesisFullArchDeliveryNextVisit,
+    this.searchProstheticDiagnostic_Bite,
+    this.searchProstheticDiagnostic_DiagnosticImpression,
+    this.searchProstheticDiagnostic_ScanAppliance,
   });
 
   @override
@@ -97,6 +106,7 @@ class ProstheticTreatmentEntity extends Equatable {
     this.finalProthesisSingleBridgeTryInNextVisit,
     this.finalProthesisSingleBridgeDelivery,
     this.finalProthesisSingleBridgeDeliveryStatus,
+    this.searchTeethClassification,
     this.finalProthesisSingleBridgeDeliveryNextVisit,
     this.finalProthesisFullArchHealingCollar,
     this.finalProthesisFullArchHealingCollarStatus,
@@ -110,5 +120,8 @@ class ProstheticTreatmentEntity extends Equatable {
     this.finalProthesisFullArchDelivery,
     this.finalProthesisFullArchDeliveryStatus,
     this.finalProthesisFullArchDeliveryNextVisit,
+    this.searchProstheticDiagnostic_Bite,
+    this.searchProstheticDiagnostic_DiagnosticImpression,
+    this.searchProstheticDiagnostic_ScanAppliance,
       ];
 }

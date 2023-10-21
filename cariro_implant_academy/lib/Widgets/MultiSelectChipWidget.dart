@@ -51,6 +51,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiSelectContainer(
+      key: GlobalKey(),
       showInListView: verticalList,
       alignments: MultiSelectAlignments(
           crossAxisAlignment: CrossAxisAlignment.start,

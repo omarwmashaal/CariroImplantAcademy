@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/exception.dart';
@@ -20,21 +21,17 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
     try {
       final result = await dataSource.searchPatients(params);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
-
-
   }
 
   @override
-  Future<Either<Failure, PatientInfoEntity>> createPatient(PatientInfoEntity patient)async {
-    try{
+  Future<Either<Failure, PatientInfoEntity>> createPatient(PatientInfoEntity patient) async {
+    try {
       final result = await dataSource.createPatient(patient);
       return Right(result);
-    }on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -44,8 +41,7 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
     try {
       final result = await dataSource.getPatient(id);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -55,8 +51,7 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
     try {
       final result = await dataSource.getNextAvailableId();
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -66,30 +61,27 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
     try {
       final result = await dataSource.checkDuplicateId(id);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
 
   @override
-  Future<Either<Failure, String?>> compareDuplicateNumber(String number) async{
+  Future<Either<Failure, String?>> compareDuplicateNumber(String number) async {
     try {
       final result = await dataSource.checkDuplicateNumber(number);
       return Right(result);
-    }on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
 
   @override
-  Future<Either<Failure, PatientInfoEntity>> updatePatientData(PatientInfoEntity patient) async{
+  Future<Either<Failure, PatientInfoEntity>> updatePatientData(PatientInfoEntity patient) async {
     try {
       final result = await dataSource.updatePatientData(patient);
       return Right(result);
-    }on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -108,6 +100,16 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   Future<Either<Failure, List<AdvancedTreatmentSearchEntity>>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params) async {
     try {
       final result = await dataSource.advancedTreatmentSearch(params);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProstheticTreatmentEntity>>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to) async {
+    try {
+      final result = await dataSource.advancedProstheticSearch(query,from,to);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AdvancedSearchBloc_States extends Equatable {}
@@ -22,6 +23,15 @@ class AdvancedSearchBloc_LoadedPatientsSuccessfullyState extends AdvancedSearchB
   final List<AdvancedPatientSearchEntity> data;
 
   AdvancedSearchBloc_LoadedPatientsSuccessfullyState({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class AdvancedSearchBloc_LoadedProstheticSuccessfullyState extends AdvancedSearchBloc_States {
+  final List<ProstheticTreatmentEntity> data;
+
+  AdvancedSearchBloc_LoadedProstheticSuccessfullyState({required this.data});
 
   @override
   List<Object?> get props => [data];

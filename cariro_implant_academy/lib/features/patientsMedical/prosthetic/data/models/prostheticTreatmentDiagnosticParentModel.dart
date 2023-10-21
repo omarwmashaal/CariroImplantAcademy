@@ -45,7 +45,7 @@ class ProstheticTreatmentDiagnosticParentModel extends ProstheticTreatmentDiagno
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['date'] = this.date?.toUtc().toIso8601String();
     data['id'] = this.id;
-    data['needsRemake'] = this.needsRemake ?? false;
+    data['needsRemake'] = this.needsRemake;
     data['patientId'] = this.patientId;
     data['operatorId'] = this.operatorId;
     data['prostheticTreatmentId'] = this.prostheticTreatmentId;

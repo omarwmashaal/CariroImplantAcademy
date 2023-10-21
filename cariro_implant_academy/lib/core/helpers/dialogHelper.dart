@@ -6,7 +6,7 @@ class DialogHelper {
   DialogHelper() {}
 
   dismissSingle(BuildContext context) {
-    if (currentDialogueCount != 0) {
+    if (  currentDialogueCount != 0) {
       Navigator.of(context, rootNavigator: true).pop();
       currentDialogueCount--;
     }

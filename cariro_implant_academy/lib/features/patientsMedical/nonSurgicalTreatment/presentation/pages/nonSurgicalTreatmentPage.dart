@@ -83,6 +83,9 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
       listener: (context, state) {
+        if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem)
+          CustomLoader.show(context);
+        else CustomLoader.hide();
         if (state is NonSurgicalTreatmentBloc_DentalExaminationDataLoadedSuccessfully) {
           dentalExaminationEntity = state.dentalExaminationEntity;
           //  bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: nonSurgicalTreatment.treatment??""));
@@ -92,8 +95,6 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is NonSurgicalTreatmentBloc_DataSavingError)
           ShowSnackBar(context, isSuccess: false, message: state.message);
-        else if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem)
-          CustomLoader.show(context);
         else if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItemError)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully)
@@ -118,7 +119,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                 title: "Extraction done at price ${model.extraction!.planPrice!.toString()}?",
               );
             }
-          } else if (state.action == "Filled") {
+          }
+          else if (state.action == "Filled") {
               bool crown = false;
               bool rootCanalTreatment = false;
               bool restoration = false;
@@ -204,6 +206,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
             }
 
         }
+
+
       },
       buildWhen: (previous, current) =>
           current is NonSurgicalTreatmentBloc_LoadingData ||

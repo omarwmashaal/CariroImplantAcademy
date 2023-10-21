@@ -96,6 +96,7 @@ import 'package:cariro_implant_academy/features/patient/domain/repositories/room
 import 'package:cariro_implant_academy/features/patient/domain/repositories/visitsRepo.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addComplainUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addToMyPatientsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedProstheticSearchUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedSearchPatientsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedTreatmentSearchUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/checkDuplicateIdUseCase.dart';
@@ -492,10 +493,12 @@ init() async {
   sl.registerLazySingleton(() => AdvancedSearchBloc(
         advancedTreatmentSearchUseCase: sl(),
         advancedSearchPatientsUseCase: sl(),
+    advancedProstheticSearchUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => AdvancedTreatmentSearchUseCase(patientInfoRepo: sl()));
   sl.registerLazySingleton(() => AdvancedSearchPatientsUseCase(patientInfoRepo: sl()));
+  sl.registerLazySingleton(() => AdvancedProstheticSearchUseCase(patientInfoRepo: sl()));
   sl.registerLazySingleton(() => PatientSearchUseCase(sl()));
   sl.registerLazySingleton(() => AddRangeToMyPatientsUseCase(sl()));
   sl.registerLazySingleton(() => AddToMyPatientsUseCase(patientInfoRepo: sl(), addOrRemoveMyPatientsRepo: sl()));

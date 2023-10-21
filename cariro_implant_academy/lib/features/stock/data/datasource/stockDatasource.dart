@@ -10,7 +10,7 @@ import '../models/stockModel.dart';
 abstract class StockDatasource {
   Future<List<StockModel>> getStock(String? search);
 
-  Future<List<StockLogModel>> getStockLogs(String? search);
+  Future<List<StockLogModel>> getStockLogs(String? search, DateTime? from, DateTime? to, int? categoryId, int? operatorId, String? status);
 
   Future<StockModel> getStockByName(String search);
 }
@@ -39,10 +39,15 @@ class StockDatasourceImpl implements StockDatasource {
   }
 
   @override
-  Future<List<StockLogModel>> getStockLogs(String? search) async {
+  Future<List<StockLogModel>> getStockLogs(String? search, DateTime? from, DateTime? to, int? categoryId, int? operatorId, String? status) async {
     late StandardHttpResponse response;
     String query = "";
     if (search != null) query = "search=$search";
+    if (from != null) query = "${query==""?"":"&"}from=${from!.toUtc().toIso8601String()}";
+    if (to != null) query = "${query==""?"":"&"}to=${to!.toUtc().toIso8601String()}";
+    if (categoryId != null) query = "${query==""?"":"&"}categoryId=$categoryId";
+    if (operatorId != null) query = "${query==""?"":"&"}operatorId=$operatorId";
+    if (status != null) query = "${query==""?"":"&"}status=$status";
     try {
       response = await httpRepo.get(host: "$serverHost/$stockController/GetStockLogs?$query");
     } catch (e) {

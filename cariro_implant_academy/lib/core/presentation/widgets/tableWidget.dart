@@ -39,17 +39,15 @@ class TableWidget extends StatefulWidget {
 class _TableWidgetState extends State<TableWidget> {
   @override
   Widget build(BuildContext context) {
-    widget.dataSource.addListener(() {
-     setState(() {
-     });
-    });
+
     return SfDataGrid(
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
-      horizontalScrollPhysics: ScrollPhysics(),
+      horizontalScrollPhysics: BouncingScrollPhysics(),
       allowSorting: widget.allowSorting,
       allowTriStateSorting: widget.allowSorting,
       allowMultiColumnSorting: widget.allowSorting,
+      showHorizontalScrollbar: true,
       highlightRowOnHover: true,
       gridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,
       headerGridLinesVisibility: widget.showGridLines ? GridLinesVisibility.both : GridLinesVisibility.horizontal,

@@ -8,6 +8,11 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cariro_implant_academy/API/PatientAPI.dart';
@@ -21,25 +26,50 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../Models/DTOs/DropDownDTO.dart';
 import '../../../../Models/PatientInfo.dart';
+import '../../../../Widgets/CIA_CheckBoxWidget.dart';
+import '../../../../Widgets/CIA_DropDown.dart';
 import '../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../Widgets/CIA_Table.dart';
 import '../../../../Widgets/CIA_TextField.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../Widgets/Title.dart';
+import '../../../patientsMedical/prosthetic/domain/enums/enum.dart';
 import '../../../patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import '../../../patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
+import '../../domain/usecases/advancedProstheticSearchUseCase.dart';
 import '../bloc/advancedSearchBloc.dart';
 
+enum AdvancedSearchEnum { Patient, Treatments, Prosthetic }
+
+enum _ProstheticSearchType {
+  DiagnosticImpression,
+  ScanAppliance,
+  Bite,
+  SingleAndBridge,
+  FullArch,
+}
+
+enum _FinalProstheticSearchType {
+  HealingCollar,
+  Impression,
+  TryIn,
+  Delivery,
+}
+
 class PatientAdvancedSearchPage extends StatefulWidget {
-  PatientAdvancedSearchPage({Key? key, this.treatments = false}) : super(key: key);
-  static String routeName = "PatientsAdvancedSearch";
+  PatientAdvancedSearchPage({Key? key, required this.advancedSearchType}) : super(key: key);
+  static String routeNamePatients = "PatientsAdvancedSearch";
   static String routeNameTreatments = "TreatmentAdvancedSearch";
-  static String routePath = "Patients/AdvancedSearch/PatientsAdvancedSearch";
-  static String routeNameTreatmentsPath = "Patients/AdvancedSearch/TreatmentAdvancedSearch";
-  bool treatments;
+  static String routeNameProsthetic = "ProstheticAdvancedSearch";
+  static String routePathPatients = "Patients/AdvancedSearch/PatientsAdvancedSearch";
+  static String routePathTreatments = "Patients/AdvancedSearch/TreatmentAdvancedSearch";
+  static String routePathProsthetic = "Patients/AdvancedSearch/ProstheticAdvancedSearch";
+  AdvancedSearchEnum advancedSearchType;
 
   @override
   State<PatientAdvancedSearchPage> createState() => _PatientsSearchPageState();
@@ -48,8 +78,11 @@ class PatientAdvancedSearchPage extends StatefulWidget {
 class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with TickerProviderStateMixin {
   AdvancedPatientSearchDataGridSource dataSource_patients = AdvancedPatientSearchDataGridSource();
   AdvancedTreatmentSearchDataGridSource dataSource_treatments = AdvancedTreatmentSearchDataGridSource();
+  AdvancedProstheticSearchDataGridSource dataSource_prosthetic = AdvancedProstheticSearchDataGridSource();
   AdvancedPatientSearchEntity searchDTO = AdvancedPatientSearchEntity();
   AdvancedTreatmentSearchEntity searchTreatmentsDTO = AdvancedTreatmentSearchEntity(done: false);
+  ProstheticTreatmentEntity searchProstheticDTO = ProstheticTreatmentEntity();
+  AdvancedProstheticSearchParams searchProstheticQuery = AdvancedProstheticSearchParams(query: ProstheticTreatmentEntity());
   List<String> columns = [];
 
   late AdvancedSearchBloc bloc;
@@ -57,10 +90,15 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
   @override
   void initState() {
     bloc = BlocProvider.of<AdvancedSearchBloc>(context);
-    bloc.add(
-        widget.treatments ? AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO) : AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
-    tabController = TabController(length: 2, vsync: this);
-    tabController.index = (widget.treatments ? 1 : 0);
+    bloc.add(widget.advancedSearchType == AdvancedSearchEnum.Treatments
+        ? AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO)
+        : AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
+    tabController = TabController(length: 3, vsync: this);
+    tabController.index = (widget.advancedSearchType == AdvancedSearchEnum.Treatments
+        ? 1
+        : widget.advancedSearchType == AdvancedSearchEnum.Patient
+            ? 0
+            : 2);
   }
 
   late TabController tabController;
@@ -73,13 +111,18 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
           height: 60,
           child: TabBar(
             onTap: (value) {
-              if (widget.treatments) {
-                context.goNamed(PatientAdvancedSearchPage.routeName);
+              if (value == 0) {
+                context.goNamed(PatientAdvancedSearchPage.routeNamePatients);
                 bloc.add(AdvancedSearchBloc_SearchPatientsEvents(query: searchDTO));
-              } else {
+              } else if (value == 1) {
                 context.goNamed(PatientAdvancedSearchPage.routeNameTreatments);
                 bloc.add(AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO));
-              } //setState(() {});
+              } else if (value == 2) {
+                context.goNamed(PatientAdvancedSearchPage.routeNameProsthetic);
+                // bloc.add(AdvancedSearchBloc_SearchTreatmentsEvents(query: searchTreatmentsDTO));
+              }
+
+              //setState(() {});
             },
             controller: tabController,
             labelColor: Colors.black,
@@ -89,6 +132,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
               ),
               Tab(
                 text: "Treatments",
+              ),
+              Tab(
+                text: "Prosthetic Treatment",
               ),
             ],
           ),
@@ -1008,6 +1054,807 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                 Expanded(child: SizedBox()),
                                 FormTextKeyWidget(text: "Total: "),
                                 FormTextValueWidget(text: dataSource_treatments.models.length.toString()),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TitleWidget(
+                          title: "Prosthetic Advanced Search",
+                          showBackButton: false,
+                        ),
+                      ),
+                      CIA_SecondaryButton(
+                          label: "Load Last Filter",
+                          onTab: () {
+                            searchProstheticQuery = bloc.searchProstheticQuery;
+                            bloc.add(AdvancedSearchBloc_SearchProstheticEvents(query: AdvancedProstheticSearchParams(query: searchProstheticDTO)));
+                          }),
+                      SizedBox(width: 10),
+                      CIA_PrimaryButton(
+                          isLong: true,
+                          label: "Show filter",
+                          onTab: () {
+                            _ProstheticSearchType searchType = _ProstheticSearchType.DiagnosticImpression;
+                            DateTime? _from;
+                            DateTime? _to;
+
+                            CIA_ShowPopUp(
+                                width: 1100,
+                                context: context,
+                                title: "Filters",
+                                child: StatefulBuilder(builder: (context, _setState) {
+                                  searchProstheticDTO = ProstheticTreatmentEntity();
+                                  searchProstheticQuery = bloc.searchProstheticQuery;
+                                  if (searchType == _ProstheticSearchType.DiagnosticImpression) {
+                                    searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression = DiagnosticImpressionEntity();
+                                  } else if (searchType == _ProstheticSearchType.Bite) {
+                                    searchProstheticDTO.searchProstheticDiagnostic_Bite = BiteEntity();
+                                  } else if (searchType == _ProstheticSearchType.ScanAppliance) {
+                                    searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance = ScanApplianceEntity();
+                                  }
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      CIA_MultiSelectChipWidget(
+                                        onChange: (item, isSelected) {
+                                          searchType = _ProstheticSearchType.values.firstWhere((element) => element.name.toLowerCase() == item.toLowerCase());
+                                          _setState(() {});
+                                        },
+                                        singleSelect: true,
+                                        labels: [
+                                          CIA_MultiSelectChipWidgeModel(
+                                            label: "Diagnostic Impression",
+                                            value: "DiagnosticImpression",
+                                            isSelected: searchType == _ProstheticSearchType.DiagnosticImpression,
+                                          ),
+                                          CIA_MultiSelectChipWidgeModel(
+                                            label: "Bite",
+                                            value: "Bite",
+                                            isSelected: searchType == _ProstheticSearchType.Bite,
+                                          ),
+                                          CIA_MultiSelectChipWidgeModel(
+                                            label: "Scan Appliance",
+                                            value: "ScanAppliance",
+                                            isSelected: searchType == _ProstheticSearchType.ScanAppliance,
+                                          ),
+                                          CIA_MultiSelectChipWidgeModel(
+                                            label: "Single And Bridge",
+                                            value: "SingleAndBridge",
+                                            isSelected: searchType == _ProstheticSearchType.SingleAndBridge,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              child: CIA_DateTimeTextFormField(
+                                            label: "From",
+                                            controller: TextEditingController(text: _from == null ? "" : DateFormat("dd-MM-yyyy").format(_from!)),
+                                            onChange: (value) => _from = value,
+                                          )),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                              child: CIA_DateTimeTextFormField(
+                                            label: "To",
+                                            controller: TextEditingController(text: _to == null ? "" : DateFormat("dd-MM-yyyy").format(_to!)),
+                                            onChange: (value) => _to = value,
+                                          )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Divider(),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Expanded(child: () {
+                                        if (searchType == _ProstheticSearchType.DiagnosticImpression)
+                                          return Column(
+                                            children: [
+                                              CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression?.diagnostic != null) {
+                                                    return DropDownDTO(
+                                                        name: (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression?.diagnostic?.name ?? "")
+                                                            .replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression == null)
+                                                    searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression = DiagnosticImpressionEntity();
+                                                  searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression!.diagnostic =
+                                                      EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Physical", id: 0),
+                                                  DropDownDTO(name: "Digital", id: 1),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_DropDownSearch(
+                                                label: "Next Step",
+                                                selectedItem: () {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression?.nextStep != null) {
+                                                    return DropDownDTO(
+                                                        name: (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression?.nextStep?.name ?? "")
+                                                            .replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression == null)
+                                                    searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression = (DiagnosticImpressionEntity());
+
+                                                  searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression!.nextStep =
+                                                      EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Ready for implant", id: 0),
+                                                  DropDownDTO(name: "Bite", id: 1),
+                                                  DropDownDTO(name: "Needs new impression", id: 2),
+                                                  DropDownDTO(name: "Needs scan PPT", id: 3),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Needs Remake",
+                                                onChange: (v) {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression == null)
+                                                    searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression = (DiagnosticImpressionEntity());
+
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression!.needsRemake = v;
+                                                },
+                                                //value: e.needsRemake ?? false,
+                                              ),
+                                            ],
+                                          );
+                                        else if (searchType == _ProstheticSearchType.Bite)
+                                          return Column(
+                                            children: [
+                                              CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_Bite?.diagnostic != null) {
+                                                    return DropDownDTO(
+                                                        name:
+                                                            (searchProstheticDTO.searchProstheticDiagnostic_Bite?.diagnostic?.name ?? "").replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  searchProstheticDTO.searchProstheticDiagnostic_Bite!.diagnostic =
+                                                      EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Done", id: 0),
+                                                  DropDownDTO(name: "Needs ReScan", id: 1),
+                                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_DropDownSearch(
+                                                label: "Next Step",
+                                                selectedItem: () {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_Bite?.nextStep != null) {
+                                                    return DropDownDTO(
+                                                        name: searchProstheticDTO.searchProstheticDiagnostic_Bite!.nextStep!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  searchProstheticDTO.searchProstheticDiagnostic_Bite!.nextStep =
+                                                      EnumProstheticDiagnosticBiteNextStep.values[value.id!];
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Scan Appliance", id: 0),
+                                                  DropDownDTO(name: "ReImpression", id: 1),
+                                                  DropDownDTO(name: "ReBite", id: 2),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Needs Remake",
+                                                onChange: (v) {
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_Bite!.needsRemake = v;
+                                                },
+                                                value: searchProstheticDTO.searchProstheticDiagnostic_Bite?.needsRemake ?? false,
+                                              ),
+                                              SizedBox(height: 10),
+                                            ],
+                                          );
+                                        else if (searchType == _ProstheticSearchType.ScanAppliance)
+                                          return Column(
+                                            children: [
+                                              CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance?.diagnostic != null) {
+                                                    return DropDownDTO(
+                                                        name: searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance!.diagnostic!.name
+                                                            .replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance!.diagnostic =
+                                                      EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Done", id: 0),
+                                                  DropDownDTO(name: "Needs ReBite", id: 1),
+                                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                                  DropDownDTO(name: "Needs ReDesign", id: 3),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Needs Remake",
+                                                onChange: (v) {
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance!.needsRemake = v;
+                                                },
+                                                value: searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance?.needsRemake ?? false,
+                                              ),
+                                              SizedBox(height: 10),
+                                            ],
+                                          );
+                                        else if (searchType == _ProstheticSearchType.SingleAndBridge) {
+                                          _FinalProstheticSearchType finalProstheticSearchType = _FinalProstheticSearchType.HealingCollar;
+                                          return StatefulBuilder(builder: (context, __setState) {
+                                            searchProstheticDTO = ProstheticTreatmentEntity();
+                                            return Column(
+                                              children: [
+                                                CIA_MultiSelectChipWidget(
+                                                  onChange: (item, isSelected) {
+                                                    finalProstheticSearchType = _FinalProstheticSearchType.values
+                                                        .firstWhere((element) => element.name.toLowerCase() == item.toLowerCase());
+                                                    __setState(() {});
+                                                  },
+                                                  singleSelect: true,
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Healing Collar",
+                                                      value: "HealingCollar",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.HealingCollar,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Impression",
+                                                      value: "Impression",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.Impression,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Try In",
+                                                      value: "TryIn",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.TryIn,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Delivery",
+                                                      value: "Delivery",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.Delivery,
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Divider(),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                CIA_MultiSelectChipWidget(
+                                                  key: GlobalKey(),
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Upper Anterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.UpperAnterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Lower Anterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.LowerAnterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Upper Posterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.UpperPosterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Lower Posterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.LowerPosterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "All", isSelected: searchProstheticDTO.searchTeethClassification == null),
+                                                  ],
+                                                  singleSelect: true,
+                                                  onChange: (item, isSelected) {
+                                                    if (item == "Upper Anterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.UpperAnterior;
+                                                    else if (item == "Upper Posterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.UpperPosterior;
+                                                    else if (item == "Lower Anterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.LowerAnterior;
+                                                    else if (item == "Lower Posterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.LowerPosterior;
+                                                    else if (item == "All") searchProstheticDTO.searchTeethClassification = null;
+                                                  },
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                () {
+                                                  if (finalProstheticSearchType == _FinalProstheticSearchType.HealingCollar)
+                                                    return CIA_DropDownSearch(
+                                                      label: "Customization",
+                                                      selectedItem: () {
+                                                        if (searchProstheticDTO!.finalProthesisSingleBridgeHealingCollarStatus != null) {
+                                                          return DropDownDTO(
+                                                              name: searchProstheticDTO!.finalProthesisSingleBridgeHealingCollarStatus!.name
+                                                                  .replaceAll("_", " "));
+                                                        }
+                                                        return null;
+                                                      }(),
+                                                      onSelect: (value) {
+                                                        searchProstheticDTO!.finalProthesisSingleBridgeHealingCollarStatus =
+                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                      },
+                                                      items: [
+                                                        DropDownDTO(name: "With Customization", id: 0),
+                                                        DropDownDTO(name: "Without Customization", id: 1),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.Impression)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeImpressionStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisSingleBridgeImpressionStatus!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeImpressionStatus =
+                                                                EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Scan by scan body", id: 0),
+                                                            DropDownDTO(name: "Scan by abutment", id: 1),
+                                                            DropDownDTO(name: "Physical Impression open tray", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeImpressionNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisSingleBridgeImpressionNextVisit!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeImpressionNextVisit =
+                                                                EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Custom Abutment", id: 0),
+                                                            DropDownDTO(name: "Try In", id: 1),
+                                                            DropDownDTO(name: "Delivery", id: 2),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.TryIn)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeTryInStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeTryInStatus =
+                                                                EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeTryInNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name:
+                                                                      searchProstheticDTO!.finalProthesisSingleBridgeTryInNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeTryInNextVisit =
+                                                                EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Delivery", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.Delivery)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Status",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeDeliveryStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name:
+                                                                      searchProstheticDTO!.finalProthesisSingleBridgeDeliveryStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeDeliveryStatus =
+                                                                EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisSingleBridgeDeliveryNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisSingleBridgeDeliveryNextVisit!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisSingleBridgeDeliveryNextVisit =
+                                                                EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  return Container();
+                                                }(),
+                                              ],
+                                            );
+                                          });
+                                        } else if (searchType == _ProstheticSearchType.FullArch) {
+                                          _FinalProstheticSearchType finalProstheticSearchType = _FinalProstheticSearchType.HealingCollar;
+                                          return StatefulBuilder(builder: (context, __setState) {
+                                            searchProstheticDTO = ProstheticTreatmentEntity();
+                                            return Column(
+                                              children: [
+                                                CIA_MultiSelectChipWidget(
+                                                  onChange: (item, isSelected) {
+                                                    finalProstheticSearchType = _FinalProstheticSearchType.values
+                                                        .firstWhere((element) => element.name.toLowerCase() == item.toLowerCase());
+                                                    __setState(() {});
+                                                  },
+                                                  singleSelect: true,
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Healing Collar",
+                                                      value: "HealingCollar",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.HealingCollar,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Impression",
+                                                      value: "Impression",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.Impression,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Try In",
+                                                      value: "TryIn",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.TryIn,
+                                                    ),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                      label: "Delivery",
+                                                      value: "Delivery",
+                                                      isSelected: finalProstheticSearchType == _FinalProstheticSearchType.Delivery,
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Divider(),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                CIA_MultiSelectChipWidget(
+                                                  key: GlobalKey(),
+                                                  labels: [
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Upper Anterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.UpperAnterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Lower Anterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.LowerAnterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Upper Posterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.UpperPosterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "Lower Posterior",
+                                                        isSelected: searchProstheticDTO.searchTeethClassification == EnumTeethClassification.LowerPosterior),
+                                                    CIA_MultiSelectChipWidgeModel(
+                                                        label: "All", isSelected: searchProstheticDTO.searchTeethClassification == null),
+                                                  ],
+                                                  singleSelect: true,
+                                                  onChange: (item, isSelected) {
+                                                    if (item == "Upper Anterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.UpperAnterior;
+                                                    else if (item == "Upper Posterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.UpperPosterior;
+                                                    else if (item == "Lower Anterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.LowerAnterior;
+                                                    else if (item == "Lower Posterior")
+                                                      searchProstheticDTO.searchTeethClassification = EnumTeethClassification.LowerPosterior;
+                                                    else if (item == "All") searchProstheticDTO.searchTeethClassification = null;
+                                                  },
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                () {
+                                                  if (finalProstheticSearchType == _FinalProstheticSearchType.HealingCollar)
+                                                    return CIA_DropDownSearch(
+                                                      label: "Customization",
+                                                      selectedItem: () {
+                                                        if (searchProstheticDTO!.finalProthesisFullArchHealingCollarStatus != null) {
+                                                          return DropDownDTO(
+                                                              name: searchProstheticDTO!.finalProthesisFullArchHealingCollarStatus!.name.replaceAll("_", " "));
+                                                        }
+                                                        return null;
+                                                      }(),
+                                                      onSelect: (value) {
+                                                        searchProstheticDTO!.finalProthesisFullArchHealingCollarStatus =
+                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                      },
+                                                      items: [
+                                                        DropDownDTO(name: "With Customization", id: 0),
+                                                        DropDownDTO(name: "Without Customization", id: 1),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.Impression)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchImpressionStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisFullArchImpressionStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchImpressionStatus =
+                                                                EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Scan by scan body", id: 0),
+                                                            DropDownDTO(name: "Scan by abutment", id: 1),
+                                                            DropDownDTO(name: "Physical Impression open tray", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchImpressionNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisFullArchImpressionNextVisit!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchImpressionNextVisit =
+                                                                EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Custom Abutment", id: 0),
+                                                            DropDownDTO(name: "Try In", id: 1),
+                                                            DropDownDTO(name: "Delivery", id: 2),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.TryIn)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchTryInStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisFullArchTryInStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchTryInStatus =
+                                                                EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchTryInNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisFullArchTryInNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchTryInNextVisit =
+                                                                EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Delivery", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  else if (finalProstheticSearchType == _FinalProstheticSearchType.Delivery)
+                                                    return Column(
+                                                      children: [
+                                                        CIA_DropDownSearch(
+                                                          label: "Status",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchDeliveryStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: searchProstheticDTO!.finalProthesisFullArchDeliveryStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchDeliveryStatus =
+                                                                EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10),
+                                                        CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (searchProstheticDTO!.finalProthesisFullArchDeliveryNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name:
+                                                                      searchProstheticDTO!.finalProthesisFullArchDeliveryNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            searchProstheticDTO!.finalProthesisFullArchDeliveryNextVisit =
+                                                                EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  return Container();
+                                                }(),
+                                              ],
+                                            );
+                                          });
+                                        }
+
+                                        return Container();
+                                      }())
+                                    ],
+                                  );
+                                }),
+                                onSave: () {
+                                  searchProstheticQuery = AdvancedProstheticSearchParams(
+                                    query: searchProstheticDTO,
+                                    to: _to,
+                                    from: _from,
+                                  );
+                                  bloc.searchProstheticQuery = searchProstheticQuery;
+                                  bloc.add(AdvancedSearchBloc_SearchProstheticEvents(query: searchProstheticQuery));
+                                  return true;
+                                });
+                          }),
+                    ],
+                  ),
+                  Expanded(
+                    child: BlocConsumer<AdvancedSearchBloc, AdvancedSearchBloc_States>(
+                        listener: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadedProstheticSuccessfullyState)
+                        dataSource_prosthetic.updateData(newData: state.data, search: searchProstheticDTO);
+                    }, builder: (context, state) {
+                      if (state is AdvancedSearchBloc_LoadingErrorState)
+                        return BigErrorPageWidget(message: state.message);
+                      else if (state is AdvancedSearchBloc_LoadingState) return LoadingWidget();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: TableWidget(
+                              key: GlobalKey(),
+                              headerHeight: 60,
+                              headerStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              dataSource: dataSource_prosthetic,
+                              onCellClick: (value) {
+                                // setState(() {
+                                //selectedPatientID = dataSource.models[value - 1].id!;
+
+                                //});
+                                //internalPagesController.jumpToPage(1);
+                                  context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": value.toString()});
+
+                              },
+                            ),
+                          ),
+                          Divider(),
+                          Container(
+                            height: 40,
+                            child: Row(
+                              children: [
+                                Expanded(child: SizedBox()),
+                                FormTextKeyWidget(text: "Total: "),
+                                FormTextValueWidget(text: dataSource_prosthetic.models.length.toString()),
                               ],
                             ),
                           ),

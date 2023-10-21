@@ -25,10 +25,7 @@ class UpdatePatientProstheticTreatmentDiagnosticUseCase extends UseCases<NoParam
     );
 
 
-    if(data.prostheticDiagnostic_DiagnosticImpression![0].diagnostic==null && data.prostheticDiagnostic_DiagnosticImpression![0].nextStep==null)
-    {
-      data.prostheticDiagnostic_DiagnosticImpression = [];
-    }
+
 
     return await prostheticRepository.updatePatientProstheticTreatmentDiagnostic(data).then((value) => value.fold(
           (l) => Left(l..message = "Update Diagnostic: ${l.message ?? ""}"),

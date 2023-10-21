@@ -32,7 +32,7 @@ class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
     on<StockBloc_GetStockLogEvent>(
       (event, emit) async {
         emit(StockBloc_LoadingState());
-        final result = await getStockLogUseCase(event.search);
+        final result = await getStockLogUseCase(event.params);
         result.fold(
           (l) => emit(StockBloc_LoadingErrorState(message: l.message ?? "")),
           (r) => emit(StockBloc_LoadedStockLogSuccessfullyState(data: r)),

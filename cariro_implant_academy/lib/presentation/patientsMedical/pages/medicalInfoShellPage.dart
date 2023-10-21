@@ -91,6 +91,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                           );
                         },
                       ),
+                      SizedBox(width: 10,),
                       BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                         buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                         builder: (context, state) {
@@ -110,10 +111,10 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                                     ? ""
                                                     : DateFormat("dd-MM-yyyy").format(state.date!)
                                                 : "") +
-                                            " Click To Edit",
+                                            (siteController.getRole()=="admin"? " Click To Edit":" Only Admin can edit"),
                                         style: TextStyle(),
                                       ),
-                                      onTap: () => CIA_PopupDialog_DateOnlyPicker(
+                                      onTap: () =>siteController.getRole()!="admin"?null:  CIA_PopupDialog_DateOnlyPicker(
                                           context,
                                           "Pick Date",
                                           (date) => medicalShellBloc.emit(

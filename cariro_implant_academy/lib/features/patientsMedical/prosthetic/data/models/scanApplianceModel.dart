@@ -4,7 +4,6 @@ import '../../domain/entities/scanApplianceEntity.dart';
 import '../../domain/enums/enum.dart';
 
 class ScanApplianceModel extends ScanApplianceEntity {
-  EnumProstheticDiagnosticScanApplianceDiagnostic? diagnostic;
 
   ScanApplianceModel({
     super.date,

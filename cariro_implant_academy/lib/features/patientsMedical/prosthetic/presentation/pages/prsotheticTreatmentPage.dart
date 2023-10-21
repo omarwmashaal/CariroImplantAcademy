@@ -138,7 +138,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                     }(),
                                                     onSelect: (value) {
                                                       e.diagnostic = EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
-                                                    },
+                                                      e.operatorId = siteController.getUserId();
+                                                      },
                                                     items: [
                                                       DropDownDTO(name: "Physical", id: 0),
                                                       DropDownDTO(name: "Digital", id: 1),
@@ -156,6 +157,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       return null;
                                                     }(),
                                                     onSelect: (value) {
+                                                      e.operatorId = siteController.getUserId();
                                                       e.nextStep = EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
                                                     },
                                                     items: [
@@ -169,7 +171,10 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                 SizedBox(width: 10),
                                                 CIA_CheckBoxWidget(
                                                   text: "Needs Remake",
-                                                  onChange: (v) => e.needsRemake = v,
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.needsRemake = v;
+                                                  },
                                                   value: e.needsRemake ?? false,
                                                 ),
                                                 SizedBox(width: 10),
@@ -230,6 +235,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       return null;
                                                     }(),
                                                     onSelect: (value) {
+                                                      e.operatorId = siteController.getUserId();
                                                       e.diagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
                                                     },
                                                     items: [
@@ -250,6 +256,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       return null;
                                                     }(),
                                                     onSelect: (value) {
+                                                      e.operatorId = siteController.getUserId();
                                                       e.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
                                                     },
                                                     items: [
@@ -262,7 +269,10 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                 SizedBox(width: 10),
                                                 CIA_CheckBoxWidget(
                                                   text: "Needs Remake",
-                                                  onChange: (v) => e.needsRemake = v,
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.needsRemake = v;
+                                                  },
                                                   value: e.needsRemake ?? false,
                                                 ),
                                                 SizedBox(width: 10),
@@ -318,6 +328,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       return null;
                                                     }(),
                                                     onSelect: (value) {
+                                                      e.operatorId = siteController.getUserId();
                                                       e.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
                                                     },
                                                     items: [
@@ -335,7 +346,10 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                 SizedBox(width: 10),
                                                 CIA_CheckBoxWidget(
                                                   text: "Needs Remake",
-                                                  onChange: (v) => e.needsRemake = v,
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.needsRemake = v;
+                                                  },
                                                   value: e.needsRemake ?? false,
                                                 ),
                                                 SizedBox(width: 10),

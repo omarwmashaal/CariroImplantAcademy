@@ -122,8 +122,9 @@ class SiteController  {
         else if (path == PatientsSearchPage.routeName ||
             path == PatientsSearchPage.myPatientsRouteName ||
             path == ComplainsSearchPage.routeName ||
-            path == PatientAdvancedSearchPage.routeName ||
+            path == PatientAdvancedSearchPage.routeNamePatients ||
             path == PatientAdvancedSearchPage.routeNameTreatments ||
+            path == PatientAdvancedSearchPage.routeNameProsthetic ||
          path == VisitsPage.routeName
         ) {
           if (getRole() == "secretary")
@@ -140,7 +141,10 @@ class SiteController  {
               SlidingTabModel(title: "Complains", namedDirectory: ComplainsSearchPage.routeName),
               path == PatientAdvancedSearchPage.routeNameTreatments
                   ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
-                  : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeName),
+                  : path == PatientAdvancedSearchPage.routeNamePatients?
+              SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNamePatients)
+              :SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameProsthetic),
+
             ]);
         } else if (path == ViewUserProfilePage.candidateRouteName || path == ViewCandidateData.routeName)
           siteController._setAppBarWidget(context: context, tabs: [

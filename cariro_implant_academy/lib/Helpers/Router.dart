@@ -81,7 +81,6 @@ class CIA_Router {
           name: "/",
           path: "/",
           builder: (context, state) {
-
             dialogHelper.clear();
             return Scaffold(body: AuthenticationPage());
           },
@@ -169,20 +168,24 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: PatientAdvancedSearchPage.routePath,
-                        name: PatientAdvancedSearchPage.routeName,
+                        path: PatientAdvancedSearchPage.routePathPatients,
+                        name: PatientAdvancedSearchPage.routeNamePatients,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
-                            child: _Authorize(allowedRoles: [
-                              UserRoles.Instructor,
-                              UserRoles.Assistant,
-                              UserRoles.Admin,
-                            ], child: PatientAdvancedSearchPage()),
+                            child: _Authorize(
+                                allowedRoles: [
+                                  UserRoles.Instructor,
+                                  UserRoles.Assistant,
+                                  UserRoles.Admin,
+                                ],
+                                child: PatientAdvancedSearchPage(
+                                  advancedSearchType: AdvancedSearchEnum.Patient,
+                                )),
                           );
                         },
                       ),
                       GoRoute(
-                        path: PatientAdvancedSearchPage.routeNameTreatmentsPath,
+                        path: PatientAdvancedSearchPage.routePathTreatments,
                         name: PatientAdvancedSearchPage.routeNameTreatments,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
@@ -193,7 +196,25 @@ class CIA_Router {
                                 UserRoles.Admin,
                               ],
                               child: PatientAdvancedSearchPage(
-                                treatments: true,
+                                advancedSearchType: AdvancedSearchEnum.Treatments,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: PatientAdvancedSearchPage.routePathProsthetic,
+                        name: PatientAdvancedSearchPage.routeNameProsthetic,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [
+                                UserRoles.Instructor,
+                                UserRoles.Assistant,
+                                UserRoles.Admin,
+                              ],
+                              child: PatientAdvancedSearchPage(
+                                advancedSearchType: AdvancedSearchEnum.Prosthetic,
                               ),
                             ),
                           );
@@ -718,7 +739,7 @@ class _Authorize extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        authenticationBloc = sl<AuthenticationBloc>();
+    authenticationBloc = sl<AuthenticationBloc>();
     authenticationBloc.logInEvent(LoginParams());
     List<String> roles = allowedRoles.map((e) => e.name.toLowerCase()).toList();
     //Logger.root.log(Level.INFO, "Called verify from main routing redirect");
@@ -732,7 +753,7 @@ class _Authorize extends StatelessWidget {
         else
           CustomLoader.hide();
       },
-      buildWhen: (previous, current) => current is LoggedIn ,
+      buildWhen: (previous, current) => current is LoggedIn,
       builder: (context, state) {
         if (state is LoggedIn) {
           if (siteController.getRole() == "admin" || roles.contains(siteController.getRole()))

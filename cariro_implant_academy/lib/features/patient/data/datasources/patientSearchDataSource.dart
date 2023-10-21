@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedSearchPatientsModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticModel.dart';
+import 'package:intl/intl.dart';
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../core/error/failure.dart';
+import '../../../patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
 import '../../domain/entities/advancedPatientSearchEntity.dart';
 import '../../domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../domain/entities/patientInfoEntity.dart';
@@ -23,6 +26,7 @@ abstract class PatientSearchDataSource {
 
   Future<List<AdvancedSearchPatientsModel>> advancedSearchPatients(AdvancedPatientSearchEntity params);
   Future< List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
+  Future< List<ProstheticTreatmentEntity>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to);
 
 
   Future<PatientInfoModel> createPatient(PatientInfoEntity patient);
@@ -199,6 +203,30 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     }
     catch(e)
     {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<ProstheticTreatmentEntity>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to)async {
+    late StandardHttpResponse response;
+    String q ="";
+    if(from!=null) q+="from=${from!.toUtc().toIso8601String()}";
+    if(to!=null) q+="${q==""?"":"&"}to=${to!.toUtc().toIso8601String()}";
+    try {
+      response = await client.post(
+          host: "$serverHost/$patientInfoController/AdvancedSearchProsthetic?$q",
+          body: ProstheticTreatmentModel.fromEntity(query).toJson()
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if (response.body == null) return [];
+      return ((response.body!) as List<dynamic>).map((e) => ProstheticTreatmentModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }

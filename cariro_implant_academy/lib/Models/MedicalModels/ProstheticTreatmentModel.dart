@@ -290,7 +290,7 @@ class _ProstheticTreatmentDiagnosticParentModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['date'] = CIA_DateConverters.fromDateTimeToBackend(this.date);
     data['id'] = this.id;
-    data['needsRemake'] = this.needsRemake ?? false;
+    data['needsRemake'] = this.needsRemake;
     data['patientId'] = this.patientId;
     data['operatorId'] = this.operatorId;
     data['prostheticTreatmentId'] = this.prostheticTreatmentId;
