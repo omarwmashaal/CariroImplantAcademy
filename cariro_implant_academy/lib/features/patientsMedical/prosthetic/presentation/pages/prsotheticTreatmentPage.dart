@@ -175,7 +175,9 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Needs Remake",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
-                                                    return e.needsRemake = v;
+                                                    if(v)e.scanned=false;
+                                                    _setState((){});
+                                                     e.needsRemake = v;
                                                   },
                                                   value: e.needsRemake ?? false,
                                                 ),
@@ -184,6 +186,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Scanned",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
+                                                    if(v)e.needsRemake=false;
+                                                    _setState((){});
                                                     return e.scanned = v;
                                                   },
                                                   value: e.scanned ?? false,
@@ -282,6 +286,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Needs Remake",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
+                                                    if(v)e.scanned=false;
+                                                    _setState((){});
                                                     return e.needsRemake = v;
                                                   },
                                                   value: e.needsRemake ?? false,
@@ -291,6 +297,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Scanned",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
+                                                    if(v)e.needsRemake=false;
+                                                    _setState((){});
                                                     return e.scanned = v;
                                                   },
                                                   value: e.scanned ?? false,
@@ -368,6 +376,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Needs Remake",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
+                                                    if(v)e.scanned=false;
+                                                    _setState((){});
                                                     return e.needsRemake = v;
                                                   },
                                                   value: e.needsRemake ?? false,
@@ -377,6 +387,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   text: "Scanned",
                                                   onChange: (v) {
                                                     e.operatorId = siteController.getUserId();
+                                                    if(v)e.needsRemake=false;
+                                                    _setState((){});
                                                     return e.scanned = v;
                                                   },
                                                   value: e.scanned ?? false,
