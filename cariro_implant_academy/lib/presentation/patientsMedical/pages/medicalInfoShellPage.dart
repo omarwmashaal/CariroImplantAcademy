@@ -208,7 +208,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                         height: 650,
                                         child: LabCreateNewRequestPage(
                                           isDoctor: true,
-                                          patient: patient,
+                                          patientId: patient.id,
                                         ),
                                       );
                                     /*var checkLabRequests = await MedicalAPI.CheckLabRequests(widget.patientId);

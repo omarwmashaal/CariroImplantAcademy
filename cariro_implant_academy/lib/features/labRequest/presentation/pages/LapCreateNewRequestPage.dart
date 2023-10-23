@@ -46,12 +46,12 @@ import '../../domain/entities/labRequestEntityl.dart';
 import '../../domain/entities/labStepEntity.dart';
 
 class LabCreateNewRequestPage extends StatefulWidget {
-  LabCreateNewRequestPage({Key? key, this.isDoctor = false, this.onChange, this.patient}) : super(key: key);
+  LabCreateNewRequestPage({Key? key, this.isDoctor = false, this.onChange, this.patientId}) : super(key: key);
   static String routeName = "CreateRequest";
   static String routePath = "CreateRequest";
   bool isDoctor;
   Function? onChange;
-  PatientInfoEntity? patient;
+  int? patientId;
 
   @override
   State<LabCreateNewRequestPage> createState() => _LabCreateNewRequestPageState();
@@ -60,6 +60,7 @@ class LabCreateNewRequestPage extends StatefulWidget {
 class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
   late LabRequestsBloc bloc;
   late UsersBloc usersBloc;
+  late CreateOrViewPatientBloc patientBloc;
   LabRequestEntity labRequest = LabRequestEntity(
     steps: [
       LabStepEntity(
@@ -79,6 +80,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
   void initState() {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);
+    patientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     if (widget.isDoctor) {
       labRequest.customer = UserEntity(
         name: siteController.getUserName(),
@@ -86,10 +88,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
         phoneNumber: siteController.getUserPhoneNumber(),
       );
       labRequest.customerId = siteController.getUserId();
-      if (widget.patient != null) {
-        labRequest.patient = BasicNameIdObjectEntity(name: widget.patient!.name, id: widget.patient!.id);
-        labRequest.patientId = widget.patient!.id;
-      }
+    }
+    if (widget.patientId != null) {
+      patientBloc.add(GetPatientInfoEvent(id: widget.patientId!));
     }
   }
 
@@ -143,6 +144,15 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
               }
             },
           ),
+          BlocListener<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+            listener: (context, state) {
+              if (state is LoadedPatientInfoState) {
+                labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
+                labRequest.patientId = state.patient!.id;
+                bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
+              }
+            },
+          )
         ],
         child: Column(
           children: [

@@ -1,5 +1,7 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
@@ -692,6 +694,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                         onSelect: (value) {
                                                           singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus =
                                                               EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                            {
+                                                              CIA_ShowPopUp(
+                                                                hideButton: true,
+                                                                context: context,
+                                                                width: 1100,
+                                                                height: 650,
+                                                                child: LabCreateNewRequestPage(
+                                                                  isDoctor: true,
+                                                                  patientId: widget.patientId,
+                                                                ),
+                                                              );
+
+                                                            }
                                                         },
                                                         items: [
                                                           DropDownDTO(name: "Scan by scan body", id: 0),
@@ -752,6 +768,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                         onSelect: (value) {
                                                           singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus =
                                                               EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                          {
+                                                            CIA_ShowPopUp(
+                                                              hideButton: true,
+                                                              context: context,
+                                                              width: 1100,
+                                                              height: 650,
+                                                              child: LabCreateNewRequestPage(
+                                                                isDoctor: true,
+                                                                patientId: widget.patientId,
+                                                              ),
+                                                            );
+
+                                                          }
                                                         },
                                                         items: [
                                                           DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
@@ -943,6 +973,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                         onSelect: (value) {
                                                           fullArchEntity!.finalProthesisFullArchImpressionStatus =
                                                               EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                          {
+                                                            CIA_ShowPopUp(
+                                                              hideButton: true,
+                                                              context: context,
+                                                              width: 1100,
+                                                              height: 650,
+                                                              child: LabCreateNewRequestPage(
+                                                                isDoctor: true,
+                                                                patientId: widget.patientId,
+                                                              ),
+                                                            );
+
+                                                          }
                                                         },
                                                         items: [
                                                           DropDownDTO(name: "Scan by scan body", id: 0),
