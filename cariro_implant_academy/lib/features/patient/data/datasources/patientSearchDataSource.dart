@@ -20,7 +20,7 @@ abstract class PatientSearchDataSource {
   Future<List<PatientInfoEntity>> searchPatients(PatientSearchParams params);
 
   Future<PatientInfoEntity> getPatient(int id);
-  Future<NoParams> setPatientOut(int id);
+  Future<NoParams> setPatientOut(int id,String outReason);
 
   Future<int> getNextAvailableId();
 
@@ -87,11 +87,11 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     }
   }
   @override
-  Future<NoParams> setPatientOut(int id) async {
+  Future<NoParams> setPatientOut(int id,String outReason) async {
     late StandardHttpResponse result;
     try {
       result = await client.post(
-        host: "$serverHost/$patientInfoController/SetPatientOut?id=$id",
+        host: "$serverHost/$patientInfoController/SetPatientOut?id=$id${outReason==""?"":"&outReason=$outReason"}",
       );
     } catch (e) {
       throw mapException(e);

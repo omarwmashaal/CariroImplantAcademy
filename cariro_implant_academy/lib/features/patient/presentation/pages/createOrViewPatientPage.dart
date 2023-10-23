@@ -22,12 +22,14 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/receiptTableWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/setPatientOutUseCase.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSeachBlocStates.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,7 +131,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
         }
         if (state is LoadingPatientInfoState)
           return LoadingWidget();
-        else
+        else {
           return Padding(
             padding: EdgeInsets.only(top: 5),
             child: Column(
@@ -139,6 +141,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                     TitleWidget(title: "Patient's Data", showBackButton: true),
                     BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                       builder: (context, state) {
+                        double height = 0;
                         if (createOrViewPatientBloc.pageState == PageState.view)
                           return Row(
                             children: [
@@ -147,13 +150,31 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 color: patient.out ? Colors.red : Colors.green,
                               ),
                               SizedBox(width: 10),
-                              Visibility(visible: patient.out, child: Text("Patient Out!")),
+                              Visibility(
+                                  visible: patient.out,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        CIA_ShowPopUp(context: context, child: Text(patient.outReason ?? ""));
+                                      },
+                                      child: Text("Patient Out!. Click to view Reason"))),
                               SizedBox(width: 10),
                               Visibility(
-                                  visible: !patient.out && siteController.getRole()=="admin",
+                                  visible: !patient.out && siteController.getRole() == "admin",
                                   child: CIA_SecondaryButton(
                                     label: "Set Patient Out",
-                                    onTab: () =>createOrViewPatientBloc.add(SetPatientOutEvent(patientID)),
+                                    onTab: () => CIA_ShowPopUp(
+                                      height: 400,
+                                        context: context,
+                                        onSave: () => createOrViewPatientBloc.add(SetPatientOutEvent(SetPatientOutParams(
+                                              id: patientID,
+                                              outReason: patient.outReason??"",
+                                            ))),
+                                        child: CIA_TextFormField(
+                                          label: "Reason",
+                                          maxLines: 10,
+                                          controller: TextEditingController(),
+                                          onChange: (v) => patient.outReason = v,
+                                        )),
                                   )),
                             ],
                           );
@@ -814,6 +835,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
               ],
             ),
           );
+        }
       },
     );
   }

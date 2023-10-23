@@ -4,13 +4,23 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/patientI
 import 'package:cariro_implant_academy/features/patient/domain/repositories/patientInfoRepo.dart';
 import 'package:dartz/dartz.dart';
 
-class SetPatientOutUseCase extends UseCases<NoParams,int>
+class SetPatientOutUseCase extends UseCases<NoParams,SetPatientOutParams>
 {
   final PatientInfoRepo patientRepo;
   SetPatientOutUseCase({required this.patientRepo});
   @override
-  Future<Either<Failure, NoParams>> call(int id) async{
-   return await patientRepo.setPatientOut(id);
+  Future<Either<Failure, NoParams>> call(SetPatientOutParams params) async{
+   return await patientRepo.setPatientOut(params.id,params.outReason);
   }
 
+}
+
+class SetPatientOutParams{
+  final int id;
+  final String outReason;
+
+  const SetPatientOutParams({
+    required this.id,
+    required this.outReason,
+  });
 }

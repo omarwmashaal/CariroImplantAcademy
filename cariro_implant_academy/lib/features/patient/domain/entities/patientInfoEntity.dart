@@ -31,6 +31,7 @@ class PatientInfoEntity extends Equatable {
   String? registeredBy;
   EnumPatientType patientType;
   bool out;
+  String? outReason;
 
   PatientInfoEntity(
       { this.name,
@@ -42,6 +43,7 @@ class PatientInfoEntity extends Equatable {
        this.maritalStatus,
       this.relative,
       this.doctor,
+      this.outReason = "",
       this.doctorId,
       this.city,
       this.dateOfBirth,
@@ -69,6 +71,7 @@ class PatientInfoEntity extends Equatable {
         phone,
         maritalStatus,
         relative,
+    outReason,
         doctor,
     out,
         doctorId,

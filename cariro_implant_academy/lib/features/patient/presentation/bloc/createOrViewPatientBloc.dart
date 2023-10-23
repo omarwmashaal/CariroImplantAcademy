@@ -145,7 +145,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
     on<SetPatientOutEvent>(
       (event, emit) async {
         emit(UpdatingPatientState());
-        final result = await setPatientOutUseCase(event.id);
+        final result = await setPatientOutUseCase(event.params);
         result.fold(
           (l) => emit(UpdatingPatientErrorState(message: l.message ?? "")),
           (r) => emit(PatientOutSuccessfullyState()),

@@ -117,9 +117,9 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
     }
   }
   @override
-  Future<Either<Failure, NoParams>> setPatientOut(int id) async {
+  Future<Either<Failure, NoParams>> setPatientOut(int id,String outReason) async {
     try {
-      final result = await dataSource.setPatientOut(id);
+      final result = await dataSource.setPatientOut(id,outReason);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/patientI
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_States.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../domain/usecases/setPatientOutUseCase.dart';
+
 abstract class CreateOrViewPatientBloc_Events extends Equatable{}
 
 class CheckDuplicateNumberEvent extends CreateOrViewPatientBloc_Events{
@@ -12,11 +14,11 @@ class CheckDuplicateNumberEvent extends CreateOrViewPatientBloc_Events{
   List<Object?> get props => [number];
 }
 class SetPatientOutEvent extends CreateOrViewPatientBloc_Events{
-  final int id;
-  SetPatientOutEvent(this.id);
+  final SetPatientOutParams params;
+  SetPatientOutEvent(this.params);
    @override
   // TODO: implement props
-  List<Object?> get props => [id];
+  List<Object?> get props => [params];
 }
 class CheckAvailableIdEvent extends CreateOrViewPatientBloc_Events{
   final int id;
