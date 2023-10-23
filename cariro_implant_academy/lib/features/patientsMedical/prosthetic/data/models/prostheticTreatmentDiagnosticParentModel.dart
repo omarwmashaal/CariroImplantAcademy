@@ -16,12 +16,14 @@ class ProstheticTreatmentDiagnosticParentModel extends ProstheticTreatmentDiagno
     super.patient,
     super.patientId,
     super.prostheticTreatmentId,
+    super.scanned,
   }) ;
 
   factory ProstheticTreatmentDiagnosticParentModel.fromJson(Map<String, dynamic> json) {
     return ProstheticTreatmentDiagnosticParentModel(
       date: DateTime.tryParse(json['date']??"")?.toLocal(),
       id: json['id'],
+      scanned: json['scanned'],
       needsRemake: json['needsRemake'] ?? false,
       operator: BasicNameIdObjectModel.fromJson(json['operator'] ?? Map<String, dynamic>()),
       operatorId: json['operatorId'],
@@ -32,6 +34,7 @@ class ProstheticTreatmentDiagnosticParentModel extends ProstheticTreatmentDiagno
     return ProstheticTreatmentDiagnosticParentModel(
       date: entity.date,
       id: entity.id,
+      scanned: entity.scanned,
       needsRemake: entity.needsRemake,
       operator: entity.operator,
       operatorId: entity.operatorId,
@@ -45,6 +48,7 @@ class ProstheticTreatmentDiagnosticParentModel extends ProstheticTreatmentDiagno
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['date'] = this.date?.toUtc().toIso8601String();
     data['id'] = this.id;
+    data['scanned'] = this.scanned;
     data['needsRemake'] = this.needsRemake;
     data['patientId'] = this.patientId;
     data['operatorId'] = this.operatorId;

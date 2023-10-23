@@ -25,6 +25,7 @@ class GetPatientProstheticTreatmentDiagnosticUseCase extends UseCases<Prosthetic
               operatorId: e.operatorId,
               diagnostic: e.diagnostic,
               needsRemake: e.needsRemake,
+              scanned: e.scanned,
               nextStep: e.nextStep,
               patient: e.patient,
               prostheticTreatmentId: e.prostheticTreatmentId,
@@ -36,6 +37,7 @@ class GetPatientProstheticTreatmentDiagnosticUseCase extends UseCases<Prosthetic
               date: e.date,
               operatorId: e.operatorId,
               diagnostic: e.diagnostic,
+              scanned: e.scanned,
               needsRemake: e.needsRemake,
               nextStep: e.nextStep,
               patient: e.patient,
@@ -49,6 +51,7 @@ class GetPatientProstheticTreatmentDiagnosticUseCase extends UseCases<Prosthetic
               operatorId: e.operatorId,
               diagnostic: e.diagnostic,
               needsRemake: e.needsRemake,
+              scanned: e.scanned,
               patient: e.patient,
               prostheticTreatmentId: e.prostheticTreatmentId,
             )).toList();

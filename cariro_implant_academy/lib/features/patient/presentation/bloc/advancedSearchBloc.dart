@@ -406,6 +406,10 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
                 cells.add(DataGridCell<String>(
                     columnName: "Diagnostic Impression Needs Remake",
                     value: e.searchProstheticDiagnostic_DiagnosticImpression?.needsRemake ?? false ? "-" : "Needs Remake"));
+              if (search?.searchProstheticDiagnostic_DiagnosticImpression?.scanned != null)
+                cells.add(DataGridCell<String>(
+                    columnName: "Diagnostic Impression Scanned",
+                    value: e.searchProstheticDiagnostic_DiagnosticImpression?.scanned ?? false ? "-" : "Scanned"));
               if (search?.searchProstheticDiagnostic_DiagnosticImpression != null)
                 cells.add(DataGridCell<DateTime>(columnName: "Diagnostic Impression Date", value: e.searchProstheticDiagnostic_DiagnosticImpression?.date));
               if (search?.searchProstheticDiagnostic_Bite?.diagnostic != null)
@@ -414,6 +418,8 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
                 cells.add(DataGridCell<String>(columnName: "Bite Next Step", value: e.searchProstheticDiagnostic_Bite?.nextStep?.name ?? ""));
               if (search?.searchProstheticDiagnostic_Bite?.needsRemake != null)
                 cells.add(DataGridCell<String>(columnName: "Bite Needs Remake", value: e.searchProstheticDiagnostic_Bite?.needsRemake ?? false ? "-" : "Needs Remake"));
+               if (search?.searchProstheticDiagnostic_Bite?.scanned != null)
+                cells.add(DataGridCell<String>(columnName: "Bite Scanned", value: e.searchProstheticDiagnostic_Bite?.scanned ?? false ? "-" : "Scanned"));
               if (search?.searchProstheticDiagnostic_Bite != null)
                 cells.add(DataGridCell<DateTime>(columnName: "Bite Date", value: e.searchProstheticDiagnostic_Bite?.date));
               if (search?.searchProstheticDiagnostic_ScanAppliance?.diagnostic != null)
@@ -421,7 +427,10 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
                     DataGridCell<String>(columnName: "Scan Appliance Diagnostic", value: e.searchProstheticDiagnostic_ScanAppliance?.diagnostic?.name ?? ""));
               if (search?.searchProstheticDiagnostic_ScanAppliance?.needsRemake != null)
                 cells.add(DataGridCell<String>(
-                    columnName: "Scan Appliance Next Step", value: e.searchProstheticDiagnostic_ScanAppliance?.needsRemake ?? false ? "-" : "Needs Remake"));
+                    columnName: "Scan Appliance Needs Remake", value: e.searchProstheticDiagnostic_ScanAppliance?.needsRemake ?? false ? "-" : "Needs Remake"));
+              if (search?.searchProstheticDiagnostic_ScanAppliance?.scanned != null)
+                cells.add(DataGridCell<String>(
+                    columnName: "Scan Appliance Scanned", value: e.searchProstheticDiagnostic_ScanAppliance?.scanned ?? false ? "-" : "Scanned"));
               if (search?.searchProstheticDiagnostic_ScanAppliance != null)
                 cells.add(DataGridCell<DateTime>(columnName: "Scan Appliance Date", value: e.searchProstheticDiagnostic_ScanAppliance?.date));
               if (search?.finalProthesisSingleBridgeHealingCollarStatus != null)

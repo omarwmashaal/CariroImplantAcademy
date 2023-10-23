@@ -15,6 +15,7 @@ class DiagnosticImpressionEntity extends ProstheticTreatmentDiagnosticParent {
     super.patient,
     super.patientId,
     super.prostheticTreatmentId,
+    super.scanned,
     this.diagnostic,
     this.nextStep,
   });

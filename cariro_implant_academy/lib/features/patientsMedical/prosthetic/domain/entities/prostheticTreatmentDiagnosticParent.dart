@@ -10,6 +10,7 @@ class ProstheticTreatmentDiagnosticParent  extends Equatable{
   int? operatorId;
   BasicNameIdObjectEntity? operator;
   bool? needsRemake;
+  bool? scanned;
 
   ProstheticTreatmentDiagnosticParent({
     this.date,
@@ -17,6 +18,7 @@ class ProstheticTreatmentDiagnosticParent  extends Equatable{
     this.needsRemake,
     this.operator,
     this.operatorId,
+    this.scanned,
     this.patient,
     this.patientId,
     this.prostheticTreatmentId,
@@ -51,6 +53,7 @@ class ProstheticTreatmentDiagnosticParent  extends Equatable{
     date,
     id,
     needsRemake,
+    scanned,
     operator,
     operatorId,
     patient,

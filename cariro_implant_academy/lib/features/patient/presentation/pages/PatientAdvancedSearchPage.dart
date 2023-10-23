@@ -184,6 +184,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                         searchDTO.noTreatmentPlan = isSelected;
                                       },
                                     ),
+                                    SizedBox(height: 10,),
                                     Row(
                                       children: [
                                         FormTextKeyWidget(text: "Age Range"),
@@ -740,6 +741,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                         searchTreatmentsDTO.noTreatmentPlan = isSelected;
                                       },
                                     ),
+                                    SizedBox(height: 10,),
                                     CIA_MultiSelectChipWidget(
                                       key: GlobalKey(),
                                       labels: [
@@ -1241,7 +1243,16 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
 
                                                   return searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression!.needsRemake = v;
                                                 },
-                                                //value: e.needsRemake ?? false,
+                                              ),
+                                              SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Scanned",
+                                                onChange: (v) {
+                                                  if (searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression == null)
+                                                    searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression = (DiagnosticImpressionEntity());
+
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_DiagnosticImpression!.scanned = v;
+                                                },
                                               ),
                                             ],
                                           );
@@ -1297,6 +1308,14 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                 value: searchProstheticDTO.searchProstheticDiagnostic_Bite?.needsRemake ?? false,
                                               ),
                                               SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Scanned",
+                                                onChange: (v) {
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_Bite!.scanned = v;
+                                                },
+                                                value: searchProstheticDTO.searchProstheticDiagnostic_Bite?.scanned ?? false,
+                                              ),
+                                              SizedBox(height: 10),
                                             ],
                                           );
                                         else if (searchType == _ProstheticSearchType.ScanAppliance)
@@ -1330,6 +1349,13 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                   return searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance!.needsRemake = v;
                                                 },
                                                 value: searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance?.needsRemake ?? false,
+                                              ), SizedBox(height: 10),
+                                              CIA_CheckBoxWidget(
+                                                text: "Scanned",
+                                                onChange: (v) {
+                                                  return searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance!.scanned = v;
+                                                },
+                                                value: searchProstheticDTO.searchProstheticDiagnostic_ScanAppliance?.scanned ?? false,
                                               ),
                                               SizedBox(height: 10),
                                             ],

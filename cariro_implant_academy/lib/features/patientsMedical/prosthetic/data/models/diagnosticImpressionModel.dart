@@ -13,6 +13,7 @@ class DiagnosticImpressionModel extends DiagnosticImpressionEntity {
     super.patient,
     super.patientId,
     super.prostheticTreatmentId,
+    super.scanned,
     super.diagnostic,
     super.nextStep,
   });
@@ -21,6 +22,7 @@ class DiagnosticImpressionModel extends DiagnosticImpressionEntity {
       date: entity.date,
       id: entity.id,
       needsRemake: entity.needsRemake,
+      scanned: entity.scanned,
       operator: entity.operator,
       operatorId: entity.operatorId,
       patient: entity.patient,
@@ -38,6 +40,7 @@ class DiagnosticImpressionModel extends DiagnosticImpressionEntity {
       needsRemake: parent.needsRemake,
       operator: parent.operator,
       operatorId: parent.operatorId,
+      scanned: parent.scanned,
       patient: parent.patient,
       patientId: parent.patientId,
       prostheticTreatmentId: parent.prostheticTreatmentId,

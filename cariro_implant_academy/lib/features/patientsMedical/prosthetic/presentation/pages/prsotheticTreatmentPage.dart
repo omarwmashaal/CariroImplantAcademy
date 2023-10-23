@@ -178,6 +178,15 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   value: e.needsRemake ?? false,
                                                 ),
                                                 SizedBox(width: 10),
+                                                CIA_CheckBoxWidget(
+                                                  text: "Scanned",
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.scanned = v;
+                                                  },
+                                                  value: e.scanned ?? false,
+                                                ),
+                                                SizedBox(width: 10),
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -276,6 +285,15 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                   value: e.needsRemake ?? false,
                                                 ),
                                                 SizedBox(width: 10),
+                                                CIA_CheckBoxWidget(
+                                                  text: "Scanned",
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.scanned = v;
+                                                  },
+                                                  value: e.scanned ?? false,
+                                                ),
+                                                SizedBox(width: 10),
                                                 Expanded(
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -351,6 +369,15 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                     return e.needsRemake = v;
                                                   },
                                                   value: e.needsRemake ?? false,
+                                                ),
+                                                SizedBox(width: 10),
+                                                CIA_CheckBoxWidget(
+                                                  text: "Scanned",
+                                                  onChange: (v) {
+                                                    e.operatorId = siteController.getUserId();
+                                                    return e.scanned = v;
+                                                  },
+                                                  value: e.scanned ?? false,
                                                 ),
                                                 SizedBox(width: 10),
                                                 Expanded(

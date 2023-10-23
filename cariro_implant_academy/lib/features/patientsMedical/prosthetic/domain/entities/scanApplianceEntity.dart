@@ -14,6 +14,7 @@ class ScanApplianceEntity extends ProstheticTreatmentDiagnosticParent {
     super.patient,
     super.patientId,
     super.prostheticTreatmentId,
+    super.scanned,
     this.diagnostic,
   });
 

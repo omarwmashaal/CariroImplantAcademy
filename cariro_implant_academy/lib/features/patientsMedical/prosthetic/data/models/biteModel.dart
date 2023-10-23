@@ -16,6 +16,7 @@ class BiteModel extends BiteEntity {
     super.prostheticTreatmentId,
     super.diagnostic,
     super.nextStep,
+    super.scanned,
   });
   factory BiteModel.fromEntity(BiteEntity entity) {
     return BiteModel(
@@ -25,6 +26,7 @@ class BiteModel extends BiteEntity {
       operator: entity.operator,
       operatorId: entity.operatorId,
       patient: entity.patient,
+      scanned: entity.scanned,
       patientId: entity.patientId,
       prostheticTreatmentId: entity.prostheticTreatmentId,
       diagnostic: entity.diagnostic,
@@ -42,6 +44,7 @@ class BiteModel extends BiteEntity {
       operatorId: parent.operatorId,
       patient: parent.patient,
       patientId: parent.patientId,
+      scanned: parent.scanned,
       prostheticTreatmentId: parent.prostheticTreatmentId,
       diagnostic: json['diagnostic'] == null ? null : EnumProstheticDiagnosticBiteDiagnostic.values[json['diagnostic']],
       nextStep: json['nextStep'] == null ? null : EnumProstheticDiagnosticBiteNextStep.values[json['nextStep']!],
