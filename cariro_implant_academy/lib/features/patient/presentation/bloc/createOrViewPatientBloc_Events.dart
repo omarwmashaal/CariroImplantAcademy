@@ -11,6 +11,13 @@ class CheckDuplicateNumberEvent extends CreateOrViewPatientBloc_Events{
   // TODO: implement props
   List<Object?> get props => [number];
 }
+class SetPatientOutEvent extends CreateOrViewPatientBloc_Events{
+  final int id;
+  SetPatientOutEvent(this.id);
+   @override
+  // TODO: implement props
+  List<Object?> get props => [id];
+}
 class CheckAvailableIdEvent extends CreateOrViewPatientBloc_Events{
   final int id;
   CheckAvailableIdEvent(this.id);

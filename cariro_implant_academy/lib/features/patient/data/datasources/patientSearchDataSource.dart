@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedSearchPatientsModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticModel.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,7 @@ abstract class PatientSearchDataSource {
   Future<List<PatientInfoEntity>> searchPatients(PatientSearchParams params);
 
   Future<PatientInfoEntity> getPatient(int id);
+  Future<NoParams> setPatientOut(int id);
 
   Future<int> getNextAvailableId();
 
@@ -83,6 +85,19 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch (e) {
       throw DataConversionException(message: DATACONVERSION_FAILURE_MESSAGE);
     }
+  }
+  @override
+  Future<NoParams> setPatientOut(int id) async {
+    late StandardHttpResponse result;
+    try {
+      result = await client.post(
+        host: "$serverHost/$patientInfoController/SetPatientOut?id=$id",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    return NoParams();
   }
 
   @override

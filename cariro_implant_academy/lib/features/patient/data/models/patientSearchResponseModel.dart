@@ -20,6 +20,7 @@ class PatientInfoModel extends PatientInfoEntity {
           doctor: patientEntity.doctor,
           doctorId: patientEntity.doctorId,
           relative: patientEntity.relative,
+    out: patientEntity.out,
           dateOfBirth: patientEntity.dateOfBirth,
           city: patientEntity.city,
           address: patientEntity.address,
@@ -42,6 +43,7 @@ class PatientInfoModel extends PatientInfoEntity {
     id,
     gender,
     phone,
+    out,
     age,
     maritalStatus,
     relative,
@@ -71,6 +73,7 @@ class PatientInfoModel extends PatientInfoEntity {
           maritalStatus: maritalStatus,
           doctor: doctor,
           doctorId: doctorId,
+    out: out,
           relative: relative,
           dateOfBirth: dateOfBirth,
           city: city,
@@ -96,6 +99,7 @@ class PatientInfoModel extends PatientInfoEntity {
       id: map['id'] as int?,
       gender: mapToEnum(EnumGender.values, map['gender']),
       phone: map['phone'] as String?,
+      out: map['out']??false,
       age: (){
         var age = (AgeCalculator.age(DateTime.parse(map['dateOfBirth'])).years) as int;
         if(age<0) return null;
@@ -135,6 +139,7 @@ class PatientInfoModel extends PatientInfoEntity {
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
+      'out': this.out,
       'id': this.id,
       'gender': getEnumName(this.gender),
       'phone': this.phone,

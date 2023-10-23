@@ -206,6 +206,7 @@ import '../features/patient/domain/usecases/getMySchedulesUseCase.dart';
 import '../features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
 import '../features/patient/domain/usecases/inqueueComplaiUseCase.dart';
 import '../features/patient/domain/usecases/patientSearchUseCase.dart';
+import '../features/patient/domain/usecases/setPatientOutUseCase.dart';
 import '../features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
 import '../features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import '../features/patient/presentation/bloc/patientSearchBloc.dart';
@@ -522,6 +523,7 @@ init() async {
         patientSearchUseCase: sl(),
         getPatientDataUseCase: sl(),
         updatePatientDataUseCase: sl(),
+        setPatientOutUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => CreatePatientUseCase(patientInfoRepo: sl(), imageRepo: sl()));
@@ -530,6 +532,7 @@ init() async {
   sl.registerLazySingleton(() => GetNextAvailableIdUseCase(sl()));
   sl.registerLazySingleton(() => GetPatientDataUseCase(patientRepo: sl()));
   sl.registerLazySingleton(() => UpdatePatientDataUseCase(patientInfoRepo: sl()));
+  sl.registerLazySingleton(() => SetPatientOutUseCase(patientRepo: sl()));
   //repos
   sl.registerLazySingleton<InputValidationRepo>(() => InputValidationRepoImpl());
   //dataSources

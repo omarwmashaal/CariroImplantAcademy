@@ -75,7 +75,6 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     PatientInfoEntity patient = PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married);
     final createOrViewPatientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     final imageBlocProfile = sl<ImageBloc>();
@@ -113,6 +112,8 @@ class CreateOrViewPatientPage extends StatelessWidget {
         else if (state is UpdatedPatientSuccessfully) {
           patient = state.patient;
           ShowSnackBar(context, isSuccess: true);
+        } else if (state is PatientOutSuccessfullyState) {
+          createOrViewPatientBloc.add(GetPatientInfoEvent(id: patientID));
         }
 
         if (state is CreatingPatientState || state is UpdatingPatientState)
@@ -133,7 +134,35 @@ class CreateOrViewPatientPage extends StatelessWidget {
             padding: EdgeInsets.only(top: 5),
             child: Column(
               children: [
-                TitleWidget(title: "Patient's Data", showBackButton: true),
+                Row(
+                  children: [
+                    TitleWidget(title: "Patient's Data", showBackButton: true),
+                    BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                      builder: (context, state) {
+                        if (createOrViewPatientBloc.pageState == PageState.view)
+                          return Row(
+                            children: [
+                              Icon(
+                                Icons.circle,
+                                color: patient.out ? Colors.red : Colors.green,
+                              ),
+                              SizedBox(width: 10),
+                              Visibility(visible: patient.out, child: Text("Patient Out!")),
+                              SizedBox(width: 10),
+                              Visibility(
+                                  visible: !patient.out && siteController.getRole()=="admin",
+                                  child: CIA_SecondaryButton(
+                                    label: "Set Patient Out",
+                                    onTab: () =>createOrViewPatientBloc.add(SetPatientOutEvent(patientID)),
+                                  )),
+                            ],
+                          );
+                        else
+                          return Container();
+                      },
+                    ),
+                  ],
+                ),
                 Expanded(
                   flex: 4,
                   child: Row(
@@ -225,41 +254,39 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                     );
                                 },
                               ),
+                              BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                                buildWhen: (previous, current) => current is ChangePageState,
+                                builder: (context, state) {
+                                  bool visible = false;
+                                  if (state is ChangePageState &&
+                                      createOrViewPatientBloc.pageState == PageState.addNew &&
+                                      siteController.getSite() == Website.Lab) {
+                                    visible = true;
+                                  }
 
-
-                         BlocBuilder<CreateOrViewPatientBloc,CreateOrViewPatientBloc_State>(
-                           buildWhen: (previous, current) => current is ChangePageState,
-
-                           builder: (context, state) {
-                             bool visible = false;
-                             if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew && siteController.getSite()==Website.Lab)
-                               {
-                                 visible = true;
-                               }
-
-                               return  Visibility(
-                             visible:visible,
-                             child: CIA_MultiSelectChipWidget(
-                               key: GlobalKey(),
-                               singleSelect: true,
-                               onChange: (item, isSelected) {
-                                 if (isSelected) {
-                                   if (item == "CIA")
-                                     patient.patientType = EnumPatientType.CIA;
-                                   else if (item == "Clinic")
-                                     patient.patientType = EnumPatientType.Clinic;
-                                   else if (item == "OutSource") patient.patientType = EnumPatientType.OutSource;
-                                 }
-                               },
-                               labels: [
-                                 CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
-                                 CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
-                                 CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
-                               ],
-                             ),
-                           );
-                         },),
-
+                                  return Visibility(
+                                    visible: visible,
+                                    child: CIA_MultiSelectChipWidget(
+                                      key: GlobalKey(),
+                                      singleSelect: true,
+                                      onChange: (item, isSelected) {
+                                        if (isSelected) {
+                                          if (item == "CIA")
+                                            patient.patientType = EnumPatientType.CIA;
+                                          else if (item == "Clinic")
+                                            patient.patientType = EnumPatientType.Clinic;
+                                          else if (item == "OutSource") patient.patientType = EnumPatientType.OutSource;
+                                        }
+                                      },
+                                      labels: [
+                                        CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
+                                        CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
+                                        CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {

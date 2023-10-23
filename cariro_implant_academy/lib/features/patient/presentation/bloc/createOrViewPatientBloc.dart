@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getNextAvailableIdUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/setPatientOutUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_States.dart';
@@ -23,6 +24,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
   final PatientSearchUseCase patientSearchUseCase;
   final GetPatientDataUseCase getPatientDataUseCase;
   final UpdatePatientDataUseCase updatePatientDataUseCase;
+  final SetPatientOutUseCase setPatientOutUseCase;
   PageState pageState = PageState.view;
 
   CreateOrViewPatientBloc({
@@ -33,6 +35,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
     required this.patientSearchUseCase,
     required this.getPatientDataUseCase,
     required this.updatePatientDataUseCase,
+    required this.setPatientOutUseCase,
   }) : super(LoadingPatientInfoState()) {
     on<CheckDuplicateNumberEvent>(
       (event, emit) async {
@@ -136,6 +139,16 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
         result.fold(
           (l) => emit(UpdatingPatientErrorState(message: l.message ?? "")),
           (r) => emit(UpdatedPatientSuccessfully(patient: r)),
+        );
+      },
+    );
+    on<SetPatientOutEvent>(
+      (event, emit) async {
+        emit(UpdatingPatientState());
+        final result = await setPatientOutUseCase(event.id);
+        result.fold(
+          (l) => emit(UpdatingPatientErrorState(message: l.message ?? "")),
+          (r) => emit(PatientOutSuccessfullyState()),
         );
       },
     );

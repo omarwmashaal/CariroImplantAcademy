@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
@@ -110,6 +111,15 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   Future<Either<Failure, List<ProstheticTreatmentEntity>>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to) async {
     try {
       final result = await dataSource.advancedProstheticSearch(query,from,to);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+  @override
+  Future<Either<Failure, NoParams>> setPatientOut(int id) async {
+    try {
+      final result = await dataSource.setPatientOut(id);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

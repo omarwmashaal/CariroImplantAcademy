@@ -106,6 +106,13 @@ class UpdatingPatientState extends CreateOrViewPatientBloc_State{
 
 }
 
+class PatientOutSuccessfullyState extends CreateOrViewPatientBloc_State{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+}
+
 class UpdatingPatientErrorState extends CreateOrViewPatientBloc_State{
   final String message;
   UpdatingPatientErrorState({required this.message});

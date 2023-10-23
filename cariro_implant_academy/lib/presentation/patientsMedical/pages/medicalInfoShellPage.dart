@@ -323,7 +323,13 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               ),
                               SizedBox(
                                 height: 10,
-                              ),
+                              ), 
+                              Row(
+                                children: [
+                                  FormTextValueWidget(text: patient.out? "Patient Out!":""),
+                                  Icon(Icons.circle,color: patient.out? Colors.red:Colors.green,),
+                                ],
+                              )
                             ],
                           ),
                         );
