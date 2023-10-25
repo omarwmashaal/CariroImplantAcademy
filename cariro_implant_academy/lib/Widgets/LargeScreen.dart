@@ -16,6 +16,7 @@ import 'package:cariro_implant_academy/Widgets/AppBarBloc_States.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
 import 'package:cariro_implant_academy/Widgets/Drawer.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/widgets/calendarWidget.dart';
 import 'package:cariro_implant_academy/features/user/presentation/pages/viewUserProfile.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
@@ -33,6 +34,7 @@ import '../core/features/authentication/presentation/pages/authentication_page.d
 import '../core/injection_contianer.dart';
 import '../core/presentation/widgets/LoadingWidget.dart';
 import '../core/features/notification/presentation/widgets/notificationDropDownWidget.dart';
+import 'CIA_PopUp.dart';
 
 //TODO: Return to stateless
 class CIA_LargeScreen extends StatefulWidget {
@@ -75,11 +77,11 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                 Container(
                   color: Color_Background,
                   height: 50,
-                  child:  BlocListener<AppBarBloc, AppBarBlocState>(
+                  child: BlocListener<AppBarBloc, AppBarBlocState>(
                     bloc: appBarBloc,
                     listener: (context, state) {
-                     // if (state is AppBarNewNotificationState)
-                       // BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
+                      // if (state is AppBarNewNotificationState)
+                      // BlocProvider.of<AppBarBloc>(context).add(AppBarGetNotificationsEvent());
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -88,78 +90,90 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                           bloc: appBarBloc,
                           buildWhen: (previous, current) => current is AppBarChangedState,
                           builder: (context, state) {
-                            if (state is AppBarChangedState)
-                              return state.newAppBar ?? Container();
+                            if (state is AppBarChangedState) return state.newAppBar ?? Container();
                             return Container();
                           },
                         ),
                         //GetBuilder<SiteController>(builder: (siteController) => siteController.appBarWidget),
                         Expanded(
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-
-                                GestureDetector(
-                                  onTap: () {
-                                    context.goNamed(NotificationsPage.routeName);
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                context.goNamed(NotificationsPage.routeName);
+                              },
+                              child: Text("View All Notifications"),
+                            ),
+                            BlocConsumer<AppBarBloc, AppBarBlocState>(
+                              bloc: appBarBloc,
+                              listener: (context, state) {
+                                if (state is AppBarMarkedNotificationsAsReadState) {
+                                  appBarBloc.add(AppBarGetNotificationsEvent());
+                                }
+                              },
+                              buildWhen: (previous, current) => current is AppBarNewNotificationState || current is AppBarNotificationsLoadedState,
+                              builder: (context, state) {
+                                var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
+                                return NotificationDropDownWidget(
+                                  markAsRead: () {
+                                    appBarBloc.add(AppBarMarkAllNotificationsAsReadEvent());
                                   },
-                                  child: Text("View All Notifications"),
-                                ),
-                                BlocConsumer<AppBarBloc, AppBarBlocState>(
-                                  bloc: appBarBloc,
-                                  listener: (context, state) {
-                                    if (state is AppBarMarkedNotificationsAsReadState) {
-                                      appBarBloc.add(AppBarGetNotificationsEvent());
-                                    }
-                                  },
-                                  buildWhen: (previous, current) => current is AppBarNewNotificationState || current is AppBarNotificationsLoadedState,
-                                  builder: (context, state) {
-                                    var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
-                                    return NotificationDropDownWidget(
-                                      markAsRead: () {
-
-                                        appBarBloc.add(AppBarMarkAllNotificationsAsReadEvent());
-                                      },
-                                      customButton: Icon(
-                                        Icons.notifications,
-                                        color: state is AppBarNewNotificationState ? Colors.red : null,
-                                      ),
-                                      hint: "omar",
-                                      notifications: notifications,
-                                    );
-                                  },
-                                ),
-                                SizedBox(width: 30),
-                                BlocBuilder<ImageBloc, ImageBloc_State>(
-                                  bloc: imageBlocProfilesss,
-                                  builder: (context, state) {
-                                    Uint8List? image;
-                                    if (state is ImageLoadedState)
-                                      image = state.image;
-                                    else if (state is ImageDownloadingState)
-                                      return ClipRRect(
-                                        borderRadius: BorderRadius.circular(500.0),
-                                        child: LoadingWidget(),
-                                      );
-                                    return GestureDetector(
-                                        onTap: () {
-                                          context.goNamed(ViewUserProfilePage.routeName, pathParameters: {"id": siteController.getUserId().toString()});
-                                        },
-                                        child: CircleAvatar(
-                                          //borderRadius: BorderRadius.circular(500.0),
-                                          backgroundImage: image == null
-                                              ? AssetImage("assets/user.png") as ImageProvider
-                                              : MemoryImage(
-                                            image!,
-                                          ),
-                                        ));
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                )
-                              ],
-                            ))
+                                  customButton: Icon(
+                                    Icons.notifications,
+                                    color: state is AppBarNewNotificationState ? Colors.red : null,
+                                  ),
+                                  hint: "omar",
+                                  notifications: notifications,
+                                );
+                              },
+                            ),
+                            SizedBox(width: 20),
+                            IconButton(
+                                onPressed: () {
+                                  CIA_ShowPopUp(
+                                    context: context,
+                                    width: 900,
+                                    height: 600,
+                                    title: "Calendar",
+                                    child: CalendarWidget(
+                                      getForDoctor: siteController.getRole() != "secretary",
+                                      getAllSchedules: siteController.getRole() == "secretary",
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.calendar_month_sharp)),
+                            SizedBox(width: 20),
+                            BlocBuilder<ImageBloc, ImageBloc_State>(
+                              bloc: imageBlocProfilesss,
+                              builder: (context, state) {
+                                Uint8List? image;
+                                if (state is ImageLoadedState)
+                                  image = state.image;
+                                else if (state is ImageDownloadingState)
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(500.0),
+                                    child: LoadingWidget(),
+                                  );
+                                return GestureDetector(
+                                    onTap: () {
+                                      context.goNamed(ViewUserProfilePage.routeName, pathParameters: {"id": siteController.getUserId().toString()});
+                                    },
+                                    child: CircleAvatar(
+                                      //borderRadius: BorderRadius.circular(500.0),
+                                      backgroundImage: image == null
+                                          ? AssetImage("assets/user.png") as ImageProvider
+                                          : MemoryImage(
+                                              image!,
+                                            ),
+                                    ));
+                              },
+                            ),
+                            SizedBox(
+                              width: 20,
+                            )
+                          ],
+                        ))
                       ],
                     ),
                   ),

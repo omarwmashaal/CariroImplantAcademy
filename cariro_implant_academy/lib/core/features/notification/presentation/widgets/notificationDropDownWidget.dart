@@ -64,6 +64,7 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
                 ],
               )
             : null,
+
         items: (widget.notifications as List<NotificationEntity>)
             .map((item) => DropdownMenuItem<NotificationEntity>(
                   value: item,
@@ -117,11 +118,13 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
 
           }
         },
+
         onMenuStateChange: (isOpen) async {
           //siteController.newNotification.value = false;
           if (isOpen) widget.markAsRead();
         },
         dropdownStyleData: DropdownStyleData(
+
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Color_Background,

@@ -53,6 +53,7 @@ class CalendarWidget extends StatefulWidget {
   int? patientID;
   bool getForDoctor;
   bool getAllSchedules;
+
   Function(VisitEntity newVisit)? onNewVisit;
 
   @override
@@ -104,6 +105,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           context: context,
           onSave: () async {
             bloc.add(CalendarBloc_ScheduleNewVisit(newVisit: newVisit));
+            return false;
           },
           child: StatefulBuilder(
             builder: (context, setState) {
@@ -222,7 +224,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                               onTap: () {
                                                 if (state is LoadedPatients) {
                                                   newVisit.patientName = state.patients[index].name;
-                                                  newVisit.id = state.patients[index].id;
+                                                  newVisit.patientId = state.patients[index].id;
                                                   dialogHelper.dismissSingle(context);
                                                   setState(() {});
                                                 }
@@ -292,6 +294,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     },
                     emptyString: "No room available at this time slot",
                   ),
+                  BlocBuilder<CalendarBloc,CalendarBloc_States>(builder: (context, state) {
+                    String error = "";
+                    if(state is CalendarBloc_CreatingScheduleError)
+                      error = state.message;
+                    return Text(error,style: TextStyle(color: Colors.red),);
+                  },)
                 ],
               );
             },
@@ -308,6 +316,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         if (state is CalendarBloc_LoadedRoomsSuccessfully)
           rooms = state.rooms;
         else if (state is CalendarBloc_CreatedNewScheduleSuccessfully) {
+          dialogHelper.dismissSingle(context);
           if (loadAll)
             bloc.add(CalendarBloc_GetAllSchedules(month: currentMonth));
           else
