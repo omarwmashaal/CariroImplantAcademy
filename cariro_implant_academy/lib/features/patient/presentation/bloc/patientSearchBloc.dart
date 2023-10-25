@@ -20,7 +20,7 @@ const DATA_CONVERSION_EXCEPTION_MESSAGE = "Server responded with incorrect data"
 
 class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc_States> {
   final PatientSearchUseCase searchUseCase;
-  String _filter = "Name";
+  String _filter = "Id";
 
   PatientSearchBloc({required this.searchUseCase}) : super(LoadingPatientSearchState()) {
     on<PatientSearchEvent>(

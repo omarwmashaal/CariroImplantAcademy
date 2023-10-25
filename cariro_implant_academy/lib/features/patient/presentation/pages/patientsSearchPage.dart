@@ -172,8 +172,8 @@ class PatientsSearchPage extends StatelessWidget {
                               Expanded(
                                 flex: 8,
                                 child: HorizontalRadioButtons(
-                                  groupValue: "Name",
-                                  names: ["Name", "Phone", "All"],
+                                  groupValue: "Id",
+                                  names: ["Id","Name", "Phone", "All"],
                                   onChange: (value) => dispatchChangeFilter(context, value)
                                   // _getXController.searchFilter.value = value;
                                   ,
