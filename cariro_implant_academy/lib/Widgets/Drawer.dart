@@ -29,13 +29,13 @@ class DrawerItems extends StatefulWidget {
 
 class _DrawerItemsState extends State<DrawerItems> {
   double radius = 30;
-SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
+  SidebarXController ss = SidebarXController(selectedIndex: 0, extended: false);
+
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: EdgeInsets.all(1),
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(radius)),
         boxShadow: [
           BoxShadow(
@@ -56,7 +56,7 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
             fit: BoxFit.contain,
           );
         },
-        items: PagesController.DrawerItems(context,ss),
+        items: PagesController.DrawerItems(context, ss),
         showToggleButton: true,
         theme: SidebarXTheme(
           selectedItemDecoration: BoxDecoration(
@@ -81,26 +81,27 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
         footerBuilder: (context, extended) {
           List<Widget> children = [
             GestureDetector(
-            onTap: () {
-              siteController.setSite(Website.CIA);
-              widget.onSiteChange();
-              context.goNamed(PatientsSearchPage.routeName);
-
-            },
-            child: Image(
-              image: siteController.getSiteLogoBySite(Website.CIA),
-              width: 50,
-              height: 50,
-              fit: BoxFit.contain,
+              onTap: () {
+                siteController.setSite(Website.CIA);
+                widget.onSiteChange();
+                context.goNamed(PatientsSearchPage.routeName);
+              },
+              child: Image(
+                image: siteController.getSiteLogoBySite(Website.CIA),
+                width: 50,
+                height: 50,
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
-            SizedBox(width: extended? 10:0,height: extended? 0:10,),
+            SizedBox(
+              width: extended ? 10 : 0,
+              height: extended ? 0 : 10,
+            ),
             GestureDetector(
               onTap: () {
                 siteController.setSite(Website.Lab);
                 widget.onSiteChange();
                 context.goNamed(LabRequestsSearchPage.routeName);
-
               },
               child: Image(
                 image: siteController.getSiteLogoBySite(Website.Lab),
@@ -109,7 +110,10 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(width: extended? 10:0,height: extended? 0:10,),
+            SizedBox(
+              width: extended ? 10 : 0,
+              height: extended ? 0 : 10,
+            ),
             GestureDetector(
               onTap: () {
                 siteController.setSite(Website.Clinic);
@@ -121,11 +125,25 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
                 height: 50,
                 fit: BoxFit.contain,
               ),
-            ),];
+            ),
+          ];
           return siteController.getRole() != "admin"
               ? Container(
                   color: Colors.white,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.logout),
+                        color: Colors.red,
+                        onPressed: () {
+                          siteController.clearCach();
+                          context.go("/");
+                        },
 
+                      ),
+                      FormTextValueWidget(text: "Logout"),
+                    ],
+                  ),
                 )
               : Expanded(
                   child: Container(
@@ -133,27 +151,38 @@ SidebarXController ss = SidebarXController(selectedIndex: 0,extended: false);
                     child: Column(
                       children: [
                         Divider(),
-                        FormTextKeyWidget(text: extended? "Switch Sites":""),
+                        FormTextKeyWidget(text: extended ? "Switch Sites" : ""),
                         SizedBox(height: 20),
-                        extended?
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children:children,
-                        ):
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: children,
-                        ),
-                        SizedBox(height:10),
+                        extended
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: children,
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: children,
+                              ),
+                        SizedBox(height: 10),
                         Visibility(
-                          visible: siteController.getSite()==Website.CIA,
+                          visible: siteController.getSite() == Website.CIA,
                           child: IconButton(
                             icon: Icon(Icons.settings),
-                            onPressed: (){
+                            onPressed: () {
                               context.goNamed(SettingsPage.routeName);
                             },
                           ),
-                        )
+                        ),
+                        SizedBox(height: 10),
+                        IconButton(
+                          icon: Icon(Icons.logout),
+                          color: Colors.red,
+                          onPressed: () {
+                            siteController.clearCach();
+                            context.go("/");
+                          },
+
+                        ),
+                        FormTextValueWidget(text: "Logout"),
                       ],
                     ),
                   ),

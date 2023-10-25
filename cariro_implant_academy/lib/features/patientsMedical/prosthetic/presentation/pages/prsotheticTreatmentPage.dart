@@ -1,6 +1,8 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
@@ -60,376 +62,381 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 60,
-            child: TabBar(
-              onTap: (value) {
-                if (value == 0)
-                  bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
-                else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
-              },
-              labelColor: Colors.black,
-              tabs: [
-                Tab(
-                  text: "Diagnostic",
-                ),
-                Tab(
-                  text: "Final Prothesis",
-                ),
-              ],
+    return BlocListener<LabRequestsBloc,LabRequestsBloc_States>(
+      listener: (context, state) {
+        if(state is LabRequestsBloc_CreatedLabRequestSuccessfullyState)
+          dialogHelper.dismissAll(context);
+      },
+      child:DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 60,
+              child: TabBar(
+                onTap: (value) {
+                  if (value == 0)
+                    bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
+                  else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                },
+                labelColor: Colors.black,
+                tabs: [
+                  Tab(
+                    text: "Diagnostic",
+                  ),
+                  Tab(
+                    text: "Final Prothesis",
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                    bloc: medicalInfoShellBloc,
-                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                    builder: (context, stateShell) {
-                      return AbsorbPointer(absorbing: () {
-                        if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                          edit = stateShell.edit;
-                          return !edit;
-                        } else {
-                          edit = false;
-                          return true;
-                        }
-                      }(), child: BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
-                        builder: (context, state) {
-                          if (state is ProstheticBloc_LoadingDataState)
-                            return LoadingWidget();
-                          else if (state is ProstheticBloc_DataLoadingErrorState)
-                            return BigErrorPageWidget(message: state.message);
-                          else if (state is ProstheticBloc_DiagnosticDataLoadedSuccessfullyState) {
-                            diagnosticEntity = state.data;
-                            return StatefulBuilder(
-                              builder: (context, _setState) {
-                                return ListView(children: () {
-                                  List<Widget> r = [];
-                                  if (diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.isEmpty) {
-                                    diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity());
-                                  }
-                                  if (diagnosticEntity!.prostheticDiagnostic_Bite!.isEmpty) {
-                                    diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
-                                  }
-                                  if (diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.isEmpty) {
-                                    diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
-                                  }
+            Expanded(
+              child: TabBarView(
+                children: [
+                  BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                      bloc: medicalInfoShellBloc,
+                      buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                      builder: (context, stateShell) {
+                        return AbsorbPointer(absorbing: () {
+                          if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                            edit = stateShell.edit;
+                            return !edit;
+                          } else {
+                            edit = false;
+                            return true;
+                          }
+                        }(), child: BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+                          builder: (context, state) {
+                            if (state is ProstheticBloc_LoadingDataState)
+                              return LoadingWidget();
+                            else if (state is ProstheticBloc_DataLoadingErrorState)
+                              return BigErrorPageWidget(message: state.message);
+                            else if (state is ProstheticBloc_DiagnosticDataLoadedSuccessfullyState) {
+                              diagnosticEntity = state.data;
+                              return StatefulBuilder(
+                                builder: (context, _setState) {
+                                  return ListView(children: () {
+                                    List<Widget> r = [];
+                                    if (diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.isEmpty) {
+                                      diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity());
+                                    }
+                                    if (diagnosticEntity!.prostheticDiagnostic_Bite!.isEmpty) {
+                                      diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
+                                    }
+                                    if (diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.isEmpty) {
+                                      diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
+                                    }
 
-                                  r.add(Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: FormTextKeyWidget(text: "Diagnostic Impression"),
-                                  ));
-                                  r.addAll(diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!
-                                      .map((e) => Padding(
-                                            padding: const EdgeInsets.only(bottom: 10),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: CIA_DropDownSearch(
-                                                    label: "Diagnostic",
-                                                    selectedItem: () {
-                                                      if (e.diagnostic != null) {
-                                                        return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                      }
-                                                      return null;
-                                                    }(),
-                                                    onSelect: (value) {
-                                                      e.diagnostic = EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
-                                                      e.operatorId = siteController.getUserId();
-                                                      },
-                                                    items: [
-                                                      DropDownDTO(name: "Physical", id: 0),
-                                                      DropDownDTO(name: "Digital", id: 1),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                Expanded(
-                                                  child: CIA_DropDownSearch(
-                                                    label: "Next Step",
-                                                    selectedItem: () {
-                                                      if (e.nextStep != null) {
-                                                        return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
-                                                      }
-                                                      return null;
-                                                    }(),
-                                                    onSelect: (value) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      e.nextStep = EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
-                                                    },
-                                                    items: [
-                                                      DropDownDTO(name: "Ready for implant", id: 0),
-                                                      DropDownDTO(name: "Bite", id: 1),
-                                                      DropDownDTO(name: "Needs new impression", id: 2),
-                                                      DropDownDTO(name: "Needs scan PPT", id: 3),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Needs Remake",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.scanned=false;
-                                                    _setState((){});
-                                                     e.needsRemake = v;
-                                                  },
-                                                  value: e.needsRemake ?? false,
-                                                ),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Scanned",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.needsRemake=false;
-                                                    _setState((){});
-                                                    return e.scanned = v;
-                                                  },
-                                                  value: e.scanned ?? false,
-                                                ),
-                                                SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.operator!.name ?? "",
-                                                        secondaryInfo: true,
-                                                      )),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
-                                                      )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _setState(() {
-                                                        diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity(
-                                                            operatorId: sl<SharedPreferences>().getInt("userid"),
-                                                            operator: BasicNameIdObjectEntity(
-                                                              name: siteController.getUserName(),
-                                                              id: sl<SharedPreferences>().getInt("userid"),
-                                                            )));
-                                                      });
-                                                    },
-                                                    icon: Icon(Icons.add))
+                                    r.add(Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: FormTextKeyWidget(text: "Diagnostic Impression"),
+                                    ));
+                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!
+                                        .map((e) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Diagnostic",
+                                              selectedItem: () {
+                                                if (e.diagnostic != null) {
+                                                  return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                e.diagnostic = EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
+                                                e.operatorId = siteController.getUserId();
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Physical", id: 0),
+                                                DropDownDTO(name: "Digital", id: 1),
                                               ],
                                             ),
-                                          ))
-                                      .toList());
-
-                                  r.add(Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: FormTextKeyWidget(text: "Bite"),
-                                  ));
-                                  r.addAll(diagnosticEntity!.prostheticDiagnostic_Bite!
-                                      .map((e) => Padding(
-                                            padding: const EdgeInsets.only(bottom: 10),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: CIA_DropDownSearch(
-                                                    label: "Diagnostic",
-                                                    selectedItem: () {
-                                                      if (e.diagnostic != null) {
-                                                        return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                      }
-                                                      return null;
-                                                    }(),
-                                                    onSelect: (value) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      e.diagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
-                                                    },
-                                                    items: [
-                                                      DropDownDTO(name: "Done", id: 0),
-                                                      DropDownDTO(name: "Needs ReScan", id: 1),
-                                                      DropDownDTO(name: "Needs ReImpression", id: 2),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                Expanded(
-                                                  child: CIA_DropDownSearch(
-                                                    label: "Next Step",
-                                                    selectedItem: () {
-                                                      if (e.nextStep != null) {
-                                                        return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
-                                                      }
-                                                      return null;
-                                                    }(),
-                                                    onSelect: (value) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      e.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
-                                                    },
-                                                    items: [
-                                                      DropDownDTO(name: "Scan Appliance", id: 0),
-                                                      DropDownDTO(name: "ReImpression", id: 1),
-                                                      DropDownDTO(name: "ReBite", id: 2),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Needs Remake",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.scanned=false;
-                                                    _setState((){});
-                                                    return e.needsRemake = v;
-                                                  },
-                                                  value: e.needsRemake ?? false,
-                                                ),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Scanned",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.needsRemake=false;
-                                                    _setState((){});
-                                                    return e.scanned = v;
-                                                  },
-                                                  value: e.scanned ?? false,
-                                                ),
-                                                SizedBox(width: 10),
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.operator!.name ?? "",
-                                                        secondaryInfo: true,
-                                                      )),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
-                                                      )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _setState(() {
-                                                        diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
-                                                      });
-                                                    },
-                                                    icon: Icon(Icons.add))
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Next Step",
+                                              selectedItem: () {
+                                                if (e.nextStep != null) {
+                                                  return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                e.operatorId = siteController.getUserId();
+                                                e.nextStep = EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Ready for implant", id: 0),
+                                                DropDownDTO(name: "Bite", id: 1),
+                                                DropDownDTO(name: "Needs new impression", id: 2),
+                                                DropDownDTO(name: "Needs scan PPT", id: 3),
                                               ],
                                             ),
-                                          ))
-                                      .toList());
-
-                                  r.add(Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: FormTextKeyWidget(text: "Scan Appliance"),
-                                  ));
-                                  r.addAll(diagnosticEntity!.prostheticDiagnostic_ScanAppliance!
-                                      .map((e) => Padding(
-                                            padding: const EdgeInsets.only(bottom: 10),
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Needs Remake",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.scanned=false;
+                                              _setState((){});
+                                              e.needsRemake = v;
+                                            },
+                                            value: e.needsRemake ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Scanned",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.needsRemake=false;
+                                              _setState((){});
+                                              return e.scanned = v;
+                                            },
+                                            value: e.scanned ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
                                             child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Expanded(
-                                                  child: CIA_DropDownSearch(
-                                                    label: "Diagnostic",
-                                                    selectedItem: () {
-                                                      if (e.diagnostic != null) {
-                                                        return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                      }
-                                                      return null;
-                                                    }(),
-                                                    onSelect: (value) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      e.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
-                                                    },
-                                                    items: [
-                                                      DropDownDTO(name: "Done", id: 0),
-                                                      DropDownDTO(name: "Needs ReBite", id: 1),
-                                                      DropDownDTO(name: "Needs ReImpression", id: 2),
-                                                      DropDownDTO(name: "Needs ReDesign", id: 3),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Expanded(child: SizedBox()),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Needs Remake",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.scanned=false;
-                                                    _setState((){});
-                                                    return e.needsRemake = v;
-                                                  },
-                                                  value: e.needsRemake ?? false,
-                                                ),
-                                                SizedBox(width: 10),
-                                                CIA_CheckBoxWidget(
-                                                  text: "Scanned",
-                                                  onChange: (v) {
-                                                    e.operatorId = siteController.getUserId();
-                                                    if(v)e.needsRemake=false;
-                                                    _setState((){});
-                                                    return e.scanned = v;
-                                                  },
-                                                  value: e.scanned ?? false,
-                                                ),
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.operator!.name ?? "",
+                                                      secondaryInfo: true,
+                                                    )),
                                                 SizedBox(width: 10),
                                                 Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.operator!.name ?? "",
-                                                        secondaryInfo: true,
-                                                      )),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
-                                                      )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      _setState(() {
-                                                        diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
-                                                      });
-                                                    },
-                                                    icon: Icon(Icons.add))
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                      secondaryInfo: true,
+                                                    )),
                                               ],
                                             ),
-                                          ))
-                                      .toList());
+                                          ),
+                                          SizedBox(width: 10),
+                                          IconButton(
+                                              onPressed: () {
+                                                _setState(() {
+                                                  diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity(
+                                                      operatorId: sl<SharedPreferences>().getInt("userid"),
+                                                      operator: BasicNameIdObjectEntity(
+                                                        name: siteController.getUserName(),
+                                                        id: sl<SharedPreferences>().getInt("userid"),
+                                                      )));
+                                                });
+                                              },
+                                              icon: Icon(Icons.add))
+                                        ],
+                                      ),
+                                    ))
+                                        .toList());
 
-                                  // r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child: e)).toList();
-                                  return r;
-                                  /*
+                                    r.add(Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: FormTextKeyWidget(text: "Bite"),
+                                    ));
+                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_Bite!
+                                        .map((e) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Diagnostic",
+                                              selectedItem: () {
+                                                if (e.diagnostic != null) {
+                                                  return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                e.operatorId = siteController.getUserId();
+                                                e.diagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Done", id: 0),
+                                                DropDownDTO(name: "Needs ReScan", id: 1),
+                                                DropDownDTO(name: "Needs ReImpression", id: 2),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Next Step",
+                                              selectedItem: () {
+                                                if (e.nextStep != null) {
+                                                  return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                e.operatorId = siteController.getUserId();
+                                                e.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Scan Appliance", id: 0),
+                                                DropDownDTO(name: "ReImpression", id: 1),
+                                                DropDownDTO(name: "ReBite", id: 2),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Needs Remake",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.scanned=false;
+                                              _setState((){});
+                                              return e.needsRemake = v;
+                                            },
+                                            value: e.needsRemake ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Scanned",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.needsRemake=false;
+                                              _setState((){});
+                                              return e.scanned = v;
+                                            },
+                                            value: e.scanned ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.operator!.name ?? "",
+                                                      secondaryInfo: true,
+                                                    )),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                      secondaryInfo: true,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          IconButton(
+                                              onPressed: () {
+                                                _setState(() {
+                                                  diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
+                                                });
+                                              },
+                                              icon: Icon(Icons.add))
+                                        ],
+                                      ),
+                                    ))
+                                        .toList());
+
+                                    r.add(Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: FormTextKeyWidget(text: "Scan Appliance"),
+                                    ));
+                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_ScanAppliance!
+                                        .map((e) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_DropDownSearch(
+                                              label: "Diagnostic",
+                                              selectedItem: () {
+                                                if (e.diagnostic != null) {
+                                                  return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                }
+                                                return null;
+                                              }(),
+                                              onSelect: (value) {
+                                                e.operatorId = siteController.getUserId();
+                                                e.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
+                                              },
+                                              items: [
+                                                DropDownDTO(name: "Done", id: 0),
+                                                DropDownDTO(name: "Needs ReBite", id: 1),
+                                                DropDownDTO(name: "Needs ReImpression", id: 2),
+                                                DropDownDTO(name: "Needs ReDesign", id: 3),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Needs Remake",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.scanned=false;
+                                              _setState((){});
+                                              return e.needsRemake = v;
+                                            },
+                                            value: e.needsRemake ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Scanned",
+                                            onChange: (v) {
+                                              e.operatorId = siteController.getUserId();
+                                              if(v)e.needsRemake=false;
+                                              _setState((){});
+                                              return e.scanned = v;
+                                            },
+                                            value: e.scanned ?? false,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.operator!.name ?? "",
+                                                      secondaryInfo: true,
+                                                    )),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                    child: FormTextValueWidget(
+                                                      align: TextAlign.center,
+                                                      text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                      secondaryInfo: true,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          IconButton(
+                                              onPressed: () {
+                                                _setState(() {
+                                                  diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
+                                                });
+                                              },
+                                              icon: Icon(Icons.add))
+                                        ],
+                                      ),
+                                    ))
+                                        .toList());
+
+                                    // r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child: e)).toList();
+                                    return r;
+                                    /*
                         * FormTextKeyWidget(text: "Diagnostic Impression"),
                         Row(
                           children: [
@@ -572,141 +579,141 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                         })
 
                       ,*/
-                                }());
-                              },
-                            );
-                          } else
-                            return Container();
-                        },
-                      ));
-                    }),
-                DefaultTabController(
-                  length: 2,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 60,
-                        width: 500,
-                        child: TabBar(
-                          onTap: (value) {
-                            if (value == 0)
-                              bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
-                            else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisFullArchEvent(id: widget.patientId));
+                                  }());
+                                },
+                              );
+                            } else
+                              return Container();
                           },
-                          labelColor: Colors.black,
-                          indicatorColor: Colors.orange,
-                          tabs: [
-                            Tab(
-                              text: "Single & Bridge",
-                            ),
-                            Tab(
-                              text: "Full Arch",
-                            ),
-                          ],
+                        ));
+                      }),
+                  DefaultTabController(
+                    length: 2,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 60,
+                          width: 500,
+                          child: TabBar(
+                            onTap: (value) {
+                              if (value == 0)
+                                bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                              else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisFullArchEvent(id: widget.patientId));
+                            },
+                            labelColor: Colors.black,
+                            indicatorColor: Colors.orange,
+                            tabs: [
+                              Tab(
+                                text: "Single & Bridge",
+                              ),
+                              Tab(
+                                text: "Full Arch",
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: [
-                            BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                bloc: medicalInfoShellBloc,
-                                buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                builder: (context, stateShell) {
-                                  return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
-                                    builder: (context, state) {
-                                      if (state is ProstheticBloc_LoadingDataState)
-                                        return LoadingWidget();
-                                      else if (state is ProstheticBloc_DataLoadingErrorState)
-                                        return BigErrorPageWidget(message: state.message);
-                                      else if (state is ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState) {
-                                        singleBridgeEntity = state.data;
-                                        return AbsorbPointer(
-                                            absorbing: () {
-                                              if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                                edit = stateShell.edit;
-                                                return !edit;
-                                              } else {
-                                                edit = false;
-                                                return true;
-                                              }
-                                            }(),
-                                            child: ListView(
-                                              children: [
-                                                CIA_TeethChart(
-                                                  onChange: (selectedTeethList) {
-                                                    singleBridgeEntity!.finalProthesisSingleBridgeTeeth = selectedTeethList;
-                                                  },
-                                                  selectedTeeth: singleBridgeEntity!.finalProthesisSingleBridgeTeeth ?? [],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: CIA_CheckBoxWidget(
-                                                        text: "Healing Collar",
-                                                        onChange: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeHealingCollar = value;
-                                                        },
-                                                        value: singleBridgeEntity!.finalProthesisSingleBridgeHealingCollar ?? false,
+                        Expanded(
+                          child: TabBarView(
+                            children: [
+                              BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                                  bloc: medicalInfoShellBloc,
+                                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                  builder: (context, stateShell) {
+                                    return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+                                      builder: (context, state) {
+                                        if (state is ProstheticBloc_LoadingDataState)
+                                          return LoadingWidget();
+                                        else if (state is ProstheticBloc_DataLoadingErrorState)
+                                          return BigErrorPageWidget(message: state.message);
+                                        else if (state is ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState) {
+                                          singleBridgeEntity = state.data;
+                                          return AbsorbPointer(
+                                              absorbing: () {
+                                                if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                                  edit = stateShell.edit;
+                                                  return !edit;
+                                                } else {
+                                                  edit = false;
+                                                  return true;
+                                                }
+                                              }(),
+                                              child: ListView(
+                                                children: [
+                                                  CIA_TeethChart(
+                                                    onChange: (selectedTeethList) {
+                                                      singleBridgeEntity!.finalProthesisSingleBridgeTeeth = selectedTeethList;
+                                                    },
+                                                    selectedTeeth: singleBridgeEntity!.finalProthesisSingleBridgeTeeth ?? [],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: CIA_CheckBoxWidget(
+                                                          text: "Healing Collar",
+                                                          onChange: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeHealingCollar = value;
+                                                          },
+                                                          value: singleBridgeEntity!.finalProthesisSingleBridgeHealingCollar ?? false,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Customization",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus!.name
-                                                                    .replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus =
-                                                              EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "With Customization", id: 0),
-                                                          DropDownDTO(name: "Without Customization", id: 1),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Customization",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeHealingCollarStatus =
+                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "With Customization", id: 0),
+                                                            DropDownDTO(name: "Without Customization", id: 1),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(child: SizedBox()),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: CIA_CheckBoxWidget(
-                                                        text: "Impression",
-                                                        onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeImpression = v,
-                                                        value: singleBridgeEntity!.finalProthesisSingleBridgeImpression ?? false,
+                                                      SizedBox(width: 10),
+                                                      Expanded(child: SizedBox()),
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: CIA_CheckBoxWidget(
+                                                          text: "Impression",
+                                                          onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeImpression = v,
+                                                          value: singleBridgeEntity!.finalProthesisSingleBridgeImpression ?? false,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Procedure",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus != null) {
-                                                            return DropDownDTO(
-                                                                name:
-                                                                    singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus =
-                                                              EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
-                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name:
+                                                                  singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeImpressionStatus =
+                                                            EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                            if(value.name?.toLowerCase().contains("physical impression")==true)
                                                             {
                                                               CIA_ShowPopUp(
                                                                 hideButton: true,
@@ -720,460 +727,462 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                               );
 
                                                             }
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Scan by scan body", id: 0),
-                                                          DropDownDTO(name: "Scan by abutment", id: 1),
-                                                          DropDownDTO(name: "Physical Impression open tray", id: 2),
-                                                          DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                                        ],
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Scan by scan body", id: 0),
+                                                            DropDownDTO(name: "Scan by abutment", id: 1),
+                                                            DropDownDTO(name: "Physical Impression open tray", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name: singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit!.name
-                                                                    .replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit =
-                                                              EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Custom Abutment", id: 0),
-                                                          DropDownDTO(name: "Try In", id: 1),
-                                                          DropDownDTO(name: "Delivery", id: 2),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit!.name
+                                                                      .replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeImpressionNextVisit =
+                                                            EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Custom Abutment", id: 0),
+                                                            DropDownDTO(name: "Try In", id: 1),
+                                                            DropDownDTO(name: "Delivery", id: 2),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: CIA_CheckBoxWidget(
-                                                      text: "Try in",
-                                                      onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeTryIn = v,
-                                                      value: singleBridgeEntity!.finalProthesisSingleBridgeTryIn ?? false,
-                                                    )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Procedure",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus =
-                                                              EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
-                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
-                                                          {
-                                                            CIA_ShowPopUp(
-                                                              hideButton: true,
-                                                              context: context,
-                                                              width: 1100,
-                                                              height: 650,
-                                                              child: LabCreateNewRequestPage(
-                                                                isDoctor: true,
-                                                                patientId: widget.patientId,
-                                                              ),
-                                                            );
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_CheckBoxWidget(
+                                                            text: "Try in",
+                                                            onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeTryIn = v,
+                                                            value: singleBridgeEntity!.finalProthesisSingleBridgeTryIn ?? false,
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeTryInStatus =
+                                                            EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                            if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                            {
+                                                              CIA_ShowPopUp(
+                                                                hideButton: true,
+                                                                context: context,
+                                                                width: 1100,
+                                                                height: 650,
+                                                                child: LabCreateNewRequestPage(
+                                                                  isDoctor: true,
+                                                                  patientId: widget.patientId,
+                                                                ),
+                                                              );
 
-                                                          }
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
-                                                          DropDownDTO(name: "Try in PMMA", id: 1),
-                                                          DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
-                                                          DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                                        ],
+                                                            }
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name: singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit =
-                                                              EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Delivery", id: 0),
-                                                          DropDownDTO(name: "Try in PMMA", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeTryInNextVisit =
+                                                            EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Delivery", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_CheckBoxWidget(
+                                                            text: "Delivery",
+                                                            onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeDelivery = v,
+                                                            value: singleBridgeEntity!.finalProthesisSingleBridgeDelivery ?? false,
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Status",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus =
+                                                            EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name:
+                                                                  singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit =
+                                                            EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                ],
+                                              ));
+                                        }
+                                        return Container();
+                                      },
+                                    );
+                                  }),
+                              BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                                  bloc: medicalInfoShellBloc,
+                                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                  builder: (context, stateShell) {
+                                    return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+                                      builder: (context, state) {
+                                        if (state is ProstheticBloc_LoadingDataState)
+                                          return LoadingWidget();
+                                        else if (state is ProstheticBloc_DataLoadingErrorState)
+                                          return BigErrorPageWidget(message: state.message);
+                                        else if (state is ProstheticBloc_FullArchDataLoadedSuccessfullyState) {
+                                          fullArchEntity = state.data;
+                                          return AbsorbPointer(
+                                              absorbing: () {
+                                                if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                                  edit = stateShell.edit;
+                                                  return !edit;
+                                                } else {
+                                                  edit = false;
+                                                  return true;
+                                                }
+                                              }(),
+                                              child: ListView(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_CheckBoxWidget(
+                                                            text: "Healing Collar",
+                                                            onChange: (value) {
+                                                              fullArchEntity!.finalProthesisFullArchHealingCollar = value;
+                                                            },
+                                                            value: fullArchEntity!.finalProthesisFullArchHealingCollar ?? false,
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Customization",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchHealingCollarStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchHealingCollarStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchHealingCollarStatus =
+                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "With Customization", id: 0),
+                                                            DropDownDTO(name: "Without Customization", id: 1),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(child: SizedBox()),
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
                                                         child: CIA_CheckBoxWidget(
-                                                      text: "Delivery",
-                                                      onChange: (v) => singleBridgeEntity!.finalProthesisSingleBridgeDelivery = v,
-                                                      value: singleBridgeEntity!.finalProthesisSingleBridgeDelivery ?? false,
-                                                    )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Status",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeDeliveryStatus =
-                                                              EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Done", id: 0),
-                                                          DropDownDTO(name: "ReDesign", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                          DropDownDTO(name: "ReTryIn", id: 3),
-                                                        ],
+                                                          text: "Impression",
+                                                          onChange: (v) => fullArchEntity!.finalProthesisFullArchImpression = v,
+                                                          value: fullArchEntity!.finalProthesisFullArchImpression ?? false,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name:
-                                                                    singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          singleBridgeEntity!.finalProthesisSingleBridgeDeliveryNextVisit =
-                                                              EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Done", id: 0),
-                                                          DropDownDTO(name: "ReDesign", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                          DropDownDTO(name: "ReTryIn", id: 3),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                              ],
-                                            ));
-                                      }
-                                      return Container();
-                                    },
-                                  );
-                                }),
-                            BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                bloc: medicalInfoShellBloc,
-                                buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                builder: (context, stateShell) {
-                                  return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
-                                    builder: (context, state) {
-                                      if (state is ProstheticBloc_LoadingDataState)
-                                        return LoadingWidget();
-                                      else if (state is ProstheticBloc_DataLoadingErrorState)
-                                        return BigErrorPageWidget(message: state.message);
-                                      else if (state is ProstheticBloc_FullArchDataLoadedSuccessfullyState) {
-                                        fullArchEntity = state.data;
-                                        return AbsorbPointer(
-                                            absorbing: () {
-                                              if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                                edit = stateShell.edit;
-                                                return !edit;
-                                              } else {
-                                                edit = false;
-                                                return true;
-                                              }
-                                            }(),
-                                            child: ListView(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: CIA_CheckBoxWidget(
-                                                      text: "Healing Collar",
-                                                      onChange: (value) {
-                                                        fullArchEntity!.finalProthesisFullArchHealingCollar = value;
-                                                      },
-                                                      value: fullArchEntity!.finalProthesisFullArchHealingCollar ?? false,
-                                                    )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Customization",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchHealingCollarStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchHealingCollarStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchHealingCollarStatus =
-                                                              EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "With Customization", id: 0),
-                                                          DropDownDTO(name: "Without Customization", id: 1),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(child: SizedBox()),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: CIA_CheckBoxWidget(
-                                                        text: "Impression",
-                                                        onChange: (v) => fullArchEntity!.finalProthesisFullArchImpression = v,
-                                                        value: fullArchEntity!.finalProthesisFullArchImpression ?? false,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Procedure",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchImpressionStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchImpressionStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchImpressionStatus =
-                                                              EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
-                                                          if(value.name?.toLowerCase().contains("physical impression")==true)
-                                                          {
-                                                            CIA_ShowPopUp(
-                                                              hideButton: true,
-                                                              context: context,
-                                                              width: 1100,
-                                                              height: 650,
-                                                              child: LabCreateNewRequestPage(
-                                                                isDoctor: true,
-                                                                patientId: widget.patientId,
-                                                              ),
-                                                            );
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchImpressionStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchImpressionStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchImpressionStatus =
+                                                            EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                            if(value.name?.toLowerCase().contains("physical impression")==true)
+                                                            {
+                                                              CIA_ShowPopUp(
+                                                                hideButton: true,
+                                                                context: context,
+                                                                width: 1100,
+                                                                height: 650,
+                                                                child: LabCreateNewRequestPage(
+                                                                  isDoctor: true,
+                                                                  patientId: widget.patientId,
+                                                                ),
+                                                              );
 
-                                                          }
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Scan by scan body", id: 0),
-                                                          DropDownDTO(name: "Scan by abutment", id: 1),
-                                                          DropDownDTO(name: "Physical Impression open tray", id: 2),
-                                                          DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                                        ],
+                                                            }
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Scan by scan body", id: 0),
+                                                            DropDownDTO(name: "Scan by abutment", id: 1),
+                                                            DropDownDTO(name: "Physical Impression open tray", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchImpressionNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchImpressionNextVisit!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchImpressionNextVisit =
-                                                              EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Custom Abutment", id: 0),
-                                                          DropDownDTO(name: "Try In", id: 1),
-                                                          DropDownDTO(name: "Delivery", id: 2),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchImpressionNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchImpressionNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchImpressionNextVisit =
+                                                            EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Custom Abutment", id: 0),
+                                                            DropDownDTO(name: "Try In", id: 1),
+                                                            DropDownDTO(name: "Delivery", id: 2),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: CIA_CheckBoxWidget(
-                                                      text: "Try in",
-                                                      onChange: (v) => fullArchEntity!.finalProthesisFullArchTryIn = v,
-                                                      value: fullArchEntity!.finalProthesisFullArchTryIn ?? false,
-                                                    )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Procedure",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchTryInStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchTryInStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchTryInStatus =
-                                                              EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
-                                                          DropDownDTO(name: "Try in PMMA", id: 1),
-                                                          DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
-                                                          DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                                        ],
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_CheckBoxWidget(
+                                                            text: "Try in",
+                                                            onChange: (v) => fullArchEntity!.finalProthesisFullArchTryIn = v,
+                                                            value: fullArchEntity!.finalProthesisFullArchTryIn ?? false,
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Procedure",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchTryInStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchTryInStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchTryInStatus =
+                                                            EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
+                                                            DropDownDTO(name: "Try in PMMA", id: 1),
+                                                            DropDownDTO(name: "Try in on scan abutment PMMY", id: 2),
+                                                            DropDownDTO(name: "Physical Impression closed tray", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchTryInNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchTryInNextVisit!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchTryInNextVisit =
-                                                              EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Delivery", id: 0),
-                                                          DropDownDTO(name: "Try In PMMA", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchTryInNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchTryInNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchTryInNextVisit =
+                                                            EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Delivery", id: 0),
+                                                            DropDownDTO(name: "Try In PMMA", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: CIA_CheckBoxWidget(
-                                                      text: "Delivery",
-                                                      onChange: (v) => fullArchEntity!.finalProthesisFullArchDelivery = v,
-                                                      value: fullArchEntity!.finalProthesisFullArchDelivery ?? false,
-                                                    )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Status",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchDeliveryStatus != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchDeliveryStatus!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchDeliveryStatus =
-                                                              EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Done", id: 0),
-                                                          DropDownDTO(name: "ReDesign", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                          DropDownDTO(name: "ReTryIn", id: 3),
-                                                        ],
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_CheckBoxWidget(
+                                                            text: "Delivery",
+                                                            onChange: (v) => fullArchEntity!.finalProthesisFullArchDelivery = v,
+                                                            value: fullArchEntity!.finalProthesisFullArchDelivery ?? false,
+                                                          )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Status",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchDeliveryStatus != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchDeliveryStatus!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchDeliveryStatus =
+                                                            EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_DropDownSearch(
-                                                        label: "Next Visit",
-                                                        selectedItem: () {
-                                                          if (fullArchEntity!.finalProthesisFullArchDeliveryNextVisit != null) {
-                                                            return DropDownDTO(
-                                                                name: fullArchEntity!.finalProthesisFullArchDeliveryNextVisit!.name.replaceAll("_", " "));
-                                                          }
-                                                          return null;
-                                                        }(),
-                                                        onSelect: (value) {
-                                                          fullArchEntity!.finalProthesisFullArchDeliveryNextVisit =
-                                                              EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
-                                                        },
-                                                        items: [
-                                                          DropDownDTO(name: "Done", id: 0),
-                                                          DropDownDTO(name: "ReDesign", id: 1),
-                                                          DropDownDTO(name: "ReImpression", id: 2),
-                                                          DropDownDTO(name: "ReTryIn", id: 3),
-                                                        ],
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: CIA_DropDownSearch(
+                                                          label: "Next Visit",
+                                                          selectedItem: () {
+                                                            if (fullArchEntity!.finalProthesisFullArchDeliveryNextVisit != null) {
+                                                              return DropDownDTO(
+                                                                  name: fullArchEntity!.finalProthesisFullArchDeliveryNextVisit!.name.replaceAll("_", " "));
+                                                            }
+                                                            return null;
+                                                          }(),
+                                                          onSelect: (value) {
+                                                            fullArchEntity!.finalProthesisFullArchDeliveryNextVisit =
+                                                            EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                          },
+                                                          items: [
+                                                            DropDownDTO(name: "Done", id: 0),
+                                                            DropDownDTO(name: "ReDesign", id: 1),
+                                                            DropDownDTO(name: "ReImpression", id: 2),
+                                                            DropDownDTO(name: "ReTryIn", id: 3),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    Expanded(child: SizedBox())
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                              ],
-                                            ));
-                                      }
-                                      return Container();
-                                    },
-                                  );
-                                }),
-                          ],
+                                                      Expanded(child: SizedBox())
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                ],
+                                              ));
+                                        }
+                                        return Container();
+                                      },
+                                    );
+                                  }),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ) ,
     );
+
   }
 
   @override
