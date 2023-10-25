@@ -61,7 +61,7 @@ class PatientVisitsBloc extends Bloc<PatientVisitsBloc_Events, PatientVisitsBloc
     );
     on<PatientVisitsBloc_PatientEntersClinicEvent>(
       (event, emit) async {
-        final result = await patientEntersClinicUseCase(event.id);
+        final result = await patientEntersClinicUseCase(event.params);
         result.fold(
           (l) => emit(PatientVisitsBloc_VisitProcedureErrorState(message: l.message ?? "")),
           (r) => emit(PatientVisitsBloc_VisitProcedureSuccessState()),

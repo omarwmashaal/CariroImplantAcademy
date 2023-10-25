@@ -69,9 +69,9 @@ class VisitsRepoImpl implements VisitsRepo{
   }
 
   @override
-  Future<Either<Failure, NoParams>> patientEntersClinic(int patientId) async{
+  Future<Either<Failure, NoParams>> patientEntersClinic(int patientId,int doctorId) async{
     try{
-      final result = await  visitsDataSource.patientEntersClinic(patientId);
+      final result = await  visitsDataSource.patientEntersClinic(patientId,doctorId);
       return Right(result);
     }
     on Exception catch(e)

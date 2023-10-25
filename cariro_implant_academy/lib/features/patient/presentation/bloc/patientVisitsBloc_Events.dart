@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/usecases/getVisitsUseCase.dart';
@@ -18,10 +19,10 @@ class PatientVisitsBloc_PatientVisitsEvent extends PatientVisitsBloc_Events{
   List<Object?> get props => [id];
 }
 class PatientVisitsBloc_PatientEntersClinicEvent extends PatientVisitsBloc_Events{
-  final int id;
-  PatientVisitsBloc_PatientEntersClinicEvent({required this.id});
+  final PatientEntersClinicParams params;
+  PatientVisitsBloc_PatientEntersClinicEvent({required this.params});
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [params];
 }
 class PatientVisitsBloc_PatientLeavesClinicEvent extends PatientVisitsBloc_Events{
   final int id;

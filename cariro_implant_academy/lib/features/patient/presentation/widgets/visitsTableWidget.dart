@@ -1,10 +1,14 @@
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getVisitsUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
@@ -22,6 +26,7 @@ import '../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../Widgets/FormTextWidget.dart';
 import '../../../../Widgets/Title.dart';
+import '../../../../core/injection_contianer.dart';
 import '../bloc/patientVisitsBloc.dart';
 import 'calendarWidget.dart';
 
@@ -34,12 +39,11 @@ class VisitsTableWidget extends StatelessWidget {
   late PatientVisitsBloc bloc;
 
   String? search;
+
   @override
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<PatientVisitsBloc>(context);
-    bloc.add(PatientVisitsBloc_GetVisitsEvent(params: GetVisitsParams(
-      patientId: patientId
-    )));
+    bloc.add(PatientVisitsBloc_GetVisitsEvent(params: GetVisitsParams(patientId: patientId)));
     VisitDataSource dataSource = VisitDataSource();
     return Container(
       height: 200,
@@ -115,7 +119,44 @@ class VisitsTableWidget extends StatelessWidget {
                                     CIA_SecondaryButton(
                                       width: 180,
                                       label: "Patient Enters Clinic",
-                                      onTab: () => bloc.add(PatientVisitsBloc_PatientEntersClinicEvent(id: patientId!)),
+                                      onTab: () {
+                                        int? doctorId = patientData?.doctorId;
+                                        CIA_ShowPopUp(
+                                          height: 200,
+                                          context: context,
+                                          onSave: () {
+                                            if (doctorId == null) {
+                                              ShowSnackBar(context, isSuccess: false, message: "Please Choose Doctor");
+                                              return false;
+                                            }
+                                            if (patientId != null) {
+                                              bloc.add(PatientVisitsBloc_PatientEntersClinicEvent(
+                                                params: PatientEntersClinicParams(
+                                                  patientId: patientId!,
+                                                  doctorId: doctorId!,
+                                                ),
+                                              ));
+                                            }
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Flexible(
+                                                child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                  label: "Doctor",
+                                                  asyncUseCase: sl<LoadUsersUseCase>(),
+                                                  searchParams: LoadUsersEnum.instructorsAndAssistants,
+                                                  selectedItem: patientData?.doctorId == null
+                                                      ? null
+                                                      : BasicNameIdObjectEntity(id: patientData!.doctorId!, name: patientData.doctor),
+                                                  onSelect: (value) {
+                                                    doctorId = value.id;
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                     CIA_SecondaryButton(
                                         width: 150,
@@ -182,12 +223,21 @@ class VisitsTableWidget extends StatelessWidget {
                   return SizedBox();
                 },
               )),
-          Visibility(visible: patientId==null,child:CIA_TextFormField(label: "Search", controller: TextEditingController(text: search??""),onChange: (v){
-            search = v;
-            bloc.add(PatientVisitsBloc_GetVisitsEvent(params: GetVisitsParams(
-              search: search,
-            ),));
-          },),),
+          Visibility(
+            visible: patientId == null,
+            child: CIA_TextFormField(
+              label: "Search",
+              controller: TextEditingController(text: search ?? ""),
+              onChange: (v) {
+                search = v;
+                bloc.add(PatientVisitsBloc_GetVisitsEvent(
+                  params: GetVisitsParams(
+                    search: search,
+                  ),
+                ));
+              },
+            ),
+          ),
           //TitleWidget(title: "Visits"),
           BlocConsumer<PatientVisitsBloc, PatientVisitsBloc_States>(
             listener: (context, state) {
@@ -218,7 +268,7 @@ class VisitsTableWidget extends StatelessWidget {
                 return BigErrorPageWidget(message: state.message);
               else if (state is PatientVisitsBloc_LoadingVisitsState) return LoadingWidget();
 
-            return Expanded(
+              return Expanded(
                 child: TableWidget(
                   //columnNames: dataSource.columns,
                   // loadFunction:()=> dataSource.loadData(),

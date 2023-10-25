@@ -18,7 +18,7 @@ abstract class VisitsDataSource {
   Future<NoParams> scheduleNewVisit(VisitEntity newVisit);
 
   Future<NoParams> patientVisits(int patientId);
-  Future<NoParams> patientEntersClinic(int patientId);
+  Future<NoParams> patientEntersClinic(int patientId,int doctorId);
   Future<NoParams> patientLeavesClinic(int patientId);
 }
 
@@ -106,10 +106,10 @@ class VisitsDatasourceImpl implements VisitsDataSource {
   }
 
   @override
-  Future<NoParams> patientEntersClinic(int patientId) async {
+  Future<NoParams> patientEntersClinic(int patientId,int doctorId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.put(host: "$serverHost/$patientInfoController/PatientEntersClinic?id=$patientId");
+      response = await httpRepo.put(host: "$serverHost/$patientInfoController/PatientEntersClinic?id=$patientId&doctorId=$doctorId");
     } catch (e) {
       throw mapException(e);
     }

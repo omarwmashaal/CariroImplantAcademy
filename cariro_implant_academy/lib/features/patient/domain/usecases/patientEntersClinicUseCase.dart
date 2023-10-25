@@ -4,16 +4,25 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/visitEnt
 import 'package:cariro_implant_academy/features/patient/domain/repositories/visitsRepo.dart';
 import 'package:dartz/dartz.dart';
 
-class PatientEntersClinicUseCase extends UseCases<NoParams, int> {
+class PatientEntersClinicUseCase extends UseCases<NoParams, PatientEntersClinicParams> {
   final VisitsRepo visitsRepo;
 
   PatientEntersClinicUseCase({required this.visitsRepo});
 
   @override
-  Future<Either<Failure, NoParams>> call(int patientId) async {
-    return await visitsRepo.patientEntersClinic(patientId).then((value) => value.fold(
+  Future<Either<Failure, NoParams>> call(PatientEntersClinicParams params) async {
+    return await visitsRepo.patientEntersClinic(params.patientId,params.doctorId).then((value) => value.fold(
           (l) => Left(l..message = "Patient Enters Clinic: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
   }
+}
+class PatientEntersClinicParams{
+  final int patientId;
+  final int doctorId;
+
+  const PatientEntersClinicParams({
+    required this.patientId,
+    required this.doctorId,
+  });
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class DialogHelper {
   int currentDialogueCount = 0;
+  int trials = 0;
 
   DialogHelper() {}
 
@@ -9,7 +10,16 @@ class DialogHelper {
     if (  currentDialogueCount != 0) {
       Navigator.of(context, rootNavigator: true).pop();
       currentDialogueCount--;
+      trials = 0;
     }
+    else{
+      trials++;
+    }
+    if(trials ==2)
+      {
+        Navigator.of(context, rootNavigator: true).pop();
+        trials = 0;
+      }
   }
 
   dismissAll(BuildContext context) {
