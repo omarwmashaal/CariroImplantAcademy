@@ -19,6 +19,7 @@ import '../../../../core/constants/enums/enums.dart';
 class ComplainsSearchPage extends StatefulWidget {
   const ComplainsSearchPage({Key? key}) : super(key: key);
   static String routeName = "PatientsComplains";
+   static String routeNameClinic = "ClinicPatientsComplains";
 
   @override
   State<ComplainsSearchPage> createState() => _PatientsComplainsPageState();

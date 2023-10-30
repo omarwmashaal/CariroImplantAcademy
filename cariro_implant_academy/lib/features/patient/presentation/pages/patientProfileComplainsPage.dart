@@ -50,6 +50,7 @@ class PatientProfileComplainsPage extends StatefulWidget {
   }
 
   static String routeName = "Complains";
+   static String routeNameClinic = "ClinicComplains";
   static String routePath = "Patients/:id/Complains";
 
   @override

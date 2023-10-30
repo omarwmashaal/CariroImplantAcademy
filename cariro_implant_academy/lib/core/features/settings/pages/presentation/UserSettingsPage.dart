@@ -33,6 +33,7 @@ import '../../../../injection_contianer.dart';
 class UsersSettingsPage extends StatefulWidget {
   const UsersSettingsPage({Key? key}) : super(key: key);
   static String routeName = "UsersSettings";
+   static String routeNameClinic = "ClinicUsersSettings";
   static String routePath = "UsersSettings";
 
   @override

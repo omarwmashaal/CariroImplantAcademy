@@ -39,8 +39,10 @@ class _getx extends GetxController {
 class ViewUserData extends StatefulWidget {
   ViewUserData({Key? key, required this.userId, this.role}) : super(key: key);
   static String routeName = "UserProfile";
+   static String routeNameClinic = "ClinicUserProfile";
   static String routePath = "User/:id/UserProfile";
   static String candidateRouteName = "CandidateProfile";
+   static String candidateRouteNameClinic = "ClinicCandidateProfile";
   static String candidateRoutePath = "Candidate/:id/CandidateProfile";
   int userId;
   UserRoles? role;
@@ -482,6 +484,7 @@ class ViewCandidateData extends StatefulWidget {
   ViewCandidateData({Key? key, required this.userId}) : super(key: key);
   int userId;
   static String routeName = "CandidateDetails";
+   static String routeNameClinic = "ClinicCandidateDetails";
   static String routePath = "Candidate/:id/CandidateDetails";
 
   @override

@@ -31,6 +31,7 @@ class LAB_ViewRequestPage extends StatefulWidget {
   LAB_ViewRequestPage({Key? key, required this.id}) : super(key: key);
   int id;
   static String routeName = "ViewRequest";
+   static String routeNameClinic = "ClinicViewRequest";
   static String routePath = "ViewRequest";
   static String routeCIAName = "ViewLabRequest";
   static String routeCIAPath = "ViewLabRequest/:id";

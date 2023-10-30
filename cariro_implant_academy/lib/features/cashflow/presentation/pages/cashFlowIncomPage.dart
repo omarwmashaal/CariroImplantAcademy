@@ -34,6 +34,7 @@ class CashFlowIncomePage extends StatefulWidget {
   CashFlowDataGridSource datasource = CashFlowDataGridSource(type: CashFlowType.income);
   Function(CashFlowEntity cashFlowData)? onIncomeRowClick;
   static String routeName = "CashFlowIncome";
+   static String routeNameClinic = "ClinicCashFlowIncome";
   static String routePath = "CashFlowIncome";
   static String routeCIAname = "CashFlowIncomeCIA";
   static String routeLABname = "CashFlowIncomeLAB";

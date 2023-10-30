@@ -58,6 +58,7 @@ class _MyProfileState extends State<_MyProfile> {
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
   static String routeName = "Settings";
+   static String routeNameClinic = "ClinicSettings";
   static String routePath = "Settings";
 
   @override

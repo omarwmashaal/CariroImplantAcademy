@@ -7,6 +7,7 @@ class SiteLayout extends StatefulWidget {
   SiteLayout({Key? key, required this.largeScreen}) : super(key: key);
   Widget largeScreen;
   static String routeName = "/CIA_HomePage";
+   static String routeNameClinic = "/Clinic_HomePage";
 
   @override
   State<SiteLayout> createState() => _SiteLayoutState();

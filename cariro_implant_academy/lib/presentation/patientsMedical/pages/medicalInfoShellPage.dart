@@ -92,17 +92,17 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                         },
                       ),
                       SizedBox(width: 10,),
-                      BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                        builder: (context, state) {
-                          return AbsorbPointer(
-                            absorbing: state is MedicalInfoBlocChangeViewEditState? !state.edit:false,
-                            child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                              buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
-                              builder: (context, state) {
-                                if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
-                                return Expanded(
-                                  child: MouseRegion(
+                      Expanded(
+                        child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                          buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                          builder: (context, state) {
+                            return AbsorbPointer(
+                              absorbing: state is MedicalInfoBlocChangeViewEditState? !state.edit:false,
+                              child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                                buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
+                                builder: (context, state) {
+                                  if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
+                                  return MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: GestureDetector(
                                       child: Text( "Date: "+
@@ -120,12 +120,12 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                           (date) => medicalShellBloc.emit(
                                               MedicalInfoBlocChangeDateState(date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
                       )
                     ],
                   ),

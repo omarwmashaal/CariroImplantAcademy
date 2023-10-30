@@ -26,6 +26,7 @@ class StockLogsSharedPages extends StatefulWidget {
    StockLogsSharedPages({Key? key}) : super(key: key);
   StockLogsDataSource logs_dataSource = StockLogsDataSource();
    static String routeName = "StockLogs";
+    static String routeNameClinic = "ClinicStockLogs";
    static String routePath = "StockLogs";
    static String routeCIAname = "CIAStockLogs";
    static String routeLABname = "LabStockLogs";

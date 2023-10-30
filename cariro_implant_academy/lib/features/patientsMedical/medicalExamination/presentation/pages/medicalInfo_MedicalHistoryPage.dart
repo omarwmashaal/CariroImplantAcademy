@@ -32,7 +32,8 @@ import '../bloc/medicaHistoryBloc.dart';
 class PatientMedicalHistory extends StatefulWidget {
   PatientMedicalHistory({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "MedicalHistory";
-  static String routePath = "Patients/:id/MedicalHistory";
+   static String routeNameClinic = "ClinicMedicalHistory";
+static String routePath = "Patients/:id/MedicalHistory";
   int patientId;
 
   static String getPath(String id) {

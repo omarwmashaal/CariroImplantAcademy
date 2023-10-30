@@ -36,6 +36,7 @@ class ProstheticTreatmentPage extends StatefulWidget {
   ProstheticTreatmentPage({Key? key, required this.patientId}) : super(key: key);
   int patientId;
   static String routeName = "ProstheticTreatment";
+   static String routeNameClinic = "ClinicProstheticTreatment";
   static String routePath = "Patient/:id/ProstheticTreatment";
 
   @override

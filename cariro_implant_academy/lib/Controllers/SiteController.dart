@@ -106,8 +106,9 @@ class SiteController  {
   
   setDynamicAppBar({required BuildContext context, Map<String, String>? pathQueries}) {
     var path = GoRouter.of(context).location.split("/").last;
+    print(path);
     Future.delayed(Duration(milliseconds: 0)).then((value) {
-      if (siteController.getSite() == Website.CIA) {
+      if (siteController.getSite() == Website.CIA || siteController.getSite()==Website.Clinic) {
         if ((path == SettingsPage.routeName && getRole() == "admin") || (path == UsersSettingsPage.routeName && getRole() == "admin"))
           siteController._setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Settings", namedDirectory: SettingsPage.routeName),

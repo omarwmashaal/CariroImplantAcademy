@@ -59,13 +59,13 @@ class CreateOrViewPatientPage extends StatelessWidget {
     return "/CIA/Patients/$id/ViewPatient";
   }
 
-  static String getPathAddPatient(String id) {
-    return "/CIA/Patients/AddPatient";
-  }
+
 
   static String viewPatientRouteName = "ViewPatient";
+   static String viewPatientRouteNameClinic = "ClinicViewPatient";
   static String viewPatientRoutePath = "Patients/:id/ViewPatient";
   static String addPatientRouteName = "AddPatient";
+   static String addPatientRouteNameClinic = "ClinicAddPatient";
   static String addPatientRoutePath = "AddPatient";
 
   final int patientID;

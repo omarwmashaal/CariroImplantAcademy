@@ -176,6 +176,7 @@ class PagesController extends PageController {
 
     switch (siteController.getSite()) {
       case Website.CIA:
+      case Website.Clinic:
         {
           return [
             SidebarXItem(

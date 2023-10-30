@@ -22,6 +22,7 @@ class StockLogsSearchPage extends StatefulWidget {
   }) : super(key: key);
 
   static String routeName = "StockLogs";
+   static String routeNameClinic = "ClinicStockLogs";
   static String routePath = "StockLogs";
   static String routeCIAname = "CIAStockLogs";
   static String routeLABname = "LabStockLogs";

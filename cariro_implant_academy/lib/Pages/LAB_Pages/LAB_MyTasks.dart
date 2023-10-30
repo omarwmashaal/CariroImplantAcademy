@@ -13,6 +13,7 @@ import '../../features/labRequest/presentation/pages/LAB_ViewTask.dart';
 class LAB_MyTasksPage extends StatefulWidget {
   const LAB_MyTasksPage({Key? key}) : super(key: key);
   static String routeName = "MyTasks";
+   static String routeNameClinic = "ClinicMyTasks";
   static String routePath = "MyTasks/TodaysTasks";
   @override
   State<LAB_MyTasksPage> createState() => _LAB_MyTasksPageState();

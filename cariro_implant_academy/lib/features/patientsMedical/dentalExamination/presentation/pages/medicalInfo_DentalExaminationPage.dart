@@ -26,6 +26,7 @@ import '../../domain/entities/dentalExaminationEntity.dart';
 class DentalExaminationPage extends StatefulWidget {
   DentalExaminationPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "DentalExamination";
+   static String routeNameClinic = "ClinicDentalExamination";
   static String routePath = "Patient/:id/DentalExamination";
   int patientId;
 

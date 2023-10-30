@@ -29,6 +29,7 @@ class CashFlowSummaryPage extends StatefulWidget {
   CashFlowSummaryDataGridSource? diS_dataSource;
 
   static String routeName = "CashFlowSummary";
+   static String routeNameClinic = "ClinicCashFlowSummary";
   static String routePath = "CashFlowSummary";
   static String routeCIAname = "CashFlowSummaryCIA";
   static String routeLABname = "CashFlowSummaryLAB";

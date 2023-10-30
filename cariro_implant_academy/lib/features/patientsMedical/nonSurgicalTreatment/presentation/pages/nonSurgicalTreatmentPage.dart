@@ -36,6 +36,7 @@ import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 class NonSurgicalTreatmentPage extends StatefulWidget {
   NonSurgicalTreatmentPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "NonSurgicalTreatment";
+   static String routeNameClinic = "ClinicNonSurgicalTreatment";
   static String routePath = "Patient/:id/NonSurgicalTreatment";
   int patientId;
 

@@ -21,11 +21,17 @@ class UserSearchsPage extends StatefulWidget {
   UserSearchsPage({Key? key, required this.dataSource, this.type}) : super(key: key);
   ApplicationUserDataSource dataSource;
   static String assistantsRouteName = "Users/Assistants";
+   static String assistantsRouteNameClinic = "ClinicUsers/Assistants";
   static String candidatesRouteName = "Candidates";
+   static String candidatesRouteNameClinic = "ClinicCandidates";
   static String instructorsRouteName = "Users/Instructors";
+   static String instructorsRouteNameClinic = "ClinicUsers/Instructors";
   static String techniciansRouteName = "Users/Technicians";
+   static String techniciansRouteNameClinic = "ClinicUsers/Technicians";
   static String outSourceRouteName = "Users/Customers";
+   static String outSourceRouteNameClinic = "ClinicUsers/Customers";
   static String labModeratorsRouteName = "Users/LabModerators";
+   static String labModeratorsRouteNameClinic = "ClinicUsers/LabModerators";
 
   String? type;
 

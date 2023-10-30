@@ -50,6 +50,7 @@ class CashFlowExpensesPage extends StatefulWidget {
   CashFlowDataGridSource e_dataSource = CashFlowDataGridSource(type: CashFlowType.expenses);
 
   static String routeName = "CashFlowExpenses";
+   static String routeNameClinic = "ClinicCashFlowExpenses";
   static String routePath = "CashFlowExpenses";
   static String routeCIAname = "CashFlowExpensesCIA";
   static String routeLABname = "CashFlowExpensesLAB";

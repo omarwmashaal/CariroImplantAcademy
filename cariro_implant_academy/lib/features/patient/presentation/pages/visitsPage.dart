@@ -13,6 +13,7 @@ import '../widgets/visitsTableWidget.dart';
 class VisitsPage extends StatelessWidget {
   VisitsPage({Key? key, this.patientId}) : super(key: key);
   static String routeName = "PatientsVisits";
+   static String routeNameClinic = "ClinicPatientsVisits";
   static String routePath = "PatientsVisits";
   static String routeNameProfile = "VisitsLogs";
   static String routePathProfile = "Patients/:id/VisitsLogs";

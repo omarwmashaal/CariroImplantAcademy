@@ -36,6 +36,7 @@ class LAB_ViewTaskPage extends StatefulWidget {
   LAB_ViewTaskPage({Key? key, required this.id}) : super(key: key);
   int id;
   static String routeName = "ViewTask";
+   static String routeNameClinic = "ClinicViewTask";
   static String routePath = "ViewTask";
 
   @override

@@ -19,6 +19,7 @@ class CIA_MyProfilePage extends StatefulWidget {
 
   PatientInfoModel user = PatientInfoModel();
   static String routeName = "MyProfile";
+   static String routeNameClinic = "ClinicMyProfile";
   static String routePath = "MyProfile";
 
   @override

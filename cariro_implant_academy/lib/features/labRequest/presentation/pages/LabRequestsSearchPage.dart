@@ -27,6 +27,7 @@ class LabRequestsSearchPage extends StatefulWidget {
   bool all;
   bool myRequests;
   static String routeName = "TodaysRequests";
+   static String routeNameClinic = "ClinicTodaysRequests";
   static String routePath = "Requests/TodaysRequests";
 
   static String routeAllName = "AllRequests";

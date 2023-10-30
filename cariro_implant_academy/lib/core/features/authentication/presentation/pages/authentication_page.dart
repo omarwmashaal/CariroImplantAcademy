@@ -62,7 +62,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         else if (state is LoggedIn) {
           sl<SignalR>();
           //sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
-          if (siteController.getSite() == Website.CIA)
+          if (siteController.getSite() == Website.CIA || siteController.getSite()==Website.Clinic)
             context.goNamed(PatientsSearchPage.routeName);
         }
         if (state is! LoggingInState) CustomLoader.hide();

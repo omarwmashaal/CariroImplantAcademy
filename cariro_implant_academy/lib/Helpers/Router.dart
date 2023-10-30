@@ -72,7 +72,7 @@ class CIA_Router {
   static var rootNavigationKey = GlobalKey<NavigatorState>();
   static var routeConst_PatientInfo = "PatientInfo";
   static var routeConst_LabView = "GoToLabRequest";
-
+  var tt =  "aso";
   static GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
     initialLocation: "/",
@@ -90,6 +90,19 @@ class CIA_Router {
             if (!siteController.isLoggedIn()) {
               return "/";
             }
+
+            if (state.location.contains("/Clinic")) {
+              siteController.setSite(Website.Clinic);
+            } else if (state.location.contains("/Lab")) {
+              siteController.setSite(Website.Lab);
+            }
+
+            var site = siteController.getSite().name;
+            var newlocation = state.location.replaceAll("CIA/", "$site/").replaceAll("Clinic/", "$site/").replaceAll("Lab/", "$site/");
+            print("my location" + state.location);
+            print("my location Edited" + newlocation);
+
+            return newlocation;
           },
           routes: [
             GoRoute(
@@ -222,7 +235,7 @@ class CIA_Router {
                       ),
                       GoRoute(
                         name: routeConst_PatientInfo,
-                        path: "CIA/Patients/:id",
+                        path: "Patients/:id",
                         redirect: (context, state) {
                           if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
                           return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
@@ -722,6 +735,428 @@ class CIA_Router {
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: CashFlowSummaryPage(),
                         ),
+                      ),
+                    ],
+                  )
+                ]),
+            GoRoute(
+                name: "Clinic",
+                path: "Clinic",
+                builder: (context, state) {
+                  siteController.setSite(Website.Clinic);
+                  return Scaffold(body: AuthenticationPage());
+                },
+                //todo: fix this
+
+                routes: [
+                  ShellRoute(
+                    builder: (context, state, child) {
+                      siteController.setDynamicAppBar(context: context, pathQueries: state.pathParameters);
+                      sl<SignalR>();
+                      return SiteLayout(
+                          largeScreen: Scaffold(
+                              body: CIA_LargeScreen(
+                        child: child,
+                      )));
+                    },
+                    routes: [
+                      GoRoute(
+                          path: PatientsSearchPage.routeName,
+                          pageBuilder: (context, state) {
+                            return NoTransitionPage(
+                              child: PatientsSearchPage(),
+                            );
+                          },
+                          routes: [
+                            GoRoute(
+                              path: CreateOrViewPatientPage.addPatientRoutePath,
+                              pageBuilder: (context, state) {
+                                return NoTransitionPage(
+                                    child: const CreateOrViewPatientPage(
+                                  patientID: 0,
+                                ));
+                              },
+                            ),
+                            ShellRoute(
+                                pageBuilder: (context, state, child) {
+                                  return NoTransitionPage(
+                                    child: _Authorize(allowedRoles: [
+                                      UserRoles.Instructor,
+                                      UserRoles.Assistant,
+                                      UserRoles.Admin,
+                                    ], child: MedicalInfoShellPage(patientId: int.parse(state.pathParameters['id'].toString()), child: child)),
+                                  );
+                                },
+                                routes: [
+                                  GoRoute(
+                                    path: ":id/MedicalHistory",
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: PatientMedicalHistory(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: DentalHistoryPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: DentalHistoryPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: DentalExaminationPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: DentalExaminationPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: NonSurgicalTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: NonSurgicalTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: TreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new TreatmentPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: SurgicalTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new SurgicalTreatmentPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    path: ProstheticTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: ProstheticTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ]),
+
+                          ]),
+                      GoRoute(
+                        path: PatientsSearchPage.myPatientsRouteName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [
+                                UserRoles.Instructor,
+                                UserRoles.Assistant,
+                                UserRoles.Admin,
+                              ],
+                              child: PatientsSearchPage(myPatients: true),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: VisitsPage.routeName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: VisitsPage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: ComplainsSearchPage.routeName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: ComplainsSearchPage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: PatientAdvancedSearchPage.routePathPatients,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(
+                                allowedRoles: [
+                                  UserRoles.Instructor,
+                                  UserRoles.Assistant,
+                                  UserRoles.Admin,
+                                ],
+                                child: PatientAdvancedSearchPage(
+                                  advancedSearchType: AdvancedSearchEnum.Patient,
+                                )),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: PatientAdvancedSearchPage.routePathTreatments,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [
+                                UserRoles.Instructor,
+                                UserRoles.Assistant,
+                                UserRoles.Admin,
+                              ],
+                              child: PatientAdvancedSearchPage(
+                                advancedSearchType: AdvancedSearchEnum.Treatments,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: PatientAdvancedSearchPage.routePathProsthetic,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [
+                                UserRoles.Instructor,
+                                UserRoles.Assistant,
+                                UserRoles.Admin,
+                              ],
+                              child: PatientAdvancedSearchPage(
+                                advancedSearchType: AdvancedSearchEnum.Prosthetic,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: "Clinic/Patients/:id",
+                        redirect: (context, state) {
+                          if (siteController.getRole() == "secretary")
+                            return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
+                          return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
+                        },
+                      ),
+                      GoRoute(
+                        path: ":id/ViewPatient",
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: CreateOrViewPatientPage(
+                              patientID: int.parse(state.pathParameters['id'].toString()),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: ":id/VisitsLogs",
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: VisitsPage(
+                              patientId: int.parse(state.pathParameters['id'].toString()),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: ":id/Complains",
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: PatientProfileComplainsPage(
+                              patientId: int.parse(state.pathParameters['id'].toString()),
+                            ),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: UserSearchPage.assistantsRouteName,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: UserSearchPage(
+                            key: GlobalKey(),
+                            type: UserRoles.Assistant,
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: UserSearchPage.instructorsRouteName,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: UserSearchPage(
+                            key: GlobalKey(),
+                            type: UserRoles.Instructor,
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: UserSearchPage.candidatesRouteName,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: UserSearchPage(
+                            key: GlobalKey(),
+                            type: UserRoles.Candidate,
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: ViewUserProfilePage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: ViewUserProfilePage(
+                            userId: int.parse(state.pathParameters['id']!),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: ViewUserProfilePage.candidateRoutePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: ViewUserProfilePage(
+                            userId: int.parse(state.pathParameters['id']!),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: ViewCandidateData.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: ViewCandidateData(
+                            userId: int.parse(state.pathParameters['id']!),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: StockSearchPage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: StockSearchPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: StockLogsSearchPage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: StockLogsSearchPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: CashFlowIncomePage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: CashFlowIncomePage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: CashFlowExpensesPage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: CashFlowExpensesPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: CashFlowSummaryPage.routePath,
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: CashFlowSummaryPage(),
+                        ),
+                      ),
+                      GoRoute(
+                        path: SettingsPage.routePath,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(allowedRoles: [
+                              UserRoles.Admin,
+                            ], child: SettingsPage()),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: CIA_MyProfilePage.routePath,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: CIA_MyProfilePage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: UsersSettingsPage.routePath,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(allowedRoles: [
+                              UserRoles.Admin,
+                            ], child: UsersSettingsPage()),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: NotificationsPage.routePath,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: NotificationsPage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: LAB_ViewRequestPage.routeCIAPath,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: LAB_ViewRequestPage(
+                              id: int.parse(state.pathParameters['id']!),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   )

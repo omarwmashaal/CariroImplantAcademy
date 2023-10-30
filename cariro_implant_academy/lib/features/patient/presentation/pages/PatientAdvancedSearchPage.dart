@@ -66,9 +66,9 @@ class PatientAdvancedSearchPage extends StatefulWidget {
   static String routeNamePatients = "PatientsAdvancedSearch";
   static String routeNameTreatments = "TreatmentAdvancedSearch";
   static String routeNameProsthetic = "ProstheticAdvancedSearch";
-  static String routePathPatients = "Patients/AdvancedSearch/PatientsAdvancedSearch";
-  static String routePathTreatments = "Patients/AdvancedSearch/TreatmentAdvancedSearch";
-  static String routePathProsthetic = "Patients/AdvancedSearch/ProstheticAdvancedSearch";
+  static String routePathPatients = "AdvancedSearch/PatientsAdvancedSearch";
+  static String routePathTreatments = "AdvancedSearch/TreatmentAdvancedSearch";
+  static String routePathProsthetic = "AdvancedSearch/ProstheticAdvancedSearch";
   AdvancedSearchEnum advancedSearchType;
 
   @override

@@ -22,6 +22,7 @@ import '../../domain/entities/notificationEntity.dart';
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
   static String routeName = "Notifications";
+   static String routeNameClinic = "ClinicNotifications";
   static String routePath = "Notifications";
 
   @override

@@ -22,11 +22,17 @@ import '../../domain/entities/enum.dart';
 class UserSearchPage extends StatefulWidget {
   UserSearchPage({Key? key, required this.type}) : super(key: key);
   static String assistantsRouteName = "Users/Assistants";
+   static String assistantsRouteNameClinic = "ClinicUsers/Assistants";
   static String candidatesRouteName = "Candidates";
+   static String candidatesRouteNameClinic = "ClinicCandidates";
   static String instructorsRouteName = "Users/Instructors";
+   static String instructorsRouteNameClinic = "ClinicUsers/Instructors";
   static String techniciansRouteName = "Users/Technicians";
+   static String techniciansRouteNameClinic = "ClinicUsers/Technicians";
   static String outSourceRouteName = "Users/Customers";
+   static String outSourceRouteNameClinic = "ClinicUsers/Customers";
   static String labModeratorsRouteName = "Users/LabModerators";
+   static String labModeratorsRouteNameClinic = "ClinicUsers/LabModerators";
 
   UserRoles type;
 

@@ -48,6 +48,7 @@ import '../../domain/entities/labStepEntity.dart';
 class LabCreateNewRequestPage extends StatefulWidget {
   LabCreateNewRequestPage({Key? key, this.isDoctor = false, this.onChange, this.patientId}) : super(key: key);
   static String routeName = "CreateRequest";
+   static String routeNameClinic = "ClinicCreateRequest";
   static String routePath = "CreateRequest";
   bool isDoctor;
   Function? onChange;

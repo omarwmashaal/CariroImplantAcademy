@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 class TreatmentPage extends StatefulWidget {
   TreatmentPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "TreatmentPlan";
+   static String routeNameClinic = "ClinicTreatmentPlan";
   static String routePath = "Patient/:id/TreatmentPlan";
   int patientId;
 

@@ -24,6 +24,7 @@ import '../../../../../Widgets/Title.dart';
 import '../../../../../core/injection_contianer.dart';
 import '../../../../../core/presentation/widgets/tableWidget.dart';
 import '../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
+import '../../../patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../bloc/addOrRemoveMyPatientsBloc.dart';
 import '../bloc/addOrRemoveMyPatientsBloc_states.dart';
 import '../bloc/patientSeachBlocEvents.dart';
@@ -34,14 +35,15 @@ import 'createOrViewPatientPage.dart';
 class PatientsSearchPage extends StatelessWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
   static String routeName = "Patients";
+  static String routeNameClinic = "ClinicPatients";
   static String myPatientsRouteName = "MyPatients";
+  static String myPatientsRouteNameClinic = "ClinicMyPatients";
   bool myPatients;
 
   @override
   Widget build(BuildContext context) {
-
     var dataSource = PatientSearchDataSourceTable(context);
-    BlocProvider.of<PatientSearchBloc>(context).add( PatientSearchEvent(myPatients: myPatients));
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: myPatients));
     return MultiBlocListener(
       listeners: [
         BlocListener<PatientSearchBloc, PatientSearchBloc_States>(
@@ -50,8 +52,7 @@ class PatientsSearchPage extends StatelessWidget {
               CustomLoader.show(context);
             else if (state is LoadingError)
               ShowSnackBar(context, isSuccess: false, message: state.message);
-            else if (state is LoadedPatientSearchState)
-              dataSource.update(state.result);
+            else if (state is LoadedPatientSearchState) dataSource.update(state.result);
             if (state is! LoadingPatientSearchState) CustomLoader.hide();
           },
         ),
@@ -173,7 +174,7 @@ class PatientsSearchPage extends StatelessWidget {
                                 flex: 8,
                                 child: HorizontalRadioButtons(
                                   groupValue: "Id",
-                                  names: ["Id","Name", "Phone", "All"],
+                                  names: ["Id", "Name", "Phone", "All"],
                                   onChange: (value) => dispatchChangeFilter(context, value)
                                   // _getXController.searchFilter.value = value;
                                   ,
@@ -188,22 +189,24 @@ class PatientsSearchPage extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 5,
-                  child: BlocBuilder<PatientSearchBloc,PatientSearchBloc_States>(
-                    builder: (context, state) {
-                      return TableWidget(
-                        dataSource: dataSource,
-                        onCellClick: (value) {
-                          //    setState(() {
-                          //     selectedPatientID = dataSource.models[value - 1].id!;
-                          //    });
-                          //internalPagesController.jumpToPage(1);
-                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":value.toString()});
-                        },
-                      );
-                    },
-                  )
-                ),
+                    flex: 5,
+                    child: BlocBuilder<PatientSearchBloc, PatientSearchBloc_States>(
+                      builder: (context, state) {
+                        return TableWidget(
+                          dataSource: dataSource,
+                          onCellClick: (value) {
+                            //    setState(() {
+                            //     selectedPatientID = dataSource.models[value - 1].id!;
+                            //    });
+                            //internalPagesController.jumpToPage(1);
+                            if (siteController.getRole() != "secretary")
+                              context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": value.toString()});
+                            else
+                              context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": value.toString()});
+                          },
+                        );
+                      },
+                    )),
               ],
             ),
           ),
@@ -213,7 +216,7 @@ class PatientsSearchPage extends StatelessWidget {
   }
 
   void dispatchSearch(BuildContext context, String query) {
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query,myPatients: myPatients));
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: myPatients));
   }
 
   void dispatchChangeFilter(BuildContext context, String filter) {
