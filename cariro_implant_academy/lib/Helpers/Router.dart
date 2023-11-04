@@ -48,6 +48,7 @@ import '../core/injection_contianer.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowSummaryPage.dart';
+import '../features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
 import '../features/patient/presentation/pages/complainsSearchPage.dart';
 import '../features/patient/presentation/pages/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/pages/visitsPage.dart';
@@ -72,7 +73,7 @@ class CIA_Router {
   static var rootNavigationKey = GlobalKey<NavigatorState>();
   static var routeConst_PatientInfo = "PatientInfo";
   static var routeConst_LabView = "GoToLabRequest";
-  var tt =  "aso";
+  var tt = "aso";
   static GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
     initialLocation: "/",
@@ -145,6 +146,157 @@ class CIA_Router {
                                 ));
                               },
                             ),
+                            GoRoute(
+                              path: CreateOrViewPatientPage.viewPatientRoutePath,
+                              name: CreateOrViewPatientPage.viewPatientRouteName,
+                              pageBuilder: (context, state) {
+                                return NoTransitionPage(
+                                  child: CreateOrViewPatientPage(
+                                    patientID: int.parse(state.pathParameters['id'].toString()),
+                                  ),
+                                );
+                              },
+                            ),
+                            ShellRoute(
+                                pageBuilder: (context, state, child) {
+                                  return NoTransitionPage(
+                                    child: _Authorize(allowedRoles: [
+                                      UserRoles.Instructor,
+                                      UserRoles.Assistant,
+                                      UserRoles.Admin,
+                                    ], child: MedicalInfoShellPage(patientId: int.parse(state.pathParameters['id'].toString()), child: child)),
+                                  );
+                                },
+                                routes: [
+                                  GoRoute(
+                                    name: PatientMedicalHistory.routeName,
+                                    path: PatientMedicalHistory.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: PatientMedicalHistory(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: DentalHistoryPage.routeName,
+                                    path: DentalHistoryPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: DentalHistoryPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: DentalExaminationPage.routeName,
+                                    path: DentalExaminationPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: DentalExaminationPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: NonSurgicalTreatmentPage.routeName,
+                                    path: NonSurgicalTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: NonSurgicalTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: TreatmentPage.routeName,
+                                    path: TreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new TreatmentPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: SurgicalTreatmentPage.routeName,
+                                    path: SurgicalTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new SurgicalTreatmentPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: ProstheticTreatmentPage.routeName,
+                                    path: ProstheticTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: ProstheticTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ]),
                           ]),
                       GoRoute(
                         path: PatientsSearchPage.myPatientsRouteName,
@@ -239,17 +391,6 @@ class CIA_Router {
                         redirect: (context, state) {
                           if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
                           return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
-                        },
-                      ),
-                      GoRoute(
-                        path: CreateOrViewPatientPage.viewPatientRoutePath,
-                        name: CreateOrViewPatientPage.viewPatientRouteName,
-                        pageBuilder: (context, state) {
-                          return NoTransitionPage(
-                            child: CreateOrViewPatientPage(
-                              patientID: int.parse(state.pathParameters['id'].toString()),
-                            ),
-                          );
                         },
                       ),
                       GoRoute(
@@ -417,146 +558,6 @@ class CIA_Router {
                           );
                         },
                       ),
-                      ShellRoute(
-                          pageBuilder: (context, state, child) {
-                            return NoTransitionPage(
-                              child: _Authorize(allowedRoles: [
-                                UserRoles.Instructor,
-                                UserRoles.Assistant,
-                                UserRoles.Admin,
-                              ], child: MedicalInfoShellPage(patientId: int.parse(state.pathParameters['id'].toString()), child: child)),
-                            );
-                          },
-                          routes: [
-                            GoRoute(
-                              name: PatientMedicalHistory.routeName,
-                              path: PatientMedicalHistory.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: PatientMedicalHistory(
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: DentalHistoryPage.routeName,
-                              path: DentalHistoryPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: DentalHistoryPage(
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: DentalExaminationPage.routeName,
-                              path: DentalExaminationPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: DentalExaminationPage(
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: NonSurgicalTreatmentPage.routeName,
-                              path: NonSurgicalTreatmentPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: NonSurgicalTreatmentPage(
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: TreatmentPage.routeName,
-                              path: TreatmentPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: new TreatmentPage(
-                                      key: GlobalKey(),
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: SurgicalTreatmentPage.routeName,
-                              path: SurgicalTreatmentPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: new SurgicalTreatmentPage(
-                                      key: GlobalKey(),
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            GoRoute(
-                              name: ProstheticTreatmentPage.routeName,
-                              path: ProstheticTreatmentPage.routePath,
-                              pageBuilder: (context, state) {
-                                return NoTransitionPage(
-                                  child: _Authorize(
-                                    allowedRoles: [
-                                      UserRoles.Instructor,
-                                      UserRoles.Assistant,
-                                      UserRoles.Admin,
-                                    ],
-                                    child: ProstheticTreatmentPage(
-                                      patientId: int.parse(state.pathParameters['id'].toString()),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ]),
                     ],
                   )
                 ]),
@@ -777,6 +778,36 @@ class CIA_Router {
                                 ));
                               },
                             ),
+                            GoRoute(
+                              path: ":id/ViewPatient",
+                              pageBuilder: (context, state) {
+                                return NoTransitionPage(
+                                  child: CreateOrViewPatientPage(
+                                    patientID: int.parse(state.pathParameters['id'].toString()),
+                                  ),
+                                );
+                              },
+                            ),
+                            GoRoute(
+                              path: ":id/VisitsLogs",
+                              pageBuilder: (context, state) {
+                                return NoTransitionPage(
+                                  child: VisitsPage(
+                                    patientId: int.parse(state.pathParameters['id'].toString()),
+                                  ),
+                                );
+                              },
+                            ),
+                            GoRoute(
+                              path: ":id/Complains",
+                              pageBuilder: (context, state) {
+                                return NoTransitionPage(
+                                  child: PatientProfileComplainsPage(
+                                    patientId: int.parse(state.pathParameters['id'].toString()),
+                                  ),
+                                );
+                              },
+                            ),
                             ShellRoute(
                                 pageBuilder: (context, state, child) {
                                   return NoTransitionPage(
@@ -800,6 +831,25 @@ class CIA_Router {
                                           ],
                                           child: PatientMedicalHistory(
                                             patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: ClinicTreatmentPage.routeName,
+                                    path: ClinicTreatmentPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: ClinicTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+
                                           ),
                                         ),
                                       );
@@ -910,7 +960,6 @@ class CIA_Router {
                                     },
                                   ),
                                 ]),
-
                           ]),
                       GoRoute(
                         path: PatientsSearchPage.myPatientsRouteName,
@@ -996,39 +1045,8 @@ class CIA_Router {
                       GoRoute(
                         path: "Clinic/Patients/:id",
                         redirect: (context, state) {
-                          if (siteController.getRole() == "secretary")
-                            return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
+                          if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
                           return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
-                        },
-                      ),
-                      GoRoute(
-                        path: ":id/ViewPatient",
-                        pageBuilder: (context, state) {
-                          return NoTransitionPage(
-                            child: CreateOrViewPatientPage(
-                              patientID: int.parse(state.pathParameters['id'].toString()),
-                            ),
-                          );
-                        },
-                      ),
-                      GoRoute(
-                        path: ":id/VisitsLogs",
-                        pageBuilder: (context, state) {
-                          return NoTransitionPage(
-                            child: VisitsPage(
-                              patientId: int.parse(state.pathParameters['id'].toString()),
-                            ),
-                          );
-                        },
-                      ),
-                      GoRoute(
-                        path: ":id/Complains",
-                        pageBuilder: (context, state) {
-                          return NoTransitionPage(
-                            child: PatientProfileComplainsPage(
-                              patientId: int.parse(state.pathParameters['id'].toString()),
-                            ),
-                          );
                         },
                       ),
                       GoRoute(

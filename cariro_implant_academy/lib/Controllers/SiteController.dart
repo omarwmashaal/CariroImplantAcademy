@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
+
 import '../core/features/settings/pages/presentation/UserSettingsPage.dart';
 import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
@@ -169,7 +171,9 @@ class SiteController  {
             path == DentalHistoryPage.routeName ||
             path == NonSurgicalTreatmentPage.routeName ||
             path == TreatmentPage.routeName ||
-            path == SurgicalTreatmentPage.routeName)
+            path == SurgicalTreatmentPage.routeName ||
+            path == ClinicTreatmentPage.routeName
+        )
           setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
         else
           _setAppBarWidget(context: context);
@@ -210,7 +214,9 @@ class SiteController  {
 
   setMedicalAppBar({required int id, required BuildContext context}) async {
     var path = GoRouter.of(context).location.split("/").last;
-    var pages = [
+    List<MedicalSlidingModel> pages=[];
+    if(getSite()==Website.CIA)
+     pages = [
       MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": id.toString()})),
       MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.routeName, pathParameters: {"id": id.toString()})),
       MedicalSlidingModel(name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.routeName, pathParameters: {"id": id.toString()})),
@@ -240,6 +246,31 @@ class SiteController  {
           onTap: () => context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
           onSave: () {}),
     ];
+    else if(getSite()==Website.Clinic)
+      {
+        pages = [
+          MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": id.toString()})),
+          MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.routeName, pathParameters: {"id": id.toString()})),
+          MedicalSlidingModel(name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.routeName, pathParameters: {"id": id.toString()})),
+
+          MedicalSlidingModel(
+              name: "Clinic Treatments",
+              onTap: () => context.goNamed(ClinicTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
+              onSave: () async {
+                //   if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
+              }),
+          MedicalSlidingModel(
+              name: "Surgical Treatment",
+              onTap: () => context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
+              onSave: () async {
+                // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
+              }),
+          MedicalSlidingModel(
+              name: "Prosthetic Treatment",
+              onTap: () => context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
+              onSave: () {}),
+        ];
+      }
     for (var element in pages) {
       if (element!.name!.removeAllWhitespace.toString().toLowerCase() == path.toLowerCase()) {
         element.isSelected = true;

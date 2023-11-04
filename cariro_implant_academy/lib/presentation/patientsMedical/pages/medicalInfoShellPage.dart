@@ -294,7 +294,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                   Expanded(child: FormTextKeyWidget(text: "ID")),
                                   Expanded(
                                     child: FormTextValueWidget(
-                                      text: patient?.id.toString() == null ? "" : patient?.id.toString(),
+                                      text: patient?.secondaryId.toString() == null ? "" : patient?.secondaryId.toString(),
                                     ),
                                   )
                                 ],

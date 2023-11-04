@@ -6,6 +6,7 @@ import '../../../../Helpers/CIA_DateConverters.dart';
 class VisitModel extends VisitEntity {
   VisitModel({
     id,
+    secondaryId,
     from,
     title,
     to,
@@ -22,6 +23,7 @@ class VisitModel extends VisitEntity {
     patientName,
   }) : super(
           id: id,
+    secondaryId: secondaryId,
           from: from,
           title: title,
           to: to,
@@ -40,6 +42,7 @@ class VisitModel extends VisitEntity {
 
   VisitModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    secondaryId = json['secondaryId'];
     status = json['status'];
     treatment = json['treatment'];
     reservationTime = DateTime.tryParse(json['reservationTime']??"")?.toLocal();

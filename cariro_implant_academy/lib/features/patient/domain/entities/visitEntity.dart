@@ -10,6 +10,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class VisitEntity extends Equatable {
   int? id;
+  int? secondaryId;
   String? status;
   DateTime? reservationTime;
   DateTime? realVisitTime;
@@ -29,6 +30,7 @@ class VisitEntity extends Equatable {
 
   VisitEntity({
     this.id,
+    this.secondaryId,
     this.from,
     this.title,
     this.to,
@@ -49,6 +51,7 @@ class VisitEntity extends Equatable {
   // TODO: implement props
   List<Object?> get props => [
         id,
+    secondaryId,
         from,
         title,
         to,

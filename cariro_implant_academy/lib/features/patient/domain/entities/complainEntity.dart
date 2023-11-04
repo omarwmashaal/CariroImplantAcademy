@@ -11,6 +11,7 @@ import '../../../../core/constants/enums/enums.dart';
 
 class ComplainsEntity extends Equatable {
   int? id;
+  int? secondaryId;
   String? comment;
   int? patientID;
   BasicNameIdObjectEntity? patient;
@@ -33,6 +34,7 @@ class ComplainsEntity extends Equatable {
   ComplainsEntity(
       {this.id,
       this.comment,
+      this.secondaryId,
       this.patientID,
       this.patient,
       this.lastDoctorId,
@@ -51,6 +53,7 @@ class ComplainsEntity extends Equatable {
   @override
   List<Object?> get props => [
         this.id,
+        this.secondaryId,
         this.comment,
         this.patientID,
         this.patient,

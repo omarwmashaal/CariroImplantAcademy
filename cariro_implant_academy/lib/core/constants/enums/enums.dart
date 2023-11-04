@@ -137,3 +137,47 @@ enum RequestChangeEnum
   TacsChange,
   ScrewChange,
 }
+
+
+ enum EnumClinicRestorationStatus { NotSelected, Done, Temp }
+ enum EnumClinicRestorationType { NotSelected, Composite, ReinforcedGlassIonomer, Temp, IndirectRestoration }
+ enum EnumClinicRestorationClass
+{
+  NotSelected,
+  ClassI,
+  ClassII,
+  ClassIII,
+  ClassIV,
+  ClassV,
+  ClassVI,
+}
+
+ enum EnumClinicImplantTypes
+{
+  NotSelected,
+  Simple,
+  Immediate,
+  Guided,
+  Expansion,
+  Splitting,
+  GBR,
+  OpenSinus,
+  ClosedSinus
+
+}
+ enum EnumClinicTMDtypes { NotSelected,Diagnosis,Injection,SRS,NightGuardHard,NightGuardSoft}
+ enum EnumClinicPedoTooth {A,B,C,D,E}
+ enum EnumClinicPedoFirstStep {Pulpotomy,Pulpectomy}
+ enum EnumClinicPedoSecondStep { CastStanlessSteelZirconia, FinalRestoration,TempFilling}
+ enum EnumClinicRootCanalTreatmentType {
+  NotSelected,
+  B,
+  L,
+  MB,
+  DB,
+  DL,
+  MB2,
+  P,
+  Other,
+}
+    

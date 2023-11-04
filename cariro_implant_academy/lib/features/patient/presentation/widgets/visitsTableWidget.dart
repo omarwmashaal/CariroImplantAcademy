@@ -275,7 +275,7 @@ class VisitsTableWidget extends StatelessWidget {
                   dataSource: dataSource,
                   onCellClick: (index) {
                     context.goNamed(CIA_Router.routeConst_PatientInfo,
-                        pathParameters: {'id': dataSource.models.firstWhere((element) => element.id == index).patientId!.toString()});
+                        pathParameters: {'id':  dataSource.models.firstWhere((element) => element.secondaryId==index).id.toString()});
                   },
                 ),
               );

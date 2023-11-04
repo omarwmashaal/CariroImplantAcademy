@@ -23,7 +23,7 @@ class DentalHistoryPage extends StatefulWidget {
   DentalHistoryPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "DentalHistory";
    static String routeNameClinic = "ClinicDentalHistory";
-  static String routePath = "Patients/:id/DentalHistory";
+  static String routePath = ":id/DentalHistory";
   int patientId;
 
   @override

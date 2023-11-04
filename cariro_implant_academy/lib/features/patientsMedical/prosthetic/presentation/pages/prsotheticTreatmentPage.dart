@@ -37,7 +37,7 @@ class ProstheticTreatmentPage extends StatefulWidget {
   int patientId;
   static String routeName = "ProstheticTreatment";
    static String routeNameClinic = "ClinicProstheticTreatment";
-  static String routePath = "Patient/:id/ProstheticTreatment";
+  static String routePath = ":id/ProstheticTreatment";
 
   @override
   State<ProstheticTreatmentPage> createState() => _PatientProstheticTreatmentState();

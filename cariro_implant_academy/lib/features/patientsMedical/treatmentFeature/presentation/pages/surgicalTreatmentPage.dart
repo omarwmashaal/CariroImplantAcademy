@@ -5,7 +5,7 @@ class SurgicalTreatmentPage extends StatefulWidget {
   SurgicalTreatmentPage({Key? key, required this.patientId}) : super(key: key);
   static String routeName = "SurgicalTreatment";
    static String routeNameClinic = "ClinicSurgicalTreatment";
-  static String routePath = "Patient/:id/SurgicalTreatment";
+  static String routePath = ":id/SurgicalTreatment";
   int patientId;
 
   @override

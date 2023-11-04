@@ -8,6 +8,7 @@ import '../../../../core/constants/enums/enums.dart';
 class PatientInfoEntity extends Equatable {
   String? name;
   int? id;
+  int? secondaryId;
   EnumGender? gender;
   String? phone;
   int? age;
@@ -53,6 +54,7 @@ class PatientInfoEntity extends Equatable {
       this.registeredBy,
       this.nationalId,
       this.address,
+      this.secondaryId,
       this.phone2,
       this.registrationDate,
       this.relativePatientId,
@@ -69,6 +71,7 @@ class PatientInfoEntity extends Equatable {
         id,
         gender,
         phone,
+    secondaryId,
         maritalStatus,
         relative,
     outReason,

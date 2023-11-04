@@ -45,3 +45,4 @@ const imageController= "Image";
 const cashFlowController= "CashFlow";
 const labRequestsController= "LAB_Requests";
 const labCustomerController= "Lab_Customers";
+const clinicTreatmentController= "ClinicTreatments";

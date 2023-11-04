@@ -60,16 +60,17 @@ class MyPatientsSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchB
 class PatientSearchDataSourceTable extends DataGridSource {
   //List<PatientSearchResponseEntity> models = <PatientSearchResponseEntity>[];
   BuildContext context;
+  List<PatientInfoEntity> models = [];
   /// Creates the patient data source class with required details.
   PatientSearchDataSourceTable(this.context) ;
 
 
-  init(List<PatientInfoEntity> models)  {
-
+  init(List<PatientInfoEntity> _models)  {
+  models = _models;
     if (siteController.getRole != "secretary") {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<int>(columnName: 'ID', value: e.secondaryId),
                 DataGridCell<String>(columnName: 'Name', value: e.name),
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),

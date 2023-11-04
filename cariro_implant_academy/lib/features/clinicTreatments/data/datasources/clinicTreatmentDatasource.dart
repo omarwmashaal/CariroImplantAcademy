@@ -1,0 +1,51 @@
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/data/models/clinicTreatmentModel.dart';
+
+import '../../../../core/Http/httpRepo.dart';
+import '../../../../core/constants/remoteConstants.dart';
+import '../../../../core/error/exception.dart';
+import '../../../../core/error/failure.dart';
+import '../../domain/entities/clinicTreatmentEntity.dart';
+
+abstract class ClinicTreatmentDatasource {
+  Future<ClinicTreatmentModel> getTreatment(int id);
+
+  Future<NoParams> updateTreatment(int id, ClinicTreatmentEntity model);
+}
+
+class ClinicTreatmentDataSourceImpl implements ClinicTreatmentDatasource {
+  final HttpRepo httpRepo;
+
+  ClinicTreatmentDataSourceImpl({required this.httpRepo});
+
+  @override
+  Future<ClinicTreatmentModel> getTreatment(int id) async {
+    late StandardHttpResponse result;
+    try {
+      result = await httpRepo.get(host: "$serverHost/$clinicTreatmentController/GetTreatment?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    try {
+      return ClinicTreatmentModel.fromJson(result.body as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException();
+    }
+  }
+
+  @override
+  Future<NoParams> updateTreatment(int id, ClinicTreatmentEntity model) async {
+    late StandardHttpResponse result;
+    try {
+      result = await httpRepo.post(
+        host: "$serverHost/$clinicTreatmentController/UpdateTreatment?id=$id",
+        body: ClinicTreatmentModel.fromEntity(model).toJson()
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    return NoParams();
+  }
+}

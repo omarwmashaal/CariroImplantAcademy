@@ -93,7 +93,7 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
   init({AdvancedTreatmentSearchEntity? search}) {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: "Id", value: e.id),
+              DataGridCell<int>(columnName: "Id", value: e.secondaryId),
               DataGridCell<String>(columnName: "Patient Name", value: e.patientName),
               DataGridCell<String>(columnName: "Scaling", value: e.str_scaling),
               DataGridCell<String>(columnName: "Crown", value: e.str_crown),
@@ -290,7 +290,7 @@ class AdvancedPatientSearchDataGridSource extends DataGridSource {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: () {
               List<DataGridCell> r = [];
-              r.add(DataGridCell<int>(columnName: "Id", value: e.id));
+              r.add(DataGridCell<int>(columnName: "Id", value: e.secondaryId));
               r.add(DataGridCell<String>(columnName: "Name", value: e.name));
               if (searchDTO.gender != null) r.add(DataGridCell<String>(columnName: "Gender", value: e.gender != null ? e.gender!.name : ""));
               if (searchDTO.ageRangeFrom != null || searchDTO.ageRangeTo != null) r.add(DataGridCell<int>(columnName: "Age", value: e.age ?? 0));
@@ -393,7 +393,7 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: () {
               List<DataGridCell> cells = [];
               cells.add(
-                DataGridCell<int>(columnName: "Id", value: e.patientId),
+                DataGridCell<int>(columnName: "Id", value: e.secondaryId),
               );
               cells.add(DataGridCell<String>(columnName: "Patient Name", value: e.patient?.name ?? ""));
               if (search?.searchProstheticDiagnostic_DiagnosticImpression?.diagnostic != null)

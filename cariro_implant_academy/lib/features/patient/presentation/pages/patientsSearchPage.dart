@@ -200,9 +200,9 @@ class PatientsSearchPage extends StatelessWidget {
                             //    });
                             //internalPagesController.jumpToPage(1);
                             if (siteController.getRole() != "secretary")
-                              context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": value.toString()});
+                              context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": dataSource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                             else
-                              context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": value.toString()});
+                              context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id":  dataSource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                           },
                         );
                       },

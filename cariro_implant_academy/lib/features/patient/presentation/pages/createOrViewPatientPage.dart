@@ -63,7 +63,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   static String viewPatientRouteName = "ViewPatient";
    static String viewPatientRouteNameClinic = "ClinicViewPatient";
-  static String viewPatientRoutePath = "Patients/:id/ViewPatient";
+  static String viewPatientRoutePath = ":id/ViewPatient";
   static String addPatientRouteName = "AddPatient";
    static String addPatientRouteNameClinic = "ClinicAddPatient";
   static String addPatientRoutePath = "AddPatient";
@@ -224,15 +224,15 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                           child: BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                             buildWhen: (previous, current) => current is LoadedGetNextId,
                                             builder: (context, state) {
-                                              if (state is LoadedGetNextId) patient.id = int.parse(state.message ?? "0");
+                                              if (state is LoadedGetNextId) patient.secondaryId = int.parse(state.message ?? "0");
                                               return CIA_TextFormField(
                                                 isNumber: true,
                                                 onChange: (value) async {
-                                                  patient.id = int.parse(value);
+                                                  patient.secondaryId = int.parse(value);
                                                   createOrViewPatientBloc.add(CheckAvailableIdEvent(int.parse(value)));
                                                 },
                                                 label: "Id",
-                                                controller: TextEditingController(text: (patient.id ?? "").toString()),
+                                                controller: TextEditingController(text: (patient.secondaryId ?? "").toString()),
                                               );
                                             },
                                           ),
@@ -270,7 +270,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                     return Row(
                                       children: [
                                         Expanded(child: FormTextKeyWidget(text: "ID")),
-                                        Expanded(child: FormTextValueWidget(text: patient?.id.toString() == null ? "" : patient?.id.toString()))
+                                        Expanded(child: FormTextValueWidget(text: patient?.secondaryId.toString() == null ? "" : patient?.secondaryId.toString()))
                                       ],
                                     );
                                 },

@@ -4,6 +4,7 @@ import '../../../../core/constants/enums/enums.dart';
 
 class AdvancedPatientSearchEntity extends Equatable {
   int? id;
+  int? secondaryId;
   String? name;
   int? ageRangeFrom;
   int? ageRangeTo;
@@ -29,6 +30,7 @@ class AdvancedPatientSearchEntity extends Equatable {
 
   AdvancedPatientSearchEntity(
       {this.id,
+      this.secondaryId,
       this.ageRangeFrom,
       this.ageRangeTo,
       this.gender,
@@ -50,6 +52,7 @@ class AdvancedPatientSearchEntity extends Equatable {
   @override
   List<Object?> get props => [
         this.id,
+        this.secondaryId,
         this.ageRangeFrom,
         this.ageRangeTo,
         this.gender,

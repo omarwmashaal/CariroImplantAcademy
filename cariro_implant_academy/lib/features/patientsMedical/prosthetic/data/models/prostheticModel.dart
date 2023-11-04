@@ -14,6 +14,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
   ProstheticTreatmentModel({
     super.id,
     super.patientId,
+    super.secondaryId,
     super.patient,
     super.prostheticDiagnostic_DiagnosticImpression,
     super.prostheticDiagnostic_Bite,
@@ -53,6 +54,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
     return ProstheticTreatmentModel(
       id: entity.id,
       patientId: entity.patientId,
+      secondaryId: entity.secondaryId,
       patient: entity.patient,
       searchTeethClassification: entity.searchTeethClassification,
       finalProthesisSingleBridgeTeeth: entity.finalProthesisSingleBridgeTeeth,
@@ -91,6 +93,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
 
   ProstheticTreatmentModel.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];
+    this.secondaryId = json['secondaryId'];
     this.patientId = json['patientId'];
     this.patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     this.prostheticDiagnostic_DiagnosticImpression = ((json['prostheticDiagnostic_DiagnosticImpression'] ?? []) as List<dynamic>)

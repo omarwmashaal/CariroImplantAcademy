@@ -6,6 +6,7 @@ import '../../../../core/constants/enums/enums.dart';
 class ComplainModel extends ComplainsEntity {
   ComplainModel(
       {super.id,
+      super.secondaryId,
       super.comment,
       super.patientID,
       super.patient,
@@ -22,28 +23,31 @@ class ComplainModel extends ComplainsEntity {
       super.entryBy,
       super.entryTime});
 
-  factory ComplainModel.fromEntity(ComplainsEntity entity){
+  factory ComplainModel.fromEntity(ComplainsEntity entity) {
     return ComplainModel(
-        id:entity.id,
-        comment:entity.comment,
-        patientID:entity.patientID,
-        patient:entity.patient,
-        lastDoctorId:entity.lastDoctorId,
-        lastDoctor:entity.lastDoctor,
-        lastSupervisorId:entity.lastSupervisorId,
-        notes:entity.notes,
-        lastSupervisor:entity.lastSupervisor,
-        lastCandidateId:entity.lastCandidateId,
-        lastCandidate:entity.lastCandidate,
-        mentionedDoctorId:entity.mentionedDoctorId,
-        mentionedDoctor:entity.mentionedDoctor,
-        entryById:entity.entryById,
-        entryBy:entity.entryBy,
-        entryTime:entity.entryTime, 
+      id: entity.id,
+      secondaryId: entity.secondaryId,
+      comment: entity.comment,
+      patientID: entity.patientID,
+      patient: entity.patient,
+      lastDoctorId: entity.lastDoctorId,
+      lastDoctor: entity.lastDoctor,
+      lastSupervisorId: entity.lastSupervisorId,
+      notes: entity.notes,
+      lastSupervisor: entity.lastSupervisor,
+      lastCandidateId: entity.lastCandidateId,
+      lastCandidate: entity.lastCandidate,
+      mentionedDoctorId: entity.mentionedDoctorId,
+      mentionedDoctor: entity.mentionedDoctor,
+      entryById: entity.entryById,
+      entryBy: entity.entryBy,
+      entryTime: entity.entryTime,
     );
   }
+
   ComplainModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    secondaryId = json['secondaryId'];
     comment = json['comment'];
     notes = json['queueNotes'] ?? "";
     status = json['status'] == null ? EnumComplainStatus.Untouched : EnumComplainStatus.values[json['status']];
@@ -61,7 +65,7 @@ class ComplainModel extends ComplainsEntity {
     entryBy = BasicNameIdObjectModel.fromJson((json['entryBy'] ?? Map<String, dynamic>()) as Map<String, dynamic>);
     resolvedById = json['resolvedById'];
     resolvedBy = BasicNameIdObjectModel.fromJson((json['resolvedBy'] ?? Map<String, dynamic>()) as Map<String, dynamic>);
-    entryTime = DateTime.tryParse(json['entryTime']??"")?.toLocal();
+    entryTime = DateTime.tryParse(json['entryTime'] ?? "")?.toLocal();
   }
 
   Map<String, dynamic> toJson() {
@@ -72,5 +76,4 @@ class ComplainModel extends ComplainsEntity {
     data['mentionedDoctorId'] = this.mentionedDoctorId;
     return data;
   }
-
 }

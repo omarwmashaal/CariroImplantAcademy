@@ -24,6 +24,7 @@ import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
@@ -166,6 +167,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<AuthenticationBloc>()),
         BlocProvider(create: (context) => sl<AdvancedSearchBloc>()),
         BlocProvider(create: (context) => sl<LabRequestsBloc>()),
+        BlocProvider(create: (context) => sl<ClinicTreatmentBloc>()),
       ],
 
       child: MaterialApp.router(

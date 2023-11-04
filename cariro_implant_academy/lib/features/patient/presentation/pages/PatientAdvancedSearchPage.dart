@@ -676,7 +676,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                           //});
                           //internalPagesController.jumpToPage(1);
                           print(value);
-                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": value.toString()});
+                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":  dataSource_patients.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                         },
                       );
                     }),
@@ -1063,9 +1063,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                 //});
                                 //internalPagesController.jumpToPage(1);
                                 if (searchTreatmentsDTO.done == true)
-                                  context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id": value.toString()});
+                                  context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                                 else
-                                  context.goNamed(TreatmentPage.routeName, pathParameters: {"id": value.toString()});
+                                  context.goNamed(TreatmentPage.routeName, pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                               },
                             ),
                           ),
@@ -1889,7 +1889,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
 
                                 //});
                                 //internalPagesController.jumpToPage(1);
-                                  context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": value.toString()});
+                                  context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id":  dataSource_prosthetic.models.firstWhere((element) => element.secondaryId==value).id.toString()});
 
                               },
                             ),

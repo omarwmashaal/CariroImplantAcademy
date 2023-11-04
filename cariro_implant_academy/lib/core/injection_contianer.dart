@@ -77,6 +77,12 @@ import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getSumm
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/data/datasources/clinicTreatmentDatasource.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/data/repositories/clinicTreatmentRepoImpl.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/repositories/clinicTreatmentRepo.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/getTreatmentsUseCase.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/datasource/labCustomerDatasource.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRequestDatasource.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/repositories/labRequestsRepository.dart';
@@ -494,7 +500,7 @@ init() async {
   sl.registerLazySingleton(() => AdvancedSearchBloc(
         advancedTreatmentSearchUseCase: sl(),
         advancedSearchPatientsUseCase: sl(),
-    advancedProstheticSearchUseCase: sl(),
+        advancedProstheticSearchUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => AdvancedTreatmentSearchUseCase(patientInfoRepo: sl()));
@@ -832,9 +838,9 @@ init() async {
         getPatientLabRequestsUseCase: sl(),
         finishTaskUseCase: sl(),
         getLabRequestUseCase: sl(),
-    addOrUpdateRequestReceiptUseCase: sl(),
-    assignTaskToTechnicianUseCase: sl(),
-    markRequestAsDoneUseCase: sl(),
+        addOrUpdateRequestReceiptUseCase: sl(),
+        assignTaskToTechnicianUseCase: sl(),
+        markRequestAsDoneUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
@@ -856,4 +862,20 @@ init() async {
   //datasource
   sl.registerLazySingleton<LabRequestDatasource>(() => LabRequestsDatasourceImpl(httpRepo: sl()));
   sl.registerLazySingleton<LabCustomerDatasource>(() => LabCustomerDataSourceImpl(httpRepo: sl()));
+
+  /**
+   * Clinic Treatments
+   */
+  //bloc
+  sl.registerFactory(() => ClinicTreatmentBloc(
+        updateClinicTreatmentsUseCase: sl(),
+        getClinicTreatmentsUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => GetClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => UpdateClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));
+  //repo
+  sl.registerLazySingleton<ClinicTreatmentRepo>(() => ClinicTreatmentRepoImpl(clinicTreatmentDatasource: sl()));
+  //datasource
+  sl.registerLazySingleton<ClinicTreatmentDatasource>(() => ClinicTreatmentDataSourceImpl(httpRepo: sl()));
 }

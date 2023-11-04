@@ -5,6 +5,7 @@ import '../../../../core/constants/enums/enums.dart';
 class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
   AdvancedSearchPatientsModel({
     super.id,
+    super.secondaryId,
     super.ageRangeFrom,
     super.ageRangeTo,
     super.gender,
@@ -27,6 +28,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
   {
     return AdvancedSearchPatientsModel(
       id:entity.id,
+      secondaryId:entity.secondaryId,
       ageRangeFrom:entity.ageRangeFrom,
       ageRangeTo:entity.ageRangeTo,
       gender:entity.gender,
@@ -47,6 +49,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
   }
   AdvancedSearchPatientsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    secondaryId = json['secondaryId'];
     name = json['name'];
     age = json['age'];
     //ageRangeFrom = json['ageRangeFrom'];
@@ -73,6 +76,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ageRangeFrom'] = this.ageRangeFrom;
+    data['secondaryId'] = this.secondaryId;
     data['ageRangeTo'] = this.ageRangeTo;
     data['gender'] = this.gender == null ? null : this.gender!.index;
     data['anyDiseases'] = this.anyDiseases;

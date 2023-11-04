@@ -11,6 +11,7 @@ import '../../../../Models/API_Response.dart';
 
 class AdvancedTreatmentSearchEntity extends Equatable {
   int? id;
+  int? secondaryId;
   String? patientName;
   bool? done;
   bool? scaling;
@@ -57,6 +58,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   AdvancedTreatmentSearchEntity({
     this.id,
+    this.secondaryId,
     this.patientName,
     this.done,
     this.scaling,
@@ -104,6 +106,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   @override
   List<Object?> get props => [this.id,
+    this.secondaryId,
     this.patientName,
     this.done,
     this.scaling,

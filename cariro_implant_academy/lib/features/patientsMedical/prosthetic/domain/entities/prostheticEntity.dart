@@ -11,6 +11,7 @@ import 'scanApplianceEntity.dart';
 class ProstheticTreatmentEntity extends Equatable {
   int? id;
   int? patientId;
+  int? secondaryId;
   BasicNameIdObjectEntity? patient;
   EnumTeethClassification? searchTeethClassification;
   List<DiagnosticImpressionEntity>? prostheticDiagnostic_DiagnosticImpression;
@@ -50,6 +51,7 @@ class ProstheticTreatmentEntity extends Equatable {
   ProstheticTreatmentEntity({
     this.id,
     this.patientId,
+    this.secondaryId,
     this.patient,
     this.searchTeethClassification,
     this.prostheticDiagnostic_DiagnosticImpression,
@@ -90,6 +92,7 @@ class ProstheticTreatmentEntity extends Equatable {
 
     this.id,
     this.patientId,
+    this.secondaryId,
     this.patient,
     this.prostheticDiagnostic_DiagnosticImpression,
     this.prostheticDiagnostic_Bite,

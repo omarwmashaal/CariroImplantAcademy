@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/advanced
 class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
   AdvancedTreatmentSearchModel({
     super.id,
+    super.secondaryId,
     super.patientName,
     super.done,
     super.scaling,
@@ -51,6 +52,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
   {
     return AdvancedTreatmentSearchModel(
       id: entity.id,
+      secondaryId: entity.secondaryId,
       patientName: entity.patientName,
       done: entity.done,
       scaling: entity.scaling,
@@ -79,6 +81,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
   }
   AdvancedTreatmentSearchModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    secondaryId = json['secondaryId'];
     patientName = json['patientName'];
     done = json['done'];
     str_scaling = json['scaling'];
@@ -106,6 +109,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['secondaryId'] = this.secondaryId;
     data['patientName'] = this.patientName;
     data['done'] = this.done;
     data['scaling'] = this.scaling;

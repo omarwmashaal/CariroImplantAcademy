@@ -115,7 +115,7 @@ class _PatientsComplainsPageState extends State<ComplainsSearchPage> {
                       return TableWidget(
                         dataSource: datasource,
                         onCellClick: (value) {
-                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id": value!.toString()});
+                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":  datasource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
 
                         },
                       );
