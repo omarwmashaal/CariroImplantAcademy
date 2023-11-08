@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/pedoEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/restorationEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/rootCanalTreatmentEntity.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/scalingEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/tmdEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,6 +16,7 @@ class ClinicTreatmentEntity extends Equatable {
   List<TMDEntity>? tmds;
   List<PedoEntity>? pedos;
   List<RootCanalTreatmentEntity>? rootCanalTreatments;
+  List<ScalingEntity>? scalings;
 
   ClinicTreatmentEntity({
     this.patientId,
@@ -24,6 +26,7 @@ class ClinicTreatmentEntity extends Equatable {
     this.tmds,
     this.pedos,
     this.rootCanalTreatments,
+    this.scalings,
   });
 
   @override
@@ -35,5 +38,6 @@ class ClinicTreatmentEntity extends Equatable {
         this.tmds,
         this.pedos,
         this.rootCanalTreatments,
+        this.scalings,
       ];
 }

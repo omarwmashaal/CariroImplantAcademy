@@ -43,7 +43,7 @@ class RestorationModel extends RestorationEntity {
       id:map['id'],
       patientId:map['patientId'],
       tooth:map['tooth'],
-      restorationClass:map['restorationClass']==null?null:EnumClinicRestorationClass.values[map['restorationClass']],
+      restorationClass:map['class']==null?null:EnumClinicRestorationClass.values[map['class']],
       status:map['status']==null?null:EnumClinicRestorationStatus.values[map['status']],
       type:map['type']==null?null:EnumClinicRestorationType.values[map['type']],
       date:DateTime.tryParse(map['date']??""),
@@ -60,7 +60,7 @@ class RestorationModel extends RestorationEntity {
     data['id'] = this.id;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
-    data['restorationClass'] = this.restorationClass?.index;
+    data['class'] = this.restorationClass?.index;
     data['status'] = this.status?.index;
     data['type'] = this.type?.index;
     data['date'] = this.date?.toUtc().toIso8601String();

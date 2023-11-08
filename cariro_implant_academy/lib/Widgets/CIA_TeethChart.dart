@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'MultiSelectChipWidget.dart';
@@ -227,3 +228,200 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
     );
   }
 }
+
+
+class CIA_TeethPedoChart extends StatefulWidget {
+  CIA_TeethPedoChart({Key? key, this.onChange, this.selectedTeeth}) : super(key: key);
+
+
+  late List<EnumClinicPedoTooth>? selectedTeeth ;
+  Function(List<EnumClinicPedoTooth> selectedTeethList)? onChange;
+  @override
+  State<CIA_TeethPedoChart> createState() => _CIA_TeethPedoChartState();
+}
+
+class _CIA_TeethPedoChartState extends State<CIA_TeethPedoChart> {
+  List<EnumClinicPedoTooth> selectedTeeth = <EnumClinicPedoTooth>[];
+
+
+  @override
+  void initState() {
+    if(widget.selectedTeeth==null) widget.selectedTeeth = [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if(widget.selectedTeeth==null) widget.selectedTeeth = [];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: CIA_MultiSelectChipWidget(
+                key: GlobalKey(),
+                onChange: (item, isSelected) {
+                  if(isSelected)
+                    selectedTeeth.add(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  else
+                    selectedTeeth.remove(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  if(widget.onChange!=null) widget.onChange!(selectedTeeth);
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "E",
+                      value: EnumClinicPedoTooth.UpperRightE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperRightE)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "D",
+                      value: EnumClinicPedoTooth.UpperRightD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperRightD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "C",
+                      value: EnumClinicPedoTooth.UpperRightC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperRightC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "B",
+                      value: EnumClinicPedoTooth.UpperRightB.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperRightB)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                    label: "A",
+                      value: EnumClinicPedoTooth.UpperRightA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperRightA)
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: CIA_MultiSelectChipWidget(
+                key: GlobalKey(),
+                onChange: (item, isSelected) {
+                  if(isSelected)
+                    selectedTeeth.add(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  else
+                    selectedTeeth.remove(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  if(widget.onChange!=null) widget.onChange!(selectedTeeth);
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "E",
+                      value: EnumClinicPedoTooth.UpperLeftE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftE)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "D",
+                      value: EnumClinicPedoTooth.UpperLeftD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "C",
+                      value: EnumClinicPedoTooth.UpperLeftC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "B",
+                      value: EnumClinicPedoTooth.UpperLeftB.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftB)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "A",
+                      value: EnumClinicPedoTooth.UpperLeftA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftA)
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height:5),
+        Row(
+          children: [
+            Expanded(
+              child: CIA_MultiSelectChipWidget(
+                key: GlobalKey(),
+                onChange: (item, isSelected) {
+                  if(isSelected)
+                    selectedTeeth.add(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  else
+                    selectedTeeth.remove(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  if(widget.onChange!=null) widget.onChange!(selectedTeeth);
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "E",
+                      value: EnumClinicPedoTooth.LowerRightE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerRightE)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "D",
+                      value: EnumClinicPedoTooth.LowerRightD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerRightD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "C",
+                      value: EnumClinicPedoTooth.LowerRightC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerRightC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "B",
+                      value: EnumClinicPedoTooth.LowerRightB.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerRightB)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "A",
+                      value: EnumClinicPedoTooth.LowerRightA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerRightA)
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: CIA_MultiSelectChipWidget(
+                key: GlobalKey(),
+                onChange: (item, isSelected) {
+                  if(isSelected)
+                    selectedTeeth.add(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  else
+                    selectedTeeth.remove(EnumClinicPedoTooth.values.firstWhere((element) => element.name.toLowerCase()==item.toLowerCase()));
+                  if(widget.onChange!=null) widget.onChange!(selectedTeeth);
+                },
+                labels: [
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "E",
+                      value: EnumClinicPedoTooth.LowerLeftE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftE)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "D",
+                      value: EnumClinicPedoTooth.LowerLeftD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "C",
+                      value: EnumClinicPedoTooth.LowerLeftC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "B",
+                      value: EnumClinicPedoTooth.LowerLeftB.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftB)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "A",
+                      value: EnumClinicPedoTooth.LowerLeftA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftA)
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+

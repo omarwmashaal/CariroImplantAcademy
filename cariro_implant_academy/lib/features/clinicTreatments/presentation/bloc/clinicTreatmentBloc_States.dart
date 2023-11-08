@@ -31,6 +31,10 @@ class ClinicTreatmentBloc_SelectedTeethState extends ClinicTreatmentBloc_States 
   final List<int> teeth;
   ClinicTreatmentBloc_SelectedTeethState({required  this.teeth});
 }
+class ClinicTreatmentBloc_SelectedPedoTeethState extends ClinicTreatmentBloc_States {
+  final List<EnumClinicPedoTooth> teeth;
+  ClinicTreatmentBloc_SelectedPedoTeethState({required  this.teeth});
+}
 class ClinicTreatmentBloc_SelectedImplantTypeState extends ClinicTreatmentBloc_States {
   final EnumClinicImplantTypes implantType;
   ClinicTreatmentBloc_SelectedImplantTypeState({required  this.implantType});
@@ -42,5 +46,6 @@ enum SelectedTreatmentEnum{
   ortho,
   tmd,
   pedo,
-  rootCanalTreatment
+  rootCanalTreatment,
+  scaling,
 }

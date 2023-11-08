@@ -24,7 +24,7 @@ class CIA_MultiSelectChipWidgeModel {
   bool isButton;
 }
 
-class CIA_MultiSelectChipWidget extends StatelessWidget {
+class CIA_MultiSelectChipWidget extends StatefulWidget {
   CIA_MultiSelectChipWidget(
       {Key? key,
       this.disabled = false,
@@ -49,16 +49,22 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
   bool disabled;
 
   @override
+  State<CIA_MultiSelectChipWidget> createState() => _CIA_MultiSelectChipWidgetState();
+}
+
+class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
+  List<Object?> tempSelectedItems =[];
+  @override
   Widget build(BuildContext context) {
     return MultiSelectContainer(
       key: GlobalKey(),
-      showInListView: verticalList,
+      showInListView: widget.verticalList,
       alignments: MultiSelectAlignments(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start),
-      singleSelectedItem: singleSelect,
+      singleSelectedItem: widget.singleSelect,
       textStyles: MultiSelectTextStyles(
-        selectedTextStyle: disabled
+        selectedTextStyle: widget.disabled
             ? null
             : TextStyle(
                 color: Colors.white,
@@ -66,38 +72,39 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
               ),
       ),
       listViewSettings: ListViewSettings(
-          scrollDirection: verticalList ? Axis.vertical : Axis.horizontal),
+          scrollDirection: widget.verticalList ? Axis.vertical : Axis.horizontal),
       itemsDecoration: MultiSelectDecorations(
         decoration: BoxDecoration(
           border: Border.all(color: Color_TextFieldBorder),
           borderRadius: BorderRadius.circular(20),
         ),
-        selectedDecoration: disabled
+        selectedDecoration: widget.disabled
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Color_TextFieldBorder),
               )
             : BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: redFlags ? Colors.red : Color_Accent),
-                color: redFlags ? Colors.red : Color_Accent),
+                border: Border.all(color: widget.redFlags ? Colors.red : Color_Accent),
+                color: widget.redFlags ? Colors.red : Color_Accent),
       ),
       items: _buildItems(),
       onChange: (List<Object?> selectedItems, Object? selectedItem) {
         bool isSelected = selectedItems.contains(selectedItem);
-        if (onChange != null) onChange!(selectedItem as String, isSelected);
-        if (onChangeList != null) {
-          onChangeList!(selectedItems.map((e) => e as String).toList());
+        tempSelectedItems = selectedItems;
+        if (widget.onChange != null) widget.onChange!(selectedItem as String, isSelected);
+        if (widget.onChangeList != null) {
+          widget.onChangeList!(selectedItems.map((e) => e as String).toList());
         }
-        if (onChangeSpecificTooth != null)
-          onChangeSpecificTooth!(selectedItem as String, isSelected, key);
+        if (widget.onChangeSpecificTooth != null)
+          widget.onChangeSpecificTooth!(selectedItem as String, isSelected, widget.key);
       },
     );
   }
 
   List<MultiSelectCard> _buildItems() {
     List<MultiSelectCard> returnValue = <MultiSelectCard>[];
-    for (CIA_MultiSelectChipWidgeModel label in labels) {
+    for (CIA_MultiSelectChipWidgeModel label in widget.labels) {
       returnValue.add(MultiSelectCard(
           value: label.value == null ? label.label : label.value,
           label: label.label,
@@ -111,7 +118,7 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
               border:
               Border.all(color: label.borderColor ?? Color_TextFieldBorder),
               borderRadius: label.round? BorderRadius.circular(20):null,
-            ): disabled
+            ): widget.disabled
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
@@ -120,12 +127,12 @@ class CIA_MultiSelectChipWidget extends StatelessWidget {
                 : BoxDecoration(
                     borderRadius: label.round?BorderRadius.circular(20):null,
                     border: Border.all(
-                        color: redFlags
+                        color: widget.redFlags
                             ? Colors.red
                             : label.selectedColor == null
                                 ? Color_Accent
                                 : label.selectedColor!),
-                    color: redFlags
+                    color: widget.redFlags
                         ? Colors.red
                         : label.selectedColor == null
                             ? Color_Accent

@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/features/clinicTreatments/data/models/ort
 import 'package:cariro_implant_academy/features/clinicTreatments/data/models/pedoModel.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/models/restorationModel.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/models/rootCanalTreatmentModel.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/data/models/scalingModel.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/models/tmdModel.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicImplantEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicTreatmentEntity.dart';
@@ -23,6 +24,7 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
     super.tmds,
     super.pedos,
     super.rootCanalTreatments,
+    super.scalings,
   });
 
   factory ClinicTreatmentModel.fromEntity(ClinicTreatmentEntity entity) {
@@ -35,6 +37,7 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
       tmds:entity.tmds,
       pedos:entity.pedos,
       rootCanalTreatments:entity.rootCanalTreatments,
+      scalings:entity.scalings,
     );
   }
 
@@ -45,9 +48,10 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
       restorations:((map['restorations']??[]) as List<dynamic>).map((e) => RestorationModel.fromJson(e as Map<String,dynamic>)).toList(),
       clinicImplants:((map['clinicImplants']??[]) as List<dynamic>).map((e) => ClinicImplantModel.fromJson(e as Map<String,dynamic>)).toList(),
       orthoTreatments:((map['orthoTreatments']??[]) as List<dynamic>).map((e) => OrthoTreatmentModel.fromJson(e as Map<String,dynamic>)).toList(),
-      tmds:((map['tmds']??[]) as List<dynamic>).map((e) => TMDmodel.fromJson(e as Map<String,dynamic>)).toList(),
+      tmds:((map['tmDs']??[]) as List<dynamic>).map((e) => TMDmodel.fromJson(e as Map<String,dynamic>)).toList(),
       pedos:((map['pedos']??[]) as List<dynamic>).map((e) => PedoModel.fromJson(e as Map<String,dynamic>)).toList(),
       rootCanalTreatments:((map['rootCanalTreatments']??[]) as List<dynamic>).map((e) => RootCanalTreatmentModel.fromJson(e as Map<String,dynamic>)).toList(),
+      scalings:((map['scalings']??[]) as List<dynamic>).map((e) => ScalingModel.fromJson(e as Map<String,dynamic>)).toList(),
     );
   }
 
@@ -56,10 +60,11 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
     data['patientId']=this.patientId;
     data['restorations']=this.restorations?.map((e) => RestorationModel.fromEntity(e).toJson()).toList()??[];
     data['clinicImplants']=this.clinicImplants?.map((e) => ClinicImplantModel.fromEntity(e).toJson()).toList()??[];
-    data['oOrthoTreatments']=this.orthoTreatments?.map((e) => OrthoTreatmentModel.fromEntity(e).toJson()).toList()??[];
+    data['orthoTreatments']=this.orthoTreatments?.map((e) => OrthoTreatmentModel.fromEntity(e).toJson()).toList()??[];
     data['tmds']=this.tmds?.map((e) => TMDmodel.fromEntity(e).toJson()).toList()??[];
     data['pedos']=this.pedos?.map((e) => PedoModel.fromEntity(e).toJson()).toList()??[];
     data['rootCanalTreatments']=this.rootCanalTreatments?.map((e) => RootCanalTreatmentModel.fromEntity(e).toJson()).toList()??[];
+    data['scalings']=this.scalings?.map((e) => ScalingModel.fromEntity(e).toJson()).toList()??[];
     return data;
   }
 }

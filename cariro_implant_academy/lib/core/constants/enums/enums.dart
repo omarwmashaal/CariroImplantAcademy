@@ -1,5 +1,3 @@
-
-
 import 'package:get/get.dart';
 
 enum DiabetesEnum {
@@ -47,7 +45,6 @@ enum EnumPatientType { CIA, Clinic, OutSource }
 
 enum EnumLabRequestSources { CIA, Clinic, OutSource }
 
-
 enum EnumOralHygieneRating {
   BadHygiene,
   FairHygiene,
@@ -62,29 +59,15 @@ enum EnumLabRequestInitStatus {
   Remake,
 }
 
+enum EnumGender { Male, Female }
 
-enum EnumGender
-{
-  Male,
-  Female
-}
-enum EnumCooperationScore
-{
-  BadCooperation,
-  FairCooperation,
-  GoodCooperation,
-  ExcellentCooperation
-}
-enum EnumTeethClassification
-{
-UpperAnterior,
-LowerAnterior,
-UpperPosterior,
-LowerPosterior
-}
+enum EnumCooperationScore { BadCooperation, FairCooperation, GoodCooperation, ExcellentCooperation }
+
+enum EnumTeethClassification { UpperAnterior, LowerAnterior, UpperPosterior, LowerPosterior }
+
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest,SurgicalTreatment }
 
+enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment }
 
 T? mapToEnum<T extends Enum>(List<T> values, dynamic? value) {
   if (value is String) return values.firstWhereOrNull((element) => (element as Enum).name.toLowerCase() == value.toLowerCase());
@@ -120,7 +103,6 @@ enum EnumMaritalStatus { Married, Single }
 
 enum EnumImageType { PatientProfile, IdBack, IdFront, UserProfile, Pros }
 
-
 enum EnumComplainStatus { InQueue, Untouched, Resolved }
 
 enum EnumSummaryFilter {
@@ -130,19 +112,18 @@ enum EnumSummaryFilter {
   ThisYear,
 }
 
-enum RequestChangeEnum
-{
+enum RequestChangeEnum {
   ImplantChange,
   MembraneChange,
   TacsChange,
   ScrewChange,
 }
 
+enum EnumClinicRestorationStatus { NotSelected, Done, Temp }
 
- enum EnumClinicRestorationStatus { NotSelected, Done, Temp }
- enum EnumClinicRestorationType { NotSelected, Composite, ReinforcedGlassIonomer, Temp, IndirectRestoration }
- enum EnumClinicRestorationClass
-{
+enum EnumClinicRestorationType { NotSelected, Composite, ReinforcedGlassIonomer, Temp, IndirectRestoration }
+
+enum EnumClinicRestorationClass {
   NotSelected,
   ClassI,
   ClassII,
@@ -152,25 +133,40 @@ enum RequestChangeEnum
   ClassVI,
 }
 
- enum EnumClinicImplantTypes
-{
-  NotSelected,
-  Simple,
-  Immediate,
-  Guided,
-  Expansion,
-  Splitting,
-  GBR,
-  OpenSinus,
-  ClosedSinus
+enum EnumClinicImplantTypes { NotSelected, Simple, Immediate, Guided, Expansion, Splitting, GBR, OpenSinus, ClosedSinus }
 
+enum EnumClinicTMDtypes { NotSelected, Diagnosis, Injection, SRS, NightGuardHard, NightGuardSoft }
+
+enum EnumClinicPedoTooth {
+  UpperLeftA,
+  UpperLeftB,
+  UpperLeftC,
+  UpperLeftD,
+  UpperLeftE,
+  UpperRightA,
+  UpperRightB,
+  UpperRightC,
+  UpperRightD,
+  UpperRightE,
+  LowerLeftA,
+  LowerLeftB,
+  LowerLeftC,
+  LowerLeftD,
+  LowerLeftE,
+  LowerRightA,
+  LowerRightB,
+  LowerRightC,
+  LowerRightD,
+  LowerRightE,
 }
- enum EnumClinicTMDtypes { NotSelected,Diagnosis,Injection,SRS,NightGuardHard,NightGuardSoft}
- enum EnumClinicPedoTooth {A,B,C,D,E}
- enum EnumClinicPedoFirstStep {Pulpotomy,Pulpectomy}
- enum EnumClinicPedoSecondStep { CastStanlessSteelZirconia, FinalRestoration,TempFilling}
- enum EnumClinicRootCanalTreatmentType {
+
+enum EnumClinicPedoFirstStep { Pulpotomy, Pulpectomy }
+
+enum EnumClinicPedoSecondStep { CastStanlessSteelZirconia, FinalRestoration, TempFilling }
+
+enum EnumClinicRootCanalTreatmentType {
   NotSelected,
+  SingleCanal,
   B,
   L,
   MB,
@@ -180,4 +176,9 @@ enum RequestChangeEnum
   P,
   Other,
 }
-    
+
+enum EnumClinicScalingType {
+  NotSelected,
+  Regular,
+  Deep
+}

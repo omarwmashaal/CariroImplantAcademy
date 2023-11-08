@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/pedoEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/restorationEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/rootCanalTreatmentEntity.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/scalingEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/tmdEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/getTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
@@ -13,12 +14,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatmentBloc_States> {
   final GetClinicTreatmentsUseCase getClinicTreatmentsUseCase;
   final UpdateClinicTreatmentsUseCase updateClinicTreatmentsUseCase;
-
+  bool isInitialized = false;
   ClinicTreatmentBloc({
     required this.updateClinicTreatmentsUseCase,
     required this.getClinicTreatmentsUseCase,
   }) : super(ClinicTreatmentBloc_InitState()) {
-
     on<ClinicTreatmentBloc_LoadTreatmentsEvent>(
       (event, emit) async {
         emit(ClinicTreatmentBloc_LoadingTreatmentsState());
@@ -29,8 +29,6 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
         );
       },
     );
-
-
 
     on<ClinicTreatmentBloc_UpdateTreatmentsEvent>(
       (event, emit) async {
@@ -65,14 +63,84 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
           case SelectedTreatmentEnum.rootCanalTreatment:
             {
               for (var tooth in event.selectedTeeth) {
-                if (event.data.rootCanalTreatments!.where((element) => element.tooth == tooth).toList().isEmpty)
-                  event.data.rootCanalTreatments = [
-                    ...event.data.rootCanalTreatments!,
-                    RootCanalTreatmentEntity(
-                      patientId: event.data.patientId,
-                      tooth: tooth,
-                    )
-                  ];
+                int number = 1;
+                if (event.data.rootCanalTreatments!.where((element) => element.tooth == tooth).toList().isEmpty) {
+                  switch (tooth % 10) {
+                    case 1:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                        ];
+                        break;
+                      }
+                    case 2:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                        ];
+                        break;
+                      }
+                    case 3:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                        ];
+                        break;
+                      }
+                    case 4:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 2),
+                        ];
+                        break;
+                      }
+                    case 5:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 2),
+                        ];
+                        break;
+                      }
+                    case 6:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 2),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 3),
+                        ];
+                        break;
+                      }
+                    case 7:
+                      {
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 2),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 3),
+                        ];
+                        break;
+                      }
+                    case 8:
+                      {
+
+                        event.data.rootCanalTreatments = [
+                          ...event.data.rootCanalTreatments!,
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 2),
+                          RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 3),
+                        ];
+                        break;
+                      }
+                  }
+                }
               }
 
               break;
@@ -117,6 +185,22 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
 
               break;
             }
+          case SelectedTreatmentEnum.scaling:
+            {
+              for (var tooth in event.selectedTeeth) {
+                if (event.data.scalings!.where((element) => element.tooth == tooth).toList().isEmpty)
+                  event.data.scalings = [
+                    ...event.data.scalings!,
+                    ScalingEntity(
+                      patientId: event.data.patientId,
+                      tooth: tooth,
+                      stepNumber: 1,
+                    )
+                  ];
+              }
+
+              break;
+            }
           case SelectedTreatmentEnum.implants:
             {
               for (var tooth in event.selectedTeeth) {
@@ -153,6 +237,4 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
       },
     );
   }
-
-
 }
