@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
@@ -44,5 +46,9 @@ abstract class SettingsRepository{
   Future<Either<Failure,NoParams>> addPaymentMethods( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> editRooms( List<RoomEntity> model);
   Future<Either<Failure,NoParams>> editTreatmentPrices( TreatmentPricesEntity prices);
+  Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,EnumClinicPrices category);
+  Future<Either<Failure,NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
+
+
 
 }

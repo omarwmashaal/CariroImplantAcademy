@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
@@ -613,4 +614,39 @@ class SettingsBloc_EditingTreatmentPricesErrorState extends SettingsBlocErrorSta
 class SettingsBloc_EditedTreatmentPricesSuccessfullyState extends SettingsBlocSuccessState {
   @override
   List<Object?> get props => [];
+}
+
+class SettingsBloc_EditingClinicPricesState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_EditingClinicPricesErrorState extends SettingsBlocErrorState {
+  SettingsBloc_EditingClinicPricesErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_EditedClinicPricesSuccessfullyState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+class SettingsBloc_LoadingClinicPricesState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingClinicPricesErrorState extends SettingsBlocErrorState {
+  SettingsBloc_LoadingClinicPricesErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_LoadedClinicPricesSuccessfullyState extends SettingsBlocSuccessState {
+  final List<ClinicPriceEntity> data;
+  SettingsBloc_LoadedClinicPricesSuccessfullyState({required this.data})
+  @override
+  List<Object?> get props => [data];
 }

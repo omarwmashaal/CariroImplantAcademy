@@ -1,8 +1,10 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneCompanyEnity.dart';
@@ -75,7 +77,11 @@ class _SettingsPageState extends State<SettingsPage> {
         else if (state is SettingsBloc_EditedRoomsSuccessfullyState) bloc.add(SettingsBloc_LoadRoomsEvent());
         else if (state is SettingsBloc_EditedTreatmentPricesSuccessfullyState) bloc.add(SettingsBloc_LoadTreatmentPricesEvent());
       },
-      child: Row(
+      child:siteController.getSite()==Website.Clinic?
+      Container():
+
+
+      Row(
         children: [
           SidebarX(
             controller: SidebarXController(selectedIndex: currentIndex, extended: true),

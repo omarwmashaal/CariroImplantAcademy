@@ -1,13 +1,16 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
+import 'package:cariro_implant_academy/core/features/settings/data/models/clinicPricesModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
 
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
+import '../../../../constants/enums/enums.dart';
 import '../../../../constants/remoteConstants.dart';
 import '../../../../data/models/BasicNameIdObjectModel.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 import '../../../../error/exception.dart';
 import '../../../../useCases/useCases.dart';
+import '../../domain/entities/clinicPriceEntity.dart';
 import '../../domain/entities/implantEntity.dart';
 import '../../domain/entities/membraneCompanyEnity.dart';
 import '../../domain/entities/tacEntity.dart';
@@ -79,6 +82,10 @@ abstract class SettingsDatasource {
   Future<NoParams> editRooms(List<RoomEntity> model);
 
   Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices);
+  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth,EnumClinicPrices category);
+  Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
+
+
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -540,6 +547,37 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
+  }
+
+  @override
+  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, EnumClinicPrices category)async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getTeethTreatmentPrices");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => ClinicPricesModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params)async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/updateTeethTreatmentPrices",
+        body: params.map((e) => ClinicPricesModel.fromEntity(e).toJson()).toList() ,
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 
 

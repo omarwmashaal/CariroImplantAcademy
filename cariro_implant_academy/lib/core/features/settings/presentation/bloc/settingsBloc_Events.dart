@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
@@ -236,3 +238,20 @@ class SettingsBloc_LoadStockCategoriesEvent extends SettingsBloc_Events{
   List<Object?> get props => [];
 
 }
+class SettingsBloc_EditClinicPricesEvent extends SettingsBloc_Events {
+  final List<ClinicPriceEntity> prices;
+
+  SettingsBloc_EditClinicPricesEvent({required this.prices});
+
+  @override
+  List<Object?> get props => [prices];
+}
+
+class SettingsBloc_LoadClinicPricesEvent extends SettingsBloc_Events{
+  final GetTeethClinicPircesParams params;
+  SettingsBloc_LoadClinicPricesEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+
+}
+

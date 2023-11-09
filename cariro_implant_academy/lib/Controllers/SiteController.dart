@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
 
-import '../core/features/settings/pages/presentation/UserSettingsPage.dart';
-import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
+import '../core/features/settings/presentation/pages/UserSettingsPage.dart';
+import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 

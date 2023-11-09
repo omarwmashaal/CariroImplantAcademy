@@ -42,8 +42,8 @@ import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../core/features/notification/presentation/pages/NotificationsPage.dart';
 import 'package:logging/logging.dart';
 
-import '../core/features/settings/pages/presentation/UserSettingsPage.dart';
-import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
+import '../core/features/settings/presentation/pages/UserSettingsPage.dart';
+import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
 import '../core/injection_contianer.dart';
 import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';

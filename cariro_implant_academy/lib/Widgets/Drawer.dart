@@ -11,7 +11,7 @@ import 'package:sidebarx/sidebarx.dart';
 
 import '../core/constants/enums/enums.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
-import '../core/features/settings/pages/presentation/WebsiteSettingsPage.dart';
+import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import 'FormTextWidget.dart';
 

@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
@@ -10,6 +11,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../domain/entities/clinicPriceEntity.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../datasources/settingsDatasource.dart';
 
@@ -312,6 +314,26 @@ class SettingsRepoImpl implements SettingsRepository {
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getStockCategories()async {
     try {
       final result = await settingsDatasource.getStockCategories();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, EnumClinicPrices category) async {
+    try {
+      final result = await settingsDatasource.getTeethTreatmentPrices(teeth,category);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params) async {
+    try {
+      final result = await settingsDatasource.updateTeethTreatmentPrices(params);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
