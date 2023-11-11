@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,8 +36,6 @@ import '../../domain/useCases/getPaymentMethodsUseCase.dart';
 import '../../domain/useCases/getSuppliersUseCase.dart';
 import '../../domain/useCases/getTacsUseCase.dart';
 import '../../domain/useCases/getTreatmentPricesUseCase.dart';
-import '../../pages/bloc/settingsBloc_Events.dart';
-import '../../pages/bloc/settingsBloc_States.dart';
 
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetImplantCompaniesUseCase getImplantCompaniesUseCase;
@@ -69,8 +69,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final EditTreatmentPricesUseCase editTreatmentPricesUseCase;
   final GetStockCategoriesUseCase getStockCategoriesUseCase;
   final GetRoomsUseCase getRoomsUseCase;
-  final GetTeethClinicPrices getTeethClinicPrices;
-  final UpdateTeethClinicPrices updateTeethClinicPrices;
+  final GetTeethClinicPricesUseCase getTeethClinicPricesUseCase;
+  final UpdateTeethClinicPricesUseCase updateTeethClinicPricesUseCase;
   SettingsBloc({
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
@@ -103,8 +103,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.getStockCategoriesUseCase,
     required this.getRoomsUseCase,
     required this.editTreatmentPricesUseCase,
-    required this.updateTeethClinicPrices,
-    required this.getTeethClinicPrices,
+    required this.updateTeethClinicPricesUseCase,
+    required this.getTeethClinicPricesUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
@@ -328,14 +328,14 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
 
     on<SettingsBloc_EditClinicPricesEvent>((event, emit) async {
         emit(SettingsBloc_EditingClinicPricesState());
-        final result = await updateTeethClinicPrices(event.prices);
+        final result = await updateTeethClinicPricesUseCase(event.prices);
         result.fold(
           (l) => emit(SettingsBloc_EditingClinicPricesErrorState(message: l.message ?? "")),
           (r) => emit(SettingsBloc_EditedClinicPricesSuccessfullyState()),
         );});
     on<SettingsBloc_LoadClinicPricesEvent>((event, emit) async {
         emit(SettingsBloc_LoadingClinicPricesState());
-        final result = await getTeethClinicPrices(event.params);
+        final result = await getTeethClinicPricesUseCase(event.params);
         result.fold(
           (l) => emit(SettingsBloc_LoadingClinicPricesErrorState(message: l.message ?? "")),
           (r) => emit(SettingsBloc_LoadedClinicPricesSuccessfullyState(data: r)),

@@ -58,8 +58,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
@@ -253,6 +254,7 @@ import 'features/settings/domain/useCases/getExpensesCategoriesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'features/settings/domain/useCases/getNonMedicalStockCategories.dart';
+import 'features/settings/presentation/bloc/settingsBloc.dart';
 
 final sl = GetIt.instance;
 
@@ -353,8 +355,12 @@ init() async {
         editTreatmentPricesUseCase: sl(),
         getStockCategoriesUseCase: sl(),
         getRoomsUseCase: sl(),
+        getTeethClinicPricesUseCase: sl(),
+        updateTeethClinicPricesUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => GetTeethClinicPricesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantLinesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantSizesUseCase(settingsRepository: sl()));

@@ -27,7 +27,6 @@ abstract class SettingsDatasource {
 
   Future<List<TacCompanyModel>> getTacs();
 
-
   Future<List<MembraneCompanyModel>> getMembraneCompanies();
 
   Future<List<MembraneModel>> getMembranes(int id);
@@ -49,6 +48,7 @@ abstract class SettingsDatasource {
   Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories();
 
   Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories();
+
   Future<List<BasicNameIdObjectModel>> getStockCategories();
 
   Future<List<BasicNameIdObjectModel>> getSuppliers();
@@ -82,10 +82,10 @@ abstract class SettingsDatasource {
   Future<NoParams> editRooms(List<RoomEntity> model);
 
   Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices);
-  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth,EnumClinicPrices category);
+
+  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category);
+
   Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
-
-
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -550,10 +550,16 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, EnumClinicPrices category)async {
+  Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getTeethTreatmentPrices");
+       response = await httpRepo.post(
+        host: "$serverHost/$settingsController/getTeethTreatmentPrices?",
+        body: {
+          "teeth": teeth,
+          "category": category?.map((e) => e.index).toList(),
+        },
+      );
     } catch (e) {
       throw mapException(e);
     }
@@ -566,12 +572,12 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params)async {
+  Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/updateTeethTreatmentPrices",
-        body: params.map((e) => ClinicPricesModel.fromEntity(e).toJson()).toList() ,
+        body: params.map((e) => ClinicPricesModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);
@@ -579,6 +585,4 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
   }
-
-
 }

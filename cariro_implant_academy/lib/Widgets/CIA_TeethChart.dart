@@ -308,19 +308,9 @@ class _CIA_TeethPedoChartState extends State<CIA_TeethPedoChart> {
                 },
                 labels: [
                   CIA_MultiSelectChipWidgeModel(
-                      label: "E",
-                      value: EnumClinicPedoTooth.UpperLeftE.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftE)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "D",
-                      value: EnumClinicPedoTooth.UpperLeftD.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftD)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "C",
-                      value: EnumClinicPedoTooth.UpperLeftC.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftC)
+                      label: "A",
+                      value: EnumClinicPedoTooth.UpperLeftA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftA)
                   ),
                   CIA_MultiSelectChipWidgeModel(
                       label: "B",
@@ -328,9 +318,19 @@ class _CIA_TeethPedoChartState extends State<CIA_TeethPedoChart> {
                       isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftB)
                   ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "A",
-                      value: EnumClinicPedoTooth.UpperLeftA.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftA)
+                      label: "C",
+                      value: EnumClinicPedoTooth.UpperLeftC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "D",
+                      value: EnumClinicPedoTooth.UpperLeftD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "E",
+                      value: EnumClinicPedoTooth.UpperLeftE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.UpperLeftE)
                   ),
                 ],
               ),
@@ -391,19 +391,9 @@ class _CIA_TeethPedoChartState extends State<CIA_TeethPedoChart> {
                 },
                 labels: [
                   CIA_MultiSelectChipWidgeModel(
-                      label: "E",
-                      value: EnumClinicPedoTooth.LowerLeftE.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftE)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "D",
-                      value: EnumClinicPedoTooth.LowerLeftD.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftD)
-                  ),
-                  CIA_MultiSelectChipWidgeModel(
-                      label: "C",
-                      value: EnumClinicPedoTooth.LowerLeftC.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftC)
+                      label: "A",
+                      value: EnumClinicPedoTooth.LowerLeftA.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftA)
                   ),
                   CIA_MultiSelectChipWidgeModel(
                       label: "B",
@@ -411,9 +401,19 @@ class _CIA_TeethPedoChartState extends State<CIA_TeethPedoChart> {
                       isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftB)
                   ),
                   CIA_MultiSelectChipWidgeModel(
-                      label: "A",
-                      value: EnumClinicPedoTooth.LowerLeftA.name,
-                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftA)
+                      label: "C",
+                      value: EnumClinicPedoTooth.LowerLeftC.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftC)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "D",
+                      value: EnumClinicPedoTooth.LowerLeftD.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftD)
+                  ),
+                  CIA_MultiSelectChipWidgeModel(
+                      label: "E",
+                      value: EnumClinicPedoTooth.LowerLeftE.name,
+                      isSelected: widget.selectedTeeth!.contains(EnumClinicPedoTooth.LowerLeftE)
                   ),
                 ],
               ),

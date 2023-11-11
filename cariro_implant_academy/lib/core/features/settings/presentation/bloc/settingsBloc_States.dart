@@ -646,7 +646,7 @@ class SettingsBloc_LoadingClinicPricesErrorState extends SettingsBlocErrorState 
 
 class SettingsBloc_LoadedClinicPricesSuccessfullyState extends SettingsBlocSuccessState {
   final List<ClinicPriceEntity> data;
-  SettingsBloc_LoadedClinicPricesSuccessfullyState({required this.data})
+  SettingsBloc_LoadedClinicPricesSuccessfullyState({required this.data});
   @override
   List<Object?> get props => [data];
 }

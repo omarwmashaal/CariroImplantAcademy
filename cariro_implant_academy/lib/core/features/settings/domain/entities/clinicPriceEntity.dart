@@ -7,12 +7,14 @@ class ClinicPriceEntity extends Equatable {
   EnumClinicPrices? category;
   int? price;
   int? tooth;
+  List<int>? teethList;
 
   ClinicPriceEntity({
     this.id,
     this.category,
     this.price,
     this.tooth,
+    this.teethList,
   });
 
   @override

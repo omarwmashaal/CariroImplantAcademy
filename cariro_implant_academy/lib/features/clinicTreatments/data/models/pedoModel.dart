@@ -64,7 +64,7 @@ class PedoModel extends PedoEntity {
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     data['notes'] = this.notes;
-    data['toothPedo'] = this.toothPedo?.index;
+    data['toothPedo'] = this.toothPedo?.value;
     data['secondStep'] = this.secondStep?.index;
     data['firstStep'] = this.firstStep?.index;
     data['date'] = this.date?.toUtc().toIso8601String();

@@ -46,7 +46,7 @@ abstract class SettingsRepository{
   Future<Either<Failure,NoParams>> addPaymentMethods( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> editRooms( List<RoomEntity> model);
   Future<Either<Failure,NoParams>> editTreatmentPrices( TreatmentPricesEntity prices);
-  Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,EnumClinicPrices category);
+  Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,List<EnumClinicPrices>? category);
   Future<Either<Failure,NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
 
 

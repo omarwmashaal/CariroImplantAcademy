@@ -5,10 +5,10 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class GetTeethClinicPrices extends UseCases<List<ClinicPriceEntity>,GetTeethClinicPircesParams>
+class GetTeethClinicPricesUseCase extends UseCases<List<ClinicPriceEntity>,GetTeethClinicPircesParams>
 {
   final SettingsRepository settingsRepository;
-  GetTeethClinicPrices({required this.settingsRepository});
+  GetTeethClinicPricesUseCase({required this.settingsRepository});
   @override
   Future<Either<Failure, List<ClinicPriceEntity>>> call(GetTeethClinicPircesParams params) async{
     return await settingsRepository.getTeethTreatmentPrices(params.teeth, params.category);
@@ -20,7 +20,7 @@ class GetTeethClinicPrices extends UseCases<List<ClinicPriceEntity>,GetTeethClin
 
 class GetTeethClinicPircesParams{
   final List<int>? teeth;
-  final EnumClinicPrices category;
+  final List<EnumClinicPrices>? category;
 
   const GetTeethClinicPircesParams({
     this.teeth,

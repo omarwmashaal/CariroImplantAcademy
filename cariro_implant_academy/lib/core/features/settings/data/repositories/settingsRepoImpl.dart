@@ -321,7 +321,7 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, EnumClinicPrices category) async {
+  Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category) async {
     try {
       final result = await settingsDatasource.getTeethTreatmentPrices(teeth,category);
       return Right(result);

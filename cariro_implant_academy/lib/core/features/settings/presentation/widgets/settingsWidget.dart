@@ -1,4 +1,3 @@
-import 'package:cariro_implant_academy/core/features/settings/pages/bloc/settingsBloc_Events.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +6,7 @@ import '../../../../../presentation/widgets/bigErrorPageWidget.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 import '../../../../presentation/widgets/LoadingWidget.dart';
 import '../bloc/settingsBloc.dart';
+import '../bloc/settingsBloc_Events.dart';
 import '../bloc/settingsBloc_States.dart';
 
 enum SettingsType{
