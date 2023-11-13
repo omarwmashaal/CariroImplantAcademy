@@ -15,6 +15,7 @@ class OrthoTreatmentEntity extends Equatable {
   BasicNameIdObjectEntity? assistant;
   int? doctorId;
   BasicNameIdObjectEntity? doctor;
+  int? price;
 
   @override
   List<Object?> get props => [
@@ -28,6 +29,7 @@ class OrthoTreatmentEntity extends Equatable {
     this.assistantId,
     this.doctor,
     this.doctorId,
+    this.price,
       ];
 
   OrthoTreatmentEntity({
@@ -41,5 +43,6 @@ class OrthoTreatmentEntity extends Equatable {
     this.assistantId,
     this.doctor,
     this.doctorId,
+    this.price,
   });
 }

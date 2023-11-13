@@ -22,6 +22,7 @@ class ScalingModel extends ScalingEntity {
     super.doctor,
     super.doctorId,
     super.stepNumber,
+    super.price,
   });
 
   factory ScalingModel.fromEntity(ScalingEntity entity) {
@@ -38,6 +39,7 @@ class ScalingModel extends ScalingEntity {
       doctor:entity.doctor,
       doctorId:entity.doctorId,
       stepNumber:entity.stepNumber,
+      price:entity.price,
     );
   }
 
@@ -55,6 +57,7 @@ class ScalingModel extends ScalingEntity {
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
       stepNumber:map['stepNumber'],
+      price:map['price'],
     );
   }
 
@@ -70,6 +73,7 @@ class ScalingModel extends ScalingEntity {
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
     data['stepNumber'] = this.stepNumber;
+    data['price'] = this.price;
     return data;
   }
 }

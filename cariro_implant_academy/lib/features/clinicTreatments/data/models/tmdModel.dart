@@ -21,6 +21,7 @@ class TMDmodel extends TMDEntity {
     super.doctor,
     super.doctorId,
     super.stepNumber,
+    super.price,
   });
 
   factory TMDmodel.fromEntity(TMDEntity entity) {
@@ -37,6 +38,7 @@ class TMDmodel extends TMDEntity {
       doctor:entity.doctor,
       doctorId:entity.doctorId,
       stepNumber:entity.stepNumber,
+      price:entity.price,
     );
   }
 
@@ -54,6 +56,7 @@ class TMDmodel extends TMDEntity {
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
       stepNumber:map['stepNumber'],
+      price:map['price'],
     );
   }
 
@@ -69,6 +72,7 @@ class TMDmodel extends TMDEntity {
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
     data['stepNumber'] = this.stepNumber;
+    data['price'] = this.price;
     return data;
   }
 }

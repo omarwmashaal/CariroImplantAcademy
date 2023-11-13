@@ -18,6 +18,7 @@ class RootCanalTreatmentEntity extends Equatable {
   BasicNameIdObjectEntity? assistant;
   int? doctorId;
   BasicNameIdObjectEntity? doctor;
+  int? price;
 
   @override
   List<Object?> get props => [
@@ -34,6 +35,7 @@ class RootCanalTreatmentEntity extends Equatable {
     this.assistantId,
     this.doctor,
     this.doctorId,
+    this.price,
       ];
 
   RootCanalTreatmentEntity({
@@ -50,5 +52,6 @@ class RootCanalTreatmentEntity extends Equatable {
     this.assistantId,
     this.doctor,
     this.doctorId,
+    this.price,
   });
 }

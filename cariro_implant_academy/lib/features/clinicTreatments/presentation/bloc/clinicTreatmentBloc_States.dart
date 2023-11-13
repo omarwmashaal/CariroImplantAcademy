@@ -1,6 +1,8 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicTreatmentEntity.dart';
 
+import '../../../../core/features/settings/domain/entities/clinicPriceEntity.dart';
+
 abstract class ClinicTreatmentBloc_States {}
 
 class ClinicTreatmentBloc_InitState extends ClinicTreatmentBloc_States {}
@@ -39,6 +41,35 @@ class ClinicTreatmentBloc_SelectedImplantTypeState extends ClinicTreatmentBloc_S
   final EnumClinicImplantTypes implantType;
   ClinicTreatmentBloc_SelectedImplantTypeState({required  this.implantType});
 }
+class ClinicTreatmentBloc_LoadingPricesState extends ClinicTreatmentBloc_States {
+  final String key;
+  ClinicTreatmentBloc_LoadingPricesState({required  this.key});
+}
+class ClinicTreatmentBloc_LoadedPricesSuccessfullyState extends ClinicTreatmentBloc_States {
+  final String key;
+  final List<ClinicPriceEntity> prices;
+  ClinicTreatmentBloc_LoadedPricesSuccessfullyState({required  this.key,required this.prices});
+}
+class ClinicTreatmentBloc_LoadingPricesErrorState extends ClinicTreatmentBloc_States {
+
+  final String key;
+  final String message;
+  ClinicTreatmentBloc_LoadingPricesErrorState({required  this.message,required this.key});
+}
+
+class ClinicTreatmentBloc_ShowPricesState extends ClinicTreatmentBloc_States {
+
+
+}
+class ClinicTreatmentBloc_ShowTreatmentstate extends ClinicTreatmentBloc_States {
+
+
+}
+
+class ClinicTreatmentBloc_TotalPriceChangedState extends ClinicTreatmentBloc_States {
+  final int price;
+  ClinicTreatmentBloc_TotalPriceChangedState({required this.price});
+}
 
 enum SelectedTreatmentEnum{
   restoration,
@@ -49,3 +80,5 @@ enum SelectedTreatmentEnum{
   rootCanalTreatment,
   scaling,
 }
+
+

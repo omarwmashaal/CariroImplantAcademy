@@ -876,6 +876,7 @@ init() async {
   sl.registerFactory(() => ClinicTreatmentBloc(
         updateClinicTreatmentsUseCase: sl(),
         getClinicTreatmentsUseCase: sl(),
+    getTeethClinicPricesUseCase: sl()
       ));
   //usecases
   sl.registerLazySingleton(() => GetClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));

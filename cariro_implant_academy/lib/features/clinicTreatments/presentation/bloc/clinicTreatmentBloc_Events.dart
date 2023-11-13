@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
@@ -31,4 +32,18 @@ class ClinicTreatmentBloc_BuildPageEvent extends ClinicTreatmentBloc_Events {
     this.selectedPedoTeeth,
     this.implantType,
   });
+}
+
+
+class ClinicTreatmentBloc_GetPriceEvent extends ClinicTreatmentBloc_Events {
+  final GetTeethClinicPircesParams params;
+  final String key;
+
+  ClinicTreatmentBloc_GetPriceEvent({required this.params,required this.key});
+}
+class ClinicTreatmentBloc_CalculateTotalPriceEvent extends ClinicTreatmentBloc_Events {
+  final ClinicTreatmentEntity params;
+
+
+  ClinicTreatmentBloc_CalculateTotalPriceEvent({required this.params});
 }

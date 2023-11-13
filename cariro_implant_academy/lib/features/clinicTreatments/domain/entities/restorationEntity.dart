@@ -16,6 +16,10 @@ class RestorationEntity extends Equatable {
   BasicNameIdObjectEntity? assistant;
   int? doctorId;
   BasicNameIdObjectEntity? doctor;
+  int? price;
+  int? typePrice;
+  int? statusPrice;
+  int? classPrice;
 
   RestorationEntity({
     this.id,
@@ -29,7 +33,11 @@ class RestorationEntity extends Equatable {
     this.assistant,
     this.assistantId,
     this.doctor,
+    this.price,
     this.doctorId,
+    this.statusPrice,
+    this.typePrice,
+    this.classPrice,
   });
 
   @override
@@ -46,5 +54,9 @@ class RestorationEntity extends Equatable {
     this.assistantId,
     this.doctor,
     this.doctorId,
+    this.price,
+    this.statusPrice,
+    this.typePrice,
+    this.classPrice,
       ];
 }

@@ -19,6 +19,10 @@ class RestorationModel extends RestorationEntity {
     super.assistantId,
     super.doctor,
     super.doctorId,
+    super.price,
+    super.statusPrice,
+    super.typePrice,
+    super.classPrice,
   });
 
   factory RestorationModel.fromEntity(RestorationEntity entity) {
@@ -35,6 +39,10 @@ class RestorationModel extends RestorationEntity {
       assistantId:entity.assistantId,
       doctor:entity.doctor,
       doctorId:entity.doctorId,
+      price:entity.price,
+      statusPrice:entity.statusPrice,
+      typePrice:entity.typePrice,
+      classPrice:entity.classPrice,
     );
   }
 
@@ -52,6 +60,10 @@ class RestorationModel extends RestorationEntity {
       assistantId:map['assistantId'],
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
+      price:map['price'],
+      statusPrice:map['statusPrice'],
+      typePrice:map['typePrice'],
+      classPrice:map['classPrice'],
     );
   }
 
@@ -67,6 +79,10 @@ class RestorationModel extends RestorationEntity {
     data['done'] = this.done;
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
+    data['price'] = this.price;
+    data['statusPrice'] = this.statusPrice;
+    data['typePrice'] = this.typePrice;
+    data['classPrice'] = this.classPrice;
     return data;
   }
 }

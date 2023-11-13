@@ -849,6 +849,27 @@ class CIA_Router {
                                           ],
                                           child: ClinicTreatmentPage(
                                             patientId: int.parse(state.pathParameters['id'].toString()),
+                                            plan: false,
+
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: ClinicTreatmentPage.routeNamePlan,
+                                    path: ClinicTreatmentPage.routePathPlan,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: ClinicTreatmentPage(
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                            plan: true,
 
                                           ),
                                         ),

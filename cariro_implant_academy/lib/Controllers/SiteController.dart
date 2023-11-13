@@ -172,7 +172,8 @@ class SiteController  {
             path == NonSurgicalTreatmentPage.routeName ||
             path == TreatmentPage.routeName ||
             path == SurgicalTreatmentPage.routeName ||
-            path == ClinicTreatmentPage.routeName
+            path == ClinicTreatmentPage.routeName ||
+            path == ClinicTreatmentPage.routeNamePlan
         )
           setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
         else
@@ -252,7 +253,12 @@ class SiteController  {
           MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": id.toString()})),
           MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.routeName, pathParameters: {"id": id.toString()})),
           MedicalSlidingModel(name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.routeName, pathParameters: {"id": id.toString()})),
-
+          MedicalSlidingModel(
+              name: "Clinic Treatments Plan",
+              onTap: () => context.goNamed(ClinicTreatmentPage.routeNamePlan, pathParameters: {"id": id.toString()}),
+              onSave: () async {
+                //   if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientTreatmentPlan(id, treatmentPlanModel!.treatmentPlan!);
+              }),
           MedicalSlidingModel(
               name: "Clinic Treatments",
               onTap: () => context.goNamed(ClinicTreatmentPage.routeName, pathParameters: {"id": id.toString()}),

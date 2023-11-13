@@ -22,6 +22,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
     super.assistantId,
     super.doctor,
     super.doctorId,
+    super.price,
   });
 
   factory ClinicImplantModel.fromEntity(ClinicImplantEntity entity) {
@@ -43,6 +44,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
       assistantId:entity.assistantId,
       doctor:entity.doctor,
       doctorId:entity.doctorId,
+      price:entity.price,
     );
   }
 
@@ -65,6 +67,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
       assistantId:map['assistantId'],
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
+      price:map['price'],
 
     );
   }
@@ -83,6 +86,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
     data['done'] = this.done;
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
+    data['price'] = this.price;
     return data;
   }
 }

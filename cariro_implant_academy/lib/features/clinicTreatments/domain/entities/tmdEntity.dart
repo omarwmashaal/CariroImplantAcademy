@@ -17,6 +17,7 @@ class TMDEntity extends Equatable {
   int? doctorId;
   BasicNameIdObjectEntity? doctor;
   int? stepNumber;
+  int? price;
 
   @override
   List<Object?> get props => [
@@ -32,6 +33,7 @@ class TMDEntity extends Equatable {
         this.doctor,
         this.doctorId,
         this.stepNumber,
+    this.price,
       ];
 
   TMDEntity({
@@ -47,5 +49,6 @@ class TMDEntity extends Equatable {
     this.doctor,
     this.doctorId,
     this.stepNumber,
+    this.price,
   });
 }

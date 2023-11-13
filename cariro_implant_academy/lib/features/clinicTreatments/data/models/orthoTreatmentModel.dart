@@ -16,6 +16,7 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
     super.assistantId,
     super.doctor,
     super.doctorId,
+    super.price,
 
   });
 
@@ -31,6 +32,7 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
       assistantId:entity.assistantId,
       doctor:entity.doctor,
       doctorId:entity.doctorId,
+      price:entity.price,
     );
   }
 
@@ -46,6 +48,7 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
       assistantId:map['assistantId'],
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
+      price:map['price'],
      );
   }
 
@@ -59,6 +62,7 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
     data['done'] = this.done;
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
+    data['price'] = this.price;
 
     return data;
   }

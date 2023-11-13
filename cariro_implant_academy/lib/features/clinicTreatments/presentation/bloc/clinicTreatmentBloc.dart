@@ -1,3 +1,5 @@
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicImplantEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/orthoTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/pedoEntity.dart';
@@ -14,10 +16,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatmentBloc_States> {
   final GetClinicTreatmentsUseCase getClinicTreatmentsUseCase;
   final UpdateClinicTreatmentsUseCase updateClinicTreatmentsUseCase;
+  final GetTeethClinicPricesUseCase getTeethClinicPricesUseCase;
+
   bool isInitialized = false;
+
   ClinicTreatmentBloc({
     required this.updateClinicTreatmentsUseCase,
     required this.getClinicTreatmentsUseCase,
+    required this.getTeethClinicPricesUseCase,
   }) : super(ClinicTreatmentBloc_InitState()) {
     on<ClinicTreatmentBloc_LoadTreatmentsEvent>(
       (event, emit) async {
@@ -30,6 +36,16 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
       },
     );
 
+    on<ClinicTreatmentBloc_GetPriceEvent>(
+      (event, emit) async {
+        emit(ClinicTreatmentBloc_LoadingPricesState(key: event.key));
+        var result = await getTeethClinicPricesUseCase(event.params);
+        result.fold(
+          (l) => emit(ClinicTreatmentBloc_LoadingPricesErrorState(message: l.message ?? "", key: event.key)),
+          (r) => emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(key: event.key, prices: r)),
+        );
+      },
+    );
     on<ClinicTreatmentBloc_UpdateTreatmentsEvent>(
       (event, emit) async {
         emit(ClinicTreatmentBloc_UpdatingTreatmentsState());
@@ -130,7 +146,6 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
                       }
                     case 8:
                       {
-
                         event.data.rootCanalTreatments = [
                           ...event.data.rootCanalTreatments!,
                           RootCanalTreatmentEntity(patientId: event.data.patientId, tooth: tooth, canalNumber: 1),
@@ -234,6 +249,19 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
             }
         }
         emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: event.data));
+      },
+    );
+    on<ClinicTreatmentBloc_CalculateTotalPriceEvent>(
+      (event, emit) {
+        var price = 0;
+        for (var rest in event.params.restorations!) price += rest.price ?? 0;
+        for (var rest in event.params.clinicImplants!) price += rest.price ?? 0;
+        for (var rest in event.params.orthoTreatments!) price += rest.price ?? 0;
+        for (var rest in event.params.tmds!) price += rest.price ?? 0;
+        for (var rest in event.params.pedos!) price += rest.price ?? 0;
+        for (var rest in event.params.rootCanalTreatments!) price += rest.price ?? 0;
+        for (var rest in event.params.scalings!) price += rest.price ?? 0;
+        emit(ClinicTreatmentBloc_TotalPriceChangedState(price: price));
       },
     );
   }

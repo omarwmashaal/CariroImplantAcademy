@@ -29,12 +29,12 @@ class _MedicalSlidingBarState extends State<MedicalSlidingBar> {
         if (e.isSelected)
           return Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: CIA_PrimaryButton(label: e.name, height: 50,width: 100, onTab: () {}),
+            child: CIA_PrimaryButton(label: e.name.replaceAll("Clinic", ""), height: 50,width: 100, onTab: () {}),
           );
         return Padding(
           padding: const EdgeInsets.only(right: 10),
           child: CIA_SecondaryButton(
-              label: e.name,
+              label: e.name.replaceAll("Clinic", ""),
               height: 50,
               width: 100,
               onTab: () async {

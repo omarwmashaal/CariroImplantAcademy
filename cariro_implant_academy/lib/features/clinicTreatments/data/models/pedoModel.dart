@@ -19,6 +19,9 @@ class PedoModel extends PedoEntity {
     super.assistantId,
     super.doctor,
     super.doctorId,
+    super.price,
+    super.secondStepPrice,
+    super.firstStepPrice,
   });
 
   factory PedoModel.fromEntity(PedoEntity entity) {
@@ -36,6 +39,9 @@ class PedoModel extends PedoEntity {
       assistantId:entity.assistantId,
       doctor:entity.doctor,
       doctorId:entity.doctorId,
+      price:entity.price,
+      firstStepPrice:entity.firstStepPrice,
+      secondStepPrice:entity.secondStepPrice,
     );
   }
 
@@ -45,7 +51,7 @@ class PedoModel extends PedoEntity {
       patientId: map['patientId'],
       tooth: map['tooth'],
       notes: map['notes'],
-      toothPedo: map['toothPedo'] == null ? null : EnumClinicPedoTooth.values[map['toothPedo']],
+      toothPedo: map['toothPedo'] == null ? null : EnumClinicPedoTooth.values.firstWhere((element) => element.value==map['toothPedo']),
       secondStep: map['secondStep'] == null ? null : EnumClinicPedoSecondStep.values[map['secondStep']],
       firstStep: map['firstStep'] == null ? null : EnumClinicPedoFirstStep.values[map['firstStep']],
 
@@ -55,6 +61,9 @@ class PedoModel extends PedoEntity {
       assistantId:map['assistantId'],
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
+      price:map['price'],
+      firstStepPrice:map['firstStepPrice'],
+      secondStepPrice:map['secondStepPrice'],
     );
   }
 
@@ -71,6 +80,9 @@ class PedoModel extends PedoEntity {
     data['done'] = this.done;
     data['assistantId'] = this.assistantId;
     data['doctorId'] = this.doctorId;
+    data['price'] = this.price;
+    data['secondStepPrice'] = this.secondStepPrice;
+    data['firstStepPrice'] = this.firstStepPrice;
     return data;
   }
 }
