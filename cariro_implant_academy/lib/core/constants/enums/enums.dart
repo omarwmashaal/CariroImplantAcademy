@@ -162,9 +162,9 @@ enum EnumClinicPedoTooth {
   final int value;
 }
 
-enum EnumClinicPedoFirstStep { Pulpotomy, Pulpectomy }
+enum EnumClinicPedoFirstStep { NotSelected,Pulpotomy, Pulpectomy }
 
-enum EnumClinicPedoSecondStep { CastStanlessSteelZirconia, FinalRestoration, TempFilling }
+enum EnumClinicPedoSecondStep {NotSelected, CastStanlessSteelZirconia, FinalRestoration, TempFilling }
 
 enum EnumClinicRootCanalTreatmentType {
   NotSelected,

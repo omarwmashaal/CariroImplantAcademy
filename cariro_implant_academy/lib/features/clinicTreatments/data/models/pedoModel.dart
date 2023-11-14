@@ -12,7 +12,6 @@ class PedoModel extends PedoEntity {
     super.notes,
     super.firstStep,
     super.secondStep,
-    super.toothPedo,
     super.date,
     super.done,
     super.assistant,
@@ -32,7 +31,6 @@ class PedoModel extends PedoEntity {
       notes: entity.notes,
       firstStep: entity.firstStep,
       secondStep: entity.secondStep,
-      toothPedo: entity.toothPedo,
       date:entity.date,
       done:entity.done,
       assistant:entity.assistant,
@@ -51,7 +49,6 @@ class PedoModel extends PedoEntity {
       patientId: map['patientId'],
       tooth: map['tooth'],
       notes: map['notes'],
-      toothPedo: map['toothPedo'] == null ? null : EnumClinicPedoTooth.values.firstWhere((element) => element.value==map['toothPedo']),
       secondStep: map['secondStep'] == null ? null : EnumClinicPedoSecondStep.values[map['secondStep']],
       firstStep: map['firstStep'] == null ? null : EnumClinicPedoFirstStep.values[map['firstStep']],
 
@@ -73,7 +70,6 @@ class PedoModel extends PedoEntity {
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     data['notes'] = this.notes;
-    data['toothPedo'] = this.toothPedo?.value;
     data['secondStep'] = this.secondStep?.index;
     data['firstStep'] = this.firstStep?.index;
     data['date'] = this.date?.toUtc().toIso8601String();

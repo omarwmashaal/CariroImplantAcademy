@@ -63,7 +63,6 @@ class ClinicTreatmentPage extends StatefulWidget {
 class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
   late ClinicTreatmentBloc bloc;
   List<int> selectedTeeth = [];
-  List<EnumClinicPedoTooth> selectedPedoTeeth = [];
   SelectedTreatmentEnum? selectedTreatment;
   EnumClinicImplantTypes? selectedImplantType;
   List<ExpansionTileController> expansionControllers = [];
@@ -118,38 +117,24 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CIA_SecondaryButton(
-                      label: "Show ${prices ? "Treatments" : "Prices"}",
-                      onTab: () => prices ? bloc.emit(ClinicTreatmentBloc_ShowTreatmentstate()) : bloc.emit(ClinicTreatmentBloc_ShowPricesState()))
+                    label: "Show ${prices ? "Treatments" : "Prices"}",
+                    onTab: () => CIA_ShowPopUp(
+                      context: context,
+                      height: 500,
+                      width: 1000,
+                      child: ClinicTreatmentPricesWidget(clinicTreatmentEntity: clinicTreatmentEntity),
+                    ),
+                  )
                 ],
               ),
-              state is ClinicTreatmentBloc_ShowPricesState
-                  ? BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                  bloc: medicalShellBloc,
-                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                  builder: (context, stateShell) {
-                    return Expanded(
-                      child: AbsorbPointer(
-                        absorbing: () {
-                          if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                            edit = stateShell.edit;
-                            return !edit;
-                          } else {
-                            edit = false;
-                            return true;
-                          }
-                        }(),
-                        child: ClinicTreatmentPricesWidget(clinicTreatmentEntity: clinicTreatmentEntity),
-                      ),
-                    );
-                  })
-                  : Expanded(
+              Expanded(
                 child: BlocConsumer<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
                   listener: (context, state) {
                     print("Current State $state");
                     if (state is ClinicTreatmentBloc_SelectedTeethState) selectedTeeth = state.teeth;
                   },
                   buildWhen: (previous, current) =>
-                  current is ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState ||
+                      current is ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState ||
                       current is ClinicTreatmentBloc_LoadingTreatmentsState ||
                       current is ClinicTreatmentBloc_LoadingTreatmentsErrorState,
                   builder: (context, state) {
@@ -161,7 +146,6 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                       clinicTreatmentEntity = state.data;
                       bloc.isInitialized = true;
                       selectedTeeth.clear();
-                      selectedPedoTeeth.clear();
                       selectedTreatment = null;
                       selectedImplantType = null;
 
@@ -180,7 +164,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                     bloc.emit(
                                       ClinicTreatmentBloc_SelectedTreatmentState(
                                         selectedTreatment: SelectedTreatmentEnum.values.firstWhereOrNull(
-                                              (element) => element.name.toLowerCase().removeAllWhitespace == item.removeAllWhitespace.toLowerCase(),
+                                          (element) => element.name.toLowerCase().removeAllWhitespace == item.removeAllWhitespace.toLowerCase(),
                                         ),
                                       ),
                                     );
@@ -232,14 +216,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                 return selectedTreatment == null
                                     ? Container()
                                     : Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: CIA_TeethChart(
-                                    onChange: (selectedTeethList) {
-                                      selectedTeeth = selectedTeethList;
-                                      bloc.emit(ClinicTreatmentBloc_SelectedTeethState(teeth: selectedTeeth));
-                                    },
-                                  ),
-                                );
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: CIA_TeethChart(
+                                          onChange: (selectedTeethList) {
+                                            selectedTeeth.removeWhere((element) => element < 50);
+                                            selectedTeeth.addAll(selectedTeethList);
+
+                                            bloc.emit(ClinicTreatmentBloc_SelectedTeethState(teeth: selectedTeeth));
+                                          },
+                                        ),
+                                      );
                               },
                             ),
                           ),
@@ -326,8 +312,9 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                     padding: const EdgeInsets.only(bottom: 10),
                                     child: CIA_TeethPedoChart(
                                       onChange: (selectedTeethList) {
-                                        selectedPedoTeeth = selectedTeethList;
-                                        bloc.emit(ClinicTreatmentBloc_SelectedPedoTeethState(teeth: selectedPedoTeeth));
+                                        selectedTeeth.removeWhere((element) => element > 50);
+                                        selectedTeeth.addAll(selectedTeethList.map((e) => e.value));
+                                        bloc.emit(ClinicTreatmentBloc_SelectedPedoTeethState(teeth: selectedTeeth));
                                       },
                                     ),
                                   ),
@@ -354,51 +341,49 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                     child: !edit
                                         ? Text("Please enable edit mode to modify")
                                         : BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                      buildWhen: (previous, current) =>
-                                      current is ClinicTreatmentBloc_SelectedPedoTeethState ||
-                                          current is ClinicTreatmentBloc_SelectedTeethState ||
-                                          current is ClinicTreatmentBloc_SelectedImplantTypeState,
-                                      builder: (context, state) {
-                                        return Visibility(
-                                            visible: (state is ClinicTreatmentBloc_SelectedPedoTeethState &&
-                                                (state.teeth.isNotEmpty || selectedTeeth.isNotEmpty)) ||
-                                                state is ClinicTreatmentBloc_SelectedImplantTypeState ||
-                                                (state is ClinicTreatmentBloc_SelectedTeethState &&
-                                                    (state.teeth.isNotEmpty || selectedPedoTeeth.isNotEmpty) &&
-                                                    selectedTreatment != SelectedTreatmentEnum.implants),
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(bottom: 10),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        bloc.add(ClinicTreatmentBloc_BuildPageEvent(
-                                                            data: clinicTreatmentEntity,
-                                                            selectedTeeth: selectedTeeth,
-                                                            selectedTreatmentEnum: selectedTreatment!,
-                                                            selectedPedoTeeth: selectedPedoTeeth,
-                                                            implantType: selectedImplantType));
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.check,
-                                                        color: Colors.green,
-                                                      )),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                          data: clinicTreatmentEntity,
-                                                        ));
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.remove,
-                                                        color: Colors.red,
-                                                      )),
-                                                ],
-                                              ),
-                                            ));
-                                      },
-                                    ),
+                                            buildWhen: (previous, current) =>
+                                                current is ClinicTreatmentBloc_SelectedPedoTeethState ||
+                                                current is ClinicTreatmentBloc_SelectedTeethState ||
+                                                current is ClinicTreatmentBloc_SelectedImplantTypeState,
+                                            builder: (context, state) {
+                                              return Visibility(
+                                                  visible: (state is ClinicTreatmentBloc_SelectedTeethState &&
+                                                          (state.teeth.isNotEmpty || selectedTeeth.isNotEmpty)) ||
+                                                      (state is ClinicTreatmentBloc_SelectedPedoTeethState &&
+                                                          (state.teeth.isNotEmpty || selectedTeeth.isNotEmpty)) ||
+                                                      state is ClinicTreatmentBloc_SelectedImplantTypeState,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(bottom: 10),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              bloc.add(ClinicTreatmentBloc_BuildPageEvent(
+                                                                  data: clinicTreatmentEntity,
+                                                                  selectedTeeth: selectedTeeth,
+                                                                  selectedTreatmentEnum: selectedTreatment!,
+                                                                  implantType: selectedImplantType));
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.check,
+                                                              color: Colors.green,
+                                                            )),
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                data: clinicTreatmentEntity,
+                                                              ));
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.remove,
+                                                              color: Colors.red,
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ));
+                                            },
+                                          ),
                                   ),
                                 );
                               }),
@@ -418,154 +403,150 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                               maintainState: true,
                               children: clinicTreatmentEntity.restorations!
                                   .map((e) => BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                  bloc: medicalShellBloc,
-                                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                  builder: (context, stateShell) {
-                                    return AbsorbPointer(
-                                      absorbing: () {
-                                        if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                          edit = stateShell.edit;
-                                          return !edit;
-                                        } else {
-                                          edit = false;
-                                          return true;
-                                        }
-                                      }(),
-                                      child: Container(
-                                        height: 100,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            FormTextKeyWidget(text: "Tooth: ${e.tooth!}"),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Flexible(
-                                              child: Column(
-                                                children: [
-                                                  Row(
+                                      bloc: medicalShellBloc,
+                                      buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                      builder: (context, stateShell) {
+                                        return AbsorbPointer(
+                                          absorbing: () {
+                                            if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                              edit = stateShell.edit;
+                                              return !edit;
+                                            } else {
+                                              edit = false;
+                                              return true;
+                                            }
+                                          }(),
+                                          child: Container(
+                                            height: 100,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                FormTextKeyWidget(text: "Tooth: ${e.tooth!}"),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Flexible(
+                                                  child: Column(
                                                     children: [
-                                                      AbsorbPointer(
-                                                        absorbing: widget.plan,
-                                                        child: RoundCheckBox(
-                                                            isChecked: e.done,
-                                                            onTap: (value) {
-                                                              if (value != true) {
-                                                                e.done = false;
-                                                                e.assistantId = null;
-                                                                e.assistant = null;
-                                                                e.doctor = null;
-                                                                e.doctorId = null;
-                                                                e.date = null;
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                    data: clinicTreatmentEntity));
-                                                              } else
-                                                                CIA_ShowPopUp(
-                                                                  context: context,
-                                                                  onSave: () {
-                                                                    e.date = DateTime.now();
-                                                                    e.done = value;
-                                                                    e.assistantId = siteController.getUserId();
-                                                                    e.assistant = BasicNameIdObjectEntity(
-                                                                        name: siteController.getUserName(), id: siteController.getUserId());
+                                                      Row(
+                                                        children: [
+                                                          AbsorbPointer(
+                                                            absorbing: widget.plan,
+                                                            child: RoundCheckBox(
+                                                                isChecked: e.done,
+                                                                onTap: (value) {
+                                                                  if (value != true) {
+                                                                    e.done = false;
+                                                                    e.assistantId = null;
+                                                                    e.assistant = null;
+                                                                    e.doctor = null;
+                                                                    e.doctorId = null;
+                                                                    e.date = null;
+                                                                    bloc.emit(
+                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                  } else
+                                                                    CIA_ShowPopUp(
+                                                                      context: context,
+                                                                      onSave: () {
+                                                                        e.date = DateTime.now();
+                                                                        e.done = value;
+                                                                        e.assistantId = siteController.getUserId();
+                                                                        e.assistant = BasicNameIdObjectEntity(
+                                                                            name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                    bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                        data: clinicTreatmentEntity));
-                                                                  },
-                                                                  child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                                    asyncUseCase: sl<LoadUsersUseCase>(),
-                                                                    searchParams: LoadUsersEnum.supervisors,
-                                                                    onSelect: (value) {
-                                                                      e.doctorId = value.id;
-                                                                      e.doctor = value;
-                                                                    },
-                                                                  ),
-                                                                );
-                                                            }),
+                                                                        bloc.emit(
+                                                                            ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      },
+                                                                      child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                        asyncUseCase: sl<LoadUsersUseCase>(),
+                                                                        searchParams: LoadUsersEnum.supervisors,
+                                                                        onSelect: (value) {
+                                                                          e.doctorId = value.id;
+                                                                          e.doctor = value;
+                                                                        },
+                                                                      ),
+                                                                    );
+                                                                }),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                clinicTreatmentEntity.restorations!.remove(e);
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              },
+                                                              icon: Icon(
+                                                                Icons.delete,
+                                                                color: Colors.red,
+                                                              )),
+                                                          SizedBox(width: 10),
+                                                          Expanded(
+                                                            child: CIA_DropDownSearchBasicIdName(
+                                                              label: "Status",
+                                                              selectedItem: () {
+                                                                var t = e.status == null ? null : BasicNameIdObjectEntity(name: e.status!.name);
+                                                                return t;
+                                                              }(),
+                                                              items:
+                                                                  EnumClinicRestorationStatus.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
+                                                              onSelect: (v) {
+                                                                e.status = EnumClinicRestorationStatus.values.firstWhere((element) => element.name == v.name);
+                                                              },
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Expanded(
+                                                            child: CIA_DropDownSearch(
+                                                              label: "Type",
+                                                              selectedItem: e.type == null ? null : DropDownDTO(name: e.type!.name),
+                                                              items: EnumClinicRestorationType.values.map((e) => DropDownDTO(name: e.name)).toList(),
+                                                              onSelect: (v) {
+                                                                e.type = EnumClinicRestorationType.values.firstWhere((element) => element.name == v.name);
+                                                              },
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Expanded(
+                                                            child: CIA_DropDownSearch(
+                                                              label: "Class",
+                                                              selectedItem: e.restorationClass == null ? null : DropDownDTO(name: e.restorationClass!.name),
+                                                              items: EnumClinicRestorationClass.values.map((e) => DropDownDTO(name: e.name)).toList(),
+                                                              onSelect: (v) {
+                                                                e.restorationClass =
+                                                                    EnumClinicRestorationClass.values.firstWhere((element) => element.name == v.name);
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      SizedBox(width: 10),
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            clinicTreatmentEntity.restorations!.remove(e);
-                                                            bloc.emit(
-                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
-                                                          },
-                                                          icon: Icon(
-                                                            Icons.delete,
-                                                            color: Colors.red,
-                                                          )),
-                                                      SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: CIA_DropDownSearchBasicIdName(
-                                                          label: "Status",
-                                                          selectedItem: () {
-                                                            var t = e.status == null ? null : BasicNameIdObjectEntity(name: e.status!.name);
-                                                            return t;
-                                                          }(),
-                                                          items: EnumClinicRestorationStatus.values
-                                                              .map((e) => BasicNameIdObjectEntity(name: e.name))
-                                                              .toList(),
-                                                          onSelect: (v) {
-                                                            e.status =
-                                                                EnumClinicRestorationStatus.values.firstWhere((element) => element.name == v.name);
-                                                          },
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: CIA_DropDownSearch(
-                                                          label: "Type",
-                                                          selectedItem: e.type == null ? null : DropDownDTO(name: e.type!.name),
-                                                          items: EnumClinicRestorationType.values.map((e) => DropDownDTO(name: e.name)).toList(),
-                                                          onSelect: (v) {
-                                                            e.type = EnumClinicRestorationType.values.firstWhere((element) => element.name == v.name);
-                                                          },
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Expanded(
-                                                        child: CIA_DropDownSearch(
-                                                          label: "Class",
-                                                          selectedItem:
-                                                          e.restorationClass == null ? null : DropDownDTO(name: e.restorationClass!.name),
-                                                          items: EnumClinicRestorationClass.values.map((e) => DropDownDTO(name: e.name)).toList(),
-                                                          onSelect: (v) {
-                                                            e.restorationClass =
-                                                                EnumClinicRestorationClass.values.firstWhere((element) => element.name == v.name);
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                          child: FormTextKeyWidget(
+                                                      Row(
+                                                        children: [
+                                                          Expanded(
+                                                              child: FormTextKeyWidget(
                                                             text: "Assistant: ",
                                                             secondaryInfo: true,
                                                           )),
-                                                      Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
-                                                      Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
-                                                      Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
-                                                      Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
-                                                      Expanded(
-                                                          child: FormTextValueWidget(
-                                                              text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                              secondaryInfo: true)),
+                                                          Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                          Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
+                                                          Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
+                                                          Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
+                                                          Expanded(
+                                                              child: FormTextValueWidget(
+                                                                  text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                                  secondaryInfo: true)),
+                                                        ],
+                                                      )
                                                     ],
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }))
+                                          ),
+                                        );
+                                      }))
                                   .toList(),
                             ),
                           ),
@@ -586,168 +567,168 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                               children: clinicTreatmentEntity.clinicImplants!
                                   .map(
                                     (e) => BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                    bloc: medicalShellBloc,
-                                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                    builder: (context, stateShell) {
-                                      return AbsorbPointer(
-                                          absorbing: () {
-                                            if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                              edit = stateShell.edit;
-                                              return !edit;
-                                            } else {
-                                              edit = false;
-                                              return true;
-                                            }
-                                          }(),
-                                          child: Container(
-                                            height: 100,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextKeyWidget(text: "Tooth: ${e.tooth!} || ${e.type!.name} Implant"),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                StatefulBuilder(builder: (context, _setState) {
-                                                  return Flexible(
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
+                                        bloc: medicalShellBloc,
+                                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                        builder: (context, stateShell) {
+                                          return AbsorbPointer(
+                                              absorbing: () {
+                                                if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                                  edit = stateShell.edit;
+                                                  return !edit;
+                                                } else {
+                                                  edit = false;
+                                                  return true;
+                                                }
+                                              }(),
+                                              child: Container(
+                                                height: 100,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    FormTextKeyWidget(text: "Tooth: ${e.tooth!} || ${e.type!.name} Implant"),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    StatefulBuilder(builder: (context, _setState) {
+                                                      return Flexible(
+                                                        child: Column(
                                                           children: [
-                                                            AbsorbPointer(
-                                                              absorbing: widget.plan,
-                                                              child: RoundCheckBox(
-                                                                isChecked: e.done,
-                                                                onTap: (value) {
-                                                                  if (value != true) {
-                                                                    e.done = false;
-                                                                    e.assistantId = null;
-                                                                    e.assistant = null;
-                                                                    e.doctor = null;
-                                                                    e.doctorId = null;
-                                                                    e.date = null;
-                                                                    bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                        data: clinicTreatmentEntity));
-                                                                  } else
-                                                                    CIA_ShowPopUp(
-                                                                      context: context,
-                                                                      onSave: () {
-                                                                        e.date = DateTime.now();
-                                                                        e.done = value;
-                                                                        e.assistantId = siteController.getUserId();
-                                                                        e.assistant = BasicNameIdObjectEntity(
-                                                                            name: siteController.getUserName(), id: siteController.getUserId());
+                                                            Row(
+                                                              children: [
+                                                                AbsorbPointer(
+                                                                  absorbing: widget.plan,
+                                                                  child: RoundCheckBox(
+                                                                    isChecked: e.done,
+                                                                    onTap: (value) {
+                                                                      if (value != true) {
+                                                                        e.done = false;
+                                                                        e.assistantId = null;
+                                                                        e.assistant = null;
+                                                                        e.doctor = null;
+                                                                        e.doctorId = null;
+                                                                        e.date = null;
+                                                                        bloc.emit(
+                                                                            ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      } else
+                                                                        CIA_ShowPopUp(
+                                                                          context: context,
+                                                                          onSave: () {
+                                                                            e.date = DateTime.now();
+                                                                            e.done = value;
+                                                                            e.assistantId = siteController.getUserId();
+                                                                            e.assistant = BasicNameIdObjectEntity(
+                                                                                name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                        bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                            data: clinicTreatmentEntity));
-                                                                      },
-                                                                      child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                                        asyncUseCase: sl<LoadUsersUseCase>(),
-                                                                        searchParams: LoadUsersEnum.supervisors,
-                                                                        onSelect: (value) {
-                                                                          e.doctorId = value.id;
-                                                                          e.doctor = value;
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                },
-                                                              ),
+                                                                            bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                                data: clinicTreatmentEntity));
+                                                                          },
+                                                                          child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                            asyncUseCase: sl<LoadUsersUseCase>(),
+                                                                            searchParams: LoadUsersEnum.supervisors,
+                                                                            onSelect: (value) {
+                                                                              e.doctorId = value.id;
+                                                                              e.doctor = value;
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                SizedBox(width: 10),
+                                                                IconButton(
+                                                                    onPressed: () {
+                                                                      clinicTreatmentEntity.clinicImplants!.remove(e);
+                                                                      bloc.emit(
+                                                                          ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons.delete,
+                                                                      color: Colors.red,
+                                                                    )),
+                                                                SizedBox(width: 10),
+                                                                Expanded(
+                                                                  child: CIA_TextFormField(
+                                                                    controller: TextEditingController(text: e.notes ?? ""),
+                                                                    label: "Notes",
+                                                                    onChange: (value) => e.notes = value,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Expanded(
+                                                                  child: CIA_DropDownSearchBasicIdName(
+                                                                    asyncUseCase: sl<GetImplantCompaniesUseCase>(),
+                                                                    label: "Implant Companies",
+                                                                    selectedItem: e.implantCompany_,
+                                                                    onSelect: (v) {
+                                                                      e.implantCompany_ = v;
+                                                                      e.implantCompanyId = v.id;
+                                                                      _setState(() {});
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Expanded(
+                                                                  child: CIA_DropDownSearchBasicIdName<int>(
+                                                                    asyncUseCase: e.implantCompanyId == null ? null : sl<GetImplantLinesUseCase>(),
+                                                                    searchParams: e.implantCompanyId,
+                                                                    emptyString: "Please choose Implant Company First",
+                                                                    label: "Implant Lines",
+                                                                    selectedItem: e.implantLine_,
+                                                                    onSelect: (v) {
+                                                                      e.implantLine_ = v;
+                                                                      e.implantLineId = v.id;
+                                                                      _setState(() {});
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Expanded(
+                                                                  child: CIA_DropDownSearchBasicIdName<int>(
+                                                                    asyncUseCase: e.implantLineId == null ? null : sl<GetImplantSizesUseCase>(),
+                                                                    searchParams: e.implantLineId,
+                                                                    emptyString: "Please choose Implant Line First",
+                                                                    label: "Implant Sizes",
+                                                                    selectedItem: e.implant_,
+                                                                    onSelect: (v) {
+                                                                      e.implant_ = ImplantEntity(id: v.id, name: v.name);
+                                                                      e.implantId = v.id;
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                            SizedBox(width: 10),
-                                                            IconButton(
-                                                                onPressed: () {
-                                                                  clinicTreatmentEntity.clinicImplants!.remove(e);
-                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                      data: clinicTreatmentEntity));
-                                                                },
-                                                                icon: Icon(
-                                                                  Icons.delete,
-                                                                  color: Colors.red,
-                                                                )),
-                                                            SizedBox(width: 10),
-                                                            Expanded(
-                                                              child: CIA_TextFormField(
-                                                                controller: TextEditingController(text: e.notes ?? ""),
-                                                                label: "Notes",
-                                                                onChange: (value) => e.notes = value,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Expanded(
-                                                              child: CIA_DropDownSearchBasicIdName(
-                                                                asyncUseCase: sl<GetImplantCompaniesUseCase>(),
-                                                                label: "Implant Companies",
-                                                                selectedItem: e.implantCompany_,
-                                                                onSelect: (v) {
-                                                                  e.implantCompany_ = v;
-                                                                  e.implantCompanyId = v.id;
-                                                                  _setState(() {});
-                                                                },
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Expanded(
-                                                              child: CIA_DropDownSearchBasicIdName<int>(
-                                                                asyncUseCase: e.implantCompanyId == null ? null : sl<GetImplantLinesUseCase>(),
-                                                                searchParams: e.implantCompanyId,
-                                                                emptyString: "Please choose Implant Company First",
-                                                                label: "Implant Lines",
-                                                                selectedItem: e.implantLine_,
-                                                                onSelect: (v) {
-                                                                  e.implantLine_ = v;
-                                                                  e.implantLineId = v.id;
-                                                                  _setState(() {});
-                                                                },
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Expanded(
-                                                              child: CIA_DropDownSearchBasicIdName<int>(
-                                                                asyncUseCase: e.implantLineId == null ? null : sl<GetImplantSizesUseCase>(),
-                                                                searchParams: e.implantLineId,
-                                                                emptyString: "Please choose Implant Line First",
-                                                                label: "Implant Sizes",
-                                                                selectedItem: e.implant_,
-                                                                onSelect: (v) {
-                                                                  e.implant_ = ImplantEntity(id: v.id, name: v.name);
-                                                                  e.implantId = v.id;
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                                child: FormTextKeyWidget(
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                    child: FormTextKeyWidget(
                                                                   text: "Assistant: ",
                                                                   secondaryInfo: true,
                                                                 )),
-                                                            Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
-                                                            Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
-                                                            Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
-                                                            Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
-                                                            Expanded(
-                                                                child: FormTextValueWidget(
-                                                                    text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                                    secondaryInfo: true)),
+                                                                Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                                Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
+                                                                Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
+                                                                Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
+                                                                Expanded(
+                                                                    child: FormTextValueWidget(
+                                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                                        secondaryInfo: true)),
+                                                              ],
+                                                            )
                                                           ],
-                                                        )
-                                                      ],
-                                                    ),
-                                                  );
-                                                }),
-                                              ],
-                                            ),
-                                          ));
-                                    }),
-                              )
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ],
+                                                ),
+                                              ));
+                                        }),
+                                  )
                                   .toList(),
                             ),
                           ),
@@ -768,109 +749,107 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                               children: clinicTreatmentEntity.orthoTreatments!
                                   .map(
                                     (e) => BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                    bloc: medicalShellBloc,
-                                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                    builder: (context, stateShell) {
-                                      return AbsorbPointer(
-                                          absorbing: () {
-                                            if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                              edit = stateShell.edit;
-                                              return !edit;
-                                            } else {
-                                              edit = false;
-                                              return true;
-                                            }
-                                          }(),
-                                          child: Container(
-                                            height: 110,
-                                            child: Column(
-                                              children: [
-                                                Row(
+                                        bloc: medicalShellBloc,
+                                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                        builder: (context, stateShell) {
+                                          return AbsorbPointer(
+                                              absorbing: () {
+                                                if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                                  edit = stateShell.edit;
+                                                  return !edit;
+                                                } else {
+                                                  edit = false;
+                                                  return true;
+                                                }
+                                              }(),
+                                              child: Container(
+                                                height: 110,
+                                                child: Column(
                                                   children: [
-                                                    FormTextValueWidget(text: "Tooth: ${e.tooth ?? ""}"),
-                                                    SizedBox(width: 10),
-                                                    AbsorbPointer(
-                                                      absorbing: widget.plan,
-                                                      child: RoundCheckBox(
-                                                        isChecked: e.done,
-                                                        onTap: (value) {
-                                                          if (value != true) {
-                                                            e.done = false;
-                                                            e.assistantId = null;
-                                                            e.assistant = null;
-                                                            e.doctor = null;
-                                                            e.doctorId = null;
-                                                            e.date = null;
-                                                            bloc.emit(
-                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
-                                                          } else
-                                                            CIA_ShowPopUp(
-                                                              context: context,
-                                                              onSave: () {
-                                                                e.date = DateTime.now();
-                                                                e.done = value;
-                                                                e.assistantId = siteController.getUserId();
-                                                                e.assistant = BasicNameIdObjectEntity(
-                                                                    name: siteController.getUserName(), id: siteController.getUserId());
+                                                    Row(
+                                                      children: [
+                                                        FormTextValueWidget(text: "Tooth: ${e.tooth ?? ""}"),
+                                                        SizedBox(width: 10),
+                                                        AbsorbPointer(
+                                                          absorbing: widget.plan,
+                                                          child: RoundCheckBox(
+                                                            isChecked: e.done,
+                                                            onTap: (value) {
+                                                              if (value != true) {
+                                                                e.done = false;
+                                                                e.assistantId = null;
+                                                                e.assistant = null;
+                                                                e.doctor = null;
+                                                                e.doctorId = null;
+                                                                e.date = null;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              } else
+                                                                CIA_ShowPopUp(
+                                                                  context: context,
+                                                                  onSave: () {
+                                                                    e.date = DateTime.now();
+                                                                    e.done = value;
+                                                                    e.assistantId = siteController.getUserId();
+                                                                    e.assistant = BasicNameIdObjectEntity(
+                                                                        name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                    data: clinicTreatmentEntity));
-                                                              },
-                                                              child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                                asyncUseCase: sl<LoadUsersUseCase>(),
-                                                                searchParams: LoadUsersEnum.supervisors,
-                                                                onSelect: (value) {
-                                                                  e.doctorId = value.id;
-                                                                  e.doctor = value;
-                                                                },
-                                                              ),
-                                                            );
-                                                        },
-                                                      ),
+                                                                    bloc.emit(
+                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                  },
+                                                                  child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                    asyncUseCase: sl<LoadUsersUseCase>(),
+                                                                    searchParams: LoadUsersEnum.supervisors,
+                                                                    onSelect: (value) {
+                                                                      e.doctorId = value.id;
+                                                                      e.doctor = value;
+                                                                    },
+                                                                  ),
+                                                                );
+                                                            },
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              clinicTreatmentEntity.orthoTreatments!.remove(e);
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: Colors.red,
+                                                            )),
+                                                        SizedBox(width: 10),
+                                                        Expanded(
+                                                          child: CIA_TextFormField(
+                                                            controller: TextEditingController(text: e.notes ?? ""),
+                                                            label: "Notes",
+                                                            onChange: (value) => e.notes = value,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    SizedBox(width: 10),
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          clinicTreatmentEntity.orthoTreatments!.remove(e);
-                                                          bloc.emit(
-                                                              ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                        )),
-                                                    SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: CIA_TextFormField(
-                                                        controller: TextEditingController(text: e.notes ?? ""),
-                                                        label: "Notes",
-                                                        onChange: (value) => e.notes = value,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                        child: FormTextKeyWidget(
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                            child: FormTextKeyWidget(
                                                           text: "Assistant: ",
                                                           secondaryInfo: true,
                                                         )),
-                                                    Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
-                                                    Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
-                                                    Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
-                                                    Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
-                                                    Expanded(
-                                                        child: FormTextValueWidget(
-                                                            text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                            secondaryInfo: true)),
+                                                        Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                        Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
+                                                        Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
+                                                        Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
+                                                        Expanded(
+                                                            child: FormTextValueWidget(
+                                                                text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                                secondaryInfo: true)),
+                                                      ],
+                                                    )
                                                   ],
-                                                )
-                                              ],
-                                            ),
-                                          ));
-                                    }),
-                              )
+                                                ),
+                                              ));
+                                        }),
+                                  )
                                   .toList(),
                             ),
                           ),
@@ -925,11 +904,10 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.date = DateTime.now();
                                                                 step.done = value;
                                                                 step.assistantId = siteController.getUserId();
-                                                                step.assistant = BasicNameIdObjectEntity(
-                                                                    name: siteController.getUserName(), id: siteController.getUserId());
+                                                                step.assistant =
+                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
@@ -951,10 +929,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               onPressed: () {
                                                                 step.stepNumber = step.stepNumber! - 1;
                                                                 (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! +
-                                                                        1;
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! + 1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -965,10 +941,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 onPressed: () {
                                                                   step.stepNumber = step.stepNumber! + 1;
                                                                   (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! -
-                                                                          1;
-                                                                  bloc.emit(
-                                                                      ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! - 1;
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -976,12 +950,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int stepNumber = step.stepNumber!;
                                                               clinicTreatmentEntity.tmds!.remove(step);
-                                                              for (var s in steps
-                                                                  .where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
+                                                              for (var s
+                                                                  in steps.where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
                                                                 s.stepNumber = (s.stepNumber!) - 1;
                                                               }
-                                                              bloc.emit(
-                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1015,17 +988,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                             children: [
                                               Expanded(
                                                   child: FormTextKeyWidget(
-                                                    text: "Assistant: ",
-                                                    secondaryInfo: true,
-                                                  )),
+                                                text: "Assistant: ",
+                                                secondaryInfo: true,
+                                              )),
                                               Expanded(child: FormTextValueWidget(text: step.assistant?.name ?? "", secondaryInfo: true)),
                                               Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
                                               Expanded(child: FormTextValueWidget(text: step.doctor?.name ?? "", secondaryInfo: true)),
                                               Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!),
-                                                      secondaryInfo: true)),
+                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!), secondaryInfo: true)),
                                             ],
                                           )
                                         ],
@@ -1069,7 +1041,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                         onTab: () {
                                                                           if (clinicTreatmentEntity.tmds!
                                                                               .where((element) =>
-                                                                          element.tooth == tooth && element.type == EnumClinicTMDtypes.Diagnosis)
+                                                                                  element.tooth == tooth && element.type == EnumClinicTMDtypes.Diagnosis)
                                                                               .isNotEmpty) {
                                                                             dialogHelper.dismissSingle(context);
                                                                             ShowSnackBar(context,
@@ -1255,150 +1227,149 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                               children: clinicTreatmentEntity.pedos!
                                   .map(
                                     (e) => BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                                    bloc: medicalShellBloc,
-                                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                                    builder: (context, stateShell) {
-                                      return AbsorbPointer(
-                                          absorbing: () {
-                                            if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                                              edit = stateShell.edit;
-                                              return !edit;
-                                            } else {
-                                              edit = false;
-                                              return true;
-                                            }
-                                          }(),
-                                          child: Container(
-                                            height: 110,
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextKeyWidget(text: "Tooth: ${e.tooth == null ? e.toothPedo!.name : e.tooth!}"),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Flexible(
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
+                                        bloc: medicalShellBloc,
+                                        buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                                        builder: (context, stateShell) {
+                                          return AbsorbPointer(
+                                              absorbing: () {
+                                                if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                                                  edit = stateShell.edit;
+                                                  return !edit;
+                                                } else {
+                                                  edit = false;
+                                                  return true;
+                                                }
+                                              }(),
+                                              child: Container(
+                                                height: 110,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    FormTextKeyWidget(
+                                                        text:
+                                                            "Tooth: ${(e.tooth ?? 0) > 50 ? EnumClinicPedoTooth.values.firstWhere((element) => element.value == e.tooth!).name : e.tooth?.toString()}"),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Flexible(
+                                                      child: Column(
                                                         children: [
-                                                          AbsorbPointer(
-                                                            absorbing: widget.plan,
-                                                            child: RoundCheckBox(
-                                                              isChecked: e.done,
-                                                              onTap: (value) {
-                                                                if (value != true) {
-                                                                  e.done = false;
-                                                                  e.assistantId = null;
-                                                                  e.assistant = null;
-                                                                  e.doctor = null;
-                                                                  e.doctorId = null;
-                                                                  e.date = null;
-                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                      data: clinicTreatmentEntity));
-                                                                } else
-                                                                  CIA_ShowPopUp(
-                                                                    context: context,
-                                                                    onSave: () {
-                                                                      e.date = DateTime.now();
-                                                                      e.done = value;
-                                                                      e.assistantId = siteController.getUserId();
-                                                                      e.assistant = BasicNameIdObjectEntity(
-                                                                          name: siteController.getUserName(), id: siteController.getUserId());
+                                                          Row(
+                                                            children: [
+                                                              AbsorbPointer(
+                                                                absorbing: widget.plan,
+                                                                child: RoundCheckBox(
+                                                                  isChecked: e.done,
+                                                                  onTap: (value) {
+                                                                    if (value != true) {
+                                                                      e.done = false;
+                                                                      e.assistantId = null;
+                                                                      e.assistant = null;
+                                                                      e.doctor = null;
+                                                                      e.doctorId = null;
+                                                                      e.date = null;
+                                                                      bloc.emit(
+                                                                          ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    } else
+                                                                      CIA_ShowPopUp(
+                                                                        context: context,
+                                                                        onSave: () {
+                                                                          e.date = DateTime.now();
+                                                                          e.done = value;
+                                                                          e.assistantId = siteController.getUserId();
+                                                                          e.assistant = BasicNameIdObjectEntity(
+                                                                              name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                      bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                          data: clinicTreatmentEntity));
-                                                                    },
-                                                                    child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                                      asyncUseCase: sl<LoadUsersUseCase>(),
-                                                                      searchParams: LoadUsersEnum.supervisors,
-                                                                      onSelect: (value) {
-                                                                        e.doctorId = value.id;
-                                                                        e.doctor = value;
-                                                                      },
-                                                                    ),
-                                                                  );
-                                                              },
-                                                            ),
+                                                                          bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                              data: clinicTreatmentEntity));
+                                                                        },
+                                                                        child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                          asyncUseCase: sl<LoadUsersUseCase>(),
+                                                                          searchParams: LoadUsersEnum.supervisors,
+                                                                          onSelect: (value) {
+                                                                            e.doctorId = value.id;
+                                                                            e.doctor = value;
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              SizedBox(width: 10),
+                                                              IconButton(
+                                                                  onPressed: () {
+                                                                    clinicTreatmentEntity.pedos!.remove(e);
+                                                                    bloc.emit(
+                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons.delete,
+                                                                    color: Colors.red,
+                                                                  )),
+                                                              SizedBox(width: 10),
+                                                              Expanded(
+                                                                child: CIA_DropDownSearchBasicIdName(
+                                                                  label: "First Step",
+                                                                  selectedItem: e.firstStep == null ? null : BasicNameIdObjectEntity(name: e.firstStep!.name),
+                                                                  items:
+                                                                      EnumClinicPedoFirstStep.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
+                                                                  onSelect: (v) {
+                                                                    if (v?.name == "NotSelected") {
+                                                                      e.firstStep = null;
+                                                                      return;
+                                                                    }
+                                                                    e.firstStep =
+                                                                        EnumClinicPedoFirstStep.values.firstWhere((element) => element.name == v.name);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 10,
+                                                              ),
+                                                              Expanded(
+                                                                child: CIA_DropDownSearchBasicIdName(
+                                                                  label: "Second Step",
+                                                                  selectedItem: e.secondStep == null ? null : BasicNameIdObjectEntity(name: e.secondStep!.name),
+                                                                  items: EnumClinicPedoSecondStep.values
+                                                                      .map((e) => BasicNameIdObjectEntity(name: e.name))
+                                                                      .toList(),
+                                                                  onSelect: (v) {
+                                                                    if (v?.name == "NotSelected") {
+                                                                      e.secondStep = null;
+                                                                      return;
+                                                                    }
+                                                                    e.secondStep =
+                                                                        EnumClinicPedoSecondStep.values.firstWhere((element) => element.name == v.name);
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                          SizedBox(width: 10),
-                                                          IconButton(
-                                                              onPressed: () {
-                                                                clinicTreatmentEntity.pedos!.remove(e);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
-                                                                    data: clinicTreatmentEntity));
-                                                              },
-                                                              icon: Icon(
-                                                                Icons.delete,
-                                                                color: Colors.red,
-                                                              )),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            child: CIA_DropDownSearchBasicIdName(
-                                                              label: "First Step",
-                                                              selectedItem:
-                                                              e.firstStep == null ? null : BasicNameIdObjectEntity(name: e.firstStep!.name),
-                                                              items: EnumClinicPedoFirstStep.values
-                                                                  .map((e) => BasicNameIdObjectEntity(name: e.name))
-                                                                  .toList(),
-                                                              onSelect: (v) {
-                                                                if (v?.name == "NotSelected") {
-                                                                  e.firstStep = null;
-                                                                  return;
-                                                                }
-                                                                e.firstStep =
-                                                                    EnumClinicPedoFirstStep.values.firstWhere((element) => element.name == v.name);
-                                                              },
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Expanded(
-                                                            child: CIA_DropDownSearchBasicIdName(
-                                                              label: "Second Step",
-                                                              selectedItem:
-                                                              e.secondStep == null ? null : BasicNameIdObjectEntity(name: e.secondStep!.name),
-                                                              items: EnumClinicPedoSecondStep.values
-                                                                  .map((e) => BasicNameIdObjectEntity(name: e.name))
-                                                                  .toList(),
-                                                              onSelect: (v) {
-                                                                if (v?.name == "NotSelected") {
-                                                                  e.secondStep = null;
-                                                                  return;
-                                                                }
-                                                                e.secondStep =
-                                                                    EnumClinicPedoSecondStep.values.firstWhere((element) => element.name == v.name);
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Expanded(
-                                                              child: FormTextKeyWidget(
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                  child: FormTextKeyWidget(
                                                                 text: "Assistant: ",
                                                                 secondaryInfo: true,
                                                               )),
-                                                          Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
-                                                          Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
-                                                          Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
-                                                          Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
-                                                          Expanded(
-                                                              child: FormTextValueWidget(
-                                                                  text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                                  secondaryInfo: true)),
+                                                              Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                              Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
+                                                              Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
+                                                              Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
+                                                              Expanded(
+                                                                  child: FormTextValueWidget(
+                                                                      text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                                      secondaryInfo: true)),
+                                                            ],
+                                                          )
                                                         ],
-                                                      )
-                                                    ],
-                                                  ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ));
-                                    }),
-                              )
+                                              ));
+                                        }),
+                                  )
                                   .toList(),
                             ),
                           ),
@@ -1452,11 +1423,10 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 canal.date = DateTime.now();
                                                                 canal.done = value;
                                                                 canal.assistantId = siteController.getUserId();
-                                                                canal.assistant = BasicNameIdObjectEntity(
-                                                                    name: siteController.getUserName(), id: siteController.getUserId());
+                                                                canal.assistant =
+                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
@@ -1478,11 +1448,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               onPressed: () {
                                                                 canal.canalNumber = canal.canalNumber! - 1;
                                                                 (canals.firstWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber =
-                                                                    (canals.firstWhere((element) => element.canalNumber == canal.canalNumber))
-                                                                        .canalNumber! +
-                                                                        1;
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    (canals.firstWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber! + 1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -1493,11 +1460,9 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 onPressed: () {
                                                                   canal.canalNumber = canal.canalNumber! + 1;
                                                                   (canals.lastWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber =
-                                                                      (canals.lastWhere((element) => element.canalNumber == canal.canalNumber))
-                                                                          .canalNumber! -
+                                                                      (canals.lastWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber! -
                                                                           1;
-                                                                  bloc.emit(
-                                                                      ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -1505,12 +1470,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int canalNumber = canal.canalNumber!;
                                                               clinicTreatmentEntity.rootCanalTreatments!.remove(canal);
-                                                              for (var s in canals
-                                                                  .where((element) => element.type != null && (element.canalNumber!) > canalNumber)) {
+                                                              for (var s
+                                                                  in canals.where((element) => element.type != null && (element.canalNumber!) > canalNumber)) {
                                                                 s.canalNumber = (s.canalNumber!) - 1;
                                                               }
-                                                              bloc.emit(
-                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1526,118 +1490,117 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                     children: [
                                                       Expanded(
                                                           child: CIA_MultiSelectChipWidget(
-                                                            labels: () {
-                                                              List<CIA_MultiSelectChipWidgeModel> r = [];
-                                                              var allowedEnum = EnumClinicRootCanalTreatmentType.values;
-                                                              switch (tooth % 10) {
-                                                                case 1:
-                                                                  {
-                                                                    allowedEnum = [EnumClinicRootCanalTreatmentType.SingleCanal];
-                                                                    break;
-                                                                  }
-                                                                case 2:
-                                                                  {
-                                                                    allowedEnum = [
-                                                                      EnumClinicRootCanalTreatmentType.B,
-                                                                      EnumClinicRootCanalTreatmentType.L,
-                                                                    ];
-                                                                    break;
-                                                                  }
-                                                                case 3:
-                                                                  {
-                                                                    allowedEnum = [
-                                                                      EnumClinicRootCanalTreatmentType.B,
-                                                                      EnumClinicRootCanalTreatmentType.L,
-                                                                    ];
-                                                                    break;
-                                                                  }
-                                                                case 4:
-                                                                  {
-                                                                    allowedEnum = [
-                                                                      EnumClinicRootCanalTreatmentType.B,
-                                                                      EnumClinicRootCanalTreatmentType.L,
-                                                                      EnumClinicRootCanalTreatmentType.Other,
-                                                                    ];
-                                                                    break;
-                                                                  }
-                                                                case 5:
-                                                                  {
-                                                                    allowedEnum = [
-                                                                      EnumClinicRootCanalTreatmentType.B,
-                                                                      EnumClinicRootCanalTreatmentType.L,
-                                                                      EnumClinicRootCanalTreatmentType.Other,
-                                                                    ];
-                                                                    break;
-                                                                  }
-                                                                case 6:
-                                                                  {
-                                                                    if (tooth < 30) {
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.MB2,
-                                                                        EnumClinicRootCanalTreatmentType.P,
-                                                                      ];
-                                                                    } else
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.DL,
-                                                                        EnumClinicRootCanalTreatmentType.Other,
-                                                                      ];
-                                                                    break;
-                                                                  }
-                                                                case 7:
-                                                                  {
-                                                                    if (tooth < 30) {
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.MB2,
-                                                                        EnumClinicRootCanalTreatmentType.P,
-                                                                      ];
-                                                                    } else
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.DL,
-                                                                        EnumClinicRootCanalTreatmentType.Other,
-                                                                      ];
-                                                                    break;
-                                                                  }
-                                                                case 8:
-                                                                  {
-                                                                    if (tooth < 30) {
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.MB2,
-                                                                        EnumClinicRootCanalTreatmentType.P,
-                                                                      ];
-                                                                    } else
-                                                                      allowedEnum = [
-                                                                        EnumClinicRootCanalTreatmentType.MB,
-                                                                        EnumClinicRootCanalTreatmentType.DB,
-                                                                        EnumClinicRootCanalTreatmentType.DL,
-                                                                        EnumClinicRootCanalTreatmentType.Other,
-                                                                      ];
-                                                                    break;
-                                                                  }
+                                                        labels: () {
+                                                          List<CIA_MultiSelectChipWidgeModel> r = [];
+                                                          var allowedEnum = EnumClinicRootCanalTreatmentType.values;
+                                                          switch (tooth % 10) {
+                                                            case 1:
+                                                              {
+                                                                allowedEnum = [EnumClinicRootCanalTreatmentType.SingleCanal];
+                                                                break;
                                                               }
-                                                              for (var allowed in allowedEnum) {
-                                                                r.add(CIA_MultiSelectChipWidgeModel(label: allowed.name, isSelected: canal.type == allowed));
+                                                            case 2:
+                                                              {
+                                                                allowedEnum = [
+                                                                  EnumClinicRootCanalTreatmentType.B,
+                                                                  EnumClinicRootCanalTreatmentType.L,
+                                                                ];
+                                                                break;
                                                               }
-                                                              return r;
-                                                            }(),
-                                                            singleSelect: true,
-                                                            onChange: (item, isSelected) {
-                                                              if (isSelected)
-                                                                canal.type =
-                                                                    EnumClinicRootCanalTreatmentType.values.firstWhere((element) => element.name == item);
-                                                              else
-                                                                canal.type = null;
-                                                            },
-                                                          )),
+                                                            case 3:
+                                                              {
+                                                                allowedEnum = [
+                                                                  EnumClinicRootCanalTreatmentType.B,
+                                                                  EnumClinicRootCanalTreatmentType.L,
+                                                                ];
+                                                                break;
+                                                              }
+                                                            case 4:
+                                                              {
+                                                                allowedEnum = [
+                                                                  EnumClinicRootCanalTreatmentType.B,
+                                                                  EnumClinicRootCanalTreatmentType.L,
+                                                                  EnumClinicRootCanalTreatmentType.Other,
+                                                                ];
+                                                                break;
+                                                              }
+                                                            case 5:
+                                                              {
+                                                                allowedEnum = [
+                                                                  EnumClinicRootCanalTreatmentType.B,
+                                                                  EnumClinicRootCanalTreatmentType.L,
+                                                                  EnumClinicRootCanalTreatmentType.Other,
+                                                                ];
+                                                                break;
+                                                              }
+                                                            case 6:
+                                                              {
+                                                                if (tooth < 30) {
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.MB2,
+                                                                    EnumClinicRootCanalTreatmentType.P,
+                                                                  ];
+                                                                } else
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.DL,
+                                                                    EnumClinicRootCanalTreatmentType.Other,
+                                                                  ];
+                                                                break;
+                                                              }
+                                                            case 7:
+                                                              {
+                                                                if (tooth < 30) {
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.MB2,
+                                                                    EnumClinicRootCanalTreatmentType.P,
+                                                                  ];
+                                                                } else
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.DL,
+                                                                    EnumClinicRootCanalTreatmentType.Other,
+                                                                  ];
+                                                                break;
+                                                              }
+                                                            case 8:
+                                                              {
+                                                                if (tooth < 30) {
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.MB2,
+                                                                    EnumClinicRootCanalTreatmentType.P,
+                                                                  ];
+                                                                } else
+                                                                  allowedEnum = [
+                                                                    EnumClinicRootCanalTreatmentType.MB,
+                                                                    EnumClinicRootCanalTreatmentType.DB,
+                                                                    EnumClinicRootCanalTreatmentType.DL,
+                                                                    EnumClinicRootCanalTreatmentType.Other,
+                                                                  ];
+                                                                break;
+                                                              }
+                                                          }
+                                                          for (var allowed in allowedEnum) {
+                                                            r.add(CIA_MultiSelectChipWidgeModel(label: allowed.name, isSelected: canal.type == allowed));
+                                                          }
+                                                          return r;
+                                                        }(),
+                                                        singleSelect: true,
+                                                        onChange: (item, isSelected) {
+                                                          if (isSelected)
+                                                            canal.type = EnumClinicRootCanalTreatmentType.values.firstWhere((element) => element.name == item);
+                                                          else
+                                                            canal.type = null;
+                                                        },
+                                                      )),
                                                       SizedBox(width: 10),
                                                       Expanded(
                                                         child: CIA_TextFormField(
@@ -1664,9 +1627,9 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                             children: [
                                               Expanded(
                                                   child: FormTextKeyWidget(
-                                                    text: "Assistant: ",
-                                                    secondaryInfo: true,
-                                                  )),
+                                                text: "Assistant: ",
+                                                secondaryInfo: true,
+                                              )),
                                               Expanded(child: FormTextValueWidget(text: canal.assistant?.name ?? "", secondaryInfo: true)),
                                               Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
                                               Expanded(child: FormTextValueWidget(text: canal.doctor?.name ?? "", secondaryInfo: true)),
@@ -1713,13 +1676,13 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                   patientId: widget.patientId,
                                                                   tooth: tooth,
                                                                   canalNumber: (clinicTreatmentEntity.rootCanalTreatments!
-                                                                      .where((element) => element.tooth == tooth)
-                                                                      .map((e) => e.canalNumber!)
-                                                                      .toList()
-                                                                    ..sort(
-                                                                          (a, b) => a.compareTo(b),
-                                                                    ))
-                                                                      .last +
+                                                                              .where((element) => element.tooth == tooth)
+                                                                              .map((e) => e.canalNumber!)
+                                                                              .toList()
+                                                                            ..sort(
+                                                                              (a, b) => a.compareTo(b),
+                                                                            ))
+                                                                          .last +
                                                                       1)
                                                             ];
                                                             bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
@@ -1789,11 +1752,10 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.date = DateTime.now();
                                                                 step.done = value;
                                                                 step.assistantId = siteController.getUserId();
-                                                                step.assistant = BasicNameIdObjectEntity(
-                                                                    name: siteController.getUserName(), id: siteController.getUserId());
+                                                                step.assistant =
+                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
 
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
@@ -1815,10 +1777,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               onPressed: () {
                                                                 step.stepNumber = step.stepNumber! - 1;
                                                                 (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! +
-                                                                        1;
-                                                                bloc.emit(
-                                                                    ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! + 1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -1829,10 +1789,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 onPressed: () {
                                                                   step.stepNumber = step.stepNumber! + 1;
                                                                   (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! -
-                                                                          1;
-                                                                  bloc.emit(
-                                                                      ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! - 1;
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -1840,12 +1798,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int stepNumber = step.stepNumber!;
                                                               clinicTreatmentEntity.scalings!.remove(step);
-                                                              for (var s in steps
-                                                                  .where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
+                                                              for (var s
+                                                                  in steps.where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
                                                                 s.stepNumber = (s.stepNumber!) - 1;
                                                               }
-                                                              bloc.emit(
-                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1885,17 +1842,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                             children: [
                                               Expanded(
                                                   child: FormTextKeyWidget(
-                                                    text: "Assistant: ",
-                                                    secondaryInfo: true,
-                                                  )),
+                                                text: "Assistant: ",
+                                                secondaryInfo: true,
+                                              )),
                                               Expanded(child: FormTextValueWidget(text: step.assistant?.name ?? "", secondaryInfo: true)),
                                               Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
                                               Expanded(child: FormTextValueWidget(text: step.doctor?.name ?? "", secondaryInfo: true)),
                                               Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!),
-                                                      secondaryInfo: true)),
+                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!), secondaryInfo: true)),
                                             ],
                                           )
                                         ],
@@ -1937,17 +1893,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                     patientId: widget.patientId,
                                                                     tooth: tooth,
                                                                     stepNumber: (clinicTreatmentEntity.scalings!
-                                                                        .where((element) => element.tooth == tooth)
-                                                                        .map((e) => e.stepNumber!)
-                                                                        .toList()
-                                                                      ..sort(
-                                                                            (a, b) => a.compareTo(b),
-                                                                      ))
-                                                                        .last +
+                                                                                .where((element) => element.tooth == tooth)
+                                                                                .map((e) => e.stepNumber!)
+                                                                                .toList()
+                                                                              ..sort(
+                                                                                (a, b) => a.compareTo(b),
+                                                                              ))
+                                                                            .last +
                                                                         1)
                                                               ];
-                                                              bloc.emit(
-                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             }
                                                           },
                                                           icon: Icon(Icons.add),

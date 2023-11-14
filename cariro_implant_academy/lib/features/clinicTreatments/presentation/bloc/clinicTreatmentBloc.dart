@@ -172,16 +172,6 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
                     )
                   ];
               }
-              for (var tooth in event.selectedPedoTeeth ?? []) {
-                if (event.data.pedos!.where((element) => element.tooth == tooth).toList().isEmpty)
-                  event.data.pedos = [
-                    ...event.data.pedos!,
-                    PedoEntity(
-                      patientId: event.data.patientId,
-                      toothPedo: tooth,
-                    )
-                  ];
-              }
 
               break;
             }

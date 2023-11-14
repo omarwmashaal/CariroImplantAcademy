@@ -21,7 +21,6 @@ class ClinicTreatmentBloc_UpdateTreatmentsEvent extends ClinicTreatmentBloc_Even
 class ClinicTreatmentBloc_BuildPageEvent extends ClinicTreatmentBloc_Events {
   final List<int> selectedTeeth;
   final SelectedTreatmentEnum selectedTreatmentEnum;
-  final List<EnumClinicPedoTooth>? selectedPedoTeeth;
   final EnumClinicImplantTypes? implantType;
   final ClinicTreatmentEntity data;
 
@@ -29,7 +28,6 @@ class ClinicTreatmentBloc_BuildPageEvent extends ClinicTreatmentBloc_Events {
     required this.selectedTeeth,
     required this.selectedTreatmentEnum,
     required this.data,
-    this.selectedPedoTeeth,
     this.implantType,
   });
 }

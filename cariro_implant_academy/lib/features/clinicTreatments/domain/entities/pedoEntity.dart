@@ -9,7 +9,6 @@ class PedoEntity extends Equatable {
   int? patientId;
   int? tooth;
   String? notes;
-  EnumClinicPedoTooth? toothPedo;
   EnumClinicPedoFirstStep? firstStep;
   EnumClinicPedoSecondStep? secondStep;
   bool? done;
@@ -28,7 +27,6 @@ class PedoEntity extends Equatable {
         this.patientId,
         this.tooth,
         this.notes,
-        this.toothPedo,
         this.firstStep,
         this.secondStep,
     this.date,
@@ -47,7 +45,6 @@ class PedoEntity extends Equatable {
     this.patientId,
     this.tooth,
     this.notes,
-    this.toothPedo,
     this.firstStep,
     this.secondStep,
     this.date,

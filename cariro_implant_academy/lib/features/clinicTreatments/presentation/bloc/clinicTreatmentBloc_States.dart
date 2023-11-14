@@ -34,7 +34,7 @@ class ClinicTreatmentBloc_SelectedTeethState extends ClinicTreatmentBloc_States 
   ClinicTreatmentBloc_SelectedTeethState({required  this.teeth});
 }
 class ClinicTreatmentBloc_SelectedPedoTeethState extends ClinicTreatmentBloc_States {
-  final List<EnumClinicPedoTooth> teeth;
+  final List<int> teeth;
   ClinicTreatmentBloc_SelectedPedoTeethState({required  this.teeth});
 }
 class ClinicTreatmentBloc_SelectedImplantTypeState extends ClinicTreatmentBloc_States {
