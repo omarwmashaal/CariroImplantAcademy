@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
+import 'package:cariro_implant_academy/SignalR/SignalR.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,16 +13,16 @@ import 'package:sidebarx/sidebarx.dart';
 import '../core/constants/enums/enums.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
+import '../core/injection_contianer.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import 'FormTextWidget.dart';
 
 List<String> roles = ["Secretary", "Admin", "Instructor"];
 
 class DrawerItems extends StatefulWidget {
-  DrawerItems({Key? key, this.onRoleChange, required this.onSiteChange}) : super(key: key);
+  DrawerItems({Key? key, this.onRoleChange}) : super(key: key);
 
   Function? onRoleChange;
-  Function onSiteChange;
 
   @override
   State<DrawerItems> createState() => _DrawerItemsState();
@@ -83,8 +84,7 @@ class _DrawerItemsState extends State<DrawerItems> {
             GestureDetector(
               onTap: () {
                 siteController.setSite(Website.CIA);
-                widget.onSiteChange();
-                context.goNamed(PatientsSearchPage.routeName);
+                context.goNamed(PatientsSearchPage.getRouteName());
               },
               child: Image(
                 image: siteController.getSiteLogoBySite(Website.CIA),
@@ -100,7 +100,6 @@ class _DrawerItemsState extends State<DrawerItems> {
             GestureDetector(
               onTap: () {
                 siteController.setSite(Website.Lab);
-                widget.onSiteChange();
                 context.goNamed(LabRequestsSearchPage.routeName);
               },
               child: Image(
@@ -117,7 +116,7 @@ class _DrawerItemsState extends State<DrawerItems> {
             GestureDetector(
               onTap: () {
                 siteController.setSite(Website.Clinic);
-                widget.onSiteChange();
+                context.goNamed(PatientsSearchPage.getRouteName(site: Website.Clinic));
               },
               child: Image(
                 image: siteController.getSiteLogoBySite(Website.Clinic),
@@ -137,6 +136,7 @@ class _DrawerItemsState extends State<DrawerItems> {
                         color: Colors.red,
                         onPressed: () {
                           siteController.clearCach();
+                          sl<SignalR>().disconnect();
                           context.go("/");
                         },
 
@@ -163,14 +163,11 @@ class _DrawerItemsState extends State<DrawerItems> {
                                 children: children,
                               ),
                         SizedBox(height: 10),
-                        Visibility(
-                          visible: siteController.getSite() == Website.CIA,
-                          child: IconButton(
-                            icon: Icon(Icons.settings),
-                            onPressed: () {
-                              context.goNamed(SettingsPage.routeName);
-                            },
-                          ),
+                        IconButton(
+                          icon: Icon(Icons.settings),
+                          onPressed: () {
+                            context.goNamed(SettingsPage.routeName);
+                          },
                         ),
                         SizedBox(height: 10),
                         IconButton(

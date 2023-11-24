@@ -184,7 +184,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                       child: CIA_SecondaryButton(
                           label: "Go To Patient",
                           onTab: () {
-                            context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": request.patientId.toString()});
+                            context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": request.patientId.toString()});
                           }),
                     ),
                   ],

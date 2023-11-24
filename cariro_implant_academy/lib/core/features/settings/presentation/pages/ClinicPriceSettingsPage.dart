@@ -40,17 +40,16 @@ import '../bloc/settingsBloc_Events.dart';
 import '../bloc/settingsBloc_States.dart';
 import '../widgets/clinicPriceSettingsWidget.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
-  static String routeName = "Settings";
-  static String routeNameClinic = "ClinicSettings";
-  static String routePath = "Settings";
+class ClinicPriceSettingsPage extends StatefulWidget {
+  const ClinicPriceSettingsPage({Key? key}) : super(key: key);
+  static String routeName = "ClinicPriceSettings";
+  static String routePath = "ClinicPriceSettings";
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<ClinicPriceSettingsPage> createState() => _ClinicPriceSettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
   PageController _pageController = PageController();
   int currentIndex = 0;
   late SettingsBloc bloc;
@@ -92,7 +91,207 @@ class _SettingsPageState extends State<SettingsPage> {
           bloc.add(SettingsBloc_LoadRoomsEvent());
         else if (state is SettingsBloc_EditedTreatmentPricesSuccessfullyState) bloc.add(SettingsBloc_LoadTreatmentPricesEvent());
       },
-      child: Row(
+      child: siteController.getSite() == Website.Clinic
+          ? Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    child: DefaultTabController(
+                      length: 8,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 60,
+                            child: TabBar(
+                              labelColor: Colors.black,
+                              onTap: (value) {
+                                if (value == 7) {
+                                  clinicTreatmentBloc.add(
+                                    ClinicTreatmentBloc_GetPriceEvent(
+                                      params: GetTeethClinicPircesParams(
+                                        category: EnumClinicPrices.values.where((element) => element.name.contains("Doctor")).toList(),
+                                      ),
+                                      key: "key",
+                                    ),
+                                  );
+                                }
+                              },
+                              tabs: [
+                                Tab(text: "Restoration"),
+                                Tab(text: "Implants"),
+                                Tab(text: "Ortho"),
+                                Tab(text: "TMD"),
+                                Tab(text: "Pedo"),
+                                Tab(text: "Root Canal Treatment"),
+                                Tab(text: "Scaling"),
+                                Tab(text: "Percents"),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                              child: TabBarView(
+                            children: [
+                              ClinicPricesSettingsWidget(type: "Restoration"),
+                              ClinicPricesSettingsWidget(type: "Implant"),
+                              ClinicPricesSettingsWidget(type: "Ortho"),
+                              ClinicPricesSettingsWidget(type: "TMD"),
+                              ClinicPricesSettingsWidget(type: "Pedo"),
+                              ClinicPricesSettingsWidget(type: "RootCanalTreatment"),
+                              ClinicPricesSettingsWidget(type: "Scaling"),
+                              BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                  buildWhen: (previous, current) =>
+                                      current is ClinicTreatmentBloc_LoadingPricesState ||
+                                      current is ClinicTreatmentBloc_LoadingPricesErrorState ||
+                                      current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState,
+                                  builder: (context, state) {
+                                    if (state is ClinicTreatmentBloc_LoadingPricesState)
+                                      return LoadingWidget();
+                                    else if (state is ClinicTreatmentBloc_LoadingPricesErrorState)
+                                      return BigErrorPageWidget(message: state.message);
+                                    else if (state is ClinicTreatmentBloc_LoadedPricesSuccessfullyState) {
+                                      percentages = state.prices??[];
+                                      return Expanded(
+                                        child: Column(
+                                          children: [
+                                            FormTextKeyWidget(text: "Doctor's Patient || Doctor's Operation"),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                    child: CIA_TextFormField(
+                                                  label: "Doctor's Percent",
+                                                  isNumber: true,
+                                                  suffix: "%",
+                                                  controller: TextEditingController(
+                                                      text: percentages
+                                                              .firstWhere((element) =>
+                                                                  element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
+                                                              .price
+                                                              ?.toString() ??
+                                                          "0"),
+                                                  onChange: (v) => percentages
+                                                      .firstWhere(
+                                                          (element) => element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
+                                                      .price = int.parse(v),
+                                                )),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                    child: CIA_TextFormField(
+                                                  label: "Clinic Percent",
+                                                  isNumber: true,
+                                                      suffix: "%",
+                                                  controller: TextEditingController(
+                                                      text: percentages
+                                                              .firstWhere((element) =>
+                                                                  element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
+                                                              .price
+                                                              ?.toString() ??
+                                                          "0"),
+                                                  onChange: (v) => percentages
+                                                      .firstWhere(
+                                                          (element) => element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
+                                                      .price = int.parse(v),
+                                                )),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            FormTextKeyWidget(text: "Doctor's Patient || Another Doctor's Operation"),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: CIA_TextFormField(
+                                                        label: "Doctor's Percent",
+                                                            isNumber: true,
+                                                            suffix: "%",
+                                                            controller: TextEditingController(
+                                                                text: percentages
+                                                                    .firstWhere((element) =>
+                                                                element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
+                                                                    .price
+                                                                    ?.toString() ??
+                                                                    "0"),
+                                                            onChange: (v) => percentages
+                                                                .firstWhere(
+                                                                    (element) => element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
+                                                                .price = int.parse(v),
+                                                      )),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                          child: CIA_TextFormField(
+                                                        label: "Operator's Percent",
+                                                            isNumber: true,
+                                                            suffix: "%",
+                                                            controller: TextEditingController(
+                                                                text: percentages
+                                                                    .firstWhere((element) =>
+                                                                element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_OperatorPercent)
+                                                                    .price
+                                                                    ?.toString() ??
+                                                                    "0"),
+                                                            onChange: (v) => percentages
+                                                                .firstWhere(
+                                                                    (element) => element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_OperatorPercent)
+                                                                .price = int.parse(v),
+                                                          )),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                    child: CIA_TextFormField(
+                                                  label: "Clinic Percent",
+                                                      isNumber: true,
+                                                      suffix: "%",
+                                                      controller: TextEditingController(
+                                                          text: percentages
+                                                              .firstWhere((element) =>
+                                                          element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
+                                                              .price
+                                                              ?.toString() ??
+                                                              "0"),
+                                                      onChange: (v) => percentages
+                                                          .firstWhere(
+                                                              (element) => element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
+                                                          .price = int.parse(v),
+                                                )),
+                                              ],
+                                            ),
+                                            CIA_PrimaryButton(label: "Save Changes", onTab: (){
+                                              if(
+                                               ( percentages.firstWhere((element) => element.category==EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent).price!)
+                                               +( percentages.firstWhere((element) => element.category==EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent).price!) !=100
+
+                                              ||
+                                                   ( percentages.firstWhere((element) => element.category==EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent).price!)
+                                                       +( percentages.firstWhere((element) => element.category==EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_OperatorPercent).price!)
+                                                       +( percentages.firstWhere((element) => element.category==EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent).price!) !=100
+
+
+                                              )
+                                                ShowSnackBar(context, isSuccess: false,message: "Percent Should Add Up to 100%");
+                                              else
+                                                bloc.add(SettingsBloc_EditClinicPricesEvent(prices: percentages));
+                                            })
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                    return Container();
+                                  }),
+                            ],
+                          )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Row(
               children: [
                 SidebarX(
                   controller: SidebarXController(selectedIndex: currentIndex, extended: true),

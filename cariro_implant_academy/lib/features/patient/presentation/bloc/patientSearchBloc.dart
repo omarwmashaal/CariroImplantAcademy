@@ -67,7 +67,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
 
   init(List<PatientInfoEntity> _models)  {
   models = _models;
-    if (siteController.getRole != "secretary") {
+    if (siteController.getRole() != "secretary") {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<int>(columnName: 'ID', value: e.secondaryId),

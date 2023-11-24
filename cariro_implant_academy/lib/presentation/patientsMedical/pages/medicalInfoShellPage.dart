@@ -142,15 +142,14 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
             Expanded(
               child: Row(
                 children: [
-                  Expanded(child: SizedBox()),
-                  BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
-                    builder: (context, state) {
-                      if (state is LoadedPatientInfoState) {
-                        PatientInfoEntity patient = state.patient;
-                        if (patient.profileImageId != null) blocImage.downloadImageEvent(patient.profileImageId!);
-                        return Expanded(
-                          flex: 10,
-                          child: Column(
+                  SizedBox(width:10),
+                  Expanded(
+                    child: BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                      builder: (context, state) {
+                        if (state is LoadedPatientInfoState) {
+                          PatientInfoEntity patient = state.patient;
+                          if (patient.profileImageId != null) blocImage.downloadImageEvent(patient.profileImageId!);
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               const SizedBox(
@@ -181,7 +180,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               CIA_SecondaryButton(
                                   label: "View more info",
                                   onTab: () {
-                                    context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id": widget.patientId.toString()});
+                                    context.goNamed(CreateOrViewPatientPage.getViewRouteName(), pathParameters: {"id": widget.patientId.toString()});
                                   }),
                               const SizedBox(
                                 height: 10,
@@ -190,6 +189,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                   label: "Create LAB Request",
                                   icon: Icon(Icons.document_scanner_outlined),
                                   onTab: () async {
+                                    print('check lab request');
                                     bool showRequestsPage = (await sl<CheckLabRequestsUseCase>()(patient.id!)).isRight();
                                     if (!showRequestsPage) {
                                       await CIA_ShowPopUpYesNo(
@@ -331,16 +331,16 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                 ],
                               )
                             ],
-                          ),
-                        );
-                      } else if (state is LoadingError)
-                        return Text(
-                          "Error loading patient info",
-                          style: TextStyle(color: Colors.red),
-                        );
-                      else
-                        return LoadingWidget();
-                    },
+                          );
+                        } else if (state is LoadingError)
+                          return Text(
+                            "Error loading patient info",
+                            style: TextStyle(color: Colors.red),
+                          );
+                        else
+                          return LoadingWidget();
+                      },
+                    ),
                   )
                 ],
               ),

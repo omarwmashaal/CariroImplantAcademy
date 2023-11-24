@@ -62,13 +62,13 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
   Widget build(BuildContext context) {
     if (pagesController.hasClients) pagesController.jumpToPage(0);
 
-    if (GoRouter.of(context).location == "/") return AuthenticationPage();
+    if (GoRouterState.of(context).fullPath! == "/") return AuthenticationPage();
     Logger("").log(Level.INFO, "Rebuilding large screen");
     return Row(
       children: [
         //TODO: Remove onrole change
         DrawerItems(
-          onSiteChange: () => null,
+          //onSiteChange: () => null,
         ),
         Expanded(
             flex: 7,
@@ -157,7 +157,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                   );
                                 return GestureDetector(
                                     onTap: () {
-                                      context.goNamed(ViewUserProfilePage.routeName, pathParameters: {"id": siteController.getUserId().toString()});
+                                      context.goNamed(ViewUserProfilePage.getRouteName(), pathParameters: {"id": siteController.getUserId().toString()});
                                     },
                                     child: CircleAvatar(
                                       //borderRadius: BorderRadius.circular(500.0),

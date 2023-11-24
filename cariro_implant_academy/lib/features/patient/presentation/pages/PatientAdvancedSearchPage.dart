@@ -43,6 +43,7 @@ import '../../../patientsMedical/treatmentFeature/presentation/pages/surgicalTre
 import '../../../patientsMedical/treatmentFeature/presentation/pages/treatmentPlanPage.dart';
 import '../../domain/usecases/advancedProstheticSearchUseCase.dart';
 import '../bloc/advancedSearchBloc.dart';
+import 'createOrViewPatientPage.dart';
 
 enum AdvancedSearchEnum { Patient, Treatments, Prosthetic }
 
@@ -676,7 +677,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                           //});
                           //internalPagesController.jumpToPage(1);
                           print(value);
-                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":  dataSource_patients.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                          context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {"id":  dataSource_patients.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                         },
                       );
                     }),
@@ -1063,9 +1064,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                 //});
                                 //internalPagesController.jumpToPage(1);
                                 if (searchTreatmentsDTO.done == true)
-                                  context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                                  context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                                 else
-                                  context.goNamed(TreatmentPage.routeName, pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                                  context.goNamed(TreatmentPage.getRouteName(), pathParameters: {"id":  dataSource_treatments.models.firstWhere((element) => element.secondaryId==value).id.toString()});
                               },
                             ),
                           ),

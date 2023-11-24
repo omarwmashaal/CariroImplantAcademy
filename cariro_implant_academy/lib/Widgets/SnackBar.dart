@@ -10,6 +10,7 @@ void ShowSnackBar(BuildContext context, {required bool isSuccess, String title =
   if(isSuccess)
    toast = MotionToast.success(
 
+
     title: Text(
       title,
       style: TextStyle(fontWeight: FontWeight.bold),
@@ -19,8 +20,8 @@ void ShowSnackBar(BuildContext context, {required bool isSuccess, String title =
       style: TextStyle(fontSize: 12),
     ),
     animationType: AnimationType.fromBottom,
-     dismissable: true,
-     toastDuration: Duration(seconds: 2),
+     dismissable: false,
+     toastDuration: Duration(seconds: 1),
    );
   else
    toast = MotionToast.error(
@@ -33,8 +34,8 @@ void ShowSnackBar(BuildContext context, {required bool isSuccess, String title =
       style: TextStyle(fontSize: 12),
     ),
     animationType: AnimationType.fromBottom,
-     dismissable: true,
-     toastDuration: Duration(seconds: 2),
+     dismissable: false,
+     toastDuration: Duration(seconds: 1),
 
   );
   toast.show(context);

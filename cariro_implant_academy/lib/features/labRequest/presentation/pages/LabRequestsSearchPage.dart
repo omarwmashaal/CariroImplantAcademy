@@ -1,14 +1,17 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../Constants/Fonts.dart';
+import '../../../../Helpers/Router.dart';
 import '../../../../core/constants/enums/enums.dart';
 import 'LapCreateNewRequestPage.dart';
 import '../../../../Widgets/CIA_DropDown.dart';
@@ -27,7 +30,7 @@ class LabRequestsSearchPage extends StatefulWidget {
   bool all;
   bool myRequests;
   static String routeName = "TodaysRequests";
-   static String routeNameClinic = "ClinicTodaysRequests";
+  static String routeNameClinic = "ClinicTodaysRequests";
   static String routePath = "Requests/TodaysRequests";
 
   static String routeAllName = "AllRequests";
@@ -51,20 +54,21 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   bool? paid;
 
-  String? from;
+  DateTime? from;
 
-  String? to;
+  DateTime? to;
   late LabRequestsBloc bloc;
 
   @override
   void initState() {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
-    reload();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    reload();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -218,10 +222,25 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
         ),
         Expanded(
           flex: 3,
-          child: TableWidget(
-              dataSource: dataSource,
-              onCellClick: (value) {
-                //context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": dataSource.models[value - 1].id.toString()});
+          child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+              buildWhen: (previous, current) =>
+                  current is LabRequestsBloc_LoadingRequestsState ||
+                  current is LabRequestsBloc_LoadingRequestsErrorState ||
+                  current is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState,
+              builder: (context, state) {
+                if (state is LabRequestsBloc_LoadingRequestsState)
+                  return LoadingWidget();
+                else if (state is LabRequestsBloc_LoadingRequestsErrorState)
+                  return BigErrorPageWidget(message: state.message);
+                else if (state is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState) {
+                  dataSource.updateData(state.requests);
+                  return TableWidget(
+                      dataSource: dataSource,
+                      onCellClick: (value) {
+                        context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": dataSource.models[value].id!.toString()});
+                      });
+                }
+                return Container();
               }),
         ),
       ],
@@ -232,8 +251,8 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
     bloc.add(LabRequestsBloc_GetTodaysRequestsEvent(
       getAllRequestsParams: GetAllRequestsParams(
         search: search,
-        from: widget.all ? from : DateTime.now().toString(),
-        to: widget.all ? to : DateTime.now().toString(),
+        from: widget.all ? from : DateTime.now(),
+        to: widget.all ? to : DateTime.now(),
         source: sourceEnum,
         status: statusEnum,
         paid: paid,

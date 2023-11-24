@@ -34,12 +34,27 @@ import 'createOrViewPatientPage.dart';
 
 class PatientsSearchPage extends StatelessWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
-  static String routeName = "Patients";
-  static String routeNameClinic = "ClinicPatients";
-  static String myPatientsRouteName = "MyPatients";
-  static String myPatientsRouteNameClinic = "ClinicMyPatients";
+
   bool myPatients;
 
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicPatients";
+      default:
+        return "Patients";
+    }
+  }
+  static String getMyRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicMyPatients";
+      default:
+        return "MyPatients";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var dataSource = PatientSearchDataSourceTable(context);
@@ -147,7 +162,7 @@ class PatientsSearchPage extends StatelessWidget {
               CIA_PrimaryButton(
                   label: "Add Patient",
                   onTab: () {
-                    context.goNamed(CreateOrViewPatientPage.addPatientRouteName);
+                    context.goNamed(CreateOrViewPatientPage.getAddRouteName());
                   })
             ],
           ),
@@ -199,10 +214,9 @@ class PatientsSearchPage extends StatelessWidget {
                             //     selectedPatientID = dataSource.models[value - 1].id!;
                             //    });
                             //internalPagesController.jumpToPage(1);
-                            if (siteController.getRole() != "secretary")
-                              context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": dataSource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
-                            else
-                              context.goNamed(CreateOrViewPatientPage.viewPatientRouteName, pathParameters: {"id":  dataSource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                            print("patient id = ${{"id": dataSource.models.firstWhere((element) => element.secondaryId == value).id.toString()}}");
+                            context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(),
+                                pathParameters: {"id": dataSource.models.firstWhere((element) => element.secondaryId == value).id.toString()});
                           },
                         );
                       },

@@ -88,7 +88,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
         );
       },
     );
-    on<InitialEvent>(
+    on<GetNextAvailableIdEvent>(
       (event, emit) async {
         final result = await getNextAvailableIdUseCase(NoParams());
         result.fold(

@@ -55,6 +55,7 @@ class PaymentLogTableWidget {
             return Row(
               children: [
                 Expanded(
+                  flex:2,
                   child: Column(
                     children: [
                       Expanded(
@@ -224,6 +225,7 @@ class PaymentLogTableWidget {
                   width: 10,
                 ),
                 Expanded(
+                  flex:3,
                   child: Column(
                     children: [
                       FormTextKeyWidget(text: "Payment log for receipt Id $receiptId"),
@@ -307,11 +309,11 @@ class PaymentLogsTableDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        child:          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
+        child:
         e.value is Widget
             ? e.value
             : Text(
-                e.value.toString(),
+          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):e.value.toString(),
               ),
       );
     }).toList());

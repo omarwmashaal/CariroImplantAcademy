@@ -17,6 +17,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/rootCanalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/scalingEntity.dart';
@@ -117,6 +118,38 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   CIA_SecondaryButton(
+                    label: "Show Doctors Percent",
+                    onTab: () {
+                      bloc.add(ClinicTreatmentBloc_LoadDoctorsPercentagesEvent(id: widget.patientId,clinicTreatmentEntity: clinicTreatmentEntity));
+                      return CIA_ShowPopUp(
+                        context: context,
+                        height: 500,
+                        width: 1000,
+                        child: BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                          buildWhen: (previous, current) =>
+                            current is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState ||
+                            current is ClinicTreatmentBloc_LoadingDoctorsPercentageState ||
+                            current is ClinicTreatmentBloc_LoadedDoctorsPercentageState
+                          ,
+                          builder: (context, state) {
+                            if(state is ClinicTreatmentBloc_LoadingDoctorsPercentageState)
+                              return LoadingWidget();
+                            else if(state is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState)
+                              return BigErrorPageWidget(message: state.message);
+                            else if(state is ClinicTreatmentBloc_LoadedDoctorsPercentageState)
+                             {
+                               DoctorsPercentageDataGridSource dataSource = DoctorsPercentageDataGridSource();
+
+                               dataSource.updateData(newData: state.data);
+                               return TableWidget(dataSource: dataSource);
+                             }
+                            return Container();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  CIA_SecondaryButton(
                     label: "Show ${prices ? "Treatments" : "Prices"}",
                     onTab: () => CIA_ShowPopUp(
                       context: context,
@@ -124,7 +157,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                       width: 1000,
                       child: ClinicTreatmentPricesWidget(clinicTreatmentEntity: clinicTreatmentEntity),
                     ),
-                  )
+                  ),
                 ],
               ),
               Expanded(

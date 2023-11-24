@@ -96,10 +96,15 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
           bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
         } else if (state is LabRequestsBloc_FinishingTaskErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
       },
+      buildWhen: (previous, current) =>
+        current is LabRequestsBloc_LoadingRequestsState ||
+        current is LabRequestsBloc_LoadingSingleRequestErrorState ||
+        current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState
+      ,
       builder: (context, state) {
         if (state is LabRequestsBloc_LoadingRequestsState)
           return LoadingWidget();
-        else if (state is LabRequestsBloc_LoadingRequestsErrorState)
+        else if (state is LabRequestsBloc_LoadingSingleRequestErrorState)
           return BigErrorPageWidget(message: state.message);
         else if (state is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState) {
           request = state.request;
@@ -179,7 +184,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text: request.customer == null ? "" : request.customer!.name,
+                                    text:  request.customer?.name??"",
                                   ),
                                 )
                               ],
@@ -208,7 +213,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: FormTextValueWidget(text: request.steps!.last.step!.name),
+                                  child: FormTextValueWidget(text: request.steps?.last.step?.name??""),
                                 )
                               ],
                             ),
@@ -238,7 +243,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                         CIA_SecondaryButton(
                             label: "Go To Patient",
                             onTab: () {
-                              context.goNamed(PatientMedicalHistory.routeName, pathParameters: {"id": request.patientId.toString()});
+                              context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": request.patientId.toString()});
                             }),
                       ],
                     ),
@@ -344,7 +349,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                   "Receipt",
                                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                                                 ),
-                                                BlocBuilder(
+                                                BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
                                                   buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
                                                   builder: (context, state) => CIA_SecondaryButton(
                                                       label: editMode ? "View Mode" : "Edit Mode",
@@ -380,12 +385,12 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                                   child: FormTextValueWidget(
                                                                       text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!))),
                                                               Expanded(
-                                                                  child: FormTextValueWidget(text: "by: ${e.technician == null ? "" : e.technician!.name}")),
+                                                                  child: FormTextValueWidget(text: "by: ${e.technician?.name??""}")),
                                                               Expanded(
                                                                 child: editMode
                                                                     ? CIA_TextFormField(
                                                                         isNumber: true,
-                                                                        label: e.step!.name!,
+                                                                        label: e.step?.name??"",
                                                                         suffix: "EGP",
                                                                         controller: TextEditingController(text: (e.price ?? 0).toString()),
                                                                         onChange: (v) {
@@ -398,7 +403,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                                           bloc.emit(LabRequestsBloc_UpdateReceiptTotalPriceState(totalPrice: total));
                                                                         },
                                                                       )
-                                                                    : FormTextValueWidget(text: "${e.step!.name!}"),
+                                                                    : FormTextValueWidget(text: "${e.step?.name??""}"),
                                                               ),
                                                               editMode
                                                                   ? Container()
@@ -537,7 +542,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                 ),
                                               ],
                                             )
-                                          : FormTextKeyWidget(text: "Assigned to ${(request.assignedTo) != null ? request.assignedTo!.name! : "Nobody"}")
+                                          : FormTextKeyWidget(text: "Assigned to ${ request.assignedTo?.name?? "Nobody"}")
                               /*
                             CIA_PrimaryButton(
                                             icon: Icon(
@@ -558,7 +563,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                             child: Expanded(
                               child: Column(
                                 children: [
-                                  FormTextKeyWidget(text: "Assigned to ${(request.assignedTo) != null ? request.assignedTo!.name! : "Nobody"}"),
+                                  FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name?? "Nobody"}"),
                                   SizedBox(
                                     height: 10,
                                   ),

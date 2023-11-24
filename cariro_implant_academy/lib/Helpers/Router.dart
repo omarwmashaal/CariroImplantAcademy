@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/Models/PatientInfo.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
@@ -71,12 +72,15 @@ import '../features/patientsMedical/medicalExamination/presentation/pages/medica
 class CIA_Router {
   static var shellNavigationKey = GlobalKey<NavigatorState>();
   static var rootNavigationKey = GlobalKey<NavigatorState>();
-  static var routeConst_PatientInfo = "PatientInfo";
   static var routeConst_LabView = "GoToLabRequest";
   var tt = "aso";
   static GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
     initialLocation: "/",
+    redirect: (context, state) {
+      print(state);
+    },
+
     routes: [
       GoRoute(
           name: "/",
@@ -92,18 +96,25 @@ class CIA_Router {
               return "/";
             }
 
-            if (state.location.contains("/Clinic")) {
-              siteController.setSite(Website.Clinic);
-            } else if (state.location.contains("/Lab")) {
-              siteController.setSite(Website.Lab);
-            }
+            /*if(
+            state.fullPath!.contains(ViewUserProfilePage.routePath)
+           )
+             {
+               if (state.fullPath!.contains("/Clinic")) {
+                 siteController.setSite(Website.Clinic);
+               }
+               else if (state.fullPath!.contains("/Lab")) {
+                 siteController.setSite(Website.Lab);
+               }
 
-            var site = siteController.getSite().name;
-            var newlocation = state.location.replaceAll("CIA/", "$site/").replaceAll("Clinic/", "$site/").replaceAll("Lab/", "$site/");
-            print("my location" + state.location);
-            print("my location Edited" + newlocation);
+               var site = siteController.getSite().name;
+               var newlocation = state.fullPath!.replaceAll("CIA/", "$site/").replaceAll("Clinic/", "$site/").replaceAll("Lab/", "$site/");
 
-            return newlocation;
+               print("my location" + state.fullPath!);
+               print("my location Edited" + newlocation);
+
+               return newlocation;
+             }*/
           },
           routes: [
             GoRoute(
@@ -119,7 +130,7 @@ class CIA_Router {
                   ShellRoute(
                     builder: (context, state, child) {
                       siteController.setDynamicAppBar(context: context, pathQueries: state.pathParameters);
-                      sl<SignalR>();
+                      if (siteController.getUserId() != null) sl<SignalR>().connect();
                       return SiteLayout(
                           largeScreen: Scaffold(
                               body: CIA_LargeScreen(
@@ -128,8 +139,8 @@ class CIA_Router {
                     },
                     routes: [
                       GoRoute(
-                          path: PatientsSearchPage.routeName,
-                          name: PatientsSearchPage.routeName,
+                          path: PatientsSearchPage.getRouteName(site: Website.CIA),
+                          name: PatientsSearchPage.getRouteName(site: Website.CIA),
                           pageBuilder: (context, state) {
                             return NoTransitionPage(
                               child: PatientsSearchPage(),
@@ -137,7 +148,7 @@ class CIA_Router {
                           },
                           routes: [
                             GoRoute(
-                              name: CreateOrViewPatientPage.addPatientRouteName,
+                              name: CreateOrViewPatientPage.getAddRouteName(site: Website.CIA),
                               path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
@@ -148,7 +159,7 @@ class CIA_Router {
                             ),
                             GoRoute(
                               path: CreateOrViewPatientPage.viewPatientRoutePath,
-                              name: CreateOrViewPatientPage.viewPatientRouteName,
+                              name: CreateOrViewPatientPage.getViewRouteName(site: Website.CIA),
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: CreateOrViewPatientPage(
@@ -169,7 +180,7 @@ class CIA_Router {
                                 },
                                 routes: [
                                   GoRoute(
-                                    name: PatientMedicalHistory.routeName,
+                                    name: PatientMedicalHistory.getRouteName(site:Website.CIA),
                                     path: PatientMedicalHistory.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -187,7 +198,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
-                                    name: DentalHistoryPage.routeName,
+                                    name: DentalHistoryPage.getRouteName(site:Website.CIA),
                                     path: DentalHistoryPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -205,7 +216,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
-                                    name: DentalExaminationPage.routeName,
+                                    name: DentalExaminationPage.getRouteName(site:Website.CIA),
                                     path: DentalExaminationPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -223,7 +234,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
-                                    name: NonSurgicalTreatmentPage.routeName,
+                                    name: NonSurgicalTreatmentPage.getRouteName(site:Website.CIA),
                                     path: NonSurgicalTreatmentPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -241,7 +252,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
-                                    name: TreatmentPage.routeName,
+                                    name: TreatmentPage.getRouteName(site:Website.CIA),
                                     path: TreatmentPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -260,7 +271,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
-                                    name: SurgicalTreatmentPage.routeName,
+                                    name: SurgicalTreatmentPage.getRouteName(site:Website.CIA),
                                     path: SurgicalTreatmentPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -299,8 +310,8 @@ class CIA_Router {
                                 ]),
                           ]),
                       GoRoute(
-                        path: PatientsSearchPage.myPatientsRouteName,
-                        name: PatientsSearchPage.myPatientsRouteName,
+                        path: PatientsSearchPage.getMyRouteName(site: Website.CIA),
+                        name: PatientsSearchPage.getMyRouteName(site: Website.CIA),
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
                             child: _Authorize(
@@ -315,7 +326,7 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: VisitsPage.routeName,
+                        path: VisitsPage.getSearchRouteName(site:Website.CIA),
                         name: VisitsPage.routePath,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
@@ -386,16 +397,12 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        name: routeConst_PatientInfo,
                         path: "Patients/:id",
-                        redirect: (context, state) {
-                          if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
-                          return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
-                        },
+                        redirect: (context, state) => context.namedLocation(CreateOrViewPatientPage.getViewRouteName()),
                       ),
                       GoRoute(
                         path: VisitsPage.routePathProfile,
-                        name: VisitsPage.routeNameProfile,
+                        name: VisitsPage.getProfileRouteName(site:Website.CIA),
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
                             child: VisitsPage(
@@ -447,7 +454,7 @@ class CIA_Router {
                       ),
                       GoRoute(
                         path: ViewUserProfilePage.routePath,
-                        name: ViewUserProfilePage.routeName,
+                        name: ViewUserProfilePage.getRouteName(site: Website.CIA),
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: ViewUserProfilePage(
                             userId: int.parse(state.pathParameters['id']!),
@@ -631,10 +638,18 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
+                        path: ViewUserProfilePage.routePath,
+                        name: ViewUserProfilePage.getRouteName(site: Website.Lab),
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: ViewUserProfilePage(
+                            userId: int.parse(state.pathParameters['id']!),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
                           path: "Requests/:id",
                           name: routeConst_LabView,
                           redirect: (context, state) {
-                            //   print("here");
                             if (siteController.getSite() == Website.CIA)
                               return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
                             else if (siteController.getRole() == "technician" || siteController.getRole() == "labmoderator")
@@ -753,7 +768,7 @@ class CIA_Router {
                   ShellRoute(
                     builder: (context, state, child) {
                       siteController.setDynamicAppBar(context: context, pathQueries: state.pathParameters);
-                      sl<SignalR>();
+                      if (siteController.getUserId() != null) sl<SignalR>().connect();
                       return SiteLayout(
                           largeScreen: Scaffold(
                               body: CIA_LargeScreen(
@@ -762,7 +777,17 @@ class CIA_Router {
                     },
                     routes: [
                       GoRoute(
-                          path: PatientsSearchPage.routeName,
+                        path: ViewUserProfilePage.routePath,
+                        name: ViewUserProfilePage.getRouteName(site: Website.Clinic),
+                        pageBuilder: (context, state) => NoTransitionPage(
+                          child: ViewUserProfilePage(
+                            userId: int.parse(state.pathParameters['id']!),
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                          path: PatientsSearchPage.getRouteName(site: Website.Clinic),
+                          name: PatientsSearchPage.getRouteName(site: Website.Clinic),
                           pageBuilder: (context, state) {
                             return NoTransitionPage(
                               child: PatientsSearchPage(),
@@ -770,6 +795,7 @@ class CIA_Router {
                           },
                           routes: [
                             GoRoute(
+                              name: CreateOrViewPatientPage.getAddRouteName(site: Website.Clinic),
                               path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
@@ -779,7 +805,8 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
-                              path: ":id/ViewPatient",
+                              name: CreateOrViewPatientPage.getViewRouteName(site: Website.Clinic),
+                              path: CreateOrViewPatientPage.viewPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
                                   child: CreateOrViewPatientPage(
@@ -789,6 +816,7 @@ class CIA_Router {
                               },
                             ),
                             GoRoute(
+
                               path: ":id/VisitsLogs",
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
@@ -820,7 +848,8 @@ class CIA_Router {
                                 },
                                 routes: [
                                   GoRoute(
-                                    path: ":id/MedicalHistory",
+                                    name: PatientMedicalHistory.getRouteName(site:Website.Clinic),
+                                    path: PatientMedicalHistory.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
                                         child: _Authorize(
@@ -850,7 +879,6 @@ class CIA_Router {
                                           child: ClinicTreatmentPage(
                                             patientId: int.parse(state.pathParameters['id'].toString()),
                                             plan: false,
-
                                           ),
                                         ),
                                       );
@@ -870,13 +898,13 @@ class CIA_Router {
                                           child: ClinicTreatmentPage(
                                             patientId: int.parse(state.pathParameters['id'].toString()),
                                             plan: true,
-
                                           ),
                                         ),
                                       );
                                     },
                                   ),
                                   GoRoute(
+                                    name: DentalHistoryPage.getRouteName(site:Website.Clinic),
                                     path: DentalHistoryPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -894,6 +922,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
+                                    name:DentalExaminationPage.getRouteName(site:Website.Clinic),
                                     path: DentalExaminationPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -911,6 +940,7 @@ class CIA_Router {
                                     },
                                   ),
                                   GoRoute(
+                                    name: NonSurgicalTreatmentPage.getRouteName(site:Website.Clinic),
                                     path: NonSurgicalTreatmentPage.routePath,
                                     pageBuilder: (context, state) {
                                       return NoTransitionPage(
@@ -927,63 +957,11 @@ class CIA_Router {
                                       );
                                     },
                                   ),
-                                  GoRoute(
-                                    path: TreatmentPage.routePath,
-                                    pageBuilder: (context, state) {
-                                      return NoTransitionPage(
-                                        child: _Authorize(
-                                          allowedRoles: [
-                                            UserRoles.Instructor,
-                                            UserRoles.Assistant,
-                                            UserRoles.Admin,
-                                          ],
-                                          child: new TreatmentPage(
-                                            key: GlobalKey(),
-                                            patientId: int.parse(state.pathParameters['id'].toString()),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  GoRoute(
-                                    path: SurgicalTreatmentPage.routePath,
-                                    pageBuilder: (context, state) {
-                                      return NoTransitionPage(
-                                        child: _Authorize(
-                                          allowedRoles: [
-                                            UserRoles.Instructor,
-                                            UserRoles.Assistant,
-                                            UserRoles.Admin,
-                                          ],
-                                          child: new SurgicalTreatmentPage(
-                                            key: GlobalKey(),
-                                            patientId: int.parse(state.pathParameters['id'].toString()),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  GoRoute(
-                                    path: ProstheticTreatmentPage.routePath,
-                                    pageBuilder: (context, state) {
-                                      return NoTransitionPage(
-                                        child: _Authorize(
-                                          allowedRoles: [
-                                            UserRoles.Instructor,
-                                            UserRoles.Assistant,
-                                            UserRoles.Admin,
-                                          ],
-                                          child: ProstheticTreatmentPage(
-                                            patientId: int.parse(state.pathParameters['id'].toString()),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
                                 ]),
                           ]),
                       GoRoute(
-                        path: PatientsSearchPage.myPatientsRouteName,
+                        path: PatientsSearchPage.getMyRouteName(site: Website.Clinic),
+                        name: PatientsSearchPage.getMyRouteName(site: Website.Clinic),
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
                             child: _Authorize(
@@ -998,7 +976,18 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
-                        path: VisitsPage.routeName,
+                        path: VisitsPage.routePath,
+                        name: VisitsPage.getSearchRouteName(site:Website.Clinic),
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: VisitsPage(),
+                          );
+                        },
+                      ),
+
+                      GoRoute(
+                        path: VisitsPage.getProfileRouteName(site:Website.Clinic),
+                        name: VisitsPage.routePathProfile,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
                             child: VisitsPage(),
@@ -1065,10 +1054,7 @@ class CIA_Router {
                       ),
                       GoRoute(
                         path: "Clinic/Patients/:id",
-                        redirect: (context, state) {
-                          if (siteController.getRole() == "secretary") return CreateOrViewPatientPage.getPathViewPatient(state.pathParameters['id'].toString());
-                          return PatientMedicalHistory.getPath(state.pathParameters['id'].toString());
-                        },
+                        redirect: (context, state) => context.namedLocation(CreateOrViewPatientPage.getViewRouteName()),
                       ),
                       GoRoute(
                         path: UserSearchPage.assistantsRouteName,
@@ -1162,6 +1148,17 @@ class CIA_Router {
                         },
                       ),
                       GoRoute(
+                        path: ClinicPriceSettingsPage.routePath,
+                        name: ClinicPriceSettingsPage.routeName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(allowedRoles: [
+                              UserRoles.Admin,
+                            ], child: ClinicPriceSettingsPage()),
+                          );
+                        },
+                      ),
+                      GoRoute(
                         path: CIA_MyProfilePage.routePath,
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
@@ -1203,6 +1200,8 @@ class CIA_Router {
           ]),
     ],
   );
+
+
 }
 
 class _Authorize extends StatelessWidget {

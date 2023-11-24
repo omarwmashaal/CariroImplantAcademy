@@ -129,8 +129,25 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   Row(
                     children: [
                       Expanded(
-                          child: CIA_TextFormField(
-                              label: "From", controller: TextEditingController(text: CIA_DateConverters.simpleFormatTimeOnly(newVisit.from)))),
+                          child: GestureDetector(
+                        onTap: () {},
+                        child: CIA_TextFormField(
+                            onTap: () async {
+                              var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                              if (time != null)
+                                newVisit.from = DateTime(
+                                  newVisit.from!.year,
+                                  newVisit.from!.month,
+                                  newVisit.from!.day,
+                                  time!.hour,
+                                  time!.minute,
+                                );
+                              setState(() {});
+                            },
+                            enabled: false,
+                            label: "From",
+                            controller: TextEditingController(text: CIA_DateConverters.simpleFormatTimeOnly(newVisit.from))),
+                      )),
                       Expanded(
                           child: Column(
                         children: [
@@ -161,7 +178,26 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         ],
                       )),
                       Expanded(
-                          child: CIA_TextFormField(label: "To", controller: TextEditingController(text: CIA_DateConverters.simpleFormatTimeOnly(newVisit.to)))),
+                        child: CIA_TextFormField(
+                          enabled: false,
+                          onTap: () async {
+                            var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                            if (time != null)
+                              newVisit.to = DateTime(
+                                newVisit.to!.year,
+                                newVisit.to!.month,
+                                newVisit.to!.day,
+                                time!.hour,
+                                time!.minute,
+                              );
+                            setState(() {});
+                          },
+                          label: "To",
+                          controller: TextEditingController(
+                            text: CIA_DateConverters.simpleFormatTimeOnly(newVisit.to),
+                          ),
+                        ),
+                      ),
                       Expanded(
                           child: Column(
                         children: [
@@ -294,12 +330,16 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     },
                     emptyString: "No room available at this time slot",
                   ),
-                  BlocBuilder<CalendarBloc,CalendarBloc_States>(builder: (context, state) {
-                    String error = "";
-                    if(state is CalendarBloc_CreatingScheduleError)
-                      error = state.message;
-                    return Text(error,style: TextStyle(color: Colors.red),);
-                  },)
+                  BlocBuilder<CalendarBloc, CalendarBloc_States>(
+                    builder: (context, state) {
+                      String error = "";
+                      if (state is CalendarBloc_CreatingScheduleError) error = state.message;
+                      return Text(
+                        error,
+                        style: TextStyle(color: Colors.red),
+                      );
+                    },
+                  )
                 ],
               );
             },
@@ -434,11 +474,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       if ((monthsOccurance[m]!) > occurance) {
                         occurance = monthsOccurance[m]!;
                         tempcurrentMonth = m!;
-                      };
+                      }
+                      ;
                     }
 
-                    if(tempcurrentMonth != currentMonth)
-                    {
+                    if (tempcurrentMonth != currentMonth) {
                       currentMonth = tempcurrentMonth;
                       if (loadAll) {
                         bloc.add(CalendarBloc_GetAllSchedules(month: currentMonth));

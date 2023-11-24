@@ -21,6 +21,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../API/LoadinAPI.dart';
+import '../../../../../Constants/Controllers.dart';
 import '../../../../../Models/VisitsModel.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
@@ -28,6 +29,7 @@ import '../../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../Widgets/MultiSelectChipWidget.dart';
+import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/injection_contianer.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
@@ -35,11 +37,19 @@ import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 class NonSurgicalTreatmentPage extends StatefulWidget {
   NonSurgicalTreatmentPage({Key? key, required this.patientId}) : super(key: key);
-  static String routeName = "NonSurgicalTreatment";
-   static String routeNameClinic = "ClinicNonSurgicalTreatment";
+
   static String routePath = ":id/NonSurgicalTreatment";
   int patientId;
 
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicNonSurgicalTreatment";
+      default:
+        return "NonSurgicalTreatment";
+    }
+  }
   @override
   State<NonSurgicalTreatmentPage> createState() => _NonSurgicalTreatmentPageState();
 }
@@ -350,7 +360,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               SizedBox(height: 20),
             ]),
           );
-        } else if (state is NonSurgicalTreatmentBloc_DataLoadingError) error = state.message;
+        }
+        else if (state is NonSurgicalTreatmentBloc_DataLoadingError) error = state.message;
         return BigErrorPageWidget(message: error);
       },
     );

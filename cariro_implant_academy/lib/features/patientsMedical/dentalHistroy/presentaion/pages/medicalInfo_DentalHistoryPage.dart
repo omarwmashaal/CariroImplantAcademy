@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../Constants/Colors.dart';
+import '../../../../../Constants/Controllers.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../Widgets/MultiSelectChipWidget.dart';
@@ -21,11 +22,18 @@ import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_St
 
 class DentalHistoryPage extends StatefulWidget {
   DentalHistoryPage({Key? key, required this.patientId}) : super(key: key);
-  static String routeName = "DentalHistory";
-   static String routeNameClinic = "ClinicDentalHistory";
+
   static String routePath = ":id/DentalHistory";
   int patientId;
-
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicDentalHistory";
+      default:
+        return "DentalHistory";
+    }
+  }
   @override
   State<DentalHistoryPage> createState() => _PatientDentalHistoryState();
 }
@@ -215,7 +223,7 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
         } else if (state is DentalHistoryBloc_ErrorState)
           return BigErrorPageWidget(message: state.message);
         else
-          return BigErrorPageWidget(message: "Couldn't retrieve data");
+          return Container();
       },
     );
   }

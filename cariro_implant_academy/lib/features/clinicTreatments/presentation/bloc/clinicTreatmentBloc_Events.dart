@@ -12,6 +12,13 @@ class ClinicTreatmentBloc_LoadTreatmentsEvent extends ClinicTreatmentBloc_Events
   ClinicTreatmentBloc_LoadTreatmentsEvent({required this.id});
 }
 
+class ClinicTreatmentBloc_LoadDoctorsPercentagesEvent extends ClinicTreatmentBloc_Events {
+  final int id;
+  final ClinicTreatmentEntity clinicTreatmentEntity;
+
+  ClinicTreatmentBloc_LoadDoctorsPercentagesEvent({required this.id, required this.clinicTreatmentEntity});
+}
+
 class ClinicTreatmentBloc_UpdateTreatmentsEvent extends ClinicTreatmentBloc_Events {
   final UpdateClinicTreatmentsParams data;
 

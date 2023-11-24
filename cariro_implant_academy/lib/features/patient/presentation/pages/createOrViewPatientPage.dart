@@ -23,6 +23,7 @@ import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.d
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/receiptTableWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/setPatientOutUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
@@ -55,17 +56,40 @@ class CreateOrViewPatientPage extends StatelessWidget {
     required this.patientID,
   }) : super(key: key);
 
-  static String getPathViewPatient(String id) {
-    return "/CIA/Patients/$id/ViewPatient";
+
+
+
+  static String getVisitPatientRouteName() {
+    if(siteController.getRole()=="secretary")
+      return getViewRouteName();
+    return PatientMedicalHistory.getRouteName();
+
+  }
+
+  static String getViewRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicViewPatient";
+      default:
+        return "ViewPatient";
+    }
+  }
+
+
+  static String getAddRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicAddPatient";
+      default:
+        return "AddPatient";
+    }
   }
 
 
 
-  static String viewPatientRouteName = "ViewPatient";
-   static String viewPatientRouteNameClinic = "ClinicViewPatient";
   static String viewPatientRoutePath = ":id/ViewPatient";
-  static String addPatientRouteName = "AddPatient";
-   static String addPatientRouteNameClinic = "ClinicAddPatient";
   static String addPatientRoutePath = "AddPatient";
 
   final int patientID;
@@ -84,7 +108,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
     final imageBlocIdFront = sl<ImageBloc>();
     if (patientID == 0) {
       createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.addNew));
-      createOrViewPatientBloc.add(InitialEvent());
+      createOrViewPatientBloc.add(GetNextAvailableIdEvent());
       createOrViewPatientBloc.emit(LoadedPatientInfoState(patient: patient));
     } else
       createOrViewPatientBloc.add(GetPatientInfoEvent(id: patientID));
@@ -103,7 +127,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is CreatedPatientState) {
           ShowSnackBar(context, isSuccess: true);
-          createOrViewPatientBloc.add(InitialEvent());
+          createOrViewPatientBloc.add(GetNextAvailableIdEvent());
           createOrViewPatientBloc.emit(LoadedPatientInfoState(
               patient: PatientInfoEntity(
             gender: EnumGender.Male,

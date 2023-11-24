@@ -229,4 +229,16 @@ enum EnumClinicPrices {
   ScalingRegular,
   ScalingDeep,
   Ortho,
+  DoctorsPatientDoctorsOperation_DoctorPercent,
+  DoctorsPatientDoctorsOperation_ClinicPercent,
+  DoctorsPatientAnotherDoctorsOperation_DoctorPercent,
+  DoctorsPatientAnotherDoctorsOperation_OperatorPercent,
+  DoctorsPatientAnotherDoctorsOperation_ClinicPercent,
+}
+
+enum EnumDortorsPercentageEnum
+{
+  Operator,
+  Main,
+  OperatorAndMain,
 }

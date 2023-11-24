@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/core/features/authentication/domain/useca
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocEvents.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,10 +61,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         else if (state is ErrorState)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is LoggedIn) {
-          sl<SignalR>();
+          sl<SignalR>().connect();
           //sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
           if (siteController.getSite() == Website.CIA || siteController.getSite()==Website.Clinic)
-            context.goNamed(PatientsSearchPage.routeName);
+            context.goNamed(PatientsSearchPage.getRouteName());
+          else
+            context.goNamed(LabRequestsSearchPage.routeName);
         }
         if (state is! LoggingInState) CustomLoader.hide();
       },

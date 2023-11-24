@@ -45,8 +45,8 @@ class LabStepEntity extends Equatable {
         this.requestId,
         this.step,
         this.stepId,
-        this.notes = "",
-        this.price = 0,
+        this.notes,
+        this.price,
         this.request,
       ];
 }

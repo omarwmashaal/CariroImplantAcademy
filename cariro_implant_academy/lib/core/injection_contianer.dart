@@ -81,6 +81,7 @@ import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashF
 import 'package:cariro_implant_academy/features/clinicTreatments/data/datasources/clinicTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/repositories/clinicTreatmentRepoImpl.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/repositories/clinicTreatmentRepo.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/getDoctorPercentageForPatientUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/getTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
@@ -876,11 +877,13 @@ init() async {
   sl.registerFactory(() => ClinicTreatmentBloc(
         updateClinicTreatmentsUseCase: sl(),
         getClinicTreatmentsUseCase: sl(),
-    getTeethClinicPricesUseCase: sl()
+    getTeethClinicPricesUseCase: sl(),
+    getDoctorPercentageForPatientUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));
   sl.registerLazySingleton(() => UpdateClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => GetDoctorPercentageForPatientUseCase(clinicTreatmentRepo: sl()));
   //repo
   sl.registerLazySingleton<ClinicTreatmentRepo>(() => ClinicTreatmentRepoImpl(clinicTreatmentDatasource: sl()));
   //datasource

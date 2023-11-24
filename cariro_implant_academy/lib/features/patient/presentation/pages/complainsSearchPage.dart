@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dar
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc_States.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/pages/createOrViewPatientPage.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +116,7 @@ class _PatientsComplainsPageState extends State<ComplainsSearchPage> {
                       return TableWidget(
                         dataSource: datasource,
                         onCellClick: (value) {
-                          context.goNamed(CIA_Router.routeConst_PatientInfo, pathParameters: {"id":  datasource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                          context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {"id":  datasource.models.firstWhere((element) => element.secondaryId==value).id.toString()});
 
                         },
                       );

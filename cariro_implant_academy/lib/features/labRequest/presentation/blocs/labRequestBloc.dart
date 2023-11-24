@@ -35,8 +35,6 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final AddOrUpdateRequestReceiptUseCase addOrUpdateRequestReceiptUseCase;
   final AssignTaskToTechnicianUseCase assignTaskToTechnicianUseCase;
 
-
-
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
     required this.createNewLabCustomerUseCase,
@@ -53,11 +51,11 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
         emit(LabRequestsBloc_LoadingRequestsState());
-        final result = await getAllLabRequestsUseCase(event.getAllRequestsParams
-          ..to = DateFormat("yyyy-MM-dd").format(DateTime.now())
-          ..from = DateFormat("yyyy-MM-dd").format(DateTime.now()));
+        final result = await getAllLabRequestsUseCase(event.getAllRequestsParams);
         result.fold(
-          (l) => emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? "")),
+          (l) {
+            emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? ""));
+          },
           (r) => emit(LabRequestsBloc_LoadedMultiRequestsSuccessfullyState(requests: r)),
         );
       },
@@ -97,7 +95,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         emit(LabRequestsBloc_LoadingRequestsState());
         final result = await getLabRequestUseCase(event.id);
         result.fold(
-          (l) => emit(LabRequestsBloc_LoadingRequestsErrorState(message: l.message ?? "")),
+          (l) => emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r)),
         );
       },
@@ -167,7 +165,6 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
                     event.request.steps![1].stepId = r.id;
                   },
                 ));
-
         }
         final result = await createLabRequestUseCase(event.request);
         result.fold(
@@ -213,14 +210,14 @@ class LabRequestDataGridSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
               DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!)),
-              DataGridCell<String>(columnName: 'Source', value: e.source?.name??""),
+              DataGridCell<String>(columnName: 'Source', value: e.source?.name ?? ""),
               DataGridCell<String>(columnName: 'Customer Name', value: e.customer?.name ?? ""),
               DataGridCell<String>(columnName: 'Customer Phone', value: e.customer?.phoneNumber ?? ""),
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name ?? ""),
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
-              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name??""),
-              DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last??""),
-              DataGridCell<String>(columnName: 'Step', value: e.steps ==null||(e.steps??[]).length==0?"": (e.steps ?? [])?.last?.step?.name??""),
+              DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name ?? ""),
+              DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last ?? ""),
+              DataGridCell<String>(columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
             ]))
         .toList();
   }

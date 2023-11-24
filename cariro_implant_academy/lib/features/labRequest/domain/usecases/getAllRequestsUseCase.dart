@@ -21,8 +21,8 @@ class GetAllLabRequestsUseCase extends UseCases<List<LabRequestEntity>, GetAllRe
 }
 
 class GetAllRequestsParams {
-  String? from;
-  String? to;
+  DateTime? from;
+  DateTime? to;
   String? search;
   EnumLabRequestStatus? status;
   EnumLabRequestSources? source;

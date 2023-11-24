@@ -535,8 +535,8 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                           label: "Membrane Company",
                                           selectedItem: widget.surgicalTreatmentEntity.openSinusLift_Membrane_Company != null
                                               ? widget.surgicalTreatmentEntity.openSinusLift_Membrane_Company
-                                              : companies.firstWhereOrNull(
-                                                  (element) => element.id == widget.surgicalTreatmentEntity.openSinusLift_Membrane_CompanyID),
+                                              : companies
+                                                  .firstWhereOrNull((element) => element.id == widget.surgicalTreatmentEntity.openSinusLift_Membrane_CompanyID),
                                           onSelect: (value) {
                                             widget.surgicalTreatmentEntity.openSinusLift_Membrane_CompanyID = value.id;
                                             widget.surgicalTreatmentEntity.openSinusLift_Membrane_Company = value;
@@ -554,8 +554,10 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                           selectedItem: () {
                                             if (widget.surgicalTreatmentEntity.openSinusLift_Membrane != null)
                                               return BasicNameIdObjectEntity(
-                                                  name: widget.surgicalTreatmentEntity.openSinusLift_Membrane!.name ??
-                                                      widget.surgicalTreatmentEntity.openSinusLift_Membrane!.size,
+                                                  name: widget.surgicalTreatmentEntity.openSinusLift_Membrane!.name != "" &&
+                                                          widget.surgicalTreatmentEntity.openSinusLift_Membrane!.name != null
+                                                      ? widget.surgicalTreatmentEntity.openSinusLift_Membrane?.name
+                                                      : widget.surgicalTreatmentEntity.openSinusLift_Membrane?.size??"",
                                                   id: widget.surgicalTreatmentEntity.openSinusLift_Membrane!.id);
                                             return null;
                                           }(),
@@ -680,9 +682,7 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                           value: "stg",
                                           isSelected: widget.surgicalTreatmentEntity.softTissueGraftSurgeryTypeSoftTissueGraft!),
                                       CIA_MultiSelectChipWidgeModel(
-                                          label: "Advanced",
-                                          value: "advanced",
-                                          isSelected: widget.surgicalTreatmentEntity.softTissueGraftSurgeryTypeAdvanced!),
+                                          label: "Advanced", value: "advanced", isSelected: widget.surgicalTreatmentEntity.softTissueGraftSurgeryTypeAdvanced!),
                                     ],
                                   ),
                                 ),
@@ -866,10 +866,8 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                               },
                               labels: [
                                 CIA_MultiSelectChipWidgeModel(label: "Buccal", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationBuccal!),
-                                CIA_MultiSelectChipWidgeModel(
-                                    label: "Crestal", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationCrestal!),
-                                CIA_MultiSelectChipWidgeModel(
-                                    label: "Lingual", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationLingual!),
+                                CIA_MultiSelectChipWidgeModel(label: "Crestal", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationCrestal!),
+                                CIA_MultiSelectChipWidgeModel(label: "Lingual", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationLingual!),
                                 CIA_MultiSelectChipWidgeModel(label: "Mesial", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationMesial!),
                                 CIA_MultiSelectChipWidgeModel(label: "Distal", isSelected: widget.surgicalTreatmentEntity.softTissueGraftAugmentationDistal!),
                               ],

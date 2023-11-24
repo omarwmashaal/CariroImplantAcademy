@@ -28,6 +28,12 @@ class SignalR {
   SignalR({required this.bloc}) {
     _runConfig();
   }
+  connect()=>_runConfig();
+
+  disconnect(){
+    _hubConnection?.stop();
+  }
+
 
 // Creates the connection by using the HubConnectionBuilder.
 

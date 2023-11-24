@@ -119,7 +119,7 @@ class _UserSearchPageState extends State<UserSearchsPage> {
             onCellClick: (index) {
               var d = widget.dataSource.models[index - 1];
               selectedUserId = d.idInt ?? 0;
-              context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserProfilePage.candidateRouteName:ViewUserProfilePage.routeName,pathParameters: {"id":selectedUserId.toString()});
+              context.goNamed(widget.dataSource.type==UserRoles.Candidate?ViewUserProfilePage.candidateRouteName:ViewUserProfilePage.getRouteName(),pathParameters: {"id":selectedUserId.toString()});
 
             },
           ),

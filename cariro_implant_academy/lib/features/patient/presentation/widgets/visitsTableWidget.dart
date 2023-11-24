@@ -28,6 +28,7 @@ import '../../../../Widgets/FormTextWidget.dart';
 import '../../../../Widgets/Title.dart';
 import '../../../../core/injection_contianer.dart';
 import '../bloc/patientVisitsBloc.dart';
+import '../pages/createOrViewPatientPage.dart';
 import 'calendarWidget.dart';
 
 class VisitsTableWidget extends StatelessWidget {
@@ -274,7 +275,7 @@ class VisitsTableWidget extends StatelessWidget {
                   // loadFunction:()=> dataSource.loadData(),
                   dataSource: dataSource,
                   onCellClick: (index) {
-                    context.goNamed(CIA_Router.routeConst_PatientInfo,
+                    context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(),
                         pathParameters: {'id':  dataSource.models.firstWhere((element) => element.secondaryId==index).id.toString()});
                   },
                 ),

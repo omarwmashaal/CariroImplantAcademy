@@ -1,5 +1,7 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicDoctorPercentageEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicImplantEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/orthoTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/pedoEntity.dart';
@@ -11,12 +13,18 @@ import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+import '../../domain/useCases/getDoctorPercentageForPatientUseCase.dart';
 
 class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatmentBloc_States> {
   final GetClinicTreatmentsUseCase getClinicTreatmentsUseCase;
   final UpdateClinicTreatmentsUseCase updateClinicTreatmentsUseCase;
   final GetTeethClinicPricesUseCase getTeethClinicPricesUseCase;
+  final GetDoctorPercentageForPatientUseCase getDoctorPercentageForPatientUseCase;
 
   bool isInitialized = false;
 
@@ -24,6 +32,7 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
     required this.updateClinicTreatmentsUseCase,
     required this.getClinicTreatmentsUseCase,
     required this.getTeethClinicPricesUseCase,
+    required this.getDoctorPercentageForPatientUseCase,
   }) : super(ClinicTreatmentBloc_InitState()) {
     on<ClinicTreatmentBloc_LoadTreatmentsEvent>(
       (event, emit) async {
@@ -254,5 +263,98 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
         emit(ClinicTreatmentBloc_TotalPriceChangedState(price: price));
       },
     );
+    on<ClinicTreatmentBloc_LoadDoctorsPercentagesEvent>(
+      (event, emit) async {
+        emit(ClinicTreatmentBloc_LoadingDoctorsPercentageState());
+        await updateClinicTreatmentsUseCase(UpdateClinicTreatmentsParams(id: event.id, data: event.clinicTreatmentEntity));
+        var result = await getDoctorPercentageForPatientUseCase(event.id);
+        result.fold(
+          (l) => emit(ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState(message: l.message ?? "")),
+          (r) => emit(ClinicTreatmentBloc_LoadedDoctorsPercentageState(data: r)),
+        );
+      },
+    );
+  }
+}
+
+class DoctorsPercentageDataGridSource extends DataGridSource {
+  List<ClinicDoctorPercentageEntity> models = <ClinicDoctorPercentageEntity>[];
+
+  /// Creates the visit data source class with required details.
+  DoctorsPercentageDataGridSource() {
+    init();
+  }
+
+  init() {
+    _data = models
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              //DataGridCell<int>(columnName: 'Id', value: e.patientId),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name ?? ""),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.dateTime),
+              DataGridCell<String>(columnName: 'Doctor', value: e.doctor?.name ?? ""),
+              DataGridCell<String>(
+                  columnName: 'Operation',
+                  value: () {
+                    if (e.restorationId != null) return "Restoration";
+                    if (e.clinicImplantId != null) return "Implant";
+                    if (e.orthoTreatmentId != null) return "Ortho";
+                    if (e.tMDId != null) return "TMD";
+                    if (e.pedoId != null) return "Pedo";
+                    if (e.rootCanalTreatment != null) return "Root";
+                    if (e.scalingId != null) return "Scaling";
+                    return "";
+                  }()),
+              DataGridCell<String>(
+                  columnName: 'Type',
+                  value: () {
+                    if (e.restorationId != null) return e.restoration?.name;
+                    if (e.clinicImplantId != null) return e.clinicImplant?.name;
+                    if (e.orthoTreatmentId != null) return e.orthoTreatment?.name;
+                    if (e.tMDId != null) return e.tMD?.name;
+                    if (e.pedoId != null) return e.pedo?.name;
+                    if (e.rootCanalTreatment != null) return e.rootCanalTreatment?.name;
+                    if (e.scalingId != null) return e.scaling?.name;
+                    return "";
+                  }()),
+              DataGridCell<String>(columnName: 'Doctor type', value: AddSpacesToSentence(e.doctorFeesType?.name??"")),
+              DataGridCell<int>(columnName: "Total Fees", value: e.operationFee),
+              DataGridCell<int>(columnName: "Doctor's Share", value: e.doctorsFees),
+              DataGridCell<int>(columnName: "Clinic's Share", value: e.clinicFee),
+
+            ]))
+        .toList();
+  }
+
+  List<DataGridRow> _data = [];
+
+  @override
+  List<DataGridRow> get rows => _data;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+      if (e.value is Widget) return e.value;
+
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          e.value is DateTime
+              ? DateFormat("dd-MM-yyyy hh:mm a").format(e.value)
+              : e.value == null
+                  ? ""
+                  : e.value.toString(),
+          style: TextStyle(fontSize: 12),
+        ),
+      );
+    }).toList());
+  }
+
+  Future<bool> updateData({required List<ClinicDoctorPercentageEntity> newData}) async {
+    models = newData;
+    init();
+    notifyListeners();
+
+    return true;
   }
 }

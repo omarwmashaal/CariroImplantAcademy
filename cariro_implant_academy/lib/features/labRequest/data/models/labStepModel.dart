@@ -14,8 +14,8 @@ class LabStepModel extends LabStepEntity {
     super.requestId,
     super.step,
     super.stepId,
-    super.notes = "",
-    super.price = 0,
+    super.notes,
+    super.price,
     super.request,
   });
 
@@ -29,8 +29,8 @@ class LabStepModel extends LabStepEntity {
       requestId: entity.requestId,
       step: entity.step,
       stepId: entity.stepId,
-      notes: entity.notes = "",
-      price: entity.price = 0,
+      notes: entity.notes,
+      price: entity.price,
       request: entity.request,
     );
   }

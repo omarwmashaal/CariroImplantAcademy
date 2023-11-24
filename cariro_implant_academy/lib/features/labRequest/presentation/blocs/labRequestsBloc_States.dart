@@ -30,6 +30,15 @@ class LabRequestsBloc_LoadingRequestsErrorState extends LabRequestsBloc_States {
   List<Object?> get props => [message];
 }
 
+class LabRequestsBloc_LoadingSingleRequestErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_LoadingSingleRequestErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class LabRequestsBloc_LoadedMultiRequestsSuccessfullyState extends LabRequestsBloc_States {
   final List<LabRequestEntity> requests;
 

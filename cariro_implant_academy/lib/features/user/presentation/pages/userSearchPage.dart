@@ -151,7 +151,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   dataSource: usersDataGridSource,
                   onCellClick: (index) {
 
-                    context.goNamed(widget.type == UserRoles.Candidate ? ViewUserProfilePage.candidateRouteName : ViewUserProfilePage.routeName,
+                    context.goNamed(widget.type == UserRoles.Candidate ? ViewUserProfilePage.candidateRouteName : ViewUserProfilePage.getRouteName(),
                         pathParameters: {"id": index.toString()});
                   },
                 ),

@@ -34,7 +34,7 @@ class CreatePatientEvent extends CreateOrViewPatientBloc_Events{
   // TODO: implement props
   List<Object?> get props => [patient];
 }
-class InitialEvent extends CreateOrViewPatientBloc_Events{
+class GetNextAvailableIdEvent extends CreateOrViewPatientBloc_Events{
     @override
   // TODO: implement props
   List<Object?> get props => [];

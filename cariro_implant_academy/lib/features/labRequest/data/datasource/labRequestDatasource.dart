@@ -120,8 +120,8 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   Future<List<LabRequestModel>> getAllLabRequests(GetAllRequestsParams params) async {
     late StandardHttpResponse response;
     var query = "";
-    if (params.from != null) query = "from=${params.from}";
-    if (params.to != null) query = query == "" ? query + "to=$params.to" : query + "&to=${params.to}";
+    if (params.from != null) query = "from=${params.from!.toUtc().toIso8601String()}";
+    if (params.to != null) query = query == "" ? query + "to=$params.to" : query + "&to=${params.to!.toUtc().toIso8601String()}";
     if (params.search != null && params.search != "") {
       query = query == "" ? query + "search=${params.search}" : query + "&search=${params.search}";
     }
@@ -232,7 +232,7 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     late StandardHttpResponse response;
 
     try {
-      response = await httpRepo.post(host: "$serverHost/$labRequestsController/CheckLabRequests?id=$id");
+      response = await httpRepo.get(host: "$serverHost/$labRequestsController/CheckLabRequests?id=$id");
     } catch (e) {
       throw mapException(e);
     }

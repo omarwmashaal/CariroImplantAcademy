@@ -176,13 +176,94 @@ class PagesController extends PageController {
 
     switch (siteController.getSite()) {
       case Website.CIA:
+        {
+          return [
+            SidebarXItem(
+              label: 'atients',
+              onTap: () {
+                context.goNamed(PatientsSearchPage.getRouteName());
+                controller.notifyListeners();
+              },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Patients",
+                    child: Icon(IconDataSolid(
+                      int.parse('0x00050'),
+                    )),
+                  )),
+            ),
+            SidebarXItem(
+              label: 'ssistants',
+              onTap: () {
+                context.goNamed(UserSearchPage.assistantsRouteName);
+                controller.notifyListeners();
+              },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Assistants",
+                    child: Icon(IconDataSolid(
+                      int.parse('0x00041'),
+                    )),
+                  )),
+            ),
+            SidebarXItem(
+              label: 'nstructors',
+              onTap: () {
+
+                context.goNamed(UserSearchPage.instructorsRouteName);
+                controller.notifyListeners();             },
+              iconWidget: Container(
+                  child: Tooltip(
+                    message: "Instructors",
+                    child: Icon(IconDataSolid(
+                      int.parse('0x00049'),
+                    )),
+                  )),
+            ),
+            SidebarXItem(
+              label: 'andidates',
+              onTap: () {
+
+                context.goNamed(UserSearchPage.candidatesRouteName);
+                controller.notifyListeners();           },
+              iconWidget: Container(
+                  child:Tooltip(
+                    message: "Candidates",
+                    child: Icon(IconDataSolid(
+                      int.parse('0x00043'),
+                    )),
+                  )),
+            ),
+            SidebarXItem(
+              label: 'Stock',
+              onTap: () {
+                context.goNamed(StockSearchPage.routeCIAname);
+                controller.notifyListeners();
+              },
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Stock",child: Icon(Icons.store))),
+            ),
+            SidebarXItem(
+              label: 'Cash Flow',
+              onTap: () {
+                context.goNamed(CashFlowIncomePage.routeCIAname);
+                controller.notifyListeners();
+              },
+              iconWidget: Container(
+                  child: Tooltip(
+                      message: "Cash Flow",child: Icon(Icons.attach_money))),
+            ),
+          ];
+        }
+
       case Website.Clinic:
         {
           return [
             SidebarXItem(
               label: 'atients',
               onTap: () {
-                context.goNamed(PatientsSearchPage.routeName);
+                context.goNamed(PatientsSearchPage.getRouteName());
                 controller.notifyListeners();
               },
               iconWidget: Container(
@@ -208,30 +289,16 @@ class PagesController extends PageController {
                   )),
             ),
             SidebarXItem(
-              label: 'nstructors',
+              label: 'octors',
               onTap: () {
 
                 context.goNamed(UserSearchPage.instructorsRouteName);
                 controller.notifyListeners();             },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Instructors",
+                    message: "Doctors",
                     child: Icon(IconDataSolid(
-                int.parse('0x00049'),
-              )),
-                  )),
-            ),
-            SidebarXItem(
-              label: 'andidates',
-              onTap: () {
-
-                context.goNamed(UserSearchPage.candidatesRouteName);
-                controller.notifyListeners();           },
-              iconWidget: Container(
-                  child:Tooltip(
-                    message: "Candidates",
-                    child: Icon(IconDataSolid(
-                int.parse('0x00043'),
+                int.parse('0x00044'),
               )),
                   )),
             ),

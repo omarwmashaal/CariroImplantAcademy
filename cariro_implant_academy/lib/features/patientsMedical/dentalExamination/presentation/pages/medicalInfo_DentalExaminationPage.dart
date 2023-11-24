@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
+import '../../../../../Constants/Controllers.dart';
 import '../../../../../Widgets/CIA_TagsInputWidget.dart';
 import '../../../../../Widgets/CIA_TeethChart.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
@@ -25,11 +26,18 @@ import '../../domain/entities/dentalExaminationEntity.dart';
 
 class DentalExaminationPage extends StatefulWidget {
   DentalExaminationPage({Key? key, required this.patientId}) : super(key: key);
-  static String routeName = "DentalExamination";
-   static String routeNameClinic = "ClinicDentalExamination";
+
   static String routePath = ":id/DentalExamination";
   int patientId;
-
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicDentalExamination";
+      default:
+        return "DentalExamination";
+    }
+  }
   @override
   State<DentalExaminationPage> createState() => _PatientDentalExaminationState();
 }

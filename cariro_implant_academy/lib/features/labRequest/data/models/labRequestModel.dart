@@ -117,14 +117,14 @@ class LabRequestModel extends LabRequestEntity {
     date = DateTime.tryParse(json['date']??"")?.toLocal();
     deliveryDate = DateTime.tryParse(json['deliveryDate']??"")?.toLocal();
     entryById = json['entryById'];
-    entryBy = BasicNameIdObjectModel.fromJson(json['entryBy'] ?? Map<String, dynamic>());
+    entryBy = json['entryBy']==null?null:BasicNameIdObjectModel.fromJson(json['entryBy'] ?? Map<String, dynamic>());
     assignedToId = json['assignedToId'];
-    assignedTo = BasicNameIdObjectModel.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
+    assignedTo = json['assignedTo']==null?null:BasicNameIdObjectModel.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
     source = EnumLabRequestSources.values[json['source'] ?? 0];
     customerId = json['customerId'];
     customer = UserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
     patientId = json['patientId'];
-    patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
+    patient =json['patient']==null?null: BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     status = EnumLabRequestStatus.values[json['status'] ?? 0];
     paid = json['paid'] ?? false;
     cost = json['cost'];
@@ -134,7 +134,7 @@ class LabRequestModel extends LabRequestEntity {
     steps = ((json['steps'] ?? []) as List<dynamic>).map((e) => LabStepModel.fromJson(e as Map<String, dynamic>)).toList();
     if (steps != null && steps!.isNotEmpty && this.customerId == steps!.last.technicianId) assignedTo!.name = "Customer";
     fileId = json['fileId'];
-    file = BasicNameIdObjectModel.fromJson(json['file'] ?? Map<String, dynamic>());
+    file =json['file']==null?null: BasicNameIdObjectModel.fromJson(json['file'] ?? Map<String, dynamic>());
     fullZireonCrown = json['full_zireon_crown'] ?? false;
     porcelainFusedToZircomium = json['porcelain_fused_to_zircomium'] ?? false;
     porcelainFusedToMetal = json['porcelain_fused_to_metal'] ?? false;
@@ -169,7 +169,7 @@ class LabRequestModel extends LabRequestEntity {
         assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.NotYet);
       }
       if (assigned != null) {
-        assignedTo = assignedTo ?? assigned!.technician ?? BasicNameIdObjectModel();
+        assignedTo = json['assignedTo']==null?null: assignedTo ?? assigned!.technician ?? BasicNameIdObjectModel();
         assignedToId = assignedToId ?? assigned!.technicianId;
       }
     }

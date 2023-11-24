@@ -120,11 +120,9 @@ class VisitDataSource extends DataGridSource {
                 DataGridCell<int>(columnName: 'id', value: e.id),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 // DataGridCell<String>(columnName: 'Status', value: e.status??""),
-                // DataGridCell<String>(columnName: 'Reservation Time', value: e.reservationTime??""),
-                DataGridCell<DateTime>(
-                    columnName: 'Real Visit Time', value: e.realVisitTime),
-                DataGridCell<DateTime>(
-                    columnName: 'Enters Clinic Time', value: e.entersClinicTime),
+                DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
+                DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
+                DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
                 DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
@@ -149,10 +147,9 @@ class VisitDataSource extends DataGridSource {
                 DataGridCell<int>(columnName: 'id', value: e.id),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
-                DataGridCell<DateTime>(
-                    columnName: 'Real Visit Time', value: e.realVisitTime),
-                DataGridCell<DateTime>(
-                    columnName: 'Enters Clinic Time', value: e.entersClinicTime ),
+                DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
+                DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
+                DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
                 DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
@@ -174,20 +171,21 @@ class VisitDataSource extends DataGridSource {
       return Container(
         alignment: Alignment.center,
         child: Text(
-          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
-          e.value == null ? "" : e.value.toString(),
+          e.value is DateTime
+              ? DateFormat("dd-MM-yyyy hh:mm a").format(e.value)
+              : e.value == null
+                  ? ""
+                  : e.value.toString(),
           style: TextStyle(fontSize: 12),
         ),
       );
     }).toList());
   }
 
-   updateData({required List<VisitEntity> newData})  {
+  updateData({required List<VisitEntity> newData}) {
     models = newData;
     init();
     notifyListeners();
     notifyDataSourceListeners();
-
-
   }
 }

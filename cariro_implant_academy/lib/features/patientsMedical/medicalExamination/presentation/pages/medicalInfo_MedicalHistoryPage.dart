@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../Constants/Colors.dart';
+import '../../../../../Constants/Controllers.dart';
 import '../../../../../Models/DTOs/DropDownDTO.dart';
 import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
@@ -31,10 +32,19 @@ import '../bloc/medicaHistoryBloc.dart';
 
 class PatientMedicalHistory extends StatefulWidget {
   PatientMedicalHistory({Key? key, required this.patientId}) : super(key: key);
-  static String routeName = "MedicalHistory";
-   static String routeNameClinic = "ClinicMedicalHistory";
-static String routePath = ":id/MedicalHistory";
+
+  static String routePath = ":id/MedicalHistory";
   int patientId;
+
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicMedicalHistory";
+      default:
+        return "MedicalHistory";
+    }
+  }
 
   static String getPath(String id) {
     return "/CIA/Patients/$id/MedicalHistory";
@@ -61,9 +71,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Medical History"));
     bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
     return BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
-      listener: (context, state) {
-
-      },
+      listener: (context, state) {},
       buildWhen: (previous, current) =>
           current is MedicalHistoryBloc_LoadingState || current is MedicalHistoryBloc_DataLoaded || current is MedicalHistoryBloc_ErrorState,
       builder: (context, state) {
@@ -71,7 +79,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
           return LoadingWidget();
         else if (state is MedicalHistoryBloc_DataLoaded) {
           medicalHistoryData = state.medicalExaminationEntity;
-          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.medicalExaminationEntity.date,data: medicalHistoryData));
+          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.medicalExaminationEntity.date, data: medicalHistoryData));
 
           bloc.isInitialized = true;
           return ListView(
@@ -557,8 +565,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                         medicalHistoryData.diabetic?.when = value;
                                       },
                                       label: "When? ",
-                                      controller:
-                                          TextEditingController(text: medicalHistoryData?.diabetic?.when != null ? DateFormat("dd-MM-yyyy").format(medicalHistoryData.diabetic!.when!) : "")),
+                                      controller: TextEditingController(
+                                          text: medicalHistoryData?.diabetic?.when != null
+                                              ? DateFormat("dd-MM-yyyy").format(medicalHistoryData.diabetic!.when!)
+                                              : "")),
                                 ),
                               ),
                               Expanded(
@@ -766,7 +776,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
         } else if (state is MedicalHistoryBloc_ErrorState)
           return BigErrorPageWidget(message: state.message);
         else
-          return BigErrorPageWidget(message: "Couldn't retrieve data");
+          return Container();
       },
     );
   }

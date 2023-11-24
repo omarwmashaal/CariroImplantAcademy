@@ -139,9 +139,14 @@ void ShowAddExpenesesPopUpWidget({
                               child: expCategory == EnumExpenseseCategoriesType.BoughtMedical
                                   ? Container()
                                   : CIA_MultiSelectChipWidget(
-                                      onChange: (item, isSelected) => _setState(() => newCategory = isSelected),
+                                      onChange: (item, isSelected) {
+
+                                        dummyModel.category=null;
+                                        dummyModel.categoryId = null;
+                                        _setState(() => newCategory = isSelected);
+                                      },
                                       labels: [
-                                        CIA_MultiSelectChipWidgeModel(label: "New Category"),
+                                        CIA_MultiSelectChipWidgeModel(label: "New Category",isSelected: newCategory),
                                       ],
                                     ),
                             ),
@@ -176,7 +181,7 @@ void ShowAddExpenesesPopUpWidget({
                                               element.categoryId = null;
                                             });
                                           },
-                                          controller: TextEditingController(text: dummyModel.category!.name ?? ""),
+                                          controller: TextEditingController(text: dummyModel.category?.name ?? ""),
                                         )
                                       : CIA_DropDownSearchBasicIdName(
                                           label: "Category",
@@ -200,9 +205,14 @@ void ShowAddExpenesesPopUpWidget({
                           children: [
                             Expanded(
                               child: CIA_MultiSelectChipWidget(
-                                onChange: (item, isSelected) => _setState(() => newPaymentMethod = isSelected),
+                                onChange: (item, isSelected) {
+
+                                  dummyModel.paymentMethod=null;
+                                  dummyModel.paymentMethodId = null;
+                                  _setState(() => newPaymentMethod = isSelected);
+                                },
                                 labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "New Payment Method"),
+                                  CIA_MultiSelectChipWidgeModel(label: "New Payment Method",isSelected: newPaymentMethod),
                                 ],
                               ),
                             ),
@@ -219,7 +229,7 @@ void ShowAddExpenesesPopUpWidget({
                                           model.paymentMethodId = null;
                                         });
                                       },
-                                      controller: TextEditingController(text: dummyModel.paymentMethod!.name ?? ""),
+                                      controller: TextEditingController(text: dummyModel.paymentMethod?.name ?? ""),
                                     )
                                   : CIA_DropDownSearchBasicIdName(
                                       label: "Payment Method",
@@ -242,9 +252,13 @@ void ShowAddExpenesesPopUpWidget({
                           children: [
                             Expanded(
                               child: CIA_MultiSelectChipWidget(
-                                onChange: (item, isSelected) => _setState(() => newSupplier = isSelected),
+                                onChange: (item, isSelected) {
+                                  dummyModel.supplier=null;
+                                  dummyModel.supplierId = null;
+                                  _setState(() => newSupplier = isSelected);
+                                },
                                 labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "New Supplier"),
+                                  CIA_MultiSelectChipWidgeModel(label: "New Supplier",isSelected: newSupplier),
                                 ],
                               ),
                             ),
@@ -261,7 +275,7 @@ void ShowAddExpenesesPopUpWidget({
                                           element.supplierId = null;
                                         });
                                       },
-                                      controller: TextEditingController(text: dummyModel.supplier!.name ?? ""),
+                                      controller: TextEditingController(text: dummyModel.supplier?.name ?? ""),
                                     )
                                   : CIA_DropDownSearchBasicIdName(
                                       label: "Supplier",

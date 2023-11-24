@@ -47,13 +47,24 @@ import '../../../patient/presentation/bloc/patientVisitsBloc.dart';
 
 class ViewUserProfilePage extends StatefulWidget {
   ViewUserProfilePage({Key? key, required this.userId, this.role}) : super(key: key);
-  static String routeName = "UserProfile";
-   static String routeNameClinic = "ClinicUserProfile";
   static String routePath = "User/:id/UserProfile";
   static String candidateRouteName = "CandidateProfile";
-   static String candidateRouteNameClinic = "ClinicCandidateProfile";
+  static String candidateRouteNameClinic = "ClinicCandidateProfile";
   static String candidateRoutePath = "Candidate/:id/CandidateProfile";
   int userId;
+
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicUserProfile";
+      case Website.Lab:
+        return "LabUserProfile";
+      default:
+        return "UserProfile";
+    }
+  }
+
   UserRoles? role;
 
   @override
@@ -119,7 +130,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
         ],
         child: BlocBuilder<UsersBloc, UsersBloc_States>(
           buildWhen: (previous, current) =>
-          current is UsersBloc_LoadingUserState || current is UsersBloc_LoadedSingleUserSuccessfullyState || current is UsersBloc_SwitchEditViewModeState,
+              current is UsersBloc_LoadingUserState || current is UsersBloc_LoadedSingleUserSuccessfullyState || current is UsersBloc_SwitchEditViewModeState,
           builder: (context, state) {
             if (state is UsersBloc_LoadingUserState) {
               return LoadingWidget();
@@ -155,7 +166,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                             children: [
                                               TitleWidget(title: "User Profile"),
                                               SizedBox(width: 10),
-                                                  () {
+                                              () {
                                                 if (widget.userId == sl<SharedPreferences>().getInt("userid")) {
                                                   return CIA_SecondaryButton(
                                                       label: "Reset Password",
@@ -190,10 +201,9 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                     label: "Old Password",
                                                                     controller: TextEditingController(text: oldPassword),
                                                                     isObscure: true,
-                                                                    onChange: (v) =>
-                                                                        _setState(() {
-                                                                          oldPassword = v;
-                                                                        }),
+                                                                    onChange: (v) => _setState(() {
+                                                                      oldPassword = v;
+                                                                    }),
                                                                   ),
                                                                   SizedBox(height: 10),
                                                                   CIA_TextFormField(
@@ -239,11 +249,11 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                     newPassword1.isEmpty
                                                                         ? "Password can't be empty"
                                                                         : newPassword2 == newPassword1
-                                                                        ? "Passwords match"
-                                                                        : "Passwords don't match",
+                                                                            ? "Passwords match"
+                                                                            : "Passwords don't match",
                                                                     style: TextStyle(
                                                                         color:
-                                                                        newPassword2 == newPassword1 && newPassword1.isNotEmpty ? Colors.green : Colors.red,
+                                                                            newPassword2 == newPassword1 && newPassword1.isNotEmpty ? Colors.green : Colors.red,
                                                                         fontSize: 15),
                                                                   ),
                                                                   Text(
@@ -295,10 +305,10 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                     VisitDataSource dataSource = VisitDataSource(sessions: true);
                                                     bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                         params: GetSessionsDurationParams(
-                                                          id: widget.userId,
-                                                          from: from,
-                                                          to: to,
-                                                        )));
+                                                      id: widget.userId,
+                                                      from: from,
+                                                      to: to,
+                                                    )));
                                                     CIA_ShowPopUp(
                                                         width: 1000,
                                                         height: 900,
@@ -313,15 +323,15 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                   child: CIA_DateTimeTextFormField(
                                                                     label: "From",
                                                                     controller:
-                                                                    TextEditingController(text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
+                                                                        TextEditingController(text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
                                                                     onChange: (v) {
                                                                       from = v;
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
-                                                                            id: widget.userId,
-                                                                            from: from,
-                                                                            to: to,
-                                                                          )));
+                                                                        id: widget.userId,
+                                                                        from: from,
+                                                                        to: to,
+                                                                      )));
                                                                     },
                                                                   ),
                                                                 ),
@@ -331,10 +341,10 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
 
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
-                                                                            id: widget.userId,
-                                                                            from: from,
-                                                                            to: to,
-                                                                          )));
+                                                                        id: widget.userId,
+                                                                        from: from,
+                                                                        to: to,
+                                                                      )));
                                                                     },
                                                                     icon: Icon(Icons.remove)),
                                                                 SizedBox(width: 10),
@@ -342,15 +352,15 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                   child: CIA_DateTimeTextFormField(
                                                                     label: "To",
                                                                     controller:
-                                                                    TextEditingController(text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
+                                                                        TextEditingController(text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
                                                                     onChange: (v) {
                                                                       to = v;
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
-                                                                            id: widget.userId,
-                                                                            from: from,
-                                                                            to: to,
-                                                                          )));
+                                                                        id: widget.userId,
+                                                                        from: from,
+                                                                        to: to,
+                                                                      )));
                                                                     },
                                                                   ),
                                                                 ),
@@ -359,10 +369,10 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                       to = null;
                                                                       bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                                           params: GetSessionsDurationParams(
-                                                                            id: widget.userId,
-                                                                            from: from,
-                                                                            to: to,
-                                                                          )));
+                                                                        id: widget.userId,
+                                                                        from: from,
+                                                                        to: to,
+                                                                      )));
                                                                     },
                                                                     icon: Icon(Icons.remove)),
                                                               ],
@@ -377,7 +387,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                   }
                                                                 },
                                                                 buildWhen: (previous, current) =>
-                                                                current is UsersBloc_LoadingSessionsState ||
+                                                                    current is UsersBloc_LoadingSessionsState ||
                                                                     current is UsersBloc_LoadingSessionsErrorState ||
                                                                     current is UsersBloc_LoadedSessionsSuccessfullyState,
                                                                 builder: (context, state) {
@@ -399,9 +409,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                       children: [
                                                                         Container(
                                                                             width: double.infinity,
-                                                                            child: Center(
-                                                                                child:
-                                                                                FormTextKeyWidget(text: "Duration: $duration"))),
+                                                                            child: Center(child: FormTextKeyWidget(text: "Duration: $duration"))),
                                                                         Expanded(
                                                                           child: TableWidget(
                                                                             dataSource: dataSource,
@@ -416,8 +424,6 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                             )
                                                           ],
                                                         ));
-
-
                                                   })
                                             ],
                                           ),
@@ -430,16 +436,16 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           edit
                                               ? CIA_TextFormField(
-                                            label: "Name",
-                                            onChange: (v) => user.name = v,
-                                            controller: TextEditingController(text: user.name == null ? "" : user.name),
-                                          )
+                                                  label: "Name",
+                                                  onChange: (v) => user.name = v,
+                                                  controller: TextEditingController(text: user.name == null ? "" : user.name),
+                                                )
                                               : Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "Name")),
-                                              Expanded(child: FormTextValueWidget(text: user.name == null ? "" : user.name))
-                                            ],
-                                          ),
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Name")),
+                                                    Expanded(child: FormTextValueWidget(text: user.name == null ? "" : user.name))
+                                                  ],
+                                                ),
                                           Row(
                                             children: [
                                               Expanded(child: FormTextKeyWidget(text: "Date of birth")),
@@ -450,17 +456,17 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           edit
                                               ? CIA_TextFormField(
-                                            label: "Phone",
-                                            isNumber: true,
-                                            onChange: (v) => user.phoneNumber = v,
-                                            controller: TextEditingController(text: user.phoneNumber == null ? "" : user.phoneNumber),
-                                          )
+                                                  label: "Phone",
+                                                  isNumber: true,
+                                                  onChange: (v) => user.phoneNumber = v,
+                                                  controller: TextEditingController(text: user.phoneNumber == null ? "" : user.phoneNumber),
+                                                )
                                               : Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "Phone")),
-                                              Expanded(child: FormTextValueWidget(text: user.phoneNumber == null ? "" : user.phoneNumber))
-                                            ],
-                                          ),
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Phone")),
+                                                    Expanded(child: FormTextValueWidget(text: user.phoneNumber == null ? "" : user.phoneNumber))
+                                                  ],
+                                                ),
                                           Row(
                                             children: [
                                               Expanded(child: FormTextKeyWidget(text: "Gender")),
@@ -469,53 +475,52 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           edit
                                               ? CIA_TextFormField(
-                                            label: "Graduated From",
-                                            onChange: (v) => user.graduatedFrom = v,
-                                            controller: TextEditingController(text: user.graduatedFrom == null ? "" : user.graduatedFrom),
-                                          )
+                                                  label: "Graduated From",
+                                                  onChange: (v) => user.graduatedFrom = v,
+                                                  controller: TextEditingController(text: user.graduatedFrom == null ? "" : user.graduatedFrom),
+                                                )
                                               : Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "Graduated From")),
-                                              Expanded(child: FormTextValueWidget(text: user?.graduatedFrom == null ? "" : user?.graduatedFrom))
-                                            ],
-                                          ),
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Graduated From")),
+                                                    Expanded(child: FormTextValueWidget(text: user?.graduatedFrom == null ? "" : user?.graduatedFrom))
+                                                  ],
+                                                ),
                                           edit
                                               ? CIA_TextFormField(
-                                            label: "Class Year",
-                                            onChange: (v) => user.classYear = v,
-                                            controller: TextEditingController(text: user.classYear == null ? "" : user.classYear),
-                                          )
+                                                  label: "Class Year",
+                                                  onChange: (v) => user.classYear = v,
+                                                  controller: TextEditingController(text: user.classYear == null ? "" : user.classYear),
+                                                )
                                               : Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "Class Year")),
-                                              Expanded(child: FormTextValueWidget(text: user.classYear == null ? "" : user.classYear))
-                                            ],
-                                          ),
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Class Year")),
+                                                    Expanded(child: FormTextValueWidget(text: user.classYear == null ? "" : user.classYear))
+                                                  ],
+                                                ),
                                           edit
                                               ? CIA_TextFormField(
-                                            label: "Speciality",
-                                            onChange: (v) => user.speciality = v,
-                                            controller: TextEditingController(text: user.speciality == null ? "" : user.speciality),
-                                          )
+                                                  label: "Speciality",
+                                                  onChange: (v) => user.speciality = v,
+                                                  controller: TextEditingController(text: user.speciality == null ? "" : user.speciality),
+                                                )
                                               : Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "Speciality")),
-                                              Expanded(child: FormTextValueWidget(text: user?.speciality == null ? "" : user.speciality))
-                                            ],
-                                          ),
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text: "Speciality")),
+                                                    Expanded(child: FormTextValueWidget(text: user?.speciality == null ? "" : user.speciality))
+                                                  ],
+                                                ),
                                           Row(
                                             children: [
                                               Expanded(
                                                   child: FormTextKeyWidget(
-                                                    text: "Registration: " + (user.registeredBy == null ? "" : user.registeredBy!.name as String),
-                                                    secondaryInfo: true,
-                                                  )),
+                                                text: "Registration: " + (user.registeredBy == null ? "" : user.registeredBy!.name as String),
+                                                secondaryInfo: true,
+                                              )),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                    text: user?.registerationDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(
-                                                        user.registerationDate!),
-                                                    secondaryInfo: true,
-                                                  ))
+                                                text: user?.registerationDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.registerationDate!),
+                                                secondaryInfo: true,
+                                              ))
                                             ],
                                           ),
                                         ],
@@ -530,7 +535,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           BlocBuilder<ImageBloc, ImageBloc_State>(
                                             bloc: imageBloc,
                                             buildWhen: (previous, current) =>
-                                            current is ImageDownloadingState ||
+                                                current is ImageDownloadingState ||
                                                 current is ImageLoadedState ||
                                                 current is ImageLoadingErrorState ||
                                                 current is ImageUploadErrorState ||
@@ -574,45 +579,44 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                             Expanded(
                               child: edit
                                   ? Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(child: SizedBox()),
-                                    Flexible(
-                                      child: CIA_SecondaryButton(label: "Cancel", onTab: () => setState(() => edit = false)),
-                                    ),
-                                    Flexible(
-                                      child: CIA_PrimaryButton(
-                                          label: "Save",
-                                          isLong: true,
-                                          onTab: () {
-                                            bloc.add(UsersBloc_UpdateUserInfoEvent(
-                                              id: user!.idInt!,
-                                              userData: user!,
-                                            ));
-                                            if (user.profileImage != null) {
-                                              imageBloc.uploadImageEvent(UploadImageParams(
-                                                id: user.idInt!,
-                                                type: EnumImageType.UserProfile,
-                                                data: user.profileImage!,
-                                              ));
-                                            }
-                                          }),
-                                    ),
-                                    Expanded(child: SizedBox()),
-                                  ],
-                                ),
-                              )
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(child: SizedBox()),
+                                          Flexible(
+                                            child: CIA_SecondaryButton(label: "Cancel", onTab: () => setState(() => edit = false)),
+                                          ),
+                                          Flexible(
+                                            child: CIA_PrimaryButton(
+                                                label: "Save",
+                                                isLong: true,
+                                                onTab: () {
+                                                  bloc.add(UsersBloc_UpdateUserInfoEvent(
+                                                    id: user!.idInt!,
+                                                    userData: user!,
+                                                  ));
+                                                  if (user.profileImage != null) {
+                                                    imageBloc.uploadImageEvent(UploadImageParams(
+                                                      id: user.idInt!,
+                                                      type: EnumImageType.UserProfile,
+                                                      data: user.profileImage!,
+                                                    ));
+                                                  }
+                                                }),
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                        ],
+                                      ),
+                                    )
                                   : Center(
-                                child: CIA_SecondaryButton(
-                                  onTab: () =>
-                                      bloc.add(UsersBloc_SwitchEditViewEvent(
-                                        edit: true,
-                                        user: user,
-                                      )),
-                                  label: "Edit Info",
-                                ),
-                              ),
+                                      child: CIA_SecondaryButton(
+                                        onTab: () => bloc.add(UsersBloc_SwitchEditViewEvent(
+                                          edit: true,
+                                          user: user,
+                                        )),
+                                        label: "Edit Info",
+                                      ),
+                                    ),
                             )
                           ],
                         ),

@@ -25,6 +25,7 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
     super.pedos,
     super.rootCanalTreatments,
     super.scalings,
+    super.patientsDoctor,
   });
 
   factory ClinicTreatmentModel.fromEntity(ClinicTreatmentEntity entity) {
@@ -38,6 +39,7 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
       pedos:entity.pedos,
       rootCanalTreatments:entity.rootCanalTreatments,
       scalings:entity.scalings,
+      patientsDoctor:entity.patientsDoctor,
     );
   }
 
@@ -45,6 +47,7 @@ class ClinicTreatmentModel extends ClinicTreatmentEntity {
     return ClinicTreatmentModel(
 
       patientId:map['patientId'],
+      patientsDoctor:map['patientsDoctor']==null?null:BasicNameIdObjectModel.fromJson(map['patientsDoctor']),
       restorations:((map['restorations']??[]) as List<dynamic>).map((e) => RestorationModel.fromJson(e as Map<String,dynamic>)).toList(),
       clinicImplants:((map['clinicImplants']??[]) as List<dynamic>).map((e) => ClinicImplantModel.fromJson(e as Map<String,dynamic>)).toList(),
       orthoTreatments:((map['orthoTreatments']??[]) as List<dynamic>).map((e) => OrthoTreatmentModel.fromJson(e as Map<String,dynamic>)).toList(),
