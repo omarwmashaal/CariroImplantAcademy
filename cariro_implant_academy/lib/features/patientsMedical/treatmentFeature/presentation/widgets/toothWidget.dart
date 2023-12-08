@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/tr
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../../Constants/Fonts.dart';
@@ -29,7 +30,6 @@ class ToothWidget extends StatelessWidget {
   int patientId;
   Function(RequestChangeEntity request) acceptChanges;
 
-
   @override
   Widget build(BuildContext context) {
     return Column(children: _buildWidgets());
@@ -41,7 +41,8 @@ class ToothWidget extends StatelessWidget {
     if (currentTooth != null) {
       if (currentTooth!.simpleImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -55,7 +56,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.immediateImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -69,7 +71,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.guidedImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -83,7 +86,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.expansionWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -97,7 +101,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.splittingWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -111,7 +116,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.gbrWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -125,7 +131,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.openSinusWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -139,7 +146,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.closedSinusWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -153,7 +161,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.expansionWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -167,7 +176,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.splittingWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -181,7 +191,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.gbrWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -195,7 +206,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.openSinusWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -209,7 +221,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.closedSinusWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -223,7 +236,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.extraction != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -240,7 +254,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.restoration != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -257,7 +272,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.rootCanalTreatment != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -274,7 +290,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.scaling != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -290,7 +307,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.crown != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           price: true,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -306,7 +324,8 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.pontic != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(isSurgical: isSurgical,
+        returnValue.add(ToothStatusWidget(
+          isSurgical: isSurgical,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
@@ -320,15 +339,48 @@ class ToothWidget extends StatelessWidget {
       }
     }
     var title = <Widget>[
-      Row(
-        children: [
-          Text(
-            "Tooth",
-            style: TextStyle(fontFamily: Inter_Bold, fontSize: viewOnlyMode ? 12 : 25),
-          ),
-          SizedBox(width: 30),
-          FormTextValueWidget(text: toothID.toString()),
-        ],
+      Visibility(
+        visible: isSurgical || !viewOnlyMode || (viewOnlyMode &&
+
+
+            ((currentTooth!.simpleImplant != null && currentTooth!.simpleImplant!.planPrice != 0) ||
+            (currentTooth!.immediateImplant != null && currentTooth!.immediateImplant!.planPrice != 0) ||
+            (currentTooth!.guidedImplant != null && currentTooth!.guidedImplant!.planPrice != 0) ||
+            (currentTooth!.expansionWithImplant != null && currentTooth!.expansionWithImplant!.planPrice != 0) ||
+            (currentTooth!.splittingWithImplant != null && currentTooth!.splittingWithImplant!.planPrice != 0) ||
+            (currentTooth!.gbrWithImplant != null && currentTooth!.gbrWithImplant!.planPrice != 0) ||
+            (currentTooth!.openSinusWithImplant != null && currentTooth!.openSinusWithImplant!.planPrice != 0) ||
+            (currentTooth!.closedSinusWithImplant != null && currentTooth!.closedSinusWithImplant!.planPrice != 0) ||
+            (currentTooth!.expansionWithoutImplant != null && currentTooth!.expansionWithoutImplant!.planPrice != 0) ||
+            (currentTooth!.splittingWithoutImplant != null && currentTooth!.splittingWithoutImplant!.planPrice != 0) ||
+            (currentTooth!.gbrWithoutImplant != null && currentTooth!.gbrWithoutImplant!.planPrice != 0 && currentTooth!.gbrWithoutImplant!.planPrice != 0) ||
+            (currentTooth!.openSinusWithoutImplant != null &&
+                currentTooth!.openSinusWithoutImplant!.planPrice != 0 &&
+                currentTooth!.openSinusWithoutImplant!.planPrice != 0) ||
+            (currentTooth!.closedSinusWithoutImplant != null &&
+                currentTooth!.closedSinusWithoutImplant!.planPrice != 0 &&
+                currentTooth!.closedSinusWithoutImplant!.planPrice != 0) ||
+            (currentTooth!.extraction != null && currentTooth!.extraction!.planPrice != 0 && currentTooth!.extraction!.planPrice != 0) ||
+            (currentTooth!.restoration != null && currentTooth!.restoration!.planPrice != 0 && currentTooth!.restoration!.planPrice != 0) ||
+            (currentTooth!.rootCanalTreatment != null &&
+                currentTooth!.rootCanalTreatment!.planPrice != 0 &&
+                currentTooth!.rootCanalTreatment!.planPrice != 0) ||
+            (currentTooth!.scaling != null && currentTooth!.scaling!.planPrice != 0 && currentTooth!.scaling!.planPrice != 0) ||
+            (currentTooth!.crown != null && currentTooth!.crown!.planPrice != 0 && currentTooth!.crown!.planPrice != 0) ||
+            (currentTooth!.pontic != null && currentTooth!.pontic!.planPrice != 0))),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(child: Divider()),
+            Text(
+              "Tooth",
+              style: TextStyle(fontFamily: Inter_Bold, fontSize: viewOnlyMode ? 12 : 12),
+            ),
+            SizedBox(width: 10),
+            FormTextValueWidget(text: toothID.toString()),
+            Expanded(child: Divider()),
+          ],
+        ),
       ),
       SizedBox(height: viewOnlyMode ? 1 : 2),
     ];

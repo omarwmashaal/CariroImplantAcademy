@@ -13,26 +13,100 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Pages/CIA_Pages/ViewUserPage.dart';
 import '../../../../Widgets/CIA_TextField.dart';
 import '../../../../Widgets/Title.dart';
+import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/injection_contianer.dart';
 import '../../domain/entities/enum.dart';
 
 class UserSearchPage extends StatefulWidget {
   UserSearchPage({Key? key, required this.type}) : super(key: key);
-  static String assistantsRouteName = "Users/Assistants";
-   static String assistantsRouteNameClinic = "ClinicUsers/Assistants";
-  static String candidatesRouteName = "Candidates";
-   static String candidatesRouteNameClinic = "ClinicCandidates";
-  static String instructorsRouteName = "Users/Instructors";
-   static String instructorsRouteNameClinic = "ClinicUsers/Instructors";
-  static String techniciansRouteName = "Users/Technicians";
-   static String techniciansRouteNameClinic = "ClinicUsers/Technicians";
-  static String outSourceRouteName = "Users/Customers";
-   static String outSourceRouteNameClinic = "ClinicUsers/Customers";
-  static String labModeratorsRouteName = "Users/LabModerators";
-   static String labModeratorsRouteNameClinic = "ClinicUsers/LabModerators";
+  
+  static String routePathAssistants = "Assistants";
+  static String routePathCandidates = "Candidates";
+  static String routePathInstructors = "Instructors";
+  static String routePathTechnicians = "Technicians";
+  static String routePathCustomers = "Customers";
+  static String routePathLabModerators = "LabModerators";
+  static String routePathOutsource = "Outsource";
+
+
+  static String getRouteNameAssistants({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicAssistants";
+      default:
+        return "Assistants";
+    }
+  }
+  static String getRouteNameOutsourceModerators({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicOutsource";
+      case Website.Lab:
+        return "LabOutsource";
+      default:
+        return "CIAOutsource";
+    }
+  }
+  static String getRouteNameLabModerators({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicLabModerators";
+      case Website.Lab:
+        return "LabLabModerators";
+      default:
+        return "CIAModerators";
+    }
+  }
+
+  static String getRouteNameTechnicians({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicTechnicians";
+      case Website.Lab:
+        return "LabTechnicians";
+      default:
+        return "Technicians";
+    }
+  }
+
+  static String getRouteNameCustomers({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicCustomers";
+      case Website.Lab:
+        return "LabCustomers";
+      default:
+        return "Customers";
+    }
+  }
+  static String getRouteNameInstructors({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicInstructors";
+      default:
+        return "Instructors";
+    }
+  }
+  static String getRouteNameCandidates({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicCandidates";
+      default:
+        return "Candidates";
+    }
+  }
+
 
   UserRoles type;
 

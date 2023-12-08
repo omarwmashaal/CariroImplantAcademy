@@ -13,21 +13,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Widgets/CIA_TextField.dart';
 import '../../../../Widgets/Title.dart';
+import '../../../../core/constants/enums/enums.dart';
 
 class StockLogsSearchPage extends StatefulWidget {
   StockLogsSearchPage({
     Key? key,
   }) : super(key: key);
-
-  static String routeName = "StockLogs";
-   static String routeNameClinic = "ClinicStockLogs";
   static String routePath = "StockLogs";
-  static String routeCIAname = "CIAStockLogs";
-  static String routeLABname = "LabStockLogs";
-  static String routeClinicName = "ClinicStockLogs";
-
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicStockLogs";
+      case Website.Lab:
+        return "LabStockLogs";
+      default:
+        return "CIAStockLogs";
+    }
+  }
   @override
   State<StockLogsSearchPage> createState() => _StockLogsSearchPageState();
 }

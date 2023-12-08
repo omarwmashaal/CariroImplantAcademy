@@ -46,13 +46,20 @@ import '../../domain/entities/labRequestEntityl.dart';
 import '../../domain/entities/labStepEntity.dart';
 
 class LabCreateNewRequestPage extends StatefulWidget {
-  LabCreateNewRequestPage({Key? key, this.isDoctor = false, this.onChange, this.patientId}) : super(key: key);
+  LabCreateNewRequestPage({
+    Key? key,
+    this.isDoctor = false,
+    this.onChange,
+    this.patientId,
+    this.fixDismiss = false,
+  }) : super(key: key);
   static String routeName = "CreateRequest";
-   static String routeNameClinic = "ClinicCreateRequest";
+  static String routeNameClinic = "ClinicCreateRequest";
   static String routePath = "CreateRequest";
   bool isDoctor;
   Function? onChange;
   int? patientId;
+  bool fixDismiss;
 
   @override
   State<LabCreateNewRequestPage> createState() => _LabCreateNewRequestPageState();
@@ -116,7 +123,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 dialogHelper.dismissAll(context);
                 ShowSnackBar(context, isSuccess: true, title: "Success", message: "Customer Added!");
               } else if (state is LabRequestsBloc_ChangedPatientState) {
-                dialogHelper.dismissAll(context);
+                if (!widget.fixDismiss) dialogHelper.dismissAll(context);
               }
               if (state is LabRequestsBloc_CreatingLabRequestState)
                 CustomLoader.show(context);

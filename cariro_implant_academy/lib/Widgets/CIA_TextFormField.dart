@@ -29,10 +29,12 @@ class CIA_TextFormField extends StatefulWidget {
       this.inputFormatter,
       required this.controller,
       this.errorFunction,
+      this.textInputType,
       this.validator})
       : super(key: key);
 
   int maxLines;
+  TextInputType? textInputType;
   bool isHours;
   bool isMinutes;
   bool? isObscure = false;
@@ -97,6 +99,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           if (widget.onTap != null) widget.onTap!();
         },
         child: TextFormField(
+          keyboardType: widget.textInputType,
           onFieldSubmitted: (value) {
             if (widget.onSubmit != null) widget.onSubmit!(value);
           },

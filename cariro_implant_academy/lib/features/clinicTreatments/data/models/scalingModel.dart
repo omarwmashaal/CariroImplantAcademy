@@ -23,6 +23,7 @@ class ScalingModel extends ScalingEntity {
     super.doctorId,
     super.stepNumber,
     super.price,
+    super.clinicReceiptModelId,
   });
 
   factory ScalingModel.fromEntity(ScalingEntity entity) {
@@ -40,6 +41,7 @@ class ScalingModel extends ScalingEntity {
       doctorId:entity.doctorId,
       stepNumber:entity.stepNumber,
       price:entity.price,
+      clinicReceiptModelId:entity.clinicReceiptModelId,
     );
   }
 
@@ -58,6 +60,7 @@ class ScalingModel extends ScalingEntity {
       doctorId:map['doctorId'],
       stepNumber:map['stepNumber'],
       price:map['price'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
     );
   }
 
@@ -74,6 +77,7 @@ class ScalingModel extends ScalingEntity {
     data['doctorId'] = this.doctorId;
     data['stepNumber'] = this.stepNumber;
     data['price'] = this.price;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     return data;
   }
 }

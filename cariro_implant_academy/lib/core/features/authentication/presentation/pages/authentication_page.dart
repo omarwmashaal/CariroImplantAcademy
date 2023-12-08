@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/SignalR/SignalR.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/registerUserUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocEvents.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
@@ -21,6 +22,7 @@ import '../../../../../Constants/Controllers.dart';
 import '../../../../../Routes/Routes.dart';
 import '../../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
+import '../../../../../features/user/domain/entities/userEntity.dart';
 import '../../../../injection_contianer.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_bloc.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_blocStates.dart';
@@ -52,6 +54,19 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
+   /* sl<RegisterUserUseCase>()(
+      UserEntity(
+        name: "Admin",
+        phoneNumber: "012312412",
+        maritalStatus: "Married",
+        gender: "Male",
+        dateOfBirth: DateTime.now(),
+        email: "admin@cia.com",
+        role: "admin",
+
+      )
+    );*/
+
     authenticationBloc = context.read<AuthenticationBloc>();
     if (siteController.getSite() == null) siteController.setSite(Website.CIA);
     return BlocListener<AuthenticationBloc, Authentication_blocState>(
@@ -71,6 +86,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         if (state is! LoggingInState) CustomLoader.hide();
       },
       child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(builder: (context, state) {
+
         return Column(
           children: [
             Expanded(child: SizedBox()),
@@ -92,7 +108,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                               height: 60,
                               child: DefaultTabController(
                                 length: 3,
-                                initialIndex: 0,
+                                initialIndex: (){
+                                  print(siteController.getSite().index);
+                                  return siteController.getSite().index;
+                                }(),
                                 child: TabBar(
                                     labelColor: Colors.black,
                                     indicatorColor: Color_Accent,

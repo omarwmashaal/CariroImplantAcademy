@@ -19,12 +19,14 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../domain/useCases/getDoctorPercentageForPatientUseCase.dart';
+import '../../domain/useCases/updateClinicReceiptUseCase.dart';
 
 class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatmentBloc_States> {
   final GetClinicTreatmentsUseCase getClinicTreatmentsUseCase;
   final UpdateClinicTreatmentsUseCase updateClinicTreatmentsUseCase;
   final GetTeethClinicPricesUseCase getTeethClinicPricesUseCase;
   final GetDoctorPercentageForPatientUseCase getDoctorPercentageForPatientUseCase;
+  final UpdateClinicReceiptUseCase updateClinicReceiptUseCase;
 
   bool isInitialized = false;
 
@@ -33,6 +35,7 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
     required this.getClinicTreatmentsUseCase,
     required this.getTeethClinicPricesUseCase,
     required this.getDoctorPercentageForPatientUseCase,
+    required this.updateClinicReceiptUseCase,
   }) : super(ClinicTreatmentBloc_InitState()) {
     on<ClinicTreatmentBloc_LoadTreatmentsEvent>(
       (event, emit) async {
@@ -274,6 +277,15 @@ class ClinicTreatmentBloc extends Bloc<ClinicTreatmentBloc_Events, ClinicTreatme
         );
       },
     );
+    on<ClinicTreatmentBloc_UpdateClinicReceiptEvent>(
+      (event, emit) async {
+        //emit(ClinicTreatmentBloc_UpdatingClinicReceiptState());
+        //var result = await updateClinicReceiptUseCase(event.params);
+        // result.fold(
+        //     (l) => emit(ClinicTreatmentBloc_UpdatingClinicReceiptErrorState(message: l.message ?? "")),
+        //   (r) => emit(ClinicTreatmentBloc_UpdatedClinicReceiptSuccessfullyState()),
+      },
+    );
   }
 }
 
@@ -316,11 +328,10 @@ class DoctorsPercentageDataGridSource extends DataGridSource {
                     if (e.scalingId != null) return e.scaling?.name;
                     return "";
                   }()),
-              DataGridCell<String>(columnName: 'Doctor type', value: AddSpacesToSentence(e.doctorFeesType?.name??"")),
+              DataGridCell<String>(columnName: 'Doctor type', value: AddSpacesToSentence(e.doctorFeesType?.name ?? "")),
               DataGridCell<int>(columnName: "Total Fees", value: e.operationFee),
               DataGridCell<int>(columnName: "Doctor's Share", value: e.doctorsFees),
               DataGridCell<int>(columnName: "Clinic's Share", value: e.clinicFee),
-
             ]))
         .toList();
   }

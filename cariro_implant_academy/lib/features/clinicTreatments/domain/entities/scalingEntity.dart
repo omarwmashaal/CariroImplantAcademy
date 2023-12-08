@@ -18,6 +18,7 @@ class ScalingEntity extends Equatable {
   BasicNameIdObjectEntity? doctor;
   int? stepNumber;
   int? price;
+  int? clinicReceiptModelId;
 
   @override
   List<Object?> get props => [
@@ -34,6 +35,7 @@ class ScalingEntity extends Equatable {
         this.doctorId,
         this.stepNumber,
     this.price,
+    this.clinicReceiptModelId,
       ];
 
   ScalingEntity({
@@ -50,5 +52,6 @@ class ScalingEntity extends Equatable {
     this.doctorId,
     this.stepNumber,
     this.price,
+    this.clinicReceiptModelId,
   });
 }

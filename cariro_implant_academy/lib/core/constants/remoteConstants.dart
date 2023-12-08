@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants/Colors.dart';
@@ -7,7 +9,10 @@ import '../../Controllers/SiteController.dart';
 import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
-const _host ="http://localhost:5170/";
+const _host ="http://localhost:5000/";
+//const _host ="http://localhost:5170/";
+//const _host ="http://192.168.150.180/api/";
+var t = File("host.txt").readAsStringSync();
 //const _host = "http://54.224.105.207/api/";
 final serverHost = "${_host}api";
 final signalRHost = "${_host}notificationhub";

@@ -134,7 +134,7 @@ class ComplainsDataGridSource extends DataGridSource {
   init() {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<int>(columnName: 'Id', value: e.secondaryId),
+      DataGridCell<int>(columnName: 'Id', value: e.id),
       DataGridCell<DateTime>(columnName: 'Date', value: e.entryTime),
       DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name??""),
       DataGridCell<String>(columnName: 'Complain', value: e.comment??""),

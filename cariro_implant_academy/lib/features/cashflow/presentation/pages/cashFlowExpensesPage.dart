@@ -49,13 +49,19 @@ class CashFlowExpensesPage extends StatefulWidget {
   }) : super(key: key);
   CashFlowDataGridSource e_dataSource = CashFlowDataGridSource(type: CashFlowType.expenses);
 
-  static String routeName = "CashFlowExpenses";
-   static String routeNameClinic = "ClinicCashFlowExpenses";
   static String routePath = "CashFlowExpenses";
-  static String routeCIAname = "CashFlowExpensesCIA";
-  static String routeLABname = "CashFlowExpensesLAB";
-  static String routeClinicName = "CashFlowExpensesClinic";
 
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "CashFlowExpensesClinic";
+      case Website.Lab:
+        return "CashFlowExpensesLAB";
+      default:
+        return "CashFlowExpensesCIA";
+    }
+  }
   @override
   State<CashFlowExpensesPage> createState() => _CashFlowExpensesPageState();
 }

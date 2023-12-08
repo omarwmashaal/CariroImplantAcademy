@@ -16,6 +16,7 @@ import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.d
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -232,134 +233,149 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           nonSurgicalTreatment = state.nonSurgicalTreatmentEntity;
           medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: nonSurgicalTreatment.date, data: nonSurgicalTreatment));
           bloc.isInitialized = true;
-          return FocusTraversalGroup(
-            policy: OrderedTraversalPolicy(),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  FormTextKeyWidget(text: "Next Visit: "),
-                  FormTextValueWidget(
-                      text: nonSurgicalTreatment.nextVisit == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(nonSurgicalTreatment.nextVisit!)),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+          return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: [
+                FormTextKeyWidget(text: "Next Visit: "),
+                FormTextValueWidget(
+                    text: nonSurgicalTreatment.nextVisit == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(nonSurgicalTreatment.nextVisit!)),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+                bloc: medicalShellBloc,
+                buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+                builder: (context, stateShell) {
+                  return AbsorbPointer(
+                    absorbing: () {
+                      if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                        edit = stateShell.edit;
+                        return !edit;
+                      } else {
+                        edit = false;
+                        return true;
+                      }
+                    }(),
+                    child: StatefulBuilder(
+                      builder: (context,_setState) {
+                        var controller =  TextEditingController(text: nonSurgicalTreatment.treatment ?? "");
+
+                        return RawKeyboardListener(
+
+                          focusNode: FocusNode(),
+                          onKey: (value) {
+                            if(value.isKeyPressed(LogicalKeyboardKey.enter))
+                              {
+                                controller.text+="\r\n";
+                                _setState((){});
+                              }
+                          },
+                          child: CIA_TextFormField(
+                            textInputType: TextInputType.multiline,
+                            onChange: (value) {
+                              nonSurgicalTreatment.treatment = value;
+                              bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
+                            },
+                            label: "Treatment",
+                            controller: controller,
+                            maxLines: 5,
+                          ),
+                        );
+                      }
+                    ),
+                  );
+                }),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    asyncUseCase: sl<LoadUsersUseCase>(),
+                    searchParams: LoadUsersEnum.supervisors,
+                    onSelect: (value) {
+                      nonSurgicalTreatment.supervisorID = value.id;
+                    },
+                    //selectedItem: DropDownDTO(),
+                    selectedItem: nonSurgicalTreatment.supervisor ?? BasicNameIdObjectEntity(name: "", id: 0),
+                    label: "Supervisor",
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                CIA_SecondaryButton(
+                    label: "View History",
+                    onTab: () {
+                      CIA_PopUpTreatmentHistory_Table(widget.patientId, context, "View History Treatments", (value) {});
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                CIA_SecondaryButton(
+                    label: "Schedule Next Visit",
+                    width: 600,
+                    onTab: () async {
+                      CIA_ShowPopUp(
+                          context: context,
+                          width: 900,
+                          height: 600,
+                          title: "Schedule Next Visit",
+                          child: CalendarWidget(
+                            // dataSource: dataSource,
+                            getForDoctor: true,
+                            patientID: widget.patientId,
+                            onNewVisit: (newVisit) {
+                              nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
+                              bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
+                                nonSurgicalTreatmentEntity: nonSurgicalTreatment,
+                                dentalExaminationEntity: dentalExaminationEntity,
+                                patientId: widget.patientId,
+                              ));
+                            },
+                          ),
+                          onSave: () {
+                            bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
+                          });
+                    }),
+              ],
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                   bloc: medicalShellBloc,
                   buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                   builder: (context, stateShell) {
                     return AbsorbPointer(
-                      absorbing: () {
-                        if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                          edit = stateShell.edit;
-                          return !edit;
-                        } else {
-                          edit = false;
-                          return true;
-                        }
-                      }(),
-                      child: CIA_TextFormField(
-                        onChange: (value) {
-                          nonSurgicalTreatment.treatment = value;
-                          bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
-                        },
-                        label: "Treatment",
-                        controller: TextEditingController(text: nonSurgicalTreatment.treatment ?? ""),
-                        maxLines: 5,
-                      ),
-                    );
-                  }),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                      asyncUseCase: sl<LoadUsersUseCase>(),
-                      searchParams: LoadUsersEnum.supervisors,
-                      onSelect: (value) {
-                        nonSurgicalTreatment.supervisorID = value.id;
-                      },
-                      //selectedItem: DropDownDTO(),
-                      selectedItem: nonSurgicalTreatment.supervisor ?? BasicNameIdObjectEntity(name: "", id: 0),
-                      label: "Supervisor",
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CIA_SecondaryButton(
-                      label: "View History",
-                      onTab: () {
-                        CIA_PopUpTreatmentHistory_Table(widget.patientId, context, "View History Treatments", (value) {});
-                      }),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CIA_SecondaryButton(
-                      label: "Schedule Next Visit",
-                      width: 600,
-                      onTab: () async {
-                        CIA_ShowPopUp(
-                            context: context,
-                            width: 900,
-                            height: 600,
-                            title: "Schedule Next Visit",
-                            child: CalendarWidget(
-                              // dataSource: dataSource,
-                              getForDoctor: true,
-                              patientID: widget.patientId,
-                              onNewVisit: (newVisit) {
-                                nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
-                                bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
-                                  nonSurgicalTreatmentEntity: nonSurgicalTreatment,
-                                  dentalExaminationEntity: dentalExaminationEntity,
-                                  patientId: widget.patientId,
-                                ));
-                              },
-                            ),
-                            onSave: () {
-                              bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
-                            });
-                      }),
-                ],
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                    bloc: medicalShellBloc,
-                    buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                    builder: (context, stateShell) {
-                      return AbsorbPointer(
-                          absorbing: () {
-                            if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                              edit = stateShell.edit;
-                              return !edit;
-                            } else {
-                              edit = false;
-                              return true;
-                            }
-                          }(),
-                          child: BlocBuilder<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
-                            buildWhen: (previous, current) => current is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully,
-                            builder: (context, state) {
-                              List<int> containedTeeth = [];
+                        absorbing: () {
+                          if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                            edit = stateShell.edit;
+                            return !edit;
+                          } else {
+                            edit = false;
+                            return true;
+                          }
+                        }(),
+                        child: BlocBuilder<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
+                          buildWhen: (previous, current) => current is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully,
+                          builder: (context, state) {
+                            List<int> containedTeeth = [];
 
-                              if (state is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully) {
-                                containedTeeth = state.status;
-                                return _buildTeethSuggestion(containedTeeth);
-                              }
-                              return Container();
-                            },
-                          ));
-                    }),
-              ),
-              SizedBox(height: 20),
-            ]),
-          );
+                            if (state is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully) {
+                              containedTeeth = state.status;
+                              return _buildTeethSuggestion(containedTeeth);
+                            }
+                            return Container();
+                          },
+                        ));
+                  }),
+            ),
+            SizedBox(height: 20),
+          ]);
         }
         else if (state is NonSurgicalTreatmentBloc_DataLoadingError) error = state.message;
         return BigErrorPageWidget(message: error);

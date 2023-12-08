@@ -20,6 +20,7 @@ class RestorationEntity extends Equatable {
   int? typePrice;
   int? statusPrice;
   int? classPrice;
+  int? clinicReceiptModelId;
 
   RestorationEntity({
     this.id,
@@ -38,6 +39,7 @@ class RestorationEntity extends Equatable {
     this.statusPrice,
     this.typePrice,
     this.classPrice,
+    this.clinicReceiptModelId,
   });
 
   @override
@@ -58,5 +60,6 @@ class RestorationEntity extends Equatable {
     this.statusPrice,
     this.typePrice,
     this.classPrice,
+    this.clinicReceiptModelId,
       ];
 }

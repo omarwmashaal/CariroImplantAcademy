@@ -164,12 +164,7 @@ class VisitsTableWidget extends StatelessWidget {
                                         label: "Patient Leaves",
                                         onTab: () async {
                                           bloc.add(PatientVisitsBloc_PatientLeavesClinicEvent(id: patientId!));
-                                          PaymentWidget(
-                                              patientId: patientId!,
-                                              context: context,
-                                              onFailure: (message) {
-                                                ShowSnackBar(context, isSuccess: false, message: message);
-                                              })();
+
                                         }),
                                   ],
                                 )),
@@ -195,6 +190,7 @@ class VisitsTableWidget extends StatelessWidget {
                                           getForDoctor: false,
                                           getAllSchedules: true,
                                           patientID: patientId,
+                                          doctorId: patientData?.doctorId,
                                           onNewVisit: (newVisit) {
                                             //    nonSurgicalTreatment.nextVisit = newVisit.reservationTime;
                                             //   bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
@@ -248,12 +244,22 @@ class VisitsTableWidget extends StatelessWidget {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               else if (state is PatientVisitsBloc_VisitProcedureSuccessState) {
                 ShowSnackBar(context, isSuccess: true);
+
                 bloc.add(PatientVisitsBloc_GetVisitsEvent(
                   params: GetVisitsParams(
                     search: search,
                     patientId: patientId,
                   ),
                 ));
+              }
+              else if (state is PatientVisitsBloc_LeftSuccessState) {
+                PaymentWidget(
+                    patientId: patientId!,
+                    context: context,
+                    onFailure: (message) {
+                      ShowSnackBar(context, isSuccess: false, message: message);
+                    })();
+
               }
               if (state is PatientVisitsBloc_LoadingVisitsState)
                 CustomLoader.show(context);

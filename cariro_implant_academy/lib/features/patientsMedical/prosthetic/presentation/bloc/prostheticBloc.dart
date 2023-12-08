@@ -41,7 +41,7 @@ class ProstheticBloc extends Bloc<ProstheticBloc_Event, ProstheticBloc_States> {
         final result = await getPatientProstheticTreatmentFinalProthesisSingleBridgeUseCase(event.id);
         result.fold(
           (l) => emit(ProstheticBloc_DataLoadingErrorState(message: l.message ?? "")),
-          (r) => emit(ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState(data: r)),
+          (r) => emit(ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState(data: r),),
         );
       },
     );

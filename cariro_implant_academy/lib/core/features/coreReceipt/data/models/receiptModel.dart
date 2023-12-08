@@ -14,6 +14,8 @@ class ReceiptModel extends ReceiptEntity {
     super.toothReceiptData,
     super.total,
     super.unpaid,
+    super.prices,
+    super.isPaid,
   });
 
   factory ReceiptModel.fromEntity(ReceiptEntity entity)
@@ -29,6 +31,8 @@ class ReceiptModel extends ReceiptEntity {
       toothReceiptData:entity.toothReceiptData,
       total:entity.total,
       unpaid:entity.unpaid,
+      prices:entity.prices,
+      isPaid:entity.isPaid,
     );
   }
   ReceiptModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +46,8 @@ class ReceiptModel extends ReceiptEntity {
     total = json['total'];
     paid = json['paid'];
     unpaid = json['unpaid'];
+    prices = json['clinicPrices']==null?null:(json['clinicPrices'] as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e)).toList();
+    isPaid = json['isPaid'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +61,7 @@ class ReceiptModel extends ReceiptEntity {
     data['total'] = this.total;
     data['paid'] = this.paid;
     data['unpaid'] = this.unpaid;
+    data['isPaid'] = this.isPaid;
     return data;
   }
 }

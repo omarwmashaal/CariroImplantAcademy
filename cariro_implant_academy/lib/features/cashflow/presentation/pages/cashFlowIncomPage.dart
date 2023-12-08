@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Models/CashFlowSummaryModel.dart';
 import '../../../../Widgets/CIA_DropDown.dart';
 import '../../../../Widgets/CIA_PopUp.dart';
@@ -33,12 +34,18 @@ class CashFlowIncomePage extends StatefulWidget {
   }) : super(key: key);
   CashFlowDataGridSource datasource = CashFlowDataGridSource(type: CashFlowType.income);
   Function(CashFlowEntity cashFlowData)? onIncomeRowClick;
-  static String routeName = "CashFlowIncome";
-   static String routeNameClinic = "ClinicCashFlowIncome";
   static String routePath = "CashFlowIncome";
-  static String routeCIAname = "CashFlowIncomeCIA";
-  static String routeLABname = "CashFlowIncomeLAB";
-  static String routeClinicName = "CashFlowIncomeClinic";
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "CashFlowIncomeClinic";
+      case Website.Lab:
+        return "CashFlowIncomeLAB";
+      default:
+        return "CashFlowIncomeCIA";
+    }
+  }
 
   @override
   State<CashFlowIncomePage> createState() => _CashFlowIncomePageState();

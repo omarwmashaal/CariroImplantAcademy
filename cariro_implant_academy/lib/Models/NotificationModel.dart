@@ -31,7 +31,7 @@ class NotificationModel {
     type = json['type'] == null ? null : EnumNotificationType.values[json['type']];
     if (type == EnumNotificationType.Patient) onClickAction = () => CreateOrViewPatientPage.getVisitPatientRouteName();
     else if (type == EnumNotificationType.TreatmentPlan) onClickAction = () => TreatmentPage.getRouteName();
-    else if (type == EnumNotificationType.Complains) onClickAction = () => PatientProfileComplainsPage.routeName;
+    else if (type == EnumNotificationType.Complains) onClickAction = () => PatientProfileComplainsPage.getRouteName();
     else if (type == EnumNotificationType.LabRequest) onClickAction = () => CIA_Router.routeConst_LabView;
   }
 }

@@ -23,6 +23,7 @@ class ClinicImplantEntity extends Equatable {
   int? doctorId;
   BasicNameIdObjectEntity? doctor;
   int? price;
+  int? clinicReceiptModelId;
 
   @override
   List<Object?> get props => [
@@ -43,6 +44,7 @@ class ClinicImplantEntity extends Equatable {
         this.assistantId,
         this.doctor,
         this.doctorId,
+        this.clinicReceiptModelId,
         this.price,
       ];
 
@@ -65,5 +67,6 @@ class ClinicImplantEntity extends Equatable {
     this.doctor,
     this.price,
     this.doctorId,
+    this.clinicReceiptModelId,
   });
 }

@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
@@ -154,6 +155,14 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true);
+
+               if(state.requestChangeEntity?.requestEnum==RequestChangeEnum.ImplantChange)
+                 {
+                   bloc.add(TreatmentBloc_ConsumeImplantEvent(id: state.requestChangeEntity!.dataId!));
+                 }
+               else{
+                 bloc.add(TreatmentBloc_ConsumeItemByIdEvent(id: state.requestChangeEntity!.dataId!, count: 1));
+               }
 
               }
               if (state is TreatmentBloc_AcceptingChangesState) {

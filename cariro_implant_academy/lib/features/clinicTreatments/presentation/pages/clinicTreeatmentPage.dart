@@ -22,6 +22,7 @@ import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/rootCanalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/scalingEntity.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/tmdEntity.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateClinicReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_Events.dart';
@@ -39,6 +40,7 @@ import '../../../../core/injection_contianer.dart';
 import '../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import '../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
+import '../../../patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
 import '../../../patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import '../../../patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
 import '../bloc/clinicTreatmentBloc_States.dart';
@@ -103,7 +105,14 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+    return BlocConsumer<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+        listener: (context, state) {
+          if(state is ClinicTreatmentBloc_UpdatedClinicReceiptSuccessfullyState)
+            ShowSnackBar(context, isSuccess: true,message: "Update Receipt");
+          else if(state is ClinicTreatmentBloc_UpdatingClinicReceiptErrorState)
+            ShowSnackBar(context, isSuccess: false,message: "Failed to Update Receipt");
+
+        },
         buildWhen: (previous, current) => current is ClinicTreatmentBloc_ShowPricesState || current is ClinicTreatmentBloc_ShowTreatmentstate,
         builder: (context, state) {
           if (state is ClinicTreatmentBloc_ShowPricesState)
@@ -120,29 +129,27 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                   CIA_SecondaryButton(
                     label: "Show Doctors Percent",
                     onTab: () {
-                      bloc.add(ClinicTreatmentBloc_LoadDoctorsPercentagesEvent(id: widget.patientId,clinicTreatmentEntity: clinicTreatmentEntity));
+                      bloc.add(ClinicTreatmentBloc_LoadDoctorsPercentagesEvent(id: widget.patientId, clinicTreatmentEntity: clinicTreatmentEntity));
                       return CIA_ShowPopUp(
                         context: context,
                         height: 500,
                         width: 1000,
                         child: BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
                           buildWhen: (previous, current) =>
-                            current is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState ||
-                            current is ClinicTreatmentBloc_LoadingDoctorsPercentageState ||
-                            current is ClinicTreatmentBloc_LoadedDoctorsPercentageState
-                          ,
+                              current is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState ||
+                              current is ClinicTreatmentBloc_LoadingDoctorsPercentageState ||
+                              current is ClinicTreatmentBloc_LoadedDoctorsPercentageState,
                           builder: (context, state) {
-                            if(state is ClinicTreatmentBloc_LoadingDoctorsPercentageState)
+                            if (state is ClinicTreatmentBloc_LoadingDoctorsPercentageState)
                               return LoadingWidget();
-                            else if(state is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState)
+                            else if (state is ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState)
                               return BigErrorPageWidget(message: state.message);
-                            else if(state is ClinicTreatmentBloc_LoadedDoctorsPercentageState)
-                             {
-                               DoctorsPercentageDataGridSource dataSource = DoctorsPercentageDataGridSource();
+                            else if (state is ClinicTreatmentBloc_LoadedDoctorsPercentageState) {
+                              DoctorsPercentageDataGridSource dataSource = DoctorsPercentageDataGridSource();
 
-                               dataSource.updateData(newData: state.data);
-                               return TableWidget(dataSource: dataSource);
-                             }
+                              dataSource.updateData(newData: state.data);
+                              return TableWidget(dataSource: dataSource);
+                            }
                             return Container();
                           },
                         ),
@@ -486,6 +493,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                         e.assistantId = siteController.getUserId();
                                                                         e.assistant = BasicNameIdObjectEntity(
                                                                             name: siteController.getUserName(), id: siteController.getUserId());
+                                                                        bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                            params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                         bloc.emit(
                                                                             ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
@@ -651,6 +660,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                             e.assistantId = siteController.getUserId();
                                                                             e.assistant = BasicNameIdObjectEntity(
                                                                                 name: siteController.getUserName(), id: siteController.getUserId());
+                                                                            bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                                params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                             bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
                                                                                 data: clinicTreatmentEntity));
@@ -728,9 +739,17 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                     emptyString: "Please choose Implant Line First",
                                                                     label: "Implant Sizes",
                                                                     selectedItem: e.implant_,
-                                                                    onSelect: (v) {
+                                                                    onSelect: (v) async {
                                                                       e.implant_ = ImplantEntity(id: v.id, name: v.name);
                                                                       e.implantId = v.id;
+
+                                                                      await CIA_ShowPopUpYesNo(
+                                                                          context: context,
+                                                                          title: "Consume Implant?",
+                                                                          onSave: () async {
+                                                                            var r = await sl<ConsumeImplantUseCase>()(v.id!);
+                                                                            ShowSnackBar(context, isSuccess: r.isRight());
+                                                                          });
                                                                     },
                                                                   ),
                                                                 ),
@@ -825,6 +844,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                     e.assistantId = siteController.getUserId();
                                                                     e.assistant = BasicNameIdObjectEntity(
                                                                         name: siteController.getUserName(), id: siteController.getUserId());
+                                                                    bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                        params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                     bloc.emit(
                                                                         ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
@@ -939,6 +960,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.assistantId = siteController.getUserId();
                                                                 step.assistant =
                                                                     BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
+                                                                bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: step.id!)));
 
                                                                 bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
@@ -1312,6 +1335,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                           e.assistantId = siteController.getUserId();
                                                                           e.assistant = BasicNameIdObjectEntity(
                                                                               name: siteController.getUserName(), id: siteController.getUserId());
+                                                                          bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                              params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                           bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
                                                                               data: clinicTreatmentEntity));
@@ -1458,7 +1483,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 canal.assistantId = siteController.getUserId();
                                                                 canal.assistant =
                                                                     BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
-
+                                                                bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: canal.id!)));
                                                                 bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
@@ -1787,6 +1813,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.assistantId = siteController.getUserId();
                                                                 step.assistant =
                                                                     BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
+                                                                bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
+                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: step.id!)));
 
                                                                 bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                               },

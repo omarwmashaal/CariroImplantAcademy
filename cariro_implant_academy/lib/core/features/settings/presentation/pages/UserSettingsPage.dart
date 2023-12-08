@@ -28,13 +28,22 @@ import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../features/user/domain/entities/enum.dart';
+import '../../../../constants/enums/enums.dart';
 import '../../../../injection_contianer.dart';
 
 class UsersSettingsPage extends StatefulWidget {
   const UsersSettingsPage({Key? key}) : super(key: key);
-  static String routeName = "UsersSettings";
-   static String routeNameClinic = "ClinicUsersSettings";
   static String routePath = "UsersSettings";
+
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicUsersSettings";
+      default:
+        return "UsersSettings";
+    }
+  }
 
   @override
   State<UsersSettingsPage> createState() => _UsersSettingsPageState();
@@ -49,6 +58,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
 
   @override
   void initState() {
+
     type = UserRoles.Admin;
     authenticationBloc = context.read<AuthenticationBloc>();// BlocProvider.of<AuthenticationBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);

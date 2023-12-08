@@ -23,6 +23,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
     super.doctor,
     super.doctorId,
     super.price,
+    super.clinicReceiptModelId,
   });
 
   factory ClinicImplantModel.fromEntity(ClinicImplantEntity entity) {
@@ -45,12 +46,14 @@ class ClinicImplantModel extends ClinicImplantEntity {
       doctor:entity.doctor,
       doctorId:entity.doctorId,
       price:entity.price,
+      clinicReceiptModelId:entity.clinicReceiptModelId,
     );
   }
 
   factory ClinicImplantModel.fromJson(Map<String, dynamic> map) {
     return ClinicImplantModel(
       id: map['id'],
+      clinicReceiptModelId: map['clinicReceiptModelId'],
       patientId: map['patientId'],
       tooth: map['tooth'],
       type: map['type']==null?null:EnumClinicImplantTypes.values[map['type']],
@@ -75,6 +78,7 @@ class ClinicImplantModel extends ClinicImplantEntity {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     data['type'] = this.type?.index;

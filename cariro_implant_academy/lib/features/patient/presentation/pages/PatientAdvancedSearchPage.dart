@@ -1452,7 +1452,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                       }(),
                                                       onSelect: (value) {
                                                         searchProstheticDTO!.finalProthesisSingleBridgeHealingCollarStatus =
-                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                            EnumFinalProthesisHealingCollarStatus.values[value.id!];
                                                       },
                                                       items: [
                                                         DropDownDTO(name: "With Customization", id: 0),
@@ -1474,7 +1474,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeImpressionStatus =
-                                                                EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                                EnumFinalProthesisImpressionStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Scan by scan body", id: 0),
@@ -1496,7 +1496,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeImpressionNextVisit =
-                                                                EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                                EnumFinalProthesisImpressionNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Custom Abutment", id: 0),
@@ -1520,7 +1520,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeTryInStatus =
-                                                                EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                                EnumFinalProthesisTryInStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
@@ -1542,7 +1542,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeTryInNextVisit =
-                                                                EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                                EnumFinalProthesisTryInNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Delivery", id: 0),
@@ -1567,7 +1567,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeDeliveryStatus =
-                                                                EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                                EnumFinalProthesisDeliveryStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Done", id: 0),
@@ -1589,7 +1589,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisSingleBridgeDeliveryNextVisit =
-                                                                EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                                EnumFinalProthesisDeliveryNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Done", id: 0),
@@ -1695,7 +1695,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                       }(),
                                                       onSelect: (value) {
                                                         searchProstheticDTO!.finalProthesisFullArchHealingCollarStatus =
-                                                            EnumFinalProthesisSingleBridgeHealingCollarStatus.values[value.id!];
+                                                            EnumFinalProthesisHealingCollarStatus.values[value.id!];
                                                       },
                                                       items: [
                                                         DropDownDTO(name: "With Customization", id: 0),
@@ -1716,7 +1716,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchImpressionStatus =
-                                                                EnumFinalProthesisSingleBridgeImpressionStatus.values[value.id!];
+                                                                EnumFinalProthesisImpressionStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Scan by scan body", id: 0),
@@ -1738,7 +1738,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchImpressionNextVisit =
-                                                                EnumFinalProthesisSingleBridgeImpressionNextVisit.values[value.id!];
+                                                                EnumFinalProthesisImpressionNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Custom Abutment", id: 0),
@@ -1762,7 +1762,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchTryInStatus =
-                                                                EnumFinalProthesisSingleBridgeTryInStatus.values[value.id!];
+                                                                EnumFinalProthesisTryInStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
@@ -1783,7 +1783,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchTryInNextVisit =
-                                                                EnumFinalProthesisSingleBridgeTryInNextVisit.values[value.id!];
+                                                                EnumFinalProthesisTryInNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Delivery", id: 0),
@@ -1807,7 +1807,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchDeliveryStatus =
-                                                                EnumFinalProthesisSingleBridgeDeliveryStatus.values[value.id!];
+                                                                EnumFinalProthesisDeliveryStatus.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Done", id: 0),
@@ -1829,7 +1829,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                                           }(),
                                                           onSelect: (value) {
                                                             searchProstheticDTO!.finalProthesisFullArchDeliveryNextVisit =
-                                                                EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[value.id!];
+                                                                EnumFinalProthesisDeliveryNextVisit.values[value.id!];
                                                           },
                                                           items: [
                                                             DropDownDTO(name: "Done", id: 0),

@@ -4,13 +4,19 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/repositories/prostheticRepository.dart';
 import 'package:dartz/dartz.dart';
 
-class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseCases<NoParams, ProstheticTreatmentEntity> {
+import '../entities/prostheticTreatmentFinalEntity.dart';
+
+class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseCases<NoParams, ProstheticTreatmentFinalEntity> {
   final ProstheticRepository prostheticRepository;
 
   UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase({required this.prostheticRepository});
 
   @override
-  Future<Either<Failure, NoParams>> call(ProstheticTreatmentEntity data) async {
+  Future<Either<Failure, NoParams>> call(ProstheticTreatmentFinalEntity data) async {
+    data.impressions?.removeWhere((element) => element.isNull());
+    data.healingCollars?.removeWhere((element) => element.isNull());
+    data.tryIns?.removeWhere((element) => element.isNull());
+    data.delivery?.removeWhere((element) => element.isNull());
     return  await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisFullArch(data).then((value) => value.fold(
           (l) => Left(l..message = "Update Full Arch: ${l.message ?? ""}"),
           (r) => Right(r),

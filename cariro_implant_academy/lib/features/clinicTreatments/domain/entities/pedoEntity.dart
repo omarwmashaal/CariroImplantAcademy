@@ -20,6 +20,7 @@ class PedoEntity extends Equatable {
   int? price;
   int? firstStepPrice;
   int? secondStepPrice;
+  int? clinicReceiptModelId;
 
   @override
   List<Object?> get props => [
@@ -38,6 +39,7 @@ class PedoEntity extends Equatable {
     this.price,
     this.firstStepPrice,
     this.secondStepPrice,
+    this.clinicReceiptModelId,
       ];
 
   PedoEntity({
@@ -56,5 +58,6 @@ class PedoEntity extends Equatable {
     this.price,
     this.firstStepPrice,
     this.secondStepPrice,
+    this.clinicReceiptModelId,
   });
 }

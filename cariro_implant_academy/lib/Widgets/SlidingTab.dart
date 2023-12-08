@@ -55,7 +55,7 @@ class _SlidingTabState extends State<SlidingTab> {
   @override
   Widget build(BuildContext context) {
     path =  GoRouterState.of(context).fullPath!.split("/").last;
-    switcherIndex =  widget.tabs.indexWhere((element) =>(element.compareName?? element.namedDirectory) ==path) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory) == path);
+    switcherIndex =  widget.tabs.indexWhere((element) =>(element.compareName?? element.namedDirectory..replaceAll(siteController.getSite().name,"")) ==(path)) == -1 ? 0 : widget.tabs.indexWhere((element) => (element.compareName?? element.namedDirectory..replaceAll(siteController.getSite().name,"")) == path);
     //siteController.title = widget.tabs[switcherIndex].title;
     return SlideSwitcher(
       key: GlobalKey(),

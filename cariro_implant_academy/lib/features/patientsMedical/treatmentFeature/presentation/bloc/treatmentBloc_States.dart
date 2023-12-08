@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
@@ -85,7 +86,8 @@ class TreatmentBloc_AcceptingChangesState extends TreatmentBloc_States {
 
 class TreatmentBloc_AcceptedChangesSuccessfullyState extends TreatmentBloc_States {
   final int id;
-  TreatmentBloc_AcceptedChangesSuccessfullyState({required this.id});
+  final RequestChangeEntity? requestChangeEntity;
+  TreatmentBloc_AcceptedChangesSuccessfullyState({required this.id,this.requestChangeEntity});
   @override
   List<Object?> get props => [id];
 }

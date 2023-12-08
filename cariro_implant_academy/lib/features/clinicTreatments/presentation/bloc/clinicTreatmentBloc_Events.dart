@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/entities/clinicTreatmentEntity.dart';
+import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateClinicReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/domain/useCases/updateTreatmentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 
@@ -51,4 +52,10 @@ class ClinicTreatmentBloc_CalculateTotalPriceEvent extends ClinicTreatmentBloc_E
 
 
   ClinicTreatmentBloc_CalculateTotalPriceEvent({required this.params});
+}
+class ClinicTreatmentBloc_UpdateClinicReceiptEvent extends ClinicTreatmentBloc_Events {
+  final UpdateClinicReceiptParams params;
+
+
+  ClinicTreatmentBloc_UpdateClinicReceiptEvent({required this.params});
 }

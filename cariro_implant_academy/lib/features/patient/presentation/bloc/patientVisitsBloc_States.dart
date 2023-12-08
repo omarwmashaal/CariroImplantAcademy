@@ -25,6 +25,10 @@ class PatientVisitsBloc_VisitProcedureSuccessState extends PatientVisitsBloc_Sta
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
+class PatientVisitsBloc_LeftSuccessState extends PatientVisitsBloc_States{
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 class PatientVisitsBloc_LoadingErrorState extends PatientVisitsBloc_States{
   final String message;
   PatientVisitsBloc_LoadingErrorState({required this.message});

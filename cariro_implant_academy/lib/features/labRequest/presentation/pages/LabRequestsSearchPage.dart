@@ -237,7 +237,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   return TableWidget(
                       dataSource: dataSource,
                       onCellClick: (value) {
-                        context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": dataSource.models[value].id!.toString()});
+                        context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": value.toString()});
                       });
                 }
                 return Container();
@@ -251,8 +251,8 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
     bloc.add(LabRequestsBloc_GetTodaysRequestsEvent(
       getAllRequestsParams: GetAllRequestsParams(
         search: search,
-        from: widget.all ? from : DateTime.now(),
-        to: widget.all ? to : DateTime.now(),
+      //  from: widget.all ? from : DateTime.now(),
+      //  to: widget.all ? to : DateTime.now(),
         source: sourceEnum,
         status: statusEnum,
         paid: paid,

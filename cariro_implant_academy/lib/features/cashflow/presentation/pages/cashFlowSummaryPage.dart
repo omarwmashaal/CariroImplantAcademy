@@ -28,13 +28,18 @@ class CashFlowSummaryPage extends StatefulWidget {
   CashFlowSummaryDataGridSource iS_dataSource = CashFlowSummaryDataGridSource();
   CashFlowSummaryDataGridSource? diS_dataSource;
 
-  static String routeName = "CashFlowSummary";
-   static String routeNameClinic = "ClinicCashFlowSummary";
   static String routePath = "CashFlowSummary";
-  static String routeCIAname = "CashFlowSummaryCIA";
-  static String routeLABname = "CashFlowSummaryLAB";
-  static String routeClinicName = "CashFlowSummaryClinic";
-
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "CashFlowSummaryClinic";
+      case Website.Lab:
+        return "CashFlowSummaryLAB";
+      default:
+        return "CashFlowSummaryCIA";
+    }
+  }
   @override
   State<CashFlowSummaryPage> createState() => _CashFlowSummaryPageState();
 }

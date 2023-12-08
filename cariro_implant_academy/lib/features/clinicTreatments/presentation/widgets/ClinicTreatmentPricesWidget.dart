@@ -46,10 +46,10 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-      listener: (context, state) {
-        if(state is ClinicTreatmentBloc_UpdatedTreatmentsSuccessfullyState) {
+        listener: (context, state) {
+          if (state is ClinicTreatmentBloc_UpdatedTreatmentsSuccessfullyState) {
             bloc.add(ClinicTreatmentBloc_LoadTreatmentsEvent(id: widget.clinicTreatmentEntity.patientId!));
-            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+            Future.delayed(Duration(seconds: 1)).then((value) => bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity)));
           }
         },
         buildWhen: (previous, current) =>
@@ -64,91 +64,91 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
             return LoadingWidget();
           else if (state is ClinicTreatmentBloc_UpdatingTreatmentsErrorState || state is ClinicTreatmentBloc_LoadingTreatmentsErrorState)
             return BigErrorPageWidget(message: state.toString());
-          else if(state is ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState)
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      widget.clinicTreatmentEntity.restorations!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Restorations"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.restorations?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.restorations!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth}"),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            child: CIA_TextFormField(
-                                                              label: "Status ${e.status?.name}",
-                                                              controller: TextEditingController(text: e.statusPrice?.toString()),
-                                                              isNumber: true,
-                                                              onChange: (value) {
-                                                                e.statusPrice = int.parse(value);
-                                                                e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                                  key: "Restorations",
-                                                                ));
-                                                                bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
-                                                              },
+          else if (state is ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState)
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        widget.clinicTreatmentEntity.restorations!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Restorations"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.restorations?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.restorations!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth}"),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                label: "Status ${e.status?.name}",
+                                                                controller: TextEditingController(text: e.statusPrice?.toString()),
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  e.statusPrice = int.parse(value);
+                                                                  e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                                    key: "Restorations",
+                                                                  ));
+                                                                  bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                                },
+                                                              ),
                                                             ),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            child: CIA_TextFormField(
-                                                              label: "Type ${e.type?.name}",
-                                                              controller: TextEditingController(text: e.typePrice?.toString()),
-                                                              isNumber: true,
-                                                              onChange: (value) {
-                                                                e.typePrice = int.parse(value);
-                                                                e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                                  key: "Restorations",
-                                                                ));
-                                                                bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
-                                                              },
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                label: "Type ${e.type?.name}",
+                                                                controller: TextEditingController(text: e.typePrice?.toString()),
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  e.typePrice = int.parse(value);
+                                                                  e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                                    key: "Restorations",
+                                                                  ));
+                                                                  bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                                },
+                                                              ),
                                                             ),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            child: CIA_TextFormField(
-                                                              label: "Class ${e.restorationClass?.name}",
-                                                              controller: TextEditingController(text: e.classPrice?.toString()),
-                                                              isNumber: true,
-                                                              onChange: (value) {
-                                                                e.classPrice = int.parse(value);
-                                                                e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                                  key: "Restorations",
-                                                                ));
-                                                                bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
-                                                              },
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                label: "Class ${e.restorationClass?.name}",
+                                                                controller: TextEditingController(text: e.classPrice?.toString()),
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  e.classPrice = int.parse(value);
+                                                                  e.price = (e.statusPrice ?? 0) + (e.typePrice ?? 0) + (e.classPrice ?? 0);
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                                    key: "Restorations",
+                                                                  ));
+                                                                  bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                                },
+                                                              ),
                                                             ),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                        ],
+                                                            SizedBox(width: 10),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Restorations"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Restorations"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -158,61 +158,60 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.clinicImplants!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Implants"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.clinicImplants?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.clinicImplants!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth} || ${e.type?.name} Implant"),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: CIA_TextFormField(
-                                                        label: "${e.implant_?.name}",
-                                                        controller: TextEditingController(text: e.price?.toString()),
-                                                        isNumber: true,
-                                                        onChange: (value) {
-                                                          e.price = int.parse(value);
-                                                          bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                            key: "Implants",
-                                                          ));
-                                                          bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
                                                         },
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Implants"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.clinicImplants!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Implants"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.clinicImplants?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.clinicImplants!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} || ${e.type?.name} Implant"),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: CIA_TextFormField(
+                                                          label: "${e.implant_?.name}",
+                                                          controller: TextEditingController(text: e.price?.toString()),
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            e.price = int.parse(value);
+                                                            bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                              key: "Implants",
+                                                            ));
+                                                            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Implants"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -222,148 +221,60 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.orthoTreatments!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Ortho"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.orthoTreatments?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.orthoTreatments!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth}"),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: CIA_TextFormField(
-                                                        label: "Price",
-                                                        controller: TextEditingController(text: e.price?.toString()),
-                                                        isNumber: true,
-                                                        onChange: (value) {
-                                                          e.price = int.parse(value);
-                                                          bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                            key: "Orhto",
-                                                          ));
-                                                          bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
                                                         },
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Orhto"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
-
-                                                          return Expanded(
-                                                            child: Row(
-                                                              children: [
-                                                                FormTextKeyWidget(text: "Total: "),
-                                                                FormTextValueWidget(text: price.toString()),
-                                                              ],
-                                                            ),
-                                                          );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.pedos!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Pedo"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.pedos?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.pedos!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(
-                                                    text:
-                                                        "Tooth: ${(e.tooth ?? 0) < 50 ? e.tooth : EnumClinicPedoTooth.values.firstWhere((element) => element.value == e.tooth).name}"),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            child: CIA_TextFormField(
-                                                              label: "First Step ${e.firstStep?.name}",
-                                                              controller: TextEditingController(text: e.firstStepPrice?.toString()),
-                                                              isNumber: true,
-                                                              onChange: (value) {
-                                                                e.firstStepPrice = int.parse(value);
-                                                                e.price = (e.firstStepPrice ?? 0) + (e.secondStepPrice ?? 0);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                                  key: "Pedo",
-                                                                ));
-                                                                bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
-                                                              },
-                                                            ),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            child: CIA_TextFormField(
-                                                              label: "Second Step ${e.secondStep?.name}",
-                                                              controller: TextEditingController(text: e.secondStepPrice?.toString()),
-                                                              isNumber: true,
-                                                              onChange: (value) {
-                                                                e.secondStepPrice = int.parse(value);
-                                                                e.price = (e.firstStepPrice ?? 0) + (e.secondStepPrice ?? 0);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                                  key: "Pedo",
-                                                                ));
-                                                                bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
-                                                              },
-                                                            ),
-                                                          ),
-                                                          SizedBox(width: 10),
-                                                        ],
+                                          )
+                                          .toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.orthoTreatments!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Ortho"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.orthoTreatments?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.orthoTreatments!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth}"),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: CIA_TextFormField(
+                                                          label: "Price",
+                                                          controller: TextEditingController(text: e.price?.toString()),
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            e.price = int.parse(value);
+                                                            bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                              key: "Orhto",
+                                                            ));
+                                                            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                          },
+                                                        ),
                                                       ),
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Pedo"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Orhto"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -373,61 +284,83 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.tmds!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "TMD"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.tmds?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.tmds!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth} "),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: CIA_TextFormField(
-                                                        label: "${e.type?.name}",
-                                                        controller: TextEditingController(text: e.price?.toString()),
-                                                        isNumber: true,
-                                                        onChange: (value) {
-                                                          e.price = int.parse(value);
-                                                          bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                            key: "TMD",
-                                                          ));
-                                                          bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
                                                         },
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "TMD"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.pedos!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Pedo"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.pedos?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.pedos!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(
+                                                      text:
+                                                          "Tooth: ${(e.tooth ?? 0) < 50 ? e.tooth : EnumClinicPedoTooth.values.firstWhere((element) => element.value == e.tooth).name}"),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                label: "First Step ${e.firstStep?.name}",
+                                                                controller: TextEditingController(text: e.firstStepPrice?.toString()),
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  e.firstStepPrice = int.parse(value);
+                                                                  e.price = (e.firstStepPrice ?? 0) + (e.secondStepPrice ?? 0);
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                                    key: "Pedo",
+                                                                  ));
+                                                                  bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                                },
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                            Expanded(
+                                                              child: CIA_TextFormField(
+                                                                label: "Second Step ${e.secondStep?.name}",
+                                                                controller: TextEditingController(text: e.secondStepPrice?.toString()),
+                                                                isNumber: true,
+                                                                onChange: (value) {
+                                                                  e.secondStepPrice = int.parse(value);
+                                                                  e.price = (e.firstStepPrice ?? 0) + (e.secondStepPrice ?? 0);
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                                    key: "Pedo",
+                                                                  ));
+                                                                  bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                                },
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 10),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Pedo"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -437,61 +370,60 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.rootCanalTreatments!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Root Canal Treatment"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.rootCanalTreatments?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.rootCanalTreatments!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth} "),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: CIA_TextFormField(
-                                                        label: "Type: ${e.type?.name} || Length: ${e.length} ",
-                                                        controller: TextEditingController(text: e.price?.toString()),
-                                                        isNumber: true,
-                                                        onChange: (value) {
-                                                          e.price = int.parse(value);
-                                                          bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                            key: "Root",
-                                                          ));
-                                                          bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
                                                         },
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Root"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.tmds!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "TMD"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.tmds?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.tmds!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: CIA_TextFormField(
+                                                          label: "${e.type?.name}",
+                                                          controller: TextEditingController(text: e.price?.toString()),
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            e.price = int.parse(value);
+                                                            bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                              key: "TMD",
+                                                            ));
+                                                            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "TMD"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -501,61 +433,60 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                      widget.clinicTreatmentEntity.scalings!.isEmpty
-                          ? Container()
-                          : Column(
-                              children: [
-                                FormTextKeyWidget(text: "Scaling"),
-                                Container(
-                                  height: 100 * (widget.clinicTreatmentEntity.scalings?.length ?? 1) as double,
-                                  child: Column(
-                                    children: widget.clinicTreatmentEntity.scalings!
-                                        .map(
-                                          (e) => Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                FormTextValueWidget(text: "Tooth: ${e.tooth} "),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      flex: 3,
-                                                      child: CIA_TextFormField(
-                                                        label: "${e.type?.name}",
-                                                        controller: TextEditingController(text: e.price?.toString()),
-                                                        isNumber: true,
-                                                        onChange: (value) {
-                                                          e.price = int.parse(value);
-                                                          bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
-                                                            key: "Scaling",
-                                                          ));
-                                                          bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
                                                         },
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                                                      buildWhen: (previous, current) =>
-                                                          (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Scaling"),
-                                                      builder: (context, state) {
-                                                        int price = e.price ?? 0;
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.rootCanalTreatments!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Root Canal Treatment"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.rootCanalTreatments?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.rootCanalTreatments!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: CIA_TextFormField(
+                                                          label: "Type: ${e.type?.name} || Length: ${e.length} ",
+                                                          controller: TextEditingController(text: e.price?.toString()),
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            e.price = int.parse(value);
+                                                            bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                              key: "Root",
+                                                            ));
+                                                            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Root"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
 
                                                           return Expanded(
                                                             child: Row(
@@ -565,46 +496,108 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                                               ],
                                                             ),
                                                           );
-
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                        .toList(),
+                                          )
+                                          .toList(),
+                                    ),
                                   ),
-                                )
-                              ],
-                            ),
-                    ],
+                                ],
+                              ),
+                        widget.clinicTreatmentEntity.scalings!.isEmpty
+                            ? Container()
+                            : Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Scaling"),
+                                  Container(
+                                    height: 100 * (widget.clinicTreatmentEntity.scalings?.length ?? 1) as double,
+                                    child: Column(
+                                      children: widget.clinicTreatmentEntity.scalings!
+                                          .map(
+                                            (e) => Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: CIA_TextFormField(
+                                                          label: "${e.type?.name}",
+                                                          controller: TextEditingController(text: e.price?.toString()),
+                                                          isNumber: true,
+                                                          onChange: (value) {
+                                                            e.price = int.parse(value);
+                                                            bloc.emit(ClinicTreatmentBloc_LoadedPricesSuccessfullyState(
+                                                              key: "Scaling",
+                                                            ));
+                                                            bloc.add(ClinicTreatmentBloc_CalculateTotalPriceEvent(params: widget.clinicTreatmentEntity));
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            (current is ClinicTreatmentBloc_LoadedPricesSuccessfullyState && current.key == "Scaling"),
+                                                        builder: (context, state) {
+                                                          int price = e.price ?? 0;
+
+                                                          return Expanded(
+                                                            child: Row(
+                                                              children: [
+                                                                FormTextKeyWidget(text: "Total: "),
+                                                                FormTextValueWidget(text: price.toString()),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  )
+                                ],
+                              ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Divider(),
-              SizedBox(
-                height: 20,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FormTextKeyWidget(text: "Total: EGP "),
-                    BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
-                        buildWhen: (previous, current) => current is ClinicTreatmentBloc_TotalPriceChangedState,
-                        builder: (context, state) {
-                          if (state is ClinicTreatmentBloc_TotalPriceChangedState) totalPrice = state.price;
+                Divider(),
+                SizedBox(
+                  height: 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FormTextKeyWidget(text: "Total: EGP "),
+                      BlocBuilder<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
+                          buildWhen: (previous, current) => current is ClinicTreatmentBloc_TotalPriceChangedState,
+                          builder: (context, state) {
+                            if (state is ClinicTreatmentBloc_TotalPriceChangedState) totalPrice = state.price;
 
-                          return Text(
-                            totalPrice.toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                          );
-                        }),
-                  ],
-                ),
-              )
-            ],
-          );
+                            return Text(
+                              totalPrice.toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            );
+                          }),
+                    ],
+                  ),
+                )
+              ],
+            );
           return Container();
         });
   }

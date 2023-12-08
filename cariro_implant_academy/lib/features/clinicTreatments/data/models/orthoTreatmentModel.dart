@@ -17,6 +17,7 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
     super.doctor,
     super.doctorId,
     super.price,
+    super.clinicReceiptModelId,
 
   });
 
@@ -49,12 +50,14 @@ class OrthoTreatmentModel extends OrthoTreatmentEntity {
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
       price:map['price'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
      );
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     data['notes'] = this.notes;

@@ -22,6 +22,7 @@ class RootCanalTreatmentModel extends RootCanalTreatmentEntity {
     super.doctorId,
     super.canalNumber,
     super.price,
+    super.clinicReceiptModelId,
   });
 
   factory RootCanalTreatmentModel.fromEntity(RootCanalTreatmentEntity entity) {
@@ -58,6 +59,7 @@ class RootCanalTreatmentModel extends RootCanalTreatmentEntity {
       doctor:map['doctor']==null?null:BasicNameIdObjectModel.fromJson(map['doctor']),
       doctorId:map['doctorId'],
       canalNumber:map['canalNumber'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
       price:map['price'],
     );
   }
@@ -76,6 +78,7 @@ class RootCanalTreatmentModel extends RootCanalTreatmentEntity {
     data['doctorId'] = this.doctorId;
     data['canalNumber'] = this.canalNumber;
     data['price'] = this.price;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     return data;
   }
 }

@@ -48,8 +48,10 @@ class CalendarWidget extends StatefulWidget {
     this.onNewVisit,
     this.getForDoctor = false,
     this.getAllSchedules = false,
+    this.doctorId,
   }) : super(key: key);
 
+  int? doctorId;
   int? patientID;
   bool getForDoctor;
   bool getAllSchedules;
@@ -126,6 +128,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       label: "Date",
                       enabled: widget.patientID == null,
                       controller: TextEditingController(text: CIA_DateConverters.simpleFormatDateOnly(newVisit.from))),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -134,7 +139,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         child: CIA_TextFormField(
                             onTap: () async {
                               var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-                              if (time != null)
+                              if (time != null) {
                                 newVisit.from = DateTime(
                                   newVisit.from!.year,
                                   newVisit.from!.month,
@@ -142,6 +147,13 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                   time!.hour,
                                   time!.minute,
                                 );
+                                if (newVisit.to != null && newVisit.from != null && newVisit.to!.isBefore(newVisit.from!)) {
+                                  ShowSnackBar(context, isSuccess: false, message: "End time must be after start time");
+                                  newVisit.to = newVisit.from!.add(Duration(minutes: 15));
+                                } else if (newVisit.to == null) {
+                                  newVisit.to = newVisit.from!.add(Duration(minutes: 15));
+                                }
+                              }
                               setState(() {});
                             },
                             enabled: false,
@@ -149,40 +161,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                             controller: TextEditingController(text: CIA_DateConverters.simpleFormatTimeOnly(newVisit.from))),
                       )),
                       Expanded(
-                          child: Column(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                var d = newVisit.from!;
-                                d = d.add(Duration(minutes: 15));
-                                if (!d.isBefore(newVisit.to!)) {
-                                  ShowSnackBar(context, isSuccess: false, title: "Failed", message: "End time must be after start time");
-                                  return;
-                                }
-
-                                newVisit.from = d;
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                Icons.add,
-                                size: 20,
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                var d = newVisit.from!;
-                                d = d.subtract(Duration(minutes: 15));
-                                newVisit.from = d;
-                                setState(() {});
-                              },
-                              icon: Icon(Icons.remove, size: 20)),
-                        ],
-                      )),
-                      Expanded(
                         child: CIA_TextFormField(
                           enabled: false,
                           onTap: () async {
-                            var time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-                            if (time != null)
+                            var time = await showTimePicker(
+                                context: context, initialTime: newVisit.to != null ? TimeOfDay.fromDateTime(newVisit.to!) : TimeOfDay.now());
+                            if (time != null) {
                               newVisit.to = DateTime(
                                 newVisit.to!.year,
                                 newVisit.to!.month,
@@ -190,6 +174,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                 time!.hour,
                                 time!.minute,
                               );
+
+                              if (newVisit.to != null && newVisit.from != null && newVisit.to!.isBefore(newVisit.from!)) {
+                                ShowSnackBar(context, isSuccess: false, message: "End time must be after start time");
+                                newVisit.to = newVisit.from!.add(Duration(minutes: 15));
+                              }
+                            }
                             setState(() {});
                           },
                           label: "To",
@@ -198,36 +188,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           ),
                         ),
                       ),
-                      Expanded(
-                          child: Column(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                var d = newVisit.to!;
-                                d = d.add(Duration(minutes: 15));
-                                newVisit.to = d;
-                                setState(() {});
-                              },
-                              icon: Icon(Icons.add, size: 20)),
-                          IconButton(
-                              onPressed: () {
-                                var d = newVisit.to!;
-                                d = d.subtract(Duration(minutes: 15));
-                                if (!d.isAfter(newVisit.from!)) {
-                                  ShowSnackBar(context, isSuccess: false, title: "Failed", message: "End time must be after start time");
-                                  return;
-                                }
-
-                                newVisit.to = d;
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                Icons.remove,
-                                size: 20,
-                              )),
-                        ],
-                      )),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(builder: (context, state) {
                     if (state is LoadedPatientInfoState) {
@@ -293,18 +257,43 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   SizedBox(
                     height: 10,
                   ),
-                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                    searchParams: LoadUsersEnum.assistants,
-                    asyncUseCase: sl<LoadUsersUseCase>(),
-                    selectedItem: !widget.getForDoctor
-                        ? null
-                        : BasicNameIdObjectEntity(
-                            name: siteController.getUserName() ?? "",
-                            id: sl<SharedPreferences>().getInt("userid") ?? 0,
-                          ),
-                    //asyncItems: !widget.getForDoctor ? LoadinAPI.LoadInstructorsAndAssistants : null,
-                    label: "Doctor",
-                    onSelect: (value) => newVisit.doctorId = value.id,
+                  Builder(
+                    builder: (context) {
+                      BasicNameIdObjectEntity? selected= BasicNameIdObjectEntity();
+                      return StatefulBuilder(
+                        builder: (context, _setState) {
+                          if(!widget.getForDoctor&& widget.doctorId==null )
+                            {
+                              selected = null;
+                            }
+                          else if(widget.getForDoctor)
+                            {
+                              selected = BasicNameIdObjectEntity(
+                                name: siteController.getUserName() ?? "",
+                                id: sl<SharedPreferences>().getInt("userid") ?? 0,
+                              );
+                            }
+
+                          return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                            searchParams: LoadUsersEnum.instructorsAndAssistants,
+                            asyncUseCase: sl<LoadUsersUseCase>(),
+                            selectedItem: selected,
+                            //asyncItems: !widget.getForDoctor ? LoadinAPI.LoadInstructorsAndAssistants : null,
+                            label: "Doctor",
+                            onSelect: (value) => newVisit.doctorId = value.id,
+                            onLoad: (values) {
+                              if(widget.doctorId!=null)
+                                {
+                                  selected=values.firstWhereOrNull((element) => element.id==widget.doctorId);
+                                  newVisit.doctorId = selected?.id;
+                                  newVisit.doctorName= selected?.name;
+                                }
+                              _setState((){});
+                            },
+                          );
+                        },
+                      );
+                    }
                   ),
                   SizedBox(
                     height: 10,
@@ -329,6 +318,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       newVisit.roomId = value.id;
                     },
                     emptyString: "No room available at this time slot",
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   BlocBuilder<CalendarBloc, CalendarBloc_States>(
                     builder: (context, state) {

@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+
 abstract class ProstheticBloc_States extends Equatable{}
 
 class ProstheticBloc_LoadingDataState extends ProstheticBloc_States{
@@ -17,13 +19,13 @@ class ProstheticBloc_DiagnosticDataLoadedSuccessfullyState extends ProstheticBlo
   List<Object?> get props => [data];
 }
 class ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState extends ProstheticBloc_States{
-  final ProstheticTreatmentEntity data;
+  final ProstheticTreatmentFinalEntity data;
   ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState({required this.data});
   @override
   List<Object?> get props => [data];
 }
 class ProstheticBloc_FullArchDataLoadedSuccessfullyState extends ProstheticBloc_States{
-  final ProstheticTreatmentEntity data;
+  final ProstheticTreatmentFinalEntity data;
   ProstheticBloc_FullArchDataLoadedSuccessfullyState({required this.data});
   @override
   List<Object?> get props => [data];

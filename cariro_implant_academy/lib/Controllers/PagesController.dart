@@ -1,6 +1,6 @@
-
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
+import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -26,6 +27,7 @@ import '../Pages/Clinic_Pages/Clinic_StockPage.dart';
 import '../Pages/LAB_Pages/LAB_CashFlowPage.dart';
 import '../Pages/LAB_Pages/LAB_MyTasks.dart';
 import '../Pages/LAB_Pages/LAB_StockPage.dart';
+import '../Widgets/AppBarBloc_States.dart';
 import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
 import '../features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
@@ -53,14 +55,14 @@ class PagesController extends PageController {
               ),
               Container(
                 child: Center(
-                  child: UserSearchPage(type:UserRoles.Assistant),
+                  child: UserSearchPage(type: UserRoles.Assistant),
                 ),
               ),
               Container(
-                child: Center(child: UserSearchPage(type:UserRoles.Instructor)),
+                child: Center(child: UserSearchPage(type: UserRoles.Instructor)),
               ),
               Container(
-                child: Center(child: UserSearchPage(type:UserRoles.Candidate)),
+                child: Center(child: UserSearchPage(type: UserRoles.Candidate)),
               ),
               Container(
                 child: Center(
@@ -84,12 +86,11 @@ class PagesController extends PageController {
               physics: NeverScrollableScrollPhysics(),
               controller: pagesController,
               children: [
-                Container(
-                  child: Container()//LabRequestsSearchPage(),
-                ),
+                Container(child: Container() //LabRequestsSearchPage(),
+                    ),
                 Container(
                   child: Center(
-                    child: UserSearchPage(type:UserRoles.OutSource),
+                    child: UserSearchPage(type: UserRoles.OutSource),
                   ),
                 ),
                 Container(
@@ -111,15 +112,14 @@ class PagesController extends PageController {
             physics: NeverScrollableScrollPhysics(),
             controller: pagesController,
             children: [
+              Container(child: Container() // LabRequestsSearchPage(),
+                  ),
               Container(
-                child:Container()// LabRequestsSearchPage(),
-              ),
-              Container(
-                child: UserSearchPage(type:UserRoles.Technician),
+                child: UserSearchPage(type: UserRoles.Technician),
               ),
               Container(
                 child: Center(
-                  child: UserSearchPage(type:UserRoles.OutSource),
+                  child: UserSearchPage(type: UserRoles.OutSource),
                 ),
               ),
               Container(
@@ -171,12 +171,28 @@ class PagesController extends PageController {
     super.jumpToPage(index);
   }
 
-  static List<SidebarXItem> DrawerItems(BuildContext context,SidebarXController controller) {
+  static List<SidebarXItem> DrawerItems(BuildContext context, SidebarXController controller) {
     String role = siteController.getRole()!;
+
+    var bloc = BlocProvider.of<AppBarBloc>(context);
+
+    var path = GoRouterState.of(context).fullPath!.split("/").last;
 
     switch (siteController.getSite()) {
       case Website.CIA:
         {
+          if (path == PatientsSearchPage.routePath.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 0));
+          else if (path == UserSearchPage.routePathAssistants.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 1));
+          else if (path == UserSearchPage.routePathInstructors.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 2));
+          else if (path == UserSearchPage.routePathCandidates.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 3));
+          else if (path == StockSearchPage.routePath.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 4));
+          else if (path == CashFlowIncomePage.routePath.split("/").last) bloc.emit(DrawerSetIndex(index: 5));
+
           return [
             SidebarXItem(
               label: 'atients',
@@ -186,141 +202,143 @@ class PagesController extends PageController {
               },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Patients",
-                    child: Icon(IconDataSolid(
-                      int.parse('0x00050'),
-                    )),
-                  )),
+                message: "Patients",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00050'),
+                )),
+              )),
             ),
             SidebarXItem(
               label: 'ssistants',
               onTap: () {
-                context.goNamed(UserSearchPage.assistantsRouteName);
+                context.goNamed(UserSearchPage.getRouteNameAssistants(site:Website.CIA));
                 controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Assistants",
-                    child: Icon(IconDataSolid(
-                      int.parse('0x00041'),
-                    )),
-                  )),
+                message: "Assistants",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00041'),
+                )),
+              )),
             ),
             SidebarXItem(
               label: 'nstructors',
               onTap: () {
-
-                context.goNamed(UserSearchPage.instructorsRouteName);
-                controller.notifyListeners();             },
+                context.goNamed(UserSearchPage.getRouteNameInstructors(site:Website.CIA));
+                controller.notifyListeners();
+              },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Instructors",
-                    child: Icon(IconDataSolid(
-                      int.parse('0x00049'),
-                    )),
-                  )),
+                message: "Instructors",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00049'),
+                )),
+              )),
             ),
             SidebarXItem(
               label: 'andidates',
               onTap: () {
-
-                context.goNamed(UserSearchPage.candidatesRouteName);
-                controller.notifyListeners();           },
+                context.goNamed(UserSearchPage.getRouteNameCandidates(site:Website.CIA));
+                controller.notifyListeners();
+              },
               iconWidget: Container(
-                  child:Tooltip(
-                    message: "Candidates",
-                    child: Icon(IconDataSolid(
-                      int.parse('0x00043'),
-                    )),
-                  )),
+                  child: Tooltip(
+                message: "Candidates",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00043'),
+                )),
+              )),
             ),
             SidebarXItem(
               label: 'Stock',
               onTap: () {
-                context.goNamed(StockSearchPage.routeCIAname);
+                context.goNamed(StockSearchPage.getRouteName(site:Website.CIA));
                 controller.notifyListeners();
               },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Stock",child: Icon(Icons.store))),
+              iconWidget: Container(child: Tooltip(message: "Stock", child: Icon(Icons.store))),
             ),
             SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                context.goNamed(CashFlowIncomePage.routeCIAname);
+                context.goNamed(CashFlowIncomePage.getRouteName(site:Website.CIA));
                 controller.notifyListeners();
               },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Cash Flow",child: Icon(Icons.attach_money))),
+              iconWidget: Container(child: Tooltip(message: "Cash Flow", child: Icon(Icons.attach_money))),
             ),
           ];
         }
 
       case Website.Clinic:
         {
+          if (path == PatientsSearchPage.routePath.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 0));
+          else if (path == UserSearchPage.routePathAssistants.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 1));
+          else if (path == UserSearchPage.routePathInstructors.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 2));
+          else if (path == StockSearchPage.routePath.split("/").last)
+            bloc.emit(DrawerSetIndex(index: 3));
+          else if (path == CashFlowIncomePage.routePath.split("/").last) bloc.emit(DrawerSetIndex(index: 4));
+
           return [
             SidebarXItem(
               label: 'atients',
               onTap: () {
-                context.goNamed(PatientsSearchPage.getRouteName());
+                context.goNamed(PatientsSearchPage.getRouteName(site:Website.Clinic));
                 controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Patients",
-                    child: Icon(IconDataSolid(
-                int.parse('0x00050'),
+                message: "Patients",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00050'),
+                )),
               )),
-                  )),
             ),
             SidebarXItem(
               label: 'ssistants',
               onTap: () {
-                context.goNamed(UserSearchPage.assistantsRouteName);
+                context.goNamed(UserSearchPage.getRouteNameAssistants(site:Website.Clinic));
                 controller.notifyListeners();
               },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Assistants",
-                    child: Icon(IconDataSolid(
-                int.parse('0x00041'),
+                message: "Assistants",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00041'),
+                )),
               )),
-                  )),
             ),
             SidebarXItem(
               label: 'octors',
               onTap: () {
-
-                context.goNamed(UserSearchPage.instructorsRouteName);
-                controller.notifyListeners();             },
+                context.goNamed(UserSearchPage.getRouteNameInstructors(site:Website.Clinic));
+                controller.notifyListeners();
+              },
               iconWidget: Container(
                   child: Tooltip(
-                    message: "Doctors",
-                    child: Icon(IconDataSolid(
-                int.parse('0x00044'),
+                message: "Doctors",
+                child: Icon(IconDataSolid(
+                  int.parse('0x00044'),
+                )),
               )),
-                  )),
             ),
             SidebarXItem(
               label: 'Stock',
               onTap: () {
-                context.goNamed(StockSearchPage.routeCIAname);
+                context.goNamed(StockSearchPage.getRouteName(site: Website.Clinic));
                 controller.notifyListeners();
               },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Stock",child: Icon(Icons.store))),
+              iconWidget: Container(child: Tooltip(message: "Stock", child: Icon(Icons.store))),
             ),
             SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                context.goNamed(CashFlowIncomePage.routeCIAname);
+                context.goNamed(CashFlowIncomePage.getRouteName(site: Website.Clinic));
                 controller.notifyListeners();
               },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Cash Flow",child: Icon(Icons.attach_money))),
+              iconWidget: Container(child: Tooltip(message: "Cash Flow", child: Icon(Icons.attach_money))),
             ),
           ];
         }
@@ -336,11 +354,11 @@ class PagesController extends PageController {
                 },
                 iconWidget: Container(
                     child: Tooltip(
-                      message: "My Tasks",
-                      child: Icon(IconDataSolid(
-                        int.parse('0x0004D'),
-                      )),
-                    )),
+                  message: "My Tasks",
+                  child: Icon(IconDataSolid(
+                    int.parse('0x0004D'),
+                  )),
+                )),
               ),
             ];
           }
@@ -352,108 +370,70 @@ class PagesController extends PageController {
                   controller.notifyListeners();
                 },
                 iconWidget: Container(
-                    child:Tooltip(
-                      message: "Requests",
-                      child: Icon(IconDataSolid(
-                        int.parse('0x00052'),
-                      )),
-                    ))),
+                    child: Tooltip(
+                  message: "Requests",
+                  child: Icon(IconDataSolid(
+                    int.parse('0x00052'),
+                  )),
+                ))),
             SidebarXItem(
                 label: 'oderators',
                 onTap: () {
-                  context.goNamed(UserSearchPage.labModeratorsRouteName);
+                  context.goNamed(UserSearchPage.getRouteNameLabModerators(site:Website.Lab));
                   controller.notifyListeners();
                 },
-
                 iconWidget: Container(
-                    child:Tooltip(
-                      message: "Moderators",
-                      child: Icon(IconDataSolid(
-                        int.parse('0x0004D'),
-                      )),
-                    ))),
+                    child: Tooltip(
+                  message: "Moderators",
+                  child: Icon(IconDataSolid(
+                    int.parse('0x0004D'),
+                  )),
+                ))),
             SidebarXItem(
                 label: 'echnicians',
                 onTap: () {
-                  context.goNamed(UserSearchPage.techniciansRouteName);
+                  context.goNamed(UserSearchPage.getRouteNameTechnicians(site:Website.Lab));
                   controller.notifyListeners();
                 },
-
                 iconWidget: Container(
-                    child:Tooltip(
-                      message: "Technicians",
-                      child: Icon(IconDataSolid(
-                        int.parse('0x00054'),
-                      )),
-                    ))),
+                    child: Tooltip(
+                  message: "Technicians",
+                  child: Icon(IconDataSolid(
+                    int.parse('0x00054'),
+                  )),
+                ))),
             SidebarXItem(
                 label: 'ustomers',
                 onTap: () {
-                  context.goNamed(UserSearchPage.outSourceRouteName);
+                  context.goNamed(UserSearchPage.getRouteNameCustomers(site:Website.Lab));
                   controller.notifyListeners();
                 },
                 iconWidget: Container(
-                    child:Tooltip(
-                      message: "Customers",
-                      child: Icon(IconDataSolid(
-                        int.parse('0x00043'),
-                      )),
-                    ))),
+                    child: Tooltip(
+                  message: "Customers",
+                  child: Icon(IconDataSolid(
+                    int.parse('0x00043'),
+                  )),
+                ))),
             SidebarXItem(
-                label: 'Stock',
-                onTap: () {
-                  context.goNamed(StockSearchPage.routeLABname);
-                  controller.notifyListeners();
-                },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Stock",child: Icon(Icons.store))),),
-            SidebarXItem(
-                label: 'Cash Flow',
-                onTap: () {
-                  context.goNamed(CashFlowIncomePage.routeLABname);
-                  controller.notifyListeners();
-                },
-              iconWidget: Container(
-                  child: Tooltip(
-                      message: "Cash Flow",child: Icon(Icons.attach_money))),),
-          ];
-        }
-      case Website.Clinic:
-        {
-          return [
-            /* SideMenuItem(
-
-              label: 'Patients',
-              onTap: () {
-                pagesController.jumpToPage(0);
-              },
-            ),
-            SideMenuItem(
-
-              label: 'Doctors',
-              onTap: () {
-                pagesController.jumpToPage(1);
-              },
-            ),
-            SideMenuItem(
-
               label: 'Stock',
               onTap: () {
-                pagesController.jumpToPage(2);
+                context.goNamed(StockSearchPage.getRouteName(site:Website.Lab));
+                controller.notifyListeners();
               },
+              iconWidget: Container(child: Tooltip(message: "Stock", child: Icon(Icons.store))),
             ),
-            SideMenuItem(
-
+            SidebarXItem(
               label: 'Cash Flow',
               onTap: () {
-                pagesController.jumpToPage(3);
+                context.goNamed(CashFlowIncomePage.getRouteName(site:Website.Lab));
+                controller.notifyListeners();
               },
+              iconWidget: Container(child: Tooltip(message: "Cash Flow", child: Icon(Icons.attach_money))),
             ),
-          */
           ];
-          break;
         }
+
       default:
         {
           return [];
@@ -461,7 +441,6 @@ class PagesController extends PageController {
     }
   }
 }
-
 
 class InternalPagesController extends PageController {
   static InternalPagesController instance = Get.find();

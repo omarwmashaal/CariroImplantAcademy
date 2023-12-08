@@ -117,62 +117,62 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
     this.finalProthesisSingleBridgeHealingCollar = json['finalProthesisSingleBridgeHealingCollar'] ?? false;
     this.finalProthesisSingleBridgeHealingCollarStatus = json['finalProthesisSingleBridgeHealingCollarStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeHealingCollarStatus.values[json['finalProthesisSingleBridgeHealingCollarStatus']];
+        : EnumFinalProthesisHealingCollarStatus.values[json['finalProthesisSingleBridgeHealingCollarStatus']];
     this.finalProthesisSingleBridgeHealingCollarNextVisit = json['finalProthesisSingleBridgeHealingCollarNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeHealingCollarNextVisit.values[json['finalProthesisSingleBridgeHealingCollarNextVisit']];
+        : EnumFinalProthesisHealingCollarNextVisit.values[json['finalProthesisSingleBridgeHealingCollarNextVisit']];
     this.finalProthesisSingleBridgeImpression = json['finalProthesisSingleBridgeImpression'] ?? false;
     this.finalProthesisSingleBridgeImpressionStatus = json['finalProthesisSingleBridgeImpressionStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeImpressionStatus.values[json['finalProthesisSingleBridgeImpressionStatus']];
+        : EnumFinalProthesisImpressionStatus.values[json['finalProthesisSingleBridgeImpressionStatus']];
     this.finalProthesisSingleBridgeImpressionNextVisit = json['finalProthesisSingleBridgeImpressionNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeImpressionNextVisit.values[json['finalProthesisSingleBridgeImpressionNextVisit']];
+        : EnumFinalProthesisImpressionNextVisit.values[json['finalProthesisSingleBridgeImpressionNextVisit']];
     this.finalProthesisSingleBridgeTryIn = json['finalProthesisSingleBridgeTryIn'] ?? false;
     this.finalProthesisSingleBridgeTryInStatus = json['finalProthesisSingleBridgeTryInStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeTryInStatus.values[json['finalProthesisSingleBridgeTryInStatus']];
+        : EnumFinalProthesisTryInStatus.values[json['finalProthesisSingleBridgeTryInStatus']];
     this.finalProthesisSingleBridgeTryInNextVisit = json['finalProthesisSingleBridgeTryInNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeTryInNextVisit.values[json['finalProthesisSingleBridgeTryInNextVisit']];
+        : EnumFinalProthesisTryInNextVisit.values[json['finalProthesisSingleBridgeTryInNextVisit']];
     this.finalProthesisSingleBridgeDelivery = json['finalProthesisSingleBridgeDelivery'] ?? false;
     this.finalProthesisSingleBridgeDeliveryStatus = json['finalProthesisSingleBridgeDeliveryStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeDeliveryStatus.values[json['finalProthesisSingleBridgeDeliveryStatus']];
+        : EnumFinalProthesisDeliveryStatus.values[json['finalProthesisSingleBridgeDeliveryStatus']];
     this.finalProthesisSingleBridgeDeliveryNextVisit = json['finalProthesisSingleBridgeDeliveryNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[json['finalProthesisSingleBridgeDeliveryNextVisit']];
+        : EnumFinalProthesisDeliveryNextVisit.values[json['finalProthesisSingleBridgeDeliveryNextVisit']];
 
     this.finalProthesisFullArchHealingCollar = json['finalProthesisFullArchHealingCollar'] ?? false;
     this.finalProthesisFullArchHealingCollarStatus = json['finalProthesisFullArchHealingCollarStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeHealingCollarStatus.values[json['finalProthesisFullArchHealingCollarStatus']];
+        : EnumFinalProthesisHealingCollarStatus.values[json['finalProthesisFullArchHealingCollarStatus']];
     this.finalProthesisFullArchHealingCollarNextVisit = json['finalProthesisFullArchHealingCollarNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeHealingCollarNextVisit.values[json['finalProthesisFullArchHealingCollarNextVisit']];
+        : EnumFinalProthesisHealingCollarNextVisit.values[json['finalProthesisFullArchHealingCollarNextVisit']];
     this.finalProthesisFullArchImpression = json['finalProthesisFullArchImpression'] ?? false;
     this.finalProthesisFullArchImpressionStatus = json['finalProthesisFullArchImpressionStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeImpressionStatus.values[json['finalProthesisFullArchImpressionStatus']];
+        : EnumFinalProthesisImpressionStatus.values[json['finalProthesisFullArchImpressionStatus']];
     this.finalProthesisFullArchImpressionNextVisit = json['finalProthesisFullArchImpressionNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeImpressionNextVisit.values[json['finalProthesisFullArchImpressionNextVisit']];
+        : EnumFinalProthesisImpressionNextVisit.values[json['finalProthesisFullArchImpressionNextVisit']];
     this.finalProthesisFullArchTryIn = json['finalProthesisFullArchTryIn'] ?? false;
     this.finalProthesisFullArchTryInStatus =
-        json['finalProthesisFullArchTryInStatus'] == null ? null : EnumFinalProthesisSingleBridgeTryInStatus.values[json['finalProthesisFullArchTryInStatus']];
+        json['finalProthesisFullArchTryInStatus'] == null ? null : EnumFinalProthesisTryInStatus.values[json['finalProthesisFullArchTryInStatus']];
  this.searchTeethClassification =
         json['searchTeethClassification'] == null ? null : EnumTeethClassification.values[json['searchTeethClassification']];
 
     this.finalProthesisFullArchTryInNextVisit = json['finalProthesisFullArchTryInNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeTryInNextVisit.values[json['finalProthesisFullArchTryInNextVisit']];
+        : EnumFinalProthesisTryInNextVisit.values[json['finalProthesisFullArchTryInNextVisit']];
     this.finalProthesisFullArchDelivery = json['finalProthesisFullArchDelivery'] ?? false;
     this.finalProthesisFullArchDeliveryStatus = json['finalProthesisFullArchDeliveryStatus'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeDeliveryStatus.values[json['finalProthesisFullArchDeliveryStatus']];
+        : EnumFinalProthesisDeliveryStatus.values[json['finalProthesisFullArchDeliveryStatus']];
     this.finalProthesisFullArchDeliveryNextVisit = json['finalProthesisFullArchDeliveryNextVisit'] == null
         ? null
-        : EnumFinalProthesisSingleBridgeDeliveryNextVisit.values[json['finalProthesisFullArchDeliveryNextVisit']];
+        : EnumFinalProthesisDeliveryNextVisit.values[json['finalProthesisFullArchDeliveryNextVisit']];
   }
 
   Map<String, dynamic> toJson() {

@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentLogTableWidget.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,9 +31,15 @@ class ReceiptTableWidget {
       width: 900,
       context: context,
       child: BlocConsumer<ReceiptBloc, ReceiptBloc_States>(
-        buildWhen: (previous, current) => current is ReceiptBloc_LoadedReceiptsSuccessfullyState || current is ReceiptBloc_LoadingReceiptsErrorState,
+        buildWhen: (previous, current) =>
+        current is ReceiptBloc_LoadedReceiptsSuccessfullyState ||
+        current is ReceiptBloc_LoadingReceiptsState ||
+            current is ReceiptBloc_LoadingReceiptsErrorState,
         builder: (context, state) {
-          if (state is ReceiptBloc_LoadingReceiptsErrorState) return BigErrorPageWidget(message: state.message);
+          if (state is ReceiptBloc_LoadingReceiptsErrorState)
+            return BigErrorPageWidget(message: state.message);
+          else if(state is ReceiptBloc_LoadingReceiptsState)
+            return LoadingWidget();
           return Column(
             children: [
               FormTextKeyWidget(text: "Click on receipt to view payment log"),

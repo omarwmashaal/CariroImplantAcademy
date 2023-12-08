@@ -4,8 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FormTextWidget extends StatelessWidget {
-  FormTextWidget({Key? key, required this.keyText, required this.valueText})
-      : super(key: key);
+  FormTextWidget({Key? key, required this.keyText, required this.valueText}) : super(key: key);
   String keyText;
   String valueText;
 
@@ -25,8 +24,7 @@ class FormTextWidget extends StatelessWidget {
 }
 
 class FormTextKeyWidget extends StatelessWidget {
-  FormTextKeyWidget({Key? key, this.smallFont = false,required this.text,this.color, this.secondaryInfo = false})
-      : super(key: key);
+  FormTextKeyWidget({Key? key, this.smallFont = false, required this.text, this.color, this.secondaryInfo = false}) : super(key: key);
   String text;
   bool secondaryInfo;
   Color? color;
@@ -34,21 +32,26 @@ class FormTextKeyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = smallFont?10: 14;
+    double fontSize = smallFont ? 10 : 14;
     return Text(
       text,
       style: secondaryInfo
-          ? TextStyle(
-              fontSize: fontSize, fontFamily: Inter_Bold, color: Color_TextSecondary)
-          : TextStyle(fontSize: fontSize, fontFamily: Inter_Bold, color: color??Colors.black),
+          ? TextStyle(fontSize: fontSize, fontFamily: Inter_Bold, color: Color_TextSecondary)
+          : TextStyle(fontSize: fontSize, fontFamily: Inter_Bold, color: color ?? Colors.black),
     );
   }
 }
 
 class FormTextValueWidget extends StatelessWidget {
-  FormTextValueWidget(
-      {Key? key, this.color, this.text="",this.align = TextAlign.start, this.secondaryInfo = false, this.suffix, this.smallFont = false})
-      : super(key: key);
+  FormTextValueWidget({
+    Key? key,
+    this.color,
+    this.text = "",
+    this.align = TextAlign.start,
+    this.secondaryInfo = false,
+    this.suffix,
+    this.smallFont = false,
+  }) : super(key: key);
   String? text;
   bool secondaryInfo;
   String? suffix;
@@ -58,20 +61,13 @@ class FormTextValueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = smallFont?10: 14;
+    double fontSize = smallFont ? 10 : 14;
     return Text(
-      (text as String) + " " + (suffix != null ? (suffix as String) : ""),textAlign: align,
+ "${text??""} " + (suffix != null ? (suffix as String) : ""),
+      textAlign: align,
       style: secondaryInfo
-
-          ? TextStyle(
-              fontSize: fontSize,
-              fontFamily: Inter_Regular,
-              color:color?? Color_TextSecondary)
-          : TextStyle(
-              fontSize: fontSize,
-              fontFamily: Inter_Regular,
-          color:color??Colors.black
-            ),
+          ? TextStyle(fontSize: fontSize, fontFamily: Inter_Regular, color: color ?? Color_TextSecondary)
+          : TextStyle(fontSize: fontSize, fontFamily: Inter_Regular, color: color ?? Colors.black),
     );
   }
 }

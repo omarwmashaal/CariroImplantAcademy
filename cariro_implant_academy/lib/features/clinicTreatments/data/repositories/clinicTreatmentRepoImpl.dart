@@ -40,4 +40,14 @@ class ClinicTreatmentRepoImpl implements ClinicTreatmentRepo {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, NoParams>> updateClinicReceipt(int patientId, int treatmentId) async {
+    try {
+      final result = await clinicTreatmentDatasource.updateClinicReceipt(patientId,treatmentId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

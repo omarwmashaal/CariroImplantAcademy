@@ -48,10 +48,16 @@ class PatientProfileComplainsPage extends StatefulWidget {
   static String getPath(String id) {
     return "/Patients/Patient/$id/Complains";
   }
-
-  static String routeName = "Complains";
-   static String routeNameClinic = "ClinicComplains";
-  static String routePath = "Patients/:id/Complains";
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicComplains";
+      default:
+        return "Complains";
+    }
+  }
+  static String routePath = ":id/Complains";
 
   @override
   State<PatientProfileComplainsPage> createState() => _PatientProfileComplainsPageState();
@@ -71,6 +77,7 @@ class _PatientProfileComplainsPageState extends State<PatientProfileComplainsPag
 
   @override
   Widget build(BuildContext context) {
+
     ComplainsEntity newComplain = ComplainsEntity(patientID: widget.patientId);
     return Column(
       children: [

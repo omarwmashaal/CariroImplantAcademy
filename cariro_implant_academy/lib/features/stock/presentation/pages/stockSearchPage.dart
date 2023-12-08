@@ -8,8 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../Constants/Controllers.dart';
 import '../../../../Widgets/CIA_TextField.dart';
 import '../../../../Widgets/Title.dart';
+import '../../../../core/constants/enums/enums.dart';
 
 class StockSearchPage extends StatefulWidget {
   StockSearchPage({
@@ -17,12 +19,18 @@ class StockSearchPage extends StatefulWidget {
   }) : super(key: key);
 
   static String routePath = "Stock";
-  static String routeName = "Stock";
-   static String routeNameClinic = "ClinicStock";
-  static String routeCIAname = "CIAStock";
-  static String routeLABname = "LabStock";
-  static String routeClinicName = "ClinicStock";
 
+  static String getRouteName({Website? site}) {
+    Website website = site ?? siteController.getSite();
+    switch (website) {
+      case Website.Clinic:
+        return "ClinicStock";
+      case Website.Lab:
+        return "LabStock";
+      default:
+        return "CIAStock";
+    }
+  }
   @override
   State<StockSearchPage> createState() => _StockSearchPageState();
 }

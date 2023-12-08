@@ -16,7 +16,7 @@ class CreatePatientUseCase extends UseCases<PatientInfoEntity, PatientInfoEntity
 
   @override
   Future<Either<Failure, PatientInfoEntity>> call(PatientInfoEntity params) async {
-    if (params.secondaryId == null) return Left(InputValidationFailure(failureMessage: "Id can not be null"));
+    if (params.secondaryId == null || params.secondaryId==0) return Left(InputValidationFailure(failureMessage: "Id can not be null"));
     final duplicateId = await patientInfoRepo.checkDuplicateId(params.secondaryId!);
     return duplicateId.fold(
       (l) {

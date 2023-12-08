@@ -32,10 +32,13 @@ import '../bloc/patientSeachBlocStates.dart';
 import '../bloc/patientSearchBloc.dart';
 import 'createOrViewPatientPage.dart';
 
-class PatientsSearchPage extends StatelessWidget {
+class PatientsSearchPage extends StatefulWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
 
   bool myPatients;
+
+  static String routePath = "Patients";
+  static String routeMyPath = "MyPatients";
 
   static String getRouteName({Website? site}) {
     Website website = site ?? siteController.getSite();
@@ -55,10 +58,22 @@ class PatientsSearchPage extends StatelessWidget {
         return "MyPatients";
     }
   }
+
+  @override
+  State<PatientsSearchPage> createState() => _PatientsSearchPageState();
+}
+
+class _PatientsSearchPageState extends State<PatientsSearchPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
     var dataSource = PatientSearchDataSourceTable(context);
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: myPatients));
     return MultiBlocListener(
       listeners: [
         BlocListener<PatientSearchBloc, PatientSearchBloc_States>(
@@ -79,7 +94,7 @@ class PatientsSearchPage extends StatelessWidget {
               ShowSnackBar(context, isSuccess: false, message: state.message);
             else if (state is DoneState) {
               ShowSnackBar(context, isSuccess: true);
-              BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: myPatients));
+              BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
             }
 
             if (state is! LoadingPatientSearchState) CustomLoader.hide();
@@ -150,7 +165,7 @@ class PatientsSearchPage extends StatelessWidget {
                               if (state is DoneState) {
                                 dialogHelper.dismissSingle(context);
                                 ShowSnackBar(context, isSuccess: true);
-                                BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: myPatients));
+                                BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
                               }
                             },
                           )
@@ -230,7 +245,7 @@ class PatientsSearchPage extends StatelessWidget {
   }
 
   void dispatchSearch(BuildContext context, String query) {
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: myPatients));
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: widget.myPatients));
   }
 
   void dispatchChangeFilter(BuildContext context, String filter) {

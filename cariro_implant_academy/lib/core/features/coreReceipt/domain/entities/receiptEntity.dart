@@ -19,6 +19,8 @@ class ReceiptEntity extends Equatable {
   int? total;
   int? paid;
   int? unpaid;
+  List<BasicNameIdObjectEntity>? prices;
+  bool? isPaid;
 
   ReceiptEntity({
     this.id,
@@ -31,6 +33,8 @@ class ReceiptEntity extends Equatable {
     this.total,
     this.paid,
     this.unpaid,
+    this.prices,
+    this.isPaid,
   });
 
   @override
@@ -45,6 +49,8 @@ class ReceiptEntity extends Equatable {
         this.total,
         this.paid,
         this.unpaid,
+        this.prices,
+        this.isPaid,
       ];
 }
 /*

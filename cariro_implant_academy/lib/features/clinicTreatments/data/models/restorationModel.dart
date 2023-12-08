@@ -23,6 +23,7 @@ class RestorationModel extends RestorationEntity {
     super.statusPrice,
     super.typePrice,
     super.classPrice,
+    super.clinicReceiptModelId,
   });
 
   factory RestorationModel.fromEntity(RestorationEntity entity) {
@@ -43,6 +44,7 @@ class RestorationModel extends RestorationEntity {
       statusPrice:entity.statusPrice,
       typePrice:entity.typePrice,
       classPrice:entity.classPrice,
+      clinicReceiptModelId:entity.clinicReceiptModelId,
     );
   }
 
@@ -64,6 +66,7 @@ class RestorationModel extends RestorationEntity {
       statusPrice:map['statusPrice'],
       typePrice:map['typePrice'],
       classPrice:map['classPrice'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
     );
   }
 
@@ -83,6 +86,7 @@ class RestorationModel extends RestorationEntity {
     data['statusPrice'] = this.statusPrice;
     data['typePrice'] = this.typePrice;
     data['classPrice'] = this.classPrice;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     return data;
   }
 }

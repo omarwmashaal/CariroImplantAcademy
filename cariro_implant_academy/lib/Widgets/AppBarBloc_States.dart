@@ -4,75 +4,56 @@ import 'package:flutter/cupertino.dart';
 
 import '../Models/NotificationModel.dart';
 
-abstract class AppBarBlocState extends Equatable{}
+abstract class AppBarBlocState {}
 
-class AppBarNewNotificationState extends AppBarBlocState{
+class AppBarNewNotificationState extends AppBarBlocState {
   final List<NotificationEntity> notifications;
+
   AppBarNewNotificationState({required this.notifications});
-  @override
-  // TODO: implement props
-  List<Object?> get props => [notifications];
 }
-class AppBarNotificationsLoadedState extends AppBarBlocState{
+
+class AppBarNotificationsLoadedState extends AppBarBlocState {
   final List<NotificationEntity> notifications;
+
   AppBarNotificationsLoadedState({required this.notifications});
-  @override
-  // TODO: implement props
-  List<Object?> get props => [notifications,identityHashCode(this)];
 }
-class AppBarChangedState extends AppBarBlocState{
+
+class AppBarChangedState extends AppBarBlocState {
   final Widget? newAppBar;
-  AppBarChangedState({ this.newAppBar});
-  @override
-  // TODO: implement props
-  List<Object?> get props => [newAppBar];
-}
-class AppBarLoadingNotificationsState extends AppBarBlocState{
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
 
+  AppBarChangedState({this.newAppBar});
 }
-class AppBarLoadingNotificationsErrorState extends AppBarBlocState{
+
+class AppBarLoadingNotificationsState extends AppBarBlocState {}
+
+class AppBarLoadingNotificationsErrorState extends AppBarBlocState {
   final String message;
+
   AppBarLoadingNotificationsErrorState({required this.message});
-  @override
-  List<Object?> get props => [message];
-
 }
-class AppBarInitialState extends AppBarBlocState{
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
 
-}class AppBarMarkedNotificationsAsReadState extends AppBarBlocState{
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+class AppBarInitialState extends AppBarBlocState {}
 
-}
-class AppBarMarkedNotificationsAsReadErrorState extends AppBarBlocState{
+class AppBarMarkedNotificationsAsReadState extends AppBarBlocState {}
+
+class AppBarMarkedNotificationsAsReadErrorState extends AppBarBlocState {
   final String message;
+
   AppBarMarkedNotificationsAsReadErrorState({required this.message});
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
-
 }
 
-class AppBarDeletingNotificationsState extends AppBarBlocState{
-  @override
-  List<Object?> get props => [];
-}
+class AppBarDeletingNotificationsState extends AppBarBlocState {}
 
-class AppBarDeletingNotificationsErrorState extends AppBarBlocState{
+class AppBarDeletingNotificationsErrorState extends AppBarBlocState {
   final String message;
+
   AppBarDeletingNotificationsErrorState({required this.message});
-  @override
-  List<Object?> get props => [message];
 }
 
-class AppBarDeletedNotificationsSuccessfullyState extends AppBarBlocState{
-  @override
-  List<Object?> get props => [];
+class AppBarDeletedNotificationsSuccessfullyState extends AppBarBlocState {}
+
+class DrawerSetIndex extends AppBarBlocState {
+  final int index;
+
+  DrawerSetIndex({required this.index});
 }

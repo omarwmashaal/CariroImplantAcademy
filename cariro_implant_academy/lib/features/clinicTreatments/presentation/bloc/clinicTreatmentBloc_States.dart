@@ -90,6 +90,16 @@ class ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState extends ClinicTreat
   ClinicTreatmentBloc_LoadingDoctorsPercentageErrorState({required this.message});
 }
 
+class ClinicTreatmentBloc_UpdatedClinicReceiptSuccessfullyState extends ClinicTreatmentBloc_States {}
+
+class ClinicTreatmentBloc_UpdatingClinicReceiptState extends ClinicTreatmentBloc_States {}
+
+class ClinicTreatmentBloc_UpdatingClinicReceiptErrorState extends ClinicTreatmentBloc_States {
+  final String message;
+
+  ClinicTreatmentBloc_UpdatingClinicReceiptErrorState({required this.message});
+}
+
 class ClinicTreatmentBloc_ShowPricesState extends ClinicTreatmentBloc_States {}
 
 class ClinicTreatmentBloc_ShowTreatmentstate extends ClinicTreatmentBloc_States {}

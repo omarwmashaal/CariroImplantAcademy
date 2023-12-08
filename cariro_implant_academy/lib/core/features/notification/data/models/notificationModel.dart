@@ -39,7 +39,7 @@ class NotificationModel extends NotificationEntity {
         else if (type == EnumNotificationType.TreatmentPlan)
           GoRouter.of( context).goNamed(TreatmentPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
         else if (type == EnumNotificationType.Complains)
-        GoRouter.of( context).goNamed(PatientProfileComplainsPage.routeName, pathParameters: {'id': json['infoId']?.toString()??""});
+        GoRouter.of( context).goNamed(PatientProfileComplainsPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
         else if (type == EnumNotificationType.LabRequest)
         GoRouter.of( context).goNamed(CIA_Router.routeConst_LabView, pathParameters: {'id': json['infoId']?.toString()??""});
        else if (type == EnumNotificationType.SurgicalTreatment)

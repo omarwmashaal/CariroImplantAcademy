@@ -22,6 +22,7 @@ class TMDmodel extends TMDEntity {
     super.doctorId,
     super.stepNumber,
     super.price,
+    super.clinicReceiptModelId,
   });
 
   factory TMDmodel.fromEntity(TMDEntity entity) {
@@ -39,6 +40,7 @@ class TMDmodel extends TMDEntity {
       doctorId:entity.doctorId,
       stepNumber:entity.stepNumber,
       price:entity.price,
+      clinicReceiptModelId:entity.clinicReceiptModelId,
     );
   }
 
@@ -57,6 +59,7 @@ class TMDmodel extends TMDEntity {
       doctorId:map['doctorId'],
       stepNumber:map['stepNumber'],
       price:map['price'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
     );
   }
 
@@ -73,6 +76,7 @@ class TMDmodel extends TMDEntity {
     data['doctorId'] = this.doctorId;
     data['stepNumber'] = this.stepNumber;
     data['price'] = this.price;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     return data;
   }
 }

@@ -24,6 +24,7 @@ import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
+import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
@@ -97,6 +98,7 @@ void main() async {
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
+
   //Get.put(SiteController());
 
   /*
@@ -124,7 +126,7 @@ void main() async {
 
     print("log exported");
   });*/
-  init();
+  initInjection();
   siteController = sl<SiteController>();
   dialogHelper = sl<DialogHelper>();
   runApp(

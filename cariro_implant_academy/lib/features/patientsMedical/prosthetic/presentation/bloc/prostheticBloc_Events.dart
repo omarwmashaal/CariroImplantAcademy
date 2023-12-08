@@ -1,6 +1,8 @@
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+
 abstract class ProstheticBloc_Event extends Equatable{
 
 }
@@ -30,13 +32,13 @@ class ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent extends Pro
   List<Object?> get props => [data];
 }
 class ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent extends ProstheticBloc_Event{
-  final ProstheticTreatmentEntity data;
+  final ProstheticTreatmentFinalEntity data;
   ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent({required this.data});
   @override
   List<Object?> get props => [data];
 }
 class ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent extends ProstheticBloc_Event{
-  final ProstheticTreatmentEntity data;
+  final ProstheticTreatmentFinalEntity data;
   ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent({required this.data});
   @override
   List<Object?> get props => [data];

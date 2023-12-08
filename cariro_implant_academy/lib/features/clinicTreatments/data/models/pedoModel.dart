@@ -21,6 +21,7 @@ class PedoModel extends PedoEntity {
     super.price,
     super.secondStepPrice,
     super.firstStepPrice,
+    super.clinicReceiptModelId,
   });
 
   factory PedoModel.fromEntity(PedoEntity entity) {
@@ -40,6 +41,7 @@ class PedoModel extends PedoEntity {
       price:entity.price,
       firstStepPrice:entity.firstStepPrice,
       secondStepPrice:entity.secondStepPrice,
+      clinicReceiptModelId:entity.clinicReceiptModelId,
     );
   }
 
@@ -61,6 +63,7 @@ class PedoModel extends PedoEntity {
       price:map['price'],
       firstStepPrice:map['firstStepPrice'],
       secondStepPrice:map['secondStepPrice'],
+      clinicReceiptModelId:map['clinicReceiptModelId'],
     );
   }
 
@@ -79,6 +82,7 @@ class PedoModel extends PedoEntity {
     data['price'] = this.price;
     data['secondStepPrice'] = this.secondStepPrice;
     data['firstStepPrice'] = this.firstStepPrice;
+    data['clinicReceiptModelId'] = this.clinicReceiptModelId;
     return data;
   }
 }
