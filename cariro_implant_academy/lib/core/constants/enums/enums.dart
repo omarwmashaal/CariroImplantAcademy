@@ -236,6 +236,34 @@ enum EnumClinicPrices {
   DoctorsPatientAnotherDoctorsOperation_ClinicPercent,
 }
 
+ enum EnumTryInSeating
+{
+  ShortMargin,
+  TightFittingSurface,
+  UndercutExistance,
+  TightContact,
+  Other,
+}
+
+ enum EnumOcclusion
+{
+  High,
+  Good,
+  OpenBite,
+}
+ enum EnumBuccalContour
+{
+  OverContoured,
+  Good,
+  UnderContoured,
+}
+ enum EnumTryInContacts
+{
+   Tight,
+   Good,
+   Open,
+}
+
 enum EnumDortorsPercentageEnum
 {
   Operator,

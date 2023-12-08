@@ -1,3 +1,6 @@
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +11,7 @@ import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../Widgets/CIA_TeethChart.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
+import '../../../../../core/constants/enums/enums.dart';
 import '../../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
 import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
@@ -53,26 +57,20 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                 element.finalProthesisTeeth = selectedTeethList;
               });
             },
-             selectedTeeth:widget.fullArch?null: (){
-
-              if(widget.data.healingCollars?.isNotEmpty??false)
-                {
-                  return widget.data.healingCollars!.first.finalProthesisTeeth??[];
-                }
-             else if(widget.data.delivery?.isNotEmpty??false)
-                {
-                  return widget.data.delivery!.first.finalProthesisTeeth??[];
-                }
-              else if(widget.data.impressions?.isNotEmpty??false)
-                {
-                  return widget.data.impressions!.first.finalProthesisTeeth??[];
-                }
-              else if(widget.data.tryIns?.isNotEmpty??false)
-                {
-                  return widget.data.tryIns!.first.finalProthesisTeeth??[];
-                }
-              return <int>[];
-             }(),
+            selectedTeeth: widget.fullArch
+                ? null
+                : () {
+                    if (widget.data.healingCollars?.isNotEmpty ?? false) {
+                      return widget.data.healingCollars!.first.finalProthesisTeeth ?? [];
+                    } else if (widget.data.delivery?.isNotEmpty ?? false) {
+                      return widget.data.delivery!.first.finalProthesisTeeth ?? [];
+                    } else if (widget.data.impressions?.isNotEmpty ?? false) {
+                      return widget.data.impressions!.first.finalProthesisTeeth ?? [];
+                    } else if (widget.data.tryIns?.isNotEmpty ?? false) {
+                      return widget.data.tryIns!.first.finalProthesisTeeth ?? [];
+                    }
+                    return <int>[];
+                  }(),
           ),
         ),
         SizedBox(
@@ -377,6 +375,309 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           ],
                                         ),
                                       ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                          child: CIA_SecondaryButton(
+                                        label: "Check List",
+                                        onTab: () => CIA_ShowPopUp(
+                                            context: context,
+                                            width: 900,
+                                            height: 600,
+                                            child: StatefulBuilder(
+                                              builder: (context,setState) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(10.0),
+                                                  child: ListView(
+                                                    children: [
+                                                      Row(
+                                                      children: [
+                                                        CIA_MultiSelectChipWidget(
+                                                          singleSelect: true,
+                                                          labels: [
+                                                            CIA_MultiSelectChipWidgeModel(label: "Satisfied", isSelected: e.satisfied==true),
+                                                            CIA_MultiSelectChipWidgeModel(label: "Non Satisfied", isSelected: e.satisfied==false),
+                                                          ],
+                                                          onChange: (item, isSelected) {
+                                                            if (item == "Satisfied") {
+                                                              e.satisfied = true;
+                                                              e.nonSatisfiedNewScan = null;
+                                                              e.nonSatisfiedDescription = null;
+                                                            } else if (item == "Non Satisfied") {
+                                                              e.satisfied = false;
+                                                            }
+                                                            setState(() {});
+                                                          },
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        Visibility(
+                                                          visible: e.satisfied == false,
+                                                          child: Expanded(
+                                                            child: Row(
+                                                              children: [
+                                                                CIA_MultiSelectChipWidget(
+                                                                  singleSelect: true,
+                                                                  labels: [
+                                                                    CIA_MultiSelectChipWidgeModel(label: "New Scan", isSelected: e.nonSatisfiedNewScan==true),
+                                                                    CIA_MultiSelectChipWidgeModel(label: "Same Scan", isSelected: e.nonSatisfiedNewScan==false),
+                                                                  ],
+                                                                  onChange: (item, isSelected) {
+                                                                    if (item == "New Scan") {
+                                                                      e.nonSatisfiedNewScan = true;
+                                                                    } else if (item == "Same Scan") {
+                                                                      e.nonSatisfiedNewScan = false;
+                                                                    }
+                                                                  },
+                                                                ),
+                                                                SizedBox(width: 10),
+                                                                Expanded(
+                                                                  child: CIA_TextFormField(
+                                                                    label: "Non Satisfied Description",
+                                                                    controller: TextEditingController(text: e.nonSatisfiedDescription),
+                                                                    onChange: (v) => e.nonSatisfiedDescription = v,
+                                                                  ),
+                                                                ),
+                                                                // Add more fields as needed
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          FormTextKeyWidget(text: "Seating"),
+                                                          SizedBox(width: 10),
+                                                          CIA_MultiSelectChipWidget(
+                                                            singleSelect: true,
+                                                            labels: [
+                                                              CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected: e.seating==true),
+                                                              CIA_MultiSelectChipWidgeModel(label: "No", isSelected: e.seating==false),
+                                                            ],
+                                                            onChange: (item, isSelected) {
+                                                              if (item == "Yes") {
+                                                                e.seating = true;
+                                                                e.nonSeatingOtherNotes = null;
+                                                                e.nonSeatingType = null;
+                                                              } else if (item == "No") {
+                                                                e.seating = false;
+                                                              }
+                                                              setState(() {});
+                                                            },
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Visibility(
+                                                            visible: e.seating==false,
+                                                            child: Expanded(
+                                                              child: Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: CIA_DropDownSearch(
+                                                                      label: "Non Seating Type",
+                                                                      selectedItem: e.nonSeatingType != null
+                                                                          ? DropDownDTO(name: e.nonSeatingType!.name.replaceAll("_", " "))
+                                                                          : null,
+                                                                      onSelect: (value) {
+                                                                        e.nonSeatingType = EnumTryInSeating.values[value.id!];
+                                                                      },
+                                                                      items: EnumTryInSeating.values
+                                                                          .map(
+                                                                            (value) => DropDownDTO(
+                                                                          name: value.name.replaceAll("_", " "),
+                                                                          id: EnumTryInSeating.values.indexOf(value),
+                                                                        ),
+                                                                      )
+                                                                          .toList(),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(width: 10),
+                                                                  Expanded(
+                                                                    child: CIA_TextFormField(
+                                                                      label: "Non Seating Other Notes",
+                                                                      controller: TextEditingController(text: e.nonSeatingOtherNotes),
+                                                                      onChange: (v) => e.nonSeatingOtherNotes = v,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+
+
+
+
+                                                      SizedBox(height: 10),
+                                                      CIA_DropDownSearch(
+                                                        label: "Mesial Contact",
+                                                        selectedItem:
+                                                            e.mesialContacts != null ? DropDownDTO(name: e.mesialContacts!.name.replaceAll("_", " ")) : null,
+                                                        onSelect: (value) {
+                                                          e.mesialContacts = EnumTryInContacts.values[value.id!];
+                                                        },
+                                                        items: EnumTryInContacts.values
+                                                            .map(
+                                                              (value) => DropDownDTO(
+                                                                name: value.name.replaceAll("_", " "),
+                                                                id: EnumTryInContacts.values.indexOf(value),
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_DropDownSearch(
+                                                        label: "Distal Contact",
+                                                        selectedItem:
+                                                            e.distalContacts != null ? DropDownDTO(name: e.distalContacts!.name.replaceAll("_", " ")) : null,
+                                                        onSelect: (value) {
+                                                          e.distalContacts = EnumTryInContacts.values[value.id!];
+                                                        },
+                                                        items: EnumTryInContacts.values
+                                                            .map(
+                                                              (value) => DropDownDTO(
+                                                                name: value.name.replaceAll("_", " "),
+                                                                id: EnumTryInContacts.values.indexOf(value),
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_DropDownSearch(
+                                                        label: "Occlusion",
+                                                        selectedItem: e.occlusion != null ? DropDownDTO(name: e.occlusion!.name.replaceAll("_", " ")) : null,
+                                                        onSelect: (value) {
+                                                          e.occlusion = EnumOcclusion.values[value.id!];
+                                                        },
+                                                        items: EnumOcclusion.values
+                                                            .map(
+                                                              (value) => DropDownDTO(
+                                                                name: value.name.replaceAll("_", " "),
+                                                                id: EnumOcclusion.values.indexOf(value),
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_DropDownSearch(
+                                                        label: "Buccal Contour",
+                                                        selectedItem: e.buccalContour != null ? DropDownDTO(name: e.buccalContour!.name.replaceAll("_", " ")) : null,
+                                                        onSelect: (value) {
+                                                          e.buccalContour = EnumBuccalContour.values[value.id!];
+                                                        },
+                                                        items: EnumBuccalContour.values
+                                                            .map(
+                                                              (value) => DropDownDTO(
+                                                                name: value.name.replaceAll("_", " "),
+                                                                id: EnumBuccalContour.values.indexOf(value),
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: FormTextKeyWidget(
+                                                              text: "Passive",
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Expanded(
+                                                            child: CIA_MultiSelectChipWidget(
+                                                              singleSelect: true,
+                                                              labels: [
+                                                                CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected: e.passive==true),
+                                                                CIA_MultiSelectChipWidgeModel(label: "No", isSelected: e.passive==false),
+                                                              ],
+                                                              onChange: (item, isSelected) {
+                                                                e.passive = item == "Yes";
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+
+                                                      // Other dropdowns and text fields...
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Retention",
+                                                        controller: TextEditingController(text: e.retention),
+                                                        onChange: (v) => e.retention = v,
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Occlusion Notes",
+                                                        controller: TextEditingController(text: e.occlusionNotes),
+                                                        onChange: (v) => e.occlusionNotes = v,
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Occlusal Plan and Midline",
+                                                        controller: TextEditingController(text: e.occlusalPlanAndMidline),
+                                                        onChange: (v) => e.occlusalPlanAndMidline = v,
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Centric Relation",
+                                                        controller: TextEditingController(text: e.centricRelation),
+                                                        onChange: (v) => e.centricRelation = v,
+                                                      ),
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Vertical Dimension",
+                                                        controller: TextEditingController(text: e.verticalDimension),
+                                                        onChange: (v) => e.verticalDimension = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Lip Support",
+                                                        controller: TextEditingController(text: e.lipSupport),
+                                                        onChange: (v) => e.lipSupport = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Size and Shape of Teeth",
+                                                        controller: TextEditingController(text: e.sizeAndShapeOfTeeth),
+                                                        onChange: (v) => e.sizeAndShapeOfTeeth = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Canting",
+                                                        controller: TextEditingController(text: e.canting),
+                                                        onChange: (v) => e.canting = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Frontal Smiling and Lateral Photos",
+                                                        controller: TextEditingController(text: e.frontalSmilingAndLateralPhotos),
+                                                        onChange: (v) => e.frontalSmilingAndLateralPhotos = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Evaluation",
+                                                        controller: TextEditingController(text: e.evaluation),
+                                                        onChange: (v) => e.evaluation = v,
+                                                      ),
+
+                                                      SizedBox(height: 10),
+                                                      CIA_TextFormField(
+                                                        label: "Explain Why",
+                                                        controller: TextEditingController(text: e.explainWhy),
+                                                        onChange: (v) => e.explainWhy = v,
+                                                      ),
+                                                      // Add the remaining fields as needed...
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            )),
+                                      )),
                                     ],
                                   ),
                                 ),

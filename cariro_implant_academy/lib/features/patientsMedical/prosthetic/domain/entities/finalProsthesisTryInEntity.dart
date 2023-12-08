@@ -10,6 +10,30 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
   EnumFinalProthesisTryInNextVisit? finalProthesisTryInNextVisit;
   DateTime? finalProthesisTryInDate;
 
+  // New fields from C# TryInModel
+  bool? satisfied;
+  bool? nonSatisfiedNewScan;
+  String? nonSatisfiedDescription;
+  bool? seating;
+  EnumTryInSeating? nonSeatingType;
+  String? nonSeatingOtherNotes;
+  EnumTryInContacts? mesialContacts;
+  EnumTryInContacts? distalContacts;
+  EnumOcclusion? occlusion;
+  EnumBuccalContour? buccalContour;
+  bool? passive;
+  String? retention;
+  String? occlusionNotes;
+  String? occlusalPlanAndMidline;
+  String? centricRelation;
+  String? verticalDimension;
+  String? lipSupport;
+  String? sizeAndShapeOfTeeth;
+  String? canting;
+  String? frontalSmilingAndLateralPhotos;
+  String? evaluation;
+  String? explainWhy;
+
   FinalProthesisTryInEntity({
     int? id,
     int? patientId,
@@ -21,6 +45,29 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
     this.finalProthesisTryInStatus,
     this.finalProthesisTryInNextVisit,
     this.finalProthesisTryInDate,
+    // New fields from C# TryInModel
+    this.satisfied,
+    this.nonSatisfiedNewScan,
+    this.nonSatisfiedDescription,
+    this.seating,
+    this.nonSeatingType,
+    this.nonSeatingOtherNotes,
+    this.mesialContacts,
+    this.distalContacts, // Added property for distalContacts
+    this.occlusion,
+    this.buccalContour,
+    this.passive,
+    this.retention,
+    this.occlusionNotes,
+    this.occlusalPlanAndMidline,
+    this.centricRelation,
+    this.verticalDimension,
+    this.lipSupport,
+    this.sizeAndShapeOfTeeth,
+    this.canting,
+    this.frontalSmilingAndLateralPhotos,
+    this.evaluation,
+    this.explainWhy,
   }) : super(
     id: id,
     patientId: patientId,
@@ -29,12 +76,36 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
     website: website,
     finalProthesisTeeth: finalProthesisTeeth,
   );
+
   bool isNull() {
     return finalProthesisTryIn == null &&
         finalProthesisTryInStatus == null &&
         finalProthesisTryInNextVisit == null &&
-        finalProthesisTryInDate == null;
+        finalProthesisTryInDate == null &&
+        satisfied == null &&
+        nonSatisfiedNewScan == null &&
+        nonSatisfiedDescription == null &&
+        seating == null &&
+        nonSeatingType == null &&
+        nonSeatingOtherNotes == null &&
+        mesialContacts == null &&
+        distalContacts == null && // Added null check for distalContacts
+        occlusion == null &&
+        buccalContour == null &&
+        passive == null &&
+        retention == null &&
+        occlusionNotes == null &&
+        occlusalPlanAndMidline == null &&
+        centricRelation == null &&
+        verticalDimension == null &&
+        lipSupport == null &&
+        sizeAndShapeOfTeeth == null &&
+        canting == null &&
+        frontalSmilingAndLateralPhotos == null &&
+        evaluation == null &&
+        explainWhy == null;
   }
+
   @override
   List<Object?> get props {
     return [
@@ -43,6 +114,28 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
       finalProthesisTryInStatus,
       finalProthesisTryInNextVisit,
       finalProthesisTryInDate,
+      satisfied,
+      nonSatisfiedNewScan,
+      nonSatisfiedDescription,
+      seating,
+      nonSeatingType,
+      nonSeatingOtherNotes,
+      mesialContacts,
+      distalContacts,
+      occlusion,
+      buccalContour,
+      passive,
+      retention,
+      occlusionNotes,
+      occlusalPlanAndMidline,
+      centricRelation,
+      verticalDimension,
+      lipSupport,
+      sizeAndShapeOfTeeth,
+      canting,
+      frontalSmilingAndLateralPhotos,
+      evaluation,
+      explainWhy,
     ];
   }
 }
