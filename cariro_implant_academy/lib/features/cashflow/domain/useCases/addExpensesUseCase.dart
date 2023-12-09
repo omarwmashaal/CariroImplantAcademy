@@ -20,6 +20,7 @@ class AddExpensesUseCase extends UseCases<NoParams, AddExpensesParams> {
           params.models,
           params.isStockItem,
           params.type,
+      params.inventory,
         )
         .then((value) => value.fold(
               (l) => Left(l..message = "Add Expenses: ${l.message ?? ""}"),
@@ -32,10 +33,12 @@ class AddExpensesParams {
   final List<CashFlowEntity> models;
   final bool isStockItem;
   final EnumExpenseseCategoriesType type;
+  final Website inventory;
 
   AddExpensesParams({
     required this.models,
     required this.type,
     required this.isStockItem,
+     required this.inventory,
   });
 }

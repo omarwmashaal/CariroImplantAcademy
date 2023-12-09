@@ -110,11 +110,13 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                         Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Visibility(
-                            visible: tabController.index != 3,
+                            visible: tabController.index != 1,
                             child: CIA_TextFormField(
-                              label: "Email",
+                              label: tabController.index==3?"Personal Email":"Email",
                               controller: TextEditingController(text: newUser.email ?? ""),
-                              onChange: (value) => newUser.email = value,
+                              onChange: (value) {
+                                 newUser.email = value;
+                              },
                             ),
                           ),
                         ),

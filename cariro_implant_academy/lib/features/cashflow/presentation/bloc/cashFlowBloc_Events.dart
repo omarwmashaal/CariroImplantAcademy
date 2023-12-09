@@ -73,11 +73,13 @@ class CashFlowBloc_AddExpenseEvent extends CashFlowBloc_Events {
   final List<CashFlowEntity> models;
   final bool isStockItem;
   final EnumExpenseseCategoriesType type;
+  final Website inventory;
 
   CashFlowBloc_AddExpenseEvent({
     required this.type,
     required this.isStockItem,
     required this.models,
+    required this.inventory,
   });
 
   @override

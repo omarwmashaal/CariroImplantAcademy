@@ -185,7 +185,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
-                  DataGridCell<String>(columnName: 'Email', value: e.email),
+                  DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<Widget>(
                       columnName: 'Remove',
@@ -233,7 +233,7 @@ class UsersDataGridSource extends DataGridSource {
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
-                  DataGridCell<String>(columnName: 'Email', value: e.email),
+                 // DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
@@ -359,11 +359,12 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
-                  DataGridCell<String>(columnName: 'Email', value: e.email),
+                  DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                 ]))
             .toList();
-      } else if (type == UserRoles.Secretary) {
+      }
+      else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -373,13 +374,14 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                 ]))
             .toList();
-      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+      }
+      else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
         columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
-                  DataGridCell<String>(columnName: 'Email', value: e.email),
+                 // DataGridCell<String>(columnName: 'Email',  value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),

@@ -50,7 +50,7 @@ class CandidateDetailsModel extends CandidateDetailsEntity {
       totalImplantCounts: map['totalImplantCounts'],
       tooth: map['tooth'],
       implantId: map['implantId'],
-      implant:map['patient']==null?null: ImplantModel.fromJson(map['implant']),
+      implant:map['implant']==null?null: ImplantModel.fromJson(map['implant']),
     );
   }
 }

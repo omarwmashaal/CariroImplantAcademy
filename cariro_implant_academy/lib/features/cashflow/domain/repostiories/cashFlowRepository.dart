@@ -21,7 +21,7 @@ abstract class CashFlowRepository {
 
   Future<Either<Failure, NoParams>> addIncome(CashFlowEntity model);
 
-  Future<Either<Failure, NoParams>> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type);
+  Future<Either<Failure, NoParams>> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type,Website inventoryWebsite);
 
   Future<Either<Failure, NoParams>> addSettlement(String filter, int value);
 

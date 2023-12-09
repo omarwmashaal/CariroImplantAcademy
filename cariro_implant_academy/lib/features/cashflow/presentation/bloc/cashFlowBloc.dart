@@ -114,6 +114,8 @@ class CashFlowBloc extends Bloc<CashFlowBloc_Events, CashFlowBloc_States> {
           models: event.models,
           type: event.type,
           isStockItem: event.isStockItem,
+          inventory: event.inventory,
+
         ));
         result.fold(
           (l) => emit(CashFlowBloC_ProcessingCashFlowErrorState(message: l.message ?? "")),

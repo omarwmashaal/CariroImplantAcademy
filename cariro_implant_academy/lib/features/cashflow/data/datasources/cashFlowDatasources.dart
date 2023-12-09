@@ -23,7 +23,7 @@ abstract class CashFlowDatasource {
 
   Future<NoParams> addIncome(CashFlowEntity model);
 
-  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type);
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type,Website inventoryWebsite);
 
   Future<NoParams> addSettlement(String filter, int value);
 
@@ -36,11 +36,11 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
   CashFlowDataSourceImpl({required this.httpRepo});
 
   @override
-  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type) async {
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type,Website inventoryWebsite) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.post(
-        host: "$serverHost/$cashFlowController/addExpense?type=${type.index}",
+        host: "$serverHost/$cashFlowController/addExpense?type=${type.index}&inventoryWebsite=${inventoryWebsite.index}",
         body: models.map((e) => CashFlowModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {

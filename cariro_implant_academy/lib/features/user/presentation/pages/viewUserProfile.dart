@@ -455,6 +455,26 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           edit
                                               ? CIA_TextFormField(
+                                                  label: user.role=="candidate"?"Personal Email": "Email",
+                                                  onChange: (v) => user.email = v,
+                                                  controller: TextEditingController(text: user.email == null ? "" : user.email),
+                                                )
+                                              : Row(
+                                                  children: [
+                                                    Expanded(child: FormTextKeyWidget(text:  user.role=="candidate"?"Personal Email": "Email")),
+                                                    Expanded(child: FormTextValueWidget(text: user.email == null ? "" : user.email))
+                                                  ],
+                                                ),
+                                          Row(
+                                            children: [
+                                              Expanded(child: FormTextKeyWidget(text: "Date of birth")),
+                                              Expanded(
+                                                  child: FormTextValueWidget(
+                                                      text: user.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.dateOfBirth!)))
+                                            ],
+                                          ),
+                                          edit
+                                              ? CIA_TextFormField(
                                                   label: "Phone",
                                                   isNumber: true,
                                                   onChange: (v) => user.phoneNumber = v,

@@ -16,9 +16,9 @@ class CashFlowRepoImpl implements CashFlowRepository {
   CashFlowRepoImpl({required this.cashFlowDatasource});
 
   @override
-  Future<Either<Failure, NoParams>> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type) async {
+  Future<Either<Failure, NoParams>> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type ,Website inventoryWebsite) async {
     try {
-      final result = await cashFlowDatasource.addExpense(models, isStockItem, type);
+      final result = await cashFlowDatasource.addExpense(models, isStockItem, type,inventoryWebsite);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getExpensesCategoryByNameUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockByNameUseCase.dart';
@@ -50,6 +51,7 @@ void ShowAddExpenesesPopUpWidget({
     supplier: BasicNameIdObjectEntity(),
   );
   EnumExpenseseCategoriesType expCategory = EnumExpenseseCategoriesType.Service;
+  Website inventoryWebsite = Website.CIA;
   CIA_ShowPopUp(
       context: context,
       width: 1000,
@@ -68,6 +70,7 @@ void ShowAddExpenesesPopUpWidget({
           type: expCategory,
           isStockItem: isStockItem,
           models: models,
+          inventory: inventoryWebsite,
         ));
         return false;
       },
@@ -77,6 +80,20 @@ void ShowAddExpenesesPopUpWidget({
           builder: (context, _setState) {
             return Column(
               children: [
+                FormTextKeyWidget(text: "Inventroy Website"),
+                SizedBox(height: 10,),
+                CIA_MultiSelectChipWidget(
+                  singleSelect: true,
+                  labels: [
+                    CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: inventoryWebsite == Website.CIA),
+                    CIA_MultiSelectChipWidgeModel(label: "Lab", isSelected: inventoryWebsite == Website.Lab),
+                    CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: inventoryWebsite == Website.Clinic),
+                  ],
+                  onChange: (item, isSelected) {
+                    inventoryWebsite = Website.values.firstWhere((element) => element.name==item);
+                  },
+                ),
+                SizedBox(height: 10),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -140,13 +157,12 @@ void ShowAddExpenesesPopUpWidget({
                                   ? Container()
                                   : CIA_MultiSelectChipWidget(
                                       onChange: (item, isSelected) {
-
-                                        dummyModel.category=null;
+                                        dummyModel.category = null;
                                         dummyModel.categoryId = null;
                                         _setState(() => newCategory = isSelected);
                                       },
                                       labels: [
-                                        CIA_MultiSelectChipWidgeModel(label: "New Category",isSelected: newCategory),
+                                        CIA_MultiSelectChipWidgeModel(label: "New Category", isSelected: newCategory),
                                       ],
                                     ),
                             ),
@@ -206,13 +222,12 @@ void ShowAddExpenesesPopUpWidget({
                             Expanded(
                               child: CIA_MultiSelectChipWidget(
                                 onChange: (item, isSelected) {
-
-                                  dummyModel.paymentMethod=null;
+                                  dummyModel.paymentMethod = null;
                                   dummyModel.paymentMethodId = null;
                                   _setState(() => newPaymentMethod = isSelected);
                                 },
                                 labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "New Payment Method",isSelected: newPaymentMethod),
+                                  CIA_MultiSelectChipWidgeModel(label: "New Payment Method", isSelected: newPaymentMethod),
                                 ],
                               ),
                             ),
@@ -253,12 +268,12 @@ void ShowAddExpenesesPopUpWidget({
                             Expanded(
                               child: CIA_MultiSelectChipWidget(
                                 onChange: (item, isSelected) {
-                                  dummyModel.supplier=null;
+                                  dummyModel.supplier = null;
                                   dummyModel.supplierId = null;
                                   _setState(() => newSupplier = isSelected);
                                 },
                                 labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "New Supplier",isSelected: newSupplier),
+                                  CIA_MultiSelectChipWidgeModel(label: "New Supplier", isSelected: newSupplier),
                                 ],
                               ),
                             ),
