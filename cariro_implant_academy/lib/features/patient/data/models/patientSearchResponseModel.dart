@@ -103,7 +103,7 @@ class PatientInfoModel extends PatientInfoEntity {
       name: map['name'] as String?,
       patientType: EnumPatientType.values[map['patientType']??0],
       id: map['id'] as int?,
-      secondaryId: map['secondaryId'] as int?,
+      secondaryId: map['secondaryId'] as String?,
       gender: EnumGender.values[map['gender']],
       phone: map['phone'] as String?,
       outReason: map['outReason'] as String?,

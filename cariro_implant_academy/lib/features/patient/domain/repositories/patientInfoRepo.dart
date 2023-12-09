@@ -13,7 +13,7 @@ abstract class PatientInfoRepo{
   Future<Either<Failure,PatientInfoEntity>> createPatient(PatientInfoEntity patient);
   Future<Either<Failure,PatientInfoEntity>> updatePatientData(PatientInfoEntity patient);
   Future<Either<Failure,int>> getNextAvailableId();
-  Future<Either<Failure,bool>> checkDuplicateId(int id);
+  Future<Either<Failure,bool>> checkDuplicateId(String id);
   Future<Either<Failure,NoParams>> setPatientOut(int id,String outReason);
   Future<Either<Failure,String?>> compareDuplicateNumber(String number);
   Future<Either<Failure,List<AdvancedPatientSearchEntity>>> advancedSearchPatients(AdvancedPatientSearchEntity params);

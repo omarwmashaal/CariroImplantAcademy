@@ -21,7 +21,7 @@ class SetPatientOutEvent extends CreateOrViewPatientBloc_Events{
   List<Object?> get props => [params];
 }
 class CheckAvailableIdEvent extends CreateOrViewPatientBloc_Events{
-  final int id;
+  final String id;
   CheckAvailableIdEvent(this.id);
    @override
   // TODO: implement props

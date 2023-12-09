@@ -4,11 +4,11 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/patientI
 import 'package:cariro_implant_academy/features/patient/domain/repositories/patientInfoRepo.dart';
 import 'package:dartz/dartz.dart';
 
-class CheckDuplicateIdUseCase extends UseCases<bool,int>{
+class CheckDuplicateIdUseCase extends UseCases<bool,String>{
   PatientInfoRepo repo;
   CheckDuplicateIdUseCase(this.repo);
   @override
-  Future<Either<Failure, bool>> call(int id) async{
+  Future<Either<Failure, bool>> call(String id) async{
     return await repo.checkDuplicateId(id);
   }
   

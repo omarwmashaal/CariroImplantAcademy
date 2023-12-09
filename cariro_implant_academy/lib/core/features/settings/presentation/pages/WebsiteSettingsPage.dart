@@ -263,6 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ? LoadingWidget()
                               : Column(
                                   children: [
+                                    FormTextKeyWidget(text: "Implant Companies"),
                                     Expanded(
                                       child: SidebarX(
                                           controller: SidebarXController(selectedIndex: 0, extended: true),
@@ -344,6 +345,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             else
                               return Column(
                                 children: [
+
+                                  FormTextKeyWidget(text: "Implant Lines"),
                                   Expanded(
                                     child: SidebarX(
                                         controller: SidebarXController(selectedIndex: 0, extended: true),
@@ -432,6 +435,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
+                                    FormTextKeyWidget(text: "Implant Sizes"),
                                     Expanded(
                                       child: ListView(
                                         children: implants

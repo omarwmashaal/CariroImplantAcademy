@@ -58,7 +58,7 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   }
 
   @override
-  Future<Either<Failure, bool>> checkDuplicateId(int id) async {
+  Future<Either<Failure, bool>> checkDuplicateId(String id) async {
     try {
       final result = await dataSource.checkDuplicateId(id);
       return Right(result);

@@ -110,7 +110,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
     final imageBlocIdFront = sl<ImageBloc>();
     if (patientID == 0) {
       createOrViewPatientBloc.add(ChangePageStateEvent(pageState: PageState.addNew));
-      createOrViewPatientBloc.add(GetNextAvailableIdEvent());
+      //createOrViewPatientBloc.add(GetNextAvailableIdEvent());
       createOrViewPatientBloc.emit(LoadedPatientInfoState(patient: patient));
     } else {
       createOrViewPatientBloc.add(GetPatientInfoEvent(id: patientID));
@@ -119,7 +119,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
     return BlocConsumer<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
       listener: (context, state) {
         if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.edit) {
-          createOrViewPatientBloc.add(GetNextAvailableIdEvent());
+         // createOrViewPatientBloc.add(GetNextAvailableIdEvent());
         }
         if (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew) {
           patient.maritalStatus = EnumMaritalStatus.Married;
@@ -133,7 +133,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
           ShowSnackBar(context, isSuccess: false, message: state.message);
         } else if (state is CreatedPatientState) {
           ShowSnackBar(context, isSuccess: true);
-          createOrViewPatientBloc.add(GetNextAvailableIdEvent());
+          //createOrViewPatientBloc.add(GetNextAvailableIdEvent());
           createOrViewPatientBloc.emit(LoadedPatientInfoState(
               patient: PatientInfoEntity(
             gender: EnumGender.Male,
@@ -258,13 +258,12 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                             buildWhen: (previous, current) => current is LoadedGetNextId,
                                             builder: (context, state) {
                                               if (state is LoadedGetNextId && createOrViewPatientBloc.pageState == PageState.addNew ) {
-                                                patient.secondaryId = int.parse(state.message ?? "0");
+                                                patient.secondaryId = state.message??"0";
                                               }
                                               return CIA_TextFormField(
-                                                isNumber: true,
                                                 onChange: (value) async {
-                                                  patient.secondaryId = int.parse(value);
-                                                  createOrViewPatientBloc.add(CheckAvailableIdEvent(int.parse(value)));
+                                                  patient.secondaryId = value;
+                                                  createOrViewPatientBloc.add(CheckAvailableIdEvent(value));
                                                 },
                                                 label: "Id",
                                                 controller: TextEditingController(text: (patient.secondaryId ?? "").toString()),

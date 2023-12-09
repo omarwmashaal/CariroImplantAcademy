@@ -24,7 +24,7 @@ abstract class PatientSearchDataSource {
 
   Future<int> getNextAvailableId();
 
-  Future<bool> checkDuplicateId(int id);
+  Future<bool> checkDuplicateId(String id);
 
   Future<List<AdvancedSearchPatientsModel>> advancedSearchPatients(AdvancedPatientSearchEntity params);
   Future< List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
@@ -119,7 +119,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
   }
 
   @override
-  Future<bool> checkDuplicateId(int id) async {
+  Future<bool> checkDuplicateId(String id) async {
     late StandardHttpResponse result;
     try {
       result = await client.get(

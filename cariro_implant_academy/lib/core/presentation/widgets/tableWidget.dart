@@ -23,7 +23,7 @@ class TableWidget extends StatefulWidget {
       : super(key: key);
 
   DataGridSource dataSource;
-  Function(int index)? onCellClick;
+  Function(dynamic index)? onCellClick;
   bool? isTreatment;
   String? title;
   bool showGridLines;
@@ -74,7 +74,7 @@ class _TableWidgetState extends State<TableWidget> {
       navigationMode: GridNavigationMode.row,
       onCellTap: (value) {
         if (widget.onCellClick != null && value.rowColumnIndex.rowIndex != 0) {
-          widget.onCellClick!(widget.dataSource.effectiveRows.elementAt(value.rowColumnIndex.rowIndex-1).getCells().firstWhere((element) => element.columnName.toLowerCase()=="id").value as int);
+          widget.onCellClick!(widget.dataSource.effectiveRows.elementAt(value.rowColumnIndex.rowIndex-1).getCells().firstWhere((element) => element.columnName.toLowerCase()=="id").value as dynamic);
 
 
         }
