@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
@@ -51,6 +52,7 @@ class NonSurgicalTreatmentPage extends StatefulWidget {
         return "NonSurgicalTreatment";
     }
   }
+
   @override
   State<NonSurgicalTreatmentPage> createState() => _NonSurgicalTreatmentPageState();
 }
@@ -71,7 +73,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
     bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
     medicalShellBloc = context.read<MedicalInfoShellBloc>();
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Non Surgical Treatment"));
-    medicalShellBloc.saveChanges =(){
+    medicalShellBloc.saveChanges = () {
       bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
         nonSurgicalTreatmentEntity: nonSurgicalTreatment,
         patientId: widget.patientId,
@@ -102,11 +104,11 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
       listener: (context, state) {
-        if(state is NonSurgicalTreatmentBloc_DataSavedSuccessfully)
-          bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
+        if (state is NonSurgicalTreatmentBloc_DataSavedSuccessfully) bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
         if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem)
           CustomLoader.show(context);
-        else CustomLoader.hide();
+        else
+          CustomLoader.hide();
         if (state is NonSurgicalTreatmentBloc_DentalExaminationDataLoadedSuccessfully) {
           dentalExaminationEntity = state.dentalExaminationEntity;
           //  bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: nonSurgicalTreatment.treatment??""));
@@ -135,100 +137,113 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                     tooth: state.tooth,
                     action: "extraction",
                   ));
-
                 },
                 title: "Extraction done at price ${model.extraction!.planPrice!.toString()}?",
               );
             }
-          }
-          else if (state.action == "Filled") {
-              bool crown = false;
-              bool rootCanalTreatment = false;
-              bool restoration = false;
+          } else if (state.action == "Filled") {
+            bool crown = false;
+            bool rootCanalTreatment = false;
+            bool restoration = false;
 
-               CIA_ShowPopUp(
-                context: context,
-                onSave: () async {
-                  if (crown)
-                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
-                      patientId: widget.patientId,
-                      tooth: state.tooth,
-                      action: "crown",
-                    ));
-                  if (rootCanalTreatment)
-                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
-                      patientId: widget.patientId,
-                      tooth: state.tooth,
-                      action: "rootCanaltreatment",
-                    ));
-                  if (restoration)
-                    bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
-                      patientId: widget.patientId,
-                      tooth: state.tooth,
-                      action: "restoration",
-                    ));
-
-
-
-                },
-                child: Column(
-                  children: [
-                    model.crown != null
-                        ? Row(
-                            children: [
-                              FormTextKeyWidget(text: "Crown at price ${model.crown!.planPrice!.toString()}"),
-                              SizedBox(width: 10),
-                              CIA_MultiSelectChipWidget(
-                                onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
-                                singleSelect: true,
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                ],
-                              )
-                            ],
-                          )
-                        : SizedBox(),
-                    model.restoration != null
-                        ? Row(
-                            children: [
-                              FormTextKeyWidget(text: "Restoration at price ${model.restoration!.planPrice!.toString()}"),
-                              SizedBox(width: 10),
-                              CIA_MultiSelectChipWidget(
-                                singleSelect: true,
-                                onChange: (item, isSelected) => restoration = item == "Yes" && isSelected,
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                ],
-                              )
-                            ],
-                          )
-                        : SizedBox(),
-                    model.rootCanalTreatment != null
-                        ? Row(
-                            children: [
-                              FormTextKeyWidget(text: "Root Canal Treatment at price ${model.rootCanalTreatment!.planPrice!.toString()}"),
-                              SizedBox(width: 10),
-                              CIA_MultiSelectChipWidget(
-                                singleSelect: true,
-                                onChange: (item, isSelected) => rootCanalTreatment = item == "Yes" && isSelected,
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "Yes"),
-                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
-                                ],
-                              )
-                            ],
-                          )
-                        : SizedBox(),
-                  ],
+            CIA_ShowPopUp(
+              context: context,
+              onSave: () async {
+                if (crown)
+                  bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                    patientId: widget.patientId,
+                    tooth: state.tooth,
+                    action: "crown",
+                  ));
+                if (rootCanalTreatment)
+                  bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                    patientId: widget.patientId,
+                    tooth: state.tooth,
+                    action: "rootCanaltreatment",
+                  ));
+                if (restoration)
+                  bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                    patientId: widget.patientId,
+                    tooth: state.tooth,
+                    action: "restoration",
+                  ));
+              },
+              child: Column(
+                children: [
+                  model.crown != null
+                      ? Row(
+                          children: [
+                            FormTextKeyWidget(text: "Crown at price ${model.crown!.planPrice!.toString()}"),
+                            SizedBox(width: 10),
+                            CIA_MultiSelectChipWidget(
+                              onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
+                              singleSelect: true,
+                              labels: [
+                                CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                              ],
+                            )
+                          ],
+                        )
+                      : SizedBox(),
+                  model.restoration != null
+                      ? Row(
+                          children: [
+                            FormTextKeyWidget(text: "Restoration at price ${model.restoration!.planPrice!.toString()}"),
+                            SizedBox(width: 10),
+                            CIA_MultiSelectChipWidget(
+                              singleSelect: true,
+                              onChange: (item, isSelected) => restoration = item == "Yes" && isSelected,
+                              labels: [
+                                CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                              ],
+                            )
+                          ],
+                        )
+                      : SizedBox(),
+                  model.rootCanalTreatment != null
+                      ? Row(
+                          children: [
+                            FormTextKeyWidget(text: "Root Canal Treatment at price ${model.rootCanalTreatment!.planPrice!.toString()}"),
+                            SizedBox(width: 10),
+                            CIA_MultiSelectChipWidget(
+                              singleSelect: true,
+                              onChange: (item, isSelected) => rootCanalTreatment = item == "Yes" && isSelected,
+                              labels: [
+                                CIA_MultiSelectChipWidgeModel(label: "Yes"),
+                                CIA_MultiSelectChipWidgeModel(label: "No", isSelected: true),
+                              ],
+                            )
+                          ],
+                        )
+                      : SizedBox(),
+                ],
+              ),
+            );
+          } else if (state.action.toLowerCase() == "scaling") {
+            int price  =0;
+            CIA_ShowPopUp(
+              context: context,
+              onSave: () {
+                bloc.add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                  patientId: widget.patientId,
+                  tooth: 0,
+                  action: "scaling",
+                ));
+              },
+              child: CIA_TextFormField(
+                label: "Price",
+                isNumber: true,
+                suffix: "EGP",
+                onChange: (value) =>price = int.parse(value),
+                controller: TextEditingController(
+                  text:state.data?.scaling?.planPrice?.toString()??"0"
                 ),
-              );
-            }
-
+              ),
+            );
+          }
         }
-
-
       },
       buildWhen: (previous, current) =>
           current is NonSurgicalTreatmentBloc_LoadingData ||
@@ -270,33 +285,29 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                         return true;
                       }
                     }(),
-                    child: StatefulBuilder(
-                      builder: (context,_setState) {
-                        var controller =  TextEditingController(text: nonSurgicalTreatment.treatment ?? "");
+                    child: StatefulBuilder(builder: (context, _setState) {
+                      var controller = TextEditingController(text: nonSurgicalTreatment.treatment ?? "");
 
-                        return RawKeyboardListener(
-
-                          focusNode: FocusNode(),
-                          onKey: (value) {
-                            if(value.isKeyPressed(LogicalKeyboardKey.enter))
-                              {
-                                controller.text+="\r\n";
-                                _setState((){});
-                              }
+                      return RawKeyboardListener(
+                        focusNode: FocusNode(),
+                        onKey: (value) {
+                          if (value.isKeyPressed(LogicalKeyboardKey.enter)) {
+                            controller.text += "\r\n";
+                            _setState(() {});
+                          }
+                        },
+                        child: CIA_TextFormField(
+                          textInputType: TextInputType.multiline,
+                          onChange: (value) {
+                            nonSurgicalTreatment.treatment = value;
+                            bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
                           },
-                          child: CIA_TextFormField(
-                            textInputType: TextInputType.multiline,
-                            onChange: (value) {
-                              nonSurgicalTreatment.treatment = value;
-                              bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
-                            },
-                            label: "Treatment",
-                            controller: controller,
-                            maxLines: 5,
-                          ),
-                        );
-                      }
-                    ),
+                          label: "Treatment",
+                          controller: controller,
+                          maxLines: 5,
+                        ),
+                      );
+                    }),
                   );
                 }),
             SizedBox(height: 20),
@@ -376,7 +387,24 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
 
                             if (state is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully) {
                               containedTeeth = state.status;
-                              return _buildTeethSuggestion(containedTeeth);
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Visibility(
+                                    visible: nonSurgicalTreatment.treatment?.toLowerCase().contains("scaling") ?? false,
+                                    child: CIA_PrimaryButton(
+                                        label: "Add Scaling to Receipt",
+                                        onTab: () {
+                                          bloc.add(NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent(
+                                            patientId: widget.patientId,
+                                            tooth: 0,
+                                            action: "scaling",
+                                          ));
+                                        }),
+                                  ),
+                                  _buildTeethSuggestion(containedTeeth)
+                                ],
+                              );
                             }
                             return Container();
                           },
@@ -385,8 +413,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
             ),
             SizedBox(height: 20),
           ]);
-        }
-        else if (state is NonSurgicalTreatmentBloc_DataLoadingError) error = state.message;
+        } else if (state is NonSurgicalTreatmentBloc_DataLoadingError) error = state.message;
         return BigErrorPageWidget(message: error);
       },
     );
@@ -491,6 +518,6 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
         children: uu,
       ),
     );
-    return ss;
+    return Expanded(child: ss);
   }
 }

@@ -585,7 +585,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState || current is ChangedPatientRelative,
                                 builder: (context, state) {
-                                  if (state is ChangedPatientRelative || (state is ChangePageState && createOrViewPatientBloc.pageState == PageState.addNew)) {
+                                  if (state is ChangedPatientRelative || (state is ChangePageState && (createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit))) {
                                     return CIA_TextFormField(
                                       onTap: () {
                                         CIA_ShowPopUp(

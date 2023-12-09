@@ -109,9 +109,9 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
   }
 
   @override
-  Future<Either<Failure, NoParams>> addPatientReceipt({required int patientId, required int tooth, required String action}) async {
+  Future<Either<Failure, NoParams>> addPatientReceipt({required int patientId, required int tooth, required String action, int? price}) async {
     try {
-      final result = await receiptDataSource.addPatientReceipt(patientId,tooth,action);
+      final result = await receiptDataSource.addPatientReceipt(patientId,tooth,action, price);
       return Right(result);
     } on Exception catch(e)
     {

@@ -169,6 +169,18 @@ class PaymentWidget {
                                               ),
                                             ),
                                           ));
+                                          r.add(Visibility(
+                                            visible: (element.implant ?? 0) != 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Implant")),
+                                                  Expanded(child: FormTextValueWidget(text: (element.implant ?? 0).toString())),
+                                                ],
+                                              ),
+                                            ),
+                                          ));
                                           r.add(Divider());
                                         });
                                         } else if(siteController.getSite()==Website.Clinic)

@@ -24,7 +24,7 @@ abstract class ReceiptsDatasource {
   Future<NoParams> removePayment({required int paymentId});
 
   Future<int> getTotalDebt({required int patientId});
-  Future<NoParams> addPatientReceipt( int patientId, int tooth, String action);
+  Future<NoParams> addPatientReceipt( int patientId, int tooth, String action, int? price);
 
 }
 
@@ -191,11 +191,11 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
   }
 
   @override
-  Future<NoParams> addPatientReceipt(int patientId, int tooth, String action) async {
+  Future<NoParams> addPatientReceipt(int patientId, int tooth, String action, int? price) async {
     late StandardHttpResponse result;
     try {
       result = await httpRepo.put(
-        host: "$serverHost/$medicalController/AddPatientReceipt?id=$patientId&tooth=$tooth&action=$action",
+        host: "$serverHost/$medicalController/AddPatientReceipt?id=$patientId&tooth=$tooth&action=$action${price!=null?"&price=$price":""}",
       );
     } catch (e) {
       throw mapException(e);

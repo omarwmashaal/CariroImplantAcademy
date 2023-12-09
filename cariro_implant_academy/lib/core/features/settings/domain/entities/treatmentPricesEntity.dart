@@ -6,6 +6,7 @@ class TreatmentPricesEntity extends Equatable {
   int? crown;
   int? restoration;
   int? rootCanalTreatment;
+  int? implant;
   int? other;
 
   TreatmentPricesEntity({
@@ -14,6 +15,7 @@ class TreatmentPricesEntity extends Equatable {
     this.rootCanalTreatment = 0,
     this.restoration = 0,
     this.extraction = 0,
+    this.implant = 0,
     this.other = 0,
   });
 
@@ -27,6 +29,7 @@ class TreatmentPricesEntity extends Equatable {
         rootCanalTreatment,
         restoration,
         extraction,
+    implant,
         other,
       ];
 }

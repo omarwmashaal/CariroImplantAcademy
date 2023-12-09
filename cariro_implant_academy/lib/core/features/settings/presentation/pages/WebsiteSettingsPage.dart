@@ -1265,11 +1265,11 @@ class _SettingsPageState extends State<SettingsPage> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: CIA_TextFormField(
-                                  label: "Other",
+                                  label: "Implant",
                                   isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.other?.toString() ?? ""),
+                                  controller: TextEditingController(text: TreatmentPrices.implant?.toString() ?? ""),
                                   onChange: (value) {
-                                    TreatmentPrices.other = int.parse(value);
+                                    TreatmentPrices.implant = int.parse(value);
                                   },
                                 ),
                               ),

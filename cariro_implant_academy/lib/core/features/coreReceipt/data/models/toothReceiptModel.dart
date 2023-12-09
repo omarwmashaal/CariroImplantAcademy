@@ -8,6 +8,7 @@ class ToothReceiptModel extends ToothReceiptEntity {
     super.rootCanalTreatment,
     super.scaling,
     super.tooth,
+    super.implant,
   });
   ToothReceiptModel.fromJson(Map<String, dynamic> json) {
     crown = json['crown'];
@@ -16,5 +17,6 @@ class ToothReceiptModel extends ToothReceiptEntity {
     rootCanalTreatment = json['rootCanalTreatment'];
     extraction = json['extraction'];
     tooth = json['tooth'];
+    implant = json['implant'];
   }
 }

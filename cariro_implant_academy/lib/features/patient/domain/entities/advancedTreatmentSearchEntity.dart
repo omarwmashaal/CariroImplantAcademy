@@ -10,8 +10,9 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../../Models/API_Response.dart';
 
 class AdvancedTreatmentSearchEntity extends Equatable {
+  List<int>? ids;
   int? id;
-  int? secondaryId;
+  String? secondaryId;
   String? patientName;
   bool? done;
   bool? scaling;
@@ -92,6 +93,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.str_expansionWithImplant,
     this.str_splittingWithImplant,
     this.str_gbrWithImplant,
+    this.ids,
     this.str_openSinusWithImplant,
     this.str_closedSinusWithImplant,
     this.str_guidedImplant,
@@ -113,6 +115,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.crown,
     this.rootCanalTreatment,
     this.restoration,
+    this.ids,
     this.pontic,
     this.noTreatmentPlan,
     this.extraction,

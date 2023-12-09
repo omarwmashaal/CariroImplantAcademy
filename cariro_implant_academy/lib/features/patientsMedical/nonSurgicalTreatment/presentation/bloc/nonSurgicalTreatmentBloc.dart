@@ -119,6 +119,7 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
           patientId: event.patientId,
           tooth: event.tooth,
           action: event.action,
+          price: event.price,
         ));
 
         result.fold(

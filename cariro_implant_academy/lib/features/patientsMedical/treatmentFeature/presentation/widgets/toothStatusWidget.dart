@@ -4,12 +4,16 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
+import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +33,7 @@ import '../../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
+import '../../../nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_Events.dart';
 import '../../domain/entities/trearmentPlanPropertyEntity.dart';
 
 class ToothStatusWidget extends StatefulWidget {
@@ -44,6 +49,7 @@ class ToothStatusWidget extends StatefulWidget {
       required this.patientId,
       required this.isSurgical,
       required this.acceptChanges,
+      required this.tooth,
       this.viewOnlyMode = false})
       : super(key: key);
   TreatmentPlanPropertyEntity fieldModel;
@@ -56,6 +62,7 @@ class ToothStatusWidget extends StatefulWidget {
   int? settingsPrice;
   bool isSurgical;
   int patientId;
+  int tooth;
   Function(RequestChangeEntity request) acceptChanges;
 
   @override
@@ -162,17 +169,20 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       ],
                     )),
                 SizedBox(width: 10),
-                Expanded(
-                    child: Row(
-                  children: [
-                    FormTextKeyWidget(text: "Price: "),
-                    FormTextKeyWidget(
-                        text: (widget.fieldModel.planPrice != 0 && widget.fieldModel.planPrice != null
-                                ? widget.fieldModel.planPrice ?? widget.settingsPrice
-                                : widget.settingsPrice)
-                            .toString()),
-                  ],
-                ))
+                Visibility(
+                  visible: !widget.isSurgical,
+                  child: Expanded(
+                      child: Row(
+                    children: [
+                      FormTextKeyWidget(text: "Price: "),
+                      FormTextKeyWidget(
+                          text: (widget.fieldModel.planPrice != 0 && widget.fieldModel.planPrice != null
+                                  ? widget.fieldModel.planPrice ?? widget.settingsPrice
+                                  : widget.settingsPrice)
+                              .toString()),
+                    ],
+                  )),
+                )
               ],
             ),
           ),
@@ -360,6 +370,47 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                                     widget.fieldModel.doneByCandidateID = value.id;
                                                   },
                                                 ),
+                                                CIA_SecondaryButton(
+                                                    label: "Add To Receipt",
+                                                    onTab: () {
+                                                      CIA_ShowPopUp(
+                                                        context: context,
+                                                        onSave: () {
+                                                          BlocProvider.of<MedicalInfoShellBloc>(context).add(MedicalInfoShell_SaveChanges());
+
+
+                                                          Future.delayed(Duration(seconds: 5)).then((value) {
+                                                            BlocProvider.of<NonSurgicalTreatmentBloc>(context)
+                                                                .add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                                                              patientId: widget.patientId,
+                                                              tooth: widget.tooth,
+                                                              action: "implant",
+
+                                                            ));
+                                                          });
+                                                        },
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                FormTextKeyWidget(text: "Tooth: ${widget.tooth} || "),
+                                                                FormTextKeyWidget(text: widget.title),
+                                                              ],
+                                                            ),
+                                                            SizedBox(height:10)
+,                                                            CIA_TextFormField(
+                                                              label: "Price",
+                                                              isNumber: true,
+                                                              suffix: "EGP",
+                                                              onChange: (value) => widget.fieldModel.planPrice = int.parse(value),
+                                                              controller: TextEditingController(
+                                                                text: widget.fieldModel.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      );
+                                                    })
                                               ],
                                             );
                                           },
@@ -426,7 +477,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           : FormTextKeyWidget(text: widget.title),
                     ),
                     SizedBox(width: 10),
-                    if (widget.price)
+                    if (widget.price && !widget.isSurgical)
                       Expanded(
                           child: CIA_TextFormField(
                         suffix: "EGP",

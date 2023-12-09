@@ -143,7 +143,7 @@ class VisitDataSource extends DataGridSource {
       ];
       _visitData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<int>(columnName: 'id', value: e.id),
+                DataGridCell<int>(columnName: 'id', value: e.patientId),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 // DataGridCell<String>(columnName: 'Status', value: e.status??""),
                 DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
@@ -152,7 +152,12 @@ class VisitDataSource extends DataGridSource {
                 DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-                DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
+        DataGridCell<Widget>(
+            columnName: 'Treatment',
+            value: GestureDetector(
+              child: Text(e.treatment ?? ""),
+              onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+            )),
               ]))
           .toList();
     } else {
@@ -171,7 +176,7 @@ class VisitDataSource extends DataGridSource {
       if (siteController.getRole() == "admin")
         _visitData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
-                  DataGridCell<int>(columnName: 'id', value: e.id),
+                  // DataGridCell<int>(columnName: 'id', value: e.patientId),
                   DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                   DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
                   DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
@@ -180,7 +185,7 @@ class VisitDataSource extends DataGridSource {
                   DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                   DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                   DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-                  DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
+
                   DataGridCell<Widget>(
                       columnName: 'Edit',
                       value: IconButton(
@@ -271,8 +276,8 @@ class VisitDataSource extends DataGridSource {
                                               e.entersClinicTime = newTime;
                                               if (e.leaveTime != null && e.entersClinicTime != null) {
                                                 e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
-
-                                              }setState(() {});
+                                              }
+                                              setState(() {});
                                             },
                                           ),
                                         ),
@@ -330,7 +335,7 @@ class VisitDataSource extends DataGridSource {
                                             onSave: () {
                                               bloc.add(PatientVisitsBloc_UpdateVisitsEvent(params: UpdateVisitParams(visitEntity: e, delete: true)));
                                               dialogHelper.dismissAll(context);
-                                              },
+                                            },
                                             title: "Are you sure you want to delete this entry?");
                                       },
                                       color: Colors.red,
@@ -341,6 +346,12 @@ class VisitDataSource extends DataGridSource {
                                 );
                               }));
                         },
+                      )),
+                  DataGridCell<Widget>(
+                      columnName: 'Treatment',
+                      value: GestureDetector(
+                        child: Text(e.treatment ?? ""),
+                        onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
                       )),
                 ]))
             .toList();
@@ -356,7 +367,12 @@ class VisitDataSource extends DataGridSource {
                   DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                   DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                   DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-                  DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
+          DataGridCell<Widget>(
+              columnName: 'Treatment',
+              value: GestureDetector(
+                child: Text(e.treatment ?? ""),
+                onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+              )),
                 ]))
             .toList();
     }

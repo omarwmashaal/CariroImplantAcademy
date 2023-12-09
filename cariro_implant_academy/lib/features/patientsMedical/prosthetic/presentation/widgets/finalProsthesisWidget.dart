@@ -204,7 +204,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           }(),
                                           onSelect: (value) {
                                             e!.finalProthesisImpressionStatus = EnumFinalProthesisImpressionStatus.values[value.id!];
-                                            if (value.name?.toLowerCase().contains("physical impression") == true) {
+                                             {
                                               CIA_ShowPopUp(
                                                 hideButton: true,
                                                 context: context,
@@ -332,8 +332,19 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                             return null;
                                           }(),
                                           onSelect: (value) {
+                                            CIA_ShowPopUp(
+                                              hideButton: true,
+                                              context: context,
+                                              width: 1100,
+                                              height: 650,
+                                              child: LabCreateNewRequestPage(
+                                                fixDismiss: true,
+                                                isDoctor: true,
+                                                patientId: widget.patientId,
+                                              ),
+                                            );
                                             e!.finalProthesisTryInStatus = EnumFinalProthesisTryInStatus.values[value.id!];
-                                            if (value.name?.toLowerCase().contains("physical impression") == true) {
+                                             {
                                               CIA_ShowPopUp(
                                                 hideButton: true,
                                                 context: context,

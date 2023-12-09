@@ -168,9 +168,9 @@ class SiteController {
               SlidingTabModel(title: "Complains",compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
               path == PatientAdvancedSearchPage.routeNameTreatments
                   ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
-                  : path == PatientAdvancedSearchPage.routeNamePatients
-                      ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNamePatients)
-                      : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameProsthetic),
+                  : path == PatientAdvancedSearchPage.routeNameProsthetic
+                      ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameProsthetic)
+                      : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNamePatients),
             ]);
         } else if (path == ViewUserProfilePage.candidateRoutePath.split("/").last || path == ViewCandidateData.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [

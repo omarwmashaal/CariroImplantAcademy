@@ -10,7 +10,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class VisitEntity extends Equatable {
   int? id;
-  int? secondaryId;
+  String? secondaryId;
   String? status;
   DateTime? reservationTime;
   DateTime? realVisitTime;

@@ -133,10 +133,10 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
               ),
               Tab(
                 text: "Treatments",
-              ),
+              ),/*
               Tab(
                 text: "Prosthetic Treatment",
-              ),
+              ),*/
             ],
           ),
         ),
@@ -666,19 +666,26 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       if (state is AdvancedSearchBloc_LoadingErrorState)
                         return BigErrorPageWidget(message: state.message);
                       else if (state is AdvancedSearchBloc_LoadingState) return LoadingWidget();
-                      return TableWidget(
-                        key: GlobalKey(),
-                        allowSorting: true,
-                        dataSource: dataSource_patients,
-                        onCellClick: (value) {
-                          // setState(() {
-                          //selectedPatientID = dataSource.models[value - 1].id!;
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: TableWidget(
+                              key: GlobalKey(),
+                              allowSorting: true,
+                              dataSource: dataSource_patients,
+                              onCellClick: (value) {
+                                // setState(() {
+                                //selectedPatientID = dataSource.models[value - 1].id!;
 
-                          //});
-                          //internalPagesController.jumpToPage(1);
-                          print(value);
-                          context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {"id":  dataSource_patients.models.firstWhere((element) => element.secondaryId==value).id.toString()});
-                        },
+                                //});
+                                //internalPagesController.jumpToPage(1);
+                                print(value);
+                                context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {"id":  dataSource_patients.models.firstWhere((element) => element.secondaryId==value).id.toString()});
+                              },
+                            ),
+                          ),
+                          FormTextKeyWidget(text: "Count :${dataSource_patients.models?.length?.toString()}")
+                        ],
                       );
                     }),
                   ),
@@ -1042,7 +1049,8 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                   ),
                   Expanded(
                     child: BlocConsumer<AdvancedSearchBloc, AdvancedSearchBloc_States>(listener: (context, state) {
-                      if (state is AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState) dataSource_treatments.updateData(state.data);
+                      if (state is AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState)
+                        dataSource_treatments.updateData(state.data,searchTreatmentsDTO);
                     }, builder: (context, state) {
                       if (state is AdvancedSearchBloc_LoadingErrorState)
                         return BigErrorPageWidget(message: state.message);
@@ -1086,7 +1094,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                     }),
                   ),
                 ],
-              ),
+              ),/*
               Column(
                 children: [
                   Row(
@@ -1911,7 +1919,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                     }),
                   ),
                 ],
-              ),
+              ),*/
             ],
           ),
         ),

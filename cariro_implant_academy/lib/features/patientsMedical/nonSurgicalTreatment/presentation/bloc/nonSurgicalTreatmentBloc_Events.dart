@@ -72,11 +72,13 @@ class NonSurgicalTreatmentBloc_AddPatientReceiptEvent extends NonSurgicalTreatme
   final int patientId;
   final int tooth;
   final String action;
+  final int? price;
 
   NonSurgicalTreatmentBloc_AddPatientReceiptEvent({
     required this.patientId,
     required this.tooth,
     required this.action,
+    this.price,
   });
 
   @override
@@ -84,5 +86,6 @@ class NonSurgicalTreatmentBloc_AddPatientReceiptEvent extends NonSurgicalTreatme
         patientId,
         tooth,
         action,
+    price,
       ];
 }

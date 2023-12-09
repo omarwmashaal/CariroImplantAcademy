@@ -4,7 +4,7 @@ import '../../../../core/constants/enums/enums.dart';
 
 class AdvancedPatientSearchEntity extends Equatable {
   int? id;
-  int? secondaryId;
+  String? secondaryId;
   String? name;
   int? ageRangeFrom;
   int? ageRangeTo;

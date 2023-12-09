@@ -7,6 +7,7 @@ class ToothReceiptEntity extends Equatable {
   int? restoration;
   int? rootCanalTreatment;
   int? extraction;
+  int? implant;
 
   ToothReceiptEntity({
     this.extraction = 0,
@@ -14,6 +15,7 @@ class ToothReceiptEntity extends Equatable {
     this.rootCanalTreatment = 0,
     this.scaling = 0,
     this.crown = 0,
+    this.implant = 0,
     this.tooth,
   });
 
@@ -25,6 +27,7 @@ class ToothReceiptEntity extends Equatable {
         this.restoration,
         this.rootCanalTreatment,
         this.scaling,
+        this.implant,
         this.crown,
         this.tooth,
       ];

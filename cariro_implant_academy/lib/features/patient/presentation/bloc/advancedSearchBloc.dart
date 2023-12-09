@@ -17,6 +17,7 @@ class AdvancedSearchBloc extends Bloc<AdvancedSearchBloc_Events, AdvancedSearchB
   final AdvancedSearchPatientsUseCase advancedSearchPatientsUseCase;
   final AdvancedTreatmentSearchUseCase advancedTreatmentSearchUseCase;
   final AdvancedProstheticSearchUseCase advancedProstheticSearchUseCase;
+  List<int> ids = [];
 
   AdvancedPatientSearchEntity searchPatientQuery = AdvancedPatientSearchEntity();
   AdvancedTreatmentSearchEntity searchTreatmentQuery = AdvancedTreatmentSearchEntity();
@@ -33,13 +34,17 @@ class AdvancedSearchBloc extends Bloc<AdvancedSearchBloc_Events, AdvancedSearchB
         final result = await advancedSearchPatientsUseCase(event.query);
         result.fold(
           (l) => emit(AdvancedSearchBloc_LoadingErrorState(message: l.message ?? "")),
-          (r) => emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: r)),
+          (r) {
+            ids = r.where((element) => element.id != null).map((e) => e.id!).toList();
+            emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: r));
+          },
         );
       },
     );
     on<AdvancedSearchBloc_SearchTreatmentsEvents>(
       (event, emit) async {
         emit(AdvancedSearchBloc_LoadingState());
+        event.query.ids = ids;
         final result = await advancedTreatmentSearchUseCase(event.query);
         result.fold(
           (l) => emit(AdvancedSearchBloc_LoadingErrorState(message: l.message ?? "")),
@@ -86,35 +91,39 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
   ];
 
   List<AdvancedTreatmentSearchEntity> models = <AdvancedTreatmentSearchEntity>[];
+  AdvancedTreatmentSearchEntity query  = AdvancedTreatmentSearchEntity();
 
   /// Creates the income data source class with required details.
   AdvancedTreatmentSearchDataGridSource() {}
 
   init({AdvancedTreatmentSearchEntity? search}) {
     _data = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: "Id", value: e.secondaryId),
-              DataGridCell<String>(columnName: "Patient Name", value: e.patientName),
-              DataGridCell<String>(columnName: "Scaling", value: e.str_scaling),
-              DataGridCell<String>(columnName: "Crown", value: e.str_crown),
-              DataGridCell<String>(columnName: "RootCanal Treatment", value: e.str_rootCanalTreatment),
-              DataGridCell<String>(columnName: "Restoration", value: e.str_restoration),
-              DataGridCell<String>(columnName: "Pontic", value: e.str_pontic),
-              DataGridCell<String>(columnName: "Extraction", value: e.str_extraction),
-              DataGridCell<String>(columnName: "Simple Implant", value: e.str_simpleImplant),
-              DataGridCell<String>(columnName: "Immediate Implant", value: e.str_immediateImplant),
-              DataGridCell<String>(columnName: "Expansion With Implant", value: e.str_expansionWithImplant),
-              DataGridCell<String>(columnName: "Splitting With Implant", value: e.str_splittingWithImplant),
-              DataGridCell<String>(columnName: "GBR With Implant", value: e.str_gbrWithImplant),
-              DataGridCell<String>(columnName: "Open Sinus WithImplant", value: e.str_openSinusWithImplant),
-              DataGridCell<String>(columnName: "ClosedSinus With Implant", value: e.str_closedSinusWithImplant),
-              DataGridCell<String>(columnName: "Guided Implant", value: e.str_guidedImplant),
-              DataGridCell<String>(columnName: "Expansion Without Implant", value: e.str_expansionWithoutImplant),
-              DataGridCell<String>(columnName: "Splitting Without Implant", value: e.str_splittingWithoutImplant),
-              DataGridCell<String>(columnName: "GBRWithout Implant", value: e.str_gbrWithoutImplant),
-              DataGridCell<String>(columnName: "OpenSinus Without Implant", value: e.str_openSinusWithoutImplant),
-              DataGridCell<String>(columnName: "ClosedSinus Without Implant", value: e.str_closedSinusWithoutImplant),
-            ]))
+        .map<DataGridRow>((e) => DataGridRow(cells: () {
+              List<DataGridCell> r = [];
+
+              r.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
+              r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
+              if (query.scaling == true) r.add(DataGridCell<String>(columnName: "Scaling", value: e.str_scaling));
+              if (query.crown == true) r.add(DataGridCell<String>(columnName: "Crown", value: e.str_crown));
+              if (query.rootCanalTreatment == true) r.add(DataGridCell<String>(columnName: "RootCanal Treatment", value: e.str_rootCanalTreatment));
+              if (query.restoration == true) r.add(DataGridCell<String>(columnName: "Restoration", value: e.str_restoration));
+              if (query.pontic == true) r.add(DataGridCell<String>(columnName: "Pontic", value: e.str_pontic));
+              if (query.extraction == true) r.add(DataGridCell<String>(columnName: "Extraction", value: e.str_extraction));
+              if (query.simpleImplant == true) r.add(DataGridCell<String>(columnName: "Simple Implant", value: e.str_simpleImplant));
+              if (query.immediateImplant == true) r.add(DataGridCell<String>(columnName: "Immediate Implant", value: e.str_immediateImplant));
+              if (query.expansionWithImplant == true) r.add(DataGridCell<String>(columnName: "Expansion With Implant", value: e.str_expansionWithImplant));
+              if (query.splittingWithImplant == true) r.add(DataGridCell<String>(columnName: "Splitting With Implant", value: e.str_splittingWithImplant));
+              if (query.gbrWithImplant == true) r.add(DataGridCell<String>(columnName: "GBR With Implant", value: e.str_gbrWithImplant));
+              if (query.openSinusWithImplant == true) r.add(DataGridCell<String>(columnName: "Open Sinus WithImplant", value: e.str_openSinusWithImplant));
+              if (query.closedSinusWithImplant == true) r.add(DataGridCell<String>(columnName: "ClosedSinus With Implant", value: e.str_closedSinusWithImplant));
+              if (query.guidedImplant == true) r.add(DataGridCell<String>(columnName: "Guided Implant", value: e.str_guidedImplant));
+              if (query.expansionWithoutImplant == true) r.add(DataGridCell<String>(columnName: "Expansion Without Implant", value: e.str_expansionWithoutImplant));
+              if (query.splittingWithoutImplant == true) r.add(DataGridCell<String>(columnName: "Splitting Without Implant", value: e.str_splittingWithoutImplant));
+              if (query.gbrWithoutImplant == true) r.add(DataGridCell<String>(columnName: "GBRWithout Implant", value: e.str_gbrWithoutImplant));
+              if (query.openSinusWithoutImplant == true) r.add(DataGridCell<String>(columnName: "OpenSinus Without Implant", value: e.str_openSinusWithoutImplant));
+              if (query.closedSinusWithoutImplant == true) r.add(DataGridCell<String>(columnName: "ClosedSinus Without Implant", value: e.str_closedSinusWithoutImplant));
+              return r;
+            }()))
         .toList();
   }
 
@@ -268,8 +277,9 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
     }).toList());
   }
 
-  updateData(List<AdvancedTreatmentSearchEntity> newData) async {
+  updateData(List<AdvancedTreatmentSearchEntity> newData,AdvancedTreatmentSearchEntity queryy) async {
     models = newData;
+    query = queryy;
     init();
     notifyListeners();
 
@@ -290,7 +300,7 @@ class AdvancedPatientSearchDataGridSource extends DataGridSource {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: () {
               List<DataGridCell> r = [];
-              r.add(DataGridCell<int>(columnName: "Id", value: e.secondaryId));
+              r.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
               r.add(DataGridCell<String>(columnName: "Name", value: e.name));
               if (searchDTO.gender != null) r.add(DataGridCell<String>(columnName: "Gender", value: e.gender != null ? e.gender!.name : ""));
               if (searchDTO.ageRangeFrom != null || searchDTO.ageRangeTo != null) r.add(DataGridCell<int>(columnName: "Age", value: e.age ?? 0));
@@ -392,9 +402,7 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: () {
               List<DataGridCell> cells = [];
-              cells.add(
-                DataGridCell<int>(columnName: "Id", value: e.secondaryId),
-              );
+              cells.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
               cells.add(DataGridCell<String>(columnName: "Patient Name", value: e.patient?.name ?? ""));
               if (search?.searchProstheticDiagnostic_DiagnosticImpression?.diagnostic != null)
                 cells.add(DataGridCell<String>(
@@ -408,8 +416,7 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
                     value: e.searchProstheticDiagnostic_DiagnosticImpression?.needsRemake ?? false ? "-" : "Needs Remake"));
               if (search?.searchProstheticDiagnostic_DiagnosticImpression?.scanned != null)
                 cells.add(DataGridCell<String>(
-                    columnName: "Diagnostic Impression Scanned",
-                    value: e.searchProstheticDiagnostic_DiagnosticImpression?.scanned ?? false ? "-" : "Scanned"));
+                    columnName: "Diagnostic Impression Scanned", value: e.searchProstheticDiagnostic_DiagnosticImpression?.scanned ?? false ? "-" : "Scanned"));
               if (search?.searchProstheticDiagnostic_DiagnosticImpression != null)
                 cells.add(DataGridCell<DateTime>(columnName: "Diagnostic Impression Date", value: e.searchProstheticDiagnostic_DiagnosticImpression?.date));
               if (search?.searchProstheticDiagnostic_Bite?.diagnostic != null)
@@ -417,8 +424,9 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
               if (search?.searchProstheticDiagnostic_Bite?.nextStep != null)
                 cells.add(DataGridCell<String>(columnName: "Bite Next Step", value: e.searchProstheticDiagnostic_Bite?.nextStep?.name ?? ""));
               if (search?.searchProstheticDiagnostic_Bite?.needsRemake != null)
-                cells.add(DataGridCell<String>(columnName: "Bite Needs Remake", value: e.searchProstheticDiagnostic_Bite?.needsRemake ?? false ? "-" : "Needs Remake"));
-               if (search?.searchProstheticDiagnostic_Bite?.scanned != null)
+                cells.add(DataGridCell<String>(
+                    columnName: "Bite Needs Remake", value: e.searchProstheticDiagnostic_Bite?.needsRemake ?? false ? "-" : "Needs Remake"));
+              if (search?.searchProstheticDiagnostic_Bite?.scanned != null)
                 cells.add(DataGridCell<String>(columnName: "Bite Scanned", value: e.searchProstheticDiagnostic_Bite?.scanned ?? false ? "-" : "Scanned"));
               if (search?.searchProstheticDiagnostic_Bite != null)
                 cells.add(DataGridCell<DateTime>(columnName: "Bite Date", value: e.searchProstheticDiagnostic_Bite?.date));
@@ -483,15 +491,12 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        child: Text(
-          e.value is DateTime? DateFormat("dd-MM-yyyy").format(e.value):
-          e.value.toString()
-        ),
+        child: Text(e.value is DateTime ? DateFormat("dd-MM-yyyy").format(e.value) : e.value.toString()),
       );
     }).toList());
   }
 
-  updateData({required List<ProstheticTreatmentEntity> newData,ProstheticTreatmentEntity? search}) async {
+  updateData({required List<ProstheticTreatmentEntity> newData, ProstheticTreatmentEntity? search}) async {
     models = newData;
     init(search: search);
     notifyListeners();

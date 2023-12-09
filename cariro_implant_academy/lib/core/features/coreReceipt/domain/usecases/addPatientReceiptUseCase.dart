@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/repositories/receiptReposiotry.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/treatmentWidget.dart';
 import 'package:dartz/dartz.dart';
 
 class AddPatientReceiptUseCase extends UseCases<NoParams, AddPatientReceiptParams> {
@@ -12,7 +13,7 @@ class AddPatientReceiptUseCase extends UseCases<NoParams, AddPatientReceiptParam
 
   @override
   Future<Either<Failure, NoParams>> call(AddPatientReceiptParams params) async {
-    return await receiptRepository.addPatientReceipt(patientId: params.patientId,action: params.action,tooth:  params.tooth).then((value) => value.fold(
+    return await receiptRepository.addPatientReceipt(patientId: params.patientId,action: params.action,tooth:  params.tooth,price: params.price).then((value) => value.fold(
           (l) => Left(l..message = "Get Add Patient Receipt: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
@@ -22,6 +23,7 @@ class AddPatientReceiptParams{
   final int patientId;
   final int tooth;
   final String action;
-  AddPatientReceiptParams({required this.patientId,required this.tooth,required this.action});
+  final int? price;
+  AddPatientReceiptParams({required this.patientId,required this.tooth,required this.action, this.price});
 
 }
