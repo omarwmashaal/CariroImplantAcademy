@@ -1,10 +1,27 @@
 import 'package:cariro_implant_academy/features/patient/domain/entities/visitEntity.dart';
+import 'package:cariro_implant_academy/features/user/domain/entities/canidateDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class UsersBloc_States extends Equatable {}
 
 class UsersBloc_ResettingPasswordState extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+class UsersBloc_LoadingCandidateDetailsState extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+class UsersBloc_LoadedCandidateDetailsSuccessfullyState extends UsersBloc_States {
+  final List<CandidateDetailsEntity>data ;
+  UsersBloc_LoadedCandidateDetailsSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [];
+}
+class UsersBloc_LoadingCandidateDetailsErrorState extends UsersBloc_States {
+  final String message;
+  UsersBloc_LoadingCandidateDetailsErrorState({required this.message});
   @override
   List<Object?> get props => [];
 }

@@ -1,6 +1,6 @@
 import 'StockModel.dart';
 
-class ImplantModel {
+class ImplantModelsss {
   int? id;
   String? name;
   String? size;
@@ -8,7 +8,7 @@ class ImplantModel {
   int? stockItemId;
   StockModel? stockItem;
 
-  ImplantModel(
+  ImplantModelsss(
       {this.id,
         this.name="",
         this.size="",
@@ -16,7 +16,7 @@ class ImplantModel {
         this.stockItemId,
         this.stockItem});
 
-  ImplantModel.fromJson(Map<String, dynamic> json) {
+  ImplantModelsss.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name']??"";
     size = json['size'];

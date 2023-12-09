@@ -17,8 +17,13 @@ import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc.dart';
+import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -480,99 +485,3 @@ class _ViewUserDataState extends State<ViewUserData> {
   }
 }
 */
-class ViewCandidateData extends StatefulWidget {
-  ViewCandidateData({Key? key, required this.userId}) : super(key: key);
-  int userId;
-  static String routeName = "CandidateDetails";
-   static String routeNameClinic = "ClinicCandidateDetails";
-  static String routePath = "Candidate/:id/CandidateDetails";
-
-  @override
-  State<ViewCandidateData> createState() => _ViewCandidateDataState();
-}
-
-class _ViewCandidateDataState extends State<ViewCandidateData> {
-  bool edit = false;
-  late ApplicationUserModel user;
-  FocusNode next = FocusNode();
-  CandidateDetailsDataSource dataSource = new CandidateDetailsDataSource();
-  String? from;
-  String? to;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();/*
-    return CIA_FutureBuilder(
-      loadFunction: UserAPI.GetUserData(widget.userId),
-      onSuccess: (data) {
-        user = data as ApplicationUserModel;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: SizedBox()),
-                Expanded(
-                    child: CIA_DateTimeTextFormField(
-                  label: "From",
-                  controller: TextEditingController(),
-                  onChange: (v) {
-                    from = v;
-                    dataSource.loadData(widget.userId, (v) {
-                      _getx.totalImplants.value = v;
-                    }, from: from, to: to);
-                  },
-                )),
-                SizedBox(width: 10),
-                Expanded(
-                    child: CIA_DateTimeTextFormField(
-                  label: "to",
-                  controller: TextEditingController(),
-                  onChange: (v) {
-                    to = v;
-                    dataSource.loadData(widget.userId, (v) {
-                      _getx.totalImplants.value = v;
-                    }, from: from, to: to);
-                  },
-                )),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-            Expanded(
-              child: CIA_Table(
-                columnNames: dataSource.columns,
-                dataSource: dataSource,
-                allowSorting: true,
-                loadFunction: () {
-                  return dataSource.loadData(widget.userId, (v) {
-                    _getx.totalImplants.value = v;
-                  });
-                },
-                onCellClick: (index) {
-
-                  if (index != 0)
-                    context.goNamed(SurgicalTreatmentPage.routeName, pathParameters: {'id': dataSource.effectiveRows.elementAt(index-1).getCells().first.value.toString()});
-                },
-              ),
-            ),
-            Obx(() => Container(
-                  alignment: AlignmentDirectional.bottomEnd,
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: Text(
-                    "Total Implants: ${_getx.totalImplants.value.toString()}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                )),
-          ],
-        );
-      },
-    );*/
-  }
-}

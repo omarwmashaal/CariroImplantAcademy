@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
@@ -7,6 +8,8 @@ import 'package:cariro_implant_academy/features/user/data/datasource/userDatasou
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/repositories/userRepository.dart';
 import 'package:dartz/dartz.dart';
+
+import '../../domain/entities/canidateDetailsEntity.dart';
 
 class UsersRepositoryImpl extends UsersRepository {
   final UserDatasource userDatasource;
@@ -88,6 +91,16 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source)async {
     try {
       final result = await userDatasource.searchUsersByWorkPlace(search, source);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CandidateDetailsEntity>>> getCandidateDetails(int id, DateTime? from, DateTime? to) async {
+    try {
+      final result = await userDatasource.getCandidateDetails(id, from , to);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

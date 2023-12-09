@@ -61,6 +61,7 @@ import '../features/patientsMedical/treatmentFeature/presentation/pages/treatmen
 import '../features/stock/presentation/pages/stockLogsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
 import '../features/user/domain/entities/enum.dart';
+import '../features/user/presentation/pages/candidateDetailsPage.dart';
 import '../features/user/presentation/pages/userSearchPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
 import '../core/features/authentication/presentation/pages/authentication_page.dart';

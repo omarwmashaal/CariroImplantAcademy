@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -260,6 +261,7 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
 
   @override
   void initState() {
+    dialogHelper.increaseCount();
     focus.addListener(() {
       if (!focus.hasFocus) {
         if (widget.onChange != null) {

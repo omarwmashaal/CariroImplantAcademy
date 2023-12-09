@@ -76,7 +76,6 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
   bool photoChanged = false;
 
   FocusNode next = FocusNode();
-  CandidateDetailsDataSource dataSource = new CandidateDetailsDataSource();
   String? from;
   String? to;
   double imageWidth = 200;

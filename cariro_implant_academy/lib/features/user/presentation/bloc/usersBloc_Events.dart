@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/enum.dart';
 import '../../domain/usecases/changeRoleUseCase.dart';
+import '../../domain/usecases/getCandidateDetailsUseCase.dart';
 import '../../domain/usecases/getUsersSessions.dart';
 
 abstract class UsersBloc_Events extends Equatable {}
@@ -26,6 +27,14 @@ class UsersBloc_GetUserInfoEvent extends UsersBloc_Events {
 
   @override
   List<Object?> get props => [id];
+}
+class UsersBloc_GetCandidateDetailsEvent extends UsersBloc_Events {
+  final GetCandidateDetailsParams params;
+
+  UsersBloc_GetCandidateDetailsEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
 }
 class UsersBloc_ChangeRoleEvent extends UsersBloc_Events {
  final ChangeRoleParams params;

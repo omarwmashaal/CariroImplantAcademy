@@ -86,7 +86,7 @@ static Future<API_Response> GetCandidateDetails(int id,{String? from,String? to}
     if(to!=null) query+="&to=$to";
     var response = await HTTPRequest.Get("User/GetCandidateDetails?$query");
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = ((response.result??[]) as List<dynamic>).map((e) => CandidateDetails.fromJson(e as Map<String,dynamic>)).toList();
+     // response.result = ((response.result??[]) as List<dynamic>).map((e) => CandidateDetailsEntity.fromJson(e as Map<String,dynamic>)).toList();
 
     }
     return response;

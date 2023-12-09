@@ -1004,7 +1004,7 @@ class _ImplantsSettingsState extends State<_ImplantsSettings> {
   int selectedList1Id = 0;
   List<DropDownDTO> list2 = [];
   int selectedList2Id = 0;
-  List<ImplantModel> implants = [];
+  List<ImplantModelsss> implants = [];
 
   @override
   Widget build(BuildContext context) {
@@ -1116,11 +1116,11 @@ class _ImplantsSettingsState extends State<_ImplantsSettings> {
         Expanded(
           child: CIA_FutureBuilder(
             loadFunction:
-                selectedList2Id == 0 ? Future(() => API_Response(statusCode: 200, result: <ImplantModel>[])) : SettingsAPI.GetImplants(selectedList2Id),
+                selectedList2Id == 0 ? Future(() => API_Response(statusCode: 200, result: <ImplantModelsss>[])) : SettingsAPI.GetImplants(selectedList2Id),
             onSuccess: (data) {
               var tempName = "";
-              implants = data as List<ImplantModel>;
-              implants.add(ImplantModel());
+              implants = data as List<ImplantModelsss>;
+              implants.add(ImplantModelsss());
               return selectedList2Id == 0
                   ? Container()
                   : Column(
@@ -1139,7 +1139,7 @@ class _ImplantsSettingsState extends State<_ImplantsSettings> {
 
                                                         if (implants.last.size != "" && implants.last.size != null)
                                                         {
-                                                          implants.add(ImplantModel());
+                                                          implants.add(ImplantModelsss());
                                                           mySetState(() {});
                                                         }
                                                       },

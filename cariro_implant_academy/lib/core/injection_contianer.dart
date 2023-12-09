@@ -176,6 +176,7 @@ import 'package:cariro_implant_academy/features/user/data/datasource/userDatasou
 import 'package:cariro_implant_academy/features/user/data/repositories/userRepository.dart';
 import 'package:cariro_implant_academy/features/user/domain/repositories/userRepository.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/getCandidateDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUserDataUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
@@ -778,6 +779,7 @@ initInjection() async {
         resetPasswordForUserUseCase: sl(),
         changeRoleUseCase: sl(),
         searchUsersByWorkPlaceUseCase: sl(),
+    getCandidateDetailsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -787,6 +789,7 @@ initInjection() async {
   sl.registerLazySingleton(() => GetUsersSessionsUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => ChangeRoleUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => SearchUsersByWorkPlaceUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => GetCandidateDetailsUseCase(usersRepository: sl()));
   //repo
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
   //DATASOURCE

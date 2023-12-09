@@ -52,6 +52,7 @@ import '../features/patientsMedical/dentalHistroy/presentaion/pages/medicalInfo_
 import '../features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../features/stock/presentation/pages/stockLogsSearchPage.dart';
 import '../features/stock/presentation/pages/stockSearchPage.dart';
+import '../features/user/presentation/pages/candidateDetailsPage.dart';
 import '../features/user/presentation/pages/viewUserProfile.dart';
 
 class SiteController {

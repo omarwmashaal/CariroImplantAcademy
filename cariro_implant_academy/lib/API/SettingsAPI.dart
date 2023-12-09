@@ -13,7 +13,7 @@ class SettingsAPI {
     var response = await HTTPRequest.Get("Settings/GetAllImplants");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => ImplantModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>).map((e) => ImplantModelsss.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -41,7 +41,7 @@ class SettingsAPI {
     var response = await HTTPRequest.Get("Settings/GetImplants?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = (response.result as List<dynamic>).map((e) => ImplantModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>).map((e) => ImplantModelsss.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -180,7 +180,7 @@ class SettingsAPI {
     return response;
   }
 
-  static Future<API_Response> AddImplants(int id,List<ImplantModel> model) async {
+  static Future<API_Response> AddImplants(int id,List<ImplantModelsss> model) async {
     var response = await HTTPRequest.Put("Settings/Implants?id=$id",model.map((e) => e.toJson()).toList());
 
     return response;

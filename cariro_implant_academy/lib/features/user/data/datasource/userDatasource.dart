@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/visitModel.dart';
+import 'package:cariro_implant_academy/features/user/data/candidateDetailsModel.dart';
 import 'package:cariro_implant_academy/features/user/data/models/userModel.dart';
 import 'package:intl/intl.dart';
 
@@ -18,6 +19,7 @@ abstract class UserDatasource {
   Future<List<UserModel>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<NoParams> updateUserInfo(int id, UserEntity userData);
+  Future<List<CandidateDetailsModel>> getCandidateDetails(int id, DateTime? from, DateTime? to);
 
   Future<NoParams> changeRole(int id, String role);
 
@@ -145,6 +147,22 @@ class UserDatasourceImpl extends UserDatasource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       return response.body == null ? [] : (response.body as List<dynamic>).map((e) => UserModel.fromJson(e)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<CandidateDetailsModel>> getCandidateDetails(int id, DateTime? from, DateTime? to) async {
+    late StandardHttpResponse response;
+    try {
+     response = await httpRepo.get(host: "$serverHost/$userController/GetCandidateDetails?id=$id${from==null?"":"&from=${DateFormat("MM-dd-yyyy").format(from)}"}${to==null?"":"&to=${DateFormat("MM-dd-yyyy").format(to)}"}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return response.body == null ? [] : (response.body as List<dynamic>).map((e) => CandidateDetailsModel.fromMap(e)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }

@@ -1,12 +1,15 @@
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/entities/canidateDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/getCandidateDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_Events.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -31,6 +34,7 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
   final GetUsersSessionsUseCase getUsersSessionsUseCase;
   final ResetPasswordForUserUseCase resetPasswordForUserUseCase;
   final ChangeRoleUseCase changeRoleUseCase;
+  final GetCandidateDetailsUseCase getCandidateDetailsUseCase;
   bool edit = false;
 
   UsersBloc({
@@ -42,6 +46,7 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
     required this.changeRoleUseCase,
     required this.searchUsersByWorkPlaceUseCase,
     required this.resetPasswordForUserUseCase,
+    required this.getCandidateDetailsUseCase,
   }) : super(UsersBloc_LoadingUserState()) {
     on<UsersBloc_GetUserInfoEvent>(
       (event, emit) async {
@@ -64,6 +69,16 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
         result.fold(
           (l) => emit(UsersBloc_LoadingUserErrorState(message: l.message ?? "")),
           (r) => emit(UsersBloc_LoadedMultiUsersSuccessfullyState(usersData: r)),
+        );
+      },
+    );
+    on<UsersBloc_GetCandidateDetailsEvent>(
+      (event, emit) async {
+        emit(UsersBloc_LoadingCandidateDetailsState());
+        final result = await getCandidateDetailsUseCase(event.params);
+        result.fold(
+          (l) => emit(UsersBloc_LoadingCandidateDetailsErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_LoadedCandidateDetailsSuccessfullyState(data: r)),
         );
       },
     );
@@ -423,4 +438,79 @@ class UsersDataGridSource extends DataGridSource {
     return true;
   }
 }
+
+
+
+class CandidateDetailsDataSource extends DataGridSource {
+  List<CandidateDetailsEntity> models = <CandidateDetailsEntity>[];
+
+  List<String> columns = [
+    "Patient Id",
+    "Patient Name",
+    "Procedures",
+    "Tooth",
+    "Date",
+    "Implant",
+    // "Implant Count",
+    //"Other Procedures",
+    "Total Implant Counts",
+  ];
+
+  /// Creates the visit data source class with required details.
+  CandidateDetailsDataSource() {
+    init();
+  }
+  init() {
+
+    _userData = models
+        .map<DataGridRow>((e) =>
+        DataGridRow(cells: [
+          DataGridCell<int>(columnName: 'Id', value: e.patientId),
+          DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
+          DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
+          DataGridCell<int>(columnName: 'Tooth', value: e.tooth),
+          DataGridCell<DateTime>(columnName: 'Date', value: e.date),
+          DataGridCell<String>(columnName: 'Implant', value: e.implant?.size),
+          DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
+          // DataGridCell<List<String>>(columnName: 'Other Procedures', value: e.otherProcedures),
+          // DataGridCell<int>(columnName: 'Total Implant Counts', value: e.totalImplantCounts),
+
+        ]))
+        .toList();
+  }
+
+  List<DataGridRow> _userData = [];
+
+  @override
+  List<DataGridRow> get rows => _userData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+          var returnedValue = e.value;
+          if (returnedValue is Widget) return returnedValue;
+          if(e.columnName=="Date")returnedValue = DateFormat("dd-MM-yyyy").format(e.value);
+          return Container(
+            alignment: Alignment.center,
+            child: Text(
+              returnedValue == null ? "" : returnedValue.toString(),
+              style: TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }).toList());
+  }
+
+  Future<bool> loadData(List<CandidateDetailsEntity> data) async {
+
+    models = data;
+    init();
+    notifyListeners();
+
+    return true;
+  }
+
+}
+
 
