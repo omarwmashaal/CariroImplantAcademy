@@ -11,7 +11,7 @@ class PatientEntersClinicUseCase extends UseCases<NoParams, PatientEntersClinicP
 
   @override
   Future<Either<Failure, NoParams>> call(PatientEntersClinicParams params) async {
-    return await visitsRepo.patientEntersClinic(params.patientId,params.doctorId).then((value) => value.fold(
+    return await visitsRepo.patientEntersClinic(params.patientId,params.doctorId,params.roomId).then((value) => value.fold(
           (l) => Left(l..message = "Patient Enters Clinic: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
@@ -20,9 +20,11 @@ class PatientEntersClinicUseCase extends UseCases<NoParams, PatientEntersClinicP
 class PatientEntersClinicParams{
   final int patientId;
   final int doctorId;
+  final int? roomId;
 
   const PatientEntersClinicParams({
     required this.patientId,
     required this.doctorId,
+     this.roomId,
   });
 }

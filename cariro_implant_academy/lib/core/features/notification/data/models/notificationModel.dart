@@ -29,7 +29,7 @@ class NotificationModel extends NotificationEntity {
       title: json['title'] ?? "",
       content: json['content'] ?? "",
       read: json['read'] ?? false,
-      date: CIA_DateConverters.fromBackendToDateTime(json['date']),
+      date: DateTime.tryParse(json['date']??"")?.toLocal(),
       infoId: json['infoId'],
       type: json['type'] == null ? null : EnumNotificationType.values[json['type']],
       onClickAction: (context) {

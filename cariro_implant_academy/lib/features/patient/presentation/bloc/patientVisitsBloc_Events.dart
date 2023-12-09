@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updateVisit.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/usecases/getVisitsUseCase.dart';
@@ -8,6 +9,13 @@ abstract class PatientVisitsBloc_Events extends Equatable{}
 class PatientVisitsBloc_GetVisitsEvent extends PatientVisitsBloc_Events{
   final GetVisitsParams params;
   PatientVisitsBloc_GetVisitsEvent({required this.params});
+  @override
+  List<Object?> get props => [];
+
+}
+class PatientVisitsBloc_UpdateVisitsEvent extends PatientVisitsBloc_Events{
+  final UpdateVisitParams params;
+  PatientVisitsBloc_UpdateVisitsEvent({required this.params});
   @override
   List<Object?> get props => [];
 

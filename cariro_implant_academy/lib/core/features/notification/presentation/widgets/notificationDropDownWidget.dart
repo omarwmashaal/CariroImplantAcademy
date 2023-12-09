@@ -130,7 +130,7 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
             color: Color_Background,
           ),
           maxHeight: 400,
-          width: 400,
+          width: 800,
           offset: const Offset(-180, 0),
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(40),

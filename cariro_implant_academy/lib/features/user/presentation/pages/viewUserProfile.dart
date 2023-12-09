@@ -302,7 +302,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                   onTab: () async {
                                                     DateTime? from;
                                                     DateTime? to;
-                                                    VisitDataSource dataSource = VisitDataSource(sessions: true);
+                                                    VisitDataSource dataSource = VisitDataSource(sessions: true,context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
                                                     bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                         params: GetSessionsDurationParams(
                                                       id: widget.userId,

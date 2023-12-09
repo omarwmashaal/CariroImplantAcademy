@@ -69,9 +69,9 @@ class VisitsRepoImpl implements VisitsRepo{
   }
 
   @override
-  Future<Either<Failure, NoParams>> patientEntersClinic(int patientId,int doctorId) async{
+  Future<Either<Failure, NoParams>> patientEntersClinic(int patientId,int doctorId,int? roomId) async{
     try{
-      final result = await  visitsDataSource.patientEntersClinic(patientId,doctorId);
+      final result = await  visitsDataSource.patientEntersClinic(patientId,doctorId,roomId);
       return Right(result);
     }
     on Exception catch(e)
@@ -96,6 +96,18 @@ class VisitsRepoImpl implements VisitsRepo{
   Future<Either<Failure, NoParams>> patientVisits(int patientId) async{
     try{
       final result = await  visitsDataSource.patientVisits(patientId);
+      return Right(result);
+    }
+    on Exception catch(e)
+    {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateVisit(VisitEntity data,bool delete) async{
+    try{
+      final result = await  visitsDataSource.updateVisit(data,delete);
       return Right(result);
     }
     on Exception catch(e)

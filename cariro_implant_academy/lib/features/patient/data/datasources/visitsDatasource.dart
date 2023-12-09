@@ -16,9 +16,10 @@ abstract class VisitsDataSource {
   Future<List<VisitModel>> getMySchedules(int month);
 
   Future<NoParams> scheduleNewVisit(VisitEntity newVisit);
+  Future<NoParams> updateVisit(VisitEntity data, bool delete);
 
   Future<NoParams> patientVisits(int patientId);
-  Future<NoParams> patientEntersClinic(int patientId,int doctorId);
+  Future<NoParams> patientEntersClinic(int patientId,int doctorId,int? roomId);
   Future<NoParams> patientLeavesClinic(int patientId);
 }
 
@@ -106,10 +107,10 @@ class VisitsDatasourceImpl implements VisitsDataSource {
   }
 
   @override
-  Future<NoParams> patientEntersClinic(int patientId,int doctorId) async {
+  Future<NoParams> patientEntersClinic(int patientId,int doctorId,int? roomId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.put(host: "$serverHost/$patientInfoController/PatientEntersClinic?id=$patientId&doctorId=$doctorId");
+      response = await httpRepo.put(host: "$serverHost/$patientInfoController/PatientEntersClinic?id=$patientId&doctorId=$doctorId${roomId!=null?"&roomId=$roomId":""}");
     } catch (e) {
       throw mapException(e);
     }
@@ -143,6 +144,20 @@ class VisitsDatasourceImpl implements VisitsDataSource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
     return NoParams();
 
+  }
+
+  @override
+  Future<NoParams> updateVisit(VisitEntity data, bool delete) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(host: "$serverHost/$patientInfoController/UpdateVisit?delete=$delete", body:
+      VisitModel.fromEntity(data).toJson()
+        ,);
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    return NoParams();
   }
 }
 

@@ -125,6 +125,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveC
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updateVisit.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
@@ -561,12 +562,14 @@ initInjection() async {
         patientEntersClinicUseCase: sl(),
         patientLeavesClinicUseCase: sl(),
         patientVisitsUseCase: sl(),
+    updateVisitUseCase: sl()
       ));
   //usecases
   sl.registerLazySingleton(() => GetVisitsUseCase(visitsRepo: sl()));
   sl.registerLazySingleton(() => PatientLeavesClinicUseCase(visitsRepo: sl()));
   sl.registerLazySingleton(() => PatientEntersClinicUseCase(visitsRepo: sl()));
   sl.registerLazySingleton(() => PatientVisitsUseCase(visitsRepo: sl()));
+  sl.registerLazySingleton(() => UpdateVisitUseCase(visitsRepo: sl()));
   /**
    * Image Features
    */

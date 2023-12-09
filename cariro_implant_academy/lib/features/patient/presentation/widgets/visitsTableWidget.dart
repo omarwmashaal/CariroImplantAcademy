@@ -4,11 +4,16 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentWidget.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getVisitsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
@@ -27,6 +32,7 @@ import '../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../Widgets/FormTextWidget.dart';
 import '../../../../Widgets/Title.dart';
 import '../../../../core/injection_contianer.dart';
+import '../bloc/calendarBloc_Events.dart';
 import '../bloc/patientVisitsBloc.dart';
 import '../pages/createOrViewPatientPage.dart';
 import 'calendarWidget.dart';
@@ -45,7 +51,7 @@ class VisitsTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<PatientVisitsBloc>(context);
     bloc.add(PatientVisitsBloc_GetVisitsEvent(params: GetVisitsParams(patientId: patientId)));
-    VisitDataSource dataSource = VisitDataSource();
+    VisitDataSource dataSource = VisitDataSource(context: context, bloc: bloc);
     return Container(
       height: 200,
       child: Column(
@@ -122,6 +128,7 @@ class VisitsTableWidget extends StatelessWidget {
                                       label: "Patient Enters Clinic",
                                       onTab: () {
                                         int? doctorId = patientData?.doctorId;
+                                        int? roomId;
                                         CIA_ShowPopUp(
                                           height: 200,
                                           context: context,
@@ -135,6 +142,8 @@ class VisitsTableWidget extends StatelessWidget {
                                                 params: PatientEntersClinicParams(
                                                   patientId: patientId!,
                                                   doctorId: doctorId!,
+                                                  roomId: roomId!,
+
                                                 ),
                                               ));
                                             }
@@ -153,6 +162,30 @@ class VisitsTableWidget extends StatelessWidget {
                                                     doctorId = value.id;
                                                   },
                                                 ),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Builder(
+                                                builder: (context) {
+                                                  var b = BlocProvider.of<CalendarBloc>(context);
+                                                  b.add(CalendarBloc_GetRooms());
+                                                  return BlocBuilder<CalendarBloc,CalendarBloc_States>(
+                                                    buildWhen: (previous, current) => current is CalendarBloc_LoadedRoomsSuccessfully,
+                                                    builder: (context,state) {
+                                                      List<BasicNameIdObjectEntity> rooms =[];
+                                                      if(state is CalendarBloc_LoadedRoomsSuccessfully)
+                                                        rooms  = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name,id: e.id)).toList();
+                                                      return Flexible(
+                                                        child: CIA_DropDownSearchBasicIdName(
+                                                          label: "Room",
+                                                          items: rooms,
+                                                         onSelect: (value) {
+                                                           roomId = value.id;
+                                                          },
+                                                        ),
+                                                      );
+                                                    }
+                                                  );
+                                                }
                                               ),
                                             ],
                                           ),
