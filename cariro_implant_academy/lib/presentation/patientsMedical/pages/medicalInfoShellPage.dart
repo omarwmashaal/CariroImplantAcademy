@@ -330,7 +330,10 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                   FormTextValueWidget(text: patient.out? "Patient Out!":""),
                                   Icon(Icons.circle,color: patient.out? Colors.red:Colors.green,),
                                 ],
-                              )
+                              ),
+                              CIA_PrimaryButton(label: "Save", onTab: (){
+                                medicalShellBloc.add(MedicalInfoShell_SaveChanges());
+                              })
                             ],
                           );
                         } else if (state is LoadingError)

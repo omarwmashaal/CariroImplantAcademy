@@ -54,7 +54,10 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
     bloc = BlocProvider.of<DentalHistoryBloc>(context);
     medicalShellBloc = context.read<MedicalInfoShellBloc>();
     medicalVariablesBloc = context.read<MedicalPagesStatesChangesBloc>();
-    //load = MedicalAPI.GetPatientDentalHistory(widget.patientId);
+    medicalShellBloc.saveChanges = (){
+      bloc.add(DentalHistoryBloc_SaveDentalHistoryEvent(dentalHistoryEntity: dentalHistoryData!));
+
+    } ;//load = MedicalAPI.GetPatientDentalHistory(widget.patientId);
     super.initState();
   }
 
@@ -63,7 +66,11 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Dental History"));
     bloc.add(DentalHistoryBloc_GetDentalHistoryEvent(patientId: widget.patientId));
     return BlocConsumer<DentalHistoryBloc, DentalHistoryBloc_States>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is DentalHistoryBloc_SavedDataSuccessfullyState)
+          bloc.add(DentalHistoryBloc_GetDentalHistoryEvent(patientId: widget.patientId));
+
+      },
       buildWhen: (previous, current) =>
           current is DentalHistoryBloc_LoadingDataState || current is DentalHistoryBloc_DataLoadedSuccessfullyState || current is DentalHistoryBloc_ErrorState,
       builder: (context, state) {

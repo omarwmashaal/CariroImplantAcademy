@@ -64,6 +64,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
   void initState() {
     bloc = BlocProvider.of<MedicalHistoryBloc>(context);
     medicalShellBloc = context.read<MedicalInfoShellBloc>();
+    medicalShellBloc.saveChanges = () {
+      bloc.add(MedicalHistoryBloc_SaveMedicalHistoryEvent(medicalExaminationEntity: medicalHistoryData));
+    };
   }
 
   @override
@@ -71,9 +74,14 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Medical History"));
     bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
     return BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is MedicalHistoryBloc_SavedSuccessfully)
+          bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
+      },
       buildWhen: (previous, current) =>
-          current is MedicalHistoryBloc_LoadingState || current is MedicalHistoryBloc_DataLoaded || current is MedicalHistoryBloc_ErrorState,
+          current is MedicalHistoryBloc_LoadingState ||
+              current is MedicalHistoryBloc_DataLoaded ||
+              current is MedicalHistoryBloc_ErrorState,
       builder: (context, state) {
         if (state is MedicalHistoryBloc_LoadingState)
           return LoadingWidget();

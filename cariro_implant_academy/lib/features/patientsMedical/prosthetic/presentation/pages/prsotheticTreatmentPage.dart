@@ -63,6 +63,25 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
     medicalInfoShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
     medicalInfoShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Prosthetic Treatment"));
+    medicalInfoShellBloc.saveChanges = (){
+      Future.delayed(Duration.zero, () async {
+        try {
+          if (fullArchEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(data: fullArchEntity!));
+        } on Exception catch (e) {
+          // print(e);
+        }
+        try {
+          if (diagnosticEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(data: diagnosticEntity!));
+        } on Exception catch (e) {
+          // print(e);
+        }
+        try {
+          if (singleBridgeEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(data: singleBridgeEntity!));
+        } on Exception catch (e) {
+          //print(e);
+        }
+      });
+    };
 
     super.initState();
   }
@@ -72,6 +91,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
     return BlocListener<LabRequestsBloc, LabRequestsBloc_States>(
       listener: (context, state) {
         if (state is LabRequestsBloc_CreatedLabRequestSuccessfullyState) dialogHelper.dismissAll(context);
+
       },
       child: DefaultTabController(
         length: 2,

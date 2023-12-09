@@ -68,6 +68,9 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Dental Examination"));
+    medicalShellBloc.saveChanges = (){
+      bloc.add(DentalExaminationBloc_SaveDataEvent(dentalExaminationEntity: dentalExaminationEntity));
+    };
     // load = MedicalAPI.GetPatientDentalExamination(widget.patientId);
   }
 
@@ -596,6 +599,9 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
         return Container();
       },
       listener: (context, state) {
+        if(state is DentalExaminationBloc_SavedDataSuccessfullyState)
+          bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
+
         // if(state is DentalHistoryBloc_SavingDataState)
         //   context.l
       },

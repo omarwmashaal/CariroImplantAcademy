@@ -14,3 +14,8 @@ class MedicalInfoShell_ChangeViewEditEvent extends MedicalInfoShellBloc_Event{
   @override
   List<Object?> get props => [allowEdit];
 }
+class MedicalInfoShell_SaveChanges extends MedicalInfoShellBloc_Event{
+  MedicalInfoShell_SaveChanges();
+  @override
+  List<Object?> get props => [];
+}

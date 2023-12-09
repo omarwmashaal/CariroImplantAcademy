@@ -73,6 +73,13 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
       bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
     bloc.add(TreatmentBloc_GetTreatmentPrices());
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical ? "Surgical Treatment" : "Treatment Plan"));
+    medicalShellBloc.saveChanges = (){
+      if (widget.surgical) {
+        bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
+      } else {
+        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(id: widget.patientId, data: treatmentPlanEntity.treatmentPlan ?? []));
+      }
+    };
   }
 
   @override
@@ -85,7 +92,15 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
         builder: (context, stateShell) {
           return BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
             listener: (context, state) {
-              if (state is TreatmentBloc_ChangedViewState) {
+              if(state is TreatmentBloc_SavedTreatmentDataSuccessfullyState)
+                {
+                  if (widget.surgical)
+                    bloc.add(TreatmentBloc_GetSurgicalTreatmentDataEvent(id: widget.patientId));
+                  else
+                    bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+
+                }
+             else if (state is TreatmentBloc_ChangedViewState) {
                 viewOnlyMode = !state.edit;
                 if (viewOnlyMode) totalPrice = state.total;
               } else if (state is TreatmentBloc_LoadedTreatmentPricesState)

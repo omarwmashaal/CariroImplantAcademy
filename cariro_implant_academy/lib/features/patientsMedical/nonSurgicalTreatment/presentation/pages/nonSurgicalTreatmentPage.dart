@@ -71,6 +71,13 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
     bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
     medicalShellBloc = context.read<MedicalInfoShellBloc>();
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Non Surgical Treatment"));
+    medicalShellBloc.saveChanges =(){
+      bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
+        nonSurgicalTreatmentEntity: nonSurgicalTreatment,
+        patientId: widget.patientId,
+        dentalExaminationEntity: dentalExaminationEntity,
+      ));
+    };
   }
 
   @override
@@ -95,6 +102,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
       listener: (context, state) {
+        if(state is NonSurgicalTreatmentBloc_DataSavedSuccessfully)
+          bloc.add(NonSurgicalTreatmentBloc_GetDataEvent(id: widget.patientId));
         if (state is NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem)
           CustomLoader.show(context);
         else CustomLoader.hide();
