@@ -42,6 +42,8 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
     EnumFinalProthesisTryInStatus? finalProthesisTryInStatus,
     EnumFinalProthesisTryInNextVisit? finalProthesisTryInNextVisit,
     DateTime? finalProthesisTryInDate,
+    int? operatorId,
+    BasicNameIdObjectEntity? operator,
     // Additional fields from C# TryInModel
     this.satisfied,
     this.nonSatisfiedNewScan,
@@ -71,6 +73,8 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
     patient: patient,
     searchTeethClassification: searchTeethClassification,
     website: website,
+    operator: operator,
+    operatorId: operatorId,
     finalProthesisTeeth: finalProthesisTeeth,
     finalProthesisTryIn: finalProthesisTryIn,
     finalProthesisTryInStatus: finalProthesisTryInStatus,
@@ -118,6 +122,8 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       frontalSmilingAndLateralPhotos: map['frontalSmilingAndLateralPhotos'],
       evaluation: map['evaluation'],
       explainWhy: map['explainWhy'],
+      operatorId: map['operatorId'],
+      operator: map['operatorDTO']==null?null:BasicNameIdObjectModel.fromJson(map['operatorDTO']),
       // ... add more properties as needed
     );
   }
@@ -157,6 +163,7 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       'frontalSmilingAndLateralPhotos': frontalSmilingAndLateralPhotos,
       'evaluation': evaluation,
       'explainWhy': explainWhy,
+      'operatorId': operatorId,
       // ... add more properties as needed
     };
   }
@@ -196,6 +203,7 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       frontalSmilingAndLateralPhotos: entity.frontalSmilingAndLateralPhotos,
       evaluation: entity.evaluation,
       explainWhy: entity.explainWhy,
+      operatorId: entity.operatorId,
       // ... add more properties as needed
     );
   }

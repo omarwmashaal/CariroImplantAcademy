@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/ImplantModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../Models/CandidateDetails.dart';
@@ -13,7 +14,7 @@ import '../domain/entities/canidateDetailsEntity.dart';
 
 class CandidateDetailsModel extends CandidateDetailsEntity {
   CandidateDetailsModel({
-    int? patientId,
+    String? patientId,
     BasicNameIdObjectModel? patient,
     String? procedure,
     DateTime? date,
@@ -41,7 +42,7 @@ class CandidateDetailsModel extends CandidateDetailsEntity {
 
   factory CandidateDetailsModel.fromMap(Map<String, dynamic> map) {
     return CandidateDetailsModel(
-      patientId: map['patientId'],
+      patientId:map['patient']==null?null: (PatientInfoModel.fromMap(map['patient']).secondaryId),
       patient:map['patient']==null?null: BasicNameIdObjectModel.fromJson(map['patient']),
       procedure: map['procedure'],
       date: DateTime.tryParse(map['date']),

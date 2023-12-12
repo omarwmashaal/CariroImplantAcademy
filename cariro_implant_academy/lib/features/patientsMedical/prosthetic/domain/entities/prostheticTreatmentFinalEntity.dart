@@ -9,6 +9,7 @@ import 'finalProsthesisTryInEntity.dart';
 class ProstheticTreatmentFinalEntity extends Equatable {
   int? id;
   int? patientId;
+  DateTime? date;
   BasicNameIdObjectEntity? patient;
   List<FinalProthesisHealingCollarEntity>? healingCollars;
   List<FinalProthesisImpressionEntity>? impressions;
@@ -17,6 +18,7 @@ class ProstheticTreatmentFinalEntity extends Equatable {
 
   ProstheticTreatmentFinalEntity({
     this.id,
+    this.date,
     this.patientId,
     this.patient,
     this.healingCollars,
@@ -28,6 +30,7 @@ class ProstheticTreatmentFinalEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    date,
     patientId,
     patient,
     healingCollars,

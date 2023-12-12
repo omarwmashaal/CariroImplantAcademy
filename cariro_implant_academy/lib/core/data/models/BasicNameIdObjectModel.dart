@@ -4,18 +4,22 @@ class BasicNameIdObjectModel extends BasicNameIdObjectEntity {
   BasicNameIdObjectModel({
     name="",
      id,
-  }) : super(name: name, id: id);
+    secondaryId,
+  }) : super(name: name, id: id,secondaryId: secondaryId);
 
   Map<String,dynamic> toJson()
   {
     Map<String,dynamic> data = Map<String,dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['secondaryId'] = this.secondaryId;
     return data;
   }
   factory BasicNameIdObjectModel.fromJson(Map<String, dynamic> map) {
+    print(map['secondaryId']);
     return BasicNameIdObjectModel(
       name: map['name'] as String?,
+     // secondaryId:  int.tryParse(map['secondaryId']),
       id: (){
         try{
           return map['id'] as int?;

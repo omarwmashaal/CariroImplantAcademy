@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../Widgets/Title.dart';
 import '../../domain/entities/notificationEntity.dart';
@@ -122,7 +123,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                     ),
                                     Expanded(child: SizedBox()),
                                     Text(
-                                      item.date as String,
+                                      item.date ==null?"":DateFormat("dd-MM-yyyy hh:mm a").format(item.date !),
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: ((item.read ?? false)) ? Colors.black : Colors.red,

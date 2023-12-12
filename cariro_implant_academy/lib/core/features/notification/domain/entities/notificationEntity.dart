@@ -9,12 +9,12 @@ class NotificationEntity  extends Equatable{
   String? title;
   String? content;
   bool? read;
-  String? date;
+  DateTime? date;
   int? infoId;
   EnumNotificationType? type;
   Function(BuildContext context)? onClickAction;
 
-  NotificationEntity({this.type,this.onClickAction,this.title, this.content, this.id, this.read = false, this.date = "", this.infoId});
+  NotificationEntity({this.type,this.onClickAction,this.title, this.content, this.id, this.read = false, this.date , this.infoId});
 
   @override
   // TODO: implement props

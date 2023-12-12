@@ -57,31 +57,31 @@ class ProstheticBloc extends Bloc<ProstheticBloc_Event, ProstheticBloc_States> {
     );
     on<ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent>(
       (event, emit) async {
-
+        emit(ProstheticBloc_UpdatingProstheticDiagnosticState());
         final result = await updatePatientProstheticTreatmentDiagnosticUseCase(event.data);
         result.fold(
           (l) => emit(ProstheticBloc_DataUpdatingErrorState(message: l.message ?? "")),
-          (r) => null,
+          (r) => emit(ProstheticBloc_UpdatedProstheticDiagnosticSuccessfullyState()),
         );
       },
     );
     on<ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent>(
       (event, emit) async {
-
+        emit(ProstheticBloc_UpdatingProstheticFullArchState());
         final result = await updatePatientProstheticTreatmentFinalProthesisFullArchUseCase(event.data);
         result.fold(
           (l) => emit(ProstheticBloc_DataUpdatingErrorState(message: l.message ?? "")),
-          (r) => null,
+          (r) => emit(ProstheticBloc_UpdatedProstheticFullArchSuccessfullyState()),
         );
       },
     );
     on<ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent>(
       (event, emit) async {
-
+        emit(ProstheticBloc_UpdatingProstheticSinlgeBridgeState());
         final result = await updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase(event.data);
         result.fold(
           (l) => emit(ProstheticBloc_DataUpdatingErrorState(message: l.message ?? "")),
-          (r) => null,
+          (r) => emit(ProstheticBloc_UpdatedProstheticSinlgeBridgeSuccessfullyState()),
         );
       },
     );

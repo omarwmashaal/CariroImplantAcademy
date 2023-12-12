@@ -11,7 +11,7 @@ import '../../../../core/constants/enums/enums.dart';
 
 class ComplainsEntity extends Equatable {
   int? id;
-  int? secondaryId;
+  String? secondaryId;
   String? comment;
   int? patientID;
   BasicNameIdObjectEntity? patient;

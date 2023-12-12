@@ -133,7 +133,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                 onPressed: () {
                                   CIA_ShowPopUp(
                                     context: context,
-                                    width: 900,
+                                    width: double.maxFinite,
                                     height: 600,
                                     title: "Calendar",
                                     child: CalendarWidget(

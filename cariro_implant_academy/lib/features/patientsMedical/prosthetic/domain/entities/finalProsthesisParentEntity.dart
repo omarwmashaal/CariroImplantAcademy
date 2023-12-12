@@ -10,10 +10,14 @@ class FinalProthesisParentEntity extends Equatable {
   EnumTeethClassification? searchTeethClassification;
   Website website;
   List<int>? finalProthesisTeeth;
+  int? operatorId;
+  BasicNameIdObjectEntity? operator;
 
   FinalProthesisParentEntity({
     this.id,
     this.patientId,
+    this.operatorId,
+    this.operator,
     this.patient,
     this.searchTeethClassification,
     this.website = Website.CIA,
@@ -25,6 +29,8 @@ class FinalProthesisParentEntity extends Equatable {
     return [
       id,
       patientId,
+      operatorId,
+      operator,
       patient,
       searchTeethClassification,
       website,

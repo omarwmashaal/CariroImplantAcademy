@@ -17,6 +17,8 @@ class FinalProthesisDeliveryEntity extends FinalProthesisParentEntity {
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
+    int? operatorId,
+    BasicNameIdObjectEntity? operator,
     this.finalProthesisDelivery,
     this.finalProthesisDeliveryStatus,
     this.finalProthesisDeliveryNextVisit,
@@ -27,6 +29,8 @@ class FinalProthesisDeliveryEntity extends FinalProthesisParentEntity {
     patient: patient,
     searchTeethClassification: searchTeethClassification,
     website: website,
+    operator: operator,
+    operatorId: operatorId,
     finalProthesisTeeth: finalProthesisTeeth,
   );
   bool isNull() {

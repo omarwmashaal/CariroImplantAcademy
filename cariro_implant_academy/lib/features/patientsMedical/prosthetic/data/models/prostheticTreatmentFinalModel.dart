@@ -17,6 +17,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   ProstheticTreatmentFinalModel({
     int? id,
     int? patientId,
+    DateTime? date,
     BasicNameIdObjectEntity? patient,
     List<FinalProthesisHealingCollarEntity>? healingCollars,
     List<FinalProthesisImpressionEntity>? impressions,
@@ -24,6 +25,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
     List<FinalProthesisDeliveryEntity>? delivery,
   }) : super(
           id: id,
+    date: date,
           patientId: patientId,
           patient: patient,
           healingCollars: healingCollars,
@@ -40,6 +42,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   factory ProstheticTreatmentFinalModel.fromMap(Map<String, dynamic> map) {
     return ProstheticTreatmentFinalModel(
       id: map['id'],
+      date: DateTime.tryParse(map['date']??"")?.toLocal(),
       patientId: map['patientId'],
       patient: map['patient'] != null ? BasicNameIdObjectModel.fromJson(map['patient']) : null,
       healingCollars: (map['healingCollars'] as List<dynamic>?)?.map((e) => FinalProthesisHealingCollarModel.fromMap(e)).toList(),
@@ -52,6 +55,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': super.id,
+      'date': super.date?.toUtc().toIso8601String(),
       'patientId': super.patientId,
       //'patient': super.patient?.toMap(),
       'healingCollars': super.healingCollars?.map((e) => FinalProthesisHealingCollarModel.fromEntity(e).toJson()).toList(),
@@ -64,6 +68,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   static ProstheticTreatmentFinalModel fromEntity(ProstheticTreatmentFinalEntity entity) {
     return ProstheticTreatmentFinalModel(
       id: entity.id,
+      date: entity.date,
       patientId: entity.patientId,
       patient: entity.patient,
       healingCollars: entity.healingCollars,

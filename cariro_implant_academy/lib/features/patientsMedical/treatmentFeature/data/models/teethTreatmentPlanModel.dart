@@ -77,6 +77,8 @@ class TeethTreatmentPlanModel extends TeethTreatmentPlanEntity{
       gbrWithoutImplant:entity.gbrWithoutImplant,
       openSinusWithoutImplant:entity.openSinusWithoutImplant,
       closedSinusWithoutImplant:entity.closedSinusWithoutImplant,
+      scaling:  entity.scaling,
+      crown: entity.crown,
     );
   }
   TeethTreatmentPlanModel.fromJson(Map<String, dynamic> json) {

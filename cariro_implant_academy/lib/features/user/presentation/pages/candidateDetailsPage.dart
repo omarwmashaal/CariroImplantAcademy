@@ -119,7 +119,7 @@ class _ViewCandidateDataState extends State<ViewCandidateData> {
                   dataSource: dataSource,
                   allowSorting: true,
                   onCellClick: (index) {
-                    context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {'id': index.toString()});
+                    context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {'id': dataSource.models.firstWhere((element) => element.patientId==index).patient!.id!.toString()});
                   },
                 ),
               ),

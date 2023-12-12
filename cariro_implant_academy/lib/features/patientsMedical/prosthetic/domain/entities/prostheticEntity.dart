@@ -12,6 +12,7 @@ class ProstheticTreatmentEntity extends Equatable {
   int? id;
   int? patientId;
   String? secondaryId;
+  DateTime? date;
   BasicNameIdObjectEntity? patient;
   EnumTeethClassification? searchTeethClassification;
   List<DiagnosticImpressionEntity>? prostheticDiagnostic_DiagnosticImpression;
@@ -50,6 +51,7 @@ class ProstheticTreatmentEntity extends Equatable {
 
   ProstheticTreatmentEntity({
     this.id,
+    this.date,
     this.patientId,
     this.secondaryId,
     this.patient,
@@ -91,6 +93,7 @@ class ProstheticTreatmentEntity extends Equatable {
   List<Object?> get props => [
 
     this.id,
+    this.date,
     this.patientId,
     this.secondaryId,
     this.patient,

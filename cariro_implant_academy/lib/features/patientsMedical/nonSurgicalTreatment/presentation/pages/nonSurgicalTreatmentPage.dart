@@ -342,7 +342,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                     onTab: () async {
                       CIA_ShowPopUp(
                           context: context,
-                          width: 900,
+                          width: double.maxFinite,
                           height: 600,
                           title: "Schedule Next Visit",
                           child: CalendarWidget(

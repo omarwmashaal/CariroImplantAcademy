@@ -12,6 +12,8 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
     int? id,
     int? patientId,
     BasicNameIdObjectEntity? patient,
+    int? operatorId,
+    BasicNameIdObjectEntity? operator,
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
@@ -25,6 +27,8 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
           patient: patient,
           searchTeethClassification: searchTeethClassification,
           website: website,
+    operator: operator,
+    operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
           finalProthesisImpression: finalProthesisImpression,
           finalProthesisImpressionStatus: finalProthesisImpressionStatus,
@@ -41,6 +45,8 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
     return FinalProthesisImpressionModel(
       id: map['id'],
       patientId: map['patientId'],
+      operatorId: map['operatorId'],
+      operator: map['operatorDTO']==null?null:BasicNameIdObjectModel.fromJson(map['operatorDTO']),
       patient: map['patient'] != null
           ? BasicNameIdObjectModel.fromJson(map['patient'])
           : null,
@@ -68,6 +74,7 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
     return {
       'id': super.id,
       'patientId': super.patientId,
+      'operatorId': operatorId,
      // 'patient': super.patient?.toJson(),
       'searchTeethClassification': super.searchTeethClassification,
       //'website': super.website.toString().split('.').last,
@@ -91,6 +98,7 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
       finalProthesisImpressionStatus: entity.finalProthesisImpressionStatus,
       finalProthesisImpressionNextVisit: entity.finalProthesisImpressionNextVisit,
       finalProthesisImpressionDate: entity.finalProthesisImpressionDate,
+      operatorId: entity.operatorId,
     );
   }
 }

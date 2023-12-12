@@ -13,6 +13,7 @@ import 'diagnosticImpressionModel.dart';
 class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
   ProstheticTreatmentModel({
     super.id,
+    super.date,
     super.patientId,
     super.secondaryId,
     super.patient,
@@ -53,6 +54,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
   factory ProstheticTreatmentModel.fromEntity(ProstheticTreatmentEntity entity) {
     return ProstheticTreatmentModel(
       id: entity.id,
+      date: entity.date,
       patientId: entity.patientId,
       secondaryId: entity.secondaryId,
       patient: entity.patient,
@@ -93,6 +95,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
 
   ProstheticTreatmentModel.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];
+    this.date = DateTime.tryParse(json['date']??"")?.toLocal();
     this.secondaryId = json['secondaryId'];
     this.patientId = json['patientId'];
     this.patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
@@ -178,6 +181,7 @@ class ProstheticTreatmentModel extends ProstheticTreatmentEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['date'] = this.date?.toUtc().toIso8601String();
     data['patientId'] = this.patientId;
     data['prostheticDiagnostic_DiagnosticImpression'] = this.prostheticDiagnostic_DiagnosticImpression == null
         ? []

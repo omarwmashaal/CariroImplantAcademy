@@ -12,6 +12,8 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
     int? id,
     int? patientId,
     BasicNameIdObjectEntity? patient,
+    int? operatorId,
+    BasicNameIdObjectEntity? operator,
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
@@ -25,6 +27,8 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
           patient: patient,
           searchTeethClassification: searchTeethClassification,
           website: website,
+    operator: operator,
+    operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
           finalProthesisDelivery: finalProthesisDelivery,
           finalProthesisDeliveryStatus: finalProthesisDeliveryStatus,
@@ -41,6 +45,8 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
     return FinalProthesisDeliveryModel(
       id: map['id'],
       patientId: map['patientId'],
+      operatorId: map['operatorId'],
+      operator: map['operatorDTO']==null?null:BasicNameIdObjectModel.fromJson(map['operatorDTO']),
       patient: map['patient'] != null
           ? BasicNameIdObjectModel.fromJson(map['patient'])
           : null,
@@ -73,6 +79,7 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
       //'website': super.website.toString().split('.').last,
       'finalProthesisTeeth': super.finalProthesisTeeth,
       'finalProthesisDelivery': super.finalProthesisDelivery,
+      'operatorId': operatorId,
       'finalProthesisDeliveryStatus': super.finalProthesisDeliveryStatus?.index,
       'finalProthesisDeliveryNextVisit': super.finalProthesisDeliveryNextVisit?.index,
       'finalProthesisDeliveryDate': super.finalProthesisDeliveryDate?.toUtc().toIso8601String(),
@@ -91,6 +98,7 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
       finalProthesisDeliveryStatus: entity.finalProthesisDeliveryStatus,
       finalProthesisDeliveryNextVisit: entity.finalProthesisDeliveryNextVisit,
       finalProthesisDeliveryDate: entity.finalProthesisDeliveryDate,
+      operatorId: entity.operatorId,
     );
   }
 }

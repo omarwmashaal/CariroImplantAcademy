@@ -467,7 +467,7 @@ class CandidateDetailsDataSource extends DataGridSource {
     _userData = models
         .map<DataGridRow>((e) =>
         DataGridRow(cells: [
-          DataGridCell<int>(columnName: 'Id', value: e.patientId),
+          DataGridCell<String>(columnName: 'Id', value: e.patientId),
           DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
           DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
           DataGridCell<int>(columnName: 'Tooth', value: e.tooth),

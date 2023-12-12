@@ -63,27 +63,32 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
     medicalInfoShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
     medicalInfoShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Prosthetic Treatment"));
-    medicalInfoShellBloc.saveChanges = (){
-      Future.delayed(Duration.zero, () async {
-        try {
-          if (fullArchEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(data: fullArchEntity!));
-        } on Exception catch (e) {
-          // print(e);
-        }
-        try {
-          if (diagnosticEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(data: diagnosticEntity!));
-        } on Exception catch (e) {
-          // print(e);
-        }
-        try {
-          if (singleBridgeEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(data: singleBridgeEntity!));
-        } on Exception catch (e) {
-          //print(e);
-        }
-      });
+    medicalInfoShellBloc.saveChanges = () {
+      saveMethod();
     };
 
     super.initState();
+  }
+
+  saveMethod() {
+
+    Future.delayed(Duration.zero, () async {
+      try {
+        if (fullArchEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(data: fullArchEntity!));
+      } on Exception catch (e) {
+        // print(e);
+      }
+      try {
+        if (diagnosticEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(data: diagnosticEntity!));
+      } on Exception catch (e) {
+        // print(e);
+      }
+      try {
+        if (singleBridgeEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(data: singleBridgeEntity!));
+      } on Exception catch (e) {
+        //print(e);
+      }
+    });
   }
 
   @override
@@ -91,7 +96,6 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
     return BlocListener<LabRequestsBloc, LabRequestsBloc_States>(
       listener: (context, state) {
         if (state is LabRequestsBloc_CreatedLabRequestSuccessfullyState) dialogHelper.dismissAll(context);
-
       },
       child: DefaultTabController(
         length: 2,
@@ -101,9 +105,12 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
               height: 60,
               child: TabBar(
                 onTap: (value) {
-                  if (value == 0)
+                  if (value == 0) {
                     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
-                  else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                  } else if (value == 1) {
+                    bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                  }
+                  saveMethod();
                 },
                 labelColor: Colors.black,
                 tabs: [
@@ -128,10 +135,19 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                             edit = stateShell.edit;
                             return !edit;
                           } else {
-                            edit = false;
-                            return true;
+                            return !edit;
                           }
-                        }(), child: BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+                        }(), child: BlocConsumer<ProstheticBloc, ProstheticBloc_States>(
+                          listener: (context, state) {
+                            if(state is ProstheticBloc_UpdatedProstheticDiagnosticSuccessfullyState)
+                              bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
+                          },
+                          buildWhen: (previous, current) =>
+                          current is ProstheticBloc_LoadingDataState ||
+                          current is ProstheticBloc_DataLoadingErrorState ||
+                          current is ProstheticBloc_DiagnosticDataLoadedSuccessfullyState
+
+                          ,
                           builder: (context, state) {
                             if (state is ProstheticBloc_LoadingDataState)
                               return LoadingWidget();
@@ -139,330 +155,390 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                               return BigErrorPageWidget(message: state.message);
                             else if (state is ProstheticBloc_DiagnosticDataLoadedSuccessfullyState) {
                               diagnosticEntity = state.data;
-                              return StatefulBuilder(
-                                builder: (context, _setState) {
-                                  return ListView(children: () {
-                                    List<Widget> r = [];
-                                    if (diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.isEmpty) {
-                                      diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity());
-                                    }
-                                    if (diagnosticEntity!.prostheticDiagnostic_Bite!.isEmpty) {
-                                      diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
-                                    }
-                                    if (diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.isEmpty) {
-                                      diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
-                                    }
+                              medicalInfoShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: diagnosticEntity));
 
-                                    r.add(Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: FormTextKeyWidget(text: "Diagnostic Impression"),
-                                    ));
-                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!
-                                        .map((e) => Padding(
-                                              padding: const EdgeInsets.only(bottom: 10),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: CIA_DropDownSearch(
-                                                      label: "Diagnostic",
-                                                      selectedItem: () {
-                                                        if (e.diagnostic != null) {
-                                                          return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                        }
-                                                        return null;
-                                                      }(),
-                                                      onSelect: (value) {
-                                                        e.diagnostic = EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
-                                                        e.operatorId = siteController.getUserId();
-                                                      },
-                                                      items: [
-                                                        DropDownDTO(name: "Physical", id: 0),
-                                                        DropDownDTO(name: "Digital", id: 1),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: CIA_DropDownSearch(
-                                                      label: "Next Step",
-                                                      selectedItem: () {
-                                                        if (e.nextStep != null) {
-                                                          return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
-                                                        }
-                                                        return null;
-                                                      }(),
-                                                      onSelect: (value) {
-                                                        e.operatorId = siteController.getUserId();
-                                                        e.nextStep = EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
-                                                      },
-                                                      items: [
-                                                        DropDownDTO(name: "Ready for implant", id: 0),
-                                                        DropDownDTO(name: "Bite", id: 1),
-                                                        DropDownDTO(name: "Needs new impression", id: 2),
-                                                        DropDownDTO(name: "Needs scan PPT", id: 3),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Needs Remake",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.scanned = false;
-                                                      _setState(() {});
-                                                      e.needsRemake = v;
-                                                    },
-                                                    value: e.needsRemake ?? false,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Scanned",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.needsRemake = false;
-                                                      _setState(() {});
-                                                      return e.scanned = v;
-                                                    },
-                                                    value: e.scanned ?? false,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.operator!.name ?? "",
-                                                          secondaryInfo: true,
-                                                        )),
-                                                        SizedBox(width: 10),
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                          secondaryInfo: true,
-                                                        )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        _setState(() {
-                                                          diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity(
-                                                              operatorId: sl<SharedPreferences>().getInt("userid"),
-                                                              operator: BasicNameIdObjectEntity(
-                                                                name: siteController.getUserName(),
-                                                                id: sl<SharedPreferences>().getInt("userid"),
-                                                              )));
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.add))
+                              return
+
+                                StatefulBuilder(
+                                  builder: (context, _setState) {
+                                    return ListView(children: () {
+                                      List<Widget> r = [];
+                                      if (diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.isEmpty) {
+                                        diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity());
+                                      }
+                                      if (diagnosticEntity!.prostheticDiagnostic_Bite!.isEmpty) {
+                                        diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
+                                      }
+                                      if (diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.isEmpty) {
+                                        diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
+                                      }
+
+                                      r.add(Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: FormTextKeyWidget(text: "Diagnostic Impression"),
+                                      ));
+                                      r.addAll(diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!
+                                          .map((e) => Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (e.diagnostic != null) {
+                                                    return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  e.diagnostic = EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
+                                                  e.operatorId = siteController.getUserId();
+                                                  _setState(() {
+                                                    e.operator =BasicNameIdObjectEntity(name:  siteController.getUserName());
+                                                    e.date = DateTime.now();
+                                                  });
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Physical", id: 0),
+                                                  DropDownDTO(name: "Digital", id: 1),
                                                 ],
                                               ),
-                                            ))
-                                        .toList());
-
-                                    r.add(Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: FormTextKeyWidget(text: "Bite"),
-                                    ));
-                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_Bite!
-                                        .map((e) => Padding(
-                                              padding: const EdgeInsets.only(bottom: 10),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: CIA_DropDownSearch(
-                                                      label: "Diagnostic",
-                                                      selectedItem: () {
-                                                        if (e.diagnostic != null) {
-                                                          return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                        }
-                                                        return null;
-                                                      }(),
-                                                      onSelect: (value) {
-                                                        e.operatorId = siteController.getUserId();
-                                                        e.diagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
-                                                      },
-                                                      items: [
-                                                        DropDownDTO(name: "Done", id: 0),
-                                                        DropDownDTO(name: "Needs ReScan", id: 1),
-                                                        DropDownDTO(name: "Needs ReImpression", id: 2),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: CIA_DropDownSearch(
-                                                      label: "Next Step",
-                                                      selectedItem: () {
-                                                        if (e.nextStep != null) {
-                                                          return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
-                                                        }
-                                                        return null;
-                                                      }(),
-                                                      onSelect: (value) {
-                                                        e.operatorId = siteController.getUserId();
-                                                        e.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
-                                                      },
-                                                      items: [
-                                                        DropDownDTO(name: "Scan Appliance", id: 0),
-                                                        DropDownDTO(name: "ReImpression", id: 1),
-                                                        DropDownDTO(name: "ReBite", id: 2),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Needs Remake",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.scanned = false;
-                                                      _setState(() {});
-                                                      return e.needsRemake = v;
-                                                    },
-                                                    value: e.needsRemake ?? false,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Scanned",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.needsRemake = false;
-                                                      _setState(() {});
-                                                      return e.scanned = v;
-                                                    },
-                                                    value: e.scanned ?? false,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.operator!.name ?? "",
-                                                          secondaryInfo: true,
-                                                        )),
-                                                        SizedBox(width: 10),
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                          secondaryInfo: true,
-                                                        )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        _setState(() {
-                                                          diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.add))
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Next Step",
+                                                selectedItem: () {
+                                                  if (e.nextStep != null) {
+                                                    return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  e.operatorId = siteController.getUserId();
+                                                  e.nextStep = EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
+                                                  _setState(() {
+                                                    e.operator =BasicNameIdObjectEntity(name:  siteController.getUserName());
+                                                    e.date = DateTime.now();
+                                                  });
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Ready for implant", id: 0),
+                                                  DropDownDTO(name: "Bite", id: 1),
+                                                  DropDownDTO(name: "Needs new impression", id: 2),
+                                                  DropDownDTO(name: "Needs scan PPT", id: 3),
                                                 ],
                                               ),
-                                            ))
-                                        .toList());
-
-                                    r.add(Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: FormTextKeyWidget(text: "Scan Appliance"),
-                                    ));
-                                    r.addAll(diagnosticEntity!.prostheticDiagnostic_ScanAppliance!
-                                        .map((e) => Padding(
-                                              padding: const EdgeInsets.only(bottom: 10),
+                                            ),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Needs Remake",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.scanned = false;
+                                                _setState(() {});
+                                                e.needsRemake = v;
+                                              },
+                                              value: e.needsRemake ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Scanned",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.needsRemake = false;
+                                                _setState(() {});
+                                                return e.scanned = v;
+                                              },
+                                              value: e.scanned ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
                                               child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   Expanded(
-                                                    child: CIA_DropDownSearch(
-                                                      label: "Diagnostic",
-                                                      selectedItem: () {
-                                                        if (e.diagnostic != null) {
-                                                          return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
-                                                        }
-                                                        return null;
-                                                      }(),
-                                                      onSelect: (value) {
-                                                        e.operatorId = siteController.getUserId();
-                                                        e.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
-                                                      },
-                                                      items: [
-                                                        DropDownDTO(name: "Done", id: 0),
-                                                        DropDownDTO(name: "Needs ReBite", id: 1),
-                                                        DropDownDTO(name: "Needs ReImpression", id: 2),
-                                                        DropDownDTO(name: "Needs ReDesign", id: 3),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Expanded(child: SizedBox()),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Needs Remake",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.scanned = false;
-                                                      _setState(() {});
-                                                      return e.needsRemake = v;
-                                                    },
-                                                    value: e.needsRemake ?? false,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  CIA_CheckBoxWidget(
-                                                    text: "Scanned",
-                                                    onChange: (v) {
-                                                      e.operatorId = siteController.getUserId();
-                                                      if (v) e.needsRemake = false;
-                                                      _setState(() {});
-                                                      return e.scanned = v;
-                                                    },
-                                                    value: e.scanned ?? false,
-                                                  ),
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.operator!.name ?? "",
+                                                        secondaryInfo: true,
+                                                      )),
                                                   SizedBox(width: 10),
                                                   Expanded(
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.operator!.name ?? "",
-                                                          secondaryInfo: true,
-                                                        )),
-                                                        SizedBox(width: 10),
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                          align: TextAlign.center,
-                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                          secondaryInfo: true,
-                                                        )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        _setState(() {
-                                                          diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.add))
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                        secondaryInfo: true,
+                                                      )),
                                                 ],
                                               ),
-                                            ))
-                                        .toList());
+                                            ),
+                                            SizedBox(width: 10),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.add(DiagnosticImpressionEntity(
+                                                            operatorId: sl<SharedPreferences>().getInt("userid"),
+                                                            operator: BasicNameIdObjectEntity(
+                                                              name: siteController.getUserName(),
+                                                              id: sl<SharedPreferences>().getInt("userid"),
+                                                            )));
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add)),
+                                                SizedBox(width:10),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_DiagnosticImpression!.remove(e);
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.delete)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ))
+                                          .toList());
 
-                                    // r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child: e)).toList();
-                                    return r;
-                                    /*
+                                      r.add(Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: FormTextKeyWidget(text: "Bite"),
+                                      ));
+                                      r.addAll(diagnosticEntity!.prostheticDiagnostic_Bite!
+                                          .map((e) => Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (e.diagnostic != null) {
+                                                    return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  e.operatorId = siteController.getUserId();
+                                                  e.diagnostic = EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
+                                                  _setState(() {
+                                                    e.operator =BasicNameIdObjectEntity(name:  siteController.getUserName());
+                                                    e.date = DateTime.now();
+                                                  });
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Done", id: 0),
+                                                  DropDownDTO(name: "Needs ReScan", id: 1),
+                                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Next Step",
+                                                selectedItem: () {
+                                                  if (e.nextStep != null) {
+                                                    return DropDownDTO(name: e.nextStep!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  e.operatorId = siteController.getUserId();
+                                                  e.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
+                                                  _setState(() {
+                                                    e.operator =BasicNameIdObjectEntity(name:  siteController.getUserName());
+                                                    e.date = DateTime.now();
+                                                  });
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Scan Appliance", id: 0),
+                                                  DropDownDTO(name: "ReImpression", id: 1),
+                                                  DropDownDTO(name: "ReBite", id: 2),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Needs Remake",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.scanned = false;
+                                                _setState(() {});
+                                                return e.needsRemake = v;
+                                              },
+                                              value: e.needsRemake ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Scanned",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.needsRemake = false;
+                                                _setState(() {});
+                                                return e.scanned = v;
+                                              },
+                                              value: e.scanned ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.operator!.name ?? "",
+                                                        secondaryInfo: true,
+                                                      )),
+                                                  SizedBox(width: 10),
+                                                  Expanded(
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                        secondaryInfo: true,
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_Bite!.add(BiteEntity());
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add)),
+                                                SizedBox(width:10),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_Bite!.remove(e);
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.delete)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ))
+                                          .toList());
+
+                                      r.add(Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: FormTextKeyWidget(text: "Scan Appliance"),
+                                      ));
+                                      r.addAll(diagnosticEntity!.prostheticDiagnostic_ScanAppliance!
+                                          .map((e) => Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: CIA_DropDownSearch(
+                                                label: "Diagnostic",
+                                                selectedItem: () {
+                                                  if (e.diagnostic != null) {
+                                                    return DropDownDTO(name: e.diagnostic!.name.replaceAll("_", " "));
+                                                  }
+                                                  return null;
+                                                }(),
+                                                onSelect: (value) {
+                                                  e.operatorId = siteController.getUserId();
+                                                  e.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
+                                                  _setState(() {
+                                                    e.operator =BasicNameIdObjectEntity(name:  siteController.getUserName());
+                                                    e.date = DateTime.now();
+                                                  });
+                                                },
+                                                items: [
+                                                  DropDownDTO(name: "Done", id: 0),
+                                                  DropDownDTO(name: "Needs ReBite", id: 1),
+                                                  DropDownDTO(name: "Needs ReImpression", id: 2),
+                                                  DropDownDTO(name: "Needs ReDesign", id: 3),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Needs Remake",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.scanned = false;
+                                                _setState(() {});
+                                                return e.needsRemake = v;
+                                              },
+                                              value: e.needsRemake ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Scanned",
+                                              onChange: (v) {
+                                                e.operatorId = siteController.getUserId();
+                                                if (v) e.needsRemake = false;
+                                                _setState(() {});
+                                                return e.scanned = v;
+                                              },
+                                              value: e.scanned ?? false,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.operator!.name ?? "",
+                                                        secondaryInfo: true,
+                                                      )),
+                                                  SizedBox(width: 10),
+                                                  Expanded(
+                                                      child: FormTextValueWidget(
+                                                        align: TextAlign.center,
+                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                        secondaryInfo: true,
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.add(ScanApplianceEntity());
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.add)),
+                                                SizedBox(width:10),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      _setState(() {
+                                                        diagnosticEntity!.prostheticDiagnostic_ScanAppliance!.remove(e);
+                                                      });
+                                                    },
+                                                    icon: Icon(Icons.delete)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ))
+                                          .toList());
+
+                                      // r = r.map((e) => CIA_MedicalAbsrobPointerWidget(child: e)).toList();
+                                      return r;
+                                      /*
                         * FormTextKeyWidget(text: "Diagnostic Impression"),
                         Row(
                           children: [
@@ -605,9 +681,9 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                         })
 
                       ,*/
-                                  }());
-                                },
-                              );
+                                    }());
+                                  },
+                                );
                             } else
                               return Container();
                           },
@@ -625,6 +701,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                               if (value == 0)
                                 bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
                               else if (value == 1) bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisFullArchEvent(id: widget.patientId));
+
+                              saveMethod();
                             },
                             labelColor: Colors.black,
                             indicatorColor: Colors.orange,
@@ -645,22 +723,31 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                   bloc: medicalInfoShellBloc,
                                   buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                                   builder: (context, stateShell) {
-                                    return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
-                                      builder: (context, state) {
+                                    return BlocConsumer<ProstheticBloc, ProstheticBloc_States>(
+                                      listener: (context, state) {
+                                        if(state is ProstheticBloc_UpdatedProstheticSinlgeBridgeSuccessfullyState)
+                                          bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                                      },
+                                        buildWhen: (previous, current) =>
+                                        current is ProstheticBloc_LoadingDataState ||
+                                            current is ProstheticBloc_DataLoadingErrorState ||
+                                            current is ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState,
+                                        builder: (context, state) {
                                         if (state is ProstheticBloc_LoadingDataState)
                                           return LoadingWidget();
                                         else if (state is ProstheticBloc_DataLoadingErrorState)
                                           return BigErrorPageWidget(message: state.message);
                                         else if (state is ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState) {
                                           singleBridgeEntity = state.data;
+                                          medicalInfoShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: singleBridgeEntity));
+
                                           return AbsorbPointer(
                                               absorbing: () {
                                                 if (stateShell is MedicalInfoBlocChangeViewEditState) {
                                                   edit = stateShell.edit;
                                                   return !edit;
                                                 } else {
-                                                  edit = false;
-                                                  return true;
+                                                  return !edit;
                                                 }
                                               }(),
                                               child: FinalProsthesisWidget(
@@ -676,7 +763,15 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                   bloc: medicalInfoShellBloc,
                                   buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                                   builder: (context, stateShell) {
-                                    return BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+                                    return BlocConsumer<ProstheticBloc, ProstheticBloc_States>(
+                                      listener: (context, state) {
+                                        if(state is ProstheticBloc_UpdatedProstheticFullArchSuccessfullyState)
+                                          bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisFullArchEvent(id: widget.patientId));
+                                      },
+                                      buildWhen: (previous, current) =>
+                                      current is ProstheticBloc_LoadingDataState ||
+                                          current is ProstheticBloc_DataLoadingErrorState ||
+                                          current is ProstheticBloc_FullArchDataLoadedSuccessfullyState,
                                       builder: (context, state) {
                                         if (state is ProstheticBloc_LoadingDataState)
                                           return LoadingWidget();
@@ -684,14 +779,16 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                           return BigErrorPageWidget(message: state.message);
                                         else if (state is ProstheticBloc_FullArchDataLoadedSuccessfullyState) {
                                           fullArchEntity = state.data;
+                                          medicalInfoShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: fullArchEntity));
+
                                           return AbsorbPointer(
                                               absorbing: () {
                                                 if (stateShell is MedicalInfoBlocChangeViewEditState) {
                                                   edit = stateShell.edit;
                                                   return !edit;
                                                 } else {
-                                                  edit = false;
-                                                  return true;
+                                                 return !edit;
+                                                  //return true;
                                                 }
                                               }(),
                                               child: FinalProsthesisWidget(
@@ -722,23 +819,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
   @override
   void dispose() {
     if (edit) {
-      Future.delayed(Duration.zero, () async {
-        try {
-          if (fullArchEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(data: fullArchEntity!));
-        } on Exception catch (e) {
-          // print(e);
-        }
-        try {
-          if (diagnosticEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(data: diagnosticEntity!));
-        } on Exception catch (e) {
-          // print(e);
-        }
-        try {
-          if (singleBridgeEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(data: singleBridgeEntity!));
-        } on Exception catch (e) {
-          //print(e);
-        }
-      });
+      saveMethod();
     }
 
     super.dispose();

@@ -17,6 +17,8 @@ class FinalProthesisHealingCollarEntity extends FinalProthesisParentEntity {
     BasicNameIdObjectEntity? patient,
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
+    int? operatorId,
+    BasicNameIdObjectEntity? operator,
     List<int>? finalProthesisTeeth,
     this.finalProthesisHealingCollar,
     this.finalProthesisHealingCollarStatus,
@@ -28,14 +30,18 @@ class FinalProthesisHealingCollarEntity extends FinalProthesisParentEntity {
           patient: patient,
           searchTeethClassification: searchTeethClassification,
           website: website,
+          operator: operator,
+          operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
         );
+
   bool isNull() {
     return finalProthesisHealingCollar == null &&
         finalProthesisHealingCollarStatus == null &&
         finalProthesisHealingCollarNextVisit == null &&
         finalProthesisHealingCollarDate == null;
   }
+
   @override
   List<Object?> get props => [
         ...super.props,

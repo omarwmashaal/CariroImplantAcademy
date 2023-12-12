@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/features/settings/domain/entities/implantEntity.dart';
 
 class CandidateDetailsEntity extends Equatable {
-  final int? patientId;
+  final String? patientId;
   final BasicNameIdObjectEntity? patient;
   final String? procedure;
   final DateTime? date;
