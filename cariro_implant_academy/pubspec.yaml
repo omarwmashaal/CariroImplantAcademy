@@ -87,7 +87,8 @@ dependencies:
   flutter_overlay_loader: ^2.0.0
   get_it: ^7.6.4
   flutter_native_timezone: ^2.0.0
-
+  url_launcher: ^6.2.2
+  open_file: ^3.3.2
 
 
 

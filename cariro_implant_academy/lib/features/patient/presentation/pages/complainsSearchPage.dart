@@ -124,7 +124,7 @@ class _PatientsComplainsPageState extends State<ComplainsSearchPage> {
                         dataSource: datasource,
                         onCellClick: (value) {
                           context.goNamed(PatientProfileComplainsPage.getRouteName(),
-                              pathParameters: {"id": datasource.models.firstWhere((element) => element.id == value).patientID.toString()});
+                              pathParameters: {"id": datasource.models.firstWhere((element) => element.secondaryId == value).patientID.toString()});
                         },
                       );
                     },

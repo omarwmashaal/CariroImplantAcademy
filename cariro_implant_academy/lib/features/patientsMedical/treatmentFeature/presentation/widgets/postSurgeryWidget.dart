@@ -170,18 +170,10 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                               children: [
                                 Expanded(
                                   child: CIA_MultiSelectChipWidget(
-                                    onChange: (item, isSelected) {
-                                      switch (item) {
-                                        case "Vicryl":
-                                          widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialVicryl = isSelected;
-                                          break;
-                                        case "Proline":
-                                          widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialProline = isSelected;
-                                          break;
-                                        case "X-ray":
-                                          widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialXRay = isSelected;
-                                          break;
-                                      }
+                                    onChangeList: (p0) {
+                                      widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialVicryl = p0.contains("Vicryl");
+                                      widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialProline = p0.contains("Proline");
+                                      widget.surgicalTreatmentEntity.sutureAndTemporizationAndXRayMaterialXRay = p0.contains("X-ray");
                                       setState(() {});
                                     },
                                     singleSelect: true,

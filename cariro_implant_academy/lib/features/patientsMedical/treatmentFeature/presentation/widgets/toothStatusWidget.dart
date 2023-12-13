@@ -50,6 +50,7 @@ class ToothStatusWidget extends StatefulWidget {
       required this.isSurgical,
       required this.acceptChanges,
       required this.tooth,
+      required this.bloc,
       this.viewOnlyMode = false})
       : super(key: key);
   TreatmentPlanPropertyEntity fieldModel;
@@ -63,6 +64,7 @@ class ToothStatusWidget extends StatefulWidget {
   bool isSurgical;
   int patientId;
   int tooth;
+  TreatmentBloc bloc;
   Function(RequestChangeEntity request) acceptChanges;
 
   @override
@@ -70,8 +72,6 @@ class ToothStatusWidget extends StatefulWidget {
 }
 
 class _ToothStatusWidgetState extends State<ToothStatusWidget> {
-  late TreatmentBloc bloc;
-
   @override
   Widget build(BuildContext context) {
     if (widget.viewOnlyMode) {
@@ -97,7 +97,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
-                                  if (selected!) {
+                                  if (selected==true) {
                                     widget.fieldModel.doneByAssistant =
                                         BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
                                     widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -223,213 +223,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           onTap: siteController.getRole() == "secretary"
                               ? null
                               : (selected) {
-                                  List<BasicNameIdObjectEntity> companies = [];
-                                  int? companyID;
-                                  List<BasicNameIdObjectEntity> lines = [];
-                                  int? lineID;
-                                  List<BasicNameIdObjectEntity> implants = [];
-                                  if (selected == true)
-                                    CIA_ShowPopUp(
-                                        context: context,
-                                        title: "${widget.title} Data",
-                                        onSave: () {
-                                          widget.fieldModel.status = selected;
-                                          if (selected!) {
-                                            widget.fieldModel.doneByAssistant =
-                                                BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-                                            widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
-                                            widget.fieldModel.date = DateTime.now().toUtc();
-                                          } else {
-                                            widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-                                            widget.fieldModel.doneByAssistantID = null;
-                                          }
-                                          setState(() {});
-                                        },
-                                        width: 900,
-                                        child: StatefulBuilder(
-                                          builder: (context, setState) {
-                                            return Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Visibility(
-                                                  visible: !((widget.title.toLowerCase().contains("without implant")) ||
-                                                      (!widget.title.toLowerCase().contains("implant"))),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: CIA_DropDownSearchBasicIdName<NoParams>(
-                                                          label: "Implant Company",
-                                                          asyncUseCase: sl<GetImplantCompaniesUseCase>(),
-                                                          searchParams: NoParams(),
-                                                          selectedItem: companies.firstWhereOrNull((element) => element.id == companyID),
-                                                          onSelect: (value) {
-                                                            companyID = value!.id!;
-
-                                                            setState(() {});
-                                                          },
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: CIA_DropDownSearchBasicIdName<int>(
-                                                          label: "Implant Lines",
-                                                          asyncUseCase: companyID == null ? null : sl<GetImplantLinesUseCase>(),
-                                                          emptyString: "Select implant company first",
-                                                          searchParams: companyID,
-                                                          selectedItem: lines.firstWhereOrNull((element) => element.id == lineID),
-                                                          onSelect: (value) {
-                                                            lineID = value!.id!;
-
-                                                            setState(() {});
-                                                          },
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                          child: BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
-                                                        listener: (context, state) {
-                                                          if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
-                                                            ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
-                                                          else if (state is TreatmentBloc_ConsumeItemErrorState)
-                                                            ShowSnackBar(context, isSuccess: false, message: state.message);
-                                                        },
-                                                        builder: (context, state) {
-                                                          return CIA_DropDownSearchBasicIdName<int>(
-                                                            label: "Implant Size",
-                                                            asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
-                                                            emptyString: "Select implant line first",
-                                                            searchParams: lineID,
-                                                            selectedItem: widget.fieldModel.implant,
-                                                            onSelect: (value) async {
-                                                              if (widget.fieldModel.implantID != null) {
-                                                                widget.fieldModel.requestChangeModel = RequestChangeEntity(
-                                                                  description: "${widget.fieldModel.implant?.name!} to ${value.name!}",
-                                                                  requestEnum: RequestChangeEnum.ImplantChange,
-                                                                  patientId: widget.patientId,
-                                                                  dataId: value.id,
-                                                                  dataName: value.name,
-                                                                );
-                                                              } else {
-                                                                widget.fieldModel.implant?.name = value.name;
-                                                                widget.fieldModel.implantID = value.id;
-                                                                await CIA_ShowPopUpYesNo(
-                                                                    context: context,
-                                                                    title: "Consume Implant ${widget.fieldModel.implant?.name}?",
-                                                                    onSave: () =>
-                                                                        bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
-                                                              }
-                                                              setState(() {});
-                                                            },
-                                                          );
-                                                        },
-                                                      )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  child: Visibility(
-                                                      visible: widget.fieldModel.requestChangeModel != null,
-                                                      child: Row(
-                                                        children: [
-                                                          Text("Requested Change: ${widget.fieldModel.requestChangeModel?.dataName ?? ""}"),
-                                                          CIA_SecondaryButton(
-                                                              label: "Clear Request",
-                                                              onTab: () {
-                                                                widget.fieldModel.requestChangeModel = null;
-                                                                widget.fieldModel.requestChangeId = null;
-                                                                setState(() {});
-                                                              })
-                                                        ],
-                                                      )),
-                                                ),
-                                                CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                  label: "Supervisor",
-                                                  asyncUseCase: sl<LoadUsersUseCase>(),
-                                                  searchParams: LoadUsersEnum.supervisors,
-                                                  selectedItem: widget.fieldModel.doneBySupervisor,
-                                                  onSelect: (value) {
-                                                    widget.fieldModel.doneBySupervisor = value;
-                                                    widget.fieldModel.doneBySupervisorID = value.id;
-                                                  },
-                                                ),
-                                                CIA_DropDownSearchBasicIdName(
-                                                  label: "Candidate Batch",
-                                                  asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
-                                                  selectedItem: widget.fieldModel.doneByCandidateBatch,
-                                                  onSelect: (value) {
-                                                    widget.fieldModel.doneByCandidateBatch = value;
-                                                    widget.fieldModel.doneByCandidateBatchID = value.id;
-                                                    setState(() {});
-                                                  },
-                                                ),
-                                                CIA_DropDownSearchBasicIdName<int>(
-                                                  label: "Candidate",
-                                                  asyncUseCase: widget.fieldModel.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
-                                                  searchParams: widget.fieldModel.doneByCandidateBatchID ?? 0,
-                                                  selectedItem: widget.fieldModel.doneByCandidate,
-                                                  onSelect: (value) {
-                                                    widget.fieldModel.doneByCandidate = value;
-                                                    widget.fieldModel.doneByCandidateID = value.id;
-                                                  },
-                                                ),
-                                                CIA_SecondaryButton(
-                                                    label: "Add To Receipt",
-                                                    onTab: () {
-                                                      CIA_ShowPopUp(
-                                                        context: context,
-                                                        onSave: () {
-                                                          BlocProvider.of<MedicalInfoShellBloc>(context).add(MedicalInfoShell_SaveChanges());
-
-
-                                                          Future.delayed(Duration(seconds: 5)).then((value) {
-                                                            BlocProvider.of<NonSurgicalTreatmentBloc>(context)
-                                                                .add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
-                                                              patientId: widget.patientId,
-                                                              tooth: widget.tooth,
-                                                              action: "implant",
-
-                                                            ));
-                                                          });
-                                                        },
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                FormTextKeyWidget(text: "Tooth: ${widget.tooth} || "),
-                                                                FormTextKeyWidget(text: widget.title),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height:10)
-,                                                            CIA_TextFormField(
-                                                              label: "Price",
-                                                              isNumber: true,
-                                                              suffix: "EGP",
-                                                              onChange: (value) => widget.fieldModel.planPrice = int.parse(value),
-                                                              controller: TextEditingController(
-                                                                text: widget.fieldModel.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      );
-                                                    })
-                                              ],
-                                            );
-                                          },
-                                        ));
-                                  else {
-                                    widget.fieldModel.status = selected;
-
-                                    widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneByAssistantID = null;
-                                    widget.fieldModel.doneByCandidate = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneByCandidateID = null;
-                                    widget.fieldModel.doneByCandidateBatch = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneByCandidateBatchID = null;
-                                    widget.fieldModel.implantID = null;
-                                    widget.fieldModel.implant = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneBySupervisor = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneBySupervisorID = null;
-                                    setState(() {});
-                                  }
+                                 teethData(selected);
                                 },
                           border: null,
                           borderColor: Colors.transparent,
@@ -502,144 +296,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             flex: 9,
                             child: ElevatedButton(
                               onPressed: () {
-                                List<BasicNameIdObjectEntity> companies = [];
-                                int? companyID;
-                                List<BasicNameIdObjectEntity> lines = [];
-                                int? lineID;
-                                List<BasicNameIdObjectEntity> implants = [];
-
-                                CIA_ShowPopUp(
-                                    context: context,
-                                    title: "${widget.title} Data",
-                                    onSave: () => setState(() {}),
-                                    width: 900,
-                                    child: StatefulBuilder(
-                                      builder: (context, setState) {
-                                        return Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Visibility(
-                                              visible: !((widget.title.toLowerCase().contains("without implant")) ||
-                                                  (!widget.title.toLowerCase().contains("implant"))),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: CIA_DropDownSearchBasicIdName<NoParams>(
-                                                      label: "Implant Company",
-                                                      asyncUseCase: sl<GetImplantCompaniesUseCase>(),
-                                                      searchParams: NoParams(),
-                                                      selectedItem: companies.firstWhereOrNull((element) => element.id == companyID),
-                                                      onSelect: (value) {
-                                                        companyID = value!.id!;
-
-                                                        setState(() {});
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: CIA_DropDownSearchBasicIdName<int>(
-                                                      label: "Implant Lines",
-                                                      asyncUseCase: companyID == null ? null : sl<GetImplantLinesUseCase>(),
-                                                      emptyString: "Select implant company first",
-                                                      searchParams: companyID,
-                                                      selectedItem: lines.firstWhereOrNull((element) => element.id == lineID),
-                                                      onSelect: (value) {
-                                                        lineID = value!.id!;
-
-                                                        setState(() {});
-                                                      },
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                      child: BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
-                                                    listener: (context, state) {
-                                                      if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
-                                                        ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
-                                                      else if (state is TreatmentBloc_ConsumeItemErrorState)
-                                                        ShowSnackBar(context, isSuccess: false, message: state.message);
-                                                    },
-                                                    builder: (context, state) {
-                                                      return CIA_DropDownSearchBasicIdName<int>(
-                                                        label: "Implant Size",
-                                                        asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
-                                                        emptyString: "Select implant line first",
-                                                        searchParams: lineID,
-                                                        selectedItem: widget.fieldModel.implant,
-                                                        onSelect: (value) async {
-                                                          if (widget.fieldModel.implantID != null) {
-                                                            widget.fieldModel.requestChangeModel = RequestChangeEntity(
-                                                              description: "${widget.fieldModel.implant!.name!} to ${value.name!}",
-                                                              requestEnum: RequestChangeEnum.ImplantChange,
-                                                              patientId: widget.patientId,
-                                                              dataId: value.id,
-                                                              dataName: value.name,
-                                                            );
-                                                          } else {
-                                                            widget.fieldModel.implant!.name = value.name;
-                                                            widget.fieldModel.implantID = value.id;
-                                                            await CIA_ShowPopUpYesNo(
-                                                                context: context,
-                                                                title: "Consume Implant ${widget.fieldModel.implant!.name}?",
-                                                                onSave: () => bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
-                                                          }
-                                                          setState(() {});
-                                                        },
-                                                      );
-                                                    },
-                                                  )),
-                                                ],
-                                              ),
-                                            ),
-                                            Flexible(
-                                              child: Visibility(
-                                                  visible: widget.fieldModel.requestChangeModel != null,
-                                                  child: Row(
-                                                    children: [
-                                                      Text("Requested Change: ${widget.fieldModel.requestChangeModel?.dataName ?? ""}"),
-                                                      CIA_SecondaryButton(
-                                                          label: "Clear Request",
-                                                          onTab: () {
-                                                            widget.fieldModel.requestChangeModel = null;
-                                                            widget.fieldModel.requestChangeId = null;
-                                                            setState(() {});
-                                                          })
-                                                    ],
-                                                  )),
-                                            ),
-                                            CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                              label: "Supervisor",
-                                              asyncUseCase: sl<LoadUsersUseCase>(),
-                                              searchParams: LoadUsersEnum.supervisors,
-                                              selectedItem: widget.fieldModel.doneBySupervisor,
-                                              onSelect: (value) {
-                                                widget.fieldModel.doneBySupervisor = value;
-                                                widget.fieldModel.doneBySupervisorID = value.id;
-                                              },
-                                            ),
-                                            CIA_DropDownSearchBasicIdName(
-                                              label: "Candidate Batch",
-                                              asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
-                                              selectedItem: widget.fieldModel.doneByCandidateBatch,
-                                              onSelect: (value) {
-                                                widget.fieldModel.doneByCandidateBatch = value;
-                                                widget.fieldModel.doneByCandidateBatchID = value.id;
-                                                setState(() {});
-                                              },
-                                            ),
-                                            CIA_DropDownSearchBasicIdName<int>(
-                                              label: "Candidate",
-                                              asyncUseCase: widget.fieldModel.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
-                                              searchParams: widget.fieldModel.doneByCandidateBatchID ?? 0,
-                                              selectedItem: widget.fieldModel.doneByCandidate,
-                                              onSelect: (value) {
-                                                widget.fieldModel.doneByCandidate = value;
-                                                widget.fieldModel.doneByCandidateID = value.id;
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ));
+                               teethData(null);
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
@@ -818,7 +475,235 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
 
   @override
   void initState() {
-    bloc = BlocProvider.of<TreatmentBloc>(context);
+    // bloc = BlocProvider.of<TreatmentBloc>(context);
     if (widget.price && widget.fieldModel.planPrice == null || widget.fieldModel.planPrice == 0) widget.fieldModel.planPrice = widget.settingsPrice;
+  }
+
+  void teethData(bool? selected) {
+    List<BasicNameIdObjectEntity> companies = [];
+    int? companyID;
+    List<BasicNameIdObjectEntity> lines = [];
+    int? lineID;
+    List<BasicNameIdObjectEntity> implants = [];
+
+    if (selected == true || selected == null) {
+      widget.fieldModel.doneBySupervisor =
+      (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
+          ? widget.fieldModel.doneBySupervisor
+          : widget.bloc.tempSuperVisor;
+      widget.fieldModel.doneBySupervisorID = widget.fieldModel.doneBySupervisorID ?? widget.bloc.tempSuperVisor?.id;
+      widget.fieldModel.doneByCandidate =
+      (widget.fieldModel.doneByCandidate != null && !(widget.fieldModel.doneByCandidate!.name?.isBlank ?? true))
+          ? widget.fieldModel.doneByCandidate
+          : widget.bloc.tempCandidate;
+      widget.fieldModel.doneByCandidateID = widget.fieldModel.doneByCandidateID ?? widget.bloc.tempCandidate?.id;
+      widget.fieldModel.doneByCandidateBatch =
+      (widget.fieldModel.doneByCandidateBatch != null && !(widget.fieldModel.doneByCandidateBatch!.name?.isBlank ?? true))
+          ? widget.fieldModel.doneByCandidateBatch
+          : widget.bloc.tempCandidateBatch;
+      widget.fieldModel.doneByCandidateBatchID = widget.fieldModel.doneByCandidateBatchID ?? widget.bloc.tempCandidateBatch?.id;
+      CIA_ShowPopUp(
+          context: context,
+          title: "${widget.title} Data",
+          onSave: () {
+            widget.fieldModel.status = selected;
+            if (selected == true) {
+              widget.fieldModel.doneByAssistant =
+                  BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
+              widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
+              widget.fieldModel.date = DateTime.now().toUtc();
+            } else {
+              widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
+              widget.fieldModel.doneByAssistantID = null;
+            }
+            setState(() {});
+          },
+          width: 900,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Visibility(
+                    visible: !((widget.title.toLowerCase().contains("without implant")) ||
+                        (!widget.title.toLowerCase().contains("implant"))),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CIA_DropDownSearchBasicIdName<NoParams>(
+                            label: "Implant Company",
+                            asyncUseCase: sl<GetImplantCompaniesUseCase>(),
+                            searchParams: NoParams(),
+                            selectedItem: companies.firstWhereOrNull((element) => element.id == companyID),
+                            onSelect: (value) {
+                              companyID = value!.id!;
+
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: CIA_DropDownSearchBasicIdName<int>(
+                            label: "Implant Lines",
+                            asyncUseCase: companyID == null ? null : sl<GetImplantLinesUseCase>(),
+                            emptyString: "Select implant company first",
+                            searchParams: companyID,
+                            selectedItem: lines.firstWhereOrNull((element) => element.id == lineID),
+                            onSelect: (value) {
+                              lineID = value!.id!;
+
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        Expanded(
+                            child: BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
+                              listener: (context, state) {
+                                if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
+                                  ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
+                                else if (state is TreatmentBloc_ConsumeItemErrorState)
+                                  ShowSnackBar(context, isSuccess: false, message: state.message);
+                              },
+                              builder: (context, state) {
+                                return CIA_DropDownSearchBasicIdName<int>(
+                                  label: "Implant Size",
+                                  asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
+                                  emptyString: "Select implant line first",
+                                  searchParams: lineID,
+                                  selectedItem: widget.fieldModel.implant,
+                                  onSelect: (value) async {
+                                    if (widget.fieldModel.implantID != null) {
+                                      widget.fieldModel.requestChangeModel = RequestChangeEntity(
+                                        description: "${widget.fieldModel.implant?.name!} to ${value.name!}",
+                                        requestEnum: RequestChangeEnum.ImplantChange,
+                                        patientId: widget.patientId,
+                                        dataId: value.id,
+                                        dataName: value.name,
+                                      );
+                                    } else {
+                                      widget.fieldModel.implant?.name = value.name;
+                                      widget.fieldModel.implantID = value.id;
+                                      await CIA_ShowPopUpYesNo(
+                                          context: context,
+                                          title: "Consume Implant ${widget.fieldModel.implant?.name}?",
+                                          onSave: () =>
+                                              widget.bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
+                                    }
+                                    setState(() {});
+                                  },
+                                );
+                              },
+                            )),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: Visibility(
+                        visible: widget.fieldModel.requestChangeModel != null,
+                        child: Row(
+                          children: [
+                            Text("Requested Change: ${widget.fieldModel.requestChangeModel?.dataName ?? ""}"),
+                            CIA_SecondaryButton(
+                                label: "Clear Request",
+                                onTab: () {
+                                  widget.fieldModel.requestChangeModel = null;
+                                  widget.fieldModel.requestChangeId = null;
+                                  setState(() {});
+                                })
+                          ],
+                        )),
+                  ),
+                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    label: "Supervisor",
+                    asyncUseCase: sl<LoadUsersUseCase>(),
+                    searchParams: LoadUsersEnum.supervisors,
+                    selectedItem: widget.fieldModel.doneBySupervisor,
+                    onSelect: (value) {
+                      widget.fieldModel.doneBySupervisor = value;
+                      widget.fieldModel.doneBySupervisorID = value.id;
+                      widget.bloc.tempSuperVisor = value;
+                    },
+                  ),
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Candidate Batch",
+                    asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
+                    selectedItem: widget.fieldModel.doneByCandidateBatch,
+                    onSelect: (value) {
+                      widget.fieldModel.doneByCandidateBatch = value;
+                      widget.fieldModel.doneByCandidateBatchID = value.id;
+                      widget.bloc.tempCandidateBatch = value;
+                      setState(() {});
+                    },
+                  ),
+                  CIA_DropDownSearchBasicIdName<int>(
+                    label: "Candidate",
+                    asyncUseCase: widget.fieldModel.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
+                    searchParams: widget.fieldModel.doneByCandidateBatchID ?? 0,
+                    selectedItem: widget.fieldModel.doneByCandidate,
+                    onSelect: (value) {
+                      widget.fieldModel.doneByCandidate = value;
+                      widget.fieldModel.doneByCandidateID = value.id;
+                      widget.bloc.tempCandidate = value;
+                    },
+                  ),
+                  CIA_SecondaryButton(
+                      label: "Add To Receipt",
+                      onTab: () {
+                        CIA_ShowPopUp(
+                          context: context,
+                          onSave: () {
+                            BlocProvider.of<MedicalInfoShellBloc>(context).add(MedicalInfoShell_SaveChanges());
+
+                            Future.delayed(Duration(seconds: 5)).then((value) {
+                              BlocProvider.of<NonSurgicalTreatmentBloc>(context)
+                                  .add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                                patientId: widget.patientId,
+                                tooth: widget.tooth,
+                                action: "implant",
+                              ));
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  FormTextKeyWidget(text: "Tooth: ${widget.tooth} || "),
+                                  FormTextKeyWidget(text: widget.title),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              CIA_TextFormField(
+                                label: "Price",
+                                isNumber: true,
+                                suffix: "EGP",
+                                onChange: (value) => widget.fieldModel.planPrice = int.parse(value),
+                                controller: TextEditingController(
+                                  text: widget.fieldModel.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      })
+                ],
+              );
+            },
+          ));
+    }
+    else {
+      widget.fieldModel.status = selected;
+
+      widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
+      widget.fieldModel.doneByAssistantID = null;
+      widget.fieldModel.doneByCandidate = BasicNameIdObjectEntity();
+      widget.fieldModel.doneByCandidateID = null;
+      widget.fieldModel.doneByCandidateBatch = BasicNameIdObjectEntity();
+      widget.fieldModel.doneByCandidateBatchID = null;
+      widget.fieldModel.implantID = null;
+      widget.fieldModel.implant = BasicNameIdObjectEntity();
+      widget.fieldModel.doneBySupervisor = BasicNameIdObjectEntity();
+      widget.fieldModel.doneBySupervisorID = null;
+      setState(() {});
+    }
   }
 }

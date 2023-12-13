@@ -10,11 +10,13 @@ import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../../Widgets/CIA_Table.dart';
 import '../../../../../Widgets/CIA_TextField.dart';
@@ -31,6 +33,8 @@ import '../bloc/patientSeachBlocEvents.dart';
 import '../bloc/patientSeachBlocStates.dart';
 import '../bloc/patientSearchBloc.dart';
 import 'createOrViewPatientPage.dart';
+import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PatientsSearchPage extends StatefulWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
@@ -113,9 +117,12 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
               ),
               CIA_SecondaryButton(
                   label: "Add Range to my patients",
-                  onTab: () {
+                  onTab: () async {
                     int fromId = 0;
                     int toId = 0;
+
+                    OpenFile.open("file:///C:/");
+                    /*
                     CIA_ShowPopUp(
                       height: 100,
                       context: context,
@@ -171,7 +178,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                           )
                         ],
                       ),
-                    );
+                    );*/
                   }),
               SizedBox(width: 10),
               CIA_PrimaryButton(

@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class ToothWidget extends StatelessWidget {
     required this.isSurgical,
     required this.patientId,
     required this.acceptChanges,
+    required this.bloc,
   }) : super(key: key);
   bool viewOnlyMode;
   int toothID;
@@ -28,6 +30,7 @@ class ToothWidget extends StatelessWidget {
   TreatmentPricesEntity prices;
   bool isSurgical;
   int patientId;
+  TreatmentBloc bloc;
   Function(RequestChangeEntity request) acceptChanges;
 
   @override
@@ -41,7 +44,7 @@ class ToothWidget extends StatelessWidget {
     if (currentTooth != null) {
       if (currentTooth!.simpleImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -58,7 +61,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.immediateImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -75,7 +78,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.guidedImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -92,7 +95,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.expansionWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -109,7 +112,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.splittingWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -126,7 +129,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.gbrWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -143,7 +146,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.openSinusWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -160,7 +163,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.closedSinusWithImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -177,7 +180,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.expansionWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -192,7 +195,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.splittingWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -207,7 +210,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.gbrWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -222,7 +225,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.openSinusWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -237,7 +240,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.closedSinusWithoutImplant != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -252,7 +255,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.extraction != null ) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -270,7 +273,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.restoration != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -288,7 +291,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.rootCanalTreatment != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -306,7 +309,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.scaling != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),
@@ -323,7 +326,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.crown != null && !isSurgical) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           price: true,
           viewOnlyMode: viewOnlyMode,
@@ -340,7 +343,7 @@ class ToothWidget extends StatelessWidget {
       }
       if (currentTooth!.pontic != null) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
+        returnValue.add(ToothStatusWidget( bloc:bloc,
           isSurgical: isSurgical, tooth: currentTooth.tooth!,
           viewOnlyMode: viewOnlyMode,
           acceptChanges: (request) => acceptChanges(request),

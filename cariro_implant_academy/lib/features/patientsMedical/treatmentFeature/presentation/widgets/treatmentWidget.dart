@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
@@ -51,6 +52,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   late TreatmentBloc bloc;
   int totalPrice = 0;
   TreatmentPricesEntity prices = TreatmentPricesEntity();
+
+  BasicNameIdObjectEntity? tempCandidate;
+  BasicNameIdObjectEntity? tempSuperVisor;
+  int? tempCandidateBatch;
+
 
   @override
   void dispose() {
@@ -451,6 +457,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             }
           }(),
           child: ToothWidget(
+            bloc:bloc,
             viewOnlyMode: viewOnlyMode,
             key: GlobalKey(),
             patientId: widget.patientId,

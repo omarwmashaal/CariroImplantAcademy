@@ -38,6 +38,9 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final AcceptChangesUseCase acceptChangesUseCase;
   TreatmentPricesEntity _prices = TreatmentPricesEntity();
   bool editMode = true;
+  BasicNameIdObjectEntity? tempCandidate;
+  BasicNameIdObjectEntity? tempSuperVisor;
+  BasicNameIdObjectEntity? tempCandidateBatch;
 
   TreatmentBloc({
     required this.saveTreatmentPlanUseCase,
@@ -159,13 +162,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.simpleImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
+                  
                   break;
                 }
 
@@ -182,12 +179,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     currentTooth.immediateImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "Guided Implant":
@@ -202,13 +193,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.guidedImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
-                  currentTooth.gbrWithImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "Expansion With Implant":
@@ -223,13 +209,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.expansionWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
                   break;
                 }
               case "Splitting With Implant":
@@ -244,13 +225,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.splittingWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "GBR With Implant":
@@ -265,13 +241,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.gbrWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "Open Sinus With Implant":
@@ -286,13 +257,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.openSinusWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.closedSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "Closed Sinus With Implant":
@@ -307,13 +273,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                     );
                     currentTooth.closedSinusWithImplant!.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
                   }
-                  currentTooth.immediateImplant = null;
+                  
                   currentTooth.simpleImplant = null;
-                  currentTooth.guidedImplant = null;
-                  currentTooth.openSinusWithImplant = null;
-                  currentTooth.gbrWithImplant = null;
-                  currentTooth.splittingWithImplant = null;
-                  currentTooth.expansionWithImplant = null;
                   break;
                 }
               case "Expansion Without Implant":

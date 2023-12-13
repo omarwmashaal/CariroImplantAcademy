@@ -100,7 +100,7 @@ class TreatmentPlanPropertyModel extends TreatmentPlanPropertyEntity
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['value'] = this.value;
-    data['status'] = this.status;
+    data['status'] = this.status??false;
     data['planPrice'] = this.planPrice;
     data['assignedToID'] = this.assignedToID;
     data['date'] = this.date != null ? this.date!.toUtc().toIso8601String() : null;

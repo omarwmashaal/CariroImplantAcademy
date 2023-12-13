@@ -62,7 +62,8 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
       alignments: MultiSelectAlignments(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start),
-      singleSelectedItem: widget.singleSelect,
+     // singleSelectedItem: widget.singleSelect,
+
       textStyles: MultiSelectTextStyles(
         selectedTextStyle: widget.disabled
             ? null
@@ -91,6 +92,13 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
       items: _buildItems(),
       onChange: (List<Object?> selectedItems, Object? selectedItem) {
         bool isSelected = selectedItems.contains(selectedItem);
+        if(widget.singleSelect)
+          {
+            selectedItems = isSelected? [selectedItem] :[];
+            setState(() {
+
+            });
+          }
         tempSelectedItems = selectedItems;
         if (widget.onChange != null) widget.onChange!(selectedItem as String, isSelected);
         if (widget.onChangeList != null) {
