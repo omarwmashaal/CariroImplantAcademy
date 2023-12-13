@@ -17,6 +17,7 @@ import '../core/constants/enums/enums.dart';
 import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
 import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
 import '../core/injection_contianer.dart';
+import '../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../features/patient/presentation/pages/patientsSearchPage.dart';
 import 'FormTextWidget.dart';
 
@@ -90,7 +91,7 @@ class _DrawerItemsState extends State<DrawerItems> {
           ),
           footerBuilder: (context, extended) {
             List<Widget> children = [
-              GestureDetector(
+              CIA_GestureWidget(
                 onTap: () {
                   siteController.setSite(Website.CIA);
                   context.goNamed(PatientsSearchPage.getRouteName());
@@ -106,7 +107,7 @@ class _DrawerItemsState extends State<DrawerItems> {
                 width: extended ? 10 : 0,
                 height: extended ? 0 : 10,
               ),
-              GestureDetector(
+              CIA_GestureWidget(
                 onTap: () {
                   siteController.setSite(Website.Lab);
                   context.goNamed(LabRequestsSearchPage.routeName);
@@ -122,7 +123,7 @@ class _DrawerItemsState extends State<DrawerItems> {
                 width: extended ? 10 : 0,
                 height: extended ? 0 : 10,
               ),
-              GestureDetector(
+              CIA_GestureWidget(
                 onTap: () {
                   siteController.setSite(Website.Clinic);
                   context.goNamed(PatientsSearchPage.getRouteName(site: Website.Clinic));

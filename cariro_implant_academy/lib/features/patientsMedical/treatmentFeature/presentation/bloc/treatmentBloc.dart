@@ -556,10 +556,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         final result = await acceptChangesUseCase(event.requestChangeEntity);
         result.fold(
           (l) => emit(TreatmentBloc_AcceptingChangesErrorState(message: l.message ?? "")),
-        (r) => emit(TreatmentBloc_AcceptedChangesSuccessfullyState(id: event.requestChangeEntity.id!,requestChangeEntity:  event.requestChangeEntity)),
-
+          (r) => emit(TreatmentBloc_AcceptedChangesSuccessfullyState(id: event.requestChangeEntity.id!, requestChangeEntity: event.requestChangeEntity)),
         );
-
       },
     );
   }

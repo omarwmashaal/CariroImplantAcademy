@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/usecases/getPatientDataUseCase.dart';
 import '../../domain/usecases/patientEntersClinicUseCase.dart';
 import '../../domain/usecases/patientLeavesClinicUseCase.dart';
@@ -154,7 +155,7 @@ class VisitDataSource extends DataGridSource {
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
         DataGridCell<Widget>(
             columnName: 'Treatment',
-            value: GestureDetector(
+            value: CIA_GestureWidget(
               child: Text(e.treatment ?? ""),
               onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
             )),
@@ -349,7 +350,7 @@ class VisitDataSource extends DataGridSource {
                       )),
                   DataGridCell<Widget>(
                       columnName: 'Treatment',
-                      value: GestureDetector(
+                      value: CIA_GestureWidget(
                         child: Text(e.treatment ?? ""),
                         onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
                       )),
@@ -369,7 +370,7 @@ class VisitDataSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
           DataGridCell<Widget>(
               columnName: 'Treatment',
-              value: GestureDetector(
+              value: CIA_GestureWidget(
                 child: Text(e.treatment ?? ""),
                 onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
               )),

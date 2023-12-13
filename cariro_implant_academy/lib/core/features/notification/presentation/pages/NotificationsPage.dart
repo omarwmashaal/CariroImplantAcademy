@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../Widgets/Title.dart';
+import '../../../../presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/entities/notificationEntity.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -89,7 +90,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             Expanded(
               child: ListView(
                 children: notifications
-                    .map((item) => GestureDetector(
+                    .map((item) => CIA_GestureWidget(
                           onTap: () {
                             if (item.onClickAction != null && item.infoId != null) item.onClickAction!(context);
                           },

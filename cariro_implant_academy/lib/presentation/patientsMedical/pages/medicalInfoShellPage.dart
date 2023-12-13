@@ -26,6 +26,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../features/labRequest/domain/entities/labRequestEntityl.dart';
 import '../../../features/labRequest/presentation/pages/LAB_ViewTask.dart';
 import '../../../features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
@@ -104,7 +105,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                   if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
                                   return MouseRegion(
                                     cursor: SystemMouseCursors.click,
-                                    child: GestureDetector(
+                                    child: CIA_GestureWidget(
                                       child: Text( "Date: "+
                                         (state is MedicalInfoBlocChangeDateState
                                                 ? state.date == null

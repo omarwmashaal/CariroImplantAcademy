@@ -15,6 +15,7 @@ import '../../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
 import '../../../../../../presentation/widgets/bigErrorPageWidget.dart';
+import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import '../../domain/entities/surgicalTreatmentEntity.dart';
 import '../../domain/entities/treatmentPlanEntity.dart';
@@ -370,7 +371,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  GestureDetector(
+                                  CIA_GestureWidget(
                                     onTap: () {
                                       bloc.add(TreatmentBloc_UpdateTeethStatusEvent(
                                         teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
@@ -387,7 +388,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                     ),
                                   ),
                                   SizedBox(width: 10),
-                                  GestureDetector(
+                                  CIA_GestureWidget(
                                     onTap: () {
                                       selectedStatus.clear();
                                       selectedStatus.clear();

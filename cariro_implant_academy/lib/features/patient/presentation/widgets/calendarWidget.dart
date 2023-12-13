@@ -40,6 +40,7 @@ import '../../../../Widgets/CIA_PopUp.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../Widgets/SnackBar.dart';
 import '../../../../core/injection_contianer.dart';
+import '../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/usecases/updateVisit.dart';
 import '../bloc/createOrViewPatientBloc_States.dart';
 
@@ -142,7 +143,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   Row(
                     children: [
                       Expanded(
-                          child: GestureDetector(
+                          child: CIA_GestureWidget(
                         onTap: () {},
                         child: CIA_TextFormField(
                             onTap: () async {
@@ -384,7 +385,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   Row(
                     children: [
                       Expanded(
-                          child: GestureDetector(
+                          child: CIA_GestureWidget(
                         onTap: () {},
                         child: CIA_TextFormField(
                             onTap: () async {

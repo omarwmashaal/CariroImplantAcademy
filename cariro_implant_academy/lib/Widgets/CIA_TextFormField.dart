@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../Constants/Colors.dart';
+import '../core/presentation/widgets/CIA_GestureWidget.dart';
 
 class CIA_TextFormField extends StatefulWidget {
   CIA_TextFormField(
@@ -95,7 +96,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
               primary: Color_Accent,
             ),
       ),
-      child: GestureDetector(
+      child: CIA_GestureWidget(
         onTap: () {
           if (widget.onTap != null) widget.onTap!();
         },
@@ -284,7 +285,7 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
               primary: Color_Accent,
             ),
       ),
-      child: GestureDetector(
+      child: CIA_GestureWidget(
         onTap: () {
           CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (value) {
             if (widget.onChange != null) {

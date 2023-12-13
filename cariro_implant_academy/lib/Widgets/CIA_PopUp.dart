@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_Table.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,13 +13,20 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../Constants/Colors.dart';
+import '../core/presentation/widgets/CIA_GestureWidget.dart';
 
-CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onChange) async {
+CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(DateTime) onChange,{DateTime? initDate}) async {
   String date = "";
   String hour = "";
   String minute = "";
   String timey = "PM";
   dialogHelper.increaseCount();
+  if(initDate!=null)
+    {
+      hour = DateFormat("h").format(initDate);
+      minute = DateFormat("mm").format(initDate);
+      timey = DateFormat("a").format(initDate);
+    }
   Alert(
     closeFunction: (){
       dialogHelper.dismissSingle(context);
@@ -57,7 +65,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
                 )),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: GestureDetector(
+                  child: CIA_GestureWidget(
                     onTap: () {
                       setState(() {
                         timey = timey == "PM" ? "AM" : "PM";
@@ -83,7 +91,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
                 onSelectionChanged: (value) {
                   setState(() {
                     date = value.value.toString().replaceAll(" 00:00:00.000", "");
-                    onChange(date);
+
                   });
                 },
               ),
@@ -104,7 +112,26 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function onCh
       ),
       DialogButton(
         width: 150,
-        onPressed: () => dialogHelper.dismissSingle(context),
+        onPressed: () {
+          DateTime? value = DateTime.tryParse(date);
+          if(value==null)
+            {
+              ShowSnackBar(context, isSuccess: false,message: "Error in date!");
+            }
+          else{
+              try{
+                var tempTime = DateFormat("h:mm a").parse("$hour:$minute $timey");
+                value = DateTime(value.year,value.month,value.day,tempTime.hour,tempTime.minute);
+                onChange(value);
+                dialogHelper.dismissSingle(context);
+              }
+              catch(e){
+                ShowSnackBar(context, isSuccess: false,message: "Error in time!");
+
+              }
+            }
+
+        },
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),

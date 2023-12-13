@@ -250,7 +250,7 @@ class ToothWidget extends StatelessWidget {
           },
         ));
       }
-      if (currentTooth!.extraction != null && !isSurgical) {
+      if (currentTooth!.extraction != null ) {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(ToothStatusWidget(
           isSurgical: isSurgical, tooth: currentTooth.tooth!,

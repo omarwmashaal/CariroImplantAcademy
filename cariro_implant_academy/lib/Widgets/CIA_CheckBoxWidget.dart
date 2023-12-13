@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class _CIA_CheckBoxWidgetState extends State<CIA_CheckBoxWidget> {
           }),
           activeColor: Color_Accent,
         ),
-        GestureDetector(
+        CIA_GestureWidget(
             onTap: () => setState(() {
               widget.value = !widget.value;
                   if(widget.onChange!=null)widget.onChange!(widget.value);

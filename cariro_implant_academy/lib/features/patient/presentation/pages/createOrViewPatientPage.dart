@@ -47,6 +47,7 @@ import '../../../../Widgets/FormTextWidget.dart';
 import '../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../Widgets/SnackBar.dart';
 import '../../../../core/injection_contianer.dart';
+import '../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../bloc/createOrViewPatientBloc_Events.dart';
 
@@ -182,7 +183,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               SizedBox(width: 10),
                               Visibility(
                                   visible: patient.out,
-                                  child: GestureDetector(
+                                  child: CIA_GestureWidget(
                                       onTap: () {
                                         CIA_ShowPopUp(context: context, child: Text(patient.outReason ?? ""));
                                       },

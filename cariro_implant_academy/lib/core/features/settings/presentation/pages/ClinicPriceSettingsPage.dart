@@ -33,6 +33,7 @@ import 'package:sidebarx/sidebarx.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
+import '../../../../presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/entities/treatmentPricesEntity.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../bloc/settingsBloc.dart';
@@ -1258,7 +1259,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                           SizedBox(width: 10),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
+                                            child: CIA_GestureWidget(
                                               onTap: () {
                                                 Color selectedColor = e.color!;
                                                 CIA_ShowPopUp(
@@ -1278,7 +1279,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                         ];
                                                         r.addAll(
                                                           colors.map(
-                                                            (element) => GestureDetector(
+                                                            (element) => CIA_GestureWidget(
                                                               onTap: () {
                                                                 selectedColor = element;
                                                                 mySetState(() {});
@@ -1351,7 +1352,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                       ];
                                                       r.addAll(
                                                         colors.map(
-                                                          (e) => GestureDetector(
+                                                          (e) => CIA_GestureWidget(
                                                             onTap: () {
                                                               selectedColor = e;
 

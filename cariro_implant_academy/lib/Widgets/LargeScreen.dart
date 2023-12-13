@@ -32,6 +32,7 @@ import '../Constants/Colors.dart';
 import '../Models/NotificationModel.dart';
 import '../core/features/authentication/presentation/pages/authentication_page.dart';
 import '../core/injection_contianer.dart';
+import '../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../core/presentation/widgets/LoadingWidget.dart';
 import '../core/features/notification/presentation/widgets/notificationDropDownWidget.dart';
 import 'CIA_PopUp.dart';
@@ -99,7 +100,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                             child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            GestureDetector(
+                            CIA_GestureWidget(
                               onTap: () {
                                 context.goNamed(NotificationsPage.routeName);
                               },
@@ -155,7 +156,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                     borderRadius: BorderRadius.circular(500.0),
                                     child: LoadingWidget(),
                                   );
-                                return GestureDetector(
+                                return CIA_GestureWidget(
                                     onTap: () {
                                       context.goNamed(ViewUserProfilePage.getRouteName(), pathParameters: {"id": siteController.getUserId().toString()});
                                     },

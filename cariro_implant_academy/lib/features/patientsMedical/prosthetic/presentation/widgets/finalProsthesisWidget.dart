@@ -18,6 +18,7 @@ import '../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../Widgets/CIA_TeethChart.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
 import '../../../../../core/constants/enums/enums.dart';
+import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
 import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
@@ -51,19 +52,19 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Visibility(
           visible: !widget.fullArch,
-          child: BlocBuilder<ProstheticBloc,ProstheticBloc_States>(
+          child: BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
             buildWhen: (previous, current) => current is ProstheticBloc_UpdateTeethViewState,
             builder: (context, state) {
               return CIA_TeethChart(
                 onChange: (selectedTeethList) {
                   selectedTeeth = selectedTeethList;
-
                 },
                 selectedTeeth: selectedTeeth,
               );
@@ -83,8 +84,12 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                               children: [
                                 Row(
                                   children: [
-                                    FormTextKeyWidget(text: "Teeth: ",),
-                                    FormTextValueWidget(text: e.finalProthesisTeeth?.toString(),),
+                                    FormTextKeyWidget(
+                                      text: "Teeth: ",
+                                    ),
+                                    FormTextValueWidget(
+                                      text: e.finalProthesisTeeth?.toString(),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -104,8 +109,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                               e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
                                               selectedTeeth.clear();
                                             }
-                                          }
-                                          else {
+                                          } else {
                                             e.finalProthesisHealingCollarDate = null;
                                             e.finalProthesisHealingCollar = false;
                                             e.finalProthesisTeeth = null;
@@ -114,7 +118,6 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           }
                                           setState(() {});
                                           bloc.emit(ProstheticBloc_UpdateTeethViewState());
-
                                         },
                                         value: e!.finalProthesisHealingCollar ?? false,
                                       ),
@@ -147,15 +150,24 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           FormTextKeyWidget(text: "Date"),
                                           SizedBox(width: 10),
                                           Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.finalProthesisHealingCollarDate == null
-                                                ? ""
-                                                : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisHealingCollarDate!),
+                                              child: CIA_GestureWidget(
+                                            onTap: () {
+                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
+                                                setState(() {
+                                                  e.finalProthesisHealingCollarDate = v;
+                                                });
+                                              });
+                                            },
+                                            child: FormTextValueWidget(
+                                              text: e.finalProthesisHealingCollarDate == null
+                                                  ? ""
+                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisHealingCollarDate!),
+                                            ),
                                           )),
                                           SizedBox(width: 10),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                            text: e.operator?.name ,
+                                            text: e.operator?.name,
                                           )),
                                           SizedBox(width: 10),
                                           IconButton(
@@ -203,8 +215,12 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                               children: [
                                 Row(
                                   children: [
-                                    FormTextKeyWidget(text: "Teeth: ",),
-                                    FormTextValueWidget(text: e.finalProthesisTeeth?.toString(),),
+                                    FormTextKeyWidget(
+                                      text: "Teeth: ",
+                                    ),
+                                    FormTextValueWidget(
+                                      text: e.finalProthesisTeeth?.toString(),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -214,7 +230,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                         text: "Impression",
                                         onChange: (value) {
                                           if (value == true) {
-                                            if (selectedTeeth.isEmpty&& !widget.fullArch) {
+                                            if (selectedTeeth.isEmpty && !widget.fullArch) {
                                               ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
                                             } else {
                                               e!.finalProthesisImpression = true;
@@ -224,8 +240,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                               e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
                                               selectedTeeth.clear();
                                             }
-                                          }
-                                          else {
+                                          } else {
                                             e.finalProthesisImpressionDate = null;
                                             e.finalProthesisImpression = false;
                                             e.finalProthesisTeeth = null;
@@ -307,16 +322,25 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           FormTextKeyWidget(text: "Date"),
                                           SizedBox(width: 10),
                                           Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.finalProthesisImpressionDate == null
-                                                ? ""
-                                                : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisImpressionDate!),
+                                              child: CIA_GestureWidget(
+                                            onTap: () {
+                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
+                                                setState(() {
+                                                  e.finalProthesisImpressionDate = v;
+                                                });
+                                              });
+                                            },
+                                            child: FormTextValueWidget(
+                                              text: e.finalProthesisImpressionDate == null
+                                                  ? ""
+                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisImpressionDate!),
+                                            ),
                                           )),
                                           SizedBox(width: 10),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                text: e.operator?.name ,
-                                              )),
+                                            text: e.operator?.name,
+                                          )),
                                           SizedBox(width: 10),
                                           IconButton(
                                               onPressed: () {
@@ -342,7 +366,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                     ),
                                   ],
                                 ),
-                            ],
+                              ],
                             ),
                           ))
                       .toList() ??
@@ -363,8 +387,12 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                               children: [
                                 Row(
                                   children: [
-                                    FormTextKeyWidget(text: "Teeth: ",),
-                                    FormTextValueWidget(text: e.finalProthesisTeeth?.toString(),),
+                                    FormTextKeyWidget(
+                                      text: "Teeth: ",
+                                    ),
+                                    FormTextValueWidget(
+                                      text: e.finalProthesisTeeth?.toString(),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -373,9 +401,8 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                         child: CIA_CheckBoxWidget(
                                       text: "Try in",
                                       onChange: (value) {
-
                                         if (value == true) {
-                                          if (selectedTeeth.isEmpty&& !widget.fullArch) {
+                                          if (selectedTeeth.isEmpty && !widget.fullArch) {
                                             ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
                                           } else {
                                             e!.finalProthesisTryIn = true;
@@ -385,8 +412,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                             e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
                                             selectedTeeth.clear();
                                           }
-                                        }
-                                        else {
+                                        } else {
                                           e.finalProthesisTryInDate = null;
                                           e.finalProthesisTryIn = false;
                                           e.finalProthesisTeeth = null;
@@ -508,7 +534,8 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                                                     CIA_MultiSelectChipWidget(
                                                                       singleSelect: true,
                                                                       labels: [
-                                                                        CIA_MultiSelectChipWidgeModel(label: "New Scan", isSelected: e.nonSatisfiedNewScan == true),
+                                                                        CIA_MultiSelectChipWidgeModel(
+                                                                            label: "New Scan", isSelected: e.nonSatisfiedNewScan == true),
                                                                         CIA_MultiSelectChipWidgeModel(
                                                                             label: "Same Scan", isSelected: e.nonSatisfiedNewScan == false),
                                                                       ],
@@ -778,14 +805,24 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           FormTextKeyWidget(text: "Date"),
                                           SizedBox(width: 10),
                                           Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.finalProthesisTryInDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisTryInDate!),
+                                              child: CIA_GestureWidget(
+                                            onTap: () {
+                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
+                                                setState(() {
+                                                  e.finalProthesisTryInDate = v;
+                                                });
+                                              });
+                                            },
+                                            child: FormTextValueWidget(
+                                              text:
+                                                  e.finalProthesisTryInDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisTryInDate!),
+                                            ),
                                           )),
                                           SizedBox(width: 10),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                text: e.operator?.name ,
-                                              )),
+                                            text: e.operator?.name,
+                                          )),
                                           SizedBox(width: 10),
                                           IconButton(
                                               onPressed: () {
@@ -811,7 +848,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                     )
                                   ],
                                 ),
-                           ],
+                              ],
                             ),
                           ))
                       .toList() ??
@@ -832,8 +869,12 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                               children: [
                                 Row(
                                   children: [
-                                    FormTextKeyWidget(text: "Teeth: ",),
-                                    FormTextValueWidget(text: e.finalProthesisTeeth?.toString(),),
+                                    FormTextKeyWidget(
+                                      text: "Teeth: ",
+                                    ),
+                                    FormTextValueWidget(
+                                      text: e.finalProthesisTeeth?.toString(),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -842,9 +883,8 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                         child: CIA_CheckBoxWidget(
                                       text: "Delivery",
                                       onChange: (value) {
-
                                         if (value == true) {
-                                          if (selectedTeeth.isEmpty&& !widget.fullArch) {
+                                          if (selectedTeeth.isEmpty && !widget.fullArch) {
                                             ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
                                           } else {
                                             e!.finalProthesisDelivery = true;
@@ -854,8 +894,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                             e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
                                             selectedTeeth.clear();
                                           }
-                                        }
-                                        else {
+                                        } else {
                                           e.finalProthesisDeliveryDate = null;
                                           e.finalProthesisDelivery = false;
                                           e.finalProthesisTeeth = null;
@@ -924,15 +963,26 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                           FormTextKeyWidget(text: "Date"),
                                           SizedBox(width: 10),
                                           Expanded(
-                                              child: FormTextValueWidget(
-                                            text:
-                                                e.finalProthesisDeliveryDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisDeliveryDate!),
+                                              child: CIA_GestureWidget(
+                                            onTap: () {
+                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time",initDate: e.finalProthesisDeliveryDate, (v) {
+                                                setState(() {
+                                                  e.finalProthesisDeliveryDate = v;
+                                                });
+                                              });
+                                            },
+
+                                            child: FormTextValueWidget(
+                                              text: e.finalProthesisDeliveryDate == null
+                                                  ? ""
+                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisDeliveryDate!),
+                                            ),
                                           )),
                                           SizedBox(width: 10),
                                           Expanded(
                                               child: FormTextValueWidget(
-                                                text: e.operator?.name ,
-                                              )),
+                                            text: e.operator?.name,
+                                          )),
                                           SizedBox(width: 10),
                                           IconButton(
                                               onPressed: () {
@@ -958,7 +1008,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                     )
                                   ],
                                 ),
-                            ],
+                              ],
                             ),
                           ))
                       .toList() ??

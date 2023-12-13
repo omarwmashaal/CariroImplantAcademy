@@ -252,7 +252,7 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
             return res;
           },
           filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),
-          itemAsString: (BasicNameIdObjectEntity u) => u.name!,
+          itemAsString: (BasicNameIdObjectEntity u) => u.name??"",
           items: items ?? [],
           onChanged: (v) {
             if (onSelect != null) onSelect!(v!);

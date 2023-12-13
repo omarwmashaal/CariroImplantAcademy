@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
@@ -266,10 +267,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       )),
                                                   SizedBox(width: 10),
                                                   Expanded(
-                                                      child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
+                                                      child: CIA_GestureWidget(
+                                                        onTap: (){
+                                                          CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v){
+                                                           _setState(() {
+                                                             e.date = v;
+                                                           });
+
+                                                          });
+                                                        },
+                                                        child: FormTextValueWidget(
+                                                          align: TextAlign.center,
+                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                          secondaryInfo: true,
+                                                        ),
                                                       )),
                                                 ],
                                               ),
@@ -397,10 +408,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       )),
                                                   SizedBox(width: 10),
                                                   Expanded(
-                                                      child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
+                                                      child:  CIA_GestureWidget(
+                                                        onTap: (){
+                                                          CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v){
+                                                            _setState(() {
+                                                              e.date = v;
+                                                            });
+
+                                                          });
+                                                        },
+                                                        child: FormTextValueWidget(
+                                                          align: TextAlign.center,
+                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                          secondaryInfo: true,
+                                                        ),
                                                       )),
                                                 ],
                                               ),
@@ -503,10 +524,20 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                       )),
                                                   SizedBox(width: 10),
                                                   Expanded(
-                                                      child: FormTextValueWidget(
-                                                        align: TextAlign.center,
-                                                        text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                        secondaryInfo: true,
+                                                      child: CIA_GestureWidget(
+                                                        onTap: (){
+                                                          CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v){
+                                                            _setState(() {
+                                                              e.date = v;
+                                                            });
+
+                                                          });
+                                                        },
+                                                        child: FormTextValueWidget(
+                                                          align: TextAlign.center,
+                                                          text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
+                                                          secondaryInfo: true,
+                                                        ),
                                                       )),
                                                 ],
                                               ),
