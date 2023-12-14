@@ -97,7 +97,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
-                                  if (selected==true) {
+                                  if (selected == true) {
                                     widget.fieldModel.doneByAssistant =
                                         BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
                                     widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
@@ -223,7 +223,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           onTap: siteController.getRole() == "secretary"
                               ? null
                               : (selected) {
-                                 teethData(selected);
+                                  widget.fieldModel.status = selected;
+                                  teethData();
                                 },
                           border: null,
                           borderColor: Colors.transparent,
@@ -296,7 +297,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             flex: 9,
                             child: ElevatedButton(
                               onPressed: () {
-                               teethData(null);
+                                teethData();
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
@@ -479,38 +480,40 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
     if (widget.price && widget.fieldModel.planPrice == null || widget.fieldModel.planPrice == 0) widget.fieldModel.planPrice = widget.settingsPrice;
   }
 
-  void teethData(bool? selected) {
+  void teethData() {
     List<BasicNameIdObjectEntity> companies = [];
     int? companyID;
     List<BasicNameIdObjectEntity> lines = [];
     int? lineID;
     List<BasicNameIdObjectEntity> implants = [];
 
-    if (selected == true || selected == null) {
-      widget.fieldModel.doneBySupervisor =
-      (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
+    if (widget.fieldModel.status == true) {
+      widget.fieldModel.doneByAssistant = (widget.fieldModel.doneByAssistant != null && !(widget.fieldModel.doneByAssistant!.name?.isEmpty ?? true))
+          ? widget.fieldModel.doneByAssistant
+          : BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
+      widget.fieldModel.doneByAssistantID = widget.fieldModel.doneByAssistantID ?? widget.fieldModel.doneByAssistant?.id;
+      widget.fieldModel.doneBySupervisor = (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
           ? widget.fieldModel.doneBySupervisor
           : widget.bloc.tempSuperVisor;
       widget.fieldModel.doneBySupervisorID = widget.fieldModel.doneBySupervisorID ?? widget.bloc.tempSuperVisor?.id;
-      widget.fieldModel.doneByCandidate =
-      (widget.fieldModel.doneByCandidate != null && !(widget.fieldModel.doneByCandidate!.name?.isBlank ?? true))
+      widget.fieldModel.doneByCandidate = (widget.fieldModel.doneByCandidate != null && !(widget.fieldModel.doneByCandidate!.name?.isBlank ?? true))
           ? widget.fieldModel.doneByCandidate
           : widget.bloc.tempCandidate;
       widget.fieldModel.doneByCandidateID = widget.fieldModel.doneByCandidateID ?? widget.bloc.tempCandidate?.id;
       widget.fieldModel.doneByCandidateBatch =
-      (widget.fieldModel.doneByCandidateBatch != null && !(widget.fieldModel.doneByCandidateBatch!.name?.isBlank ?? true))
-          ? widget.fieldModel.doneByCandidateBatch
-          : widget.bloc.tempCandidateBatch;
+          (widget.fieldModel.doneByCandidateBatch != null && !(widget.fieldModel.doneByCandidateBatch!.name?.isBlank ?? true))
+              ? widget.fieldModel.doneByCandidateBatch
+              : widget.bloc.tempCandidateBatch;
       widget.fieldModel.doneByCandidateBatchID = widget.fieldModel.doneByCandidateBatchID ?? widget.bloc.tempCandidateBatch?.id;
       CIA_ShowPopUp(
           context: context,
           title: "${widget.title} Data",
           onSave: () {
-            widget.fieldModel.status = selected;
-            if (selected == true) {
-              widget.fieldModel.doneByAssistant =
+            //  widget.fieldModel.status = selected;
+            if (widget.fieldModel.status == true) {
+              widget.fieldModel.doneByAssistant = widget.fieldModel.doneByAssistant ??
                   BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-              widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
+              widget.fieldModel.doneByAssistantID = widget.fieldModel.doneByAssistantID ?? sl<SharedPreferences>().getInt("userid");
               widget.fieldModel.date = DateTime.now().toUtc();
             } else {
               widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
@@ -525,8 +528,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Visibility(
-                    visible: !((widget.title.toLowerCase().contains("without implant")) ||
-                        (!widget.title.toLowerCase().contains("implant"))),
+                    visible: !((widget.title.toLowerCase().contains("without implant")) || (!widget.title.toLowerCase().contains("implant"))),
                     child: Row(
                       children: [
                         Expanded(
@@ -558,42 +560,40 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         ),
                         Expanded(
                             child: BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
-                              listener: (context, state) {
-                                if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
-                                  ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
-                                else if (state is TreatmentBloc_ConsumeItemErrorState)
-                                  ShowSnackBar(context, isSuccess: false, message: state.message);
+                          listener: (context, state) {
+                            if (state is TreatmentBloc_ConsumedItemSuccessfullyState)
+                              ShowSnackBar(context, isSuccess: true, message: "Implant Consumed Successfully");
+                            else if (state is TreatmentBloc_ConsumeItemErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
+                          },
+                          builder: (context, state) {
+                            return CIA_DropDownSearchBasicIdName<int>(
+                              label: "Implant Size",
+                              asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
+                              emptyString: "Select implant line first",
+                              searchParams: lineID,
+                              selectedItem: widget.fieldModel.implant,
+                              onSelect: (value) async {
+                                if (widget.fieldModel.implantID != null) {
+                                  widget.fieldModel.requestChangeModel = RequestChangeEntity(
+                                    description: "${widget.fieldModel.implant?.name!} to ${value.name!}",
+                                    requestEnum: RequestChangeEnum.ImplantChange,
+                                    patientId: widget.patientId,
+                                    dataId: value.id,
+                                    dataName: value.name,
+                                  );
+                                } else {
+                                  widget.fieldModel.implant?.name = value.name;
+                                  widget.fieldModel.implantID = value.id;
+                                  await CIA_ShowPopUpYesNo(
+                                      context: context,
+                                      title: "Consume Implant ${widget.fieldModel.implant?.name}?",
+                                      onSave: () => widget.bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
+                                }
+                                setState(() {});
                               },
-                              builder: (context, state) {
-                                return CIA_DropDownSearchBasicIdName<int>(
-                                  label: "Implant Size",
-                                  asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
-                                  emptyString: "Select implant line first",
-                                  searchParams: lineID,
-                                  selectedItem: widget.fieldModel.implant,
-                                  onSelect: (value) async {
-                                    if (widget.fieldModel.implantID != null) {
-                                      widget.fieldModel.requestChangeModel = RequestChangeEntity(
-                                        description: "${widget.fieldModel.implant?.name!} to ${value.name!}",
-                                        requestEnum: RequestChangeEnum.ImplantChange,
-                                        patientId: widget.patientId,
-                                        dataId: value.id,
-                                        dataName: value.name,
-                                      );
-                                    } else {
-                                      widget.fieldModel.implant?.name = value.name;
-                                      widget.fieldModel.implantID = value.id;
-                                      await CIA_ShowPopUpYesNo(
-                                          context: context,
-                                          title: "Consume Implant ${widget.fieldModel.implant?.name}?",
-                                          onSave: () =>
-                                              widget.bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
-                                    }
-                                    setState(() {});
-                                  },
-                                );
-                              },
-                            )),
+                            );
+                          },
+                        )),
                       ],
                     ),
                   ),
@@ -612,6 +612,17 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                 })
                           ],
                         )),
+                  ),
+                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    label: "Assistant",
+                    asyncUseCase: sl<LoadUsersUseCase>(),
+                    searchParams: LoadUsersEnum.assistants,
+                    selectedItem: widget.fieldModel.doneByAssistant,
+                    onSelect: (value) {
+                      widget.fieldModel.doneByAssistant = value;
+                      widget.fieldModel.doneByAssistantID = value.id;
+                      //widget.bloc.tempSuperVisor = value;
+                    },
                   ),
                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                     label: "Supervisor",
@@ -655,8 +666,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             BlocProvider.of<MedicalInfoShellBloc>(context).add(MedicalInfoShell_SaveChanges());
 
                             Future.delayed(Duration(seconds: 5)).then((value) {
-                              BlocProvider.of<NonSurgicalTreatmentBloc>(context)
-                                  .add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
+                              BlocProvider.of<NonSurgicalTreatmentBloc>(context).add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
                                 patientId: widget.patientId,
                                 tooth: widget.tooth,
                                 action: "implant",
@@ -689,10 +699,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
               );
             },
           ));
-    }
-    else {
-      widget.fieldModel.status = selected;
-
+    } else {
       widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
       widget.fieldModel.doneByAssistantID = null;
       widget.fieldModel.doneByCandidate = BasicNameIdObjectEntity();
