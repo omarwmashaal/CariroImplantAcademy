@@ -196,7 +196,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
     ],
   ).show();
 }
-
+/*
 CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String title, Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
 
@@ -248,7 +248,7 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
                               ],
                             ).show();
                           },
-                          columnNames: NonSurgicalTreatmentModel.columns,
+                          columnNames: NonSurgicalTreatmentModelsssss.columns,
                           dataSource: dataSource);
                     } else {
                       return Center(
@@ -276,7 +276,7 @@ CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String titl
     ],
   ).show();
 }
-
+*/
 CIA_ShowPopUp(
     {required BuildContext context,
     String? title,

@@ -57,9 +57,9 @@ class TempPatientAPI {
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = response.result != null
-          ? NonSurgicalTreatmentModel.fromJson(
+          ? NonSurgicalTreatmentModelsssss.fromJson(
               response.result as Map<String, dynamic>)
-          : NonSurgicalTreatmentModel();
+          : NonSurgicalTreatmentModelsssss();
     }
     return response;
   }
@@ -70,9 +70,9 @@ class TempPatientAPI {
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result = (response.result as List<dynamic>).length == 0
-          ? <NonSurgicalTreatmentModel>[]
+          ? <NonSurgicalTreatmentModelsssss>[]
           : (response.result as List)
-              .map((e) => NonSurgicalTreatmentModel.fromJson(e))
+              .map((e) => NonSurgicalTreatmentModelsssss.fromJson(e))
               .toList();
     }
     return response;
@@ -107,7 +107,7 @@ class TempPatientAPI {
   }
 
   static Future<API_Response> UpdatePatientNonSurgicalTreatment(
-      int id, NonSurgicalTreatmentModel nonSurgicalTreatment) async {
+      int id, NonSurgicalTreatmentModelsssss nonSurgicalTreatment) async {
     var response = await HTTPRequest.Put(
         "TempPatient/UpdatePatientNonSurgicalTreatment?id=$id",
         nonSurgicalTreatment.toJson());

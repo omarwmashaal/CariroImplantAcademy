@@ -64,12 +64,12 @@ class NonSurgicalTreatmentBloc_DentalExaminationDataLoadingError extends NonSurg
 }
 
 class NonSurgicalTreatmentBloc_AllDataLoadedSuccessfully extends NonSurgicalTreatmentBloc_States {
-  final NonSurgicalTreatmentEntity nonSurgicalTreatmentEntity;
+  final List<NonSurgicalTreatmentEntity> nonSurgicalTreatments;
 
-  NonSurgicalTreatmentBloc_AllDataLoadedSuccessfully({required this.nonSurgicalTreatmentEntity});
+  NonSurgicalTreatmentBloc_AllDataLoadedSuccessfully({required this.nonSurgicalTreatments});
 
   @override
-  List<Object?> get props => [nonSurgicalTreatmentEntity];
+  List<Object?> get props => [nonSurgicalTreatments];
 }
 
 class NonSurgicalTreatmentBloc_AllDataLoadingError extends NonSurgicalTreatmentBloc_States {
@@ -163,6 +163,21 @@ class NonSurgicalTreatmentBloc_AddingPatientReceipt extends NonSurgicalTreatment
 }
 
 class NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully extends NonSurgicalTreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class NonSurgicalTreatmentBloc_UpdatingNotesStates extends NonSurgicalTreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+class NonSurgicalTreatmentBloc_UpdatingNotesErrorStates extends NonSurgicalTreatmentBloc_States {
+  final String message;
+  NonSurgicalTreatmentBloc_UpdatingNotesErrorStates({required this.message});
+  @override
+  List<Object?> get props => [message];
+}
+class NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState extends NonSurgicalTreatmentBloc_States {
   @override
   List<Object?> get props => [];
 }

@@ -11,6 +11,7 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
     operator,
     operatorID,
     date,
+    id,
     nextVisit,
     treatment,
   }) : super(
@@ -20,12 +21,14 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
           operatorID: operatorID,
           supervisor: supervisor,
           supervisorID: supervisorID,
+    id: id,
           treatment: treatment,
         );
 
   Map<String, dynamic> toMap() {
     return {
       'treatment': this.treatment,
+      //'id': this.id,
       'supervisorID': this.supervisorID,
       //'supervisor': this.supervisor,
       'operatorID': this.operatorID,
@@ -40,6 +43,7 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
     return NonSurgicalTreatmentModel(
       treatment: map['treatment'] as String?,
       supervisorID: map['supervisorID'] as int?,
+      id: map['id'] as int?,
       supervisor: map['supervisor'] == null ? null : BasicNameIdObjectModel.fromJson(map['supervisor']),
       operatorID: map['operatorID'] as int?,
       operator: map['operator'] == null ? null : BasicNameIdObjectModel.fromJson(map['operator']),

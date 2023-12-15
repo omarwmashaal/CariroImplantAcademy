@@ -232,6 +232,7 @@ import '../features/patientsMedical/dentalHistroy/domain/repositories/dentalHist
 import '../features/patientsMedical/dentalHistroy/domain/useCases/saveDentalHistoryUseCsae.dart';
 import '../features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import '../features/patientsMedical/medicalExamination/domain/usecases/saveMedicalExaminationUseCsae.dart';
+import '../features/patientsMedical/nonSurgicalTreatment/domain/usecases/updateNonSurgicalTreatmentNotesUseCase.dart';
 import '../features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisSingleBridge.dart';
 import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentDiagnosticUseCase.dart';
 import '../features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase.dart';
@@ -698,6 +699,7 @@ initInjection() async {
         saveDentalExaminationUseCase: sl(),
         getTreatmentPlanItemUsecase: sl(),
         addPatientReceiptUseCase: sl(),
+    updateNonSurgicalTreatmentNotesUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
@@ -705,6 +707,7 @@ initInjection() async {
   sl.registerLazySingleton(() => GetAllNonSurgicalTreatmentsUseCase(nonSurgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => CheckNonSurgicalTreatmentTeethStatusUseCase(nonSurgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentPlanItemUsecase(nonSurgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => UpdateNonSurgicalTreatmentNotesUseCase(nonSurgicalTreatmentRepo: sl()));
   //repo
   sl.registerLazySingleton<NonSurgicalTreatmentRepo>(() => NonSurgicalTreatmentRepoImpl(nonSurgicalTreatmentDatasource: sl()));
   //datasource

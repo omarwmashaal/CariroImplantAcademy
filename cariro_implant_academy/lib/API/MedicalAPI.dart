@@ -59,7 +59,7 @@ class MedicalAPI {
     var response = await HTTPRequest.Get("Medical/GetPatientNonSurgicalTreatment?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result = NonSurgicalTreatmentModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      response.result = NonSurgicalTreatmentModelsssss.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
@@ -69,7 +69,7 @@ class MedicalAPI {
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       response.result =
-          (response.result as List<dynamic>).map((e) => NonSurgicalTreatmentModel.fromJson((e ?? Map<String, dynamic>) as Map<String, dynamic>)).toList();
+          (response.result as List<dynamic>).map((e) => NonSurgicalTreatmentModelsssss.fromJson((e ?? Map<String, dynamic>) as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -83,7 +83,7 @@ class MedicalAPI {
     return response;
   }
 
-  static Future<API_Response> AddPatientNonSurgicalTreatment(int id, NonSurgicalTreatmentModel model) async {
+  static Future<API_Response> AddPatientNonSurgicalTreatment(int id, NonSurgicalTreatmentModelsssss model) async {
     var response = await HTTPRequest.Put("Medical/AddPatientNonSurgicalTreatment?id=$id", model.toJson());
     return response;
   }

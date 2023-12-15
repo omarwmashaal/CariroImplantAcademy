@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/widgets/calendarWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationBaseEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationEntity.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 import '../../../../../API/LoadinAPI.dart';
 import '../../../../../Constants/Controllers.dart';
@@ -222,7 +224,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               ),
             );
           } else if (state.action.toLowerCase() == "scaling") {
-            int price  =0;
+            int price = 0;
             CIA_ShowPopUp(
               context: context,
               onSave: () {
@@ -236,10 +238,8 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                 label: "Price",
                 isNumber: true,
                 suffix: "EGP",
-                onChange: (value) =>price = int.parse(value),
-                controller: TextEditingController(
-                  text:state.data?.scaling?.planPrice?.toString()??"0"
-                ),
+                onChange: (value) => price = int.parse(value),
+                controller: TextEditingController(text: state.data?.scaling?.planPrice?.toString() ?? "0"),
               ),
             );
           }
@@ -323,7 +323,53 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                 CIA_SecondaryButton(
                     label: "View History",
                     onTab: () {
-                      CIA_PopUpTreatmentHistory_Table(widget.patientId, context, "View History Treatments", (value) {});
+                      NonSurgicalTreatmentDataGridSource dataSource = NonSurgicalTreatmentDataGridSource(
+                        context: context,
+                        bloc: bloc,
+                      );
+                      bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
+                      CIA_ShowPopUp(
+                        width: double.maxFinite,
+                          context: context,
+                          child: Column(
+                            children: [
+                              FormTextKeyWidget(text: "View History Treatments"),
+                              Visibility(visible: siteController.getRole()=="admin",child: FormTextValueWidget(text: "Click on note to update")),
+                              Expanded(
+                                child: BlocConsumer<NonSurgicalTreatmentBloc,NonSurgicalTreatmentBloc_States>(
+                                  buildWhen: (previous, current) =>
+                                      current is NonSurgicalTreatmentBloc_LoadingAllData ||
+                                      current is NonSurgicalTreatmentBloc_AllDataLoadingError ||
+                                      current is NonSurgicalTreatmentBloc_AllDataLoadedSuccessfully,
+                                  builder: (context, state) {
+                                    if (state is NonSurgicalTreatmentBloc_LoadingAllData)
+                                      return LoadingWidget();
+                                    else if (state is NonSurgicalTreatmentBloc_AllDataLoadingError)
+                                      return BigErrorPageWidget(message: state.message);
+                                    else if (state is NonSurgicalTreatmentBloc_AllDataLoadedSuccessfully) {
+                                      dataSource.updateData(state.nonSurgicalTreatments);
+                                      return TableWidget(dataSource: dataSource);
+                                    }
+                                    return Container();
+                                  },
+                                  listener: (context, state) {
+                                    if(state is NonSurgicalTreatmentBloc_UpdatingNotesStates)
+                                      CustomLoader.show(context);
+                                    else{
+                                      CustomLoader.hide();
+                                      if(state is NonSurgicalTreatmentBloc_UpdatingNotesErrorStates)
+                                        ShowSnackBar(context, isSuccess: false,message: state.message);
+                                      else if(state is NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState)
+                                        {
+                                          ShowSnackBar(context, isSuccess: true);
+                                          bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
+                                        }
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          ));
                     }),
                 SizedBox(
                   width: 10,

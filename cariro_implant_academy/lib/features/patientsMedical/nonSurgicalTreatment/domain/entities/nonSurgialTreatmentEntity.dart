@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 class NonSurgicalTreatmentEntity extends Equatable{
   String? treatment;
+  int? id;
   int? supervisorID;
   BasicNameIdObjectEntity? supervisor;
   int? operatorID;
@@ -15,6 +16,7 @@ class NonSurgicalTreatmentEntity extends Equatable{
     this.supervisor,
     this.operator,
     this.operatorID,
+    this.id,
     this.date,
     this.nextVisit});
 
@@ -25,6 +27,7 @@ class NonSurgicalTreatmentEntity extends Equatable{
     supervisor,
     operator,
     operatorID,
+    id,
     date,
     nextVisit,
     treatment,
