@@ -53,6 +53,7 @@ class PatientsSearchPage extends StatefulWidget {
         return "Patients";
     }
   }
+
   static String getMyRouteName({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -68,14 +69,13 @@ class PatientsSearchPage extends StatefulWidget {
 }
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
-
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
     var dataSource = PatientSearchDataSourceTable(context);
     return MultiBlocListener(
@@ -121,8 +121,6 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                     int fromId = 0;
                     int toId = 0;
 
-                    OpenFile.open("file:///C:/");
-                    /*
                     CIA_ShowPopUp(
                       height: 100,
                       context: context,
@@ -178,7 +176,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                           )
                         ],
                       ),
-                    );*/
+                    );
                   }),
               SizedBox(width: 10),
               CIA_PrimaryButton(

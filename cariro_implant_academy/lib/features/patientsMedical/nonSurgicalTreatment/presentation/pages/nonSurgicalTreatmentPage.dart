@@ -288,24 +288,16 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                     child: StatefulBuilder(builder: (context, _setState) {
                       var controller = TextEditingController(text: nonSurgicalTreatment.treatment ?? "");
 
-                      return RawKeyboardListener(
-                        focusNode: FocusNode(),
-                        onKey: (value) {
-                          if (value.isKeyPressed(LogicalKeyboardKey.enter)) {
-                            controller.text += "\r\n";
-                            _setState(() {});
-                          }
+                      return CIA_TextFormField(
+                        textInputType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        onChange: (value) {
+                          nonSurgicalTreatment.treatment = value;
+                          bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
                         },
-                        child: CIA_TextFormField(
-                          textInputType: TextInputType.multiline,
-                          onChange: (value) {
-                            nonSurgicalTreatment.treatment = value;
-                            bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
-                          },
-                          label: "Treatment",
-                          controller: controller,
-                          maxLines: 5,
-                        ),
+                        label: "Treatment",
+                        controller: controller,
+                        maxLines: 10,
                       );
                     }),
                   );

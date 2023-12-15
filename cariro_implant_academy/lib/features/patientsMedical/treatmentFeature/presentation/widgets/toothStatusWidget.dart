@@ -315,7 +315,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByCandidate!.name,
+                                              text: widget.fieldModel.doneByCandidate?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -331,7 +331,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByCandidateBatch!.name,
+                                              text: widget.fieldModel.doneByCandidateBatch?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -347,7 +347,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByAssistant!.name,
+                                              text: widget.fieldModel.doneByAssistant?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -367,7 +367,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneBySupervisor!.name,
+                                              text: widget.fieldModel.doneBySupervisor?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -387,7 +387,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                               ),
                                               SizedBox(width: 5),
                                               FormTextValueWidget(
-                                                text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant!.name,
+                                                text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant?.name,
                                                 smallFont: true,
                                               ),
                                               SizedBox(width: 5),

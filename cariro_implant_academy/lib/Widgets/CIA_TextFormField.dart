@@ -29,6 +29,7 @@ class CIA_TextFormField extends StatefulWidget {
       this.onTap,
       this.onSubmit,
       this.inputFormatter,
+        this.textInputAction = TextInputAction.next,
       required this.controller,
       this.errorFunction,
       this.textInputType,
@@ -57,6 +58,7 @@ class CIA_TextFormField extends StatefulWidget {
   List<TextInputFormatter>? inputFormatter;
   String Function(String value)? validator;
   bool Function(String value)? errorFunction;
+  TextInputAction textInputAction;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
@@ -101,7 +103,9 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           if (widget.onTap != null) widget.onTap!();
         },
         child: TextFormField(
+
           keyboardType: widget.textInputType,
+
           onFieldSubmitted: (value) {
             if (widget.onSubmit != null) widget.onSubmit!(value);
           },
@@ -165,7 +169,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           maxLines: widget.maxLines,
           focusNode: focus,
           controller: widget.controller,
-          textInputAction: TextInputAction.next,
+          textInputAction: widget.textInputAction,
           obscureText: widget.isObscure == null ? false : true,
           decoration: InputDecoration(
             suffixText: widget.suffix,
