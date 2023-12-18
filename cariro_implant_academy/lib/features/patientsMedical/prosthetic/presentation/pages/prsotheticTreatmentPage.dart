@@ -756,6 +756,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                   builder: (context, stateShell) {
                                     return BlocConsumer<ProstheticBloc, ProstheticBloc_States>(
                                       listener: (context, state) {
+                                        print(state);
                                         if(state is ProstheticBloc_UpdatedProstheticSinlgeBridgeSuccessfullyState)
                                           bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
                                       },
