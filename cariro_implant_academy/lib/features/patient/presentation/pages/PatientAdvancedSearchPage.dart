@@ -750,6 +750,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                       },
                                     ),
                                     SizedBox(height: 10,),
+                                    Divider(),
+                                    FormTextKeyWidget(text: "Plan or Done"),
+                                    SizedBox(height: 5,),
                                     CIA_MultiSelectChipWidget(
                                       key: GlobalKey(),
                                       labels: [
@@ -765,6 +768,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                       },
                                     ),
                                     SizedBox(height: 10),
+                                    Divider(),
+                                    FormTextKeyWidget(text: "Teeth"),
+                                    SizedBox(height: 5,),
                                     CIA_MultiSelectChipWidget(
                                       key: GlobalKey(),
                                       labels: [
@@ -796,6 +802,9 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                       },
                                     ),
                                     SizedBox(height: 10),
+                                    Divider(),
+                                    FormTextKeyWidget(text: "Treatment Type"),
+                                    SizedBox(height: 5,),
                                     Wrap(
                                       children: [
                                         CIA_MultiSelectChipWidget(
