@@ -8,12 +8,12 @@ import '../Constants/Colors.dart';
 class CIA_MultiSelectChipWidgeModel {
   CIA_MultiSelectChipWidgeModel(
       {required this.label,
-      this.value,
-      this.isSelected = false,
-      this.borderColor,
+        this.value,
+        this.isSelected = false,
+        this.borderColor,
         this.round = true,
         this.isButton = false,
-      this.selectedColor});
+        this.selectedColor});
 
   String label;
   String? value;
@@ -27,14 +27,14 @@ class CIA_MultiSelectChipWidgeModel {
 class CIA_MultiSelectChipWidget extends StatefulWidget {
   CIA_MultiSelectChipWidget(
       {Key? key,
-      this.disabled = false,
-      required this.labels,
-      this.redFlags = false,
-      this.onChange,
-      this.onChangeList,
-      this.verticalList = false,
-      this.onChangeSpecificTooth,
-      this.singleSelect = false
+        this.disabled = false,
+        required this.labels,
+        this.redFlags = false,
+        this.onChange,
+        this.onChangeList,
+        this.verticalList = false,
+        this.onChangeSpecificTooth,
+        this.singleSelect = false
 
       })
       : super(key: key);
@@ -62,15 +62,14 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
       alignments: MultiSelectAlignments(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start),
-     // singleSelectedItem: widget.singleSelect,
-
+      singleSelectedItem: widget.singleSelect,
       textStyles: MultiSelectTextStyles(
         selectedTextStyle: widget.disabled
             ? null
             : TextStyle(
-                color: Colors.white,
-                fontFamily: Inter_Bold,
-              ),
+          color: Colors.white,
+          fontFamily: Inter_Bold,
+        ),
       ),
       listViewSettings: ListViewSettings(
           scrollDirection: widget.verticalList ? Axis.vertical : Axis.horizontal),
@@ -81,24 +80,17 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
         ),
         selectedDecoration: widget.disabled
             ? BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Color_TextFieldBorder),
-              )
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Color_TextFieldBorder),
+        )
             : BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: widget.redFlags ? Colors.red : Color_Accent),
-                color: widget.redFlags ? Colors.red : Color_Accent),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: widget.redFlags ? Colors.red : Color_Accent),
+            color: widget.redFlags ? Colors.red : Color_Accent),
       ),
       items: _buildItems(),
       onChange: (List<Object?> selectedItems, Object? selectedItem) {
         bool isSelected = selectedItems.contains(selectedItem);
-        if(widget.singleSelect)
-          {
-            selectedItems = isSelected? [selectedItem] :[];
-            setState(() {
-
-            });
-          }
         tempSelectedItems = selectedItems;
         if (widget.onChange != null) widget.onChange!(selectedItem as String, isSelected);
         if (widget.onChangeList != null) {
@@ -119,7 +111,7 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
           decorations:  MultiSelectItemDecorations(
             decoration: BoxDecoration(
               border:
-                  Border.all(color: label.borderColor ?? Color_TextFieldBorder),
+              Border.all(color: label.borderColor ?? Color_TextFieldBorder),
               borderRadius: label.round? BorderRadius.circular(20):null,
             ),
             selectedDecoration: label.isButton?BoxDecoration(
@@ -128,23 +120,23 @@ class _CIA_MultiSelectChipWidgetState extends State<CIA_MultiSelectChipWidget> {
               borderRadius: label.round? BorderRadius.circular(20):null,
             ): widget.disabled
                 ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: label.borderColor ?? Color_TextFieldBorder),
-                  )
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                  color: label.borderColor ?? Color_TextFieldBorder),
+            )
                 : BoxDecoration(
-                    borderRadius: label.round?BorderRadius.circular(20):null,
-                    border: Border.all(
-                        color: widget.redFlags
-                            ? Colors.red
-                            : label.selectedColor == null
-                                ? Color_Accent
-                                : label.selectedColor!),
+                borderRadius: label.round?BorderRadius.circular(20):null,
+                border: Border.all(
                     color: widget.redFlags
                         ? Colors.red
                         : label.selectedColor == null
-                            ? Color_Accent
-                            : label.selectedColor!),
+                        ? Color_Accent
+                        : label.selectedColor!),
+                color: widget.redFlags
+                    ? Colors.red
+                    : label.selectedColor == null
+                    ? Color_Accent
+                    : label.selectedColor!),
           ),
           selected: label.isSelected,
           textStyles: label.isButton?  MultiSelectItemTextStyles(

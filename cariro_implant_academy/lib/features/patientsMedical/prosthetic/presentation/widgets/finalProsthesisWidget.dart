@@ -545,6 +545,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                                                         } else if (item == "Same Scan") {
                                                                           e.nonSatisfiedNewScan = false;
                                                                         }
+                                                                        setState((){});
                                                                       },
                                                                     ),
                                                                     SizedBox(width: 10),
@@ -709,6 +710,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                                                                 ],
                                                                 onChange: (item, isSelected) {
                                                                   e.passive = item == "Yes";
+                                                                  setState((){});
                                                                 },
                                                               ),
                                                             ),

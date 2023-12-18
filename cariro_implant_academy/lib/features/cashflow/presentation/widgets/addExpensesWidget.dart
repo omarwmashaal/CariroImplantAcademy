@@ -91,7 +91,8 @@ void ShowAddExpenesesPopUpWidget({
                   ],
                   onChange: (item, isSelected) {
                     inventoryWebsite = Website.values.firstWhere((element) => element.name==item);
-                  },
+                    _setState((){});
+                    },
                 ),
                 SizedBox(height: 10),
                 Expanded(
