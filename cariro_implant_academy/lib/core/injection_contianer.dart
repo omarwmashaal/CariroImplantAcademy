@@ -48,8 +48,12 @@ import 'package:cariro_implant_academy/core/features/notification/domain/usecase
 import 'package:cariro_implant_academy/core/features/settings/data/datasources/settingsDatasource.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/repositories/settingsRepoImpl.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getIncomeCategoriesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMedicalExpensesCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembraneCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembranesUseCase.dart';
@@ -258,6 +262,9 @@ import 'features/settings/domain/useCases/editTreatmentPricesUseCase.dart';
 import 'features/settings/domain/useCases/getExpensesCategoriesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import 'features/settings/domain/useCases/getImplantSizesUseCase.dart';
+import 'features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
+import 'features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
+import 'features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'features/settings/domain/useCases/getNonMedicalStockCategories.dart';
 import 'features/settings/presentation/bloc/settingsBloc.dart';
 
@@ -362,8 +369,16 @@ initInjection() async {
         getRoomsUseCase: sl(),
         getTeethClinicPricesUseCase: sl(),
         updateTeethClinicPricesUseCase: sl(),
+        getLabItemParentsUseCase: sl(),
+        getLabItemsUseCase: sl(),
+        getLabItemsLinesUseCase: sl(),
+        getLabItemsCompaniesUseCase: sl(),
+    updateLabItemsCompaniesUseCase: sl(),
+    updateLabItemsShadesUseCase: sl(),
+    updateLabItemsUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantCompaniesUseCase(settingsRepository: sl()));
@@ -421,6 +436,12 @@ initInjection() async {
   sl.registerLazySingleton(() => EditRoomsUseCase(settingsRepository: sl()));
 
   sl.registerLazySingleton(() => EditTreatmentPricesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetLabItemsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetLabItemsLinesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetLabItemsCompaniesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabItemsCompaniesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabItemsShadesUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabItemsUseCase(settingsRepository: sl()));
 
   //repositories
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepoImpl(settingsDatasource: sl()));
@@ -559,13 +580,12 @@ initInjection() async {
    * **/
   //bloc
   sl.registerFactory(() => PatientVisitsBloc(
-        getVisitsUseCase: sl(),
-        getPatientDataUseCase: sl(),
-        patientEntersClinicUseCase: sl(),
-        patientLeavesClinicUseCase: sl(),
-        patientVisitsUseCase: sl(),
-    updateVisitUseCase: sl()
-      ));
+      getVisitsUseCase: sl(),
+      getPatientDataUseCase: sl(),
+      patientEntersClinicUseCase: sl(),
+      patientLeavesClinicUseCase: sl(),
+      patientVisitsUseCase: sl(),
+      updateVisitUseCase: sl()));
   //usecases
   sl.registerLazySingleton(() => GetVisitsUseCase(visitsRepo: sl()));
   sl.registerLazySingleton(() => PatientLeavesClinicUseCase(visitsRepo: sl()));
@@ -699,7 +719,7 @@ initInjection() async {
         saveDentalExaminationUseCase: sl(),
         getTreatmentPlanItemUsecase: sl(),
         addPatientReceiptUseCase: sl(),
-    updateNonSurgicalTreatmentNotesUseCase: sl(),
+        updateNonSurgicalTreatmentNotesUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
@@ -782,7 +802,7 @@ initInjection() async {
         resetPasswordForUserUseCase: sl(),
         changeRoleUseCase: sl(),
         searchUsersByWorkPlaceUseCase: sl(),
-    getCandidateDetailsUseCase: sl(),
+        getCandidateDetailsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -887,9 +907,9 @@ initInjection() async {
   sl.registerFactory(() => ClinicTreatmentBloc(
         updateClinicTreatmentsUseCase: sl(),
         getClinicTreatmentsUseCase: sl(),
-    getTeethClinicPricesUseCase: sl(),
-    getDoctorPercentageForPatientUseCase: sl(),
-    updateClinicReceiptUseCase: sl(),
+        getTeethClinicPricesUseCase: sl(),
+        getDoctorPercentageForPatientUseCase: sl(),
+        updateClinicReceiptUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetClinicTreatmentsUseCase(clinicTreatmentRepo: sl()));

@@ -3,6 +3,8 @@ import 'package:cariro_implant_academy/core/features/settings/data/models/clinic
 import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
 
+import '../../../../../features/labRequest/data/models/labItemModel.dart';
+import '../../../../../features/labRequest/domain/entities/labItemEntity.dart';
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
 import '../../../../constants/enums/enums.dart';
 import '../../../../constants/remoteConstants.dart';
@@ -86,6 +88,20 @@ abstract class SettingsDatasource {
   Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category);
 
   Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
+
+  Future<List<BasicNameIdObjectModel>> getLabItemParents();
+
+  Future<List<BasicNameIdObjectModel>> getLabItemCompanies(int id);
+
+  Future<List<BasicNameIdObjectModel>> getLabItemLines(int id);
+
+  Future<List<LabItemModel>> getLabItems(int id);
+
+  Future<NoParams> updateLabItems(int shadeId, List<LabItemEntity> data);
+
+  Future<NoParams> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data);
+
+  Future<NoParams> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -553,7 +569,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category) async {
     late StandardHttpResponse response;
     try {
-       response = await httpRepo.post(
+      response = await httpRepo.post(
         host: "$serverHost/$settingsController/getTeethTreatmentPrices?",
         body: {
           "teeth": teeth,
@@ -578,6 +594,115 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/updateTeethTreatmentPrices",
         body: params.map((e) => ClinicPricesModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getLabItemParents() async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabItemsParents");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getLabItemCompanies(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getLabItemCompanies?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getLabItemLines(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getLabItemLines?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<List<LabItemModel>> getLabItems(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getLabItems?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => LabItemModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<NoParams> updateLabItems(int shadeId, List<LabItemEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateLabItems?id=$shadeId",
+        body: data.map((e) => LabItemModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateLabItemCompanies?id=$parentItemId",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateLabItemShades?id=$companyId",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

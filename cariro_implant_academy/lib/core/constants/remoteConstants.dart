@@ -10,9 +10,9 @@ import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
 
-//const _host ="http://localhost:5000/";
+const _host ="http://localhost:5000/";
 //const _host ="http://localhost:5170/";
-const _host ="http://192.168.121.180/api/";
+//const _host ="http://192.168.121.180/api/";
 var t = File("host.txt").readAsStringSync();
 //const _host = "http://54.224.105.207/api/";
 final serverHost = "${_host}api";

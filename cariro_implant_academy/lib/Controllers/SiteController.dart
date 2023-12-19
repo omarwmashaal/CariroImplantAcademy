@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
 
 import '../core/features/settings/presentation/pages/UserSettingsPage.dart';
@@ -107,7 +108,6 @@ class SiteController {
     //update();
   }
 
-
   setDynamicAppBar({required BuildContext context, Map<String, String>? pathQueries}) {
     var path = GoRouterState.of(context).fullPath!.split("/").last;
     print(path);
@@ -157,16 +157,21 @@ class SiteController {
             path == VisitsPage.routePath.split("/").last) {
           if (getRole() == "secretary")
             siteController.setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Patient Data",compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
-              SlidingTabModel(title: "Patient Visits",compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
-              SlidingTabModel(title: "Complains",compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
+              SlidingTabModel(
+                  title: "Patient Data", compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
+              SlidingTabModel(title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
+              SlidingTabModel(
+                  title: "Complains", compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
             ]);
           else
             siteController.setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Patient Data",compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
-              SlidingTabModel(title: "My Patients",compareName: PatientsSearchPage.routeMyPath.split("/").last, namedDirectory: PatientsSearchPage.getMyRouteName()),
+              SlidingTabModel(
+                  title: "Patient Data", compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
+              SlidingTabModel(
+                  title: "My Patients", compareName: PatientsSearchPage.routeMyPath.split("/").last, namedDirectory: PatientsSearchPage.getMyRouteName()),
               SlidingTabModel(title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
-              SlidingTabModel(title: "Complains",compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
+              SlidingTabModel(
+                  title: "Complains", compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
               path == PatientAdvancedSearchPage.routeNameTreatments
                   ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
                   : path == PatientAdvancedSearchPage.routeNameProsthetic
@@ -175,13 +180,24 @@ class SiteController {
             ]);
         } else if (path == ViewUserProfilePage.candidateRoutePath.split("/").last || path == ViewCandidateData.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Profile",compareName: ViewUserProfilePage.candidateRoutePath.split("/").last,  namedDirectory: ViewUserProfilePage.candidateRouteName, pathParameters: pathQueries),
-            SlidingTabModel(title: "Data",compareName: ViewCandidateData.routePath.split("/").last, namedDirectory: ViewCandidateData.routeName, pathParameters: pathQueries),
+            SlidingTabModel(
+                title: "Profile",
+                compareName: ViewUserProfilePage.candidateRoutePath.split("/").last,
+                namedDirectory: ViewUserProfilePage.candidateRouteName,
+                pathParameters: pathQueries),
+            SlidingTabModel(
+                title: "Data",
+                compareName: ViewCandidateData.routePath.split("/").last,
+                namedDirectory: ViewCandidateData.routeName,
+                pathParameters: pathQueries),
           ]);
-        else if (path == CashFlowIncomePage.routePath.split("/").last || path == CashFlowExpensesPage.routePath.split("/").last || path == CashFlowSummaryPage.routePath.split("/").last)
+        else if (path == CashFlowIncomePage.routePath.split("/").last ||
+            path == CashFlowExpensesPage.routePath.split("/").last ||
+            path == CashFlowSummaryPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
-            SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
             SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
           ]);
         else if (path == StockSearchPage.routePath.split("/").last || path == StockLogsSearchPage.routePath.split("/").last)
@@ -189,30 +205,43 @@ class SiteController {
             SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.getRouteName(), compareName: StockSearchPage.routePath.split("/").last),
             SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
           ]);
-        else if (path == PatientMedicalHistory.routePath.split("/").last||
+        else if (path == PatientMedicalHistory.routePath.split("/").last ||
             path == DentalExaminationPage.routePath.split("/").last ||
             path == ProstheticTreatmentPage.routePath.split("/").last ||
             path == DentalHistoryPage.routePath.split("/").last ||
             path == NonSurgicalTreatmentPage.routePath.split("/").last ||
             path == TreatmentPage.routePath.split("/").last ||
-            path == SurgicalTreatmentPage.routePath.split("/").last||
+            path == SurgicalTreatmentPage.routePath.split("/").last ||
             path == ClinicTreatmentPage.routePath.split("/").last ||
             path == ClinicTreatmentPage.routePathPlan.split("/").last)
           setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
         else
           setAppBarWidget(context: context);
       } else if (siteController.getSite() == Website.Lab) {
-        if (path == LabRequestsSearchPage.routePath.split("/").last || path == LabRequestsSearchPage.routeAllPath.split("/").last || path == LabRequestsSearchPage.routeMyPath.split("/").last) {
+        if ((path == SettingsPage.routePath.split("/").last && getRole() == "admin") ||
+            (path == LabItemSettingsPage.routePath.split("/").last && getRole() == "admin")) {
+          siteController.setAppBarWidget(context: context, tabs: [
+            SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
+            SlidingTabModel(title: "Lab Items", compareName: LabItemSettingsPage.routePath, namedDirectory: LabItemSettingsPage.routeName),
+          ]);
+        } else if (path == LabRequestsSearchPage.routePath.split("/").last ||
+            path == LabRequestsSearchPage.routeAllPath.split("/").last ||
+            path == LabRequestsSearchPage.routeMyPath.split("/").last) {
           if (siteController.getRole() == "technician") {
             siteController.setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
-              SlidingTabModel(title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
-              SlidingTabModel(title: "My Requests", compareName: LabRequestsSearchPage.routeMyPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeMyName),
+              SlidingTabModel(
+                  title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
+              SlidingTabModel(
+                  title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
+              SlidingTabModel(
+                  title: "My Requests", compareName: LabRequestsSearchPage.routeMyPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeMyName),
             ]);
           } else {
             siteController.setAppBarWidget(context: context, tabs: [
-              SlidingTabModel(title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
-              SlidingTabModel(title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
+              SlidingTabModel(
+                  title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
+              SlidingTabModel(
+                  title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
             ]);
           }
         } else if (path == StockSearchPage.routePath.split("/").last || path == StockLogsSearchPage.routePath.split("/").last)
@@ -220,10 +249,13 @@ class SiteController {
             SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.getRouteName(), compareName: StockSearchPage.routePath.split("/").last),
             SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
           ]);
-        else if (path == CashFlowIncomePage.routePath.split("/").last || path == CashFlowExpensesPage.routePath.split("/").last || path == CashFlowSummaryPage.routePath.split("/").last)
+        else if (path == CashFlowIncomePage.routePath.split("/").last ||
+            path == CashFlowExpensesPage.routePath.split("/").last ||
+            path == CashFlowSummaryPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
-            SlidingTabModel(title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
             SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
           ]);
         else

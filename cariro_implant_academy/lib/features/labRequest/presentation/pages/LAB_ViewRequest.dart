@@ -77,7 +77,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
       buildWhen: (previous, current) =>
           current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState ||
           current is LabRequestsBloc_LoadingRequestsState ||
-          current is LabRequestsBloc_LoadingRequestsErrorState,
+          current is LabRequestsBloc_LoadingSingleRequestErrorState,
       builder: (context, state) {
         if (state is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState)
         {
@@ -94,7 +94,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                     SizedBox(width: 10),
                     CIA_SecondaryButton(
                         label: "Medical Info",
-                        onTab: () {
+                        onTab: () {/*
                           var medicalInfo = request.getMedicalInfoList();
                           CIA_ShowPopUp(
                             context: context,
@@ -125,7 +125,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                 Expanded(child: FormTextValueWidget(text: request.notes ?? ""))
                               ],
                             ),
-                          );
+                          );*/
                         }),
                     SizedBox(width: 10),
                     Visibility(
@@ -501,7 +501,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
         }
         else if (state is LabRequestsBloc_LoadingRequestsState)
           return LoadingWidget();
-        else if (state is LabRequestsBloc_LoadingRequestsErrorState) return BigErrorPageWidget(message: state.message);
+        else if (state is LabRequestsBloc_LoadingSingleRequestErrorState) return BigErrorPageWidget(message: state.message);
         return Container();
       },
     );

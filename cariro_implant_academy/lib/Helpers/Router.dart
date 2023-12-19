@@ -10,6 +10,7 @@ import 'package:cariro_implant_academy/core/features/authentication/domain/useca
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
@@ -607,6 +608,24 @@ class CIA_Router {
                       )));
                     },
                     routes: [
+                      GoRoute(
+                        path: SettingsPage.routePath,
+                        name: SettingsPage.getRouteName(site: Website.Lab),
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: SettingsPage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: LabItemSettingsPage.routePath,
+                        name: LabItemSettingsPage.routeName,
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: LabItemSettingsPage(),
+                          );
+                        },
+                      ),
                       GoRoute(
                         path: LabRequestsSearchPage.routePath,
                         name: LabRequestsSearchPage.routeName,

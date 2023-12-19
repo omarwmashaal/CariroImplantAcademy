@@ -67,7 +67,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
       usersBloc: usersBloc,
     );
     reloadUsers();
-    tabController = TabController(length: 6, vsync: this);
+    tabController = TabController(length: 7, vsync: this);
   }
 
   @override
@@ -89,6 +89,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
               else if (tabController.index == 4)
                 role = "secretary";
               else if (tabController.index == 5) role = "labmoderator";
+              else if (tabController.index == 6) role = "technician";
               UserEntity newUser = UserEntity(role: role, gender: "Male");
               bool newBatch = false;
               CIA_ShowPopUp(
@@ -302,6 +303,9 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                     Tab(
                       text: "Lab Moderators",
                     ),
+                    Tab(
+                      text: "Lab Tech",
+                    ),
                   ],
                 ),
               ),
@@ -309,6 +313,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                 child: TabBarView(
                   controller: tabController,
                   children: [
+                    _buildWidget(),
                     _buildWidget(),
                     _buildWidget(),
                     _buildWidget(),

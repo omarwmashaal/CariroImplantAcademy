@@ -1,4 +1,9 @@
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
@@ -27,6 +32,8 @@ import '../../domain/useCases/getExpensesCategoriesUseCase.dart';
 import '../../domain/useCases/getImplantCompaniesUseCase.dart';
 import '../../domain/useCases/getImplantLinesUseCase.dart';
 import '../../domain/useCases/getIncomeCategoriesUseCase.dart';
+import '../../domain/useCases/getLabItemParentsUseCase.dart';
+import '../../domain/useCases/getLabItemsLinesUseCase.dart';
 import '../../domain/useCases/getMedicalExpensesCategoriesUseCase.dart';
 import '../../domain/useCases/getMembraneCompaniesUseCase.dart';
 import '../../domain/useCases/getMembranesUseCase.dart';
@@ -71,6 +78,14 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetRoomsUseCase getRoomsUseCase;
   final GetTeethClinicPricesUseCase getTeethClinicPricesUseCase;
   final UpdateTeethClinicPricesUseCase updateTeethClinicPricesUseCase;
+  final GetLabItemParentsUseCase getLabItemParentsUseCase;
+  final GetLabItemsCompaniesUseCase getLabItemsCompaniesUseCase;
+  final GetLabItemsLinesUseCase getLabItemsLinesUseCase;
+  final GetLabItemsUseCase getLabItemsUseCase;
+  final UpdateLabItemsCompaniesUseCase updateLabItemsCompaniesUseCase;
+  final UpdateLabItemsShadesUseCase updateLabItemsShadesUseCase;
+  final UpdateLabItemsUseCase updateLabItemsUseCase;
+
   SettingsBloc({
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
@@ -105,6 +120,13 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.editTreatmentPricesUseCase,
     required this.updateTeethClinicPricesUseCase,
     required this.getTeethClinicPricesUseCase,
+    required this.getLabItemParentsUseCase,
+    required this.getLabItemsUseCase,
+    required this.getLabItemsLinesUseCase,
+    required this.getLabItemsCompaniesUseCase,
+    required this.updateLabItemsUseCase,
+    required this.updateLabItemsCompaniesUseCase,
+    required this.updateLabItemsShadesUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
@@ -137,209 +159,294 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       },
     );
     on<SettingsBloc_LoadTacsEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingTacsState());
-        final result = await getTacsUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingTacsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedTacsSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingTacsState());
+      final result = await getTacsUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingTacsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedTacsSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadMembranesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingMembranesState());
-        final result = await getMembranesUseCase(event.id);
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingMembranesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedMembranesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingMembranesState());
+      final result = await getMembranesUseCase(event.id);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingMembranesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedMembranesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadExpensesCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingExpensesCategoriesState());
-        final result = await getExpensesCategoriesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingExpensesCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedExpensesCategoriesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingExpensesCategoriesState());
+      final result = await getExpensesCategoriesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingExpensesCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedExpensesCategoriesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadMedicalExpensesCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingMedicalExpensesCategoriesState());
-        final result = await getMedicalExpensesCategoriesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingMedicalExpensesCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedMedicalExpensesCategoriesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingMedicalExpensesCategoriesState());
+      final result = await getMedicalExpensesCategoriesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingMedicalExpensesCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedMedicalExpensesCategoriesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadNonMedicalStockCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingNonMedicalStockCategoriesState());
-        final result = await getNonMedicalStockCategoriesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingNonMedicalStockCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedNonMedicalStockCategoriesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingNonMedicalStockCategoriesState());
+      final result = await getNonMedicalStockCategoriesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingNonMedicalStockCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedNonMedicalStockCategoriesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_ChangeImplantCompanyNameEvent>((event, emit) async {
-        emit(SettingsBloc_ChangingImplantCompanyNameState());
-        final result = await changeImplantCompanyNameUseCase(event.value);
-        result.fold(
-          (l) => emit(SettingsBloc_ChangingImplantCompanyNameErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_ChangedImplantCompanyNameSuccessfullyState()),
-        );});
+      emit(SettingsBloc_ChangingImplantCompanyNameState());
+      final result = await changeImplantCompanyNameUseCase(event.value);
+      result.fold(
+        (l) => emit(SettingsBloc_ChangingImplantCompanyNameErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_ChangedImplantCompanyNameSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_UpdateImplantsEvent>((event, emit) async {
-        emit(SettingsBloc_UpdatingImplantsState());
-        final result = await addImplantsUseCase(event.value);
-        result.fold(
-          (l) => emit(SettingsBloc_UpdatingImplantsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_UpdatedImplantsSuccessfullyState()),
-        );});
+      emit(SettingsBloc_UpdatingImplantsState());
+      final result = await addImplantsUseCase(event.value);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingImplantsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedImplantsSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddImplantCompaniesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingImplantCompaniesState());
-        final result = await addImplantCompaniesUseCase(event.name);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingImplantCompaniesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedImplantCompaniesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingImplantCompaniesState());
+      final result = await addImplantCompaniesUseCase(event.name);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingImplantCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedImplantCompaniesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddTacsCompaniesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingTacsCompaniesState());
-        final result = await addTacsCompaniesUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingTacsCompaniesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedTacsCompaniesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingTacsCompaniesState());
+      final result = await addTacsCompaniesUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingTacsCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedTacsCompaniesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddExpensesCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingExpensesCategoriesState());
-        final result = await addExpensesCategoriesUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingExpensesCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedExpensesCategoriesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingExpensesCategoriesState());
+      final result = await addExpensesCategoriesUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingExpensesCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedExpensesCategoriesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddSuppliersEvent>((event, emit) async {
-        emit(SettingsBloc_AddingSuppliersState());
-        final result = await addSuppliersUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedSuppliersSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingSuppliersState());
+      final result = await addSuppliersUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedSuppliersSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddPaymentMethodsEvent>((event, emit) async {
-        emit(SettingsBloc_AddingPaymentMethodsState());
-        final result = await addPaymentMethodsUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingPaymentMethodsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedPaymentMethodsSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingPaymentMethodsState());
+      final result = await addPaymentMethodsUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingPaymentMethodsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedPaymentMethodsSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_EditTreatmentPricesEvent>((event, emit) async {
-        emit(SettingsBloc_EditingTreatmentPricesState());
-        final result = await editTreatmentPricesUseCase(event.prices);
-        result.fold(
-          (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_EditingTreatmentPricesState());
+      final result = await editTreatmentPricesUseCase(event.prices);
+      result.fold(
+        (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_ChangeImplantLineNameEvent>((event, emit) async {
-        emit(SettingsBloc_ChangingImplantLineNameState());
-        final result = await changeImplantLineNameUseCase(event.value);
-        result.fold(
-          (l) => emit(SettingsBloc_ChangingImplantLineNameErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_ChangedImplantLineNameSuccessfullyState()),
-        );});
+      emit(SettingsBloc_ChangingImplantLineNameState());
+      final result = await changeImplantLineNameUseCase(event.value);
+      result.fold(
+        (l) => emit(SettingsBloc_ChangingImplantLineNameErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_ChangedImplantLineNameSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_LoadMembraneCompaniesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingMembraneCompaniesState());
-        final result = await getMembraneCompaniesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingMembraneCompaniesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedMembraneCompaniesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingMembraneCompaniesState());
+      final result = await getMembraneCompaniesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingMembraneCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedMembraneCompaniesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_AddMembranesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingMembranesState());
-        final result = await addMembranesUseCase(event.value);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingMembranesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedMembranesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingMembranesState());
+      final result = await addMembranesUseCase(event.value);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingMembranesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedMembranesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddImplantLinesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingImplantLinesState());
-        final result = await addImplantLinesUseCase(event.value);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingImplantLinesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedImplantLinesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingImplantLinesState());
+      final result = await addImplantLinesUseCase(event.value);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingImplantLinesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedImplantLinesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddMembraneCompaniesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingMembraneCompaniesState());
-        final result = await addMembraneCompaniesUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingMembraneCompaniesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedMembraneCompaniesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingMembraneCompaniesState());
+      final result = await addMembraneCompaniesUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingMembraneCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedMembraneCompaniesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_LoadIncomeCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingIncomeCategoriesState());
-        final result = await getIncomeCategoriesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingIncomeCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedIncomeCategoriesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingIncomeCategoriesState());
+      final result = await getIncomeCategoriesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingIncomeCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedIncomeCategoriesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_AddIncomeCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingIncomeCategoriesState());
-        final result = await addIncomeCategoriesUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingIncomeCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedIncomeCategoriesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingIncomeCategoriesState());
+      final result = await addIncomeCategoriesUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingIncomeCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedIncomeCategoriesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_AddStockCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_AddingStockCategoriesState());
-        final result = await addStockCategoriesUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_AddingStockCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_AddedStockCategoriesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_AddingStockCategoriesState());
+      final result = await addStockCategoriesUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_AddingStockCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_AddedStockCategoriesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_LoadStockCategoriesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingStockCategoriesState());
-        final result = await getStockCategoriesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingStockCategoriesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedStockCategoriesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingStockCategoriesState());
+      final result = await getStockCategoriesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingStockCategoriesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedStockCategoriesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadSuppliersEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingSuppliersState());
-        final result = await getSuppliersUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingSuppliersState());
+      final result = await getSuppliersUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadPaymentMethodsEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingPaymentMethodsState());
-        final result = await getPaymentMethodsUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingPaymentMethodsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedPaymentMethodsSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingPaymentMethodsState());
+      final result = await getPaymentMethodsUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingPaymentMethodsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedPaymentMethodsSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadRoomsEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingRoomsState());
-        final result = await getRoomsUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingRoomsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedRoomsSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingRoomsState());
+      final result = await getRoomsUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingRoomsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedRoomsSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_LoadTreatmentPricesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingTreatmentPricesState());
-        final result = await getTreatmentPricesUseCase(NoParams());
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingTreatmentPricesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedTreatmentPricesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingTreatmentPricesState());
+      final result = await getTreatmentPricesUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingTreatmentPricesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedTreatmentPricesSuccessfullyState(data: r)),
+      );
+    });
     on<SettingsBloc_EditRoomsEvent>((event, emit) async {
-        emit(SettingsBloc_EditingRoomsState());
-        final result = await editRoomsUseCase(event.model);
-        result.fold(
-          (l) => emit(SettingsBloc_EditingRoomsErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_EditedRoomsSuccessfullyState()),
-        );});
+      emit(SettingsBloc_EditingRoomsState());
+      final result = await editRoomsUseCase(event.model);
+      result.fold(
+        (l) => emit(SettingsBloc_EditingRoomsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_EditedRoomsSuccessfullyState()),
+      );
+    });
 
     on<SettingsBloc_EditClinicPricesEvent>((event, emit) async {
-        emit(SettingsBloc_EditingClinicPricesState());
-        final result = await updateTeethClinicPricesUseCase(event.prices);
-        result.fold(
-          (l) => emit(SettingsBloc_EditingClinicPricesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_EditedClinicPricesSuccessfullyState()),
-        );});
+      emit(SettingsBloc_EditingClinicPricesState());
+      final result = await updateTeethClinicPricesUseCase(event.prices);
+      result.fold(
+        (l) => emit(SettingsBloc_EditingClinicPricesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_EditedClinicPricesSuccessfullyState()),
+      );
+    });
     on<SettingsBloc_LoadClinicPricesEvent>((event, emit) async {
-        emit(SettingsBloc_LoadingClinicPricesState());
-        final result = await getTeethClinicPricesUseCase(event.params);
-        result.fold(
-          (l) => emit(SettingsBloc_LoadingClinicPricesErrorState(message: l.message ?? "")),
-          (r) => emit(SettingsBloc_LoadedClinicPricesSuccessfullyState(data: r)),
-        );});
+      emit(SettingsBloc_LoadingClinicPricesState());
+      final result = await getTeethClinicPricesUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingClinicPricesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedClinicPricesSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_LoadLabItemsParentsEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabItemParentsState());
+      final result = await getLabItemParentsUseCase(NoParams());
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabItemParentsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabItemParentsSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_LoadLabItemCompaniesEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabItemsCompaniesState());
+      final result = await getLabItemsCompaniesUseCase(event.id);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabItemsCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_LoadLabItemsShadesEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabItemsShadesState());
+      final result = await getLabItemsLinesUseCase(event.companyId);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabItemsShadesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabItemsShadesSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_LoadLabItemsEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabItemsState());
+      final result = await getLabItemsUseCase(event.shadeId);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: r)),
+      );
+    });
 
+    on<SettingsBloc_UpdateLabItemCompaniesEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabItemsCompaniesState());
+      final result = await updateLabItemsCompaniesUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabItemsCompaniesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState()),
+      );
+    });
+    on<SettingsBloc_UpdateLabItemShadesEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabItemsShadesState());
+      final result = await updateLabItemsShadesUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabItemsShadesErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsShadesSuccessfullyState()),
+      );
+    });
+    on<SettingsBloc_UpdateLabItemEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabItemsState());
+      final result = await updateLabItemsUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsSuccessfullyState()),
+      );
+    });
   }
 }

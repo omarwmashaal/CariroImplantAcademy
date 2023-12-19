@@ -178,7 +178,7 @@ void ShowAddExpenesesPopUpWidget({
                                         CIA_MultiSelectChipWidgeModel(label: "Membranes", isSelected: medicalType == "Membranes"),
                                         CIA_MultiSelectChipWidgeModel(label: "Screws", isSelected: medicalType == "Screws"),
                                         CIA_MultiSelectChipWidgeModel(label: "Implants", isSelected: medicalType == "Implants"),
-                                        CIA_MultiSelectChipWidgeModel(label: "Other", isSelected: medicalType == "Other"),
+                                       // CIA_MultiSelectChipWidgeModel(label: "Other", isSelected: medicalType == "Other"),
                                       ],
                                       onChange: (item, isSelected) {
                                         if (isSelected)

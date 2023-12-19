@@ -2,11 +2,13 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/widgets/labRequestItemWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc_Events.dart';
@@ -677,163 +679,112 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
+                          Column(
                             children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    CIA_CheckBoxWidget(
-                                      text: "Full zireon crown",
-                                      value: labRequest.fullZireonCrown ?? false,
-                                      onChange: (value) => labRequest.fullZireonCrown = value,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.waxUp,
+                                      name: "Wax Up",
+                                      onChange: (data) => labRequest.waxUp = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Porcelain fused to zircomium",
-                                      value: labRequest.porcelainFusedToZircomium ?? false,
-                                      onChange: (value) => labRequest.porcelainFusedToZircomium = value,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.printedPMMA,
+                                      name: "Printed PMMA",
+                                      onChange: (data) => labRequest.printedPMMA = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Porcelain fused to metal",
-                                      value: labRequest.porcelainFusedToMetal ?? false,
-                                      onChange: (value) => labRequest.porcelainFusedToMetal = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Porcelain fused to metal (CAD-CAM Co-Cr alloy)",
-                                      value: labRequest.porcelainFusedToMetalCADCAMCoCrAlloy ?? false,
-                                      onChange: (value) => labRequest.porcelainFusedToMetalCADCAMCoCrAlloy = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Glass ceramic crown",
-                                      value: labRequest.glassCeramicCrown ?? false,
-                                      onChange: (value) => labRequest.glassCeramicCrown = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Visiolign bonded to PEEK",
-                                      value: labRequest.visiolignBondedToPEEK ?? false,
-                                      onChange: (value) => labRequest.visiolignBondedToPEEK = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Laminate veneer",
-                                      value: labRequest.laminateVeneer ?? false,
-                                      onChange: (value) => labRequest.laminateVeneer = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Milled PMMA temporary crown",
-                                      value: labRequest.milledPMMATemporaryCrown ?? false,
-                                      onChange: (value) => labRequest.milledPMMATemporaryCrown = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Long term temporary crown",
-                                      value: labRequest.longTermTemporaryCrown ?? false,
-                                      onChange: (value) => labRequest.longTermTemporaryCrown = value,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    CIA_CheckBoxWidget(
-                                      text: "Screw-ratained crown",
-                                      value: labRequest.screwRatainedCrown ?? false,
-                                      onChange: (value) => labRequest.screwRatainedCrown = value,
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.zirconUnit,
+                                      name: "Zircon Unit",
+                                      onChange: (data) => labRequest.zirconUnit = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Survey crown for RPD",
-                                      value: labRequest.surveyCrownForRPD ?? false,
-                                      onChange: (value) => labRequest.surveyCrownForRPD = value,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.tiAbutment,
+                                      name: "Ti Abutment",
+                                      onChange: (data) => labRequest.tiAbutment = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Survey crown with extra coronal attahcment",
-                                      value: labRequest.surveyCrownWithExtraCoronalAttahcment ?? false,
-                                      onChange: (value) => labRequest.surveyCrownWithExtraCoronalAttahcment = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Cast post & core",
-                                      value: labRequest.castPostcore ?? false,
-                                      onChange: (value) => labRequest.castPostcore = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Zirconium post and core",
-                                      value: labRequest.zirconiumPostAndCore ?? false,
-                                      onChange: (value) => labRequest.zirconiumPostAndCore = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Custom carbon fiber post",
-                                      value: labRequest.customCarbonFiberPost ?? false,
-                                      onChange: (value) => labRequest.customCarbonFiberPost = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Zirconium inlay or onlay",
-                                      value: labRequest.zirconiumInlayOrOnlay ?? false,
-                                      onChange: (value) => labRequest.zirconiumInlayOrOnlay = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Glass ceramic inlay or onlay",
-                                      value: labRequest.glassCeramicInlayOrOnlay ?? false,
-                                      onChange: (value) => labRequest.glassCeramicInlayOrOnlay = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "CAD-CAM abutment",
-                                      value: labRequest.caDCAMAbutment ?? false,
-                                      onChange: (value) => labRequest.caDCAMAbutment = value,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    CIA_CheckBoxWidget(
-                                      text: "Special tray",
-                                      value: labRequest.specialTray ?? false,
-                                      onChange: (value) => labRequest.specialTray = value,
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.pfm,
+                                      name: "PFM",
+                                      onChange: (data) => labRequest.pfm = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Occlusion block",
-                                      value: labRequest.occlusionBlock ?? false,
-                                      onChange: (value) => labRequest.occlusionBlock = value,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.tiBar,
+                                      name: "Ti Bar",
+                                      onChange: (data) => labRequest.tiBar = data,
                                     ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Diagnostic or trail setup",
-                                      value: labRequest.diagnosticOrTrailSetup ?? false,
-                                      onChange: (value) => labRequest.diagnosticOrTrailSetup = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Flexible RPD",
-                                      value: labRequest.flexibleRPD ?? false,
-                                      onChange: (value) => labRequest.flexibleRPD = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Metallic RPD",
-                                      value: labRequest.metallicRPD ?? false,
-                                      onChange: (value) => labRequest.metallicRPD = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Night guard vacuum template",
-                                      value: labRequest.nightGuardVacuumTemplate ?? false,
-                                      onChange: (value) => labRequest.nightGuardVacuumTemplate = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Radiographic duplicates for CBCT",
-                                      value: labRequest.radiographicDuplicatesForCBCT ?? false,
-                                      onChange: (value) => labRequest.radiographicDuplicatesForCBCT = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Clear surgical templates",
-                                      value: labRequest.clearSurgicalTemplates ?? false,
-                                      onChange: (value) => labRequest.clearSurgicalTemplates = value,
-                                    ),
-                                    CIA_CheckBoxWidget(
-                                      text: "Diagnostic surveying",
-                                      value: labRequest.diagnosticSurveying ?? false,
-                                      onChange: (value) => labRequest.diagnosticSurveying = value,
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.compositeInlay,
+                                      name: "Composite Inlay",
+                                      onChange: (data) => labRequest.compositeInlay = data,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.threeDPrinting,
+                                      name: "3D Printing",
+                                      onChange: (data) => labRequest.threeDPrinting = data,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.emaxVeneer,
+                                      name: "Emax Veneer",
+                                      onChange: (data) => labRequest.emaxVeneer = data,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: LabRequestItemWidget(
+                                      item: labRequest.milledPMMA,
+                                      name: "Milled PMMA",
+                                      onChange: (data) => labRequest.milledPMMA = data,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10),
                             ],
                           ),
+
+
                           SizedBox(height: 10),
                           Row(
                             children: [

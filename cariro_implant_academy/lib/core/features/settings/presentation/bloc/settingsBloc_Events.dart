@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,10 +8,40 @@ import '../../../../../features/patient/domain/entities/roomEntity.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 import '../../domain/entities/treatmentPricesEntity.dart';
 import '../../domain/useCases/addImplantsUseCase.dart';
+import '../../domain/useCases/addLabItemShadesUseCase.dart';
+import '../../domain/useCases/addLabItemsUseCase.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 
 abstract class SettingsBloc_Events extends Equatable {}
 
+class SettingsBloc_LoadLabItemsEvent extends SettingsBloc_Events {
+  final int shadeId;
+  SettingsBloc_LoadLabItemsEvent({required this.shadeId});
+  @override
+  List<Object?> get props => [shadeId];
+}
+class SettingsBloc_LoadLabItemsCompaniesEvent extends SettingsBloc_Events {
+  final int id;
+  SettingsBloc_LoadLabItemsCompaniesEvent({required this.id});
+  @override
+  List<Object?> get props => [id];
+}
+class SettingsBloc_LoadLabItemsShadesEvent extends SettingsBloc_Events {
+  final int companyId;
+  SettingsBloc_LoadLabItemsShadesEvent({required this.companyId});
+  @override
+  List<Object?> get props => [companyId];
+}
+class SettingsBloc_LoadLabItemsParentsEvent extends SettingsBloc_Events {
+  @override
+  List<Object?> get props => [];
+}
+class SettingsBloc_LoadLabItemCompaniesEvent extends SettingsBloc_Events {
+  final int id;
+  SettingsBloc_LoadLabItemCompaniesEvent({required this.id});
+  @override
+  List<Object?> get props => [id];
+}
 class SettingsBloc_LoadImplantCompaniesEvent extends SettingsBloc_Events {
   @override
   List<Object?> get props => [];
@@ -250,6 +281,27 @@ class SettingsBloc_EditClinicPricesEvent extends SettingsBloc_Events {
 class SettingsBloc_LoadClinicPricesEvent extends SettingsBloc_Events{
   final GetTeethClinicPircesParams params;
   SettingsBloc_LoadClinicPricesEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+
+}
+class SettingsBloc_UpdateLabItemCompaniesEvent extends SettingsBloc_Events{
+  final UpdateLabItemsCompaniesParams params;
+  SettingsBloc_UpdateLabItemCompaniesEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+
+}
+class SettingsBloc_UpdateLabItemShadesEvent extends SettingsBloc_Events{
+  final UpdateLabItemsShadesParams params;
+  SettingsBloc_UpdateLabItemShadesEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+
+}
+class SettingsBloc_UpdateLabItemEvent extends SettingsBloc_Events{
+  final UpdateLabItemsParams params;
+  SettingsBloc_UpdateLabItemEvent({required this.params});
   @override
   List<Object?> get props => [params];
 

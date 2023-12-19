@@ -53,6 +53,8 @@ class SettingsPage extends StatefulWidget {
   static String getRouteName({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
+      case Website.Lab:
+        return "LabSettings";
       case Website.Clinic:
         return "ClinicSettings";
       default:

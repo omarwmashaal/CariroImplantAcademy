@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/cl
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
@@ -48,6 +49,13 @@ abstract class SettingsRepository{
   Future<Either<Failure,NoParams>> editTreatmentPrices( TreatmentPricesEntity prices);
   Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,List<EnumClinicPrices>? category);
   Future<Either<Failure,NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getLabItemParents();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getLabItemCompanies(int id);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getLabItemLines(int id);
+  Future<Either<Failure,List<LabItemEntity>>> getLabItems(int id);
+  Future<Either<Failure,NoParams>> updateLabItems(int shadeId,List<LabItemEntity> data);
+  Future<Either<Failure,NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure,NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
 
 
 

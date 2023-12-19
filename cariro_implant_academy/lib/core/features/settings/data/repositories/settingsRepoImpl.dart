@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/tr
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
 import 'package:dartz/dartz.dart';
 
@@ -334,6 +335,76 @@ class SettingsRepoImpl implements SettingsRepository {
   Future<Either<Failure, NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params) async {
     try {
       final result = await settingsDatasource.updateTeethTreatmentPrices(params);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemParents() async {
+    try {
+      final result = await settingsDatasource.getLabItemParents();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemCompanies(int id) async {
+    try {
+      final result = await settingsDatasource.getLabItemCompanies(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemLines(int id) async {
+    try {
+      final result = await settingsDatasource.getLabItemLines(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabItemEntity>>> getLabItems(int id) async {
+    try {
+      final result = await settingsDatasource.getLabItems(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItems(int shadeId, List<LabItemEntity> data)async {
+    try {
+      final result = await settingsDatasource.updateLabItems(shadeId,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsCompanies(parentItemId,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsShades(companyId,data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

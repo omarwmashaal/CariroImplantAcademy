@@ -31,12 +31,13 @@ import '../../domain/entities/labRequestEntityl.dart';
 import '../blocs/labRequestBloc.dart';
 import '../blocs/labRequestsBloc_Events.dart';
 import '../widgets/CIA_LAB_StepTimelineWidget.dart';
+import '../widgets/labRequestItemWidget.dart';
 
 class LAB_ViewTaskPage extends StatefulWidget {
   LAB_ViewTaskPage({Key? key, required this.id}) : super(key: key);
   int id;
   static String routeName = "ViewTask";
-   static String routeNameClinic = "ClinicViewTask";
+  static String routeNameClinic = "ClinicViewTask";
   static String routePath = "ViewTask";
 
   @override
@@ -97,10 +98,9 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
         } else if (state is LabRequestsBloc_FinishingTaskErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
       },
       buildWhen: (previous, current) =>
-        current is LabRequestsBloc_LoadingRequestsState ||
-        current is LabRequestsBloc_LoadingSingleRequestErrorState ||
-        current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState
-      ,
+          current is LabRequestsBloc_LoadingRequestsState ||
+          current is LabRequestsBloc_LoadingSingleRequestErrorState ||
+          current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState,
       builder: (context, state) {
         if (state is LabRequestsBloc_LoadingRequestsState)
           return LoadingWidget();
@@ -184,7 +184,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text:  request.customer?.name??"",
+                                    text: request.customer?.name ?? "",
                                   ),
                                 )
                               ],
@@ -213,7 +213,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: FormTextValueWidget(text: request.steps?.last.step?.name??""),
+                                  child: FormTextValueWidget(text: request.steps?.last.step?.name ?? ""),
                                 )
                               ],
                             ),
@@ -277,395 +277,494 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                 ],
               ),
               Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                flex:3,
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        FormTextKeyWidget(text: "Teeth: "),
+                        FormTextValueWidget(text: () {
+                          var r = "";
+                          (request.teeth ?? []).forEach((e) => r += "${e.toString()}, ");
+                          return r;
+                        }()),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    FormTextKeyWidget(text: "Required: "),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              FormTextKeyWidget(text: "Teeth: "),
-                              FormTextValueWidget(text: () {
-                                var r = "";
-                                (request.teeth ?? []).forEach((e) => r += "${e.toString()}, ");
-                                return r;
-                              }()),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          FormTextKeyWidget(text: "Required: "),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: request.getMedicalInfoList().length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 5),
-                                    child: Text(request.getMedicalInfoList()[index]),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          FormTextKeyWidget(text: "Notes: "),
-                          FormTextValueWidget(text: request.notes ?? ""),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Visibility(
-                            visible: siteController.getRole() == "technician",
-                            child: Container(
-                              child: request.status == EnumLabRequestStatus.FinishedAndHandeled || request.status == EnumLabRequestStatus.FinishedNotHandeled
-                                  ? Expanded(
-                                      flex: 10,
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Text(
-                                                  "Receipt",
-                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                                                ),
-                                                BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                                  buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
-                                                  builder: (context, state) => CIA_SecondaryButton(
-                                                      label: editMode ? "View Mode" : "Edit Mode",
-                                                      onTab: () {
-                                                        editMode = !editMode;
-                                                        bloc.emit(LabRequestsBloc_SwitchEditViewReceiptModeState());
-                                                      }),
-                                                ),
-                                                CIA_PrimaryButton(
-                                                    label: "Save Receipt",
-                                                    onTab: () => bloc.add(LabRequestsBloc_AddOrUpdateRequestReceiptEvent(
-                                                          params: AddOrUpdateRequestReceiptParams(
-                                                            id: widget.id,
-                                                            steps: request.steps ?? [],
-                                                          ),
-                                                        ))),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                              buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
-                                              builder: (context, state) {
-                                                return Column(
-                                                  children: request.steps!
-                                                      .map(
-                                                        (e) => Padding(
-                                                          padding: EdgeInsets.only(bottom: editMode ? 10 : 5),
-                                                          child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                  child: FormTextValueWidget(
-                                                                      text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!))),
-                                                              Expanded(
-                                                                  child: FormTextValueWidget(text: "by: ${e.technician?.name??""}")),
-                                                              Expanded(
-                                                                child: editMode
-                                                                    ? CIA_TextFormField(
-                                                                        isNumber: true,
-                                                                        label: e.step?.name??"",
-                                                                        suffix: "EGP",
-                                                                        controller: TextEditingController(text: (e.price ?? 0).toString()),
-                                                                        onChange: (v) {
-                                                                          e.price = int.parse(v);
-                                                                          int total = 0;
-                                                                          request.steps!.forEach((element) {
-                                                                            total += element.price ?? 0;
-                                                                          });
-                                                                          totalPrice = total;
-                                                                          bloc.emit(LabRequestsBloc_UpdateReceiptTotalPriceState(totalPrice: total));
-                                                                        },
-                                                                      )
-                                                                    : FormTextValueWidget(text: "${e.step?.name??""}"),
-                                                              ),
-                                                              editMode
-                                                                  ? Container()
-                                                                  : Expanded(
-                                                                      child: FormTextValueWidget(
-                                                                      text: " ${(e.price ?? 0).toString()}",
-                                                                      suffix: "EGP",
-                                                                    ))
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                );
-                                              },
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Expanded(flex: 3, child: SizedBox()),
-                                                BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                                  buildWhen: (previous, current) => current is LabRequestsBloc_UpdateReceiptTotalPriceState,
-                                                  builder: (context, state) {
-                                                    if (state is LabRequestsBloc_UpdateReceiptTotalPriceState) totalPrice = state.totalPrice;
-                                                    return Expanded(
-                                                        child: FormTextValueWidget(
-                                                      text: totalPrice.toString(),
-                                                      suffix: "EGP",
-                                                    ));
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : request.steps!.last.technicianId == request.customerId
-                                      ? Row(
-                                          children: [
-                                            Text("Waiting for Customer Action!"),
-                                            SizedBox(width: 10),
-                                            CIA_PrimaryButton(
-                                              label: "Customer Approved?",
-                                              onTab: () async {
-                                                CIA_ShowPopUp(
-                                                    context: context,
-                                                    onSave: () {
-                                                      bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                                        params: FinishTaskParams(
-                                                          id: widget.id,
-                                                          nextTaskId: nextTaskId,
-                                                          assignToId: null,
-                                                          notes: null,
-                                                        ),
-                                                      ));
-                                                    },
-                                                    child: Column(
-                                                      children: [
-                                                        CIA_DropDownSearchBasicIdName(
-                                                          asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                                          label: "Next Step",
-                                                          onSelect: (value) {
-                                                            nextTaskId = value.id!;
-                                                          },
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                      ],
-                                                    ));
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      : request.assignedToId == siteController.getUserId()
-                                          ? Column(
-                                              children: [
-                                                CIA_TextFormField(
-                                                  label: "Notes",
-                                                  maxLines: 5,
-                                                  onChange: (v) => thisStepNotes = v,
-                                                  controller: TextEditingController(
-                                                    text: thisStepNotes,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                CIA_DropDownSearchBasicIdName(
-                                                  asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                                  label: "Next Step",
-                                                  onSelect: (value) {
-                                                    nextTaskId = value.id!;
-                                                  },
-                                                ),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                        asyncUseCase: sl<LoadUsersUseCase>(),
-                                                        searchParams: LoadUsersEnum.technicians,
-                                                        label: "Assign next step to another one",
-                                                        onSelect: (value) {
-                                                          nextAssignId = value.id!;
-                                                          // setState(() {});
-                                                        },
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    FormTextKeyWidget(text: "Or Assign to customer?"),
-                                                    SizedBox(width: 10),
-                                                    RoundCheckBox(
-                                                      isChecked: nextAssignId == request.customerId,
-                                                      onTap: (isSelected) {
-                                                        if (isSelected == true)
-                                                          nextAssignId = request.customerId;
-                                                        else
-                                                          nextAssignId = null;
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 10),
-                                                CIA_PrimaryButton(
-                                                  label: "Finish Task",
-                                                  onTab: () async {
-                                                    bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                                      params: FinishTaskParams(
-                                                        id: widget.id,
-                                                        nextTaskId: nextTaskId,
-                                                        assignToId: nextAssignId ?? siteController.getUserId(),
-                                                        notes: thisStepNotes,
-                                                      ),
-                                                    ));
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                          : FormTextKeyWidget(text: "Assigned to ${ request.assignedTo?.name?? "Nobody"}")
-                              /*
-                            CIA_PrimaryButton(
-                                            icon: Icon(
-                                              Icons.play_circle,
-                                              color: Colors.white,
-                                            ),
-                                            label: "Assign next step to you?",
-                                            onTab: () async {
-                                              await LAB_RequestsAPI.AddToMyTasks(widget.id);
-                                              setState(() {});
-                                            },
-                                          )*/
-                              ,
-                            ),
-                          ),
-                          Visibility(
-                            visible: siteController.getRole() == "labmoderator",
-                            child: Expanded(
-                              child: Column(
-                                children: [
-                                  FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name?? "Nobody"}"),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                    searchParams: LoadUsersEnum.technicians,
-                                    asyncUseCase: sl<LoadUsersUseCase>(),
-                                    label: "Assign next step to technician",
-                                    onSelect: (value) {
-                                      nextAssignId = value.id!;
-                                      //setState(() {});
-                                    },
-                                    selectedItem: request.assignedTo,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  CIA_PrimaryButton(
-                                    label: 'Assign to technician',
-                                    onTab: () async {
-                                      if (nextAssignId == null)
-                                        ShowSnackBar(context, isSuccess: false, message: "Please choose a technician!");
-                                      else {
-                                        bloc.add(LabRequestsBloc_AssignTaskToATechnicianEvent(
-                                          params: AssignTaskToTechnicianParams(
-                                            taskId: request.id!,
-                                            technicianId: nextAssignId!,
-                                          ),
-                                        ));
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
-                            child: CIA_PrimaryButton(
-                              label: "Waiting your action",
-                              onTab: () async {
-                                if (request.steps != null && request.steps!.isNotEmpty) {
-                                  if (request.steps!.length >= 2)
-                                    nextAssignId = request.steps![request.steps!.length - 2].technicianId;
-                                  else
-                                    nextAssignId = null;
-                                }
-                                await CIA_ShowPopUp(
-                                    context: context,
-                                    onSave: () async {
-                                      bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                        params: FinishTaskParams(
-                                          id: widget.id,
-                                          nextTaskId: nextTaskId,
-                                          assignToId: nextAssignId,
-                                          notes: thisStepNotes,
-                                        ),
-                                      ));
+                      child: ListView(
 
-                                      return false;
-                                      //setState(() {});
-                                    },
-                                    child: Column(
-                                      children: [
-                                        CIA_TextFormField(
-                                          label: "Notes",
-                                          maxLines: 5,
-                                          onChange: (v) => thisStepNotes = v,
-                                          controller: TextEditingController(
-                                            text: thisStepNotes,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        CIA_DropDownSearchBasicIdName(
-                                          asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                          label: "Next Step",
-                                          onSelect: (value) {
-                                            nextTaskId = value.id!;
-                                          },
-                                        ),
-                                        SizedBox(height: 10),
-                                      ],
-                                    ));
-                                setState(() {});
-                              },
+                        children: [
+                          Visibility(
+                            visible: request.waxUp!=null,
+                            child: LabRequestItemWidget(
+                              item: request.waxUp,
+                              name: "Wax Up",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                              showConsume: true,
                             ),
                           ),
-                          SizedBox(
-                            height: 40,
+
+
+                          Visibility(
+                            visible: request.printedPMMA!=null,
+                            child: LabRequestItemWidget(
+                              item: request.printedPMMA,
+                              name: "Printed PMMA",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: request.zirconUnit!=null,
+                            child: LabRequestItemWidget(
+                              item: request.zirconUnit,
+                              name: "Zircon Unit",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+
+                          Visibility(
+                            visible: request.tiAbutment!=null,
+                            child: LabRequestItemWidget(
+                              item: request.tiAbutment,
+                              name: "Ti Abutment",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: request.pfm!=null,
+                            child: LabRequestItemWidget(
+                              item: request.pfm,
+                              name: "PFM",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+
+                          Visibility(
+                            visible: request.tiBar!=null,
+                            child: LabRequestItemWidget(
+                              item: request.tiBar,
+                              name: "Ti Bar",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: request.compositeInlay!=null,
+                            child: LabRequestItemWidget(
+                              item: request.compositeInlay,
+                              name: "Composite Inlay",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+
+                          Visibility(
+                            visible: request.threeDPrinting!=null,
+                            child: LabRequestItemWidget(
+                              item: request.threeDPrinting,
+                              name: "3D Printing",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: request.emaxVeneer!=null,
+                            child: LabRequestItemWidget(
+                              item: request.emaxVeneer,
+                              name: "Emax Veneer",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
+                          ),
+
+
+                          Visibility(
+                            visible: request.milledPMMA!=null,
+                            child: LabRequestItemWidget(
+                              item: request.milledPMMA,
+                              name: "Milled PMMA",
+                              onChange: (data) => null,
+                              viewOnly: true,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    VerticalDivider(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: CIA_LAB_StepTimelineWidget(
-                          steps: request!.steps ?? [],
-                          isTask: true,
-                          customerId: request.customerId!,
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CIA_SecondaryButton(label: "Use From Stock", onTab: (){
+                      CIA_ShowPopUp(context: context,child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [],
+                            )
+                          ],
+                        ),
+                      ));
+                    }),
+                    FormTextKeyWidget(text: "Notes: "),
+                    FormTextValueWidget(text: request.notes ?? ""),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: siteController.getRole() == "technician",
+                      child: Container(
+                        child: request.status == EnumLabRequestStatus.FinishedAndHandeled || request.status == EnumLabRequestStatus.FinishedNotHandeled
+                            ? Expanded(
+                                flex: 10,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            "Receipt",
+                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                          BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                            buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
+                                            builder: (context, state) => CIA_SecondaryButton(
+                                                label: editMode ? "View Mode" : "Edit Mode",
+                                                onTab: () {
+                                                  editMode = !editMode;
+                                                  bloc.emit(LabRequestsBloc_SwitchEditViewReceiptModeState());
+                                                }),
+                                          ),
+                                          CIA_PrimaryButton(
+                                              label: "Save Receipt",
+                                              onTab: () => bloc.add(LabRequestsBloc_AddOrUpdateRequestReceiptEvent(
+                                                    params: AddOrUpdateRequestReceiptParams(
+                                                      id: widget.id,
+                                                      steps: request.steps ?? [],
+                                                    ),
+                                                  ))),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                        buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
+                                        builder: (context, state) {
+                                          return Column(
+                                            children: request.steps!
+                                                .map(
+                                                  (e) => Padding(
+                                                    padding: EdgeInsets.only(bottom: editMode ? 10 : 5),
+                                                    child: Row(
+                                                      children: [
+                                                        Expanded(
+                                                            child: FormTextValueWidget(
+                                                                text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!))),
+                                                        Expanded(child: FormTextValueWidget(text: "by: ${e.technician?.name ?? ""}")),
+                                                        Expanded(
+                                                          child: editMode
+                                                              ? CIA_TextFormField(
+                                                                  isNumber: true,
+                                                                  label: e.step?.name ?? "",
+                                                                  suffix: "EGP",
+                                                                  controller: TextEditingController(text: (e.price ?? 0).toString()),
+                                                                  onChange: (v) {
+                                                                    e.price = int.parse(v);
+                                                                    int total = 0;
+                                                                    request.steps!.forEach((element) {
+                                                                      total += element.price ?? 0;
+                                                                    });
+                                                                    totalPrice = total;
+                                                                    bloc.emit(LabRequestsBloc_UpdateReceiptTotalPriceState(totalPrice: total));
+                                                                  },
+                                                                )
+                                                              : FormTextValueWidget(text: "${e.step?.name ?? ""}"),
+                                                        ),
+                                                        editMode
+                                                            ? Container()
+                                                            : Expanded(
+                                                                child: FormTextValueWidget(
+                                                                text: " ${(e.price ?? 0).toString()}",
+                                                                suffix: "EGP",
+                                                              ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                                .toList(),
+                                          );
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(flex: 3, child: SizedBox()),
+                                          BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                            buildWhen: (previous, current) => current is LabRequestsBloc_UpdateReceiptTotalPriceState,
+                                            builder: (context, state) {
+                                              if (state is LabRequestsBloc_UpdateReceiptTotalPriceState) totalPrice = state.totalPrice;
+                                              return Expanded(
+                                                  child: FormTextValueWidget(
+                                                text: totalPrice.toString(),
+                                                suffix: "EGP",
+                                              ));
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : request.steps!.last.technicianId == request.customerId
+                                ? Row(
+                                    children: [
+                                      Text("Waiting for Customer Action!"),
+                                      SizedBox(width: 10),
+                                      CIA_PrimaryButton(
+                                        label: "Customer Approved?",
+                                        onTab: () async {
+                                          CIA_ShowPopUp(
+                                              context: context,
+                                              onSave: () {
+                                                bloc.add(LabRequestsBloc_FinishTaskEvent(
+                                                  params: FinishTaskParams(
+                                                    id: widget.id,
+                                                    nextTaskId: nextTaskId,
+                                                    assignToId: null,
+                                                    notes: null,
+                                                  ),
+                                                ));
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  CIA_DropDownSearchBasicIdName(
+                                                    asyncUseCase: sl<GetDefaultStepsUseCase>(),
+                                                    label: "Next Step",
+                                                    onSelect: (value) {
+                                                      nextTaskId = value.id!;
+                                                    },
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                ],
+                                              ));
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                : request.assignedToId == siteController.getUserId()
+                                    ? SizedBox(
+                                        child: CIA_PrimaryButton(
+                                            label: "Finish Task",
+                                            onTab: () {
+                                              CIA_ShowPopUp(
+                                                context: context,
+                                                onSave: () {
+                                                  bloc.add(LabRequestsBloc_FinishTaskEvent(
+                                                    params: FinishTaskParams(
+                                                      id: widget.id,
+                                                      nextTaskId: nextTaskId,
+                                                      assignToId: nextAssignId ?? siteController.getUserId(),
+                                                      notes: thisStepNotes,
+                                                    ),
+                                                  ));
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    CIA_TextFormField(
+                                                      label: "Notes",
+                                                      maxLines: 5,
+                                                      onChange: (v) => thisStepNotes = v,
+                                                      controller: TextEditingController(
+                                                        text: thisStepNotes,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    CIA_DropDownSearchBasicIdName(
+                                                      asyncUseCase: sl<GetDefaultStepsUseCase>(),
+                                                      label: "Next Step",
+                                                      onSelect: (value) {
+                                                        nextTaskId = value.id!;
+                                                      },
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                            asyncUseCase: sl<LoadUsersUseCase>(),
+                                                            searchParams: LoadUsersEnum.technicians,
+                                                            label: "Assign next step to another one",
+                                                            onSelect: (value) {
+                                                              nextAssignId = value.id!;
+                                                              // setState(() {});
+                                                            },
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        FormTextKeyWidget(text: "Or Assign to customer?"),
+                                                        SizedBox(width: 10),
+                                                        RoundCheckBox(
+                                                          isChecked: nextAssignId == request.customerId,
+                                                          onTap: (isSelected) {
+                                                            if (isSelected == true)
+                                                              nextAssignId = request.customerId;
+                                                            else
+                                                              nextAssignId = null;
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      )
+                                    : FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}")
+                        /*
+                      CIA_PrimaryButton(
+                                      icon: Icon(
+                                        Icons.play_circle,
+                                        color: Colors.white,
+                                      ),
+                                      label: "Assign next step to you?",
+                                      onTab: () async {
+                                        await LAB_RequestsAPI.AddToMyTasks(widget.id);
+                                        setState(() {});
+                                      },
+                                    )*/
+                        ,
+                      ),
+                    ),
+                    Visibility(
+                      visible: siteController.getRole() == "labmoderator",
+                      child: Expanded(
+                        child: Column(
+                          children: [
+                            FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}"),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                              searchParams: LoadUsersEnum.technicians,
+                              asyncUseCase: sl<LoadUsersUseCase>(),
+                              label: "Assign next step to technician",
+                              onSelect: (value) {
+                                nextAssignId = value.id!;
+                                //setState(() {});
+                              },
+                              selectedItem: request.assignedTo,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            CIA_PrimaryButton(
+                              label: 'Assign to technician',
+                              onTab: () async {
+                                if (nextAssignId == null)
+                                  ShowSnackBar(context, isSuccess: false, message: "Please choose a technician!");
+                                else {
+                                  bloc.add(LabRequestsBloc_AssignTaskToATechnicianEvent(
+                                    params: AssignTaskToTechnicianParams(
+                                      taskId: request.id!,
+                                      technicianId: nextAssignId!,
+                                    ),
+                                  ));
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    )
+                    ),
+                    Visibility(
+                      visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
+                      child: CIA_PrimaryButton(
+                        label: "Waiting your action",
+                        onTab: () async {
+                          if (request.steps != null && request.steps!.isNotEmpty) {
+                            if (request.steps!.length >= 2)
+                              nextAssignId = request.steps![request.steps!.length - 2].technicianId;
+                            else
+                              nextAssignId = null;
+                          }
+                          await CIA_ShowPopUp(
+                              context: context,
+                              onSave: () async {
+                                bloc.add(LabRequestsBloc_FinishTaskEvent(
+                                  params: FinishTaskParams(
+                                    id: widget.id,
+                                    nextTaskId: nextTaskId,
+                                    assignToId: nextAssignId,
+                                    notes: thisStepNotes,
+                                  ),
+                                ));
+
+                                return false;
+                                //setState(() {});
+                              },
+                              child: Column(
+                                children: [
+                                  CIA_TextFormField(
+                                    label: "Notes",
+                                    maxLines: 5,
+                                    onChange: (v) => thisStepNotes = v,
+                                    controller: TextEditingController(
+                                      text: thisStepNotes,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName(
+                                    asyncUseCase: sl<GetDefaultStepsUseCase>(),
+                                    label: "Next Step",
+                                    onSelect: (value) {
+                                      nextTaskId = value.id!;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ));
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
                   ],
                 ),
               ),
