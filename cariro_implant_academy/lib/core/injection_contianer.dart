@@ -210,6 +210,7 @@ import '../features/labRequest/domain/usecases/getPatientRequestsUseCase.dart';
 import '../features/labRequest/domain/usecases/getRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import '../features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
+import '../features/labRequest/domain/usecases/updateLabRequestUseCase.dart';
 import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import '../features/patient/data/datasources/patientSearchDataSource.dart';
 import '../features/patient/data/repositories/addOrRemoveMyPatientsRepoImpl.dart';
@@ -266,6 +267,7 @@ import 'features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
 import 'features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'features/settings/domain/useCases/getNonMedicalStockCategories.dart';
+import 'features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
 import 'features/settings/presentation/bloc/settingsBloc.dart';
 
 final sl = GetIt.instance;
@@ -376,6 +378,7 @@ initInjection() async {
     updateLabItemsCompaniesUseCase: sl(),
     updateLabItemsShadesUseCase: sl(),
     updateLabItemsUseCase: sl(),
+    updateLabItemsParentsPriceUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
@@ -442,6 +445,8 @@ initInjection() async {
   sl.registerLazySingleton(() => UpdateLabItemsCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsShadesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabItemsParentsPriceUseCase(settingsRepository: sl()));
+
 
   //repositories
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepoImpl(settingsDatasource: sl()));
@@ -878,6 +883,7 @@ initInjection() async {
         addOrUpdateRequestReceiptUseCase: sl(),
         assignTaskToTechnicianUseCase: sl(),
         markRequestAsDoneUseCase: sl(),
+        updateLabRequestUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
@@ -893,6 +899,7 @@ initInjection() async {
   sl.registerLazySingleton(() => CheckLabRequestsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => CreateNewLabCustomerUseCase(labCustomersRepository: sl()));
   sl.registerLazySingleton(() => SearchLabPatientsByTypeUseCase(labCustomersRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabRequestUseCase(labRequestRepository: sl()));
   //repo
   sl.registerLazySingleton<LabRequestRepository>(() => LabRequestRepoImpl(labRequestDatasource: sl()));
   sl.registerLazySingleton<LabCustomersRepository>(() => LabCustomerRepoImpl(labCustomerDatasource: sl()));

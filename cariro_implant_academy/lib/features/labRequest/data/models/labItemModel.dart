@@ -5,7 +5,6 @@ class LabItemModel extends LabItemEntity {
     super.id,
     super.code,
     super.consumedCount,
-    super.unitPrice,
     super.consumed,
     super.size,
     super.labItemShadeId,
@@ -17,7 +16,6 @@ class LabItemModel extends LabItemEntity {
       id: map['id'],
       code: map['code'],
       consumedCount: map['consumedCount'],
-      unitPrice: map['unitPrice'],
       consumed: map['consumed'],
       size: map['size'],
       labItemShadeId: map['labItemShadeId'],
@@ -30,7 +28,6 @@ class LabItemModel extends LabItemEntity {
       id: entity.id,
       code: entity.code,
       consumedCount: entity.consumedCount,
-      unitPrice: entity.unitPrice,
       consumed: entity.consumed,
       size: entity.size,
       labItemShadeId: entity.labItemShadeId,
@@ -43,7 +40,6 @@ class LabItemModel extends LabItemEntity {
     data['id'] = this.id;
     data['code'] = this.code;
     data['consumedCount'] = this.consumedCount;
-    data['unitPrice'] = this.unitPrice;
     data['consumed'] = this.consumed;
     data['size'] = this.size;
     data['labItemShadeId'] = this.labItemShadeId;

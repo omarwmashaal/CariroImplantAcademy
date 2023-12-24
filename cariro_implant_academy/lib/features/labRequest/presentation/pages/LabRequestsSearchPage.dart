@@ -194,10 +194,8 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                               statusEnum = EnumLabRequestStatus.InQueue;
                             else if (v.name == "In Progress")
                               statusEnum = EnumLabRequestStatus.InProgress;
-                            else if (v.name == "Finished and Handled")
-                              statusEnum = EnumLabRequestStatus.FinishedAndHandeled;
-                            else if (v.name == "Finished Not Handled")
-                              statusEnum = EnumLabRequestStatus.FinishedNotHandeled;
+                            else if (v.name == "Finished")
+                              statusEnum =EnumLabRequestStatus.Finished;
                             else if (v.name == "None") statusEnum = null;
                             reload();
                           },
@@ -207,8 +205,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                             BasicNameIdObjectEntity(name: "None"),
                             BasicNameIdObjectEntity(name: "In Queue"),
                             BasicNameIdObjectEntity(name: "In Progress"),
-                            BasicNameIdObjectEntity(name: "Finished and Handled"),
-                            BasicNameIdObjectEntity(name: "Finished Not Handled"),
+                            BasicNameIdObjectEntity(name: "Finished"),
                           ],
                         ),
                       ),

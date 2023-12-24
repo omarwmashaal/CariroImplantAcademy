@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../../Widgets/CIA_TextFormField.dart';
 
-class LabRequestItemWidget extends StatefulWidget {
-  LabRequestItemWidget({
+class LabRequestItemConsumeWidget extends StatefulWidget {
+  LabRequestItemConsumeWidget({
     Key? key,
     required this.item,
     required this.name,
@@ -21,10 +21,10 @@ class LabRequestItemWidget extends StatefulWidget {
   Function(LabRequestItemEntity data) onChange;
 
   @override
-  State<LabRequestItemWidget> createState() => _LabRequestItemWidgetState();
+  State<LabRequestItemConsumeWidget> createState() => _LabRequestItemConsumeWidgetState();
 }
 
-class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
+class _LabRequestItemConsumeWidgetState extends State<LabRequestItemConsumeWidget> {
   @override
   Widget build(BuildContext context) {
     widget.item!.totalPrice = widget.item!.number!*widget.item!.price!;

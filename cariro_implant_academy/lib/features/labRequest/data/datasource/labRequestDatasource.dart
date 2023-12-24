@@ -23,6 +23,7 @@ abstract class LabRequestDatasource {
   Future<NoParams> checkLabRequests(int id);
 
   Future<NoParams> addRequest(LabRequestEntity model);
+  Future<NoParams> updateLabRequest(LabRequestEntity model);
 
   Future<BasicNameIdObjectModel> getDefaultStepByName(String name);
 
@@ -233,6 +234,21 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
 
     try {
       response = await httpRepo.get(host: "$serverHost/$labRequestsController/CheckLabRequests?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateLabRequest(LabRequestEntity model) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$labRequestsController/UpdateLabRequest",
+        body: LabRequestModel.fromEntity(model).toJson(),
+      );
     } catch (e) {
       throw mapException(e);
     }

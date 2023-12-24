@@ -3,7 +3,9 @@ import 'package:cariro_implant_academy/core/features/settings/data/models/clinic
 import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
 
+import '../../../../../features/labRequest/data/models/labItemParentModel.dart';
 import '../../../../../features/labRequest/data/models/labItemModel.dart';
+import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../../../../features/labRequest/domain/entities/labItemEntity.dart';
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
 import '../../../../constants/enums/enums.dart';
@@ -89,7 +91,7 @@ abstract class SettingsDatasource {
 
   Future<NoParams> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
 
-  Future<List<BasicNameIdObjectModel>> getLabItemParents();
+  Future<List<LabItemParentModel>> getLabItemParents();
 
   Future<List<BasicNameIdObjectModel>> getLabItemCompanies(int id);
 
@@ -102,6 +104,7 @@ abstract class SettingsDatasource {
   Future<NoParams> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data);
 
   Future<NoParams> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateLabItemsParentsPrice(int parentItemId, int price);
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -603,7 +606,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getLabItemParents() async {
+  Future<List<LabItemParentModel>> getLabItemParents() async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabItemsParents");
@@ -612,7 +615,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => LabItemParentModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
@@ -703,6 +706,21 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/UpdateLabItemShades?id=$companyId",
         body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateLabItemsParentsPrice(int parentItemId, int price) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateLabItemParentsPrice?id=$parentItemId&price=$price",
+
       );
     } catch (e) {
       throw mapException(e);

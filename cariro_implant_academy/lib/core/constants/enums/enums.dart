@@ -39,7 +39,7 @@ enum LabStepStatus {
   NotYet,
 }
 
-enum EnumLabRequestStatus { InQueue, InProgress, FinishedNotHandeled, FinishedAndHandeled }
+enum EnumLabRequestStatus { InQueue, InProgress, Finished }
 
 enum EnumPatientType { CIA, Clinic, OutSource }
 

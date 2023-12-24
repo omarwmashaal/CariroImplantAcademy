@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createLabRequestUseCase.dart';
@@ -7,6 +8,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAl
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/updateLabRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
@@ -34,6 +36,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final MarkRequestAsDoneUseCase markRequestAsDoneUseCase;
   final AddOrUpdateRequestReceiptUseCase addOrUpdateRequestReceiptUseCase;
   final AssignTaskToTechnicianUseCase assignTaskToTechnicianUseCase;
+  final UpdateLabRequestUseCase updateLabRequestUseCase;
 
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
@@ -47,6 +50,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.markRequestAsDoneUseCase,
     required this.addOrUpdateRequestReceiptUseCase,
     required this.assignTaskToTechnicianUseCase,
+    required this.updateLabRequestUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -67,6 +71,16 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         result.fold(
           (l) => emit(LabRequestsBloc_CreatingCustomerErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_CreatedCustomerSuccessfullyState(newCustomer: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_UpdateLabRequestEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_UpdatingLabRequestState());
+        final result = await updateLabRequestUseCase(event.request);
+        result.fold(
+          (l) => emit(LabRequestsBloc_UpdatingLabRequestErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_UpdatedLabRequestSuccessfullyState()),
         );
       },
     );

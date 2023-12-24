@@ -7,7 +7,9 @@ class LabRequestItemModel extends LabRequestItemEntity {
     String? name,
     String? description,
     int? number,
-  }) : super(name: name, description: description, number: number);
+    int? price,
+    int? totalPrice,
+  }) : super(name: name, description: description, number: number,price:price,totalPrice:totalPrice);
 
 
   factory LabRequestItemModel.fromJson(Map<String, dynamic> map) {
@@ -15,6 +17,8 @@ class LabRequestItemModel extends LabRequestItemEntity {
       name: map['name'],
       description: map['description'],
       number: map['number'],
+      price: map['price'],
+      totalPrice: map['totalPrice'],
     );
   }
 
@@ -23,6 +27,8 @@ class LabRequestItemModel extends LabRequestItemEntity {
       'name': name,
       'description': description,
       'number': number,
+      'price': price,
+      'totalPrice': totalPrice,
     };
   }
 
@@ -31,5 +37,7 @@ class LabRequestItemModel extends LabRequestItemEntity {
     name: entity.name,
     description: entity.description,
     number: entity.number,
+    price: entity.price,
+    totalPrice: entity.totalPrice,
   );
 }

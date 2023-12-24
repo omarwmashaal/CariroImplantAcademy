@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
+
 class GetLabItemsCompaniesUseCase extends UseCases<List<BasicNameIdObjectEntity>, int> {
   final SettingsRepository settingsRepository;
 

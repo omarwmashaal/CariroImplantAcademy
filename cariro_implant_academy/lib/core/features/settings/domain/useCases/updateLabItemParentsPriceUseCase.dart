@@ -7,22 +7,22 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 
-class UpdateLabItemsCompaniesUseCase extends UseCases<NoParams, UpdateLabItemsCompaniesParams> {
+class UpdateLabItemsParentsPriceUseCase extends UseCases<NoParams, UpdateLabItemsParentsPriceParams> {
   final SettingsRepository settingsRepository;
 
-  UpdateLabItemsCompaniesUseCase({required this.settingsRepository});
+  UpdateLabItemsParentsPriceUseCase({required this.settingsRepository});
 
   @override
-  Future<Either<Failure, NoParams>> call(UpdateLabItemsCompaniesParams params) async {
-    return await settingsRepository.updateLabItemsCompanies(params.parentItemId,params.data).then((value) => value.fold(
-          (l) => Left(l..message = "Update Lab Items Companies:"),
+  Future<Either<Failure, NoParams>> call(UpdateLabItemsParentsPriceParams params) async {
+    return await settingsRepository.updateLabItemsParentsPrice(params.parentItemId,params.price).then((value) => value.fold(
+          (l) => Left(l..message = "Update Lab Items Parents Price:"),
           (r) => Right(r),
         ));
   }
 }
 
-class UpdateLabItemsCompaniesParams{
+class UpdateLabItemsParentsPriceParams{
   final int parentItemId;
-  final List<BasicNameIdObjectEntity> data;
-  UpdateLabItemsCompaniesParams({required this.parentItemId,required this.data});
+  final int price;
+  UpdateLabItemsParentsPriceParams({required this.parentItemId,required this.price});
  }

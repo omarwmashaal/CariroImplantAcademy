@@ -20,6 +20,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
@@ -38,6 +39,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../../../Widgets/SlidingTab.dart';
 import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
+import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../../../presentation/widgets/CIA_GestureWidget.dart';
 import '../../domain/entities/treatmentPricesEntity.dart';
 import '../../domain/useCases/addLabItemsUseCase.dart';
@@ -78,7 +80,20 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SettingsBloc, SettingsBloc_States>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState) {
+          CustomLoader.show(context);
+        } else {
+          CustomLoader.hide();
+          if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState) {
+            ShowSnackBar(context, isSuccess: false, message: state.message);
+            bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
+          } else if (state is SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState) {
+            ShowSnackBar(context, isSuccess: true);
+            bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
+          }
+        }
+      },
       buildWhen: (previous, current) =>
           current is SettingsBloc_LoadingLabItemParentsState ||
           current is SettingsBloc_LoadingLabItemParentsErrorState ||
@@ -96,8 +111,32 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
           }
           sideBarItem = state.data
               .map((e) => SidebarXItem(
-                    label: e.name,
-                    iconWidget: Container(),
+                    label: "${e.name}: ${e.unitPrice} EGP",
+                    iconWidget: IconButton(
+                        onPressed: () {
+                          CIA_ShowPopUp(
+                            onSave: () {
+                              bloc.add(
+                                SettingsBloc_UpdateLabItemParentPriceEvent(
+                                  params: UpdateLabItemsParentsPriceParams(
+                                    price: e.unitPrice ?? 0,
+                                    parentItemId: currentItemId,
+                                  ),
+                                ),
+                              );
+                            },
+                            context: context,
+                            title: "Edit Price",
+                            child: CIA_TextFormField(
+                              label: "Price",
+                              isNumber: true,
+                              suffix: "EGP",
+                              controller: TextEditingController(text: e.unitPrice?.toString() ?? "0"),
+                              onChange: (value) => e.unitPrice = int.tryParse(value) ?? 0,
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.edit)),
                     onTap: () {
                       bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: e.id!));
                       currentIndex = e.id!;
@@ -111,7 +150,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                 controller: SidebarXController(selectedIndex: currentIndex, extended: true),
                 showToggleButton: false,
                 extendedTheme: SidebarXTheme(
-                    width: 200,
+                    width: 300,
                     selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     decoration: BoxDecoration(
                       border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
@@ -217,8 +256,9 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                     ? null
                                                     : labItemCompanies = [
                                                         ...labItemCompanies,
-                                                        BasicNameIdObjectEntity(
+                                                        LabItemParentEntity(
                                                           name: newName,
+                                                          unitPrice: 0,
                                                         ),
                                                       ];
                                                 bloc.add(
@@ -370,7 +410,6 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                               }
                             }
                           },
-
                           builder: (context, state) {
                             List<LabItemEntity> labItems = [];
                             if (state is SettingsBloc_LoadedLabItemsSuccessfullyState) {
@@ -416,17 +455,6 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                Expanded(
-                                                  child: CIA_TextFormField(
-                                                      label: "Unit Price",
-                                                      isNumber: true,
-                                                      suffix: "EGP",
-                                                      controller: TextEditingController(text: labItems[index].unitPrice?.toString()),
-                                                      onChange: (value) => labItems[index].unitPrice = int.tryParse(value)),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
                                                 IconButton(
                                                     onPressed: () {
                                                       labItems.add(LabItemEntity(labItemShadeId: shadeId));
@@ -446,14 +474,15 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    CIA_PrimaryButton(label: "Save", onTab: (){
-                                      bloc.add(SettingsBloc_UpdateLabItemEvent(params: UpdateLabItemsParams(
-                                        data: labItems,
-                                        shadeId: shadeId,
-                                      )));
-                                    })
-
-
+                                    CIA_PrimaryButton(
+                                        label: "Save",
+                                        onTab: () {
+                                          bloc.add(SettingsBloc_UpdateLabItemEvent(
+                                              params: UpdateLabItemsParams(
+                                            data: labItems,
+                                            shadeId: shadeId,
+                                          )));
+                                        })
                                   ],
                                 ),
                               );

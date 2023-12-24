@@ -8,6 +8,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../Models/ImplantModel.dart';
 import '../../../../../Models/TacCompanyModel.dart';
+import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../../../data/models/BasicNameIdObjectModel.dart';
 import '../../data/models/membraneCompanyModel.dart';
 import '../../data/models/treatmentPricesModel.dart';
@@ -664,7 +665,7 @@ class SettingsBloc_LoadingLabItemParentsErrorState extends SettingsBlocErrorStat
 }
 
 class SettingsBloc_LoadedLabItemParentsSuccessfullyState extends SettingsBlocSuccessState {
-  final List<BasicNameIdObjectEntity> data;
+  final List<LabItemParentEntity> data;
   SettingsBloc_LoadedLabItemParentsSuccessfullyState({required this.data});
   @override
   List<Object?> get props => [data];
@@ -776,6 +777,23 @@ class SettingsBloc_UpdatingLabItemsErrorState extends SettingsBlocErrorState {
 }
 
 class SettingsBloc_UpdatedLabItemsSuccessfullyState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState extends SettingsBlocErrorState {
+  SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState extends SettingsBlocSuccessState {
   @override
   List<Object?> get props => [];
 }

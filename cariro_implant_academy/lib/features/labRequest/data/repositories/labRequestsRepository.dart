@@ -143,4 +143,14 @@ class LabRequestRepoImpl implements LabRequestRepository{
     }
   }
 
+  @override
+  Future<Either<Failure, NoParams>> updateLabRequest(LabRequestEntity model) async {
+    try {
+      final result = await labRequestDatasource.updateLabRequest(model);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
 }

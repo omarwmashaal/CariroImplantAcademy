@@ -24,6 +24,7 @@ class LabRequestEntity extends Equatable {
   int? cost;
   int? paidAmount;
   String? notes;
+  String? notesFromTech;
   String? requiredStep;
   List<LabStepEntity>? steps;
   List<int>? teeth;
@@ -46,6 +47,7 @@ class LabRequestEntity extends Equatable {
   LabRequestEntity({
     this.id,
     this.waxUp,
+    this.notesFromTech,
     this.zirconUnit,
     this.pfm,
     this.compositeInlay,
@@ -88,6 +90,7 @@ class LabRequestEntity extends Equatable {
   List<Object?> get props => [
         this.id,
         this.date,
+        this.notesFromTech,
         this.deliveryDate,
         this.entryById,
         this.entryBy,

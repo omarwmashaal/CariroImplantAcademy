@@ -12,6 +12,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/entities/labIt
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../domain/entities/clinicPriceEntity.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../datasources/settingsDatasource.dart';
@@ -342,7 +343,7 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemParents() async {
+  Future<Either<Failure, List<LabItemParentEntity>>> getLabItemParents() async {
     try {
       final result = await settingsDatasource.getLabItemParents();
       return Right(result);
@@ -405,6 +406,16 @@ class SettingsRepoImpl implements SettingsRepository {
   Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data) async {
     try {
       final result = await settingsDatasource.updateLabItemsShades(companyId,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsParentsPrice(int parentItemId, int price) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsParentsPrice(parentItemId,price);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

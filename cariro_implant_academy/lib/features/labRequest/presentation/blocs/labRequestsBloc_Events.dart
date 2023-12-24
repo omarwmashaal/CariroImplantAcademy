@@ -28,6 +28,10 @@ class LabRequestsBloc_CreateLabRequestEvent extends LabRequestsBloc_Events{
   final LabRequestEntity request;
   LabRequestsBloc_CreateLabRequestEvent({required this.request});
 }
+class LabRequestsBloc_UpdateLabRequestEvent extends LabRequestsBloc_Events{
+  final LabRequestEntity request;
+  LabRequestsBloc_UpdateLabRequestEvent({required this.request});
+}
 class LabRequestsBloc_GetPatientsRequestsEvent extends LabRequestsBloc_Events{
   final int patientId;
   LabRequestsBloc_GetPatientsRequestsEvent({required this.patientId});

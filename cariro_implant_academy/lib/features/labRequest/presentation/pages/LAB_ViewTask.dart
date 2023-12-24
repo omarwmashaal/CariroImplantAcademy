@@ -67,6 +67,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
       listener: (context, state) {
         if (state is LabRequestsBloc_MarkingRequestAsDoneState ||
             state is LabRequestsBloc_UpdatingRequestReceiptState ||
+            state is LabRequestsBloc_UpdatingLabRequestState ||
             state is LabRequestsBloc_AssigningTaskToATechnicianState ||
             state is LabRequestsBloc_FinishingTaskState)
           CustomLoader.show(context);
@@ -95,7 +96,13 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
           ShowSnackBar(context, isSuccess: true);
           dialogHelper.dismissSingle(context);
           bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
-        } else if (state is LabRequestsBloc_FinishingTaskErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
+        } else if (state is LabRequestsBloc_FinishingTaskErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is LabRequestsBloc_UpdatedLabRequestSuccessfullyState) {
+          ShowSnackBar(context, isSuccess: true);
+          bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
+          dialogHelper.dismissAll(context);
+        } else if (state is LabRequestsBloc_UpdatingLabRequestErrorState) ShowSnackBar(context, isSuccess: false, message: state.message ?? "");
       },
       buildWhen: (previous, current) =>
           current is LabRequestsBloc_LoadingRequestsState ||
@@ -253,31 +260,37 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     children: [
                       RoundCheckBox(
                         disabledColor: Colors.green,
-                        onTap: request.status == EnumLabRequestStatus.FinishedAndHandeled || request.status == EnumLabRequestStatus.FinishedNotHandeled
+                        onTap: request.status == EnumLabRequestStatus.Finished
                             ? null
                             : (value) async {
                                 await CIA_ShowPopUpYesNo(
                                   context: context,
                                   title: "Mark request as finished?",
-                                  onSave: () => bloc.add(LabRequestsBloc_MarkRequestAsDoneEvent(
-                                    params: MarkRequestAsDoneParams(
-                                      requestId: widget.id,
-                                      notes: thisStepNotes,
+                                  onSave: () => CIA_ShowPopUp(
+                                    context: context,
+                                    onSave: () {
+                                      request.status = EnumLabRequestStatus.Finished;
+                                      bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                    },
+                                    child: CIA_TextFormField(
+                                      label: "Notes From Technician",
+                                      maxLines: 5,
+                                      onChange: (v) => request.notesFromTech = v,
+                                      controller: TextEditingController(
+                                        text: request.notesFromTech,
+                                      ),
                                     ),
-                                  )),
+                                  ),
                                 );
                               },
                       ),
-                      FormTextKeyWidget(
-                          text: request.status == EnumLabRequestStatus.FinishedAndHandeled || request.status == EnumLabRequestStatus.FinishedNotHandeled
-                              ? "Request Completed"
-                              : "Mark as Completed")
+                      FormTextKeyWidget(text: request.status == EnumLabRequestStatus.Finished ? "Request Completed" : "Mark as Completed")
                     ],
                   ),
                 ],
               ),
               Expanded(
-                flex:3,
+                flex: 3,
                 child: Column(
                   //crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -306,10 +319,9 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     ),
                     Expanded(
                       child: ListView(
-
                         children: [
                           Visibility(
-                            visible: request.waxUp!=null,
+                            visible: request.waxUp != null,
                             child: LabRequestItemWidget(
                               item: request.waxUp,
                               name: "Wax Up",
@@ -318,10 +330,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               showConsume: true,
                             ),
                           ),
-
-
                           Visibility(
-                            visible: request.printedPMMA!=null,
+                            visible: request.printedPMMA != null,
                             child: LabRequestItemWidget(
                               item: request.printedPMMA,
                               name: "Printed PMMA",
@@ -329,9 +339,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
                           Visibility(
-                            visible: request.zirconUnit!=null,
+                            visible: request.zirconUnit != null,
                             child: LabRequestItemWidget(
                               item: request.zirconUnit,
                               name: "Zircon Unit",
@@ -339,10 +348,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
-
                           Visibility(
-                            visible: request.tiAbutment!=null,
+                            visible: request.tiAbutment != null,
                             child: LabRequestItemWidget(
                               item: request.tiAbutment,
                               name: "Ti Abutment",
@@ -350,9 +357,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
                           Visibility(
-                            visible: request.pfm!=null,
+                            visible: request.pfm != null,
                             child: LabRequestItemWidget(
                               item: request.pfm,
                               name: "PFM",
@@ -360,10 +366,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
-
                           Visibility(
-                            visible: request.tiBar!=null,
+                            visible: request.tiBar != null,
                             child: LabRequestItemWidget(
                               item: request.tiBar,
                               name: "Ti Bar",
@@ -371,9 +375,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
                           Visibility(
-                            visible: request.compositeInlay!=null,
+                            visible: request.compositeInlay != null,
                             child: LabRequestItemWidget(
                               item: request.compositeInlay,
                               name: "Composite Inlay",
@@ -381,10 +384,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
-
                           Visibility(
-                            visible: request.threeDPrinting!=null,
+                            visible: request.threeDPrinting != null,
                             child: LabRequestItemWidget(
                               item: request.threeDPrinting,
                               name: "3D Printing",
@@ -392,9 +393,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
                           Visibility(
-                            visible: request.emaxVeneer!=null,
+                            visible: request.emaxVeneer != null,
                             child: LabRequestItemWidget(
                               item: request.emaxVeneer,
                               name: "Emax Veneer",
@@ -402,10 +402,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                               viewOnly: true,
                             ),
                           ),
-
-
                           Visibility(
-                            visible: request.milledPMMA!=null,
+                            visible: request.milledPMMA != null,
                             child: LabRequestItemWidget(
                               item: request.milledPMMA,
                               name: "Milled PMMA",
@@ -416,21 +414,24 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                         ],
                       ),
                     ),
-
                     SizedBox(
                       height: 10,
                     ),
-                    CIA_SecondaryButton(label: "Use From Stock", onTab: (){
-                      CIA_ShowPopUp(context: context,child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [],
-                            )
-                          ],
-                        ),
-                      ));
-                    }),
+                    CIA_SecondaryButton(
+                        label: "Use From Stock",
+                        onTab: () {
+                          CIA_ShowPopUp(
+                              context: context,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [],
+                                    )
+                                  ],
+                                ),
+                              ));
+                        }),
                     FormTextKeyWidget(text: "Notes: "),
                     FormTextValueWidget(text: request.notes ?? ""),
                     SizedBox(
@@ -443,7 +444,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     Visibility(
                       visible: siteController.getRole() == "technician",
                       child: Container(
-                        child: request.status == EnumLabRequestStatus.FinishedAndHandeled || request.status == EnumLabRequestStatus.FinishedNotHandeled
+                        child: request.status == EnumLabRequestStatus.Finished
                             ? Expanded(
                                 flex: 10,
                                 child: SingleChildScrollView(
@@ -588,71 +589,118 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                   )
                                 : request.assignedToId == siteController.getUserId()
                                     ? SizedBox(
-                                        child: CIA_PrimaryButton(
-                                            label: "Finish Task",
-                                            onTab: () {
-                                              CIA_ShowPopUp(
-                                                context: context,
-                                                onSave: () {
-                                                  bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                                    params: FinishTaskParams(
-                                                      id: widget.id,
-                                                      nextTaskId: nextTaskId,
-                                                      assignToId: nextAssignId ?? siteController.getUserId(),
-                                                      notes: thisStepNotes,
-                                                    ),
-                                                  ));
-                                                },
-                                                child: Column(
-                                                  children: [
-                                                    CIA_TextFormField(
-                                                      label: "Notes",
+                                        child: Row(
+                                          children: [
+                                            CIA_SecondaryButton(
+                                                label: "Save Changes",
+                                                onTab: () {
+                                                  CIA_ShowPopUp(
+                                                    context: context,
+                                                    onSave: () {
+                                                      bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                    },
+                                                    child: CIA_TextFormField(
+                                                      label: "Notes From Technician",
                                                       maxLines: 5,
-                                                      onChange: (v) => thisStepNotes = v,
+                                                      onChange: (v) => request.notesFromTech = v,
                                                       controller: TextEditingController(
-                                                        text: thisStepNotes,
+                                                        text: request.notesFromTech,
                                                       ),
                                                     ),
-                                                    SizedBox(height: 10),
-                                                    CIA_DropDownSearchBasicIdName(
-                                                      asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                                      label: "Next Step",
-                                                      onSelect: (value) {
-                                                        nextTaskId = value.id!;
-                                                      },
-                                                    ),
-                                                    SizedBox(height: 10),
-                                                    Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                                            asyncUseCase: sl<LoadUsersUseCase>(),
-                                                            searchParams: LoadUsersEnum.technicians,
-                                                            label: "Assign next step to another one",
-                                                            onSelect: (value) {
-                                                              nextAssignId = value.id!;
-                                                              // setState(() {});
-                                                            },
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 10),
-                                                        FormTextKeyWidget(text: "Or Assign to customer?"),
-                                                        SizedBox(width: 10),
-                                                        RoundCheckBox(
-                                                          isChecked: nextAssignId == request.customerId,
-                                                          onTap: (isSelected) {
-                                                            if (isSelected == true)
-                                                              nextAssignId = request.customerId;
-                                                            else
-                                                              nextAssignId = null;
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }),
+                                                  );
+                                                }),
+                                            SizedBox(width: 10),
+                                            CIA_PrimaryButton(
+                                                label: "Finish Request",
+                                                onTab: () {
+                                                  PageController controller = PageController();
+                                                  int index = 0;
+
+                                                  CIA_ShowPopUp(
+                                                      context: context,
+                                                      hideButton: true,
+                                                      width: double.maxFinite,
+                                                      height: 600,
+                                                      onSave: () {},
+                                                      child: StatefulBuilder(builder: (context, _setState) {
+                                                        return Column(
+                                                          children: [
+                                                            Expanded(
+                                                              child: PageView(
+                                                                controller: controller,
+                                                                onPageChanged: (value) {
+                                                                  index = value;
+                                                                  _setState(() {});
+                                                                },
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.all(8.0),
+                                                                    child: CIA_TextFormField(
+                                                                      label: "Notes From Technician",
+                                                                      maxLines: 5,
+                                                                      onChange: (v) => request.notesFromTech = v,
+                                                                      controller: TextEditingController(
+                                                                        text: request.notesFromTech,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.all(8.0),
+                                                                    child: CIA_TextFormField(
+                                                                      label: "Notes From Technician",
+                                                                      maxLines: 5,
+                                                                      onChange: (v) => request.notesFromTech = v,
+                                                                      controller: TextEditingController(
+                                                                        text: request.notesFromTech,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.all(8.0),
+                                                                    child: CIA_TextFormField(
+                                                                      label: "Notes From Technician",
+                                                                      maxLines: 5,
+                                                                      onChange: (v) => request.notesFromTech = v,
+                                                                      controller: TextEditingController(
+                                                                        text: request.notesFromTech,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Visibility(
+                                                                  visible: index != 0,
+                                                                  child: CIA_SecondaryButton(
+                                                                      label: "Previous",
+                                                                      onTab: () {
+                                                                        controller.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                                      }),
+                                                                ),
+                                                                SizedBox(width: 10),
+                                                                index != 2
+                                                                    ? CIA_SecondaryButton(
+                                                                        label: "Next",
+                                                                        onTab: () {
+                                                                          controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                                        })
+                                                                    : CIA_PrimaryButton(
+                                                                        label: "Finish",
+                                                                        onTab: () {
+                                                                          request.status = EnumLabRequestStatus.Finished;
+                                                                          bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                                        }),
+                                                              ],
+                                                            )
+                                                          ],
+                                                        );
+                                                      }));
+                                                }),
+                                          ],
+                                        ),
                                       )
                                     : FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}")
                         /*

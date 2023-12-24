@@ -11,6 +11,7 @@ import '../../domain/useCases/addImplantsUseCase.dart';
 import '../../domain/useCases/addLabItemShadesUseCase.dart';
 import '../../domain/useCases/addLabItemsUseCase.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
+import '../../domain/useCases/updateLabItemParentsPriceUseCase.dart';
 
 abstract class SettingsBloc_Events extends Equatable {}
 
@@ -302,6 +303,13 @@ class SettingsBloc_UpdateLabItemShadesEvent extends SettingsBloc_Events{
 class SettingsBloc_UpdateLabItemEvent extends SettingsBloc_Events{
   final UpdateLabItemsParams params;
   SettingsBloc_UpdateLabItemEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+
+}
+class SettingsBloc_UpdateLabItemParentPriceEvent extends SettingsBloc_Events{
+  final UpdateLabItemsParentsPriceParams params;
+  SettingsBloc_UpdateLabItemParentPriceEvent({required this.params});
   @override
   List<Object?> get props => [params];
 

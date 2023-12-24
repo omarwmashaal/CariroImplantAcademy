@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
@@ -85,6 +86,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateLabItemsCompaniesUseCase updateLabItemsCompaniesUseCase;
   final UpdateLabItemsShadesUseCase updateLabItemsShadesUseCase;
   final UpdateLabItemsUseCase updateLabItemsUseCase;
+  final UpdateLabItemsParentsPriceUseCase updateLabItemsParentsPriceUseCase;
 
   SettingsBloc({
     required this.getImplantCompaniesUseCase,
@@ -127,6 +129,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabItemsUseCase,
     required this.updateLabItemsCompaniesUseCase,
     required this.updateLabItemsShadesUseCase,
+    required this.updateLabItemsParentsPriceUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
@@ -446,6 +449,14 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabItemsErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabItemsSuccessfullyState()),
+      );
+    });
+    on<SettingsBloc_UpdateLabItemParentPriceEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState());
+      final result = await updateLabItemsParentsPriceUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState()),
       );
     });
   }

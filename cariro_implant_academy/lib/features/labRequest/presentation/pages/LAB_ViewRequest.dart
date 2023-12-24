@@ -381,8 +381,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                       ),
                                       Visibility(
                                         visible: request.paid == false &&
-                                            (request.status == EnumLabRequestStatus.FinishedAndHandeled ||
-                                                request.status == EnumLabRequestStatus.FinishedNotHandeled),
+                                            (request.status == EnumLabRequestStatus.Finished ),
                                         child: CIA_SecondaryButton(
                                           label: "Pay",
                                           onTab: () {

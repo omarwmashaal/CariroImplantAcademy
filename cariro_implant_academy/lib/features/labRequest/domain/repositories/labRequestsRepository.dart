@@ -17,6 +17,7 @@ abstract class LabRequestRepository {
   Future<Either<Failure, NoParams>> checkLabRequests(int id);
 
   Future<Either<Failure, NoParams>> addRequest(LabRequestEntity model);
+  Future<Either<Failure, NoParams>> updateLabRequest(LabRequestEntity model);
 
   Future<Either<Failure, BasicNameIdObjectEntity>> getDefaultStepByName(String name);
 

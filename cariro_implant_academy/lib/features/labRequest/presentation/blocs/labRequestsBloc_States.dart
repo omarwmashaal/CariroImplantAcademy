@@ -153,6 +153,24 @@ class LabRequestsBloc_CreatingLabRequestErrorState extends LabRequestsBloc_State
   @override
   List<Object?> get props => [message];
 }
+class LabRequestsBloc_UpdatingLabRequestState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_UpdatedLabRequestSuccessfullyState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_UpdatingLabRequestErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_UpdatingLabRequestErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
 
 class LabRequestsBloc_FinishingTaskState extends LabRequestsBloc_States {
   @override

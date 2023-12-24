@@ -11,6 +11,7 @@ import '../../../../core/constants/enums/enums.dart';
 class LabRequestModel extends LabRequestEntity {
   LabRequestModel({
     super.id,
+    super.notesFromTech,
     super.date,
     super.deliveryDate,
     super.entryById,
@@ -48,6 +49,7 @@ class LabRequestModel extends LabRequestEntity {
     return LabRequestModel(
       id: entity.id,
       date: entity.date,
+      notesFromTech: entity.notesFromTech,
       deliveryDate: entity.deliveryDate,
       entryById: entity.entryById,
       entryBy: entity.entryBy,
@@ -83,6 +85,7 @@ class LabRequestModel extends LabRequestEntity {
 
   LabRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    notesFromTech = json['notesFromTech'];
     initStatus = json['initStatus'] != null ? EnumLabRequestInitStatus.values[json['initStatus']] : null;
     teeth = ((json['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
     date = DateTime.tryParse(json['date'] ?? "")?.toLocal();
@@ -135,7 +138,7 @@ class LabRequestModel extends LabRequestEntity {
     data['id'] = this.id ?? 0;
     data['initStatus'] = this.initStatus != null ? this.initStatus!.index : null;
     data['teeth'] = this.teeth ?? [];
-    //data['date'] = CIA_DateConverters.fromDateTimeToBackend(this.date);
+    data['date'] = this.date?.toUtc().toIso8601String();
     data['deliveryDate'] =
         this.deliveryDate == null ? null : DateFormat("yyyy-MM-dd").format(this.deliveryDate!); // CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
     // data['entryById'] = this.entryById;
@@ -166,6 +169,7 @@ class LabRequestModel extends LabRequestEntity {
     data['threeDPrinting'] = this.threeDPrinting == null ? null : LabRequestItemModel.fromEntity(this.threeDPrinting!).toJson();
     data['others'] = this.others?.map((e) => LabRequestItemModel.fromEntity(e).toJson()).toList();
     data['notes'] = this.notes;
+    data['notesFromTech'] = this.notesFromTech;
     data['requiredStep'] = this.requiredStep;
     data['steps'] = (this.steps ?? []).map((e) => LabStepModel.fromEntity(e).toJson()).toList();
     data['fileId'] = this.fileId;
