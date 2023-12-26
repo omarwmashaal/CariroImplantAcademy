@@ -14,6 +14,7 @@ class LabRequestModel extends LabRequestEntity {
     super.notesFromTech,
     super.date,
     super.deliveryDate,
+    super.labFees,
     super.entryById,
     super.entryBy,
     super.source,
@@ -43,11 +44,15 @@ class LabRequestModel extends LabRequestEntity {
     super.file,
     super.initStatus,
     super.teeth,
+    super.assignedTo,
+    super.assignedToId,
+
   });
 
   factory LabRequestModel.fromEntity(LabRequestEntity entity) {
     return LabRequestModel(
       id: entity.id,
+      labFees: entity.labFees,
       date: entity.date,
       notesFromTech: entity.notesFromTech,
       deliveryDate: entity.deliveryDate,
@@ -80,11 +85,15 @@ class LabRequestModel extends LabRequestEntity {
       file: entity.file,
       initStatus: entity.initStatus,
       teeth: entity.teeth,
+      assignedToId: entity.assignedToId,
+      assignedTo: entity.assignedTo
+
     );
   }
 
   LabRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    labFees = json['labFees']??0;
     notesFromTech = json['notesFromTech'];
     initStatus = json['initStatus'] != null ? EnumLabRequestInitStatus.values[json['initStatus']] : null;
     teeth = ((json['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
@@ -121,7 +130,7 @@ class LabRequestModel extends LabRequestEntity {
     threeDPrinting = json['threeDPrinting'] == null ? null : LabRequestItemModel.fromJson(json['threeDPrinting']);
     others = ((json['others'] ?? []) as List<dynamic>).map((e) => LabRequestItemModel.fromJson(e)).toList();
 
-    if (steps != null) {
+    /*if (steps != null) {
       var assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.InProgress);
       if (assigned == null) {
         assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.NotYet);
@@ -130,12 +139,13 @@ class LabRequestModel extends LabRequestEntity {
         assignedTo = json['assignedTo'] == null ? null : assignedTo ?? assigned!.technician ?? BasicNameIdObjectModel();
         assignedToId = assignedToId ?? assigned!.technicianId;
       }
-    }
+    }*/
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id ?? 0;
+    data['labFees'] = this.labFees ?? 0;
     data['initStatus'] = this.initStatus != null ? this.initStatus!.index : null;
     data['teeth'] = this.teeth ?? [];
     data['date'] = this.date?.toUtc().toIso8601String();
@@ -143,9 +153,9 @@ class LabRequestModel extends LabRequestEntity {
         this.deliveryDate == null ? null : DateFormat("yyyy-MM-dd").format(this.deliveryDate!); // CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
     // data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
-    if (this.steps != null && this.steps != []) {
-      this.assignedToId = steps![0].technicianId;
-    }
+   // if (this.steps != null && this.steps != []) {
+     // this.assignedToId = steps![0].technicianId;
+    //}
     data['assignedToId'] = this.assignedToId;
     //data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
     data['source'] = (this.source ?? EnumLabRequestSources.CIA).index;
@@ -170,8 +180,8 @@ class LabRequestModel extends LabRequestEntity {
     data['others'] = this.others?.map((e) => LabRequestItemModel.fromEntity(e).toJson()).toList();
     data['notes'] = this.notes;
     data['notesFromTech'] = this.notesFromTech;
-    data['requiredStep'] = this.requiredStep;
-    data['steps'] = (this.steps ?? []).map((e) => LabStepModel.fromEntity(e).toJson()).toList();
+  //  data['requiredStep'] = this.requiredStep;
+   // data['steps'] = (this.steps ?? []).map((e) => LabStepModel.fromEntity(e).toJson()).toList();
     data['fileId'] = this.fileId;
     data['file'] = this.file != null ? BasicNameIdObjectModel.fromEntity(this.file!).toJson() : null;
 

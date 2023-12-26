@@ -32,6 +32,7 @@ import '../blocs/labRequestBloc.dart';
 import '../blocs/labRequestsBloc_Events.dart';
 import '../widgets/CIA_LAB_StepTimelineWidget.dart';
 import '../widgets/labRequestItemConsumeWidget.dart';
+import '../widgets/labRequestItemReceiptWidget.dart';
 import '../widgets/labRequestItemWidget.dart';
 
 class LAB_ViewTaskPage extends StatefulWidget {
@@ -293,7 +294,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
               Expanded(
                 flex: 3,
                 child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 10,
@@ -318,6 +319,9 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    request.status==EnumLabRequestStatus.Finished?
+                      LabRequestItemReceiptWidget(request: request, onTotalCalculated: (t){},viewOnly: true,)  :
                     Expanded(
                       child: ListView(
                         children: [
@@ -418,23 +422,13 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    CIA_SecondaryButton(
-                        label: "Use From Stock",
-                        onTab: () {
-                          CIA_ShowPopUp(
-                              context: context,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [],
-                                    )
-                                  ],
-                                ),
-                              ));
-                        }),
-                    FormTextKeyWidget(text: "Notes: "),
+                    FormTextKeyWidget(text: "Notes From Customer: "),
+                    SizedBox(height: 10),
                     FormTextValueWidget(text: request.notes ?? ""),
+                    SizedBox(height: 10),
+                    FormTextKeyWidget(text: "Notes From Lab: "),
+                    SizedBox(height: 10),
+                    FormTextValueWidget(text: request.notesFromTech ?? ""),
                     SizedBox(
                       height: 10,
                     ),
@@ -443,225 +437,118 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       height: 10,
                     ),
                     Visibility(
-                      visible: siteController.getRole() == "technician",
+                      visible: siteController.getRole() == "technician" && siteController.getUserId()==request.assignedToId,
                       child: Container(
                         child: request.status == EnumLabRequestStatus.Finished
-                            ? Expanded(
-                                flex: 10,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            "Receipt",
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                                          ),
-                                          BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                            buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
-                                            builder: (context, state) => CIA_SecondaryButton(
-                                                label: editMode ? "View Mode" : "Edit Mode",
-                                                onTab: () {
-                                                  editMode = !editMode;
-                                                  bloc.emit(LabRequestsBloc_SwitchEditViewReceiptModeState());
-                                                }),
-                                          ),
-                                          CIA_PrimaryButton(
-                                              label: "Save Receipt",
-                                              onTab: () => bloc.add(LabRequestsBloc_AddOrUpdateRequestReceiptEvent(
-                                                    params: AddOrUpdateRequestReceiptParams(
-                                                      id: widget.id,
-                                                      steps: request.steps ?? [],
-                                                    ),
-                                                  ))),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                        buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
-                                        builder: (context, state) {
-                                          return Column(
-                                            children:( request.steps??[])
-                                                .map(
-                                                  (e) => Padding(
-                                                    padding: EdgeInsets.only(bottom: editMode ? 10 : 5),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                            child: FormTextValueWidget(
-                                                                text: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!))),
-                                                        Expanded(child: FormTextValueWidget(text: "by: ${e.technician?.name ?? ""}")),
-                                                        Expanded(
-                                                          child: editMode
-                                                              ? CIA_TextFormField(
-                                                                  isNumber: true,
-                                                                  label: e.step?.name ?? "",
-                                                                  suffix: "EGP",
-                                                                  controller: TextEditingController(text: (e.price ?? 0).toString()),
-                                                                  onChange: (v) {
-                                                                    e.price = int.parse(v);
-                                                                    int total = 0;
-                                                                    request.steps?.forEach((element) {
-                                                                      total += element.price ?? 0;
-                                                                    });
-                                                                    totalPrice = total;
-                                                                    bloc.emit(LabRequestsBloc_UpdateReceiptTotalPriceState(totalPrice: total));
-                                                                  },
-                                                                )
-                                                              : FormTextValueWidget(text: "${e.step?.name ?? ""}"),
-                                                        ),
-                                                        editMode
-                                                            ? Container()
-                                                            : Expanded(
-                                                                child: FormTextValueWidget(
-                                                                text: " ${(e.price ?? 0).toString()}",
-                                                                suffix: "EGP",
-                                                              ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                                .toList(),
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(flex: 3, child: SizedBox()),
-                                          BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                            buildWhen: (previous, current) => current is LabRequestsBloc_UpdateReceiptTotalPriceState,
-                                            builder: (context, state) {
-                                              if (state is LabRequestsBloc_UpdateReceiptTotalPriceState) totalPrice = state.totalPrice;
-                                              return Expanded(
-                                                  child: FormTextValueWidget(
-                                                text: totalPrice.toString(),
-                                                suffix: "EGP",
-                                              ));
+                            ? Container()
+                            : SizedBox(
+                                child: Row(
+                                  children: [
+                                    CIA_SecondaryButton(
+                                        label: "Save Changes",
+                                        onTab: () {
+                                          CIA_ShowPopUp(
+                                            context: context,
+                                            onSave: () {
+                                              bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
                                             },
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                            child: CIA_TextFormField(
+                                              label: "Notes From Technician",
+                                              maxLines: 5,
+                                              onChange: (v) => request.notesFromTech = v,
+                                              controller: TextEditingController(
+                                                text: request.notesFromTech,
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                    SizedBox(width: 10),
+                                    CIA_PrimaryButton(
+                                        label: "Finish Request",
+                                        onTab: () {
+                                          PageController controller = PageController();
+                                          int index = 0;
+
+                                          int total = 0;
+                                          CIA_ShowPopUp(
+                                              context: context,
+                                              hideButton: true,
+                                              width: double.maxFinite,
+                                              height: 600,
+                                              onSave: () {},
+                                              child: StatefulBuilder(builder: (context, _setState) {
+                                                return Column(
+                                                  children: [
+                                                    Expanded(
+                                                      child: PageView(
+                                                        controller: controller,
+                                                        onPageChanged: (value) {
+                                                          index = value;
+                                                          _setState(() {});
+                                                        },
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: LabRequestItemConsumeWidget(
+                                                              request: request,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: LabRequestItemReceiptWidget(
+                                                              request: request,
+                                                              onTotalCalculated: (_total) {
+                                                                total = _total;
+                                                              },
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: CIA_TextFormField(
+                                                              label: "Notes From Technician",
+                                                              maxLines: 5,
+                                                              onChange: (v) => request.notesFromTech = v,
+                                                              controller: TextEditingController(
+                                                                text: request.notesFromTech,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Visibility(
+                                                          visible: index != 0,
+                                                          child: CIA_SecondaryButton(
+                                                              label: "Previous",
+                                                              onTab: () {
+                                                                controller.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                              }),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        index != 2
+                                                            ? CIA_SecondaryButton(
+                                                                label: "Next",
+                                                                onTab: () {
+                                                                  controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                                })
+                                                            : CIA_PrimaryButton(
+                                                                label: "Finish",
+                                                                onTab: () {
+                                                                  request.status = EnumLabRequestStatus.Finished;
+                                                                  bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                                }),
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                              }));
+                                        }),
+                                  ],
                                 ),
                               )
-                            : SizedBox(
-                          child: Row(
-                            children: [
-                              CIA_SecondaryButton(
-                                  label: "Save Changes",
-                                  onTab: () {
-                                    CIA_ShowPopUp(
-                                      context: context,
-                                      onSave: () {
-                                        bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                      },
-                                      child: CIA_TextFormField(
-                                        label: "Notes From Technician",
-                                        maxLines: 5,
-                                        onChange: (v) => request.notesFromTech = v,
-                                        controller: TextEditingController(
-                                          text: request.notesFromTech,
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                              SizedBox(width: 10),
-                              CIA_PrimaryButton(
-                                  label: "Finish Request",
-                                  onTab: () {
-                                    PageController controller = PageController();
-                                    int index = 0;
-
-                                    CIA_ShowPopUp(
-                                        context: context,
-                                        hideButton: true,
-                                        width: double.maxFinite,
-                                        height: 600,
-                                        onSave: () {},
-                                        child: StatefulBuilder(builder: (context, _setState) {
-                                          return Column(
-                                            children: [
-                                              Expanded(
-                                                child: PageView(
-                                                  controller: controller,
-                                                  onPageChanged: (value) {
-                                                    index = value;
-                                                    _setState(() {});
-                                                  },
-                                                  children: [
-
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: LabRequestItemConsumeWidget(
-                                                        request: request,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: CIA_TextFormField(
-                                                        label: "Notes From Technician",
-                                                        maxLines: 5,
-                                                        onChange: (v) => request.notesFromTech = v,
-                                                        controller: TextEditingController(
-                                                          text: request.notesFromTech,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: CIA_TextFormField(
-                                                        label: "Notes From Technician",
-                                                        maxLines: 5,
-                                                        onChange: (v) => request.notesFromTech = v,
-                                                        controller: TextEditingController(
-                                                          text: request.notesFromTech,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Visibility(
-                                                    visible: index != 0,
-                                                    child: CIA_SecondaryButton(
-                                                        label: "Previous",
-                                                        onTab: () {
-                                                          controller.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
-                                                        }),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  index != 2
-                                                      ? CIA_SecondaryButton(
-                                                      label: "Next",
-                                                      onTab: () {
-                                                        controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
-                                                      })
-                                                      : CIA_PrimaryButton(
-                                                      label: "Finish",
-                                                      onTab: () {
-                                                        request.status = EnumLabRequestStatus.Finished;
-                                                        bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                                      }),
-                                                ],
-                                              )
-                                            ],
-                                          );
-                                        }));
-                                  }),
-                            ],
-                          ),
-                        )
                         /*
                       CIA_PrimaryButton(
                                       icon: Icon(
@@ -718,7 +605,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                         ),
                       ),
                     ),
-                   /* Visibility(
+                    /* Visibility(
                       visible: request.steps?.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
                       child: CIA_PrimaryButton(
                         label: "Waiting your action",

@@ -39,6 +39,8 @@ class _LabRequestItemConsumeWidgetState extends State<LabRequestItemConsumeWidge
   Widget build(BuildContext context) {
     return Column(
       children: [
+        FormTextKeyWidget(text: "Consume Item Details"),
+        SizedBox(height: 10),
         __LabRequestItemConsumeWidget(item: widget.request.zirconUnit, parentItemId: 1, label: "Zircon Unit"),
         __LabRequestItemConsumeWidget(item: widget.request.pfm, parentItemId: 2, label: "PFM"),
         __LabRequestItemConsumeWidget(item: widget.request.compositeInlay, parentItemId: 3, label: "Composite Inlay"),
@@ -102,7 +104,8 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                   ShowSnackBar(context, isSuccess: true);
                   bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: item!.id!));
                 }
-                else if(state is LabRequestsBloc_LoadedLabItemSuccessfullyState) {
+                else if(state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id==widget.item?.labItemId) {
+                  widget.item!.labItem = state.data;
                   item = state.data;
                   setState(() {
 
@@ -180,7 +183,10 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                     buildWhen: (previous, current) =>
                         current is LabRequestsBloc_LoadedLabItemSuccessfullyState || current is LabRequestsBloc_LoadingLabItemErrorState,
                     builder: (context, state) {
-                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.item?.labItemId) item = state.data;
+                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.item?.labItemId) {
+                        item = state.data;
+                        widget.item!.labItem = state.data;
+                      }
 
                       if (item != null) {
                         return Row(

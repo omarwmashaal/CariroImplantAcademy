@@ -27,13 +27,13 @@ class LabRequestItemWidget extends StatefulWidget {
 class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
   @override
   Widget build(BuildContext context) {
-    widget.item!.totalPrice = widget.item!.number!*widget.item!.price!;
+    if (widget.item != null) widget.item!.totalPrice = widget.item!.number! * widget.item!.price!;
     return SizedBox(
       width: 300,
       child: Visibility(
         visible: !(widget.viewOnly && (widget.item?.isNull() ?? true)),
         child: Padding(
-          padding: const EdgeInsets.only(bottom:20.0),
+          padding: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -43,39 +43,35 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                 children: [
                   Expanded(
                     child: CIA_TextFormField(
-                            label: "Description",
-                            controller: TextEditingController(text: widget.item?.description),
-                            onChange: (v) {
-                              if (widget.item == null) widget.item = LabRequestItemEntity();
-                              widget.item!.description = v;
-                              widget.onChange(widget.item!);
-                            },
-                          ),
+                      label: "Description",
+                      controller: TextEditingController(text: widget.item?.description),
+                      onChange: (v) {
+                        if (widget.item == null) widget.item = LabRequestItemEntity();
+                        widget.item!.description = v;
+                        widget.onChange(widget.item!);
+                      },
+                    ),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: CIA_TextFormField(
-                            label: "Number",
-                            controller: TextEditingController(text: widget.item?.number?.toString()),
-                            isNumber: true,
-                            onChange: (v) {
-                              if (widget.item == null) widget.item = LabRequestItemEntity();
-                              widget.item!.number = int.tryParse(v);
-                              widget.item!.totalPrice = widget.item!.price! * widget.item!.number!;
-                              widget.onChange(widget.item!);
-                              setState(() {
-
-                              });
-                            },
-                          ),
+                      label: "Number",
+                      controller: TextEditingController(text: widget.item?.number?.toString()),
+                      isNumber: true,
+                      onChange: (v) {
+                        if (widget.item == null) widget.item = LabRequestItemEntity();
+                        widget.item!.number = int.tryParse(v);
+                        widget.item!.totalPrice = widget.item!.price! * widget.item!.number!;
+                        widget.onChange(widget.item!);
+                        setState(() {});
+                      },
+                    ),
                   ),
                   SizedBox(width: 10),
                   Visibility(
                     visible: widget.viewOnly,
                     child: Expanded(
-                      child:
-
-                      Row(
+                      child: Row(
                         children: [
                           Expanded(
                             child: Row(
@@ -85,7 +81,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                               ],
                             ),
                           ),
-                          SizedBox(width:10),
+                          SizedBox(width: 10),
                           Expanded(
                             child: Row(
                               children: [
@@ -99,7 +95,6 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                     ),
                   ),
                 ],
-
               ),
             ],
           ),

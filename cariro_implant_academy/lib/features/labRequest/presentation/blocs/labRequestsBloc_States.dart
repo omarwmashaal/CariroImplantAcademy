@@ -285,7 +285,7 @@ class LabRequestsBloc_ConsumingLabItemState extends LabRequestsBloc_States {
 
 class LabRequestsBloc_ConsumedLabItemSuccessfullyState extends LabRequestsBloc_States {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LabRequestsBloc_ConsumingLabItemErrorState extends LabRequestsBloc_States {
@@ -305,7 +305,7 @@ class LabRequestsBloc_LoadedLabItemSuccessfullyState extends LabRequestsBloc_Sta
   final LabItemEntity data;
   LabRequestsBloc_LoadedLabItemSuccessfullyState({required this.data});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LabRequestsBloc_LoadingLabItemErrorState extends LabRequestsBloc_States {

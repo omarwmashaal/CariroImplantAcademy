@@ -23,6 +23,7 @@ class LabRequestEntity extends Equatable {
   bool? paid;
   int? cost;
   int? paidAmount;
+  int? labFees;
   String? notes;
   String? notesFromTech;
   String? requiredStep;
@@ -50,6 +51,7 @@ class LabRequestEntity extends Equatable {
     this.notesFromTech,
     this.zirconUnit,
     this.pfm,
+    this.labFees,
     this.compositeInlay,
     this.emaxVeneer,
     this.milledPMMA,
@@ -78,6 +80,8 @@ class LabRequestEntity extends Equatable {
     this.file,
     this.initStatus = EnumLabRequestInitStatus.Scan,
     this.teeth,
+    this.assignedToId,
+    this.assignedTo,
   }) {
     entryBy = BasicNameIdObjectEntity();
     customer = UserEntity();
@@ -92,6 +96,9 @@ class LabRequestEntity extends Equatable {
         this.date,
         this.notesFromTech,
         this.deliveryDate,
+    this.assignedTo,
+    this.assignedToId,
+        this.labFees,
         this.entryById,
         this.entryBy,
         this.source,
