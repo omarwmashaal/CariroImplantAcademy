@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:dartz/dartz.dart';
 
+import '../entities/labItemEntity.dart';
 import '../entities/labStepEntity.dart';
 import '../usecases/getAllRequestsUseCase.dart';
 
@@ -34,4 +35,6 @@ abstract class LabRequestRepository {
   Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
   Future<Either<Failure, NoParams>> payForRequest(int id);
+  Future<Either<Failure, LabItemEntity>> getLabItemDetails(int id);
+  Future<Either<Failure, NoParams>> consumeLabItem(int id,int? number,bool consumeWholeBlock);
 }

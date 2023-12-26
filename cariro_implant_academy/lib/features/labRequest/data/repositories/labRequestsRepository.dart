@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRequestDatasource.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labStepEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
@@ -147,6 +148,26 @@ class LabRequestRepoImpl implements LabRequestRepository{
   Future<Either<Failure, NoParams>> updateLabRequest(LabRequestEntity model) async {
     try {
       final result = await labRequestDatasource.updateLabRequest(model);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> consumeLabItem(int id,int? number, bool consumeWholeBlock) async {
+    try {
+      final result = await labRequestDatasource.consumeLabItem(id,number,consumeWholeBlock);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, LabItemEntity>> getLabItemDetails(int id)  async {
+    try {
+      final result = await labRequestDatasource.getLabItemDetails(id);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:equatable/equatable.dart';
@@ -273,4 +274,45 @@ class LabRequestsBloc_UpdateReceiptTotalPriceState extends LabRequestsBloc_State
   LabRequestsBloc_UpdateReceiptTotalPriceState({required this.totalPrice});
   @override
   List<Object?> get props => [totalPrice];
+}
+
+
+
+class LabRequestsBloc_ConsumingLabItemState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_ConsumedLabItemSuccessfullyState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_ConsumingLabItemErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_ConsumingLabItemErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+class LabRequestsBloc_LoadingLabItemState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_LoadedLabItemSuccessfullyState extends LabRequestsBloc_States {
+  final LabItemEntity data;
+  LabRequestsBloc_LoadedLabItemSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_LoadingLabItemErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_LoadingLabItemErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

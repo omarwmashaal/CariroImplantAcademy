@@ -202,10 +202,12 @@ import '../features/labRequest/data/repositories/labCustomersRepo.dart';
 import '../features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import '../features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
 import '../features/labRequest/domain/usecases/checkLabRequestsUseCase.dart';
+import '../features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import '../features/labRequest/domain/usecases/createLabRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
 import '../features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import '../features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
+import '../features/labRequest/domain/usecases/getLabItemDetailsUseCase.dart';
 import '../features/labRequest/domain/usecases/getPatientRequestsUseCase.dart';
 import '../features/labRequest/domain/usecases/getRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
@@ -884,6 +886,8 @@ initInjection() async {
         assignTaskToTechnicianUseCase: sl(),
         markRequestAsDoneUseCase: sl(),
         updateLabRequestUseCase: sl(),
+    consumeLabItemUseCase: sl(),
+    getLabItemDetailsUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
@@ -900,6 +904,8 @@ initInjection() async {
   sl.registerLazySingleton(() => CreateNewLabCustomerUseCase(labCustomersRepository: sl()));
   sl.registerLazySingleton(() => SearchLabPatientsByTypeUseCase(labCustomersRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabRequestUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => ConsumeLabItemUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetLabItemDetailsUseCase(labRequestRepository: sl()));
   //repo
   sl.registerLazySingleton<LabRequestRepository>(() => LabRequestRepoImpl(labRequestDatasource: sl()));
   sl.registerLazySingleton<LabCustomersRepository>(() => LabCustomerRepoImpl(labCustomerDatasource: sl()));

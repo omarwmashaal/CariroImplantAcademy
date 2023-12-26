@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class GetLabItemsLinesUseCase extends UseCases<List<BasicNameIdObjectEntity>, int> {
+class GetLabItemsLinesUseCase extends LoadingUseCases<int> {
   final SettingsRepository settingsRepository;
 
   GetLabItemsLinesUseCase({required this.settingsRepository});

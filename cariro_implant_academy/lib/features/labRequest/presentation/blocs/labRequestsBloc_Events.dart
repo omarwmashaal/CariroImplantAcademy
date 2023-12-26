@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
@@ -59,4 +60,12 @@ class LabRequestsBloc_AddToMyTasksEvent extends LabRequestsBloc_Events{
 class LabRequestsBloc_AssignTaskToATechnicianEvent extends LabRequestsBloc_Events{
   final AssignTaskToTechnicianParams params;
   LabRequestsBloc_AssignTaskToATechnicianEvent({required this.params});
+}
+class LabRequestsBloc_GetLabItemDetailsEvent extends LabRequestsBloc_Events{
+  final int id;
+  LabRequestsBloc_GetLabItemDetailsEvent({required this.id});
+}
+class LabRequestsBloc_ConsumeLabItemEvent extends LabRequestsBloc_Events{
+  final ConsumeLabItemParams params;
+  LabRequestsBloc_ConsumeLabItemEvent({required this.params});
 }

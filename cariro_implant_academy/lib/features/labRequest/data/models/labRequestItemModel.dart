@@ -1,5 +1,10 @@
 import 'dart:convert';
 
+import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/models/labItemModel.dart';
+
+import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
+import '../../domain/entities/labItemEntity.dart';
 import '../../domain/entities/labRequestItemEntity.dart';
 
 class LabRequestItemModel extends LabRequestItemEntity {
@@ -9,8 +14,17 @@ class LabRequestItemModel extends LabRequestItemEntity {
     int? number,
     int? price,
     int? totalPrice,
-  }) : super(name: name, description: description, number: number,price:price,totalPrice:totalPrice);
-
+    int? labItemId,
+    LabItemEntity? labItem,
+  }) : super(
+          name: name,
+          description: description,
+          number: number,
+          price: price,
+          totalPrice: totalPrice,
+          labItem: labItem,
+          labItemId: labItemId,
+        );
 
   factory LabRequestItemModel.fromJson(Map<String, dynamic> map) {
     return LabRequestItemModel(
@@ -19,6 +33,8 @@ class LabRequestItemModel extends LabRequestItemEntity {
       number: map['number'],
       price: map['price'],
       totalPrice: map['totalPrice'],
+      labItemId: map['labItemId'],
+      labItem: map['labItem'] == null ? null : LabItemModel.fromJson(map['labItem']),
     );
   }
 
@@ -29,15 +45,17 @@ class LabRequestItemModel extends LabRequestItemEntity {
       'number': number,
       'price': price,
       'totalPrice': totalPrice,
+      'labItemId': labItemId,
     };
   }
 
   LabRequestItemModel.fromEntity(LabRequestItemEntity entity)
       : super(
-    name: entity.name,
-    description: entity.description,
-    number: entity.number,
-    price: entity.price,
-    totalPrice: entity.totalPrice,
-  );
+          name: entity.name,
+          description: entity.description,
+          number: entity.number,
+          price: entity.price,
+          totalPrice: entity.totalPrice,
+          labItemId: entity.labItemId,
+        );
 }

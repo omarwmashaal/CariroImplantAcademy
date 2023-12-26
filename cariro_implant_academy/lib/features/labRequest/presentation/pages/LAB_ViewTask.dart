@@ -31,6 +31,7 @@ import '../../domain/entities/labRequestEntityl.dart';
 import '../blocs/labRequestBloc.dart';
 import '../blocs/labRequestsBloc_Events.dart';
 import '../widgets/CIA_LAB_StepTimelineWidget.dart';
+import '../widgets/labRequestItemConsumeWidget.dart';
 import '../widgets/labRequestItemWidget.dart';
 
 class LAB_ViewTaskPage extends StatefulWidget {
@@ -484,7 +485,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                         buildWhen: (previous, current) => current is LabRequestsBloc_SwitchEditViewReceiptModeState,
                                         builder: (context, state) {
                                           return Column(
-                                            children: request.steps!
+                                            children:( request.steps??[])
                                                 .map(
                                                   (e) => Padding(
                                                     padding: EdgeInsets.only(bottom: editMode ? 10 : 5),
@@ -504,7 +505,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                                   onChange: (v) {
                                                                     e.price = int.parse(v);
                                                                     int total = 0;
-                                                                    request.steps!.forEach((element) {
+                                                                    request.steps?.forEach((element) {
                                                                       total += element.price ?? 0;
                                                                     });
                                                                     totalPrice = total;
@@ -551,158 +552,116 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                   ),
                                 ),
                               )
-                            : request.steps!.last.technicianId == request.customerId
-                                ? Row(
-                                    children: [
-                                      Text("Waiting for Customer Action!"),
-                                      SizedBox(width: 10),
-                                      CIA_PrimaryButton(
-                                        label: "Customer Approved?",
-                                        onTab: () async {
-                                          CIA_ShowPopUp(
-                                              context: context,
-                                              onSave: () {
-                                                bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                                  params: FinishTaskParams(
-                                                    id: widget.id,
-                                                    nextTaskId: nextTaskId,
-                                                    assignToId: null,
-                                                    notes: null,
-                                                  ),
-                                                ));
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  CIA_DropDownSearchBasicIdName(
-                                                    asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                                    label: "Next Step",
-                                                    onSelect: (value) {
-                                                      nextTaskId = value.id!;
-                                                    },
-                                                  ),
-                                                  SizedBox(height: 10),
-                                                ],
-                                              ));
-                                        },
+                            : SizedBox(
+                          child: Row(
+                            children: [
+                              CIA_SecondaryButton(
+                                  label: "Save Changes",
+                                  onTab: () {
+                                    CIA_ShowPopUp(
+                                      context: context,
+                                      onSave: () {
+                                        bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                      },
+                                      child: CIA_TextFormField(
+                                        label: "Notes From Technician",
+                                        maxLines: 5,
+                                        onChange: (v) => request.notesFromTech = v,
+                                        controller: TextEditingController(
+                                          text: request.notesFromTech,
+                                        ),
                                       ),
-                                    ],
-                                  )
-                                : request.assignedToId == siteController.getUserId()
-                                    ? SizedBox(
-                                        child: Row(
-                                          children: [
-                                            CIA_SecondaryButton(
-                                                label: "Save Changes",
-                                                onTab: () {
-                                                  CIA_ShowPopUp(
-                                                    context: context,
-                                                    onSave: () {
-                                                      bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                                    },
-                                                    child: CIA_TextFormField(
-                                                      label: "Notes From Technician",
-                                                      maxLines: 5,
-                                                      onChange: (v) => request.notesFromTech = v,
-                                                      controller: TextEditingController(
-                                                        text: request.notesFromTech,
+                                    );
+                                  }),
+                              SizedBox(width: 10),
+                              CIA_PrimaryButton(
+                                  label: "Finish Request",
+                                  onTab: () {
+                                    PageController controller = PageController();
+                                    int index = 0;
+
+                                    CIA_ShowPopUp(
+                                        context: context,
+                                        hideButton: true,
+                                        width: double.maxFinite,
+                                        height: 600,
+                                        onSave: () {},
+                                        child: StatefulBuilder(builder: (context, _setState) {
+                                          return Column(
+                                            children: [
+                                              Expanded(
+                                                child: PageView(
+                                                  controller: controller,
+                                                  onPageChanged: (value) {
+                                                    index = value;
+                                                    _setState(() {});
+                                                  },
+                                                  children: [
+
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: LabRequestItemConsumeWidget(
+                                                        request: request,
                                                       ),
                                                     ),
-                                                  );
-                                                }),
-                                            SizedBox(width: 10),
-                                            CIA_PrimaryButton(
-                                                label: "Finish Request",
-                                                onTab: () {
-                                                  PageController controller = PageController();
-                                                  int index = 0;
-
-                                                  CIA_ShowPopUp(
-                                                      context: context,
-                                                      hideButton: true,
-                                                      width: double.maxFinite,
-                                                      height: 600,
-                                                      onSave: () {},
-                                                      child: StatefulBuilder(builder: (context, _setState) {
-                                                        return Column(
-                                                          children: [
-                                                            Expanded(
-                                                              child: PageView(
-                                                                controller: controller,
-                                                                onPageChanged: (value) {
-                                                                  index = value;
-                                                                  _setState(() {});
-                                                                },
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: CIA_TextFormField(
-                                                                      label: "Notes From Technician",
-                                                                      maxLines: 5,
-                                                                      onChange: (v) => request.notesFromTech = v,
-                                                                      controller: TextEditingController(
-                                                                        text: request.notesFromTech,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: CIA_TextFormField(
-                                                                      label: "Notes From Technician",
-                                                                      maxLines: 5,
-                                                                      onChange: (v) => request.notesFromTech = v,
-                                                                      controller: TextEditingController(
-                                                                        text: request.notesFromTech,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(8.0),
-                                                                    child: CIA_TextFormField(
-                                                                      label: "Notes From Technician",
-                                                                      maxLines: 5,
-                                                                      onChange: (v) => request.notesFromTech = v,
-                                                                      controller: TextEditingController(
-                                                                        text: request.notesFromTech,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Visibility(
-                                                                  visible: index != 0,
-                                                                  child: CIA_SecondaryButton(
-                                                                      label: "Previous",
-                                                                      onTab: () {
-                                                                        controller.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
-                                                                      }),
-                                                                ),
-                                                                SizedBox(width: 10),
-                                                                index != 2
-                                                                    ? CIA_SecondaryButton(
-                                                                        label: "Next",
-                                                                        onTab: () {
-                                                                          controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
-                                                                        })
-                                                                    : CIA_PrimaryButton(
-                                                                        label: "Finish",
-                                                                        onTab: () {
-                                                                          request.status = EnumLabRequestStatus.Finished;
-                                                                          bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                                                        }),
-                                                              ],
-                                                            )
-                                                          ],
-                                                        );
-                                                      }));
-                                                }),
-                                          ],
-                                        ),
-                                      )
-                                    : FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}")
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: CIA_TextFormField(
+                                                        label: "Notes From Technician",
+                                                        maxLines: 5,
+                                                        onChange: (v) => request.notesFromTech = v,
+                                                        controller: TextEditingController(
+                                                          text: request.notesFromTech,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: CIA_TextFormField(
+                                                        label: "Notes From Technician",
+                                                        maxLines: 5,
+                                                        onChange: (v) => request.notesFromTech = v,
+                                                        controller: TextEditingController(
+                                                          text: request.notesFromTech,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Visibility(
+                                                    visible: index != 0,
+                                                    child: CIA_SecondaryButton(
+                                                        label: "Previous",
+                                                        onTab: () {
+                                                          controller.previousPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                        }),
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  index != 2
+                                                      ? CIA_SecondaryButton(
+                                                      label: "Next",
+                                                      onTab: () {
+                                                        controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+                                                      })
+                                                      : CIA_PrimaryButton(
+                                                      label: "Finish",
+                                                      onTab: () {
+                                                        request.status = EnumLabRequestStatus.Finished;
+                                                        bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                      }),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        }));
+                                  }),
+                            ],
+                          ),
+                        )
                         /*
                       CIA_PrimaryButton(
                                       icon: Icon(
@@ -759,13 +718,13 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
+                   /* Visibility(
+                      visible: request.steps?.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
                       child: CIA_PrimaryButton(
                         label: "Waiting your action",
                         onTab: () async {
                           if (request.steps != null && request.steps!.isNotEmpty) {
-                            if (request.steps!.length >= 2)
+                            if (request.steps!=null && request.steps!.length >= 2)
                               nextAssignId = request.steps![request.steps!.length - 2].technicianId;
                             else
                               nextAssignId = null;
@@ -809,7 +768,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                           setState(() {});
                         },
                       ),
-                    ),
+                    ),*/
                     SizedBox(
                       height: 40,
                     ),

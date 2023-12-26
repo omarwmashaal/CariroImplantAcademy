@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createLabRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finishTaskUseCase.dart';
@@ -12,6 +13,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/updat
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +23,7 @@ import '../../../../Constants/Controllers.dart';
 import '../../../../core/constants/enums/enums.dart';
 import '../../domain/entities/labRequestEntityl.dart';
 import '../../domain/usecases/checkLabRequestsUseCase.dart';
+import '../../domain/usecases/getLabItemDetailsUseCase.dart';
 import '../../domain/usecases/getPatientRequestsUseCase.dart';
 import '../../domain/usecases/getRequestUseCase.dart';
 
@@ -37,6 +40,8 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final AddOrUpdateRequestReceiptUseCase addOrUpdateRequestReceiptUseCase;
   final AssignTaskToTechnicianUseCase assignTaskToTechnicianUseCase;
   final UpdateLabRequestUseCase updateLabRequestUseCase;
+  final GetLabItemDetailsUseCase getLabItemDetailsUseCase;
+  final ConsumeLabItemUseCase consumeLabItemUseCase;
 
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
@@ -51,6 +56,8 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.addOrUpdateRequestReceiptUseCase,
     required this.assignTaskToTechnicianUseCase,
     required this.updateLabRequestUseCase,
+    required this.consumeLabItemUseCase,
+    required this.getLabItemDetailsUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -151,6 +158,26 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         result.fold(
           (l) => emit(LabRequestsBloc_UpdatingRequestErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_UpdatedRequestReceiptSuccessfullyState()),
+        );
+      },
+    );
+    on<LabRequestsBloc_ConsumeLabItemEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_ConsumingLabItemState());
+        final result = await consumeLabItemUseCase(event.params);
+        result.fold(
+          (l) => emit(LabRequestsBloc_ConsumingLabItemErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_ConsumedLabItemSuccessfullyState()),
+        );
+      },
+    );
+    on<LabRequestsBloc_GetLabItemDetailsEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_LoadingLabItemState());
+        final result = await getLabItemDetailsUseCase(event.id);
+        result.fold(
+          (l) => emit(LabRequestsBloc_LoadingLabItemErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_LoadedLabItemSuccessfullyState(data: r)),
         );
       },
     );

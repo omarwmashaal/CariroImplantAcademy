@@ -9,6 +9,7 @@ class LabItemModel extends LabItemEntity {
     super.size,
     super.labItemShadeId,
     super.labItemShade,
+    super.name
   });
 
   factory LabItemModel.fromJson(Map<String, dynamic> map) {
@@ -20,6 +21,7 @@ class LabItemModel extends LabItemEntity {
       size: map['size'],
       labItemShadeId: map['labItemShadeId'],
       labItemShade: map['labItemShade'],
+      name: map['name']
     );
   }
 

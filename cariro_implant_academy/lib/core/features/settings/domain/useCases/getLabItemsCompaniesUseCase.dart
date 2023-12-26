@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 
-class GetLabItemsCompaniesUseCase extends UseCases<List<BasicNameIdObjectEntity>, int> {
+class GetLabItemsCompaniesUseCase extends LoadingUseCases<int> {
   final SettingsRepository settingsRepository;
 
   GetLabItemsCompaniesUseCase({required this.settingsRepository});

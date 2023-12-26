@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/models/labItemModel.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/constants/remoteConstants.dart';
@@ -14,15 +15,16 @@ import '../models/labRequestModel.dart';
 import '../models/labStepModel.dart';
 
 abstract class LabRequestDatasource {
-
   Future<List<LabRequestModel>> getAllLabRequests(GetAllRequestsParams params);
 
   Future<List<LabRequestModel>> getPatientLabRequests(int id);
 
   Future<LabRequestModel> getLabRequest(int id);
+
   Future<NoParams> checkLabRequests(int id);
 
   Future<NoParams> addRequest(LabRequestEntity model);
+
   Future<NoParams> updateLabRequest(LabRequestEntity model);
 
   Future<BasicNameIdObjectModel> getDefaultStepByName(String name);
@@ -40,6 +42,9 @@ abstract class LabRequestDatasource {
   Future<NoParams> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
   Future<NoParams> payForRequest(int id);
+  Future<LabItemModel> getLabItemDetails(int id);
+
+  Future<NoParams> consumeLabItem(int id, int? number, bool consumeWholeBlock);
 }
 
 class LabRequestsDatasourceImpl implements LabRequestDatasource {
@@ -254,5 +259,34 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
+  }
+
+  @override
+  Future<NoParams> consumeLabItem(int id, int? number, bool consumeWholeBlock) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+          host: "$serverHost/$labRequestsController/ConsumeLabItem?id=$id&consumeWholeBlock=$consumeWholeBlock${number == null ? "" : "&number=$number"}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<LabItemModel> getLabItemDetails(int id)async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$labRequestsController/GetLabItemDetails?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return LabItemModel.fromJson(response.body as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
   }
 }

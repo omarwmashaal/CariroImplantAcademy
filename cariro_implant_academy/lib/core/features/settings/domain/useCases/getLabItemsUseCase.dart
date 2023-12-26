@@ -5,7 +5,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:dartz/dartz.dart';
 
-class GetLabItemsUseCase extends UseCases<List<LabItemEntity>, int> {
+class GetLabItemsUseCase extends LoadingUseCases<int> {
   final SettingsRepository settingsRepository;
 
   GetLabItemsUseCase({required this.settingsRepository});
