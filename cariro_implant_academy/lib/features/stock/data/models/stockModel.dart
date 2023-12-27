@@ -8,7 +8,11 @@ class StockModel extends StockEntity {
     super.count,
     super.id,
     super.name,
+    super.code,
     super.categoryId,
+    super.companyName,
+    super.labItemType,
+    super.shadeName,
   });
 
   StockModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +20,18 @@ class StockModel extends StockEntity {
     name = json['name'] ?? "";
     count = json['count'] ?? 0;
     categoryId = json['categoryId'];
+    code = json['code'];
+
+    if (json['labItemShade'] != null) {
+      shadeName = BasicNameIdObjectModel.fromJson(json['labItemShade']).name;
+      if (json['labItemShade']['labItemCompany'] != null) {
+        companyName = BasicNameIdObjectModel.fromJson(json['labItemShade']['labItemCompany']).name;
+        if (json['labItemShade']['labItemCompany']['labItemParent'] != null) {
+          labItemType = BasicNameIdObjectModel.fromJson(json['labItemShade']['labItemCompany']['labItemParent']).name;
+        }
+      }
+    }
+
     category = BasicNameIdObjectModel.fromJson(json['category'] ?? Map<String, dynamic>());
   }
 

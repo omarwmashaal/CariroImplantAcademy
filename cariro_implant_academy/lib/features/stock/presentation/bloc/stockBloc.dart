@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockLogEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockLogUseCase.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+import '../../../../core/constants/enums/enums.dart';
 import '../../domain/usecases/getStockUseCase.dart';
 
 class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
@@ -53,13 +55,26 @@ class StockDataGridSource extends DataGridSource {
   }
 
   init() {
-    _stockData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Name', value: e.name),
-              DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-              DataGridCell<int>(columnName: 'Count', value: e.count),
-              DataGridCell<Widget>(
+    if (siteController.getSite() == Website.Lab) {
+      _stockData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'Id', value: e.id),
+                DataGridCell<String>(columnName: 'Type', value: e.labItemType),
+                DataGridCell<String>(columnName: 'Company', value: e.companyName),
+                DataGridCell<String>(columnName: 'Shade', value: e.shadeName),
+                DataGridCell<String>(columnName: 'Code', value: e.code),
+                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                DataGridCell<int>(columnName: 'Count', value: e.count),
+              ]))
+          .toList();
+    } else
+      _stockData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<String>(columnName: 'Name', value: e.name),
+                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                DataGridCell<int>(columnName: 'Count', value: e.count),
+                /* DataGridCell<Widget>(
                   columnName: 'Add More',
                   value: IconButton(
                     onPressed: () {
@@ -240,9 +255,9 @@ class StockDataGridSource extends DataGridSource {
               );*/
                     },
                     icon: Icon(Icons.remove),
-                  )),
-            ]))
-        .toList();
+                  )),*/
+              ]))
+          .toList();
   }
 
   List<DataGridRow> _stockData = [];
@@ -294,16 +309,28 @@ class StockLogsDataGridSource extends DataGridSource {
   }
 
   init() {
-    _stockLogsData = models
-        .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<DateTime>(columnName: 'Date', value: e.date),
-              DataGridCell<String>(columnName: 'Name', value: e.name),
-              DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
-              DataGridCell<int>(columnName: 'Count', value: e.count),
-              DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
-            ]))
-        .toList();
+    if (siteController.getSite() == Website.Lab)
+      _stockLogsData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<DateTime>(columnName: 'Date', value: e.date),
+                DataGridCell<String>(columnName: 'Name', value: e.name),
+                DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
+                DataGridCell<int>(columnName: 'Count', value: e.count),
+                DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
+              ]))
+          .toList();
+    else
+      _stockLogsData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<int>(columnName: 'ID', value: e.id),
+                DataGridCell<DateTime>(columnName: 'Date', value: e.date),
+                DataGridCell<String>(columnName: 'Name', value: e.name),
+                DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
+                DataGridCell<int>(columnName: 'Count', value: e.count),
+                DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
+              ]))
+          .toList();
   }
 
   List<DataGridRow> _stockLogsData = [];
@@ -315,12 +342,11 @@ class StockLogsDataGridSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-      if (e.columnName == "Status")
+      /*if (e.columnName == "Status")
         return Container(
           alignment: Alignment.center,
-          child: Text(          e.value is DateTime? DateFormat("dd-MM-yyyy hh:mm a").format(e.value):
-
-          e.value.toString(),
+          child: Text(
+            e.value is DateTime ? DateFormat("dd-MM-yyyy hh:mm a").format(e.value) : e.value.toString(),
             style: TextStyle(
                 color: e.value == "Added"
                     ? Colors.green
@@ -328,7 +354,7 @@ class StockLogsDataGridSource extends DataGridSource {
                         ? Colors.red
                         : Colors.black),
           ),
-        );
+        );*/
       return Container(
         alignment: Alignment.center,
         child: Text(e.value.toString()),

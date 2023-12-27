@@ -1,16 +1,28 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:equatable/equatable.dart';
 
-class StockEntity extends Equatable {
+class StockEntity extends BasicNameIdObjectEntity {
   int? id;
   String? name;
   int? count;
+  String? code;
   int? categoryId;
   BasicNameIdObjectEntity? category;
+  String? companyName;
+  String? shadeName;
+  String? labItemType;
 
-  StockEntity({this.id, this.name, this.count, this.category,categoryId});
-
-
+  StockEntity({
+    this.id,
+    this.name,
+    this.count,
+    this.category,
+    this.code,
+    this.categoryId,
+    this.companyName,
+    this.labItemType,
+    this.shadeName,
+  });
 
   @override
   List<Object?> get props => [
@@ -19,6 +31,7 @@ class StockEntity extends Equatable {
         count,
         categoryId,
         category,
+    code,
       ];
 //IncomeDataSource dataSource = IncomeDataSource();
 }

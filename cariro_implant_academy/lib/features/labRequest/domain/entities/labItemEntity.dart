@@ -1,8 +1,9 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/stock/domain/entities/stockEntity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get/get.dart';
 
-class LabItemEntity extends BasicNameIdObjectEntity {
+class LabItemEntity extends StockEntity {
   int? id;
   String? code;
   int? consumedCount;

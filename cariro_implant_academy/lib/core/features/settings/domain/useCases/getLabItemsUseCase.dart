@@ -13,7 +13,7 @@ class GetLabItemsUseCase extends LoadingUseCases<int> {
   @override
   Future<Either<Failure, List<LabItemEntity>>> call(int id) async {
     return await settingsRepository.getLabItems(id).then((value) => value.fold(
-          (l) => Left(l..message = "Get Lab Items:"),
+          (l) => Left(l..message = "Get Lab Items: ${l.message}"),
           (r) => Right(r),
         ));
   }
