@@ -46,6 +46,7 @@ import '../../../../core/injection_contianer.dart';
 import '../../../../presentation/bloc/imagesBloc.dart';
 import '../../../patient/presentation/bloc/patientVisitsBloc.dart';
 import '../../domain/usecases/changeRoleUseCase.dart';
+import '../userAccessWidet.dart';
 
 class ViewUserProfilePage extends StatefulWidget {
   ViewUserProfilePage({Key? key, required this.userId, this.role}) : super(key: key);
@@ -439,22 +440,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                             visible: siteController.getRole()!.contains("admin"),
                                             child: SizedBox(
                                               width: 300,
-                                              child: HorizontalRadioButtons(
-                                                names: ["Admin", "Instructor", "Assistant"],
-                                                groupValue: user.roles!.contains(UserRoles.Admin.name.toLowerCase())
-                                                    ? "Admin"
-                                                    : user.roles!.contains(UserRoles.Assistant.name.toLowerCase())
-                                                        ? "Assistant"
-                                                        : user.roles!.contains(UserRoles.Instructor.name.toLowerCase())
-                                                            ? "Instructor"
-                                                            : user.roles!.contains(UserRoles.Secretary.name.toLowerCase())
-                                                                ? "Secretary"
-                                                                : "",
-                                                onChange: (value) async {
-                                                  bloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: user.idInt!)));
-                                                  //await loadData();
-                                                },
-                                              ),
+                                              child: UserAccessWidget(user: user),
                                             ),
                                           ),
                                           SizedBox(height: 10),

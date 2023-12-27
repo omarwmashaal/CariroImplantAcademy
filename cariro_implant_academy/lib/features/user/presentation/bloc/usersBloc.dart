@@ -1,4 +1,6 @@
 import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
@@ -9,6 +11,7 @@ import 'package:cariro_implant_academy/features/user/domain/usecases/getCandidat
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_Events.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_States.dart';
+import 'package:cariro_implant_academy/features/user/presentation/userAccessWidet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -203,51 +206,9 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<Widget>(
-              columnName: 'Access',
-              value: Row(
-                children: [
-                  CIA_CheckBoxWidget(
-                    text: "CIA",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
-                      if (value) e.accessWebsites!.add(Website.CIA);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "LAB",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
-                      if (value) e.accessWebsites!.add(Website.Lab);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Clinic",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
-                      if (value) e.accessWebsites!.add(Website.Clinic);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
-                  ),
-                ],
-              )),
+                  DataGridCell<Widget>(
+                      columnName: 'Access',
+                      value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
@@ -270,51 +231,9 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
                   DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
 
-          DataGridCell<Widget>(
-              columnName: 'Access',
-              value: Row(
-                children: [
-                  CIA_CheckBoxWidget(
-                    text: "CIA",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
-                      if (value) e.accessWebsites!.add(Website.CIA);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "LAB",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
-                      if (value) e.accessWebsites!.add(Website.Lab);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Clinic",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
-                      if (value) e.accessWebsites!.add(Website.Clinic);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
-                  ),
-                ],
-              )),
+                  DataGridCell<Widget>(
+                      columnName: 'Access',
+                      value: UserAccessWidget(user: e)),
 
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
@@ -334,51 +253,9 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<Widget>(
-              columnName: 'Access',
-              value: Row(
-                children: [
-                  CIA_CheckBoxWidget(
-                    text: "CIA",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
-                      if (value) e.accessWebsites!.add(Website.CIA);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "LAB",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
-                      if (value) e.accessWebsites!.add(Website.Lab);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Clinic",
-                    onChange: (value) {
-                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                        return;
-                      }
-                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
-                      if (value) e.accessWebsites!.add(Website.Clinic);
-                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                    },
-                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
-                  ),
-                ],
-              )),
+                  DataGridCell<Widget>(
+                      columnName: 'Access',
+                      value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
@@ -399,49 +276,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<Widget>(
                       columnName: 'Access',
-                      value: Row(
-                        children: [
-                          CIA_CheckBoxWidget(
-                            text: "CIA",
-                            onChange: (value) {
-                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                                return;
-                              }
-                              e.accessWebsites!.removeWhere((element) => element == Website.CIA);
-                              if (value) e.accessWebsites!.add(Website.CIA);
-                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                            },
-                            value: e.accessWebsites?.contains(Website.CIA) ?? false,
-                          ),
-                          CIA_CheckBoxWidget(
-                            text: "LAB",
-                            onChange: (value) {
-                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                                return;
-                              }
-                              e.accessWebsites!.removeWhere((element) => element == Website.Lab);
-                              if (value) e.accessWebsites!.add(Website.Lab);
-                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                            },
-                            value: e.accessWebsites?.contains(Website.Lab) ?? false,
-                          ),
-                          CIA_CheckBoxWidget(
-                            text: "Clinic",
-                            onChange: (value) {
-                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
-                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
-                                return;
-                              }
-                              e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
-                              if (value) e.accessWebsites!.add(Website.Clinic);
-                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
-                            },
-                            value: e.accessWebsites?.contains(Website.Clinic) ?? false,
-                          ),
-                        ],
-                      )),
+                      value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
