@@ -138,8 +138,8 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                     height: 600,
                                     title: "Calendar",
                                     child: CalendarWidget(
-                                      getForDoctor: siteController.getRole() != "secretary",
-                                      getAllSchedules: siteController.getRole() == "secretary",
+                                      getForDoctor: (!siteController.getRole()!.contains("secretary")),
+                                      getAllSchedules: siteController.getRole()!.contains("secretary"),
                                     ),
                                   );
                                 },

@@ -73,7 +73,7 @@ void main() {
       final pref = await SharedPreferences.getInstance();
       setUpSuccess();
      await repoImpl.login(loginParams);
-      expect(pref.getString("role"), loginResponse.role);
+      expect(pref.getString("role"), loginResponse.roles);
     },
   );
   test(

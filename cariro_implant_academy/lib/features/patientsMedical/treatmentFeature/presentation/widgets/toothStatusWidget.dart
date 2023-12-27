@@ -93,7 +93,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                   child: widget.isSurgical
                       ? RoundCheckBox(
                           isChecked: widget.fieldModel.status,
-                          onTap: siteController.getRole() == "secretary"
+                          onTap: siteController.getRole()!.contains("secretary")
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
@@ -220,7 +220,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                   child: widget.isSurgical
                       ? RoundCheckBox(
                           isChecked: widget.fieldModel.status,
-                          onTap: siteController.getRole() == "secretary"
+                          onTap: siteController.getRole()!.contains("secretary")
                               ? null
                               : (selected) {
                                   widget.fieldModel.status = selected;
@@ -440,7 +440,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       SizedBox(width: 10),
                       Expanded(
                           child: Visibility(
-                        visible: siteController.getRole() == "admin" && widget.fieldModel.requestChangeId != null,
+                        visible: siteController.getRole()!.contains("admin") && widget.fieldModel.requestChangeId != null,
                         child: Row(
                           children: [
                             Expanded(

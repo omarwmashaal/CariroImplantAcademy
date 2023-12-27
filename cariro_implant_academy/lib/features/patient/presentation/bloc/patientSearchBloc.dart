@@ -39,9 +39,11 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
         );
       },
     );
-    on<PatientSearchFilterChangedEvent>((event, emit) {
-      this._filter = event.filter;
-    },);
+    on<PatientSearchFilterChangedEvent>(
+      (event, emit) {
+        this._filter = event.filter;
+      },
+    );
   }
 }
 
@@ -61,13 +63,13 @@ class PatientSearchDataSourceTable extends DataGridSource {
   //List<PatientSearchResponseEntity> models = <PatientSearchResponseEntity>[];
   BuildContext context;
   List<PatientInfoEntity> models = [];
+
   /// Creates the patient data source class with required details.
-  PatientSearchDataSourceTable(this.context) ;
+  PatientSearchDataSourceTable(this.context);
 
-
-  init(List<PatientInfoEntity> _models)  {
-  models = _models;
-    if (siteController.getRole() != "secretary") {
+  init(List<PatientInfoEntity> _models) {
+    models = _models;
+    if ((!siteController.getRole()!.contains("secretary"))) {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<String>(columnName: 'ID', value: e.secondaryId),
@@ -75,7 +77,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),
                 DataGridCell<int>(columnName: 'Age', value: e.age),
-                DataGridCell<String>(columnName: 'Marital Status', value:getEnumName(e.maritalStatus)),
+                DataGridCell<String>(columnName: 'Marital Status', value: getEnumName(e.maritalStatus)),
                 DataGridCell<String>(columnName: 'Relative', value: e.relative),
                 DataGridCell<Widget>(
                   columnName: 'Add to my patients',
@@ -85,7 +87,6 @@ class PatientSearchDataSourceTable extends DataGridSource {
                             icon: Icon(Icons.remove),
                             onPressed: () async {
                               context.read<AddToMyPatientsRangeBloc>().removeFromMyPatients(e.id!);
-
                             },
                           )
                         : e.doctorId == null
@@ -132,11 +133,9 @@ class PatientSearchDataSourceTable extends DataGridSource {
     }).toList());
   }
 
-   update(List<PatientInfoEntity> models)  {
-
-     init(models);
+  update(List<PatientInfoEntity> models) {
+    init(models);
     notifyListeners();
     //notifyDataSourceListeners();
-
   }
 }

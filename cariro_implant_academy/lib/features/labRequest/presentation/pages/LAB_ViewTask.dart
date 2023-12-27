@@ -127,7 +127,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
               Row(
                 children: [
                   TitleWidget(
-                    title: siteController.getRole() == "technician" ? "Task Details" : "Request Details",
+                    title: siteController.getRole()!.contains("technician") ? "Task Details" : "Request Details",
                     showBackButton: true,
                   ),
                   SizedBox(width: 10),
@@ -437,7 +437,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       height: 10,
                     ),
                     Visibility(
-                      visible: siteController.getRole() == "technician" && siteController.getUserId()==request.assignedToId,
+                      visible: siteController.getRole()!.contains("technician") && siteController.getUserId()==request.assignedToId,
                       child: Container(
                         child: request.status == EnumLabRequestStatus.Finished
                             ? Container()
@@ -565,7 +565,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       ),
                     ),
                     Visibility(
-                      visible: siteController.getRole() == "labmoderator" && request.status!=EnumLabRequestStatus.Finished,
+                      visible: siteController.getRole()!.contains("labmoderator") && request.status!=EnumLabRequestStatus.Finished,
                       child: Expanded(
                         child: Column(
                           children: [

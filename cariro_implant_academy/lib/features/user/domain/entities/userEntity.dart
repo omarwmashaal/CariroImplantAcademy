@@ -33,7 +33,7 @@ class UserEntity extends Equatable {
   String? phoneNumber;
   int? batchId;
   BasicNameIdObjectEntity? batch;
-  String? role;
+  List<String>? roles;
   int? workPlaceId;
   BasicNameIdObjectEntity? workPlace;
   String? phoneNumber2;
@@ -44,7 +44,7 @@ class UserEntity extends Equatable {
 
   UserEntity({
     this.name = "",
-    this.role,
+    this.roles,
     this.dateOfBirth,
     this.gender,
     this.graduatedFrom,
@@ -73,7 +73,7 @@ class UserEntity extends Equatable {
   @override
   List<Object?> get props => [
         this.name,
-        this.role,
+        this.roles,
         this.dateOfBirth,
         this.gender,
         this.graduatedFrom,

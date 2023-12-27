@@ -136,7 +136,7 @@ class _DrawerItemsState extends State<DrawerItems> {
                 ),
               ),
             ];
-            return siteController.getRole() != "admin"
+            return (!siteController.getRole()!.contains("admin"))
                 ? Container(
                     color: Colors.white,
                     child: Column(

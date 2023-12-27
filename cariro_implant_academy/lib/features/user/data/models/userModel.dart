@@ -7,7 +7,7 @@ import '../../../../core/constants/enums/enums.dart';
 class UserModel extends UserEntity {
   UserModel({
     super.name,
-    super.role,
+    super.roles,
     super.dateOfBirth,
     super.gender,
     super.graduatedFrom,
@@ -37,7 +37,7 @@ class UserModel extends UserEntity {
       accessWebsites: entity.accessWebsites,
       batch: entity.batch,
       batchId: entity.batchId,
-      role: entity.role,
+      roles: entity.roles,
       dateOfBirth: entity.dateOfBirth,
       gender: entity.gender,
       graduatedFrom: entity.graduatedFrom,
@@ -100,7 +100,7 @@ class UserModel extends UserEntity {
     phoneNumber2 = json['phoneNumber2'];
     workPlace = BasicNameIdObjectModel.fromJson(json['workPlace'] ?? Map<String, dynamic>());
     workPlaceId = json['workPlaceId'];
-    role = json['role'];
+    roles = ((json['roles']??[]) as List<dynamic>).map((e) => e as String).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -125,7 +125,7 @@ class UserModel extends UserEntity {
     data['phoneNumber'] = this.phoneNumber;
     data['batchId'] = this.batchId;
     data['batch'] = this.batch==null?null:BasicNameIdObjectModel.fromEntity(this.batch!).toJson();
-    data['role'] = this.role ?? "";
+    data['roles'] = this.roles?.map((e) => e as String).toList();
     data['phoneNumber2'] = this.phoneNumber2;
     data['workPlace'] = this.workPlace != null ? BasicNameIdObjectModel.fromEntity(this.workPlace!).toJson() : null;
     data['workPlaceId'] = this.workPlaceId;

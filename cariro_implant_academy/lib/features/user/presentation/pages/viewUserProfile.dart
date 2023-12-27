@@ -119,14 +119,12 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
               else if (state is UsersBloc_ResetPasswordSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true);
                 dialogHelper.dismissSingle(context);
+              } else if (state is UsersBloc_ChangingRoleErrorState)
+                ShowSnackBar(context, isSuccess: false, message: state.message);
+              else if (state is UsersBloc_ChangedRoleSuccessfullyState) {
+                ShowSnackBar(context, isSuccess: true);
+                bloc.add(UsersBloc_GetUserInfoEvent(id: widget.userId));
               }
-              else if(state is UsersBloc_ChangingRoleErrorState)
-                ShowSnackBar(context, isSuccess: false,message: state.message);
-              else if(state is UsersBloc_ChangedRoleSuccessfullyState)
-                {
-                  ShowSnackBar(context, isSuccess: true);
-                  bloc.add(UsersBloc_GetUserInfoEvent(id: widget.userId));
-                }
             },
           ),
           BlocListener<ImageBloc, ImageBloc_State>(
@@ -305,14 +303,13 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 }
                                               }(),
                                               SizedBox(width: 10),
-
-
                                               CIA_SecondaryButton(
                                                   label: "Sessions Duration",
                                                   onTab: () async {
                                                     DateTime? from;
                                                     DateTime? to;
-                                                    VisitDataSource dataSource = VisitDataSource(sessions: true,context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
+                                                    VisitDataSource dataSource =
+                                                        VisitDataSource(sessions: true, context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
                                                     bloc.add(UsersBloc_GetSessionsDurationEvent(
                                                         params: GetSessionsDurationParams(
                                                       id: widget.userId,
@@ -439,22 +436,21 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           SizedBox(height: 10),
                                           Visibility(
-                                            visible: siteController.getRole()=="admin",
+                                            visible: siteController.getRole()!.contains("admin"),
                                             child: SizedBox(
                                               width: 300,
                                               child: HorizontalRadioButtons(
                                                 names: ["Admin", "Instructor", "Assistant"],
-                                                groupValue: user.role == UserRoles.Admin.name.toLowerCase()
+                                                groupValue: user.roles!.contains(UserRoles.Admin.name.toLowerCase())
                                                     ? "Admin"
-                                                    : user.role == UserRoles.Assistant.name.toLowerCase()
-                                                    ? "Assistant"
-                                                    : user.role == UserRoles.Instructor.name.toLowerCase()
-                                                    ? "Instructor"
-                                                    : user.role == UserRoles.Secretary.name.toLowerCase()
-                                                    ? "Secretary"
-                                                    : "",
+                                                    : user.roles!.contains(UserRoles.Assistant.name.toLowerCase())
+                                                        ? "Assistant"
+                                                        : user.roles!.contains(UserRoles.Instructor.name.toLowerCase())
+                                                            ? "Instructor"
+                                                            : user.roles!.contains(UserRoles.Secretary.name.toLowerCase())
+                                                                ? "Secretary"
+                                                                : "",
                                                 onChange: (value) async {
-
                                                   bloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: user.idInt!)));
                                                   //await loadData();
                                                 },
@@ -490,13 +486,13 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                           ),
                                           edit
                                               ? CIA_TextFormField(
-                                                  label: user.role=="candidate"?"Personal Email": "Email",
+                                                  label: user.roles!.contains("candidate") ? "Personal Email" : "Email",
                                                   onChange: (v) => user.email = v,
                                                   controller: TextEditingController(text: user.email == null ? "" : user.email),
                                                 )
                                               : Row(
                                                   children: [
-                                                    Expanded(child: FormTextKeyWidget(text:  user.role=="candidate"?"Personal Email": "Email")),
+                                                    Expanded(child: FormTextKeyWidget(text: user.roles!.contains("candidate") ? "Personal Email" : "Email")),
                                                     Expanded(child: FormTextValueWidget(text: user.email == null ? "" : user.email))
                                                   ],
                                                 ),

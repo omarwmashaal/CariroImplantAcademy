@@ -329,14 +329,14 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                       );
                       bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
                       CIA_ShowPopUp(
-                        width: double.maxFinite,
+                          width: double.maxFinite,
                           context: context,
                           child: Column(
                             children: [
                               FormTextKeyWidget(text: "View History Treatments"),
-                              Visibility(visible: siteController.getRole()=="admin",child: FormTextValueWidget(text: "Click on note to update")),
+                              Visibility(visible: siteController.getRole()!.contains("admin"), child: FormTextValueWidget(text: "Click on note to update")),
                               Expanded(
-                                child: BlocConsumer<NonSurgicalTreatmentBloc,NonSurgicalTreatmentBloc_States>(
+                                child: BlocConsumer<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
                                   buildWhen: (previous, current) =>
                                       current is NonSurgicalTreatmentBloc_LoadingAllData ||
                                       current is NonSurgicalTreatmentBloc_AllDataLoadingError ||
@@ -353,17 +353,16 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                                     return Container();
                                   },
                                   listener: (context, state) {
-                                    if(state is NonSurgicalTreatmentBloc_UpdatingNotesStates)
+                                    if (state is NonSurgicalTreatmentBloc_UpdatingNotesStates)
                                       CustomLoader.show(context);
-                                    else{
+                                    else {
                                       CustomLoader.hide();
-                                      if(state is NonSurgicalTreatmentBloc_UpdatingNotesErrorStates)
-                                        ShowSnackBar(context, isSuccess: false,message: state.message);
-                                      else if(state is NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState)
-                                        {
-                                          ShowSnackBar(context, isSuccess: true);
-                                          bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
-                                        }
+                                      if (state is NonSurgicalTreatmentBloc_UpdatingNotesErrorStates)
+                                        ShowSnackBar(context, isSuccess: false, message: state.message);
+                                      else if (state is NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState) {
+                                        ShowSnackBar(context, isSuccess: true);
+                                        bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
+                                      }
                                     }
                                   },
                                 ),

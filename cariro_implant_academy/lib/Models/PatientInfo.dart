@@ -124,7 +124,7 @@ class PatientDataSource extends DataGridSource {
   }
 
   init() {
-    if (siteController.getRole() != "secretary")
+    if ((!siteController.getRole()!.contains("secretary")))
       {
         columns = [
           "ID",

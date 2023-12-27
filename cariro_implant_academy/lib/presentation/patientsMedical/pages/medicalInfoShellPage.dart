@@ -92,13 +92,15 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                           );
                         },
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Expanded(
                         child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                           buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
                           builder: (context, state) {
                             return AbsorbPointer(
-                              absorbing: state is MedicalInfoBlocChangeViewEditState? !state.edit:false,
+                              absorbing: state is MedicalInfoBlocChangeViewEditState ? !state.edit : false,
                               child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                                 buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
                                 builder: (context, state) {
@@ -106,20 +108,23 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                   return MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: CIA_GestureWidget(
-                                      child: Text( "Date: "+
-                                        (state is MedicalInfoBlocChangeDateState
+                                      child: Text(
+                                        "Date: " +
+                                            (state is MedicalInfoBlocChangeDateState
                                                 ? state.date == null
                                                     ? ""
                                                     : DateFormat("dd-MM-yyyy").format(state.date!)
                                                 : "") +
-                                            (siteController.getRole()=="admin"? " Click To Edit":" Only Admin can edit"),
+                                            (siteController.getRole()!.contains("admin") ? " Click To Edit" : " Only Admin can edit"),
                                         style: TextStyle(),
                                       ),
-                                      onTap: () =>siteController.getRole()!="admin"?null:  CIA_PopupDialog_DateOnlyPicker(
-                                          context,
-                                          "Pick Date",
-                                          (date) => medicalShellBloc.emit(
-                                              MedicalInfoBlocChangeDateState(date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
+                                      onTap: () => (!siteController.getRole()!.contains("admin"))
+                                          ? null
+                                          : CIA_PopupDialog_DateOnlyPicker(
+                                              context,
+                                              "Pick Date",
+                                              (date) => medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
+                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
                                     ),
                                   );
                                 },
@@ -143,7 +148,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
             Expanded(
               child: Row(
                 children: [
-                  SizedBox(width:10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                       builder: (context, state) {
@@ -325,16 +330,21 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               ),
                               SizedBox(
                                 height: 10,
-                              ), 
+                              ),
                               Row(
                                 children: [
-                                  FormTextValueWidget(text: patient.out? "Patient Out!":""),
-                                  Icon(Icons.circle,color: patient.out? Colors.red:Colors.green,),
+                                  FormTextValueWidget(text: patient.out ? "Patient Out!" : ""),
+                                  Icon(
+                                    Icons.circle,
+                                    color: patient.out ? Colors.red : Colors.green,
+                                  ),
                                 ],
                               ),
-                              CIA_PrimaryButton(label: "Save", onTab: (){
-                                medicalShellBloc.add(MedicalInfoShell_SaveChanges());
-                              })
+                              CIA_PrimaryButton(
+                                  label: "Save",
+                                  onTab: () {
+                                    medicalShellBloc.add(MedicalInfoShell_SaveChanges());
+                                  })
                             ],
                           );
                         } else if (state is LoadingError)

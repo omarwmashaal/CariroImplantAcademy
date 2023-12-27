@@ -8,7 +8,7 @@ class AuthenticationUserEntity extends Equatable {
   final int idInt;
   final String phoneNumber;
   final String phone;
-  final String role;
+  final List<String> roles;
   final String token;
   final int? profileId;
 
@@ -18,7 +18,7 @@ class AuthenticationUserEntity extends Equatable {
         name,
         idInt,
         phoneNumber,
-        role,
+        roles,
         token,
         phone,
       ];
@@ -28,7 +28,7 @@ class AuthenticationUserEntity extends Equatable {
     required this.token,
     required this.idInt,
     required this.phoneNumber,
-    required this.role,
+    required this.roles,
     required this.phone,
      this.profileId,
   });

@@ -9,7 +9,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
     required name,
     required idInt,
     required phoneNumber,
-    required role,
+    required roles,
     required token,
     required phone,
     profileId,
@@ -18,7 +18,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
           token: token,
           idInt: idInt,
           phoneNumber: phoneNumber,
-          role: role,
+          roles: roles,
           phone: phone,
           profileId: profileId,
         );
@@ -29,7 +29,7 @@ class AuthenticationUserModel extends AuthenticationUserEntity {
         token: map['token'] as String,
         idInt: map['idInt'] as int,
         phoneNumber: map['phoneNumber'] as String,
-        role: map['role'] as String,
+        roles: ((map['roles']??[]) as List<dynamic>).map((e) => e as String).toList(),
         profileId: map['profileImageId'] as int?,
         phone: map['phone'] as String);
   }

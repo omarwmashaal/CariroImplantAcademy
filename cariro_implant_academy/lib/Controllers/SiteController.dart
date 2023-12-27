@@ -113,9 +113,9 @@ class SiteController {
     print(path);
     Future.delayed(Duration(milliseconds: 0)).then((value) {
       if (siteController.getSite() == Website.CIA || siteController.getSite() == Website.Clinic) {
-        if ((path == SettingsPage.routePath.split("/").last && getRole() == "admin") ||
-            (path == UsersSettingsPage.routePath.split("/").last && getRole() == "admin") ||
-            (path == ClinicPriceSettingsPage.routePath.split("/").last && getRole() == "admin")) {
+        if ((path == SettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
+            (path == UsersSettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
+            (path == ClinicPriceSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))) {
           if (getSite() == Website.CIA)
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
@@ -155,7 +155,7 @@ class SiteController {
             path == PatientAdvancedSearchPage.routePathProsthetic.split("/").last ||
             path == PatientAdvancedSearchPage.routePathTreatments.split("/").last ||
             path == VisitsPage.routePath.split("/").last) {
-          if (getRole() == "secretary")
+          if (getRole()!.contains("secretary"))
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
                   title: "Patient Data", compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
@@ -218,8 +218,8 @@ class SiteController {
         else
           setAppBarWidget(context: context);
       } else if (siteController.getSite() == Website.Lab) {
-        if ((path == SettingsPage.routePath.split("/").last && getRole() == "admin") ||
-            (path == LabItemSettingsPage.routePath.split("/").last && getRole() == "admin")) {
+        if ((path == SettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
+            (path == LabItemSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))) {
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
             SlidingTabModel(title: "Lab Items", compareName: LabItemSettingsPage.routePath, namedDirectory: LabItemSettingsPage.routeName),
@@ -227,7 +227,7 @@ class SiteController {
         } else if (path == LabRequestsSearchPage.routePath.split("/").last ||
             path == LabRequestsSearchPage.routeAllPath.split("/").last ||
             path == LabRequestsSearchPage.routeMyPath.split("/").last) {
-          if (siteController.getRole() == "technician") {
+          if (siteController.getRole()!.contains("technician")) {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
                   title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
@@ -358,8 +358,8 @@ class SiteController {
       _siteLogo = AssetImage("assets/Clinic_logo.png");
   }
 
-  setRole(String role) {
-    sl<SharedPreferences>().setString("role", role);
+  setRole(List<String> role) {
+    sl<SharedPreferences>().setStringList("role", role);
   }
 
   setToken(String token) async {
@@ -378,7 +378,7 @@ class SiteController {
     return sl<SharedPreferences>().getString("token");
   }
 
-  String? getRole() => sl<SharedPreferences>().getString("role");
+  List<String>? getRole() => sl<SharedPreferences>().getStringList("role");
 
   int? getProfileImageId() => sl<SharedPreferences>().getInt("profileImageId");
 

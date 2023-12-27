@@ -27,7 +27,7 @@ void main() {
     token: "string",
     idInt: 0,
     phoneNumber: "string",
-    role: "string",
+    roles: "string",
     phone: "string",
   );
   test(

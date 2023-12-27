@@ -111,7 +111,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                 else if (tabController.index == 5)
                   role = "labmoderator";
                 else if (tabController.index == 6) role = "technician";
-                UserEntity newUser = UserEntity(role: role, gender: "Male");
+                UserEntity newUser = UserEntity(roles: [role], gender: "Male");
                 bool newBatch = false;
                 CIA_ShowPopUp(
                   title: "Add new $role",

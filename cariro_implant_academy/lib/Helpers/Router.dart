@@ -677,7 +677,7 @@ class CIA_Router {
                           redirect: (context, state) {
                             if (siteController.getSite() == Website.CIA)
                               return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
-                            else if (siteController.getRole() == "technician" || siteController.getRole() == "labmoderator")
+                            else if (siteController.getRole()!.contains("technician") || siteController.getRole()!.contains("labmoderator"))
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewTaskPage.routePath}";
                             else
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewRequestPage.routePath}";
@@ -706,46 +706,44 @@ class CIA_Router {
                               },
                             ),
                           ]),
-                      GoRoute(
-                          path: "Users",
-                          builder: (context, state) => Container(),                          routes: [
-                            GoRoute(
-                              path: UserSearchPage.routePathTechnicians,
-                              name: UserSearchPage.getRouteNameTechnicians(site: Website.Lab),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: _Authorize(
-                                  allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
-                                  child: UserSearchPage(
-                                    key: GlobalKey(),
-                                    type: UserRoles.Technician,
-                                  ),
-                                ),
+                      GoRoute(path: "Users", builder: (context, state) => Container(), routes: [
+                        GoRoute(
+                          path: UserSearchPage.routePathTechnicians,
+                          name: UserSearchPage.getRouteNameTechnicians(site: Website.Lab),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
+                              child: UserSearchPage(
+                                key: GlobalKey(),
+                                type: UserRoles.Technician,
                               ),
                             ),
-                            GoRoute(
-                              path: UserSearchPage.routePathLabModerators,
-                              name: UserSearchPage.getRouteNameLabModerators(site: Website.Lab),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: _Authorize(
-                                  allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
-                                  child: UserSearchPage(
-                                    key: GlobalKey(),
-                                    type: UserRoles.LabModerator,
-                                  ),
-                                ),
+                          ),
+                        ),
+                        GoRoute(
+                          path: UserSearchPage.routePathLabModerators,
+                          name: UserSearchPage.getRouteNameLabModerators(site: Website.Lab),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: _Authorize(
+                              allowedRoles: [UserRoles.Admin, UserRoles.Secretary, UserRoles.LabModerator],
+                              child: UserSearchPage(
+                                key: GlobalKey(),
+                                type: UserRoles.LabModerator,
                               ),
                             ),
-                            GoRoute(
-                              path: UserSearchPage.routePathOutsource,
-                              name: UserSearchPage.getRouteNameOutsourceModerators(site: Website.Lab),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: UserSearchPage(
-                                  key: GlobalKey(),
-                                  type: UserRoles.OutSource,
-                                ),
-                              ),
+                          ),
+                        ),
+                        GoRoute(
+                          path: UserSearchPage.routePathOutsource,
+                          name: UserSearchPage.getRouteNameOutsourceModerators(site: Website.Lab),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: UserSearchPage(
+                              key: GlobalKey(),
+                              type: UserRoles.OutSource,
                             ),
-                          ]),
+                          ),
+                        ),
+                      ]),
                       GoRoute(
                         path: StockSearchPage.routePath,
                         name: StockSearchPage.getRouteName(site: Website.Lab),
@@ -1077,40 +1075,38 @@ class CIA_Router {
                         path: "Clinic/Patients/:id",
                         redirect: (context, state) => context.namedLocation(CreateOrViewPatientPage.getViewRouteName()),
                       ),
-                      GoRoute(
-                          path: "Users",
-                          builder: (context, state) => Container(),                          routes: [
-                            GoRoute(
-                              path: UserSearchPage.routePathAssistants,
-                              name: UserSearchPage.getRouteNameAssistants(site: Website.Clinic),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: UserSearchPage(
-                                  key: GlobalKey(),
-                                  type: UserRoles.Assistant,
-                                ),
-                              ),
+                      GoRoute(path: "Users", builder: (context, state) => Container(), routes: [
+                        GoRoute(
+                          path: UserSearchPage.routePathAssistants,
+                          name: UserSearchPage.getRouteNameAssistants(site: Website.Clinic),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: UserSearchPage(
+                              key: GlobalKey(),
+                              type: UserRoles.Assistant,
                             ),
-                            GoRoute(
-                              path: UserSearchPage.routePathInstructors,
-                              name: UserSearchPage.getRouteNameInstructors(site:Website.Clinic),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: UserSearchPage(
-                                  key: GlobalKey(),
-                                  type: UserRoles.Instructor,
-                                ),
-                              ),
+                          ),
+                        ),
+                        GoRoute(
+                          path: UserSearchPage.routePathInstructors,
+                          name: UserSearchPage.getRouteNameInstructors(site: Website.Clinic),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: UserSearchPage(
+                              key: GlobalKey(),
+                              type: UserRoles.Instructor,
                             ),
-                            GoRoute(
-                              path: UserSearchPage.routePathCandidates,
-                              name:UserSearchPage.getRouteNameCandidates(site:Website.Clinic),
-                              pageBuilder: (context, state) => NoTransitionPage(
-                                child: UserSearchPage(
-                                  key: GlobalKey(),
-                                  type: UserRoles.Candidate,
-                                ),
-                              ),
+                          ),
+                        ),
+                        GoRoute(
+                          path: UserSearchPage.routePathCandidates,
+                          name: UserSearchPage.getRouteNameCandidates(site: Website.Clinic),
+                          pageBuilder: (context, state) => NoTransitionPage(
+                            child: UserSearchPage(
+                              key: GlobalKey(),
+                              type: UserRoles.Candidate,
                             ),
-                          ]),
+                          ),
+                        ),
+                      ]),
                       GoRoute(
                         path: ViewUserProfilePage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
@@ -1136,35 +1132,35 @@ class CIA_Router {
                         ),
                       ),
                       GoRoute(
-                        name:StockSearchPage.getRouteName(site:Website.Clinic),
+                        name: StockSearchPage.getRouteName(site: Website.Clinic),
                         path: StockSearchPage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: StockSearchPage(),
                         ),
                       ),
                       GoRoute(
-                        name: StockLogsSearchPage.getRouteName(site:Website.Clinic),
+                        name: StockLogsSearchPage.getRouteName(site: Website.Clinic),
                         path: StockLogsSearchPage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: StockLogsSearchPage(),
                         ),
                       ),
                       GoRoute(
-                        name:CashFlowIncomePage.getRouteName(site:Website.Clinic),
+                        name: CashFlowIncomePage.getRouteName(site: Website.Clinic),
                         path: CashFlowIncomePage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: CashFlowIncomePage(),
                         ),
                       ),
                       GoRoute(
-                        name:CashFlowExpensesPage.getRouteName(site:Website.Clinic),
+                        name: CashFlowExpensesPage.getRouteName(site: Website.Clinic),
                         path: CashFlowExpensesPage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: CashFlowExpensesPage(),
                         ),
                       ),
                       GoRoute(
-                        name:CashFlowSummaryPage.getRouteName(site:Website.Clinic),
+                        name: CashFlowSummaryPage.getRouteName(site: Website.Clinic),
                         path: CashFlowSummaryPage.routePath,
                         pageBuilder: (context, state) => NoTransitionPage(
                           child: CashFlowSummaryPage(),
@@ -1262,7 +1258,7 @@ class _Authorize extends StatelessWidget {
       buildWhen: (previous, current) => current is LoggedIn,
       builder: (context, state) {
         if (state is LoggedIn) {
-          if (siteController.getRole() == "admin" || roles.contains(siteController.getRole()))
+          if (siteController.getRole()!.contains("admin") || roles.contains(siteController.getRole()))
             return child;
           else
             return BigErrorPageWidget(message: "Sorry you don't have access to this page");

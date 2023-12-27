@@ -42,7 +42,7 @@ class PagesController extends PageController {
   static int previousIndex = 0;
 
   PageView MainPageRoutes() {
-    String role = siteController.getRole()!;
+   // String role = siteController.getRole()!;
     switch (siteController.getSite()) {
       case Website.CIA:
         {
@@ -81,7 +81,7 @@ class PagesController extends PageController {
         }
       case Website.Lab:
         {
-          if (role == "Secretary")
+          if (siteController.getRole()!.contains("secretary"))
             return PageView(
               physics: NeverScrollableScrollPhysics(),
               controller: pagesController,
@@ -99,7 +99,7 @@ class PagesController extends PageController {
                 LAB_CashFlowsSearchPage(),
               ],
             );
-          else if (role == "technician") {
+          else if (siteController.getRole()!.contains("technician")) {
             return PageView(
               physics: NeverScrollableScrollPhysics(),
               controller: pagesController,
@@ -172,7 +172,7 @@ class PagesController extends PageController {
   }
 
   static List<SidebarXItem> DrawerItems(BuildContext context, SidebarXController controller) {
-    String role = siteController.getRole()!;
+    //String role = siteController.getRole()!;
 
     var bloc = BlocProvider.of<AppBarBloc>(context);
 
@@ -344,7 +344,7 @@ class PagesController extends PageController {
         }
       case Website.Lab:
         {
-          if (role == "technician") {
+          if (siteController.getRole()!.contains( "technician")) {
             return [
               SidebarXItem(
                 label: 'y Tasks',

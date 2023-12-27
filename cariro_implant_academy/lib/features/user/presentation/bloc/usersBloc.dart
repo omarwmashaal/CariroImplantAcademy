@@ -182,8 +182,8 @@ class UsersDataGridSource extends DataGridSource {
   }
 
   init() {
-    String? role = siteController.getRole();
-    if (role == "admin") {
+    List<String>? role = siteController.getRole();
+    if (role!.contains("admin")) {
       if (type == UserRoles.Candidate) {
         columns = ["ID", "Name", "Batch", "Email", "Phone", "Remove"];
         _userData = models

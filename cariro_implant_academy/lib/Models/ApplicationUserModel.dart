@@ -153,7 +153,7 @@ class ApplicationUserDataSource extends DataGridSource {
   }
 
   init() {
-    if (siteController.getRole() == "admin") {
+    if (siteController.getRole()!.contains("admin")) {
       if (type == UserRoles.Candidate) {
         columns = ["ID", "Name", "Batch", "Email", "Phone", "Remove"];
         _userData = models

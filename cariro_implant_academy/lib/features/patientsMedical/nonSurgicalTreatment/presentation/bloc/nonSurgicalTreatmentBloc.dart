@@ -184,7 +184,7 @@ class NonSurgicalTreatmentDataGridSource extends DataGridSource {
               DataGridCell<Widget>(
                   columnName: 'Treatment',
                   value: CIA_GestureWidget(
-                    onTap: () => siteController.getRole() != "admin"
+                    onTap: () => (!siteController.getRole()!.contains("admin"))
                         ? null
                         : CIA_ShowPopUp(
                             context: context,

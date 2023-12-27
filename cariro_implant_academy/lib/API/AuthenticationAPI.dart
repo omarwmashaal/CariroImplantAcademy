@@ -18,7 +18,7 @@ class AuthenticationAPI {
     var tempToken = await siteController.getToken();
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       LoginResponseDTO loginResponse = LoginResponseDTO.fromJson(response.result as Map<String, dynamic>);
-      siteController.setRole(loginResponse.role!);
+     // siteController.setRole(loginResponse.role!);
       await siteController.setToken(loginResponse.token!);
       SharedPreferences.getInstance().then((value) {
         value.setString("token", loginResponse!.token!);
@@ -57,7 +57,7 @@ class AuthenticationAPI {
     var response = await HTTPRequest.Get("Authentication/VerifyToken");
     if(response.statusCode==200)
       {
-        siteController.setRole((response.result as Map<String,dynamic>)['role'] as String);
+      //  siteController.setRole((response.result as Map<String,dynamic>)['role'] as String);
    //     var user = siteController.getUser();
      //   user.name = (response.result as Map<String,dynamic>)['name'] as String;
       //  user.idInt = (response.result as Map<String,dynamic>)['id'] as int;
@@ -71,7 +71,7 @@ class AuthenticationAPI {
         NotificationsAPI.GetNotifications();
       }
     else {
-      siteController.setRole("");
+      //siteController.setRole("");
      // siteController.setUser(ApplicationUserModel());
       await siteController.clearCach();
     }

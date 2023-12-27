@@ -61,7 +61,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
 
   static String getVisitPatientRouteName() {
-    if(siteController.getRole()=="secretary") {
+    if(siteController.getRole()!.contains("secretary")) {
       return getViewRouteName();
     }
     return PatientMedicalHistory.getRouteName();
@@ -190,7 +190,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                       child: Text("Patient Out!. Click to view Reason"))),
                               SizedBox(width: 10),
                               Visibility(
-                                  visible: !patient.out && siteController.getRole() == "admin",
+                                  visible: !patient.out && siteController.getRole()!.contains("admin"),
                                   child: CIA_SecondaryButton(
                                     label: "Set Patient Out",
                                     onTab: () => CIA_ShowPopUp(

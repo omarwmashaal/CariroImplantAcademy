@@ -174,7 +174,7 @@ class VisitDataSource extends DataGridSource {
         "Doctor Name",
         "Treatment",
       ];
-      if (siteController.getRole() == "admin")
+      if (siteController.getRole()!.contains("admin"))
         _visitData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   // DataGridCell<int>(columnName: 'id', value: e.patientId),
