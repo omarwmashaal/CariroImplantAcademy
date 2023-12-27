@@ -1,3 +1,6 @@
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/canidateDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
@@ -65,6 +68,7 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
           role: event.role.name,
           search: event.search,
           batch: event.batchId,
+          accessWebsites: event.accessWebsites,
         ));
         result.fold(
           (l) => emit(UsersBloc_LoadingUserErrorState(message: l.message ?? "")),
@@ -159,6 +163,7 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
 class UsersDataGridSource extends DataGridSource {
   UserRoles type;
   UsersBloc usersBloc;
+  BuildContext context;
   List<UserEntity> models = <UserEntity>[];
   List<String> columns = [
     "ID",
@@ -170,6 +175,7 @@ class UsersDataGridSource extends DataGridSource {
   ///Creates the visit data source class with required details.
   UsersDataGridSource({
     required this.type,
+    required this.context,
     required this.usersBloc,
   }) {
     init();
@@ -187,19 +193,9 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
                   DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Remove',
-                      value: IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () async {
-                          //await UserAPI.RemoveUser(e.idInt!);
-                          //await loadData();
-                        },
-                      )),
                 ]))
             .toList();
-      }
-      else if (type == UserRoles.Secretary) {
+      } else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -207,15 +203,51 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Remove',
-                      value: IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () async {
-                          //await UserAPI.RemoveUser(e.idInt!);
-                          //await loadData();
-                        },
-                      )),
+          DataGridCell<Widget>(
+              columnName: 'Access',
+              value: Row(
+                children: [
+                  CIA_CheckBoxWidget(
+                    text: "CIA",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
+                      if (value) e.accessWebsites!.add(Website.CIA);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
+                  ),
+                  CIA_CheckBoxWidget(
+                    text: "LAB",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
+                      if (value) e.accessWebsites!.add(Website.Lab);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
+                  ),
+                  CIA_CheckBoxWidget(
+                    text: "Clinic",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
+                      if (value) e.accessWebsites!.add(Website.Clinic);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
+                  ),
+                ],
+              )),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
@@ -226,46 +258,64 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      }
-      else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
         columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality", "Role", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
-                 // DataGridCell<String>(columnName: 'Email', value: e.email),
+                  // DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
                   DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
-                  DataGridCell<Widget>(
-                    columnName: 'Role',
-                    value: HorizontalRadioButtons(
-                      names: ["Admin", "Instructor", "Assistant"],
-                      groupValue: type == UserRoles.Admin
-                          ? "Admin"
-                          : type == UserRoles.Assistant
-                              ? "Assistant"
-                              : type == UserRoles.Instructor
-                                  ? "Instructor"
-                                  : type == UserRoles.Secretary
-                                      ? "Secretary"
-                                      : "",
-                      onChange: (value) async {
-                        usersBloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: e.idInt!)));
-                        //await loadData();
-                      },
-                    ),
+
+          DataGridCell<Widget>(
+              columnName: 'Access',
+              value: Row(
+                children: [
+                  CIA_CheckBoxWidget(
+                    text: "CIA",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
+                      if (value) e.accessWebsites!.add(Website.CIA);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
                   ),
-                  DataGridCell<Widget>(
-                      columnName: 'Remove',
-                      value: IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () async {
-                          //await UserAPI.RemoveUser(e.idInt!);
-                          //await loadData();
-                        },
-                      )),
+                  CIA_CheckBoxWidget(
+                    text: "LAB",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
+                      if (value) e.accessWebsites!.add(Website.Lab);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
+                  ),
+                  CIA_CheckBoxWidget(
+                    text: "Clinic",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
+                      if (value) e.accessWebsites!.add(Website.Clinic);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
+                  ),
+                ],
+              )),
+
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
@@ -276,8 +326,7 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      }
-      else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
+      } else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -285,15 +334,51 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Remove',
-                      value: IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () async {
-                          //await UserAPI.RemoveUser(e.idInt!);
-                          //await loadData();
-                        },
-                      )),
+          DataGridCell<Widget>(
+              columnName: 'Access',
+              value: Row(
+                children: [
+                  CIA_CheckBoxWidget(
+                    text: "CIA",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.CIA);
+                      if (value) e.accessWebsites!.add(Website.CIA);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.CIA) ?? false,
+                  ),
+                  CIA_CheckBoxWidget(
+                    text: "LAB",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Lab);
+                      if (value) e.accessWebsites!.add(Website.Lab);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Lab) ?? false,
+                  ),
+                  CIA_CheckBoxWidget(
+                    text: "Clinic",
+                    onChange: (value) {
+                      if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                        ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                        return;
+                      }
+                      e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
+                      if (value) e.accessWebsites!.add(Website.Clinic);
+                      usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                    },
+                    value: e.accessWebsites?.contains(Website.Clinic) ?? false,
+                  ),
+                ],
+              )),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
@@ -313,32 +398,49 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<Widget>(
-                    columnName: 'Role',
-                    value: HorizontalRadioButtons(
-                      names: ["Admin", "Instructor", "Assistant"],
-                      groupValue: type == UserRoles.Admin
-                          ? "Admin"
-                          : type == UserRoles.Assistant
-                              ? "Assistant"
-                              : type == UserRoles.Instructor
-                                  ? "Instructor"
-                                  : type == UserRoles.Secretary
-                                      ? "Secretary"
-                                      : "",
-                      onChange: (value) async {
-                        usersBloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: e.idInt!)));
-                        //await loadData();
-                      },
-                    ),
-                  ),
-                  DataGridCell<Widget>(
-                      columnName: 'Remove',
-                      value: IconButton(
-                        icon: Icon(Icons.delete_forever),
-                        onPressed: () async {
-                          //await UserAPI.RemoveUser(e.idInt!);
-                          //await loadData();
-                        },
+                      columnName: 'Access',
+                      value: Row(
+                        children: [
+                          CIA_CheckBoxWidget(
+                            text: "CIA",
+                            onChange: (value) {
+                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                                return;
+                              }
+                              e.accessWebsites!.removeWhere((element) => element == Website.CIA);
+                              if (value) e.accessWebsites!.add(Website.CIA);
+                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                            },
+                            value: e.accessWebsites?.contains(Website.CIA) ?? false,
+                          ),
+                          CIA_CheckBoxWidget(
+                            text: "LAB",
+                            onChange: (value) {
+                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                                return;
+                              }
+                              e.accessWebsites!.removeWhere((element) => element == Website.Lab);
+                              if (value) e.accessWebsites!.add(Website.Lab);
+                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                            },
+                            value: e.accessWebsites?.contains(Website.Lab) ?? false,
+                          ),
+                          CIA_CheckBoxWidget(
+                            text: "Clinic",
+                            onChange: (value) {
+                              if (value == false && (e.accessWebsites?.length ?? 0) < 2) {
+                                ShowSnackBar(context, isSuccess: false, message: "User must have at access to at least one website!");
+                                return;
+                              }
+                              e.accessWebsites!.removeWhere((element) => element == Website.Clinic);
+                              if (value) e.accessWebsites!.add(Website.Clinic);
+                              usersBloc.add(UsersBloc_UpdateUserInfoEvent(id: e.idInt!, userData: e));
+                            },
+                            value: e.accessWebsites?.contains(Website.Clinic) ?? false,
+                          ),
+                        ],
                       )),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
@@ -363,8 +465,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                 ]))
             .toList();
-      }
-      else if (type == UserRoles.Secretary) {
+      } else if (type == UserRoles.Secretary) {
         columns = ["ID", "Name", "Email", "Phone"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -374,14 +475,13 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                 ]))
             .toList();
-      }
-      else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
+      } else if (type == UserRoles.Assistant || type == UserRoles.Instructor) {
         columns = ["ID", "Name", "Email", "Phone", "Graduated", "Class Year", "Speciality"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
-                 // DataGridCell<String>(columnName: 'Email',  value: e.email),
+                  // DataGridCell<String>(columnName: 'Email',  value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                   DataGridCell<String>(columnName: 'Graduated', value: e.graduatedFrom),
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
@@ -441,8 +541,6 @@ class UsersDataGridSource extends DataGridSource {
   }
 }
 
-
-
 class CandidateDetailsDataSource extends DataGridSource {
   List<CandidateDetailsEntity> models = <CandidateDetailsEntity>[];
 
@@ -462,22 +560,20 @@ class CandidateDetailsDataSource extends DataGridSource {
   CandidateDetailsDataSource() {
     init();
   }
+
   init() {
-
     _userData = models
-        .map<DataGridRow>((e) =>
-        DataGridRow(cells: [
-          DataGridCell<String>(columnName: 'Id', value: e.patientId),
-          DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
-          DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
-          DataGridCell<int>(columnName: 'Tooth', value: e.tooth),
-          DataGridCell<DateTime>(columnName: 'Date', value: e.date),
-          DataGridCell<String>(columnName: 'Implant', value: e.implant?.size),
-          DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
-          // DataGridCell<List<String>>(columnName: 'Other Procedures', value: e.otherProcedures),
-          // DataGridCell<int>(columnName: 'Total Implant Counts', value: e.totalImplantCounts),
-
-        ]))
+        .map<DataGridRow>((e) => DataGridRow(cells: [
+              DataGridCell<String>(columnName: 'Id', value: e.patientId),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
+              DataGridCell<String>(columnName: 'Procedures', value: e.procedure),
+              DataGridCell<int>(columnName: 'Tooth', value: e.tooth),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.date),
+              DataGridCell<String>(columnName: 'Implant', value: e.implant?.size),
+              DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
+              // DataGridCell<List<String>>(columnName: 'Other Procedures', value: e.otherProcedures),
+              // DataGridCell<int>(columnName: 'Total Implant Counts', value: e.totalImplantCounts),
+            ]))
         .toList();
   }
 
@@ -490,29 +586,25 @@ class CandidateDetailsDataSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          var returnedValue = e.value;
-          if (returnedValue is Widget) return returnedValue;
-          if(e.columnName=="Date")returnedValue = DateFormat("dd-MM-yyyy").format(e.value);
-          return Container(
-            alignment: Alignment.center,
-            child: Text(
-              returnedValue == null ? "" : returnedValue.toString(),
-              style: TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }).toList());
+      var returnedValue = e.value;
+      if (returnedValue is Widget) return returnedValue;
+      if (e.columnName == "Date") returnedValue = DateFormat("dd-MM-yyyy").format(e.value);
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          returnedValue == null ? "" : returnedValue.toString(),
+          style: TextStyle(fontSize: 12),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }).toList());
   }
 
   Future<bool> loadData(List<CandidateDetailsEntity> data) async {
-
     models = data;
     init();
     notifyListeners();
 
     return true;
   }
-
 }
-
-

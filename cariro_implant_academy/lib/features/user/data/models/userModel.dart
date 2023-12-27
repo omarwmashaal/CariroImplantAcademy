@@ -64,7 +64,7 @@ class UserModel extends UserEntity {
     profileImageId = json['profileImageId'];
     dateOfBirth = DateTime.tryParse(json['dateOfBirth'] ?? "")?.toLocal();
     gender = json['gender'];
-    accessWebsites = json['accessWebsites'];
+    accessWebsites =((json['accessWebsites']??[]) as List<dynamic>).map((e) => Website.values.firstWhere((element) =>element.index== e!)).toList() ;
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
     speciality = json['speciality'];
@@ -115,7 +115,7 @@ class UserModel extends UserEntity {
     data['address'] = this.address;
     data['city'] = this.city;
     data['idInt'] = this.idInt;
-    data['accessWebsites'] = this.accessWebsites;
+    data['accessWebsites'] = this.accessWebsites?.map((e) => e.index).toList();
     data['id'] = this.id;
     //data['registeredById'] = this.registeredById;
     // data['registeredBy'] = this.registeredBy;

@@ -27,12 +27,13 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch}) async {
+  Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch, Website? accessWebsites}) async {
     try {
       final result = await userDatasource.searchUsersByRole(
         role: role,
         batch: batch,
         search: search,
+        accessWebsites: accessWebsites,
       );
       return Right(result);
     } on Exception catch (e) {
@@ -88,7 +89,7 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source)async {
+  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source) async {
     try {
       final result = await userDatasource.searchUsersByWorkPlace(search, source);
       return Right(result);
@@ -100,11 +101,10 @@ class UsersRepositoryImpl extends UsersRepository {
   @override
   Future<Either<Failure, List<CandidateDetailsEntity>>> getCandidateDetails(int id, DateTime? from, DateTime? to) async {
     try {
-      final result = await userDatasource.getCandidateDetails(id, from , to);
+      final result = await userDatasource.getCandidateDetails(id, from, to);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-
 }

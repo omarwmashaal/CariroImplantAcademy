@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswo
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/constants/enums/enums.dart';
 import '../../domain/entities/enum.dart';
 import '../../domain/usecases/changeRoleUseCase.dart';
 import '../../domain/usecases/getCandidateDetailsUseCase.dart';
@@ -17,7 +18,7 @@ class UsersBloc_SwitchEditViewEvent extends UsersBloc_Events {
   UsersBloc_SwitchEditViewEvent({required this.edit, required this.user});
 
   @override
-  List<Object?> get props => [edit,user];
+  List<Object?> get props => [edit, user];
 }
 
 class UsersBloc_GetUserInfoEvent extends UsersBloc_Events {
@@ -28,6 +29,7 @@ class UsersBloc_GetUserInfoEvent extends UsersBloc_Events {
   @override
   List<Object?> get props => [id];
 }
+
 class UsersBloc_GetCandidateDetailsEvent extends UsersBloc_Events {
   final GetCandidateDetailsParams params;
 
@@ -36,14 +38,16 @@ class UsersBloc_GetCandidateDetailsEvent extends UsersBloc_Events {
   @override
   List<Object?> get props => [params];
 }
+
 class UsersBloc_ChangeRoleEvent extends UsersBloc_Events {
- final ChangeRoleParams params;
+  final ChangeRoleParams params;
 
   UsersBloc_ChangeRoleEvent({required this.params});
 
   @override
   List<Object?> get props => [params];
 }
+
 class UsersBloc_ResetPasswordForUserEvent extends UsersBloc_Events {
   final int id;
 
@@ -61,6 +65,7 @@ class UsersBloc_ResetPasswordEvent extends UsersBloc_Events {
   @override
   List<Object?> get props => [params];
 }
+
 class UsersBloc_GetSessionsDurationEvent extends UsersBloc_Events {
   final GetSessionsDurationParams params;
 
@@ -90,10 +95,12 @@ class UsersBloc_SearchUsersByRoleEvent extends UsersBloc_Events {
   final int? batchId;
   final String? search;
   final UserRoles role;
+  final Website? accessWebsites;
 
   UsersBloc_SearchUsersByRoleEvent({
     this.batchId,
     this.search,
+    this.accessWebsites,
     required this.role,
   });
 
@@ -102,17 +109,15 @@ class UsersBloc_SearchUsersByRoleEvent extends UsersBloc_Events {
         batchId,
         search,
         role,
+        accessWebsites,
       ];
 }
+
 class UsersBloc_SearchUsersByWorkPlaceEvent extends UsersBloc_Events {
   final SearchUsersByWorkPlaceParams params;
 
-  UsersBloc_SearchUsersByWorkPlaceEvent({
-    required this.params
-  });
+  UsersBloc_SearchUsersByWorkPlaceEvent({required this.params});
 
   @override
-  List<Object?> get props => [
-        params
-      ];
+  List<Object?> get props => [params];
 }

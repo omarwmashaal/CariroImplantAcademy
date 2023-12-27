@@ -15,7 +15,7 @@ import '../../domain/entities/userEntity.dart';
 abstract class UserDatasource {
   Future<UserModel> getUserData({required int id});
 
-  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch});
+  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch,Website? accessWebsites});
   Future<List<UserModel>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<NoParams> updateUserInfo(int id, UserEntity userData);
@@ -50,7 +50,7 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch}) async {
+  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch,Website? accessWebsites}) async {
     late StandardHttpResponse response;
     try {
       search = search == "" ? null : search;
@@ -58,6 +58,7 @@ class UserDatasourceImpl extends UserDatasource {
       query += "${query == "" ? "" : "${role == null ? "" : "&"}"}${role == null ? "" : "role=$role"}";
       query += "${query == "" ? "" : "${search == null ? "" : "&"}"}${search == null ? "" : "search=$search"}";
       query += "${query == "" ? "" : "${batch == null ? "" : "&"}"}${batch == null ? "" : "batch=$batch"}";
+      query += "${query == "" ? "" : "${accessWebsites == null ? "" : "&"}"}${accessWebsites == null ? "" : "accessWebsites=${accessWebsites!.index}"}";
       response = await httpRepo.get(host: "$serverHost/$userController/SearchUsersByRole?$query");
     } catch (e) {
       throw mapException(e);

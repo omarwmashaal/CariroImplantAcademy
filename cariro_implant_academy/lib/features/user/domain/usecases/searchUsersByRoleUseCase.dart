@@ -5,6 +5,8 @@ import 'package:cariro_implant_academy/features/user/domain/repositories/userRep
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/constants/enums/enums.dart';
+
 class SearchUsersByRoleUseCase extends UseCases<List<UserEntity>, SearchUsersByRoleParams> {
   final UsersRepository usersRepository;
 
@@ -17,6 +19,7 @@ class SearchUsersByRoleUseCase extends UseCases<List<UserEntity>, SearchUsersByR
           role: params.role,
           search: params.search,
           batch: params.batch,
+        accessWebsites:params.accessWebsites,
         )
         .then((value) => value.fold(
               (l) => Left(l..message = "Search Users: ${l.message ?? ""}"),
@@ -29,6 +32,7 @@ class SearchUsersByRoleParams {
   final String role;
   final String? search;
   final int? batch;
+  final Website? accessWebsites;
 
-  SearchUsersByRoleParams({required this.role, this.search, this.batch});
+  SearchUsersByRoleParams({required this.role, this.search, this.batch,this.accessWebsites});
 }

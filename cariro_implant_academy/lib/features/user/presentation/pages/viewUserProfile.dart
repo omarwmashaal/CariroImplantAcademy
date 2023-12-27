@@ -40,10 +40,12 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../Widgets/Title.dart';
 import '../../../../core/injection_contianer.dart';
 import '../../../../presentation/bloc/imagesBloc.dart';
 import '../../../patient/presentation/bloc/patientVisitsBloc.dart';
+import '../../domain/usecases/changeRoleUseCase.dart';
 
 class ViewUserProfilePage extends StatefulWidget {
   ViewUserProfilePage({Key? key, required this.userId, this.role}) : super(key: key);
@@ -98,7 +100,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
         listeners: [
           BlocListener<UsersBloc, UsersBloc_States>(
             listener: (context, state) {
-              if (state is UsersBloc_UpdatingUserInfoState) {
+              if (state is UsersBloc_UpdatingUserInfoState || state is UsersBloc_ChangingRoleState) {
                 CustomLoader.show(context);
               } else {
                 CustomLoader.hide();
@@ -118,6 +120,13 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                 ShowSnackBar(context, isSuccess: true);
                 dialogHelper.dismissSingle(context);
               }
+              else if(state is UsersBloc_ChangingRoleErrorState)
+                ShowSnackBar(context, isSuccess: false,message: state.message);
+              else if(state is UsersBloc_ChangedRoleSuccessfullyState)
+                {
+                  ShowSnackBar(context, isSuccess: true);
+                  bloc.add(UsersBloc_GetUserInfoEvent(id: widget.userId));
+                }
             },
           ),
           BlocListener<ImageBloc, ImageBloc_State>(
@@ -296,6 +305,8 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 }
                                               }(),
                                               SizedBox(width: 10),
+
+
                                               CIA_SecondaryButton(
                                                   label: "Sessions Duration",
                                                   onTab: () async {
@@ -425,6 +436,30 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                         ));
                                                   })
                                             ],
+                                          ),
+                                          SizedBox(height: 10),
+                                          Visibility(
+                                            visible: siteController.getRole()=="admin",
+                                            child: SizedBox(
+                                              width: 300,
+                                              child: HorizontalRadioButtons(
+                                                names: ["Admin", "Instructor", "Assistant"],
+                                                groupValue: user.role == UserRoles.Admin.name.toLowerCase()
+                                                    ? "Admin"
+                                                    : user.role == UserRoles.Assistant.name.toLowerCase()
+                                                    ? "Assistant"
+                                                    : user.role == UserRoles.Instructor.name.toLowerCase()
+                                                    ? "Instructor"
+                                                    : user.role == UserRoles.Secretary.name.toLowerCase()
+                                                    ? "Secretary"
+                                                    : "",
+                                                onChange: (value) async {
+
+                                                  bloc.add(UsersBloc_ChangeRoleEvent(params: ChangeRoleParams(role: value.toLowerCase(), id: user.idInt!)));
+                                                  //await loadData();
+                                                },
+                                              ),
+                                            ),
                                           ),
                                           SizedBox(height: 10),
                                           Row(

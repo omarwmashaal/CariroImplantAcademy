@@ -13,7 +13,7 @@ import '../entities/canidateDetailsEntity.dart';
 abstract class UsersRepository {
   Future<Either<Failure, UserEntity>> getUserData({required int id});
 
-  Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch});
+  Future<Either<Failure, List<UserEntity>>> searchUsersByRole({required String role, String? search, int? batch,Website? accessWebsites});
   Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<Either<Failure, NoParams>> updateUserInfo(int id, UserEntity userData);

@@ -124,7 +124,8 @@ class _UserSearchPageState extends State<UserSearchPage> {
   @override
   void initState() {
     bloc = BlocProvider.of<UsersBloc>(context);
-    usersDataGridSource = UsersDataGridSource(type: widget.type, usersBloc: bloc);
+    usersDataGridSource = UsersDataGridSource(
+        context: context,type: widget.type, usersBloc: bloc);
     bloc.add(UsersBloc_SearchUsersByRoleEvent(
       role: widget.type,
       search: search,
