@@ -15,6 +15,7 @@ class UserModel extends UserEntity {
     super.speciality,
     super.maritalStatus,
     super.address,
+    super.accessWebsites,
     super.city,
     super.idInt,
     super.registeredById,
@@ -33,6 +34,7 @@ class UserModel extends UserEntity {
   factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
       name: entity.name,
+      accessWebsites: entity.accessWebsites,
       batch: entity.batch,
       batchId: entity.batchId,
       role: entity.role,
@@ -62,6 +64,7 @@ class UserModel extends UserEntity {
     profileImageId = json['profileImageId'];
     dateOfBirth = DateTime.tryParse(json['dateOfBirth'] ?? "")?.toLocal();
     gender = json['gender'];
+    accessWebsites = json['accessWebsites'];
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
     speciality = json['speciality'];
@@ -112,6 +115,7 @@ class UserModel extends UserEntity {
     data['address'] = this.address;
     data['city'] = this.city;
     data['idInt'] = this.idInt;
+    data['accessWebsites'] = this.accessWebsites;
     data['id'] = this.id;
     //data['registeredById'] = this.registeredById;
     // data['registeredBy'] = this.registeredBy;

@@ -7,7 +7,6 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
@@ -19,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import '../../../../core/injection_contianer.dart';
+import '../../domain/entities/OmarEntity.dart';
 import '../../domain/entities/labItemEntity.dart';
 import '../../domain/entities/labRequestEntityl.dart';
 import '../blocs/labRequestBloc.dart';
@@ -63,7 +63,7 @@ class __LabRequestItemConsumeWidget extends StatefulWidget {
     required this.parentItemId,
     required this.label,
   }) : super(key: key);
-  LabRequestItemEntity? item;
+  OmarEntity? item;
 
   int parentItemId;
   String label;

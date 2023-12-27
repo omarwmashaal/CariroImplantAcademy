@@ -457,7 +457,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                 ),
                                                 IconButton(
                                                     onPressed: () {
-                                                      labItems.add(LabItemEntity(labItemShadeId: shadeId));
+                                                      labItems=[...labItems,LabItemEntity(labItemShadeId: shadeId)];
                                                       bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));
                                                     },
                                                     icon: Icon(Icons.add)),

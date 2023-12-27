@@ -1,9 +1,9 @@
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/OmarEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'labRequestItemEntity.dart';
 import 'labStepEntity.dart';
 
 class LabRequestEntity extends Equatable {
@@ -30,17 +30,17 @@ class LabRequestEntity extends Equatable {
   List<LabStepEntity>? steps;
   List<int>? teeth;
   EnumLabRequestInitStatus? initStatus;
-  LabRequestItemEntity? waxUp;
-  LabRequestItemEntity? zirconUnit;
-  LabRequestItemEntity? pfm;
-  LabRequestItemEntity? compositeInlay;
-  LabRequestItemEntity? emaxVeneer;
-  LabRequestItemEntity? milledPMMA;
-  LabRequestItemEntity? printedPMMA;
-  LabRequestItemEntity? tiAbutment;
-  LabRequestItemEntity? tiBar;
-  LabRequestItemEntity? threeDPrinting;
-  List<LabRequestItemEntity>? others;
+  OmarEntity? waxUp;
+  OmarEntity? zirconUnit;
+  OmarEntity? pfm;
+  OmarEntity? compositeInlay;
+  OmarEntity? emaxVeneer;
+  OmarEntity? milledPMMA;
+  OmarEntity? printedPMMA;
+  OmarEntity? tiAbutment;
+  OmarEntity? tiBar;
+  OmarEntity? threeDPrinting;
+  List<OmarEntity>? others;
 
   int? fileId;
   BasicNameIdObjectEntity? file;

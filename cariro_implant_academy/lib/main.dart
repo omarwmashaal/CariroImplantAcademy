@@ -26,6 +26,8 @@ import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
 import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/models/labItemModel.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
@@ -98,7 +100,7 @@ void main() async {
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
-
+    LabItemEntity fff = LabItemModel();
   //Get.put(SiteController());
 
   /*

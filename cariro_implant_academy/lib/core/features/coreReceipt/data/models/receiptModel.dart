@@ -2,20 +2,33 @@ import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.d
 import 'package:cariro_implant_academy/core/features/coreReceipt/data/models/toothReceiptModel.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 
+import '../../../../../features/labRequest/data/models/OmarModel.dart';
+
 class ReceiptModel extends ReceiptEntity {
   ReceiptModel({
-    super.date,
     super.id,
-    super.operator,
-    super.operatorId,
-    super.paid,
-    super.patient,
+    super.date,
     super.patientId,
+    super.patient,
+    super.operatorId,
+    super.operator,
     super.toothReceiptData,
     super.total,
+    super.paid,
     super.unpaid,
     super.prices,
     super.isPaid,
+    super.labFees,
+    super.zirconUnit,
+    super.waxUp,
+    super.threeDPrinting,
+    super.tiBar,
+    super.tiAbutment,
+    super.printedPMMA,
+    super.milledPMMA,
+    super.emaxVeneer,
+    super.compositeInlay,
+    super.pfm,
   });
 
   factory ReceiptModel.fromEntity(ReceiptEntity entity)
@@ -33,6 +46,17 @@ class ReceiptModel extends ReceiptEntity {
       unpaid:entity.unpaid,
       prices:entity.prices,
       isPaid:entity.isPaid,
+      labFees:entity.labFees,
+      zirconUnit:entity.zirconUnit,
+      waxUp:entity.waxUp,
+      threeDPrinting:entity.threeDPrinting,
+      tiBar:entity.tiBar,
+      tiAbutment:entity.tiAbutment,
+      printedPMMA:entity.printedPMMA,
+      milledPMMA:entity.milledPMMA,
+      emaxVeneer:entity.emaxVeneer,
+      compositeInlay:entity.compositeInlay,
+      pfm:entity.pfm,
     );
   }
   ReceiptModel.fromJson(Map<String, dynamic> json) {
@@ -48,6 +72,17 @@ class ReceiptModel extends ReceiptEntity {
     unpaid = json['unpaid'];
     prices = json['clinicPrices']==null?null:(json['clinicPrices'] as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e)).toList();
     isPaid = json['isPaid'];
+    labFees = json['labFees'];
+    zirconUnit = json['zirconUnit']==null?null:OmarModelsss.fromJson(json['zirconUnit']);
+    waxUp = json['waxUp']==null?null:OmarModelsss.fromJson(json['waxUp']);
+    threeDPrinting = json['threeDPrinting']==null?null:OmarModelsss.fromJson(json['threeDPrinting']);
+    tiBar = json['tiBar']==null?null:OmarModelsss.fromJson(json['tiBar']);
+    tiAbutment = json['tiAbutment']==null?null:OmarModelsss.fromJson(json['tiAbutment']);
+    printedPMMA = json['printedPMMA']==null?null:OmarModelsss.fromJson(json['printedPMMA']);
+    milledPMMA = json['milledPMMA']==null?null:OmarModelsss.fromJson(json['milledPMMA']);
+    emaxVeneer = json['emaxVeneer']==null?null:OmarModelsss.fromJson(json['emaxVeneer']);
+    compositeInlay = json['compositeInlay']==null?null:OmarModelsss.fromJson(json['compositeInlay']);
+    pfm = json['pfm'];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,6 +97,17 @@ class ReceiptModel extends ReceiptEntity {
     data['paid'] = this.paid;
     data['unpaid'] = this.unpaid;
     data['isPaid'] = this.isPaid;
+    data['labFees'] = this.labFees;
+    data['zirconUnit'] = this.zirconUnit==null?null:OmarModelsss.fromEntity(this.zirconUnit!).toJson();
+    data['waxUp'] = this.waxUp==null?null:OmarModelsss.fromEntity(this.waxUp!).toJson();
+    data['threeDPrinting'] = this.threeDPrinting==null?null:OmarModelsss.fromEntity(this.threeDPrinting!).toJson();
+    data['tiBar'] = this.tiBar==null?null:OmarModelsss.fromEntity(this.tiBar!).toJson();
+    data['tiAbutment'] = this.tiAbutment==null?null:OmarModelsss.fromEntity(this.tiAbutment!).toJson();
+    data['printedPMMA'] = this.printedPMMA==null?null:OmarModelsss.fromEntity(this.printedPMMA!).toJson();
+    data['milledPMMA'] = this.milledPMMA==null?null:OmarModelsss.fromEntity(this.milledPMMA!).toJson();
+    data['emaxVeneer'] = this.emaxVeneer==null?null:OmarModelsss.fromEntity(this.emaxVeneer!).toJson();
+    data['compositeInlay'] = this.compositeInlay==null?null:OmarModelsss.fromEntity(this.compositeInlay!).toJson();
+    data['pfm'] = this.pfm==null?null:OmarModelsss.fromEntity(this.pfm!).toJson();
     return data;
   }
 }

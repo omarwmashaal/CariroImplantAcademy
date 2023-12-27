@@ -20,7 +20,7 @@ class PaymentLogModel {
   ApplicationUserModel? operator;
   String? date;
   int? receiptId;
-  ReceiptModel? receipt;
+  ReceiptModelsss? receipt;
   int? paidAmount;
 
   PaymentLogModel(

@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRequestDatasource.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
@@ -168,6 +169,16 @@ class LabRequestRepoImpl implements LabRequestRepository{
   Future<Either<Failure, LabItemEntity>> getLabItemDetails(int id)  async {
     try {
       final result = await labRequestDatasource.getLabItemDetails(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ReceiptEntity?>> getRequestReceipt(int id) async {
+    try {
+      final result = await labRequestDatasource.getRequestReceipt(id);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

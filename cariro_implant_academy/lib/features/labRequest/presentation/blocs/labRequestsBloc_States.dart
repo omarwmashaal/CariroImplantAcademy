@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
@@ -312,6 +313,27 @@ class LabRequestsBloc_LoadingLabItemErrorState extends LabRequestsBloc_States {
   final String message;
 
   LabRequestsBloc_LoadingLabItemErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class LabRequestsBloc_LoadingLabReceiptState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_LoadedLabReceiptuccessfullyState extends LabRequestsBloc_States {
+  final ReceiptEntity? data;
+  LabRequestsBloc_LoadedLabReceiptuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class LabRequestsBloc_LoadingLabReceiptErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_LoadingLabReceiptErrorState({required this.message});
 
   @override
   List<Object?> get props => [message];

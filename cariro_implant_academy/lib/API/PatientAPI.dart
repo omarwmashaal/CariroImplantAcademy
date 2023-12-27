@@ -223,7 +223,7 @@ class PatientAPI {
     var response = await HTTPRequest.Get("PatientInfo/GetTodaysReceipt?id=$id");
 
     if (response.statusCode == 200) {
-      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      response.result = ReceiptModelsss.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
@@ -232,7 +232,7 @@ class PatientAPI {
     var response = await HTTPRequest.Get("PatientInfo/GetLastReceipt?id=$id");
 
     if (response.statusCode == 200) {
-      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      response.result = ReceiptModelsss.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
@@ -241,7 +241,7 @@ class PatientAPI {
     var response = await HTTPRequest.Get("PatientInfo/GetReceipts?id=$id");
 
     if (response.statusCode == 200) {
-      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ReceiptModel.fromJson(e as Map<String, dynamic>)).toList();
+      response.result = ((response.result ?? []) as List<dynamic>).map((e) => ReceiptModelsss.fromJson(e as Map<String, dynamic>)).toList();
     }
     return response;
   }
@@ -287,7 +287,7 @@ class PatientAPI {
     var response = await HTTPRequest.Get("PatientInfo/GetReceiptById?id=$id");
 
     if (response.statusCode == 200) {
-      response.result = ReceiptModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+      response.result = ReceiptModelsss.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }

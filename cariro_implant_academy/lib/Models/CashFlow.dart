@@ -13,7 +13,7 @@ import 'API_Response.dart';
 class CashFlowModel {
   int? id;
   int? receiptID;
-  ReceiptModel? receipt;
+  ReceiptModelsss? receipt;
   String? date;
   String? name;
   int? categoryId;
@@ -74,7 +74,7 @@ class CashFlowModel {
     id = json['id'];
     receiptID = json['receiptID'];
     labRequestId = json['labRequestId'];
-    receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
+    receipt = ReceiptModelsss.fromJson(json['receipt'] ?? Map<String, dynamic>());
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     name = json['name'];
     categoryId = json['categoryId'];
@@ -94,7 +94,7 @@ class CashFlowModel {
     notes = json['notes'];
     type = json['type'];
     receiptID = json['receiptID'];
-    receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
+    receipt = ReceiptModelsss.fromJson(json['receipt'] ?? Map<String, dynamic>());
   }
 
   Map<String, dynamic> toJson() {

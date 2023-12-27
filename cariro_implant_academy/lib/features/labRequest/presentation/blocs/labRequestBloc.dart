@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
@@ -25,6 +26,7 @@ import '../../domain/entities/labRequestEntityl.dart';
 import '../../domain/usecases/checkLabRequestsUseCase.dart';
 import '../../domain/usecases/getLabItemDetailsUseCase.dart';
 import '../../domain/usecases/getPatientRequestsUseCase.dart';
+import '../../domain/usecases/getRequestReceiptUseCase.dart';
 import '../../domain/usecases/getRequestUseCase.dart';
 
 class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_States> {
@@ -42,6 +44,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final UpdateLabRequestUseCase updateLabRequestUseCase;
   final GetLabItemDetailsUseCase getLabItemDetailsUseCase;
   final ConsumeLabItemUseCase consumeLabItemUseCase;
+  final GetRequestReceiptUseCase getRequestReceiptUseCase;
 
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
@@ -58,6 +61,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.updateLabRequestUseCase,
     required this.consumeLabItemUseCase,
     required this.getLabItemDetailsUseCase,
+    required this.getRequestReceiptUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -178,6 +182,16 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingLabItemErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_LoadedLabItemSuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_GetLabRequestReceiptEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_LoadingLabReceiptState());
+        final result = await getRequestReceiptUseCase(event.id);
+        result.fold(
+          (l) => emit(LabRequestsBloc_LoadingLabReceiptErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_LoadedLabReceiptuccessfullyState(data: r)),
         );
       },
     );

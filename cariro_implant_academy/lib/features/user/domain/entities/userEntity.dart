@@ -40,6 +40,7 @@ class UserEntity extends Equatable {
   EnumLabRequestSources? workPlaceEnum;
   int? profileImageId;
   Uint8List? profileImage;
+  List<Website>? accessWebsites;
 
   UserEntity({
     this.name = "",
@@ -66,6 +67,7 @@ class UserEntity extends Equatable {
     this.batchId,
     this.workPlace,
     this.workPlaceId,
+    this.accessWebsites,
   });
 
   @override
@@ -76,6 +78,7 @@ class UserEntity extends Equatable {
         this.gender,
         this.graduatedFrom,
         this.classYear,
+        this.accessWebsites,
         this.speciality,
         this.maritalStatus,
         this.address,

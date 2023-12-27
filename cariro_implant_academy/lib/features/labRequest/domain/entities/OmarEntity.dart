@@ -1,8 +1,8 @@
-import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
-class LabRequestItemEntity extends Equatable {
+import 'labItemEntity.dart';
+
+class OmarEntity extends Equatable{
   String? name;
   String? description;
   int? number;
@@ -11,7 +11,7 @@ class LabRequestItemEntity extends Equatable {
   int? labItemId;
   LabItemEntity? labItem;
 
-  LabRequestItemEntity({
+  OmarEntity({
     this.name,
     this.description,
     this.number,
@@ -23,14 +23,14 @@ class LabRequestItemEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        name,
-        description,
-        number,
-        price,
-        totalPrice,
-        labItem,
-        labItemId,
-      ];
+    name,
+    description,
+    number,
+    price,
+    totalPrice,
+    labItem,
+    labItemId,
+  ];
 
   bool isNull() => this.description?.isEmpty ?? true && (this.number == null || this.number == 0);
 }

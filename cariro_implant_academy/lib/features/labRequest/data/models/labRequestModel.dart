@@ -1,5 +1,4 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/labRequest/data/models/labRequestItemModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/models/labStepModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
 import 'package:cariro_implant_academy/features/user/data/models/userModel.dart';
@@ -7,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/enums/enums.dart';
+import 'OmarModel.dart';
 
 class LabRequestModel extends LabRequestEntity {
   LabRequestModel({
@@ -118,17 +118,17 @@ class LabRequestModel extends LabRequestEntity {
     if (steps != null && steps!.isNotEmpty && this.customerId == steps!.last.technicianId) assignedTo!.name = "Customer";
     fileId = json['fileId'];
     file = json['file'] == null ? null : BasicNameIdObjectModel.fromJson(json['file'] ?? Map<String, dynamic>());
-    waxUp = json['waxUp'] == null ? null : LabRequestItemModel.fromJson(json['waxUp']);
-    zirconUnit = json['zirconUnit'] == null ? null : LabRequestItemModel.fromJson(json['zirconUnit']);
-    pfm = json['pfm'] == null ? null : LabRequestItemModel.fromJson(json['pfm']);
-    compositeInlay = json['compositeInlay'] == null ? null : LabRequestItemModel.fromJson(json['compositeInlay']);
-    emaxVeneer = json['emaxVeneer'] == null ? null : LabRequestItemModel.fromJson(json['emaxVeneer']);
-    milledPMMA = json['milledPMMA'] == null ? null : LabRequestItemModel.fromJson(json['milledPMMA']);
-    printedPMMA = json['printedPMMA'] == null ? null : LabRequestItemModel.fromJson(json['printedPMMA']);
-    tiAbutment = json['tiAbutment'] == null ? null : LabRequestItemModel.fromJson(json['tiAbutment']);
-    tiBar = json['tiBar'] == null ? null : LabRequestItemModel.fromJson(json['tiBar']);
-    threeDPrinting = json['threeDPrinting'] == null ? null : LabRequestItemModel.fromJson(json['threeDPrinting']);
-    others = ((json['others'] ?? []) as List<dynamic>).map((e) => LabRequestItemModel.fromJson(e)).toList();
+    waxUp = json['waxUp'] == null ? null : OmarModelsss.fromJson(json['waxUp']);
+    zirconUnit = json['zirconUnit'] == null ? null : OmarModelsss.fromJson(json['zirconUnit']);
+    pfm = json['pfm'] == null ? null : OmarModelsss.fromJson(json['pfm']);
+    compositeInlay = json['compositeInlay'] == null ? null : OmarModelsss.fromJson(json['compositeInlay']);
+    emaxVeneer = json['emaxVeneer'] == null ? null : OmarModelsss.fromJson(json['emaxVeneer']);
+    milledPMMA = json['milledPMMA'] == null ? null : OmarModelsss.fromJson(json['milledPMMA']);
+    printedPMMA = json['printedPMMA'] == null ? null : OmarModelsss.fromJson(json['printedPMMA']);
+    tiAbutment = json['tiAbutment'] == null ? null : OmarModelsss.fromJson(json['tiAbutment']);
+    tiBar = json['tiBar'] == null ? null : OmarModelsss.fromJson(json['tiBar']);
+    threeDPrinting = json['threeDPrinting'] == null ? null : OmarModelsss.fromJson(json['threeDPrinting']);
+    others = ((json['others'] ?? []) as List<dynamic>).map((e) => OmarModelsss.fromJson(e)).toList();
 
     /*if (steps != null) {
       var assigned = steps!.firstWhereOrNull((element) => element.status == LabStepStatus.InProgress);
@@ -167,17 +167,17 @@ class LabRequestModel extends LabRequestEntity {
     data['paid'] = this.paid ?? false;
     data['cost'] = this.cost ?? 0;
     data['paidAmount'] = this.paidAmount ?? 0;
-    data['waxUp'] = this.waxUp == null ? null : LabRequestItemModel.fromEntity(this.waxUp!).toJson();
-    data['zirconUnit'] = this.zirconUnit == null ? null : LabRequestItemModel.fromEntity(this.zirconUnit!).toJson();
-    data['pfm'] = this.pfm == null ? null : LabRequestItemModel.fromEntity(this.pfm!).toJson();
-    data['compositeInlay'] = this.compositeInlay == null ? null : LabRequestItemModel.fromEntity(this.compositeInlay!).toJson();
-    data['emaxVeneer'] = this.emaxVeneer == null ? null : LabRequestItemModel.fromEntity(this.emaxVeneer!).toJson();
-    data['milledPMMA'] = this.milledPMMA == null ? null : LabRequestItemModel.fromEntity(this.milledPMMA!).toJson();
-    data['printedPMMA'] = this.printedPMMA == null ? null : LabRequestItemModel.fromEntity(this.printedPMMA!).toJson();
-    data['tiAbutment'] = this.tiAbutment == null ? null : LabRequestItemModel.fromEntity(this.tiAbutment!).toJson();
-    data['tiBar'] = this.tiBar == null ? null : LabRequestItemModel.fromEntity(this.tiBar!).toJson();
-    data['threeDPrinting'] = this.threeDPrinting == null ? null : LabRequestItemModel.fromEntity(this.threeDPrinting!).toJson();
-    data['others'] = this.others?.map((e) => LabRequestItemModel.fromEntity(e).toJson()).toList();
+    data['waxUp'] = this.waxUp == null ? null : OmarModelsss.fromEntity(this.waxUp!).toJson();
+    data['zirconUnit'] = this.zirconUnit == null ? null : OmarModelsss.fromEntity(this.zirconUnit!).toJson();
+    data['pfm'] = this.pfm == null ? null : OmarModelsss.fromEntity(this.pfm!).toJson();
+    data['compositeInlay'] = this.compositeInlay == null ? null : OmarModelsss.fromEntity(this.compositeInlay!).toJson();
+    data['emaxVeneer'] = this.emaxVeneer == null ? null : OmarModelsss.fromEntity(this.emaxVeneer!).toJson();
+    data['milledPMMA'] = this.milledPMMA == null ? null : OmarModelsss.fromEntity(this.milledPMMA!).toJson();
+    data['printedPMMA'] = this.printedPMMA == null ? null : OmarModelsss.fromEntity(this.printedPMMA!).toJson();
+    data['tiAbutment'] = this.tiAbutment == null ? null : OmarModelsss.fromEntity(this.tiAbutment!).toJson();
+    data['tiBar'] = this.tiBar == null ? null : OmarModelsss.fromEntity(this.tiBar!).toJson();
+    data['threeDPrinting'] = this.threeDPrinting == null ? null : OmarModelsss.fromEntity(this.threeDPrinting!).toJson();
+    data['others'] = this.others?.map((e) => OmarModelsss.fromEntity(e).toJson()).toList();
     data['notes'] = this.notes;
     data['notesFromTech'] = this.notesFromTech;
   //  data['requiredStep'] = this.requiredStep;

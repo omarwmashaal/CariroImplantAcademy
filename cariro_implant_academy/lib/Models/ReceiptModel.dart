@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'API_Response.dart';
 import 'PatientInfo.dart';
 
-class ReceiptModel {
+class ReceiptModelsss {
   int? id;
   String? date;
   int? patientId;
@@ -20,7 +20,7 @@ class ReceiptModel {
   int? paid;
   int? unpaid;
 
-  ReceiptModel(
+  ReceiptModelsss(
       {this.id,
       this.date,
       this.patientId,
@@ -32,7 +32,7 @@ class ReceiptModel {
       this.paid,
       this.unpaid});
 
-  ReceiptModel.fromJson(Map<String, dynamic> json) {
+  ReceiptModelsss.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     date = CIA_DateConverters.fromBackendToDateTime(json['date']);
     patientId = json['patientId'];
@@ -100,7 +100,7 @@ class ReceiptDataSource extends DataGridSource {
     "Total",
   ];
 
-  List<ReceiptModel> models = <ReceiptModel>[];
+  List<ReceiptModelsss> models = <ReceiptModelsss>[];
 
   ReceiptDataSource() {
     init();
@@ -143,7 +143,7 @@ class ReceiptDataSource extends DataGridSource {
   Future<bool> loadData({required int id}) async {
     late API_Response response;
     response = await PatientAPI.GetReceipts(id);
-    if (response.statusCode == 200) models = response.result as List<ReceiptModel>;
+    if (response.statusCode == 200) models = response.result as List<ReceiptModelsss>;
     init();
     notifyListeners();
 

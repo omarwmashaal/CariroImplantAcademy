@@ -18,7 +18,7 @@ class PaymentLogEntity extends Equatable{
   BasicNameIdObjectEntity? operator;
   DateTime? date;
   int? receiptId;
-  ReceiptModel? receipt;
+  ReceiptModelsss? receipt;
   int? paidAmount;
 
   PaymentLogEntity(

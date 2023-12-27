@@ -1,7 +1,9 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/data/models/receiptModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/models/labItemModel.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../../Models/ReceiptModel.dart';
 import '../../../../core/constants/remoteConstants.dart';
 import '../../../../core/data/models/BasicNameIdObjectModel.dart';
 import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
@@ -43,6 +45,7 @@ abstract class LabRequestDatasource {
 
   Future<NoParams> payForRequest(int id);
   Future<LabItemModel> getLabItemDetails(int id);
+  Future<ReceiptModel?> getRequestReceipt(int id);
 
   Future<NoParams> consumeLabItem(int id, int? number, bool consumeWholeBlock);
 }
@@ -285,6 +288,23 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       return LabItemModel.fromJson(response.body as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<ReceiptModel?> getRequestReceipt(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$labRequestsController/GetReceipt?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if(response.body==null) return null;
+      return ReceiptModel.fromJson(response.body as Map<String, dynamic>);
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }

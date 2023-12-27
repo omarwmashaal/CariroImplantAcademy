@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/OmarEntity.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../Widgets/CIA_TextFormField.dart';
@@ -14,11 +14,11 @@ class LabRequestItemWidget extends StatefulWidget {
     this.viewOnly = false,
     this.showConsume = false,
   }) : super(key: key);
-  LabRequestItemEntity? item;
+  OmarEntity? item;
   String name;
   bool viewOnly;
   bool showConsume;
-  Function(LabRequestItemEntity data) onChange;
+  Function(OmarEntity data) onChange;
 
   @override
   State<LabRequestItemWidget> createState() => _LabRequestItemWidgetState();
@@ -46,7 +46,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                       label: "Description",
                       controller: TextEditingController(text: widget.item?.description),
                       onChange: (v) {
-                        if (widget.item == null) widget.item = LabRequestItemEntity();
+                        if (widget.item == null) widget.item = OmarEntity();
                         widget.item!.description = v;
                         widget.onChange(widget.item!);
                       },
@@ -59,7 +59,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                       controller: TextEditingController(text: widget.item?.number?.toString()),
                       isNumber: true,
                       onChange: (v) {
-                        if (widget.item == null) widget.item = LabRequestItemEntity();
+                        if (widget.item == null) widget.item = OmarEntity();
                         widget.item!.number = int.tryParse(v);
                         widget.item!.totalPrice = widget.item!.price! * widget.item!.number!;
                         widget.onChange(widget.item!);

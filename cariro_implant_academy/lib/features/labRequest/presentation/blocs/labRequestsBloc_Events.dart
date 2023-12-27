@@ -69,3 +69,7 @@ class LabRequestsBloc_ConsumeLabItemEvent extends LabRequestsBloc_Events{
   final ConsumeLabItemParams params;
   LabRequestsBloc_ConsumeLabItemEvent({required this.params});
 }
+class LabRequestsBloc_GetLabRequestReceiptEvent extends LabRequestsBloc_Events{
+  final int id;
+  LabRequestsBloc_GetLabRequestReceiptEvent({required this.id});
+}

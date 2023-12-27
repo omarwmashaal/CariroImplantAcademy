@@ -2,7 +2,6 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
@@ -135,22 +134,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               else if (state is LabRequestsBloc_CreatedLabRequestSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true, message: "Created Request Successfully");
-                setState(() {
-                  labRequest = LabRequestEntity(
-                    steps: [
-                      LabStepEntity(
-                        step: BasicNameIdObjectEntity(
-                          name: "Scan",
-                        ),
-                      ),
-                      LabStepEntity(
-                        step: BasicNameIdObjectEntity(
-                          name: "Design",
-                        ),
-                      ),
-                    ],
-                  );
-                });
+                dialogHelper.dismissAll(context);
+                if(!widget.isDoctor)
+                  Navigator.of(context).pop(true);
+
               }
             },
           ),
