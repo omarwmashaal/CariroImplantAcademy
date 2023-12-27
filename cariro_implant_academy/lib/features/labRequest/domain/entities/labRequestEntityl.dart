@@ -83,11 +83,11 @@ class LabRequestEntity extends Equatable {
     this.assignedToId,
     this.assignedTo,
   }) {
-    entryBy = BasicNameIdObjectEntity();
-    customer = UserEntity();
-    patient = BasicNameIdObjectEntity();
-    file = BasicNameIdObjectEntity();
-    teeth = [];
+    entryBy = entryBy??BasicNameIdObjectEntity();
+    customer =customer?? UserEntity();
+    patient = patient??BasicNameIdObjectEntity();
+    file =file?? BasicNameIdObjectEntity();
+    teeth =teeth?? [];
   }
 
   @override

@@ -565,7 +565,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       ),
                     ),
                     Visibility(
-                      visible: siteController.getRole() == "labmoderator",
+                      visible: siteController.getRole() == "labmoderator" && request.status!=EnumLabRequestStatus.Finished,
                       child: Expanded(
                         child: Column(
                           children: [

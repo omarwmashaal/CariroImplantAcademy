@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDe
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/widgets/labRequestItemReceiptWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,7 @@ class LAB_ViewRequestPage extends StatefulWidget {
   LAB_ViewRequestPage({Key? key, required this.id}) : super(key: key);
   int id;
   static String routeName = "ViewRequest";
-   static String routeNameClinic = "ClinicViewRequest";
+  static String routeNameClinic = "ClinicViewRequest";
   static String routePath = "ViewRequest";
   static String routeCIAName = "ViewLabRequest";
   static String routeCIAPath = "ViewLabRequest/:id";
@@ -62,7 +63,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
       bloc: bloc,
       listener: (context, state) {
         if (state is LabRequestsBloc_FinishedTaskSuccessfullyState) {
-
           thisStepNotes = null;
           nextAssignId = null;
           nextTaskId = null;
@@ -79,8 +79,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           current is LabRequestsBloc_LoadingRequestsState ||
           current is LabRequestsBloc_LoadingSingleRequestErrorState,
       builder: (context, state) {
-        if (state is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState)
-        {
+        if (state is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState) {
           request = state.request;
           return Column(
             children: [
@@ -94,7 +93,8 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                     SizedBox(width: 10),
                     CIA_SecondaryButton(
                         label: "Medical Info",
-                        onTab: () {/*
+                        onTab: () {
+                          /*
                           var medicalInfo = request.getMedicalInfoList();
                           CIA_ShowPopUp(
                             context: context,
@@ -128,56 +128,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                           );*/
                         }),
                     SizedBox(width: 10),
-                    Visibility(
-                      visible: request.steps!.last.technicianId == request.customerId && request.customerId == siteController.getUserId(),
-                      child: CIA_PrimaryButton(
-                        label: "Waiting your action",
-                        onTab: () async {
-                          if (request.steps != null && request.steps!.isNotEmpty) {
-                            if (request.steps!.length >= 2)
-                              nextAssignId = request.steps![request.steps!.length - 2].technicianId;
-                            else
-                              nextAssignId = null;
-                          }
-                          await CIA_ShowPopUp(
-                              context: context,
-                              onSave: () async {
-                                bloc.add(LabRequestsBloc_FinishTaskEvent(
-                                  params: FinishTaskParams(
-                                    id: widget.id,
-                                    nextTaskId: nextTaskId,
-                                    assignToId: nextAssignId,
-                                    notes: thisStepNotes,
-                                  ),
-                                ));
-                                return false;
-                                //setState(() {});
-                              },
-                              child: Column(
-                                children: [
-                                  CIA_TextFormField(
-                                    label: "Notes",
-                                    maxLines: 5,
-                                    onChange: (v) => thisStepNotes = v,
-                                    controller: TextEditingController(
-                                      text: thisStepNotes,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  CIA_DropDownSearchBasicIdName(
-                                    asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                    label: "Next Step",
-                                    onSelect: (value) {
-                                      nextTaskId = value.id!;
-                                    },
-                                  ),
-                                  SizedBox(height: 10),
-                                ],
-                              ));
-                          setState(() {});
-                        },
-                      ),
-                    ),
                     SizedBox(width: 10),
                     Visibility(
                       visible: request.patientId != null && siteController.getSite() == Website.CIA,
@@ -248,7 +198,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text:  request.source?.name??"",
+                                    text: request.source?.name ?? "",
                                   ),
                                 )
                               ],
@@ -266,7 +216,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text:  request.customer?.name??"",
+                                    text: request.customer?.name ?? "",
                                   ),
                                 )
                               ],
@@ -320,7 +270,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text: request.assignedTo?.name??"",
+                                    text: request.assignedTo?.name ?? "",
                                   ),
                                 )
                               ],
@@ -338,7 +288,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                 ),
                                 Expanded(
                                   child: FormTextValueWidget(
-                                    text:  request.status?.name??"",
+                                    text: request.status?.name ?? "",
                                   ),
                                 )
                               ],
@@ -380,8 +330,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                         suffix: "EGP",
                                       ),
                                       Visibility(
-                                        visible: request.paid == false &&
-                                            (request.status == EnumLabRequestStatus.Finished ),
+                                        visible: request.paid == false && (request.status == EnumLabRequestStatus.Finished),
                                         child: CIA_SecondaryButton(
                                           label: "Pay",
                                           onTab: () {
@@ -404,11 +353,9 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                                     Expanded(
                                                                         child: FormTextValueWidget(
                                                                             text: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!))),
+                                                                    Expanded(child: FormTextValueWidget(text: "by: ${e.technician?.name ?? ""}")),
                                                                     Expanded(
-                                                                        child:
-                                                                            FormTextValueWidget(text: "by: ${ e.technician?.name??""}")),
-                                                                    Expanded(
-                                                                      child: FormTextValueWidget(text: "${e.step?.name??""}"),
+                                                                      child: FormTextValueWidget(text: "${e.step?.name ?? ""}"),
                                                                     ),
                                                                     Expanded(
                                                                         child: FormTextValueWidget(
@@ -428,10 +375,10 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                           CIA_ShowPopUpYesNo(
                                                             context: context,
                                                             onSave: () async {
-                                                             // var res = await LAB_RequestsAPI.PayForRequest(widget.id);
-                                                            //  if (res.statusCode == 200) dialogHelper.dismissSingle(context);
-                                                            //  ShowSnackBar(context, isSuccess: res.statusCode == 200);
-                                                            //  setState(() {});
+                                                              // var res = await LAB_RequestsAPI.PayForRequest(widget.id);
+                                                              //  if (res.statusCode == 200) dialogHelper.dismissSingle(context);
+                                                              //  ShowSnackBar(context, isSuccess: res.statusCode == 200);
+                                                              //  setState(() {});
                                                             },
                                                           );
                                                         }),
@@ -482,13 +429,40 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                       ),
                       Expanded(
                         child: Container(
-                          alignment: Alignment.topCenter,
+                          alignment: Alignment.topLeft,
                           padding: EdgeInsets.only(top: 50),
-                          child: SingleChildScrollView(
-                              child: CIA_LAB_StepTimelineWidget(
-                            steps: request.steps!,
-                            customerId: request.customerId!,
-                          )),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CIA_SecondaryButton(
+                                width: 300,
+                                label: "Click to View Notes From Tech",
+                                icon: Icon(Icons.notes),
+                                onTab: () => CIA_ShowPopUp(context: context, child: FormTextValueWidget(text: request.notesFromTech)),
+                              ),
+                              SizedBox(height: 10),
+                              CIA_SecondaryButton(
+                                width: 300,
+                                label: "Click to View Notes From Customer",
+                                icon: Icon(Icons.notes),
+                                onTab: () => CIA_ShowPopUp(context: context, child: FormTextValueWidget(text: request.notes)),
+                              ),
+                              SizedBox(height: 10),
+                              Visibility(
+                                visible: request.status == EnumLabRequestStatus.Finished,
+                                child: CIA_SecondaryButton(
+                                  width: 300,
+                                  label: "Receipt",
+                                  icon: Icon(Icons.attach_money),
+                                  onTab: () => CIA_ShowPopUp(height:600,width: double.maxFinite, context: context, child: LabRequestItemReceiptWidget(
+                                    onTotalCalculated: (v) => null,
+                                    request: request,
+                                    viewOnly: true,
+                                  ),),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],
@@ -497,8 +471,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
               ),
             ],
           );
-        }
-        else if (state is LabRequestsBloc_LoadingRequestsState)
+        } else if (state is LabRequestsBloc_LoadingRequestsState)
           return LoadingWidget();
         else if (state is LabRequestsBloc_LoadingSingleRequestErrorState) return BigErrorPageWidget(message: state.message);
         return Container();
