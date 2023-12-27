@@ -212,6 +212,7 @@ import '../features/labRequest/domain/usecases/getPatientRequestsUseCase.dart';
 import '../features/labRequest/domain/usecases/getRequestReceiptUseCase.dart';
 import '../features/labRequest/domain/usecases/getRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
+import '../features/labRequest/domain/usecases/payForRequestUseCase.dart';
 import '../features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import '../features/labRequest/domain/usecases/updateLabRequestUseCase.dart';
 import '../features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
@@ -890,6 +891,7 @@ initInjection() async {
     consumeLabItemUseCase: sl(),
     getLabItemDetailsUseCase: sl(),
     getRequestReceiptUseCase: sl(),
+    payRequestUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
@@ -909,6 +911,7 @@ initInjection() async {
   sl.registerLazySingleton(() => ConsumeLabItemUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemDetailsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetRequestReceiptUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => PayRequestUseCase(labRequestRepository: sl()));
   //repo
   sl.registerLazySingleton<LabRequestRepository>(() => LabRequestRepoImpl(labRequestDatasource: sl()));
   sl.registerLazySingleton<LabCustomersRepository>(() => LabCustomerRepoImpl(labCustomerDatasource: sl()));

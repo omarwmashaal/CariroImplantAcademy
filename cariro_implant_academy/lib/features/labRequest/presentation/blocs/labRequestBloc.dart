@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
@@ -9,6 +11,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finis
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/payForRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/updateLabRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
@@ -45,6 +48,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final GetLabItemDetailsUseCase getLabItemDetailsUseCase;
   final ConsumeLabItemUseCase consumeLabItemUseCase;
   final GetRequestReceiptUseCase getRequestReceiptUseCase;
+  final PayRequestUseCase payRequestUseCase;
 
   LabRequestsBloc({
     required this.getAllLabRequestsUseCase,
@@ -62,6 +66,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.consumeLabItemUseCase,
     required this.getLabItemDetailsUseCase,
     required this.getRequestReceiptUseCase,
+    required this.payRequestUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -192,6 +197,16 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingLabReceiptErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_LoadedLabReceiptuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<LabRequestsBloc_PayRequestEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_PayingRequestState());
+        final result = await payRequestUseCase(event.id);
+        result.fold(
+          (l) => emit(LabRequestsBloc_PayingRequestErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_PaidRequestSuccessfullyState()),
         );
       },
     );

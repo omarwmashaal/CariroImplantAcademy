@@ -73,3 +73,7 @@ class LabRequestsBloc_GetLabRequestReceiptEvent extends LabRequestsBloc_Events{
   final int id;
   LabRequestsBloc_GetLabRequestReceiptEvent({required this.id});
 }
+class LabRequestsBloc_PayRequestEvent extends LabRequestsBloc_Events{
+  final int id;
+  LabRequestsBloc_PayRequestEvent({required this.id});
+}

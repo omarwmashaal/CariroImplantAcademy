@@ -338,3 +338,22 @@ class LabRequestsBloc_LoadingLabReceiptErrorState extends LabRequestsBloc_States
   @override
   List<Object?> get props => [message];
 }
+
+class LabRequestsBloc_PayingRequestState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_PaidRequestSuccessfullyState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_PayingRequestErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_PayingRequestErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

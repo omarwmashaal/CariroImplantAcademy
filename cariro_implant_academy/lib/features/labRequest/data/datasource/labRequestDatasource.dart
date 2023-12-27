@@ -232,8 +232,16 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<NoParams> payForRequest(int id) async {
-    throw UnimplementedError();
+  Future<NoParams> payForRequest(int id)async {
+    late StandardHttpResponse response;
+
+    try {
+      response = await httpRepo.post(host: "$serverHost/$labRequestsController/PayForRequest?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 
   @override

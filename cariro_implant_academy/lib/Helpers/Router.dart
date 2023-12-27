@@ -1258,7 +1258,7 @@ class _Authorize extends StatelessWidget {
       buildWhen: (previous, current) => current is LoggedIn,
       builder: (context, state) {
         if (state is LoggedIn) {
-          if (siteController.getRole()!.contains("admin") || roles.contains(siteController.getRole()))
+          if (siteController.getRole()!.contains("admin") ||siteController.getRole()!.any((element) => roles.contains(element)))
             return child;
           else
             return BigErrorPageWidget(message: "Sorry you don't have access to this page");

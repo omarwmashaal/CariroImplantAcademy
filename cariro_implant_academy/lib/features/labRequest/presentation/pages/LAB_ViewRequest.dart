@@ -69,10 +69,22 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           ShowSnackBar(context, isSuccess: true);
           dialogHelper.dismissSingle(context);
         } else if (state is LabRequestsBloc_FinishingTaskErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
-        if (state is LabRequestsBloc_FinishingTaskState)
+
+        else if(state is LabRequestsBloc_PayingRequestErrorState)
+          {
+            ShowSnackBar(context, isSuccess: false,message: state.message);
+          }
+        else if(state is LabRequestsBloc_PaidRequestSuccessfullyState) {
+          ShowSnackBar(context, isSuccess: true);
+          dialogHelper.dismissAll(context);
+          bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
+        }
+        if (state is LabRequestsBloc_FinishingTaskState || state is LabRequestsBloc_PayingRequestState)
           CustomLoader.show(context);
         else
           CustomLoader.hide();
+
+
       },
       buildWhen: (previous, current) =>
           current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState ||
@@ -330,8 +342,12 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                         suffix: "EGP",
                                       ),
                                       Visibility(
-                                        visible: request.paid == false && (request.status == EnumLabRequestStatus.Finished),
-                                        child: CIA_SecondaryButton(
+                                        visible:  (request.status == EnumLabRequestStatus.Finished) ,
+                                        child:
+
+                                        request.paid==true?
+                                            Icon(Icons.check_circle,color: Colors.green,):
+                                        CIA_SecondaryButton(
                                           label: "Pay",
                                           onTab: () {
                                             CIA_ShowPopUp(
@@ -339,56 +355,23 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                 height: 500,
                                                 context: context,
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                  crossAxisAlignment: CrossAxisAlignment.center ,
                                                   children: [
                                                     TitleWidget(title: "Reciept"),
-                                                    Expanded(
-                                                      child: Column(
-                                                        children: request.steps!
-                                                            .map(
-                                                              (e) => Padding(
-                                                                padding: EdgeInsets.only(bottom: 5),
-                                                                child: Row(
-                                                                  children: [
-                                                                    Expanded(
-                                                                        child: FormTextValueWidget(
-                                                                            text: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!))),
-                                                                    Expanded(child: FormTextValueWidget(text: "by: ${e.technician?.name ?? ""}")),
-                                                                    Expanded(
-                                                                      child: FormTextValueWidget(text: "${e.step?.name ?? ""}"),
-                                                                    ),
-                                                                    Expanded(
-                                                                        child: FormTextValueWidget(
-                                                                      text: " ${(e.price ?? 0).toString()}",
-                                                                      suffix: "EGP",
-                                                                    ))
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            )
-                                                            .toList(),
-                                                      ),
-                                                    ),
+                                                    LabRequestItemReceiptWidget(request: request,viewOnly: true, onTotalCalculated: (v)=>null),
                                                     CIA_PrimaryButton(
                                                         label: "Pay",
                                                         onTab: () {
                                                           CIA_ShowPopUpYesNo(
                                                             context: context,
+                                                            title: "Pay Request for ${request.cost}?",
+                                                            
                                                             onSave: () async {
-                                                              // var res = await LAB_RequestsAPI.PayForRequest(widget.id);
-                                                              //  if (res.statusCode == 200) dialogHelper.dismissSingle(context);
-                                                              //  ShowSnackBar(context, isSuccess: res.statusCode == 200);
-                                                              //  setState(() {});
+                                                              bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!));
                                                             },
                                                           );
                                                         }),
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        FormTextKeyWidget(text: "Total "),
-                                                        FormTextValueWidget(text: (request.cost ?? 0).toString()),
-                                                      ],
-                                                    ),
+
                                                   ],
                                                 ));
                                           },
