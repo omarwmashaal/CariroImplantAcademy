@@ -608,6 +608,18 @@ class CIA_Router {
                       )));
                     },
                     routes: [
+
+                      GoRoute(
+                        path: UsersSettingsPage.routePath,
+                        name: UsersSettingsPage.getRouteName(site: Website.Lab),
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: _Authorize(allowedRoles: [
+                              UserRoles.Admin,
+                            ], child: UsersSettingsPage()),
+                          );
+                        },
+                      ),
                       GoRoute(
                         path: SettingsPage.routePath,
                         name: SettingsPage.getRouteName(site: Website.Lab),

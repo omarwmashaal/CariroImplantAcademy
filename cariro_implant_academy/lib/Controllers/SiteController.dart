@@ -219,10 +219,15 @@ class SiteController {
           setAppBarWidget(context: context);
       } else if (siteController.getSite() == Website.Lab) {
         if ((path == SettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
-            (path == LabItemSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))) {
+            (path == LabItemSettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
+            (path == UsersSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))
+
+        ) {
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
             SlidingTabModel(title: "Lab Items", compareName: LabItemSettingsPage.routePath, namedDirectory: LabItemSettingsPage.routeName),
+            SlidingTabModel(title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
+
           ]);
         } else if (path == LabRequestsSearchPage.routePath.split("/").last ||
             path == LabRequestsSearchPage.routeAllPath.split("/").last ||

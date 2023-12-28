@@ -92,10 +92,11 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
             ),
             BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-              buildWhen: (previous, current) => current is LabRequestsBloc_UpdateQueueNumberState,
+              buildWhen: (previous, current) => current is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState,
               builder: (context, state) {
                 int number = 0;
-                if (state is LabRequestsBloc_UpdateQueueNumberState) number = state.number;
+                if (state is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState)
+                  number = state.requests.where((element) => element.status==EnumLabRequestStatus.InQueue).length;
                 return Text(
                   number.toString(),
                   style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
@@ -108,117 +109,100 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
           ],
         ),
         Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: CIA_TextField(
-                    label: "Search",
-                    icon: Icons.search,
-                    onChange: (value) {
-                      search = value;
-                      reload();
-                    },
-                  ),
+          child: Column(
+            children: [
+              CIA_TextField(
+                label: "Search",
+                icon: Icons.search,
+                onChange: (value) {
+                  search = value;
+                  reload();
+                },
+              ),
+              SizedBox(height:10),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: CIA_DropDownSearchBasicIdName(
+                        onSelect: (v) {
+                          if (v.name == "CIA")
+                            sourceEnum = EnumLabRequestSources.CIA;
+                          else if (v.name == "Clinic")
+                            sourceEnum = EnumLabRequestSources.Clinic;
+                          else if (v.name == "Outsource")
+                            sourceEnum = EnumLabRequestSources.OutSource;
+                          else if (v.name == "None") sourceEnum = null;
+                          reload();
+                        },
+                        label: 'Source',
+                        selectedItem: BasicNameIdObjectEntity(name: "None"),
+                        items: [
+                          BasicNameIdObjectEntity(name: "None"),
+                          BasicNameIdObjectEntity(name: "CIA"),
+                          BasicNameIdObjectEntity(name: "Clinic"),
+                          BasicNameIdObjectEntity(name: "Outsource"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: CIA_DropDownSearchBasicIdName(
+                        onSelect: (v) {
+                          if (v.name == "Unpaid")
+                            paid = false;
+                          else if (v.name == "Paid")
+                            paid = true;
+                          else if (v.name == "None") paid = null;
+                          reload();
+                        },
+                        label: 'Payment',
+                        selectedItem: BasicNameIdObjectEntity(name: "None"),
+                        items: [
+                          BasicNameIdObjectEntity(name: "None"),
+                          BasicNameIdObjectEntity(name: "Paid"),
+                          BasicNameIdObjectEntity(name: "Unpaid"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: CIA_DropDownSearchBasicIdName(
+                        onSelect: (v) {
+                          if (v.name == "In Queue")
+                            statusEnum = EnumLabRequestStatus.InQueue;
+                          else if (v.name == "In Progress")
+                            statusEnum = EnumLabRequestStatus.InProgress;
+                          else if (v.name == "Finished")
+                            statusEnum =EnumLabRequestStatus.Finished;
+                          else if (v.name == "None") statusEnum = null;
+                          reload();
+                        },
+                        label: 'Status',
+                        selectedItem: BasicNameIdObjectEntity(name: "None"),
+                        items: [
+                          BasicNameIdObjectEntity(name: "None"),
+                          BasicNameIdObjectEntity(name: "In Queue"),
+                          BasicNameIdObjectEntity(name: "In Progress"),
+                          BasicNameIdObjectEntity(name: "Finished"),
+                        ],
+                      ),
+                    ),
+                    Expanded(child: SizedBox())
+                  ],
                 ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: HorizontalRadioButtons(
-                          names: ["Sender Name", "Sender Phone", "Assigned To"],
-                        ),
-                      ),
-                      Expanded(flex: 2, child: SizedBox())
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          onSelect: (v) {
-                            if (v.name == "CIA")
-                              sourceEnum = EnumLabRequestSources.CIA;
-                            else if (v.name == "Clinic")
-                              sourceEnum = EnumLabRequestSources.Clinic;
-                            else if (v.name == "Outsource")
-                              sourceEnum = EnumLabRequestSources.OutSource;
-                            else if (v.name == "None") sourceEnum = null;
-                            reload();
-                          },
-                          label: 'Source',
-                          selectedItem: BasicNameIdObjectEntity(name: "None"),
-                          items: [
-                            BasicNameIdObjectEntity(name: "None"),
-                            BasicNameIdObjectEntity(name: "CIA"),
-                            BasicNameIdObjectEntity(name: "Clinic"),
-                            BasicNameIdObjectEntity(name: "Outsource"),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          onSelect: (v) {
-                            if (v.name == "Unpaid")
-                              paid = false;
-                            else if (v.name == "Paid")
-                              paid = true;
-                            else if (v.name == "None") paid = null;
-                            reload();
-                          },
-                          label: 'Payment',
-                          selectedItem: BasicNameIdObjectEntity(name: "None"),
-                          items: [
-                            BasicNameIdObjectEntity(name: "None"),
-                            BasicNameIdObjectEntity(name: "Paid"),
-                            BasicNameIdObjectEntity(name: "Unpaid"),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          onSelect: (v) {
-                            if (v.name == "In Queue")
-                              statusEnum = EnumLabRequestStatus.InQueue;
-                            else if (v.name == "In Progress")
-                              statusEnum = EnumLabRequestStatus.InProgress;
-                            else if (v.name == "Finished")
-                              statusEnum =EnumLabRequestStatus.Finished;
-                            else if (v.name == "None") statusEnum = null;
-                            reload();
-                          },
-                          label: 'Status',
-                          selectedItem: BasicNameIdObjectEntity(name: "None"),
-                          items: [
-                            BasicNameIdObjectEntity(name: "None"),
-                            BasicNameIdObjectEntity(name: "In Queue"),
-                            BasicNameIdObjectEntity(name: "In Progress"),
-                            BasicNameIdObjectEntity(name: "Finished"),
-                          ],
-                        ),
-                      ),
-                      Expanded(child: SizedBox())
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              SizedBox(height:10),
+            ],
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 5,
           child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
               buildWhen: (previous, current) =>
                   current is LabRequestsBloc_LoadingRequestsState ||
@@ -248,8 +232,8 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
     bloc.add(LabRequestsBloc_GetTodaysRequestsEvent(
       getAllRequestsParams: GetAllRequestsParams(
         search: search,
-      //  from: widget.all ? from : DateTime.now(),
-      //  to: widget.all ? to : DateTime.now(),
+        from: widget.all ? from : DateTime.now(),
+          to: widget.all ? to : DateTime.now(),
         source: sourceEnum,
         status: statusEnum,
         paid: paid,

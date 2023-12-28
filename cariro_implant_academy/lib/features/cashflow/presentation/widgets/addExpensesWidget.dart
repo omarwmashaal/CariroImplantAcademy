@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getExpensesCategoryByNameUseCase.dart';
@@ -51,7 +52,7 @@ void ShowAddExpenesesPopUpWidget({
     supplier: BasicNameIdObjectEntity(),
   );
   EnumExpenseseCategoriesType expCategory = EnumExpenseseCategoriesType.Service;
-  Website inventoryWebsite = Website.CIA;
+  Website inventoryWebsite = siteController.getSite();
   CIA_ShowPopUp(
       context: context,
       width: 1000,
@@ -76,6 +77,7 @@ void ShowAddExpenesesPopUpWidget({
       },
       child: SimpleBuilder(builder: (context) {
         String medicalType = "Tacs";
+        Website selectedWebsite = siteController.getSite();
         return StatefulBuilder(
           builder: (context, _setState) {
             return Column(
@@ -126,7 +128,7 @@ void ShowAddExpenesesPopUpWidget({
                         r.add(SizedBox(height: 10));
                         r.add(
                           Visibility(
-                            visible: sl<SharedPreferences>().getInt("Website") != Website.Lab.index &&
+                            visible:
                                 (expCategory == EnumExpenseseCategoriesType.BoughtItem || expCategory == EnumExpenseseCategoriesType.BoughtMedical),
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 10),

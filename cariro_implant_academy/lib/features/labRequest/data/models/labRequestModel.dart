@@ -46,54 +46,51 @@ class LabRequestModel extends LabRequestEntity {
     super.teeth,
     super.assignedTo,
     super.assignedToId,
-
   });
 
   factory LabRequestModel.fromEntity(LabRequestEntity entity) {
     return LabRequestModel(
-      id: entity.id,
-      labFees: entity.labFees,
-      date: entity.date,
-      notesFromTech: entity.notesFromTech,
-      deliveryDate: entity.deliveryDate,
-      entryById: entity.entryById,
-      entryBy: entity.entryBy,
-      source: entity.source,
-      customerId: entity.customerId,
-      customer: entity.customer,
-      patientId: entity.patientId,
-      patient: entity.patient,
-      status: entity.status,
-      paid: entity.paid,
-      waxUp: entity.waxUp,
-      zirconUnit: entity.zirconUnit,
-      pfm: entity.pfm,
-      compositeInlay: entity.compositeInlay,
-      emaxVeneer: entity.emaxVeneer,
-      milledPMMA: entity.milledPMMA,
-      printedPMMA: entity.printedPMMA,
-      tiAbutment: entity.tiAbutment,
-      tiBar: entity.tiBar,
-      threeDPrinting: entity.threeDPrinting,
-      others: entity.others,
-      cost: entity.cost,
-      paidAmount: entity.paidAmount,
-      notes: entity.notes,
-      requiredStep: entity.requiredStep,
-      steps: entity.steps,
-      fileId: entity.fileId,
-      file: entity.file,
-      initStatus: entity.initStatus,
-      teeth: entity.teeth,
-      assignedToId: entity.assignedToId,
-      assignedTo: entity.assignedTo
-
-    );
+        id: entity.id,
+        labFees: entity.labFees,
+        date: entity.date,
+        notesFromTech: entity.notesFromTech,
+        deliveryDate: entity.deliveryDate,
+        entryById: entity.entryById,
+        entryBy: entity.entryBy,
+        source: entity.source,
+        customerId: entity.customerId,
+        customer: entity.customer,
+        patientId: entity.patientId,
+        patient: entity.patient,
+        status: entity.status,
+        paid: entity.paid,
+        waxUp: entity.waxUp,
+        zirconUnit: entity.zirconUnit,
+        pfm: entity.pfm,
+        compositeInlay: entity.compositeInlay,
+        emaxVeneer: entity.emaxVeneer,
+        milledPMMA: entity.milledPMMA,
+        printedPMMA: entity.printedPMMA,
+        tiAbutment: entity.tiAbutment,
+        tiBar: entity.tiBar,
+        threeDPrinting: entity.threeDPrinting,
+        others: entity.others,
+        cost: entity.cost,
+        paidAmount: entity.paidAmount,
+        notes: entity.notes,
+        requiredStep: entity.requiredStep,
+        steps: entity.steps,
+        fileId: entity.fileId,
+        file: entity.file,
+        initStatus: entity.initStatus,
+        teeth: entity.teeth,
+        assignedToId: entity.assignedToId,
+        assignedTo: entity.assignedTo);
   }
 
   LabRequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    labFees = json['labFees']??0;
+    labFees = json['labFees'] ?? 0;
     notesFromTech = json['notesFromTech'];
     initStatus = json['initStatus'] != null ? EnumLabRequestInitStatus.values[json['initStatus']] : null;
     teeth = ((json['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
@@ -153,8 +150,8 @@ class LabRequestModel extends LabRequestEntity {
         this.deliveryDate == null ? null : DateFormat("yyyy-MM-dd").format(this.deliveryDate!); // CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
     // data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
-   // if (this.steps != null && this.steps != []) {
-     // this.assignedToId = steps![0].technicianId;
+    // if (this.steps != null && this.steps != []) {
+    // this.assignedToId = steps![0].technicianId;
     //}
     data['assignedToId'] = this.assignedToId;
     //data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
@@ -167,21 +164,21 @@ class LabRequestModel extends LabRequestEntity {
     data['paid'] = this.paid ?? false;
     data['cost'] = this.cost ?? 0;
     data['paidAmount'] = this.paidAmount ?? 0;
-    data['waxUp'] = this.waxUp == null ? null : OmarModelsss.fromEntity(this.waxUp!).toJson();
-    data['zirconUnit'] = this.zirconUnit == null ? null : OmarModelsss.fromEntity(this.zirconUnit!).toJson();
-    data['pfm'] = this.pfm == null ? null : OmarModelsss.fromEntity(this.pfm!).toJson();
-    data['compositeInlay'] = this.compositeInlay == null ? null : OmarModelsss.fromEntity(this.compositeInlay!).toJson();
-    data['emaxVeneer'] = this.emaxVeneer == null ? null : OmarModelsss.fromEntity(this.emaxVeneer!).toJson();
-    data['milledPMMA'] = this.milledPMMA == null ? null : OmarModelsss.fromEntity(this.milledPMMA!).toJson();
-    data['printedPMMA'] = this.printedPMMA == null ? null : OmarModelsss.fromEntity(this.printedPMMA!).toJson();
-    data['tiAbutment'] = this.tiAbutment == null ? null : OmarModelsss.fromEntity(this.tiAbutment!).toJson();
-    data['tiBar'] = this.tiBar == null ? null : OmarModelsss.fromEntity(this.tiBar!).toJson();
-    data['threeDPrinting'] = this.threeDPrinting == null ? null : OmarModelsss.fromEntity(this.threeDPrinting!).toJson();
+    data['waxUp'] = this.waxUp?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.waxUp!).toJson();
+    data['zirconUnit'] = this.zirconUnit?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.zirconUnit!).toJson();
+    data['pfm'] = this.pfm?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.pfm!).toJson();
+    data['compositeInlay'] = this.compositeInlay?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.compositeInlay!).toJson();
+    data['emaxVeneer'] = this.emaxVeneer?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.emaxVeneer!).toJson();
+    data['milledPMMA'] = this.milledPMMA?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.milledPMMA!).toJson();
+    data['printedPMMA'] = this.printedPMMA?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.printedPMMA!).toJson();
+    data['tiAbutment'] = this.tiAbutment?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.tiAbutment!).toJson();
+    data['tiBar'] = this.tiBar?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.tiBar!).toJson();
+    data['threeDPrinting'] = this.threeDPrinting?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.threeDPrinting!).toJson();
     data['others'] = this.others?.map((e) => OmarModelsss.fromEntity(e).toJson()).toList();
     data['notes'] = this.notes;
     data['notesFromTech'] = this.notesFromTech;
-  //  data['requiredStep'] = this.requiredStep;
-   // data['steps'] = (this.steps ?? []).map((e) => LabStepModel.fromEntity(e).toJson()).toList();
+    //  data['requiredStep'] = this.requiredStep;
+    // data['steps'] = (this.steps ?? []).map((e) => LabStepModel.fromEntity(e).toJson()).toList();
     data['fileId'] = this.fileId;
     data['file'] = this.file != null ? BasicNameIdObjectModel.fromEntity(this.file!).toJson() : null;
 

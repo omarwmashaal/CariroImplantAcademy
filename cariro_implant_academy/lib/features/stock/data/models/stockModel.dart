@@ -11,14 +11,18 @@ class StockModel extends StockEntity {
     super.code,
     super.categoryId,
     super.companyName,
+    super.consumeCount,
     super.labItemType,
+    super.consumed,
     super.shadeName,
   });
 
   StockModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    consumed = json['consumed'];
     name = json['name'] ?? "";
     count = json['count'] ?? 0;
+    consumeCount = json['consumedCount'] ?? 0;
     categoryId = json['categoryId'];
     code = json['code'];
 

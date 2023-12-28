@@ -11,10 +11,14 @@ class StockEntity extends BasicNameIdObjectEntity {
   String? companyName;
   String? shadeName;
   String? labItemType;
+  int? consumeCount;
+  bool? consumed;
 
   StockEntity({
     this.id,
     this.name,
+    this.consumeCount,
+    this.consumed,
     this.count,
     this.category,
     this.code,
@@ -28,7 +32,9 @@ class StockEntity extends BasicNameIdObjectEntity {
   List<Object?> get props => [
         id,
         name,
+    consumeCount,
         count,
+    consumed,
         categoryId,
         category,
     code,

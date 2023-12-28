@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searc
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/widgets/labRequestItemWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -136,7 +138,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 ShowSnackBar(context, isSuccess: true, message: "Created Request Successfully");
                 dialogHelper.dismissAll(context);
                 if(!widget.isDoctor)
-                  Navigator.of(context).pop(true);
+                  context.goNamed(LabRequestsSearchPage.routeName);
 
               }
             },
