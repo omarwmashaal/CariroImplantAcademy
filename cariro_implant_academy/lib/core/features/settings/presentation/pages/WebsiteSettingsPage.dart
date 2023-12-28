@@ -49,7 +49,6 @@ class SettingsPage extends StatefulWidget {
 
   static String routePath = "Settings";
 
-
   static String getRouteName({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -75,15 +74,108 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   void initState() {
-
-  bloc = BlocProvider.of<SettingsBloc>(context);
+    bloc = BlocProvider.of<SettingsBloc>(context);
     clinicTreatmentBloc = BlocProvider.of<ClinicTreatmentBloc>(context);
-    bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
+    if (siteController.getSite() == Website.CIA) bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<SidebarXItem> sideBarItems = [
+      SidebarXItem(
+          label: "Expenses Categories",
+          onTap: () {
+            bloc.add(SettingsBloc_LoadExpensesCategoriesEvent());
+            //_pageController.jumpToPage(3);
+            currentIndex = 3;
+          },
+          iconWidget: Container()),
+      SidebarXItem(
+          label: "Income Categories",
+          onTap: () {
+            bloc.add(SettingsBloc_LoadIncomeCategoriesEvent());
+            // _pageController.jumpToPage(4);
+            currentIndex = 4;
+          },
+          iconWidget: Container()),
+      SidebarXItem(
+          label: "Stock Categories",
+          onTap: () {
+            bloc.add(SettingsBloc_LoadStockCategoriesEvent());
+            // _pageController.jumpToPage(5);
+            currentIndex = 5;
+          },
+          iconWidget: Container()),
+      SidebarXItem(
+          label: "Suppliers",
+          onTap: () {
+            bloc.add(SettingsBloc_LoadSuppliersEvent());
+
+            // _pageController.jumpToPage(6);
+            currentIndex = 6;
+          },
+          iconWidget: Container()),
+      SidebarXItem(
+          label: "Payment Methods",
+          onTap: () {
+            bloc.add(SettingsBloc_LoadPaymentMethodsEvent());
+            //   _pageController.jumpToPage(7);
+            currentIndex = 7;
+          },
+          iconWidget: Container()),
+    ];
+
+    if (siteController.getSite() == Website.CIA) {
+      sideBarItems.insertAll(0, [
+        SidebarXItem(
+            label: "Implants",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
+              // _pageController.jumpToPage(0);
+              currentIndex = 0;
+            },
+            iconWidget: Container()),
+        SidebarXItem(
+            label: "Membranes",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadMembraneCompaniesEvent());
+              //_pageController.jumpToPage(1);
+              currentIndex = 1;
+            },
+            iconWidget: Container()),
+        SidebarXItem(
+            label: "Tacs",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadTacsEvent());
+              //_pageController.jumpToPage(2);
+              currentIndex = 2;
+            },
+            iconWidget: Container()),
+      ]);
+
+      sideBarItems.addAll([
+        SidebarXItem(
+            label: "Rooms",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadRoomsEvent());
+              // _pageController.jumpToPage(9);
+              currentIndex = 8;
+            },
+            iconWidget: Container()),
+        SidebarXItem(
+            label: "Treatment Prices",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadTreatmentPricesEvent());
+
+              //   _pageController.jumpToPage(10);
+              currentIndex = 9;
+            },
+            iconWidget: Container()),
+      ]);
+    }
+
     return BlocListener<SettingsBloc, SettingsBloc_States>(
       listener: (context, state) {
         if (state is SettingsBlocSuccessState)
@@ -120,90 +212,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 decoration: BoxDecoration(
                   border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
                 )),
-            items: [
-              SidebarXItem(
-                  label: "Implants",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
-                    // _pageController.jumpToPage(0);
-                    currentIndex = 0;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Membranes",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadMembraneCompaniesEvent());
-                    //_pageController.jumpToPage(1);
-                    currentIndex = 1;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Tacs",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadTacsEvent());
-                    //_pageController.jumpToPage(2);
-                    currentIndex = 2;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Expenses Categories",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadExpensesCategoriesEvent());
-                    //_pageController.jumpToPage(3);
-                    currentIndex = 3;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Income Categories",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadIncomeCategoriesEvent());
-                    // _pageController.jumpToPage(4);
-                    currentIndex = 4;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Stock Categories",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadStockCategoriesEvent());
-                    // _pageController.jumpToPage(5);
-                    currentIndex = 5;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Suppliers",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadSuppliersEvent());
-
-                    // _pageController.jumpToPage(6);
-                    currentIndex = 6;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Payment Methods",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadPaymentMethodsEvent());
-                    //   _pageController.jumpToPage(7);
-                    currentIndex = 7;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Rooms",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadRoomsEvent());
-                    // _pageController.jumpToPage(9);
-                    currentIndex = 8;
-                  },
-                  iconWidget: Container()),
-              SidebarXItem(
-                  label: "Treatment Prices",
-                  onTap: () {
-                    bloc.add(SettingsBloc_LoadTreatmentPricesEvent());
-
-                    //   _pageController.jumpToPage(10);
-                    currentIndex = 9;
-                  },
-                  iconWidget: Container()),
-            ],
+            items: sideBarItems,
           ),
           SizedBox(width: 10),
           Expanded(
@@ -348,7 +357,6 @@ class _SettingsPageState extends State<SettingsPage> {
                             else
                               return Column(
                                 children: [
-
                                   FormTextKeyWidget(text: "Implant Lines"),
                                   Expanded(
                                     child: SidebarX(

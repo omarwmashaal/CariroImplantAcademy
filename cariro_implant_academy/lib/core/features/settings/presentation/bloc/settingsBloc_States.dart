@@ -668,7 +668,7 @@ class SettingsBloc_LoadedLabItemParentsSuccessfullyState extends SettingsBlocSuc
   final List<LabItemParentEntity> data;
   SettingsBloc_LoadedLabItemParentsSuccessfullyState({required this.data});
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data,identityHashCode(this)];
 }
 class SettingsBloc_LoadingLabItemsState extends SettingsBloc_States {
   @override
@@ -707,7 +707,7 @@ class SettingsBloc_LoadedLabItemsShadesSuccessfullyState extends SettingsBlocSuc
   SettingsBloc_LoadedLabItemsShadesSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data,identityHashCode(this)];
 }
 
 class SettingsBloc_LoadingLabItemsCompaniesState extends SettingsBloc_States {
@@ -727,7 +727,7 @@ class SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState extends SettingsBloc
   SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data,identityHashCode(this)];
 }
 
 

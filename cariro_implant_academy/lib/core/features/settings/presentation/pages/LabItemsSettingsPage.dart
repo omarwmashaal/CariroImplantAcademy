@@ -296,6 +296,9 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                             }
                           },
                           buildWhen: (previous, current) =>
+                          current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
+                              current is SettingsBloc_LoadingLabItemsCompaniesState ||
+                              current is SettingsBloc_LoadingLabItemsCompaniesErrorState||
                               current is SettingsBloc_LoadedLabItemsShadesSuccessfullyState ||
                               current is SettingsBloc_LoadingLabItemsShadesErrorState ||
                               current is SettingsBloc_LoadingLabItemsShadesState,
@@ -313,7 +316,8 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                 message: state.message,
                                 fontSize: 10,
                               );
-                            else
+
+
                               return Column(
                                 children: [
                                   FormTextKeyWidget(text: "Shades"),
@@ -424,7 +428,6 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                 message: state.message,
                                 fontSize: 10,
                               );
-                            else
                               return Expanded(
                                 child: Column(
                                   children: [
