@@ -179,7 +179,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadExpensesCategoriesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingExpensesCategoriesState());
-      final result = await getExpensesCategoriesUseCase(NoParams());
+      final result = await getExpensesCategoriesUseCase(event.website);
       result.fold(
         (l) => emit(SettingsBloc_LoadingExpensesCategoriesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_LoadedExpensesCategoriesSuccessfullyState(data: r)),
@@ -187,7 +187,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadMedicalExpensesCategoriesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingMedicalExpensesCategoriesState());
-      final result = await getMedicalExpensesCategoriesUseCase(NoParams());
+      final result = await getMedicalExpensesCategoriesUseCase(event.website);
       result.fold(
         (l) => emit(SettingsBloc_LoadingMedicalExpensesCategoriesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_LoadedMedicalExpensesCategoriesSuccessfullyState(data: r)),
@@ -195,7 +195,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadNonMedicalStockCategoriesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingNonMedicalStockCategoriesState());
-      final result = await getNonMedicalStockCategoriesUseCase(NoParams());
+      final result = await getNonMedicalStockCategoriesUseCase(event.website);
       result.fold(
         (l) => emit(SettingsBloc_LoadingNonMedicalStockCategoriesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_LoadedNonMedicalStockCategoriesSuccessfullyState(data: r)),
@@ -242,11 +242,11 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       );
     });
     on<SettingsBloc_AddSuppliersEvent>((event, emit) async {
-      emit(SettingsBloc_AddingSuppliersState());
-      final result = await addSuppliersUseCase(event.model);
+      emit(SettingsBloc_AddingSuppliersState(medical: event.params.medical));
+      final result = await addSuppliersUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_AddedSuppliersSuccessfullyState()),
+        (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "",medical: event.params.medical)),
+        (r) => emit(SettingsBloc_AddedSuppliersSuccessfullyState(medical: event.params.medical)),
       );
     });
     on<SettingsBloc_AddPaymentMethodsEvent>((event, emit) async {
@@ -331,18 +331,18 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadStockCategoriesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingStockCategoriesState());
-      final result = await getStockCategoriesUseCase(NoParams());
+      final result = await getStockCategoriesUseCase(event.website);
       result.fold(
         (l) => emit(SettingsBloc_LoadingStockCategoriesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_LoadedStockCategoriesSuccessfullyState(data: r)),
       );
     });
     on<SettingsBloc_LoadSuppliersEvent>((event, emit) async {
-      emit(SettingsBloc_LoadingSuppliersState());
-      final result = await getSuppliersUseCase(NoParams());
+      emit(SettingsBloc_LoadingSuppliersState(medical: event.params.medical));
+      final result = await getSuppliersUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r)),
+        (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "",medical: event.params.medical)),
+        (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r,medical: event.params.medical)),
       );
     });
     on<SettingsBloc_LoadPaymentMethodsEvent>((event, emit) async {
