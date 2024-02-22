@@ -8,11 +8,12 @@ import 'package:get/get.dart';
 import '../entities/authenticationUserEntity.dart';
 import '../repositories/authenticationRepo.dart';
 
-class RegisterUserUseCase extends UseCases<NoParams, UserEntity>{
+class RegisterUserUseCase extends UseCases<UserEntity, UserEntity>{
   AuthenticationRepo authenticationRepo;
   RegisterUserUseCase(this.authenticationRepo);
   @override
-  Future<Either<Failure,NoParams>> call(params) async{
+  Future<Either<Failure,UserEntity>> call(params) async{
+
     if(params.roles?.isEmpty??true)
       {
         return Left(BadRequestFailure(failureMessage: "Role Can't be empty"));
@@ -24,12 +25,23 @@ class RegisterUserUseCase extends UseCases<NoParams, UserEntity>{
             return Left(BadRequestFailure(failureMessage: "Please write correct email"));
           }
       }
-    if(!params.roles!.contains("instructor"))
+    if(params.roles!.contains("candidate"))
+      {
+        if((params.facebookLink?.isNotEmpty??false) && ( !Uri.parse(params.facebookLink!).isAbsolute ||!(params.facebookLink!.toLowerCase().contains("fb.com/") ||params.facebookLink!.toLowerCase().contains("facebook.com/") )))
+          {
+            return Left(BadRequestFailure(failureMessage: "Please write correct Facebook Link, the link must start with \"http://\" or \"https://\" and contains \"facebook.com\" or \"fb.com\"!"));
+          }
+        else if((params.instagramLink?.isNotEmpty??false) && ( !Uri.parse(params.instagramLink!).isAbsolute ||!(params.instagramLink!.toLowerCase().contains("instagram.com/") )))
+          {
+            return Left(BadRequestFailure(failureMessage: "Please write correct Instagram Link, the link must start with \"http://\" or \"https://\" and contains \"instagram.com\"!"));
+          }
+      }
+    /*if(!params.roles!.contains("instructor"))
       {
         if(params.dateOfBirth==null)
           return Left(BadRequestFailure(failureMessage: "Please Date Of Birth"));
 
-      }
+      }*/
     return await authenticationRepo.registerUser(params);
   }
 

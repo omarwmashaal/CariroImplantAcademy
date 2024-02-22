@@ -12,6 +12,18 @@ class UpdateUserInfoUseCase extends UseCases<NoParams, UpdateUserInfoParams> {
 
   @override
   Future<Either<Failure, NoParams>> call(UpdateUserInfoParams params) async {
+
+    if(params.userData.roles!.contains("candidate"))
+    {
+      if((params.userData.facebookLink?.isNotEmpty??false) && ( !Uri.parse(params.userData.facebookLink!).isAbsolute ||!(params.userData.facebookLink!.toLowerCase().contains("fb.com/") ||params.userData.facebookLink!.toLowerCase().contains("facebook.com/") )))
+      {
+        return Left(BadRequestFailure(failureMessage: "Please write correct Facebook Link, the link must start with \"http://\" or \"https://\" and contains \"facebook.com\" or \"fb.com\"!"));
+      }
+      else if((params.userData.instagramLink?.isNotEmpty??false) && ( !Uri.parse(params.userData.instagramLink!).isAbsolute ||!(params.userData.instagramLink!.toLowerCase().contains("instagram.com/") )))
+      {
+        return Left(BadRequestFailure(failureMessage: "Please write correct Instagram Link, the link must start with \"http://\" or \"https://\" and contains \"instagram.com\"!"));
+      }
+    }
     return await usersRepository
         .updateUserInfo(
           params.id,

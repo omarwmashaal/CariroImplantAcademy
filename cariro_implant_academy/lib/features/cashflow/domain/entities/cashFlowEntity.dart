@@ -33,9 +33,19 @@ class CashFlowEntity extends Equatable {
   BasicNameIdObjectEntity? implantLine;
   BasicNameIdObjectEntity? implant;
   int? labRequestId;
-
+  int? labItemShadeId;
+  String? size;
+  String? code;
+  BasicNameIdObjectEntity? labItemParent;
+  BasicNameIdObjectEntity? labItemCompany;
+  BasicNameIdObjectEntity? labItemShade;
   CashFlowEntity({
     this.id,
+    this.code,
+    this.labItemShade,
+    this.labItemCompany,
+    this.labItemParent,
+    this.labItemShadeId,
     this.receiptID,
     this.receipt,
     this.date,
@@ -46,11 +56,12 @@ class CashFlowEntity extends Equatable {
     this.supplier,
     this.createdById,
     this.createdBy,
-    this.price,
+    this.price =0,
     this.count,
     this.paymentMethodId,
     this.paymentMethod,
     this.notes,
+    this.size,
     this.type,
     this.membraneCompany,
     this.membrane,
@@ -68,6 +79,7 @@ class CashFlowEntity extends Equatable {
   List<Object?> get props => [this.id,
     this.receiptID,
     this.receipt,
+    this.labItemShadeId,
     this.date,
     this.name,
     this.categoryId,
@@ -77,9 +89,11 @@ class CashFlowEntity extends Equatable {
     this.createdById,
     this.createdBy,
     this.price,
+    this.size,
     this.count,
     this.paymentMethodId,
     this.paymentMethod,
+    this.code,
     this.notes,
     this.type,
     this.membraneCompany,
@@ -88,6 +102,8 @@ class CashFlowEntity extends Equatable {
     this.implantCompany,
     this.implantLine,
     this.implant,];
+
+
 }
 /*
 class CashFlowDataSource extends DataGridSource {

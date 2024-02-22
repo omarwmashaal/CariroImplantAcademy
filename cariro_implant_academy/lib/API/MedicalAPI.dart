@@ -11,7 +11,7 @@ import '../Models/MedicalModels/DentalHistory.dart';
 import '../Models/MedicalModels/NonSurgicalTreatment.dart';
 import '../Models/MedicalModels/ProstheticTreatmentModel.dart';
 import '../Models/MedicalModels/TreatmentPrices.dart';
-
+/*
 class MedicalAPI {
   static Future<API_Response> GetPatientMedicalExamination(int id) async {
     var response = await HTTPRequest.Get("Medical/GetPatientMedicalExamination?id=$id");
@@ -68,8 +68,9 @@ class MedicalAPI {
     var response = await HTTPRequest.Get("Medical/GetPatientAllNonSurgicalTreatments?id=$id");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
-      response.result =
-          (response.result as List<dynamic>).map((e) => NonSurgicalTreatmentModelsssss.fromJson((e ?? Map<String, dynamic>) as Map<String, dynamic>)).toList();
+      response.result = (response.result as List<dynamic>)
+          .map((e) => NonSurgicalTreatmentModelsssss.fromJson((e ?? Map<String, dynamic>) as Map<String, dynamic>))
+          .toList();
     }
     return response;
   }
@@ -143,53 +144,41 @@ class MedicalAPI {
   }
 
   static Future<API_Response> UpdatePatientProstheticTreatmentDiagnostic(int id, ProstheticTreatmentModel model) async {
+    model.prostheticDiagnostic_DiagnosticImpression!.removeWhere((element) => element.diagnostic == null && element.nextStep == null);
 
-    model.prostheticDiagnostic_DiagnosticImpression!.removeWhere((element) =>
-      element.diagnostic==null &&element.nextStep==null
-    );
+    model.prostheticDiagnostic_ScanAppliance!.removeWhere((element) => element.diagnostic == null);
 
-    model.prostheticDiagnostic_ScanAppliance!.removeWhere((element) =>
-      element.diagnostic==null
-    );
+    model.prostheticDiagnostic_Bite!.removeWhere((element) => element.diagnostic == null && element.nextStep == null);
 
-    model.prostheticDiagnostic_Bite!.removeWhere((element) =>
-      element.diagnostic==null &&element.nextStep==null
-    );
-
-
-    if(model.prostheticDiagnostic_DiagnosticImpression![0].diagnostic==null && model.prostheticDiagnostic_DiagnosticImpression![0].nextStep==null)
-          {
-            model.prostheticDiagnostic_DiagnosticImpression = [];
-          }
+    if (model.prostheticDiagnostic_DiagnosticImpression![0].diagnostic == null &&
+        model.prostheticDiagnostic_DiagnosticImpression![0].nextStep == null) {
+      model.prostheticDiagnostic_DiagnosticImpression = [];
+    }
 
     var response = await HTTPRequest.Put("Medical/UpdatePatientProstheticTreatmentDiagnostic?id=$id", model.toJson());
     return response;
   }
 
   static Future<API_Response> GetPatientProstheticTreatmentDiagnostic(int id) async {
-
     var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentDiagnostic?id=$id");
-    if(response.statusCode==200)
-      {
-        response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String,dynamic>);
-      }
+    if (response.statusCode == 200) {
+      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
+    }
     return response;
   }
 
   static Future<API_Response> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
     var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentFinalProthesisSingleBridge?id=$id");
-    if(response.statusCode==200)
-    {
-      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String,dynamic>);
+    if (response.statusCode == 200) {
+      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
 
   static Future<API_Response> GetPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
     var response = await HTTPRequest.Get("Medical/GetPatientProstheticTreatmentFinalProthesisFullArch?id=$id");
-    if(response.statusCode==200)
-    {
-      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String,dynamic>())as Map<String,dynamic>);
+    if (response.statusCode == 200) {
+      response.result = ProstheticTreatmentModel.fromJson((response.result ?? Map<String, dynamic>()) as Map<String, dynamic>);
     }
     return response;
   }
@@ -228,17 +217,15 @@ class MedicalAPI {
     return response;
   }
 
-
   static Future<API_Response> ConsumeImplant(int id) async {
-    var response = await HTTPRequest.Post("Medical/ConsumeImplant?id=$id",null);
+    var response = await HTTPRequest.Post("Medical/ConsumeImplant?id=$id", null);
 
     return response;
   }
-
 
   static Future<API_Response> CheckLabRequests(int id) async {
     var response = await HTTPRequest.Get("Medical/CheckLabRequests?id=$id");
     return response;
   }
-
 }
+*/

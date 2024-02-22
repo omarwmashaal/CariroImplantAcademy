@@ -37,10 +37,13 @@ class UserEntity extends Equatable {
   int? workPlaceId;
   BasicNameIdObjectEntity? workPlace;
   String? phoneNumber2;
+  String? instagramLink;
+  String? facebookLink;
   EnumLabRequestSources? workPlaceEnum;
   int? profileImageId;
   Uint8List? profileImage;
   List<Website>? accessWebsites;
+  int? implantCount;
 
   UserEntity({
     this.name = "",
@@ -59,6 +62,7 @@ class UserEntity extends Equatable {
     this.registerationDate,
     this.id,
     this.userName,
+    this.implantCount,
     this.email,
     this.profileImageId,
     this.phoneNumber,
@@ -68,17 +72,22 @@ class UserEntity extends Equatable {
     this.workPlace,
     this.workPlaceId,
     this.accessWebsites,
+    this.instagramLink,
+    this.facebookLink,
   });
 
   @override
   List<Object?> get props => [
         this.name,
         this.roles,
+    this.instagramLink,
+    this.facebookLink,
         this.dateOfBirth,
         this.gender,
         this.graduatedFrom,
         this.classYear,
         this.accessWebsites,
+        this.implantCount,
         this.speciality,
         this.maritalStatus,
         this.address,

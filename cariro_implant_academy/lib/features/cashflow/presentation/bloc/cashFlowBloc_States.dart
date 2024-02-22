@@ -56,6 +56,13 @@ class CashFlowBloC_ProcessingCashFlowSuccessfullyState extends CashFlowBloc_Stat
   List<Object?> get props => [];
 }
 
+class CashFlowBloC_CashFlowTotalState extends CashFlowBloc_States {
+  final int total;
+  CashFlowBloC_CashFlowTotalState({required this.total});
+  @override
+  List<Object?> get props => [total];
+}
+
 class CashFlowBloC_UpdateSummaryNetProfitState extends CashFlowBloc_States {
   final int incomeTotal;
   final int expensesTotal;

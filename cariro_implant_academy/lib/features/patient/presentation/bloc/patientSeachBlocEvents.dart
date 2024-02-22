@@ -18,7 +18,8 @@ class PatientSearchEvent extends PatientSearchBloc_Events {
 
 class PatientSearchFilterChangedEvent extends PatientSearchBloc_Events {
   final String filter;
-  PatientSearchFilterChangedEvent(this.filter);
+  final bool? out;
+  PatientSearchFilterChangedEvent(this.filter, this.out);
   @override
   // TODO: implement props
   List<Object?> get props => [this.filter];

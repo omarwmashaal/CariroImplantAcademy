@@ -10,7 +10,8 @@ import '../domain/useCases/loadUsersUseCase.dart';
 abstract class UseCases<Type,Params> {
   Future<Either<Failure,Type>> call(Params params);
 }
-abstract class LoadingUseCases<T> {
+abstract class LoadingUseCases<T>  extends UseCases<List<BasicNameIdObjectEntity>,T>{
+  @override
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> call(T params);
 }
 class NoParams extends Equatable{

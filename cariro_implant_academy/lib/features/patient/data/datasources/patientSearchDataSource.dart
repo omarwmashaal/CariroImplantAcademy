@@ -3,12 +3,16 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachRequestModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachResponseModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedSearchPatientsModel.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchResonseEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticModel.dart';
 import 'package:intl/intl.dart';
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../core/error/failure.dart';
-import '../../../patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
+import '../../../patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import '../../domain/entities/advancedPatientSearchEntity.dart';
 import '../../domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../domain/entities/patientInfoEntity.dart';
@@ -20,16 +24,15 @@ abstract class PatientSearchDataSource {
   Future<List<PatientInfoEntity>> searchPatients(PatientSearchParams params);
 
   Future<PatientInfoEntity> getPatient(int id);
-  Future<NoParams> setPatientOut(int id,String outReason);
+  Future<NoParams> setPatientOut(int id, String outReason);
 
   Future<int> getNextAvailableId();
 
   Future<bool> checkDuplicateId(String id);
 
   Future<List<AdvancedSearchPatientsModel>> advancedSearchPatients(AdvancedPatientSearchEntity params);
-  Future< List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
-  Future< List<ProstheticTreatmentEntity>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to);
-
+  Future<List<AdvancedTreatmentSearchModel>> advancedTreatmentSearch(AdvancedTreatmentSearchEntity params);
+  Future<List<AdvancedProstheticSearchResponseEntity>> advancedProstheticSearch(AdvancedProstheticSearchRequestEntity query);
 
   Future<PatientInfoModel> createPatient(PatientInfoEntity patient);
 
@@ -50,6 +53,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     if (params.query != null) {
       _query += "&search=${params.query}";
       if (params.filter != null) _query += "&filter=${params.filter}";
+      if (params.out != null) _query += "&patientOut=${params.out}";
     }
 
     try {
@@ -59,8 +63,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200)
-      throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
 
     try {
       return (result.body! as List<dynamic>).map((e) => PatientInfoModel.fromMap(e as Map<String, dynamic>)).toList();
@@ -86,12 +89,13 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       throw DataConversionException(message: DATACONVERSION_FAILURE_MESSAGE);
     }
   }
+
   @override
-  Future<NoParams> setPatientOut(int id,String outReason) async {
+  Future<NoParams> setPatientOut(int id, String outReason) async {
     late StandardHttpResponse result;
     try {
       result = await client.post(
-        host: "$serverHost/$patientInfoController/SetPatientOut?id=$id${outReason==""?"":"&outReason=$outReason"}",
+        host: "$serverHost/$patientInfoController/SetPatientOut?id=$id${outReason == "" ? "" : "&outReason=$outReason"}",
       );
     } catch (e) {
       throw mapException(e);
@@ -182,9 +186,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
 
     try {
       response = await client.post(
-          host: "$serverHost/$patientInfoController/AdvancedSearchPatient",
-          body: AdvancedSearchPatientsModel.fromEntity(params).toJson()
-      );
+          host: "$serverHost/$patientInfoController/AdvancedSearchPatient", body: AdvancedSearchPatientsModel.fromEntity(params).toJson());
     } catch (e) {
       throw mapException(e);
     }
@@ -192,9 +194,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     try {
       if (response.body == null) return [];
       return ((response.body!) as List<dynamic>).map((e) => AdvancedSearchPatientsModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    catch(e)
-    {
+    } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
@@ -205,9 +205,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
 
     try {
       response = await client.post(
-          host: "$serverHost/$patientInfoController/AdvancedSearchTreatment",
-          body: AdvancedTreatmentSearchModel.fromEntity(params).toJson()
-      );
+          host: "$serverHost/$patientInfoController/AdvancedSearchTreatment", body: AdvancedTreatmentSearchModel.fromEntity(params).toJson());
     } catch (e) {
       throw mapException(e);
     }
@@ -215,33 +213,25 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
     try {
       if (response.body == null) return [];
       return ((response.body!) as List<dynamic>).map((e) => AdvancedTreatmentSearchModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    catch(e)
-    {
+    } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
   @override
-  Future<List<ProstheticTreatmentEntity>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to)async {
+  Future<List<AdvancedProstheticSearchResponseEntity>> advancedProstheticSearch(AdvancedProstheticSearchRequestEntity query) async {
     late StandardHttpResponse response;
-    String q ="";
-    if(from!=null) q+="from=${from!.toUtc().toIso8601String()}";
-    if(to!=null) q+="${q==""?"":"&"}to=${to!.toUtc().toIso8601String()}";
     try {
       response = await client.post(
-          host: "$serverHost/$patientInfoController/AdvancedSearchProsthetic?$q",
-          body: ProstheticTreatmentModel.fromEntity(query).toJson()
-      );
+          host: "$serverHost/$patientInfoController/AdvancedSearchProsthetic", body: AdvancedProstheicSearchRequestModel.fromEntity(query).toJson());
     } catch (e) {
       throw mapException(e);
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       if (response.body == null) return [];
-      return ((response.body!) as List<dynamic>).map((e) => ProstheticTreatmentModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    catch (e) {
+      return ((response.body!) as List<dynamic>).map((e) => AdvancedProstheicSeachResponseModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }

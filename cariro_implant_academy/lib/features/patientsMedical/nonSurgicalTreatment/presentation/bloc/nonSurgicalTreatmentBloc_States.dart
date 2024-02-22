@@ -92,7 +92,7 @@ class NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully extends NonSurgical
   NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully({required this.status});
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [status,identityHashCode(this)];
 }
 
 class NonSurgicalTreatmentBloc_CheckingTeethStatusError extends NonSurgicalTreatmentBloc_States {

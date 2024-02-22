@@ -39,6 +39,7 @@ import 'package:image_picker_web/image_picker_web.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../Widgets/Title.dart';
@@ -482,6 +483,37 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                     Expanded(child: FormTextValueWidget(text: user.email == null ? "" : user.email))
                                                   ],
                                                 ),
+                                          Visibility(
+                                            visible: user.roles!.contains("candidate"),
+                                            child: edit
+                                                ? CIA_TextFormField(
+                                                    label: "Instagram Link",
+                                                    onChange: (v) => user.instagramLink = v,
+                                                    controller: TextEditingController(text: user.instagramLink ?? ""),
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Instagram Link")),
+                                                      Expanded(child: FormTextValueWidget(text: user.instagramLink ?? ""))
+                                                    ],
+                                                  ),
+                                          ),
+                                          Visibility(
+                                            visible: user.roles!.contains("candidate"),
+                                            child: edit
+                                                ? CIA_TextFormField(
+                                                    label: "Facebook Link",
+                                                    onChange: (v) => user.facebookLink = v,
+                                                    controller: TextEditingController(text: user.facebookLink ?? ""),
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Expanded(child: FormTextKeyWidget(text: "Facebook Link")),
+                                                      Expanded(
+                                                          child: FormTextValueWidget(text: user.facebookLink ?? ""))
+                                                    ],
+                                                  ),
+                                          ),
                                           Row(
                                             children: [
                                               Expanded(child: FormTextKeyWidget(text: "Date of birth")),

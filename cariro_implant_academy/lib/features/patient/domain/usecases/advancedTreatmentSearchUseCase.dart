@@ -14,6 +14,7 @@ class AdvancedTreatmentSearchUseCase extends UseCases<List<AdvancedTreatmentSear
 
   @override
   Future<Either<Failure, List<AdvancedTreatmentSearchEntity>>> call(AdvancedTreatmentSearchEntity params) async {
+    if(params.complicationsAfterSurgery?.isNull()??true) params.complicationsAfterSurgery = null;
     return await patientInfoRepo.advancedTreatmentSearch(params).then((value) => value.fold(
           (l) => Left(l..message = "Advanced Treatment Search:${l.message ?? ""}"),
           (r) => Right(r),

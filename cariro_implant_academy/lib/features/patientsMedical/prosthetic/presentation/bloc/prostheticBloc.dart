@@ -23,7 +23,7 @@ class ProstheticBloc extends Bloc<ProstheticBloc_Event, ProstheticBloc_States> {
     required this.updatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase,
     required this.updatePatientProstheticTreatmentFinalProthesisFullArchUseCase,
     required this.updatePatientProstheticTreatmentDiagnosticUseCase,
-  }) : super(ProstheticBloc_LoadingDataState()) {
+  }) : super(ProstheticBloc_InitState()) {
 
     on<ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent>(
       (event, emit) async {

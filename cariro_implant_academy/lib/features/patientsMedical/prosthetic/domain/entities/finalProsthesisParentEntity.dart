@@ -12,6 +12,7 @@ class FinalProthesisParentEntity extends Equatable {
   List<int>? finalProthesisTeeth;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
+  DateTime? date;
 
   FinalProthesisParentEntity({
     this.id,
@@ -22,6 +23,7 @@ class FinalProthesisParentEntity extends Equatable {
     this.searchTeethClassification,
     this.website = Website.CIA,
     this.finalProthesisTeeth,
+    this.date,
   });
 
   @override
@@ -35,6 +37,7 @@ class FinalProthesisParentEntity extends Equatable {
       searchTeethClassification,
       website,
       finalProthesisTeeth,
+      date,
     ];
   }
 }

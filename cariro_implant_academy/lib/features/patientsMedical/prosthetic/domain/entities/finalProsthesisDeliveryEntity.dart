@@ -5,10 +5,8 @@ import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
 
 class FinalProthesisDeliveryEntity extends FinalProthesisParentEntity {
-  bool? finalProthesisDelivery;
   EnumFinalProthesisDeliveryStatus? finalProthesisDeliveryStatus;
   EnumFinalProthesisDeliveryNextVisit? finalProthesisDeliveryNextVisit;
-  DateTime? finalProthesisDeliveryDate;
 
   FinalProthesisDeliveryEntity({
     int? id,
@@ -19,10 +17,9 @@ class FinalProthesisDeliveryEntity extends FinalProthesisParentEntity {
     List<int>? finalProthesisTeeth,
     int? operatorId,
     BasicNameIdObjectEntity? operator,
-    this.finalProthesisDelivery,
+    DateTime?date,
     this.finalProthesisDeliveryStatus,
     this.finalProthesisDeliveryNextVisit,
-    this.finalProthesisDeliveryDate,
   }) : super(
     id: id,
     patientId: patientId,
@@ -32,21 +29,20 @@ class FinalProthesisDeliveryEntity extends FinalProthesisParentEntity {
     operator: operator,
     operatorId: operatorId,
     finalProthesisTeeth: finalProthesisTeeth,
+    date: date,
   );
   bool isNull() {
-    return finalProthesisDelivery == null &&
+    return
         finalProthesisDeliveryStatus == null &&
         finalProthesisDeliveryNextVisit == null &&
-        finalProthesisDeliveryDate == null;
+        date == null;
   }
   @override
   List<Object?> get props {
     return [
       ...super.props,
-      finalProthesisDelivery,
       finalProthesisDeliveryStatus,
       finalProthesisDeliveryNextVisit,
-      finalProthesisDeliveryDate,
     ];
   }
 }

@@ -14,6 +14,8 @@ class SaveSurgicalTreatmentUseCase extends UseCases<NoParams, SaveSurgicalTreatm
 
   @override
   Future<Either<Failure, NoParams>> call(SaveSurgicalTreatmentParams data) async {
+
+    (data.data.surgicalTreatment??[]).removeWhere((element) => element.isNull());
     return await surgicalTreatmentRepo.saveSurgicalTreatment(data.id, data.data).then(
           (value) => value.fold(
             (l) => Left(l..message = "Save Surgical Treatment: ${l.message ?? ""}"),

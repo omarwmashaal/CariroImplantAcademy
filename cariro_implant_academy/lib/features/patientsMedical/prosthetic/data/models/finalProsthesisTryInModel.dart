@@ -38,10 +38,9 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
-    bool? finalProthesisTryIn,
     EnumFinalProthesisTryInStatus? finalProthesisTryInStatus,
     EnumFinalProthesisTryInNextVisit? finalProthesisTryInNextVisit,
-    DateTime? finalProthesisTryInDate,
+    DateTime? date,
     int? operatorId,
     BasicNameIdObjectEntity? operator,
     // Additional fields from C# TryInModel
@@ -76,10 +75,9 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
     operator: operator,
     operatorId: operatorId,
     finalProthesisTeeth: finalProthesisTeeth,
-    finalProthesisTryIn: finalProthesisTryIn,
     finalProthesisTryInStatus: finalProthesisTryInStatus,
     finalProthesisTryInNextVisit: finalProthesisTryInNextVisit,
-    finalProthesisTryInDate: finalProthesisTryInDate,
+    date: date,
   );
 
   factory FinalProthesisTryInModel.fromJson(String json) {
@@ -94,11 +92,10 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       patient: map['patient'] != null ? BasicNameIdObjectModel.fromJson(map['patient']) : null,
       searchTeethClassification: map['searchTeethClassification'],
       finalProthesisTeeth: map['finalProthesisTeeth'] == null ? null : (map['finalProthesisTeeth'] as List<dynamic>).map((e) => e as int).toList(),
-      finalProthesisTryIn: map['finalProthesisTryIn'],
       finalProthesisTryInStatus: map['finalProthesisTryInStatus'] != null ? EnumFinalProthesisTryInStatus.values[map['finalProthesisTryInStatus']] : null,
       finalProthesisTryInNextVisit:
       map['finalProthesisTryInNextVisit'] != null ? EnumFinalProthesisTryInNextVisit.values[map['finalProthesisTryInNextVisit']] : null,
-      finalProthesisTryInDate: DateTime.tryParse(map['finalProthesisTryInDate'] ?? "")?.toLocal(),
+      date: DateTime.tryParse(map['date'] ?? "")?.toLocal(),
       // Additional fields from C# TryInModel
       satisfied: map['satisfied'],
       nonSatisfiedNewScan: map['nonSatisfiedNewScan'],
@@ -136,10 +133,9 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       'searchTeethClassification': super.searchTeethClassification,
       //'website': super.website.toString().split('.').last,
       'finalProthesisTeeth': super.finalProthesisTeeth,
-      'finalProthesisTryIn': super.finalProthesisTryIn,
       'finalProthesisTryInStatus': super.finalProthesisTryInStatus?.index,
       'finalProthesisTryInNextVisit': super.finalProthesisTryInNextVisit?.index,
-      'finalProthesisTryInDate': super.finalProthesisTryInDate?.toUtc().toIso8601String(),
+      'date': super.date?.toUtc().toIso8601String(),
       // Additional fields from C# TryInModel
       'satisfied': satisfied,
       'nonSatisfiedNewScan': nonSatisfiedNewScan,
@@ -176,10 +172,9 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       searchTeethClassification: entity.searchTeethClassification,
       website: entity.website,
       finalProthesisTeeth: entity.finalProthesisTeeth,
-      finalProthesisTryIn: entity.finalProthesisTryIn,
       finalProthesisTryInStatus: entity.finalProthesisTryInStatus,
       finalProthesisTryInNextVisit: entity.finalProthesisTryInNextVisit,
-      finalProthesisTryInDate: entity.finalProthesisTryInDate,
+      date: entity.date,
       // Additional fields from C# TryInModel
       satisfied: entity.satisfied,
       nonSatisfiedNewScan: entity.nonSatisfiedNewScan,

@@ -6,10 +6,8 @@ import '../../../../../core/constants/enums/enums.dart';
 import 'finalProsthesisParentEntity.dart';
 
 class FinalProthesisHealingCollarEntity extends FinalProthesisParentEntity {
-  bool? finalProthesisHealingCollar;
   EnumFinalProthesisHealingCollarStatus? finalProthesisHealingCollarStatus;
   EnumFinalProthesisHealingCollarNextVisit? finalProthesisHealingCollarNextVisit;
-  DateTime? finalProthesisHealingCollarDate;
 
   FinalProthesisHealingCollarEntity({
     int? id,
@@ -17,13 +15,12 @@ class FinalProthesisHealingCollarEntity extends FinalProthesisParentEntity {
     BasicNameIdObjectEntity? patient,
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
+    DateTime?date,
     int? operatorId,
     BasicNameIdObjectEntity? operator,
     List<int>? finalProthesisTeeth,
-    this.finalProthesisHealingCollar,
     this.finalProthesisHealingCollarStatus,
     this.finalProthesisHealingCollarNextVisit,
-    this.finalProthesisHealingCollarDate,
   }) : super(
           id: id,
           patientId: patientId,
@@ -33,21 +30,20 @@ class FinalProthesisHealingCollarEntity extends FinalProthesisParentEntity {
           operator: operator,
           operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
+    date: date,
         );
 
   bool isNull() {
-    return finalProthesisHealingCollar == null &&
+    return
         finalProthesisHealingCollarStatus == null &&
         finalProthesisHealingCollarNextVisit == null &&
-        finalProthesisHealingCollarDate == null;
+        date == null;
   }
 
   @override
   List<Object?> get props => [
         ...super.props,
-        finalProthesisHealingCollar,
         finalProthesisHealingCollarStatus,
         finalProthesisHealingCollarNextVisit,
-        finalProthesisHealingCollarDate,
       ];
 }

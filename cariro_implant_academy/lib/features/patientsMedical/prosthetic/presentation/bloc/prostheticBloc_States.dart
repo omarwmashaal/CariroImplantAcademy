@@ -1,12 +1,17 @@
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+import '../../domain/entities/prostheticFinalEntity.dart';
 
 abstract class ProstheticBloc_States extends Equatable {}
+
+class ProstheticBloc_InitState extends ProstheticBloc_States {
+  @override
+  List<Object?> get props => [];
+}
 
 class ProstheticBloc_LoadingDataState extends ProstheticBloc_States {
   @override
@@ -85,11 +90,11 @@ class ProstheticBloc_UpdateScanApplianceViewState extends ProstheticBloc_States 
   List<Object?> get props => [data];
 }
 
-
 class ProstheticBloc_UpdatingProstheticDiagnosticState extends ProstheticBloc_States {
   @override
   List<Object?> get props => [];
 }
+
 class ProstheticBloc_UpdatedProstheticDiagnosticSuccessfullyState extends ProstheticBloc_States {
   @override
   List<Object?> get props => [];
@@ -99,14 +104,17 @@ class ProstheticBloc_UpdatingProstheticSinlgeBridgeState extends ProstheticBloc_
   @override
   List<Object?> get props => [];
 }
+
 class ProstheticBloc_UpdatedProstheticSinlgeBridgeSuccessfullyState extends ProstheticBloc_States {
   @override
   List<Object?> get props => [];
 }
+
 class ProstheticBloc_UpdatingProstheticFullArchState extends ProstheticBloc_States {
   @override
   List<Object?> get props => [];
 }
+
 class ProstheticBloc_UpdatedProstheticFullArchSuccessfullyState extends ProstheticBloc_States {
   @override
   List<Object?> get props => [];

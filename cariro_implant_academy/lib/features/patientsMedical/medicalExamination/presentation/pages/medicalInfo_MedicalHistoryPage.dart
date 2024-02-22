@@ -73,43 +73,43 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
   Widget build(BuildContext context) {
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Medical History"));
     bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
-    return BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
-      listener: (context, state) {
-        if(state is MedicalHistoryBloc_SavedSuccessfully)
-          bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
-      },
-      buildWhen: (previous, current) =>
-          current is MedicalHistoryBloc_LoadingState ||
-              current is MedicalHistoryBloc_DataLoaded ||
-              current is MedicalHistoryBloc_ErrorState,
-      builder: (context, state) {
-        if (state is MedicalHistoryBloc_LoadingState)
-          return LoadingWidget();
-        else if (state is MedicalHistoryBloc_DataLoaded) {
-          medicalHistoryData = state.medicalExaminationEntity;
-          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.medicalExaminationEntity.date, data: medicalHistoryData));
+    return BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+      bloc: medicalShellBloc,
+      buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+      builder: (context, stateShell) {
+        return AbsorbPointer(
+          absorbing: () {
+            if (stateShell is MedicalInfoBlocChangeViewEditState) {
+              edit = stateShell.edit;
+              return !edit;
+            } else {
+              edit = false;
+              return true;
+            }
+          }(),
+          child:BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
+            listener: (context, state) {
+              if(state is MedicalHistoryBloc_SavedSuccessfully)
+                bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
+            },
+            buildWhen: (previous, current) =>
+            current is MedicalHistoryBloc_LoadingState ||
+                current is MedicalHistoryBloc_DataLoaded ||
+                current is MedicalHistoryBloc_ErrorState,
+            builder: (context, state) {
+              if (state is MedicalHistoryBloc_LoadingState)
+                return LoadingWidget();
+              else if (state is MedicalHistoryBloc_DataLoaded) {
+                medicalHistoryData = state.medicalExaminationEntity;
+                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.medicalExaminationEntity.date, data: medicalHistoryData));
 
-          bloc.isInitialized = true;
-          return ListView(
-            shrinkWrap: false,
-            children: [
-              FocusTraversalGroup(
-                policy: OrderedTraversalPolicy(),
-                child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                  bloc: medicalShellBloc,
-                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                  builder: (context, stateShell) {
-                    return AbsorbPointer(
-                      absorbing: () {
-                        if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                          edit = stateShell.edit;
-                          return !edit;
-                        } else {
-                          edit = false;
-                          return true;
-                        }
-                      }(),
-                      child: Column(
+                bloc.isInitialized = true;
+                return ListView(
+                  shrinkWrap: false,
+                  children: [
+                    FocusTraversalGroup(
+                      policy: OrderedTraversalPolicy(),
+                      child:Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           FormTextKeyWidget(text: "General Health"),
@@ -158,12 +158,12 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             children: [
                               Flexible(
                                   child: HorizontalRadioButtons(
-                                names: ["None", "Pregnant", "Lactating"],
-                                selectionColor: Colors.red,
-                                notColoredWord: "None",
-                                onChange: (value) => medicalHistoryData.pregnancyStatus = mapToEnum(PregnancyEnum.values, value),
-                                groupValue: medicalHistoryData.pregnancyStatus == null ? "" : medicalHistoryData.pregnancyStatus!.name,
-                              )),
+                                    names: ["None", "Pregnant", "Lactating"],
+                                    selectionColor: Colors.red,
+                                    notColoredWord: "None",
+                                    onChange: (value) => medicalHistoryData.pregnancyStatus = mapToEnum(PregnancyEnum.values, value),
+                                    groupValue: medicalHistoryData.pregnancyStatus == null ? "" : medicalHistoryData.pregnancyStatus!.name,
+                                  )),
                             ],
                           ),
                           SizedBox(
@@ -665,11 +665,11 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                     CIA_MultiSelectChipWidgeModel(
                                         label: "Yes",
                                         isSelected:
-                                            medicalHistoryData.prolongedBleedingOrAspirin != null && medicalHistoryData.prolongedBleedingOrAspirin as bool),
+                                        medicalHistoryData.prolongedBleedingOrAspirin != null && medicalHistoryData.prolongedBleedingOrAspirin as bool),
                                     CIA_MultiSelectChipWidgeModel(
                                         label: "No",
                                         isSelected:
-                                            medicalHistoryData.prolongedBleedingOrAspirin != null && !(medicalHistoryData.prolongedBleedingOrAspirin as bool)),
+                                        medicalHistoryData.prolongedBleedingOrAspirin != null && !(medicalHistoryData.prolongedBleedingOrAspirin as bool)),
                                   ]),
                             ],
                           ),
@@ -734,59 +734,60 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                 children: medicalHistoryData.drugsTaken!
                                     .map(
                                       (e) => Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Row(
-                                          children: [
-                                            Text(() {
-                                              index += 1;
-                                              return index.toString();
-                                            }()),
-                                            SizedBox(width: 10),
-                                            Expanded(
-                                              child: CIA_TextFormField(
-                                                label: "Drug",
-                                                controller: TextEditingController(text: e ?? ""),
-                                                onChange: (v) {
-                                                  e = v;
-                                                  medicalHistoryData.drugsTaken![index - 1] = v;
-                                                },
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {
-                                                setState(() => medicalHistoryData.drugsTaken!.add(""));
-                                              },
-                                              icon: Icon(Icons.add),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {
-                                                setState(() => medicalHistoryData.drugsTaken!.remove(e));
-                                              },
-                                              icon: Icon(Icons.remove),
-                                            ),
-                                            Expanded(child: SizedBox())
-                                          ],
+                                    padding: const EdgeInsets.only(bottom: 10.0),
+                                    child: Row(
+                                      children: [
+                                        Text(() {
+                                          index += 1;
+                                          return index.toString();
+                                        }()),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "Drug",
+                                            controller: TextEditingController(text: e ?? ""),
+                                            onChange: (v) {
+                                              e = v;
+                                              medicalHistoryData.drugsTaken![index - 1] = v;
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    )
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() => medicalHistoryData.drugsTaken!.add(""));
+                                          },
+                                          icon: Icon(Icons.add),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() => medicalHistoryData.drugsTaken!.remove(e));
+                                          },
+                                          icon: Icon(Icons.remove),
+                                        ),
+                                        Expanded(child: SizedBox())
+                                      ],
+                                    ),
+                                  ),
+                                )
                                     .toList(),
                               );
                             },
                           ),
                         ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        } else if (state is MedicalHistoryBloc_ErrorState)
-          return BigErrorPageWidget(message: state.message);
-        else
-          return Container();
+                      ) ,
+                    ),
+                  ],
+                );
+              } else if (state is MedicalHistoryBloc_ErrorState)
+                return BigErrorPageWidget(message: state.message);
+              else
+                return Container();
+            },
+          ) ,
+        );
       },
     );
+
   }
 
   @override

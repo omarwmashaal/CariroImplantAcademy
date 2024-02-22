@@ -16,6 +16,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
     super.lastHAB1cTo,
     super.penecilin,
     super.illegalDrugs,
+    super.ids,
     super.pregnancy,
     super.chewing,
     super.smokingStatus,
@@ -32,6 +33,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
       ageRangeFrom:entity.ageRangeFrom,
       ageRangeTo:entity.ageRangeTo,
       gender:entity.gender,
+      ids:entity.ids,
       noTreatmentPlan:entity.noTreatmentPlan,
       anyDiseases:entity.anyDiseases,
       bloodPressureCategories:entity.bloodPressureCategories,
@@ -75,6 +77,7 @@ class AdvancedSearchPatientsModel extends AdvancedPatientSearchEntity {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ids'] = this.ids?.map((e) => e as int).toList();
     data['ageRangeFrom'] = this.ageRangeFrom;
     data['secondaryId'] = this.secondaryId;
     data['ageRangeTo'] = this.ageRangeTo;

@@ -29,6 +29,21 @@ class UsersBloc_GetUserInfoEvent extends UsersBloc_Events {
   @override
   List<Object?> get props => [id];
 }
+class UsersBloc_RemoveUserEvent extends UsersBloc_Events {
+  final int id;
+
+  UsersBloc_RemoveUserEvent({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+class UsersBloc_RefreshCandidatesDataEvent extends UsersBloc_Events {
+
+  final int? batchId;
+  UsersBloc_RefreshCandidatesDataEvent({this.batchId});
+  @override
+  List<Object?> get props => [batchId];
+}
 
 class UsersBloc_GetCandidateDetailsEvent extends UsersBloc_Events {
   final GetCandidateDetailsParams params;

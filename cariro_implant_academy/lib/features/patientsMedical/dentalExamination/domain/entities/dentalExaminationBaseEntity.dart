@@ -9,8 +9,6 @@ class DentalExaminationBaseEntity extends Equatable{
   int? id;
   int? patientId;
   List<DentalExaminationEntity>? dentalExaminations;
-  int? interarchSpaceRT;
-  int? interarchSpaceLT;
   DateTime? date;
   String? operatorImplantNotes;
   int? operatorId;
@@ -21,8 +19,6 @@ class DentalExaminationBaseEntity extends Equatable{
     this.id,
     this.patientId,
     this.dentalExaminations,
-    this.interarchSpaceRT,
-    this.interarchSpaceLT,
     this.date,
     this.operatorImplantNotes,
     this.operatorId,
@@ -39,8 +35,6 @@ class DentalExaminationBaseEntity extends Equatable{
     id,
     patientId,
     dentalExaminations,
-    interarchSpaceRT,
-    interarchSpaceLT,
     date,
     operatorImplantNotes,
     operatorId,

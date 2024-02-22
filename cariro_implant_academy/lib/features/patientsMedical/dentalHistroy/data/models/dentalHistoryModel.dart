@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/data/models/cbctModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/entities/dentalHistoryEntity.dart';
 
 import '../../../../../core/constants/enums/enums.dart';
@@ -15,9 +16,11 @@ class DentalHistoryModel extends DentalHistoryEntity {
     satisfied,
     cooperationScore,
     willingForImplantScore,
+    cbct,
     date,
   }) : super(
           bittingCheweing: bitingChewing,
+    cbct: cbct,
     date: date,
           clench: clench,
           cooperationScore: cooperationScore,
@@ -38,6 +41,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
       bitingChewing: json['bittingCheweing'] ?? false,
       clench: json['clench'] ?? "",
       patientId: json['patientId'],
+      cbct: ((json['cbct']??[]) as List<dynamic>).map((e) => CBCT_Model.fromJson(e)).toList(),
       smoke: json['smoke'] ?? 0,
       smokingStatus: SmokingStatus.values[json['smokingStatus'] ?? 0],
       seriousInjury: json['seriousInjury'] ?? "",
@@ -52,6 +56,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
     return DentalHistoryModel(
       bitingChewing: entity.bittingCheweing,
       clench: entity.clench,
+      cbct: entity.cbct,
       cooperationScore: entity.cooperationScore,
       satisfied: entity.satisfied,
       sensitiveHotCold: entity.senstiveHotCold,
@@ -71,6 +76,7 @@ class DentalHistoryModel extends DentalHistoryEntity {
     data['senstiveSweets'] = this.senstiveSweets;
     data['bittingCheweing'] = this.bittingCheweing;
     data['clench'] = this.clench;
+    data['cbct'] = this.cbct?.map((e) => CBCT_Model.fromEntity(e).toJson()).toList();
     data['smoke'] = this.smoke;
     data['smokingStatus'] = this.smokingStatus!.index;
     data['seriousInjury'] = this.seriousInjury;

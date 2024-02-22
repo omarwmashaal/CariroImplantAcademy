@@ -7,7 +7,7 @@ import '../entities/authenticationUserEntity.dart';
 import '../usecases/loginUseCase.dart';
 abstract class AuthenticationRepo{
  Future<Either<Failure,AuthenticationUserEntity>> login(LoginParams loginParams);
- Future<Either<Failure,NoParams>> registerUser(UserEntity user);
+ Future<Either<Failure,UserEntity>> registerUser(UserEntity user);
  Future<bool> logout();
  Future<Either<Failure,NoParams>> resetPasswordForUser(int id);
 }

@@ -11,7 +11,7 @@ import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
 import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
 import '../../domain/entities/finalProsthesisImpressionEntity.dart';
 import '../../domain/entities/finalProsthesisTryInEntity.dart';
-import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+import '../../domain/entities/prostheticFinalEntity.dart';
 
 class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   ProstheticTreatmentFinalModel({
@@ -25,7 +25,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
     List<FinalProthesisDeliveryEntity>? delivery,
   }) : super(
           id: id,
-    date: date,
+          date: date,
           patientId: patientId,
           patient: patient,
           healingCollars: healingCollars,
@@ -42,7 +42,7 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
   factory ProstheticTreatmentFinalModel.fromMap(Map<String, dynamic> map) {
     return ProstheticTreatmentFinalModel(
       id: map['id'],
-      date: DateTime.tryParse(map['date']??"")?.toLocal(),
+      date: DateTime.tryParse(map['date'] ?? "")?.toLocal(),
       patientId: map['patientId'],
       patient: map['patient'] != null ? BasicNameIdObjectModel.fromJson(map['patient']) : null,
       healingCollars: (map['healingCollars'] as List<dynamic>?)?.map((e) => FinalProthesisHealingCollarModel.fromMap(e)).toList(),
@@ -59,8 +59,8 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
       'patientId': super.patientId,
       //'patient': super.patient?.toMap(),
       'healingCollars': super.healingCollars?.map((e) => FinalProthesisHealingCollarModel.fromEntity(e).toJson()).toList(),
-      'impressions': super.impressions?.map((e) =>  FinalProthesisImpressionModel.fromEntity(e).toJson()).toList(),
-      'tryIns': super.tryIns?.map((e) =>  FinalProthesisTryInModel.fromEntity(e).toJson()).toList(),
+      'impressions': super.impressions?.map((e) => FinalProthesisImpressionModel.fromEntity(e).toJson()).toList(),
+      'tryIns': super.tryIns?.map((e) => FinalProthesisTryInModel.fromEntity(e).toJson()).toList(),
       'delivery': super.delivery?.map((e) => FinalProthesisDeliveryModel.fromEntity(e).toJson()).toList(),
     };
   }
@@ -77,4 +77,10 @@ class ProstheticTreatmentFinalModel extends ProstheticTreatmentFinalEntity {
       delivery: entity.delivery,
     );
   }
+
+  bool isNull() =>
+      ((healingCollars?.isEmpty ?? true) || (healingCollars?.any((element) => element.isNull()) ?? true)) &&
+      ((impressions?.isEmpty ?? true) || (impressions?.any((element) => element.isNull()) ?? true)) &&
+      ((tryIns?.isEmpty ?? true) || (tryIns?.any((element) => element.isNull()) ?? true)) &&
+      ((delivery?.isEmpty ?? true) || (delivery?.any((element) => element.isNull()) ?? true));
 }

@@ -20,6 +20,7 @@ class UserModel extends UserEntity {
     super.idInt,
     super.registeredById,
     super.registeredBy,
+    super.implantCount,
     super.registerationDate,
     super.id,
     super.userName,
@@ -29,6 +30,8 @@ class UserModel extends UserEntity {
     super.workPlaceEnum,
     super.batch,
     super.batchId,
+    super.instagramLink,
+    super.facebookLink,
   });
 
   factory UserModel.fromEntity(UserEntity entity) {
@@ -40,6 +43,7 @@ class UserModel extends UserEntity {
       roles: entity.roles,
       dateOfBirth: entity.dateOfBirth,
       gender: entity.gender,
+      implantCount: entity.implantCount,
       graduatedFrom: entity.graduatedFrom,
       classYear: entity.classYear,
       speciality: entity.speciality,
@@ -56,18 +60,23 @@ class UserModel extends UserEntity {
       profileImageId: entity.profileImageId,
       phoneNumber: entity.phoneNumber,
       workPlaceEnum: entity.workPlaceEnum,
+      instagramLink: entity.instagramLink,
+      facebookLink: entity.facebookLink,
     );
   }
 
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     profileImageId = json['profileImageId'];
+    instagramLink = json['instagramLink'];
+    facebookLink = json['facebookLink'];
     dateOfBirth = DateTime.tryParse(json['dateOfBirth'] ?? "")?.toLocal();
     gender = json['gender'];
     accessWebsites =((json['accessWebsites']??[]) as List<dynamic>).map((e) => Website.values.firstWhere((element) =>element.index== e!)).toList() ;
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
     speciality = json['speciality'];
+    implantCount = json['implantCount']??0;
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
@@ -106,6 +115,8 @@ class UserModel extends UserEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['instagramLink'] = this.instagramLink;
+    data['facebookLink'] = this.facebookLink;
     data['dateOfBirth'] = this.dateOfBirth == null ? null : DateFormat("yyyy-MM-dd").format(this.dateOfBirth!);
     data['gender'] = this.gender;
     data['graduatedFrom'] = this.graduatedFrom;

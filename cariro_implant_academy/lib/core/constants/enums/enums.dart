@@ -158,13 +158,14 @@ enum EnumClinicPedoTooth {
   LowerLeftC(83),
   LowerLeftD(84),
   LowerLeftE(85);
+
   const EnumClinicPedoTooth(this.value);
   final int value;
 }
 
-enum EnumClinicPedoFirstStep { NotSelected,Pulpotomy, Pulpectomy }
+enum EnumClinicPedoFirstStep { NotSelected, Pulpotomy, Pulpectomy }
 
-enum EnumClinicPedoSecondStep {NotSelected, CastStanlessSteelZirconia, FinalRestoration, TempFilling }
+enum EnumClinicPedoSecondStep { NotSelected, CastStanlessSteelZirconia, FinalRestoration, TempFilling }
 
 enum EnumClinicRootCanalTreatmentType {
   NotSelected,
@@ -179,12 +180,7 @@ enum EnumClinicRootCanalTreatmentType {
   Other,
 }
 
-enum EnumClinicScalingType {
-  NotSelected,
-  Regular,
-  Deep
-}
-
+enum EnumClinicScalingType { NotSelected, Regular, Deep }
 
 enum EnumClinicPrices {
   RestorationStatusDone,
@@ -236,8 +232,7 @@ enum EnumClinicPrices {
   DoctorsPatientAnotherDoctorsOperation_ClinicPercent,
 }
 
- enum EnumTryInSeating
-{
+enum EnumTryInSeating {
   ShortMargin,
   TightFittingSurface,
   UndercutExistance,
@@ -245,28 +240,46 @@ enum EnumClinicPrices {
   Other,
 }
 
- enum EnumOcclusion
-{
+enum EnumOcclusion {
   High,
   Good,
   OpenBite,
 }
- enum EnumBuccalContour
-{
+
+enum EnumBuccalContour {
   OverContoured,
   Good,
   UnderContoured,
 }
- enum EnumTryInContacts
-{
-   Tight,
-   Good,
-   Open,
+
+enum EnumTryInContacts {
+  Tight,
+  Good,
+  Open,
 }
 
-enum EnumDortorsPercentageEnum
-{
+enum EnumDortorsPercentageEnum {
   Operator,
   Main,
   OperatorAndMain,
+}
+
+enum EunumComplicationsAfterSurgery {
+  Swelling,
+  OpenWound,
+  Numbness,
+  OroantralCommunication,
+  PusInImplantSite,
+  PusInDonorSite,
+  SinusElevationFailure,
+  GBRFailure,
+}
+
+enum EunumComplicationsAfterProsthesis {
+  ScrewLoosness,
+  CrownFall,
+  FracturedZirconia,
+  FracturedPrintedPMMA,
+  FoodImpaction,
+  Pain,
 }

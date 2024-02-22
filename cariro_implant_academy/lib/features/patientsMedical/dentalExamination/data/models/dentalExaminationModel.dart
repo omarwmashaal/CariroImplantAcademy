@@ -1,4 +1,3 @@
-
 import '../../domain/entities/dentalExaminationEntity.dart';
 
 class DentalExaminationModel extends DentalExaminationEntity {
@@ -15,6 +14,8 @@ class DentalExaminationModel extends DentalExaminationEntity {
     implantPlaced,
     implantFailed,
     previousState,
+    interarchSpaceLT,
+    interarchSpaceRT,
   }) : super(
           carious: carious,
           filled: filled,
@@ -28,6 +29,8 @@ class DentalExaminationModel extends DentalExaminationEntity {
           notSure: notSure,
           previousState: previousState,
           tooth: tooth,
+          interarchSpaceLT: interarchSpaceLT,
+          interarchSpaceRT: interarchSpaceRT,
         );
 
   Map<String, dynamic> toMap() {
@@ -44,6 +47,8 @@ class DentalExaminationModel extends DentalExaminationEntity {
       'implantPlaced': this.implantPlaced,
       'implantFailed': this.implantFailed,
       'previousState': this.previousState,
+      'interarchspaceLT': this.interarchSpaceLT,
+      'interarchspaceRT': this.interarchSpaceRT,
     };
   }
 
@@ -61,6 +66,8 @@ class DentalExaminationModel extends DentalExaminationEntity {
       implantPlaced: map['implantPlaced'] as bool?,
       implantFailed: map['implantFailed'] as bool?,
       previousState: map['previousState'] as String?,
+      interarchSpaceRT: map['interarchspaceRT'] as int?,
+      interarchSpaceLT: map['interarchspaceLT'] as int?,
     );
   }
 
@@ -78,6 +85,8 @@ class DentalExaminationModel extends DentalExaminationEntity {
       notSure: entity.notSure,
       previousState: entity.previousState,
       tooth: entity.tooth,
+      interarchSpaceRT: entity.interarchSpaceRT,
+      interarchSpaceLT: entity.interarchSpaceLT,
     );
   }
 }

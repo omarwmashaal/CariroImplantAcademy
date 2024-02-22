@@ -293,7 +293,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                         textInputAction: TextInputAction.newline,
                         onChange: (value) {
                           nonSurgicalTreatment.treatment = value;
-                          bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
+                            bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
                         },
                         label: "Treatment",
                         controller: controller,
@@ -488,62 +488,123 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
       ];
 
       uu.add(FormTextKeyWidget(text: "Do you want to update tooth $tooth?"));
-      uu.add(CIA_MultiSelectChipWidget(
-        key: LabeledGlobalKey(tooth.toString()),
-        singleSelect: true,
-        labels: tempSelectionModel,
-        onChange: (value, isSelected) async {
-          if (currentToothDentalExamination!.carious!) {
-            currentToothDentalExamination!.previousState = "carious";
-            currentToothDentalExamination.carious = false;
-          }
-          if (currentToothDentalExamination!.missed!) {
-            currentToothDentalExamination!.previousState = "missed";
-            currentToothDentalExamination.missed = false;
-          }
-          if (currentToothDentalExamination!.filled!) {
-            currentToothDentalExamination!.previousState = "filled";
-            currentToothDentalExamination.filled = false;
-          }
-          if (currentToothDentalExamination!.notSure!) {
-            currentToothDentalExamination!.previousState = "notSure";
-            currentToothDentalExamination.notSure = false;
-          }
-          if (currentToothDentalExamination!.mobilityIII!) {
-            currentToothDentalExamination!.previousState = "mobilityIII";
-            currentToothDentalExamination.mobilityIII = false;
-          }
-          if (currentToothDentalExamination!.mobilityII!) {
-            currentToothDentalExamination!.previousState = "mobilityII";
-            currentToothDentalExamination.mobilityII = false;
-          }
-          if (currentToothDentalExamination!.mobilityI!) {
-            currentToothDentalExamination!.previousState = "mobilityI";
-            currentToothDentalExamination.mobilityI = false;
-          }
-          if (currentToothDentalExamination!.hopelessTeeth!) {
-            currentToothDentalExamination!.previousState = "hopelessteeth";
-            currentToothDentalExamination.hopelessTeeth = false;
-          }
-          if (currentToothDentalExamination!.implantFailed!) {
-            currentToothDentalExamination!.previousState = "implantFailed";
-            currentToothDentalExamination.implantFailed = false;
-          }
-          if (currentToothDentalExamination!.implantPlaced!) {
-            currentToothDentalExamination!.previousState = "implantPlaced";
-            currentToothDentalExamination.implantPlaced = false;
-          }
-          if (isSelected) {
-            currentToothDentalExamination.updateToothStatus(value);
-            if (value == "Missed" || value == "Filled") {
-              bloc.add(NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent(
-                patientId: widget.patientId,
-                tooth: tooth,
-                action: value,
-              ));
-            }
-          }
-        },
+      uu.add(Row(
+        children: [
+          Expanded(
+            child: CIA_MultiSelectChipWidget(
+              key: LabeledGlobalKey(tooth.toString()),
+              singleSelect: true,
+              labels: tempSelectionModel,
+              onChange: (value, isSelected) async {
+                if (currentToothDentalExamination!.carious!) {
+                  currentToothDentalExamination!.previousState = "carious";
+                  currentToothDentalExamination.carious = false;
+                }
+                if (currentToothDentalExamination!.missed!) {
+                  currentToothDentalExamination!.previousState = "missed";
+                  currentToothDentalExamination.missed = false;
+                }
+                if (currentToothDentalExamination!.filled!) {
+                  currentToothDentalExamination!.previousState = "filled";
+                  currentToothDentalExamination.filled = false;
+                }
+                if (currentToothDentalExamination!.notSure!) {
+                  currentToothDentalExamination!.previousState = "notSure";
+                  currentToothDentalExamination.notSure = false;
+                }
+                if (currentToothDentalExamination!.mobilityIII!) {
+                  currentToothDentalExamination!.previousState = "mobilityIII";
+                  currentToothDentalExamination.mobilityIII = false;
+                }
+                if (currentToothDentalExamination!.mobilityII!) {
+                  currentToothDentalExamination!.previousState = "mobilityII";
+                  currentToothDentalExamination.mobilityII = false;
+                }
+                if (currentToothDentalExamination!.mobilityI!) {
+                  currentToothDentalExamination!.previousState = "mobilityI";
+                  currentToothDentalExamination.mobilityI = false;
+                }
+                if (currentToothDentalExamination!.hopelessTeeth!) {
+                  currentToothDentalExamination!.previousState = "hopelessteeth";
+                  currentToothDentalExamination.hopelessTeeth = false;
+                }
+                if (currentToothDentalExamination!.implantFailed!) {
+                  currentToothDentalExamination!.previousState = "implantFailed";
+                  currentToothDentalExamination.implantFailed = false;
+                }
+                if (currentToothDentalExamination!.implantPlaced!) {
+                  currentToothDentalExamination!.previousState = "implantPlaced";
+                  currentToothDentalExamination.implantPlaced = false;
+                }
+                if (isSelected) {
+                  currentToothDentalExamination.updateToothStatus(value);
+                  if (value == "Missed" || value == "Filled") {
+                    bloc.add(NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent(
+                      patientId: widget.patientId,
+                      tooth: tooth,
+                      action: value,
+                    ));
+                  }
+                }
+              },
+            ),
+          ),
+          Visibility(
+            visible: currentToothDentalExamination.missed==true,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CIA_SecondaryButton(
+                  label: "Intra Arch Spaces",
+                  onTab: () {
+                    CIA_ShowPopUp(
+                        title: "Intra Arch Spaces",
+                        context: context,
+                        width: 500,
+                        child:Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              FormTextValueWidget(text: currentToothDentalExamination!.tooth!.toString()),
+                              SizedBox(width:10),
+                              Expanded(
+                                key: GlobalKey(),
+                                child: CIA_TextFormField(
+                                  suffix: "mm",
+                                  isNumber: true,
+                                  label: "Inter arch space RT",
+                                  onChange: (value) {
+                                    currentToothDentalExamination!.interarchSpaceRT = int.tryParse(value) ?? 0;
+                                  },
+                                  controller: TextEditingController(
+                                    text: (currentToothDentalExamination.interarchSpaceRT ?? 0).toString(),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                key: GlobalKey(),
+                                child: CIA_TextFormField(
+                                    suffix: "mm",
+                                    isNumber: true,
+                                    label: "Inter arch space LT",
+                                    onChange: (value) {
+                                      try {
+                                        currentToothDentalExamination!.interarchSpaceLT = int.tryParse(value) ?? 0;
+                                      } catch (e, s) {
+                                        print(s);
+                                      }
+                                    },
+                                    controller: TextEditingController(
+                                      text: (currentToothDentalExamination.interarchSpaceLT ?? 0).toString(),
+                                    )),
+                              ),
+                            ],
+                          ),
+                        ));
+                  }),
+            ),
+          ),
+        ],
       ));
       uu.add(SizedBox(height: 10));
     });

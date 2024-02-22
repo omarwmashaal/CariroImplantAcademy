@@ -43,19 +43,19 @@ abstract class SettingsDatasource {
 
   Future<List<BasicNameIdObjectModel>> getIncomeCategories();
 
-  Future<List<BasicNameIdObjectModel>> getExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getExpensesCategories(Website website);
 
   Future<List<BasicNameIdObjectModel>> getPaymentMethods();
 
-  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories(Website website);
 
-  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories();
+  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories(Website website);
 
-  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories();
+  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories(Website website);
 
-  Future<List<BasicNameIdObjectModel>> getStockCategories();
+  Future<List<BasicNameIdObjectModel>> getStockCategories(Website website);
 
-  Future<List<BasicNameIdObjectModel>> getSuppliers();
+  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website,bool medical);
 
   Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
 
@@ -77,7 +77,7 @@ abstract class SettingsDatasource {
 
   Future<NoParams> addIncomeCategories(List<BasicNameIdObjectEntity> model);
 
-  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model);
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical);
 
   Future<NoParams> addStockCategories(List<BasicNameIdObjectEntity> model);
 
@@ -225,10 +225,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getExpensesCategories(Website website) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getExpensesCategories");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getExpensesCategories?website=${website.index}");
     } catch (e) {
       throw mapException(e);
     }
@@ -273,10 +273,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getMedicalExpensesCategories(Website website) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getMedicalExpensesCategories");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getMedicalExpensesCategories?website=${website.index}");
     } catch (e) {
       throw mapException(e);
     }
@@ -289,10 +289,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories() async {
+  Future<List<BasicNameIdObjectModel>> getNonMedicalNonStockExpensesCategories(Website website) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalNonStockExpensesCategories");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalNonStockExpensesCategories?website=${website.index}");
     } catch (e) {
       throw mapException(e);
     }
@@ -305,10 +305,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories() async {
+  Future<List<BasicNameIdObjectModel>> getNonMedicalStockCategories(Website website) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalStockCategories");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getNonMedicalStockCategories?website=${website.index}");
     } catch (e) {
       throw mapException(e);
     }
@@ -321,10 +321,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getSuppliers() async {
+  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website,bool medical) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/getSuppliers");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/getSuppliers?website=${website.index}&medical=$medical");
     } catch (e) {
       throw mapException(e);
     }
@@ -469,11 +469,11 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model) async {
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$settingsController/addSuppliers",
+        host: "$serverHost/$settingsController/addSuppliers?medical=$medical",
         body: model.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
@@ -553,10 +553,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getStockCategories() async {
+  Future<List<BasicNameIdObjectModel>> getStockCategories(Website website) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/GetStockCategories");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/GetStockCategories?website=${website.index}");
     } catch (e) {
       throw mapException(e);
     }
@@ -728,4 +728,6 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
   }
+
+
 }

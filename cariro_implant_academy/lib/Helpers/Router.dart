@@ -28,6 +28,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/LargeScreen.dart';
 import 'package:cariro_implant_academy/Widgets/SiteLayout.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/createOrViewPatientPage.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/widgets/advancedSearchPatientFiltersWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,6 +55,9 @@ import '../features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dar
 import '../features/patient/presentation/pages/complainsSearchPage.dart';
 import '../features/patient/presentation/pages/patientProfileComplainsPage.dart';
 import '../features/patient/presentation/pages/visitsPage.dart';
+import '../features/patient/presentation/widgets/advancedSearchTreatmentFiltersWidget.dart';
+import '../features/patientsMedical/complications/presentation/pages/ComplicationsAfterProsthesisPage.dart';
+import '../features/patientsMedical/complications/presentation/pages/ComplicationsAfterSurgeryPage.dart';
 import '../features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
 import '../features/patientsMedical/nonSurgicalTreatment/presentation/pages/nonSurgicalTreatmentPage.dart';
 import '../features/patientsMedical/prosthetic/presentation/pages/prsotheticTreatmentPage.dart';
@@ -305,6 +309,44 @@ class CIA_Router {
                                             UserRoles.Admin,
                                           ],
                                           child: new SurgicalTreatmentPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: ComplicationsAfterSurgeryPage.getRouteName(site: Website.CIA),
+                                    path: ComplicationsAfterSurgeryPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new ComplicationsAfterSurgeryPage(
+                                            key: GlobalKey(),
+                                            patientId: int.parse(state.pathParameters['id'].toString()),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  GoRoute(
+                                    name: ComplicationsAfterProsthesisPage.getRouteName(site: Website.CIA),
+                                    path: ComplicationsAfterProsthesisPage.routePath,
+                                    pageBuilder: (context, state) {
+                                      return NoTransitionPage(
+                                        child: _Authorize(
+                                          allowedRoles: [
+                                            UserRoles.Instructor,
+                                            UserRoles.Assistant,
+                                            UserRoles.Admin,
+                                          ],
+                                          child: new ComplicationsAfterProsthesisPage(
                                             key: GlobalKey(),
                                             patientId: int.parse(state.pathParameters['id'].toString()),
                                           ),

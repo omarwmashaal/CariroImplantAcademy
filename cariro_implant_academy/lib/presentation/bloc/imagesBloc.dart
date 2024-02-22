@@ -27,16 +27,19 @@ class ImageBloc extends Cubit<ImageBloc_State> {
     );
   }
 
-  void uploadImageEvent(UploadImageParams params) async {
-    if(params.data==_image)return;
+  Future<bool> uploadImageEvent(UploadImageParams params) async {
+    if(params.data==_image)
+      return true;
     emit(ImageUploadingState());
     final result = await uploadImageUseCase(params);
-    result.fold(
+   return result.fold(
       (l) {
         emit(ImageUploadErrorState(message: l.message ?? ""));
+        return false;
       },
       (r) {
         emit(ImageLoadedState(image:params.data));
+        return true;
       },
     );
   }

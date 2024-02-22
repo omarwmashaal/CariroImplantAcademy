@@ -5,10 +5,8 @@ import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
 
 class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
-  bool? finalProthesisTryIn;
   EnumFinalProthesisTryInStatus? finalProthesisTryInStatus;
   EnumFinalProthesisTryInNextVisit? finalProthesisTryInNextVisit;
-  DateTime? finalProthesisTryInDate;
 
   // New fields from C# TryInModel
   bool? satisfied;
@@ -43,10 +41,9 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
     int? operatorId,
     BasicNameIdObjectEntity? operator,
     List<int>? finalProthesisTeeth,
-    this.finalProthesisTryIn,
+    DateTime?date,
     this.finalProthesisTryInStatus,
     this.finalProthesisTryInNextVisit,
-    this.finalProthesisTryInDate,
     // New fields from C# TryInModel
     this.satisfied,
     this.nonSatisfiedNewScan,
@@ -79,13 +76,14 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
     searchTeethClassification: searchTeethClassification,
     website: website,
     finalProthesisTeeth: finalProthesisTeeth,
+    date: date,
   );
 
   bool isNull() {
-    return finalProthesisTryIn == null &&
+    return
         finalProthesisTryInStatus == null &&
         finalProthesisTryInNextVisit == null &&
-        finalProthesisTryInDate == null &&
+        date == null &&
         satisfied == null &&
         nonSatisfiedNewScan == null &&
         nonSatisfiedDescription == null &&
@@ -114,10 +112,8 @@ class FinalProthesisTryInEntity extends FinalProthesisParentEntity {
   List<Object?> get props {
     return [
       ...super.props,
-      finalProthesisTryIn,
       finalProthesisTryInStatus,
       finalProthesisTryInNextVisit,
-      finalProthesisTryInDate,
       satisfied,
       nonSatisfiedNewScan,
       nonSatisfiedDescription,

@@ -1,8 +1,10 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchResonseEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/exception.dart';
@@ -108,18 +110,19 @@ class PatientInfoRepoImpl implements PatientInfoRepo {
   }
 
   @override
-  Future<Either<Failure, List<ProstheticTreatmentEntity>>> advancedProstheticSearch(ProstheticTreatmentEntity query,DateTime? from, DateTime? to) async {
+  Future<Either<Failure, List<AdvancedProstheticSearchResponseEntity>>> advancedProstheticSearch(AdvancedProstheticSearchRequestEntity query) async {
     try {
-      final result = await dataSource.advancedProstheticSearch(query,from,to);
+      final result = await dataSource.advancedProstheticSearch(query);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
   @override
-  Future<Either<Failure, NoParams>> setPatientOut(int id,String outReason) async {
+  Future<Either<Failure, NoParams>> setPatientOut(int id, String outReason) async {
     try {
-      final result = await dataSource.setPatientOut(id,outReason);
+      final result = await dataSource.setPatientOut(id, outReason);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

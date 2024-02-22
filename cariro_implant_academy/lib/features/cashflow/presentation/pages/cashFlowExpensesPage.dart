@@ -144,9 +144,10 @@ class _CashFlowExpensesPageState extends State<CashFlowExpensesPage> {
                       width: 10,
                     ),
                     Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
+                        child: CIA_DropDownSearchBasicIdName<Website>(
                       label: "Category",
                       asyncUseCase: sl<GetExpensesCategoriesUseCase>(),
+                      searchParams: siteController.getSite(),
                       onSelect: (value) => catId = value.id,
                     )),
                     SizedBox(

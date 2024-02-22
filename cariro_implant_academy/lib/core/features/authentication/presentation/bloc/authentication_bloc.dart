@@ -60,7 +60,7 @@ class AuthenticationBloc extends Cubit<Authentication_blocState> {
     final result = await registerUserUseCase(user);
     result.fold(
       (l) => emit(RegisteringUserErrorState(message: l.message ?? "")),
-      (r) => emit(RegisteredUserSuccessfullyState()),
+      (r) => emit(RegisteredUserSuccessfullyState(user: r)),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/features/authentication/domain/entities/authenticationUserEntity.dart';
+import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Authentication_blocState extends Equatable{
@@ -41,6 +42,8 @@ class RegisteringUserState extends Authentication_blocState{
   List<Object?> get props => [];
 }
 class RegisteredUserSuccessfullyState extends Authentication_blocState{
+  final UserEntity user;
+  RegisteredUserSuccessfullyState({required this.user});
   @override
   List<Object?> get props => [];
 }
@@ -48,5 +51,5 @@ class RegisteringUserErrorState extends Authentication_blocState{
   final String message;
   RegisteringUserErrorState({required this.message});
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message,identityHashCode(this)];
 }

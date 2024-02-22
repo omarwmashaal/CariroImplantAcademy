@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterProsthesisPage.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterSurgeryPage.dart';
 
 import '../core/features/settings/presentation/pages/UserSettingsPage.dart';
 import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
@@ -212,6 +214,8 @@ class SiteController {
             path == NonSurgicalTreatmentPage.routePath.split("/").last ||
             path == TreatmentPage.routePath.split("/").last ||
             path == SurgicalTreatmentPage.routePath.split("/").last ||
+            path == ComplicationsAfterSurgeryPage.routePath.split("/").last ||
+            path == ComplicationsAfterProsthesisPage.routePath.split("/").last ||
             path == ClinicTreatmentPage.routePath.split("/").last ||
             path == ClinicTreatmentPage.routePathPlan.split("/").last)
           setMedicalAppBar(id: int.parse(pathQueries!['id']!), context: context);
@@ -301,9 +305,21 @@ class SiteController {
               // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
             }),
         MedicalSlidingModel(
+            name: "Surgical Complications",
+            onTap: () => context.goNamed(ComplicationsAfterSurgeryPage.getRouteName(), pathParameters: {"id": id.toString()}),
+            onSave: () async {
+              // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
+            }),
+        MedicalSlidingModel(
             name: "Prosthetic Treatment",
             onTap: () => context.goNamed(ProstheticTreatmentPage.routeName, pathParameters: {"id": id.toString()}),
             onSave: () {}),
+        MedicalSlidingModel(
+            name: "Prosthetic Complications",
+            onTap: () => context.goNamed(ComplicationsAfterProsthesisPage.getRouteName(), pathParameters: {"id": id.toString()}),
+            onSave: () async {
+              // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
+            }),
       ];
     else if (getSite() == Website.Clinic) {
       pages = [

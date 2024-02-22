@@ -14,6 +14,8 @@ class CIA_TagsInputWidget extends StatefulWidget {
     this.initialValue,
     this.strikeValues,
     this.onDelete,
+    this.disableBorder = false,
+    this.isSmall = false,
     this.onChange = null,
     this.dynamicVisibility = false,
   }) : super(key: key);
@@ -23,6 +25,8 @@ class CIA_TagsInputWidget extends StatefulWidget {
   List<String>? initialValue;
   List<String>? strikeValues;
   bool dynamicVisibility;
+  bool disableBorder;
+  bool isSmall;
 
   @override
   State<CIA_TagsInputWidget> createState() => _CIA_TagsInputWidgetState();
@@ -49,47 +53,56 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
   Widget build(BuildContext context) {
     bool show = widget.dynamicVisibility ? widget.initialValue!.isNotEmpty : true;
     return show
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FormTextKeyWidget(text: widget.label),
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    border: Border.fromBorderSide(
-                      BorderSide(color: Color_TextFieldBorder, width: 0.0),
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Row(
-                  children: widget.initialValue!
-                      .map((e) => Chip(
-                            labelPadding: const EdgeInsets.only(left: 8.0),
-                            label: Text(
-                              e.replaceAll("strike", ""),
-                              style: TextStyle(
-                                  decoration: e.contains("strike") ? TextDecoration.lineThrough : null,
-                                  color: e.contains("strike") ? Colors.red : Colors.black),
-                            ),
-                            deleteIcon: Icon(
-                              Icons.close,
-                              size: 10,
-                            ),
-                            onDeleted: () {
-                              if (widget.initialValue != null) {
-                                widget.initialValue!.remove(e);
-                                setState(() {
+        ? Row(
+          
+          children: [
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FormTextKeyWidget(text: widget.label,smallFont: widget.isSmall),
+                    Container(
+                      decoration: widget.disableBorder?null: BoxDecoration(
+                          border: Border.fromBorderSide(
+                            BorderSide(color: Color_TextFieldBorder, width: 0.0),
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Wrap(
+                        children: widget.initialValue!
+                            .map((e) => Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Chip(
+                                    labelPadding: const EdgeInsets.only(left: 2.0),
+                                    label: Text(
+                                      e.replaceAll("strike", ""),
+                                      style: TextStyle(
+                                        fontSize: widget.isSmall?10:null,
+                                          decoration: e.contains("strike") ? TextDecoration.lineThrough : null,
+                                          color: e.contains("strike") ? Colors.red : Colors.black),
+                                    ),
+                                    deleteIcon: Icon(
+                                      Icons.close,
+                                      size: 10,
+                                    ),
+                                    onDeleted: () {
+                                      if (widget.initialValue != null) {
+                                        widget.initialValue!.remove(e);
+                                        setState(() {
 
-                                });
-                              }
-                              if (widget.onDelete != null) widget.onDelete!(e);
-                            },
-                          ))
-                      .toList(),
+                                        });
+                                      }
+                                      if (widget.onDelete != null) widget.onDelete!(e);
+                                    },
+                                  ),
+                            ))
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 10,)
-            ],
-          )
+            ),
+          ],
+        )
         : SizedBox(
             height: 1,
           );

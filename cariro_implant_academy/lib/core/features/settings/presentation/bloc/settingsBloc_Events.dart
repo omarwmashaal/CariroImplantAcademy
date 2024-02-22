@@ -1,10 +1,13 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
+import '../../../../constants/enums/enums.dart';
 import '../../../../domain/entities/BasicNameIdObjectEntity.dart';
 import '../../domain/entities/treatmentPricesEntity.dart';
 import '../../domain/useCases/addImplantsUseCase.dart';
@@ -96,6 +99,8 @@ class SettingsBloc_LoadIncomeCategoriesEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadExpensesCategoriesEvent extends SettingsBloc_Events {
+  final Website website;
+  SettingsBloc_LoadExpensesCategoriesEvent({required this.website});
   @override
   List<Object?> get props => [];
 }
@@ -111,6 +116,8 @@ class SettingsBloc_LoadRoomsEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadMedicalExpensesCategoriesEvent extends SettingsBloc_Events {
+  final Website website;
+  SettingsBloc_LoadMedicalExpensesCategoriesEvent({required this.website});
   @override
   List<Object?> get props => [];
 }
@@ -121,11 +128,15 @@ class SettingsBloc_LoadNonMedicalNonStockExpensesCategoriesEvent extends Setting
 }
 
 class SettingsBloc_LoadNonMedicalStockCategoriesEvent extends SettingsBloc_Events {
+  final Website website;
+  SettingsBloc_LoadNonMedicalStockCategoriesEvent({required this.website});
   @override
   List<Object?> get props => [];
 }
 
 class SettingsBloc_LoadSuppliersEvent extends SettingsBloc_Events {
+  final GetSuppliersParams params;
+  SettingsBloc_LoadSuppliersEvent({required this.params});
   @override
   List<Object?> get props => [];
 }
@@ -221,12 +232,12 @@ class SettingsBloc_AddIncomeCategoriesEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_AddSuppliersEvent extends SettingsBloc_Events {
-  final List<BasicNameIdObjectEntity> model;
+  final AddSuppliersParams params;
 
-  SettingsBloc_AddSuppliersEvent({required this.model});
+  SettingsBloc_AddSuppliersEvent({required this.params});
 
   @override
-  List<Object?> get props => [model];
+  List<Object?> get props => [params];
 }
 
 class SettingsBloc_AddStockCategoriesEvent extends SettingsBloc_Events {
@@ -266,6 +277,8 @@ class SettingsBloc_EditTreatmentPricesEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadStockCategoriesEvent extends SettingsBloc_Events{
+  final Website website;
+  SettingsBloc_LoadStockCategoriesEvent({required this.website});
   @override
   List<Object?> get props => [];
 

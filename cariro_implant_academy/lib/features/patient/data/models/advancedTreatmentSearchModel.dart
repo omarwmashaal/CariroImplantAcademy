@@ -1,13 +1,20 @@
+import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/data/models/complicationsAfterProsthesisModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/data/models/complicationsAfterSurgeryModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
+import 'package:get/get.dart';
 
-class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
+class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
   AdvancedTreatmentSearchModel({
     super.id,
     super.ids,
+    super.tooth,
     super.secondaryId,
     super.patientName,
     super.done,
     super.scaling,
+    super.str_implantFailed,
     super.crown,
     super.rootCanalTreatment,
     super.restoration,
@@ -16,6 +23,9 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     super.simpleImplant,
     super.immediateImplant,
     super.expansionWithImplant,
+    super.implantFailed,
+    super.complicationsAfterSurgery,
+    super.complicationsAfterSurgeryOr,
     super.splittingWithImplant,
     super.gbrWithImplant,
     super.openSinusWithImplant,
@@ -27,6 +37,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     super.gbrWithoutImplant,
     super.openSinusWithoutImplant,
     super.closedSinusWithoutImplant,
+    super.str_complicationsAfterSurgery,
     super.str_scaling,
     super.str_crown,
     super.str_rootCanalTreatment,
@@ -47,14 +58,33 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     super.str_openSinusWithoutImplant,
     super.str_closedSinusWithoutImplant,
     super.teethClassification,
-});
+    super.and_scaling,
+    super.and_crown,
+    super.and_rootCanalTreatment,
+    super.and_restoration,
+    super.and_pontic,
+    super.and_extraction,
+    super.and_simpleImplant,
+    super.and_immediateImplant,
+    super.and_expansionWithImplant,
+    super.and_splittingWithImplant,
+    super.and_gbrWithImplant,
+    super.and_openSinusWithImplant,
+    super.and_closedSinusWithImplant,
+    super.and_guidedImplant,
+    super.and_expansionWithoutImplant,
+    super.and_splittingWithoutImplant,
+    super.and_gbrWithoutImplant,
+    super.and_openSinusWithoutImplant,
+    super.and_closedSinusWithoutImplant,
+  });
 
-  factory AdvancedTreatmentSearchModel.fromEntity(AdvancedTreatmentSearchEntity entity)
-  {
+  factory AdvancedTreatmentSearchModel.fromEntity(AdvancedTreatmentSearchEntity entity) {
     return AdvancedTreatmentSearchModel(
       id: entity.id,
       ids: entity.ids,
       secondaryId: entity.secondaryId,
+      complicationsAfterSurgeryOr: entity.complicationsAfterSurgeryOr,
       patientName: entity.patientName,
       done: entity.done,
       scaling: entity.scaling,
@@ -62,6 +92,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
       crown: entity.crown,
       rootCanalTreatment: entity.rootCanalTreatment,
       restoration: entity.restoration,
+      implantFailed: entity.implantFailed,
+      complicationsAfterSurgery: entity.complicationsAfterSurgery,
       pontic: entity.pontic,
       extraction: entity.extraction,
       simpleImplant: entity.simpleImplant,
@@ -78,11 +110,31 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
       openSinusWithoutImplant: entity.openSinusWithoutImplant,
       closedSinusWithoutImplant: entity.closedSinusWithoutImplant,
       teethClassification: entity.teethClassification,
-
+      and_scaling: entity.and_scaling,
+      and_crown: entity.and_crown,
+      and_rootCanalTreatment: entity.and_rootCanalTreatment,
+      and_restoration: entity.and_restoration,
+      and_pontic: entity.and_pontic,
+      and_extraction: entity.and_extraction,
+      and_simpleImplant: entity.and_simpleImplant,
+      and_immediateImplant: entity.and_immediateImplant,
+      and_expansionWithImplant: entity.and_expansionWithImplant,
+      and_splittingWithImplant: entity.and_splittingWithImplant,
+      and_gbrWithImplant: entity.and_gbrWithImplant,
+      and_openSinusWithImplant: entity.and_openSinusWithImplant,
+      and_closedSinusWithImplant: entity.and_closedSinusWithImplant,
+      and_guidedImplant: entity.and_guidedImplant,
+      and_expansionWithoutImplant: entity.and_expansionWithoutImplant,
+      and_splittingWithoutImplant: entity.and_splittingWithoutImplant,
+      and_gbrWithoutImplant: entity.and_gbrWithoutImplant,
+      and_openSinusWithoutImplant: entity.and_openSinusWithoutImplant,
+      and_closedSinusWithoutImplant: entity.and_closedSinusWithoutImplant,
     );
   }
+
   AdvancedTreatmentSearchModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    tooth = json['tooth'];
     secondaryId = json['secondaryId'];
     patientName = json['patientName'];
     done = json['done'];
@@ -106,6 +158,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     str_gbrWithoutImplant = json['gbrWithoutImplant'];
     str_openSinusWithoutImplant = json['openSinusWithoutImplant'];
     str_closedSinusWithoutImplant = json['closedSinusWithoutImplant'];
+    str_complicationsAfterSurgery = json['str_ComplicationsAfterSurgery'];
+
   }
 
   Map<String, dynamic> toJson() {
@@ -137,7 +191,31 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity{
     data['closedSinusWithoutImplant'] = this.closedSinusWithoutImplant;
     data['teethClassification'] = this.teethClassification == null ? null : this.teethClassification!.index;
 
+    data['and_scaling'] = this.and_scaling;
+    data['and_crown'] = this.and_crown;
+    data['and_rootCanalTreatment'] = this.and_rootCanalTreatment;
+    data['and_restoration'] = this.and_restoration;
+    data['and_pontic'] = this.and_pontic;
+    data['and_extraction'] = this.and_extraction;
+    data['and_simpleImplant'] = this.and_simpleImplant;
+    data['and_immediateImplant'] = this.and_immediateImplant;
+    data['and_expansionWithImplant'] = this.and_expansionWithImplant;
+    data['and_splittingWithImplant'] = this.and_splittingWithImplant;
+    data['and_gbrWithImplant'] = this.and_gbrWithImplant;
+    data['and_openSinusWithImplant'] = this.and_openSinusWithImplant;
+    data['and_closedSinusWithImplant'] = this.and_closedSinusWithImplant;
+    data['and_guidedImplant'] = this.and_guidedImplant;
+    data['and_expansionWithoutImplant'] = this.and_expansionWithoutImplant;
+    data['and_splittingWithoutImplant'] = this.and_splittingWithoutImplant;
+    data['and_gbrWithoutImplant'] = this.and_gbrWithoutImplant;
+    data['and_openSinusWithoutImplant'] = this.and_openSinusWithoutImplant;
+    data['and_closedSinusWithoutImplant'] = this.and_closedSinusWithoutImplant;
+    data['implantFailed'] = this.implantFailed;
+    data['complicationsAfterSurgery'] =
+        this.complicationsAfterSurgery == null ? null : ComplicationsAfterSurgeryModel.fromEntity(this.complicationsAfterSurgery!).toJson();
+    data['complicationsAfterSurgeryOr'] =
+        this.complicationsAfterSurgeryOr == null ? null : ComplicationsAfterSurgeryModel.fromEntity(this.complicationsAfterSurgeryOr!).toJson();
+
     return data;
   }
-
 }

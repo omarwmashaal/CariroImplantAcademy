@@ -24,5 +24,5 @@ class ScanApplianceEntity extends ProstheticTreatmentDiagnosticParent {
       diagnostic,
     ]);
 
-
+  bool isNull() => diagnostic == null;
 }

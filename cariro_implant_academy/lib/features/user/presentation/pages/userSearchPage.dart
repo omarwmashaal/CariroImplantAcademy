@@ -1,4 +1,7 @@
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
@@ -23,7 +26,7 @@ import '../../domain/entities/enum.dart';
 
 class UserSearchPage extends StatefulWidget {
   UserSearchPage({Key? key, required this.type}) : super(key: key);
-  
+
   static String routePathAssistants = "Assistants";
   static String routePathCandidates = "Candidates";
   static String routePathInstructors = "Instructors";
@@ -31,7 +34,6 @@ class UserSearchPage extends StatefulWidget {
   static String routePathCustomers = "Customers";
   static String routePathLabModerators = "LabModerators";
   static String routePathOutsource = "Outsource";
-
 
   static String getRouteNameAssistants({Website? site}) {
     Website website = site ?? siteController.getSite();
@@ -42,6 +44,7 @@ class UserSearchPage extends StatefulWidget {
         return "Assistants";
     }
   }
+
   static String getRouteNameOutsourceModerators({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -53,6 +56,7 @@ class UserSearchPage extends StatefulWidget {
         return "CIAOutsource";
     }
   }
+
   static String getRouteNameLabModerators({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -88,6 +92,7 @@ class UserSearchPage extends StatefulWidget {
         return "Customers";
     }
   }
+
   static String getRouteNameInstructors({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -97,6 +102,7 @@ class UserSearchPage extends StatefulWidget {
         return "Instructors";
     }
   }
+
   static String getRouteNameCandidates({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -107,7 +113,6 @@ class UserSearchPage extends StatefulWidget {
     }
   }
 
-
   UserRoles type;
 
   @override
@@ -117,6 +122,7 @@ class UserSearchPage extends StatefulWidget {
 class _UserSearchPageState extends State<UserSearchPage> {
   String search = "";
   int? batchId;
+  String? batchName;
 
   late UsersBloc bloc;
   late UsersDataGridSource usersDataGridSource;
@@ -124,13 +130,12 @@ class _UserSearchPageState extends State<UserSearchPage> {
   @override
   void initState() {
     bloc = BlocProvider.of<UsersBloc>(context);
-    usersDataGridSource = UsersDataGridSource(
-        context: context,type: widget.type, usersBloc: bloc);
+    usersDataGridSource = UsersDataGridSource(context: context, type: widget.type, usersBloc: bloc);
     bloc.add(UsersBloc_SearchUsersByRoleEvent(
       role: widget.type,
       search: search,
       batchId: batchId,
-    ));    //siteController.setAppBarWidget(context: context);
+    )); //siteController.setAppBarWidget(context: context);
   }
 
   @override
@@ -140,11 +145,19 @@ class _UserSearchPageState extends State<UserSearchPage> {
         if (state is UsersBloc_LoadedMultiUsersSuccessfullyState) usersDataGridSource.updateData(newData: state.usersData);
         if (state is UsersBloc_LoadingUserState)
           CustomLoader.show(context);
-        else
+        else {
           CustomLoader.hide();
+          if (state is UsersBloc_RefreshedCandidatesDataSuccessfullyState) {
+            ShowSnackBar(context, isSuccess: true);
+            bloc.add(UsersBloc_SearchUsersByRoleEvent(
+              role: widget.type,
+              search: search,
+              batchId: batchId,
+            ));
+          } else if (state is UsersBloc_RefreshingCandidateDataErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
+        }
       },
-      buildWhen: (previous, current) =>
-          current is UsersBloc_LoadingUserErrorState  || current is UsersBloc_LoadedMultiUsersSuccessfullyState,
+      buildWhen: (previous, current) => current is UsersBloc_LoadingUserErrorState || current is UsersBloc_LoadedMultiUsersSuccessfullyState,
       builder: (context, state) {
         if (state is UsersBloc_LoadingUserErrorState)
           return BigErrorPageWidget(message: state.message);
@@ -195,20 +208,41 @@ class _UserSearchPageState extends State<UserSearchPage> {
                   List<Widget> r = [];
                   if (widget.type == UserRoles.Candidate) {
                     r.add(
-                      Container(
-                        width: 400,
-                        child: CIA_DropDownSearchBasicIdName(
-                          asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
-                          label: "Batch",
-                          onSelect: (value) {
-                            batchId = value.id;
-                            bloc.add(UsersBloc_SearchUsersByRoleEvent(
-                              role: widget.type,
-                              search: search,
-                              batchId: batchId,
-                            ));
-                          },
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 400,
+                            child: CIA_DropDownSearchBasicIdName(
+                              asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
+                              label: "Batch",
+                              onSelect: (value) {
+                                batchId = value.id;
+                                batchName = value.name;
+                                bloc.add(UsersBloc_SearchUsersByRoleEvent(
+                                  role: widget.type,
+                                  search: search,
+                                  batchId: batchId,
+                                ));
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          FormTextKeyWidget(text: "${state.usersData.length.toString()} Candidate${state.usersData.length > 1 ? "s" : ""}"),
+                          SizedBox(width: 20),
+                          CIA_SecondaryButton(
+                              label: "Refresh Candidates Data",
+                              onTab: () {
+                                bloc.add(UsersBloc_RefreshCandidatesDataEvent(batchId: batchId));
+                              }),
+                          SizedBox(width: 10),
+                          BlocBuilder<UsersBloc, UsersBloc_States>(
+                            builder: (context, state) {
+                              String status = "";
+                              if (state is UsersBloc_RefreshingCandidateDatatate) status = "Refreshing ${batchName ?? "All"} Candidates Data ...";
+                              return FormTextValueWidget(text: status,);
+                              },
+                          )
+                        ],
                       ),
                     );
                     r.add(
@@ -225,7 +259,6 @@ class _UserSearchPageState extends State<UserSearchPage> {
                 child: TableWidget(
                   dataSource: usersDataGridSource,
                   onCellClick: (index) {
-
                     context.goNamed(widget.type == UserRoles.Candidate ? ViewUserProfilePage.candidateRouteName : ViewUserProfilePage.getRouteName(),
                         pathParameters: {"id": index.toString()});
                   },

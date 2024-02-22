@@ -6,10 +6,15 @@ import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_DeliveryWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_HealingCollarWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_ImpressionsWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_TryInsWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 import '../../../../../Models/DTOs/DropDownDTO.dart';
 import '../../../../../Widgets/CIA_CheckBoxWidget.dart';
@@ -23,8 +28,9 @@ import '../../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
 import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
 import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
 import '../../domain/entities/finalProsthesisImpressionEntity.dart';
+import '../../domain/entities/finalProsthesisParentEntity.dart';
 import '../../domain/entities/finalProsthesisTryInEntity.dart';
-import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+import '../../domain/entities/prostheticFinalEntity.dart';
 import '../../domain/enums/enum.dart';
 
 class FinalProsthesisWidget extends StatefulWidget {
@@ -55,7 +61,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: [
         Visibility(
           visible: !widget.fullArch,
@@ -74,949 +80,168 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
         SizedBox(
           height: 10,
         ),
-        StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              children: widget.data?.healingCollars
-                      ?.map((e) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    FormTextKeyWidget(
-                                      text: "Teeth: ",
-                                    ),
-                                    FormTextValueWidget(
-                                      text: e.finalProthesisTeeth?.toString(),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CIA_CheckBoxWidget(
-                                        text: "Healing Collar",
-                                        onChange: (value) {
-                                          if (value == true) {
-                                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                                            } else {
-                                              e!.finalProthesisHealingCollar = true;
-                                              e.operatorId = siteController.getUserId();
-                                              e.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                                              e.finalProthesisHealingCollarDate = DateTime.now();
-                                              e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
-                                              selectedTeeth.clear();
-                                            }
-                                          } else {
-                                            e.finalProthesisHealingCollarDate = null;
-                                            e.finalProthesisHealingCollar = false;
-                                            e.finalProthesisTeeth = null;
-                                            e.operator = null;
-                                            e.operatorId = null;
-                                          }
-                                          setState(() {});
-                                          bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                                        },
-                                        value: e!.finalProthesisHealingCollar ?? false,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 3,
-                                      child: CIA_DropDownSearch(
-                                        label: "Customization",
-                                        selectedItem: () {
-                                          if (e!.finalProthesisHealingCollarStatus != null) {
-                                            return DropDownDTO(name: e!.finalProthesisHealingCollarStatus!.name.replaceAll("_", " "));
-                                          }
-                                          return null;
-                                        }(),
-                                        onSelect: (value) {
-                                          e!.finalProthesisHealingCollarStatus = EnumFinalProthesisHealingCollarStatus.values[value.id!];
-                                        },
-                                        items: [
-                                          DropDownDTO(name: "With Customization", id: 0),
-                                          DropDownDTO(name: "Without Customization", id: 1),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          FormTextKeyWidget(text: "Date"),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: CIA_GestureWidget(
-                                            onTap: () {
-                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                                                setState(() {
-                                                  e.finalProthesisHealingCollarDate = v;
-                                                });
-                                              });
-                                            },
-                                            child: FormTextValueWidget(
-                                              text: e.finalProthesisHealingCollarDate == null
-                                                  ? ""
-                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisHealingCollarDate!),
-                                            ),
-                                          )),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.operator?.name,
-                                          )),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.healingCollars != null)
-                                                  widget.data!.healingCollars = [
-                                                    ...widget.data!.healingCollars!,
-                                                    FinalProthesisHealingCollarEntity(
-                                                      patientId: widget.patientId,
-                                                    )
-                                                  ];
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.add)),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.healingCollars != null) widget.data!.healingCollars!.remove(e);
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.delete)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList() ??
-                  [],
-            );
-          },
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              children: widget.data?.impressions
-                      ?.map((e) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    FormTextKeyWidget(
-                                      text: "Teeth: ",
-                                    ),
-                                    FormTextValueWidget(
-                                      text: e.finalProthesisTeeth?.toString(),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CIA_CheckBoxWidget(
-                                        text: "Impression",
-                                        onChange: (value) {
-                                          if (value == true) {
-                                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                                            } else {
-                                              e!.finalProthesisImpression = true;
-                                              e.operatorId = siteController.getUserId();
-                                              e.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                                              e.finalProthesisImpressionDate = DateTime.now();
-                                              e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
-                                              selectedTeeth.clear();
-                                            }
-                                          } else {
-                                            e.finalProthesisImpressionDate = null;
-                                            e.finalProthesisImpression = false;
-                                            e.finalProthesisTeeth = null;
-                                            e.operator = null;
-                                            e.operatorId = null;
-                                          }
-                                          setState(() {});
-                                          bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                                        },
-                                        value: e!.finalProthesisImpression ?? false,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Procedure",
-                                              selectedItem: () {
-                                                if (e!.finalProthesisImpressionStatus != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisImpressionStatus!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                e!.finalProthesisImpressionStatus = EnumFinalProthesisImpressionStatus.values[value.id!];
-                                                {
-                                                  CIA_ShowPopUp(
-                                                    hideButton: true,
-                                                    context: context,
-                                                    width: 1100,
-                                                    height: 650,
-                                                    child: LabCreateNewRequestPage(
-                                                      fixDismiss: true,
-                                                      isDoctor: true,
-                                                      patientId: widget.patientId,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Scan by scan body", id: 0),
-                                                DropDownDTO(name: "Scan by abutment", id: 1),
-                                                DropDownDTO(name: "Physical Impression open tray", id: 2),
-                                                DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Next Visit",
-                                              selectedItem: () {
-                                                if (e!.finalProthesisImpressionNextVisit != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisImpressionNextVisit!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                e!.finalProthesisImpressionNextVisit = EnumFinalProthesisImpressionNextVisit.values[value.id!];
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Custom Abutment", id: 0),
-                                                DropDownDTO(name: "Try In", id: 1),
-                                                DropDownDTO(name: "Delivery", id: 2),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          FormTextKeyWidget(text: "Date"),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: CIA_GestureWidget(
-                                            onTap: () {
-                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                                                setState(() {
-                                                  e.finalProthesisImpressionDate = v;
-                                                });
-                                              });
-                                            },
-                                            child: FormTextValueWidget(
-                                              text: e.finalProthesisImpressionDate == null
-                                                  ? ""
-                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisImpressionDate!),
-                                            ),
-                                          )),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.operator?.name,
-                                          )),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.impressions != null)
-                                                  widget.data!.impressions = [
-                                                    ...widget.data!.impressions!,
-                                                    FinalProthesisImpressionEntity(
-                                                      patientId: widget.patientId,
-                                                    )
-                                                  ];
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.add)),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.impressions != null) widget.data!.impressions!.remove(e);
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.delete)),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList() ??
-                  [],
-            );
-          },
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              children: widget.data?.tryIns
-                      ?.map((e) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    FormTextKeyWidget(
-                                      text: "Teeth: ",
-                                    ),
-                                    FormTextValueWidget(
-                                      text: e.finalProthesisTeeth?.toString(),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: CIA_CheckBoxWidget(
-                                      text: "Try in",
-                                      onChange: (value) {
-                                        if (value == true) {
-                                          if (selectedTeeth.isEmpty && !widget.fullArch) {
-                                            ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                                          } else {
-                                            e!.finalProthesisTryIn = true;
-                                            e.finalProthesisTryInDate = DateTime.now();
-                                            e.operatorId = siteController.getUserId();
-                                            e.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                                            e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
-                                            selectedTeeth.clear();
-                                          }
-                                        } else {
-                                          e.finalProthesisTryInDate = null;
-                                          e.finalProthesisTryIn = false;
-                                          e.finalProthesisTeeth = null;
-                                          e.operator = null;
-                                          e.operatorId = null;
-                                        }
-                                        setState(() {});
-                                        bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                                      },
-                                      value: e!.finalProthesisTryIn ?? false,
-                                    )),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Procedure",
-                                              selectedItem: () {
-                                                if (e!.finalProthesisTryInStatus != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisTryInStatus!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                CIA_ShowPopUp(
-                                                  hideButton: true,
-                                                  context: context,
-                                                  width: 1100,
-                                                  height: 650,
-                                                  child: LabCreateNewRequestPage(
-                                                    fixDismiss: true,
-                                                    isDoctor: true,
-                                                    patientId: widget.patientId,
-                                                  ),
-                                                );
-                                                e!.finalProthesisTryInStatus = EnumFinalProthesisTryInStatus.values[value.id!];
-                                                {
-                                                  CIA_ShowPopUp(
-                                                    hideButton: true,
-                                                    context: context,
-                                                    width: 1100,
-                                                    height: 650,
-                                                    child: LabCreateNewRequestPage(
-                                                      fixDismiss: true,
-                                                      isDoctor: true,
-                                                      patientId: widget.patientId,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Try in abutment + scan abutment", id: 0),
-                                                DropDownDTO(name: "Try in PMMA", id: 1),
-                                                DropDownDTO(name: "Try in on scan abutment PMMA", id: 2),
-                                                DropDownDTO(name: "Physical Impression closed tray", id: 3),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Next Visit",
-                                              selectedItem: () {
-                                                if (e!.finalProthesisTryInNextVisit != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisTryInNextVisit!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                e!.finalProthesisTryInNextVisit = EnumFinalProthesisTryInNextVisit.values[value.id!];
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Delivery", id: 0),
-                                                DropDownDTO(name: "Try in PMMA", id: 1),
-                                                DropDownDTO(name: "ReImpression", id: 2),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: CIA_SecondaryButton(
-                                            label: "Check List",
-                                            onTab: () => CIA_ShowPopUp(
-                                                context: context,
-                                                width: 900,
-                                                height: 600,
-                                                child: StatefulBuilder(builder: (context, setState) {
-                                                  return Padding(
-                                                    padding: const EdgeInsets.all(10.0),
-                                                    child: ListView(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            CIA_MultiSelectChipWidget(
-                                                              singleSelect: true,
-                                                              labels: [
-                                                                CIA_MultiSelectChipWidgeModel(label: "Satisfied", isSelected: e.satisfied == true),
-                                                                CIA_MultiSelectChipWidgeModel(label: "Non Satisfied", isSelected: e.satisfied == false),
-                                                              ],
-                                                              onChange: (item, isSelected) {
-                                                                if (item == "Satisfied") {
-                                                                  e.satisfied = true;
-                                                                  e.nonSatisfiedNewScan = null;
-                                                                  e.nonSatisfiedDescription = null;
-                                                                } else if (item == "Non Satisfied") {
-                                                                  e.satisfied = false;
-                                                                }
-                                                                setState(() {});
-                                                              },
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Visibility(
-                                                              visible: e.satisfied == false,
-                                                              child: Expanded(
-                                                                child: Row(
-                                                                  children: [
-                                                                    CIA_MultiSelectChipWidget(
-                                                                      singleSelect: true,
-                                                                      labels: [
-                                                                        CIA_MultiSelectChipWidgeModel(
-                                                                            label: "New Scan", isSelected: e.nonSatisfiedNewScan == true),
-                                                                        CIA_MultiSelectChipWidgeModel(
-                                                                            label: "Same Scan", isSelected: e.nonSatisfiedNewScan == false),
-                                                                      ],
-                                                                      onChange: (item, isSelected) {
-                                                                        if (item == "New Scan") {
-                                                                          e.nonSatisfiedNewScan = true;
-                                                                        } else if (item == "Same Scan") {
-                                                                          e.nonSatisfiedNewScan = false;
-                                                                        }
-                                                                        setState((){});
-                                                                      },
-                                                                    ),
-                                                                    SizedBox(width: 10),
-                                                                    Expanded(
-                                                                      child: CIA_TextFormField(
-                                                                        label: "Non Satisfied Description",
-                                                                        controller: TextEditingController(text: e.nonSatisfiedDescription),
-                                                                        onChange: (v) => e.nonSatisfiedDescription = v,
-                                                                      ),
-                                                                    ),
-                                                                    // Add more fields as needed
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            FormTextKeyWidget(text: "Seating"),
-                                                            SizedBox(width: 10),
-                                                            CIA_MultiSelectChipWidget(
-                                                              singleSelect: true,
-                                                              labels: [
-                                                                CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected: e.seating == true),
-                                                                CIA_MultiSelectChipWidgeModel(label: "No", isSelected: e.seating == false),
-                                                              ],
-                                                              onChange: (item, isSelected) {
-                                                                if (item == "Yes") {
-                                                                  e.seating = true;
-                                                                  e.nonSeatingOtherNotes = null;
-                                                                  e.nonSeatingType = null;
-                                                                } else if (item == "No") {
-                                                                  e.seating = false;
-                                                                }
-                                                                setState(() {});
-                                                              },
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Visibility(
-                                                              visible: e.seating == false,
-                                                              child: Expanded(
-                                                                child: Row(
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child: CIA_DropDownSearch(
-                                                                        label: "Non Seating Type",
-                                                                        selectedItem: e.nonSeatingType != null
-                                                                            ? DropDownDTO(name: e.nonSeatingType!.name.replaceAll("_", " "))
-                                                                            : null,
-                                                                        onSelect: (value) {
-                                                                          e.nonSeatingType = EnumTryInSeating.values[value.id!];
-                                                                        },
-                                                                        items: EnumTryInSeating.values
-                                                                            .map(
-                                                                              (value) => DropDownDTO(
-                                                                                name: value.name.replaceAll("_", " "),
-                                                                                id: EnumTryInSeating.values.indexOf(value),
-                                                                              ),
-                                                                            )
-                                                                            .toList(),
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(width: 10),
-                                                                    Expanded(
-                                                                      child: CIA_TextFormField(
-                                                                        label: "Non Seating Other Notes",
-                                                                        controller: TextEditingController(text: e.nonSeatingOtherNotes),
-                                                                        onChange: (v) => e.nonSeatingOtherNotes = v,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
+        Expanded(
+          child: StatefulBuilder(
+            builder: (context, _setState) {
+              List<FinalProthesisParentEntity> models = <FinalProthesisParentEntity>[
+                ...widget.data!.impressions ?? [],
+                ...widget.data!.healingCollars ?? [],
+                ...widget.data!.tryIns ?? [],
+                ...widget.data!.delivery ?? [],
+              ];
+              models.sort(
+                (a, b) => a.date?.compareTo(b.date ?? DateTime.now()) ?? 1,
+              );
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        CIA_SecondaryButton(
+                          label: "Healing Collar",
+                          icon: Icon(Icons.add),
+                          onTab: () {
+                            if (selectedTeeth.isEmpty && !widget.fullArch) {
+                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
+                            } else {
+                              _setState(
+                                () => widget.data.healingCollars = [
+                                  ...widget.data.healingCollars!,
+                                  FinalProthesisHealingCollarEntity(
+                                    patientId: widget.patientId,
+                                    date: DateTime.now(),
+                                    finalProthesisTeeth: List.from(selectedTeeth),
+                                    operatorId: siteController.getUserId(),
+                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
+                                  ),
+                                ],
+                              );
+                              selectedTeeth.clear();
+                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
+                            }
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        CIA_SecondaryButton(
+                          label: "Impression",
+                          icon: Icon(Icons.add),
+                          onTab: () {
+                            if (selectedTeeth.isEmpty && !widget.fullArch) {
+                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
+                            } else {
+                              _setState(
+                                () => widget.data.impressions = [
+                                  ...widget.data.impressions!,
+                                  FinalProthesisImpressionEntity(
+                                    patientId: widget.patientId,
+                                    date: DateTime.now(),
+                                    finalProthesisTeeth: List.from(selectedTeeth),
+                                    operatorId: siteController.getUserId(),
+                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
+                                  ),
+                                ],
+                              );
+                              selectedTeeth.clear();
+                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
+                            }
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        CIA_SecondaryButton(
+                          label: "Try In",
+                          icon: Icon(Icons.add),
+                          onTab: () {
+                            if (selectedTeeth.isEmpty && !widget.fullArch) {
+                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
+                            } else {
+                              _setState(
+                                () => widget.data.tryIns = [
+                                  ...widget.data.tryIns!,
+                                  FinalProthesisTryInEntity(
+                                    patientId: widget.patientId,
+                                    date: DateTime.now(),
+                                    finalProthesisTeeth: List.from(selectedTeeth),
+                                    operatorId: siteController.getUserId(),
+                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
+                                  ),
+                                ],
+                              );
+                              selectedTeeth.clear();
+                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
+                            }
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        CIA_SecondaryButton(
+                          label: "Delivery",
+                          icon: Icon(Icons.add),
+                          onTab: () {
+                            if (selectedTeeth.isEmpty && !widget.fullArch) {
+                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
+                            } else {
+                              _setState(
+                                () => widget.data.delivery = [
+                                  ...widget.data.delivery!,
+                                  FinalProthesisDeliveryEntity(
+                                    patientId: widget.patientId,
+                                    date: DateTime.now(),
+                                    finalProthesisTeeth: List.from(selectedTeeth),
+                                    operatorId: siteController.getUserId(),
+                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
+                                  ),
+                                ],
+                              );
+                              selectedTeeth.clear();
+                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                        children: models.mapIndexed((i, e) {
+                      if (e is FinalProthesisDeliveryEntity)
+                        return FinalProsthesis_DeliveryWidget(
+                          fullArch: widget.fullArch,
+                          index: i + 1,
+                          data: e,
+                          onDelete: () => _setState(() => widget.data.delivery!.remove(e)),
+                        );
+                      else if (e is FinalProthesisTryInEntity)
+                        return FinalProsthesis_TryInsWidget(
+                          fullArch: widget.fullArch,
+                          index: i + 1,
+                          data: e,
+                          patientId: widget.patientId,
+                          onDelete: () => _setState(() => widget.data.tryIns!.remove(e)),
+                        );
+                      else if (e is FinalProthesisImpressionEntity)
+                        return FinalProsthesis_ImpressionWidget(
+                          fullArch: widget.fullArch,
+                          index: i + 1,
+                          patientId: widget.patientId,
+                          data: e,
+                          onDelete: () => _setState(() => widget.data.impressions!.remove(e)),
+                        );
+                      else if (e is FinalProthesisHealingCollarEntity)
+                        return FinalProsthesis_HealingCollarWidget(
+                          fullArch: widget.fullArch,
+                          index: i + 1,
+                          data: e,
+                          onDelete: () => _setState(() => widget.data.healingCollars!.remove(e)),
+                        );
 
-                                                        SizedBox(height: 10),
-                                                        CIA_DropDownSearch(
-                                                          label: "Mesial Contact",
-                                                          selectedItem:
-                                                              e.mesialContacts != null ? DropDownDTO(name: e.mesialContacts!.name.replaceAll("_", " ")) : null,
-                                                          onSelect: (value) {
-                                                            e.mesialContacts = EnumTryInContacts.values[value.id!];
-                                                          },
-                                                          items: EnumTryInContacts.values
-                                                              .map(
-                                                                (value) => DropDownDTO(
-                                                                  name: value.name.replaceAll("_", " "),
-                                                                  id: EnumTryInContacts.values.indexOf(value),
-                                                                ),
-                                                              )
-                                                              .toList(),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_DropDownSearch(
-                                                          label: "Distal Contact",
-                                                          selectedItem:
-                                                              e.distalContacts != null ? DropDownDTO(name: e.distalContacts!.name.replaceAll("_", " ")) : null,
-                                                          onSelect: (value) {
-                                                            e.distalContacts = EnumTryInContacts.values[value.id!];
-                                                          },
-                                                          items: EnumTryInContacts.values
-                                                              .map(
-                                                                (value) => DropDownDTO(
-                                                                  name: value.name.replaceAll("_", " "),
-                                                                  id: EnumTryInContacts.values.indexOf(value),
-                                                                ),
-                                                              )
-                                                              .toList(),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_DropDownSearch(
-                                                          label: "Occlusion",
-                                                          selectedItem: e.occlusion != null ? DropDownDTO(name: e.occlusion!.name.replaceAll("_", " ")) : null,
-                                                          onSelect: (value) {
-                                                            e.occlusion = EnumOcclusion.values[value.id!];
-                                                          },
-                                                          items: EnumOcclusion.values
-                                                              .map(
-                                                                (value) => DropDownDTO(
-                                                                  name: value.name.replaceAll("_", " "),
-                                                                  id: EnumOcclusion.values.indexOf(value),
-                                                                ),
-                                                              )
-                                                              .toList(),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_DropDownSearch(
-                                                          label: "Buccal Contour",
-                                                          selectedItem:
-                                                              e.buccalContour != null ? DropDownDTO(name: e.buccalContour!.name.replaceAll("_", " ")) : null,
-                                                          onSelect: (value) {
-                                                            e.buccalContour = EnumBuccalContour.values[value.id!];
-                                                          },
-                                                          items: EnumBuccalContour.values
-                                                              .map(
-                                                                (value) => DropDownDTO(
-                                                                  name: value.name.replaceAll("_", " "),
-                                                                  id: EnumBuccalContour.values.indexOf(value),
-                                                                ),
-                                                              )
-                                                              .toList(),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                          children: [
-                                                            Expanded(
-                                                              child: FormTextKeyWidget(
-                                                                text: "Passive",
-                                                              ),
-                                                            ),
-                                                            SizedBox(width: 10),
-                                                            Expanded(
-                                                              child: CIA_MultiSelectChipWidget(
-                                                                singleSelect: true,
-                                                                labels: [
-                                                                  CIA_MultiSelectChipWidgeModel(label: "Yes", isSelected: e.passive == true),
-                                                                  CIA_MultiSelectChipWidgeModel(label: "No", isSelected: e.passive == false),
-                                                                ],
-                                                                onChange: (item, isSelected) {
-                                                                  e.passive = item == "Yes";
-                                                                  setState((){});
-                                                                },
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-
-                                                        // Other dropdowns and text fields...
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Retention",
-                                                          controller: TextEditingController(text: e.retention),
-                                                          onChange: (v) => e.retention = v,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Occlusion Notes",
-                                                          controller: TextEditingController(text: e.occlusionNotes),
-                                                          onChange: (v) => e.occlusionNotes = v,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Occlusal Plan and Midline",
-                                                          controller: TextEditingController(text: e.occlusalPlanAndMidline),
-                                                          onChange: (v) => e.occlusalPlanAndMidline = v,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Centric Relation",
-                                                          controller: TextEditingController(text: e.centricRelation),
-                                                          onChange: (v) => e.centricRelation = v,
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Vertical Dimension",
-                                                          controller: TextEditingController(text: e.verticalDimension),
-                                                          onChange: (v) => e.verticalDimension = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Lip Support",
-                                                          controller: TextEditingController(text: e.lipSupport),
-                                                          onChange: (v) => e.lipSupport = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Size and Shape of Teeth",
-                                                          controller: TextEditingController(text: e.sizeAndShapeOfTeeth),
-                                                          onChange: (v) => e.sizeAndShapeOfTeeth = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Canting",
-                                                          controller: TextEditingController(text: e.canting),
-                                                          onChange: (v) => e.canting = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Frontal Smiling and Lateral Photos",
-                                                          controller: TextEditingController(text: e.frontalSmilingAndLateralPhotos),
-                                                          onChange: (v) => e.frontalSmilingAndLateralPhotos = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Evaluation",
-                                                          controller: TextEditingController(text: e.evaluation),
-                                                          onChange: (v) => e.evaluation = v,
-                                                        ),
-
-                                                        SizedBox(height: 10),
-                                                        CIA_TextFormField(
-                                                          label: "Explain Why",
-                                                          controller: TextEditingController(text: e.explainWhy),
-                                                          onChange: (v) => e.explainWhy = v,
-                                                        ),
-                                                        // Add the remaining fields as needed...
-                                                      ],
-                                                    ),
-                                                  );
-                                                })),
-                                          )),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          FormTextKeyWidget(text: "Date"),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: CIA_GestureWidget(
-                                            onTap: () {
-                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                                                setState(() {
-                                                  e.finalProthesisTryInDate = v;
-                                                });
-                                              });
-                                            },
-                                            child: FormTextValueWidget(
-                                              text:
-                                                  e.finalProthesisTryInDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisTryInDate!),
-                                            ),
-                                          )),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.operator?.name,
-                                          )),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.tryIns != null)
-                                                  widget.data!.tryIns = [
-                                                    ...widget.data!.tryIns!,
-                                                    FinalProthesisTryInEntity(
-                                                      patientId: widget.patientId,
-                                                    )
-                                                  ];
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.add)),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.tryIns != null) widget.data!.tryIns!.remove(e);
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.delete)),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList() ??
-                  [],
-            );
-          },
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        StatefulBuilder(
-          builder: (context, setState) {
-            return Column(
-              children: widget.data?.delivery
-                      ?.map((e) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    FormTextKeyWidget(
-                                      text: "Teeth: ",
-                                    ),
-                                    FormTextValueWidget(
-                                      text: e.finalProthesisTeeth?.toString(),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: CIA_CheckBoxWidget(
-                                      text: "Delivery",
-                                      onChange: (value) {
-                                        if (value == true) {
-                                          if (selectedTeeth.isEmpty && !widget.fullArch) {
-                                            ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                                          } else {
-                                            e!.finalProthesisDelivery = true;
-                                            e.finalProthesisDeliveryDate = DateTime.now();
-                                            e.operatorId = siteController.getUserId();
-                                            e.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                                            e.finalProthesisTeeth = selectedTeeth.map((e) => e as int).toList();
-                                            selectedTeeth.clear();
-                                          }
-                                        } else {
-                                          e.finalProthesisDeliveryDate = null;
-                                          e.finalProthesisDelivery = false;
-                                          e.finalProthesisTeeth = null;
-                                          e.operator = null;
-                                          e.operatorId = null;
-                                        }
-                                        setState(() {});
-                                        bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                                      },
-                                      value: e!.finalProthesisDelivery ?? false,
-                                    )),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Status",
-                                              selectedItem: () {
-                                                if (e!.finalProthesisDeliveryStatus != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisDeliveryStatus!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                e!.finalProthesisDeliveryStatus = EnumFinalProthesisDeliveryStatus.values[value.id!];
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Done", id: 0),
-                                                DropDownDTO(name: "ReDesign", id: 1),
-                                                DropDownDTO(name: "ReImpression", id: 2),
-                                                DropDownDTO(name: "ReTryIn", id: 3),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: CIA_DropDownSearch(
-                                              label: "Next Visit",
-                                              selectedItem: () {
-                                                if (e.finalProthesisDeliveryNextVisit != null) {
-                                                  return DropDownDTO(name: e!.finalProthesisDeliveryNextVisit!.name.replaceAll("_", " "));
-                                                }
-                                                return null;
-                                              }(),
-                                              onSelect: (value) {
-                                                e!.finalProthesisDeliveryNextVisit = EnumFinalProthesisDeliveryNextVisit.values[value.id!];
-                                              },
-                                              items: [
-                                                DropDownDTO(name: "Done", id: 0),
-                                                DropDownDTO(name: "ReDesign", id: 1),
-                                                DropDownDTO(name: "ReImpression", id: 2),
-                                                DropDownDTO(name: "ReTryIn", id: 3),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          FormTextKeyWidget(text: "Date"),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: CIA_GestureWidget(
-                                            onTap: () {
-                                              CIA_PopupDialog_DateTimePicker(context, "Change Date and Time",initDate: e.finalProthesisDeliveryDate, (v) {
-                                                setState(() {
-                                                  e.finalProthesisDeliveryDate = v;
-                                                });
-                                              });
-                                            },
-
-                                            child: FormTextValueWidget(
-                                              text: e.finalProthesisDeliveryDate == null
-                                                  ? ""
-                                                  : DateFormat("dd-MM-yyyy hh:mm a").format(e.finalProthesisDeliveryDate!),
-                                            ),
-                                          )),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                              child: FormTextValueWidget(
-                                            text: e.operator?.name,
-                                          )),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.delivery != null)
-                                                  widget.data!.delivery = [
-                                                    ...widget.data!.delivery!,
-                                                    FinalProthesisDeliveryEntity(
-                                                      patientId: widget.patientId,
-                                                    )
-                                                  ];
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.add)),
-                                          SizedBox(width: 10),
-                                          IconButton(
-                                              onPressed: () {
-                                                if (widget.data!.delivery != null) widget.data!.delivery!.remove(e);
-                                                setState(() {});
-                                              },
-                                              icon: Icon(Icons.delete)),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ))
-                      .toList() ??
-                  [],
-            );
-          },
+                      return Container();
+                    }).toList()),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ],
     );

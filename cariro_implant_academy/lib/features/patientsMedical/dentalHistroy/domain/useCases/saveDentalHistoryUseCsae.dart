@@ -10,6 +10,7 @@ class SaveDentalHistoryUseCase extends UseCases<NoParams,DentalHistoryEntity>{
   SaveDentalHistoryUseCase({required this.dentalHistoryRepo});
   @override
   Future<Either<Failure, NoParams>> call(DentalHistoryEntity dentalHistoryEntity)async {
+    dentalHistoryEntity.cbct?.removeWhere((element) => element.isNull());
    return await dentalHistoryRepo.saveDentalHistory(dentalHistoryEntity);
   }
 

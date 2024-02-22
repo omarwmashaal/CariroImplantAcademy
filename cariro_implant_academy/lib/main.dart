@@ -1,55 +1,21 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:cariro_implant_academy/API/LoadinAPI.dart';
-import 'package:cariro_implant_academy/API/PatientAPI.dart';
-import 'package:cariro_implant_academy/API/SettingsAPI.dart';
-import 'package:cariro_implant_academy/API/UserAPI.dart';
-import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Controllers/NavigationController.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
-import 'package:cariro_implant_academy/Controllers/PatientMedicalController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
-import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
-import 'package:cariro_implant_academy/Models/API_Response.dart';
-import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
-import 'package:cariro_implant_academy/Models/CashFlow.dart';
-import 'package:cariro_implant_academy/Models/CashFlowSummaryModel.dart';
-import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
-import 'package:cariro_implant_academy/Models/MedicalModels/NonSurgicalTreatment.dart';
-import 'package:cariro_implant_academy/Models/PatientInfo.dart';
-import 'package:cariro_implant_academy/Models/StockModel.dart';
-import 'package:cariro_implant_academy/Models/VisitsModel.dart';
-import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/CIA_SettingsPage.dart';
-import 'package:cariro_implant_academy/Pages/CIA_Pages/ViewUserPage.dart';
-import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
-import 'package:cariro_implant_academy/features/labRequest/data/models/labItemModel.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
-import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
-import 'package:cariro_implant_academy/Pages/UsersSearchPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
-import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
-import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_bloc.dart';
-import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocStates.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc.dart';
@@ -68,30 +34,12 @@ import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medical
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import 'API/TempPatientAPI.dart';
 import 'Controllers/RolesController.dart';
 import 'Helpers/Router.dart';
-import 'core/constants/enums/enums.dart';
-import 'Pages/CIA_Pages/CashFlowPage.dart';
 import 'core/features/settings/presentation/bloc/settingsBloc.dart';
-import 'features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
-import 'Pages/SharedPages/CashFlowSharedPage.dart';
-import 'features/labRequest/presentation/pages/LapCreateNewRequestPage.dart';
-import 'Pages/SharedPages/StocksSharedPage.dart';
-import 'SignalR/SignalR.dart';
-import 'Widgets/CIA_PopUp.dart';
-import 'Widgets/LargeScreen.dart';
-import 'Widgets/SiteLayout.dart';
-import 'package:logging/logging.dart';
 
-import 'core/features/authentication/presentation/pages/authentication_page.dart';
 import 'core/injection_contianer.dart';
-import 'core/presentation/widgets/LoadingWidget.dart';
 
 void main() async {
   /*html.window.onUnload.listen((event) async {
@@ -100,7 +48,6 @@ void main() async {
   Get.put(PagesController());
   Get.put(InternalPagesController());
   Get.put(RolesController());
-    LabItemEntity fff = LabItemModel();
   //Get.put(SiteController());
 
   /*
@@ -172,8 +119,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<AdvancedSearchBloc>()),
         BlocProvider(create: (context) => sl<LabRequestsBloc>()),
         BlocProvider(create: (context) => sl<ClinicTreatmentBloc>()),
+        BlocProvider(create: (context) => sl<ComplicationsBloc>()),
       ],
-
       child: MaterialApp.router(
         title: 'CIA',
         theme: ThemeData(

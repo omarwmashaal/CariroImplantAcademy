@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowSummaryModel.dart';
@@ -40,7 +41,7 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.post(
-        host: "$serverHost/$cashFlowController/addExpense?type=${type.index}&inventoryWebsite=${inventoryWebsite.index}",
+        host: "$serverHost/$cashFlowController/${(siteController.getSite()==Website.Lab || inventoryWebsite==Website.Lab)&& type==EnumExpenseseCategoriesType.BoughtMedical?"AddLabExpense":"addExpense"}?type=${type.index}&inventoryWebsite=${inventoryWebsite.index}",
         body: models.map((e) => CashFlowModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {

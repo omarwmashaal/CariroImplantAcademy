@@ -95,9 +95,10 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                       width: 10,
                     ),
                     Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
+                        child: CIA_DropDownSearchBasicIdName<Website>(
                       label: "Category",
                       asyncUseCase: sl<GetIncomeCategoriesUseCase>(),
+                          searchParams: siteController.getSite(),
                       onSelect: (value) => catId = value.id,
                     )),
                     SizedBox(

@@ -134,6 +134,12 @@ import 'package:cariro_implant_academy/features/patient/presentation/bloc/advanc
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/data/datasources/complicationsDatasource.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/data/repositories/complicationsRepository.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/repositories/complicationsRepository.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/useCases/getSurgeryTeethForComplicationsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/useCases/udpateComplicationsAfterSurgeryUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/data/datasources/dentalHistoryDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/useCases/getDentalHistoryUseCsae.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/data/datasources/medicalHistoryDatasource.dart';
@@ -183,6 +189,8 @@ import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleU
 import 'package:cariro_implant_academy/features/user/domain/usecases/getCandidateDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUserDataUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/refreshCandidateDataUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/removeUserUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/resetPasswordUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByRoleUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
@@ -230,6 +238,9 @@ import '../features/patient/domain/usecases/setPatientOutUseCase.dart';
 import '../features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
 import '../features/patient/presentation/bloc/createOrViewPatientBloc.dart';
 import '../features/patient/presentation/bloc/patientSearchBloc.dart';
+import '../features/patientsMedical/complications/domain/useCases/getComplicationsAfterProsthesisUseCase.dart';
+import '../features/patientsMedical/complications/domain/useCases/getComplicationsAfterSurgeryUseCase.dart';
+import '../features/patientsMedical/complications/domain/useCases/udpateComplicationsAfterProsthesisUseCase.dart';
 import '../features/patientsMedical/dentalExamination/data/datasources/dentalExaminationDataSource.dart';
 import '../features/patientsMedical/dentalExamination/data/repositories/dentalExaminationRepoImpl.dart';
 import '../features/patientsMedical/dentalExamination/domain/repositories/dentalExaminationRepo.dart';
@@ -379,10 +390,10 @@ initInjection() async {
         getLabItemsUseCase: sl(),
         getLabItemsLinesUseCase: sl(),
         getLabItemsCompaniesUseCase: sl(),
-    updateLabItemsCompaniesUseCase: sl(),
-    updateLabItemsShadesUseCase: sl(),
-    updateLabItemsUseCase: sl(),
-    updateLabItemsParentsPriceUseCase: sl(),
+        updateLabItemsCompaniesUseCase: sl(),
+        updateLabItemsShadesUseCase: sl(),
+        updateLabItemsUseCase: sl(),
+        updateLabItemsParentsPriceUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
@@ -450,7 +461,6 @@ initInjection() async {
   sl.registerLazySingleton(() => UpdateLabItemsShadesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsParentsPriceUseCase(settingsRepository: sl()));
-
 
   //repositories
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepoImpl(settingsDatasource: sl()));
@@ -812,6 +822,8 @@ initInjection() async {
         changeRoleUseCase: sl(),
         searchUsersByWorkPlaceUseCase: sl(),
         getCandidateDetailsUseCase: sl(),
+        refreshCandidatesDataUseCase: sl(),
+        removeUserUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateUserInfoUseCase(usersRepository: sl()));
@@ -820,8 +832,10 @@ initInjection() async {
   sl.registerLazySingleton(() => ResetPasswordUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => GetUsersSessionsUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => ChangeRoleUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => RefreshCandidatesDataUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => SearchUsersByWorkPlaceUseCase(usersRepository: sl()));
   sl.registerLazySingleton(() => GetCandidateDetailsUseCase(usersRepository: sl()));
+  sl.registerLazySingleton(() => RemoveUserUseCase(usersRepository: sl()));
   //repo
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(userDatasource: sl()));
   //DATASOURCE
@@ -870,12 +884,35 @@ initInjection() async {
   //datasources
   sl.registerLazySingleton<CashFlowDatasource>(() => CashFlowDataSourceImpl(httpRepo: sl()));
 
+  /*
+  * Complications
+  * */
+
+  //blocs
+  sl.registerFactory(() => ComplicationsBloc(
+        updateComplicationsAfterSurgeryUseCase: sl(),
+        updateComplicationsAfterProsthesisUseCase: sl(),
+        getComplicationsAfterSurgeryUseCase: sl(),
+        getComplicationsAfterProsthesisUseCase: sl(),
+        getSurgeryTeethForComplicationsUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => UpdateComplicationsAfterSurgeryUseCase(complicationsRepo: sl()));
+  sl.registerLazySingleton(() => UpdateComplicationsAfterProsthesisUseCase(complicationsRepo: sl()));
+  sl.registerLazySingleton(() => GetComplicationsAfterSurgeryUseCase(complicationsRepo: sl()));
+  sl.registerLazySingleton(() => GetComplicationsAfterProsthesisUseCase(complicationsRepo: sl()));
+  sl.registerLazySingleton(() => GetSurgeryTeethForComplicationsUseCase(complicationsRepo: sl()));
+
+  //REPOS
+  sl.registerLazySingleton<ComplicationsRepo>(() => ComplicationsRepoImpl(complicationsDatasource: sl()));
+  //datasources
+  sl.registerLazySingleton<ComplicationsDatasource>(() => ComplicationsDatasourceImpl(httpRepo: sl()));
   /**
    * Lab Requests
    */
 
   //blocs
-  sl.registerFactory(() => LabRequestsBloc(
+  sl.registerLazySingleton(() => LabRequestsBloc(
         getAllLabRequestsUseCase: sl(),
         createNewLabCustomerUseCase: sl(),
         searchLabPatientsByTypeUseCase: sl(),
@@ -888,10 +925,10 @@ initInjection() async {
         assignTaskToTechnicianUseCase: sl(),
         markRequestAsDoneUseCase: sl(),
         updateLabRequestUseCase: sl(),
-    consumeLabItemUseCase: sl(),
-    getLabItemDetailsUseCase: sl(),
-    getRequestReceiptUseCase: sl(),
-    payRequestUseCase: sl(),
+        consumeLabItemUseCase: sl(),
+        getLabItemDetailsUseCase: sl(),
+        getRequestReceiptUseCase: sl(),
+        payRequestUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));

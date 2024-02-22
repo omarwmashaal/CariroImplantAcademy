@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +7,6 @@ import '../../Constants/Controllers.dart';
 import '../../Controllers/SiteController.dart';
 import 'enums/enums.dart';
 import '../injection_contianer.dart';
-
 
 const _host ="http://localhost:5000/";
 //const _host ="http://localhost:5170/";
@@ -24,14 +22,11 @@ Map<String, String> headers() => <String, String>{
       "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,DELETE",
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
       "Authorization": "Bearer ${siteController.getToken()}",
-      "Site":siteController.getSite()!.index!.toString(),
+      "Site": siteController.getSite()!.index!.toString(),
     };
 
-
-
 Website getSite() => _site;
-setSite(Website site) => _site=site;
-
+setSite(Website site) => _site = site;
 
 /***********************************
  * Controllers
@@ -41,14 +36,14 @@ setSite(Website site) => _site=site;
  * Authentication
  *****************/
 const authenticationController = "Authentication";
-const patientInfoController= "PatientInfo";
-const notificationController= "Notifications";
-const medicalController= "Medical";
-const userController= "User";
-const settingsController= "Settings";
-const stockController= "Stock";
-const imageController= "Image";
-const cashFlowController= "CashFlow";
-const labRequestsController= "LAB_Requests";
-const labCustomerController= "Lab_Customers";
-const clinicTreatmentController= "ClinicTreatments";
+const patientInfoController = "PatientInfo";
+const notificationController = "Notifications";
+const medicalController = "Medical";
+const userController = "User";
+const settingsController = "Settings";
+const stockController = "Stock";
+const imageController = "Image";
+const cashFlowController = "CashFlow";
+const labRequestsController = "LAB_Requests";
+const labCustomerController = "Lab_Customers";
+const clinicTreatmentController = "ClinicTreatments";

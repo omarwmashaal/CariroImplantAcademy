@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/features/stock/data/models/stockModel.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockLogEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockLogUseCase.dart';
@@ -47,7 +48,7 @@ class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
 class StockDataGridSource extends DataGridSource {
   List<String> columns = ["ID", "Name", "Category", "Count", "Add More"];
   BuildContext context;
-  List<StockEntity> models = <StockEntity>[];
+  List<dynamic> models = <dynamic>[];
 
   /// Creates the income data source class with required details.
   StockDataGridSource({required this.context}) {
@@ -284,7 +285,7 @@ class StockDataGridSource extends DataGridSource {
 
   String? search;
 
-  Future<bool> updateData(List<StockEntity> newData) async {
+  Future<bool> updateData(List<dynamic> newData) async {
     models = newData;
     init();
     notifyListeners();

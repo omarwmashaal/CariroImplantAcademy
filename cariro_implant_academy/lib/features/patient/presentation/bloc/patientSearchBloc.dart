@@ -21,12 +21,13 @@ const DATA_CONVERSION_EXCEPTION_MESSAGE = "Server responded with incorrect data"
 class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc_States> {
   final PatientSearchUseCase searchUseCase;
   String _filter = "Id";
+  bool? _out;
 
   PatientSearchBloc({required this.searchUseCase}) : super(LoadingPatientSearchState()) {
     on<PatientSearchEvent>(
       (event, emit) async {
         emit(LoadingPatientSearchState());
-        final result = await searchUseCase(PatientSearchParams(filter: this._filter, query: event.query, myPatients: event.myPatients));
+        final result = await searchUseCase(PatientSearchParams(filter: this._filter, query: event.query, myPatients: event.myPatients, out: _out));
         result.fold(
           (l) {
             if (l is HttpInternalServerErrorFailure)
@@ -42,6 +43,7 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
     on<PatientSearchFilterChangedEvent>(
       (event, emit) {
         this._filter = event.filter;
+        this._out = event.out;
       },
     );
   }
@@ -99,6 +101,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
                             : Text(e.doctor ?? ""),
                   ),
                 ),
+                DataGridCell<int>(columnName: 'Out', value: e.out?1:0),
               ]))
           .toList();
     } else {
@@ -111,6 +114,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
                 DataGridCell<int>(columnName: 'Age', value: e.age),
                 DataGridCell<String>(columnName: 'Marital Status', value: getEnumName(e.maritalStatus)),
                 DataGridCell<String>(columnName: 'Relative', value: e.relative),
+                DataGridCell<int>(columnName: 'Out', value: e.out?1:0),
               ]))
           .toList();
     }
@@ -128,7 +132,14 @@ class PatientSearchDataSourceTable extends DataGridSource {
       if (e.value is Widget) return e.value;
       return Container(
         alignment: Alignment.center,
-        child: Text(e.value.toString()),
+        child: e.columnName == "Out"
+            ? Center(
+                child: Icon(
+                  Icons.circle,
+                  color: e.value==1 ? Colors.red : Colors.green,
+                ),
+              )
+            : Text(e.value.toString()),
       );
     }).toList());
   }

@@ -22,6 +22,8 @@ abstract class UserDatasource {
   Future<List<CandidateDetailsModel>> getCandidateDetails(int id, DateTime? from, DateTime? to);
 
   Future<NoParams> changeRole(int id, String role);
+  Future<NoParams> removeUser(int id);
+  Future<NoParams> refreshCandidatesData(int? batchId);
 
   Future<NoParams> resetPassword({required String newPassword1, required String newPassword2, required String oldPassword});
 
@@ -167,5 +169,29 @@ class UserDatasourceImpl extends UserDatasource {
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
+  }
+
+  @override
+  Future<NoParams> removeUser(int id)async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.delete(host: "$serverHost/$userController/RemoveUser?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+   return NoParams();
+  }
+
+  @override
+  Future<NoParams> refreshCandidatesData(int? batchId) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(host: "$serverHost/$userController/RefreshAllCandidatesData?${batchId==null?"":"batchId=$batchId"}");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 }

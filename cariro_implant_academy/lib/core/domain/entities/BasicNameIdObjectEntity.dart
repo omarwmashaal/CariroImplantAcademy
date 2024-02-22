@@ -6,7 +6,7 @@ class BasicNameIdObjectEntity extends Equatable{
    String? secondaryId;
 
    BasicNameIdObjectEntity({
-    this.name ="",
+    this.name ,
      this.id,
      this.secondaryId,
   });

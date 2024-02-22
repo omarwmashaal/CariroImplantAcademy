@@ -25,5 +25,6 @@ class GetVisitsUseCase extends UseCases<List<VisitEntity>, GetVisitsParams> {
 class GetVisitsParams{
   final int? patientId;
   final String? search;
+  
   GetVisitsParams({this.patientId,this.search});
 }

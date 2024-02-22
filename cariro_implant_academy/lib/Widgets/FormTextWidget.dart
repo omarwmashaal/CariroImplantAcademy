@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Constants/Colors.dart';
 import 'package:cariro_implant_academy/Constants/Fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FormTextWidget extends StatelessWidget {
   FormTextWidget({Key? key, required this.keyText, required this.valueText}) : super(key: key);
@@ -51,6 +52,7 @@ class FormTextValueWidget extends StatelessWidget {
     this.secondaryInfo = false,
     this.suffix,
     this.smallFont = false,
+    this.isLink = false,
   }) : super(key: key);
   String? text;
   bool secondaryInfo;
@@ -58,16 +60,32 @@ class FormTextValueWidget extends StatelessWidget {
   bool smallFont;
   TextAlign align;
   Color? color;
+  bool isLink;
 
   @override
   Widget build(BuildContext context) {
+    try {
+      isLink = (text ?? "").contains("http://");
+    } catch (e) {}
+    color = isLink ? Colors.blueAccent : color;
     double fontSize = smallFont ? 10 : 14;
-    return Text(
- "${text??""} " + (suffix != null ? (suffix as String) : ""),
+    Widget widget = Text(
+      "${text ?? ""} " + (suffix != null ? (suffix as String) : ""),
       textAlign: align,
       style: secondaryInfo
-          ? TextStyle(fontSize: fontSize, fontFamily: Inter_Regular, color: color ?? Color_TextSecondary)
-          : TextStyle(fontSize: fontSize, fontFamily: Inter_Regular, color: color ?? Colors.black),
+          ? TextStyle(
+              fontSize: fontSize,
+              fontFamily: Inter_Regular,
+              color: color ?? Color_TextSecondary,
+              decoration: isLink ? TextDecoration.underline : null)
+          : TextStyle(
+              fontSize: fontSize, fontFamily: Inter_Regular, color: color ?? Colors.black, decoration: isLink ? TextDecoration.underline : null),
     );
+    return isLink && text != null
+        ? InkWell(
+            onTap: () => isLink && text != null ? launchUrl(Uri.parse(text!)) : null,
+            child: widget,
+          )
+        : widget;
   }
 }

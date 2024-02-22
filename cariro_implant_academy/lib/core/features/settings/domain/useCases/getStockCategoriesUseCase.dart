@@ -5,14 +5,16 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class GetStockCategoriesUseCase extends LoadingUseCases {
+import '../../../../constants/enums/enums.dart';
+
+class GetStockCategoriesUseCase extends LoadingUseCases<Website> {
   final SettingsRepository settingsRepository;
 
   GetStockCategoriesUseCase({required this.settingsRepository});
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(NoParams) async {
-    return await settingsRepository.getStockCategories().then((value) => value.fold(
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(params) async {
+    return await settingsRepository.getStockCategories(params).then((value) => value.fold(
           (l) => Left(l..message = "Get Stock Categories: ${l.message ?? ""}"),
           (r) => Right(r),
         ));

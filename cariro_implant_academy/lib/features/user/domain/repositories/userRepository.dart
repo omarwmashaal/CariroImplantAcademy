@@ -17,6 +17,8 @@ abstract class UsersRepository {
   Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
 
   Future<Either<Failure, NoParams>> updateUserInfo(int id, UserEntity userData);
+  Future<Either<Failure, NoParams>> removeUser(int id);
+  Future<Either<Failure, NoParams>> refreshCandidatesData(int? batchId);
   Future<Either<Failure, NoParams>> changeRole(int id, String role);
   Future<Either<Failure, List<CandidateDetailsEntity>>> getCandidateDetails(int id, DateTime? from, DateTime? to);
 

@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/entities/cbctEntity.dart';
 import 'package:equatable/equatable.dart';
 
 class DentalHistoryEntity extends Equatable {
@@ -14,6 +15,7 @@ class DentalHistoryEntity extends Equatable {
   int? willingForImplantScore;
   int? patientId;
   DateTime? date;
+  List<CBCT_Entity>? cbct;
 
   DentalHistoryEntity(
       {this.senstiveHotCold,
@@ -27,6 +29,7 @@ class DentalHistoryEntity extends Equatable {
       this.cooperationScore,
       this.date,
       this.patientId,
+      this.cbct,
       this.willingForImplantScore});
 
 
@@ -45,6 +48,7 @@ class DentalHistoryEntity extends Equatable {
         this.seriousInjury,
         this.satisfied,
         this.cooperationScore,
+        this.cbct,
         this.willingForImplantScore,
       ];
 }

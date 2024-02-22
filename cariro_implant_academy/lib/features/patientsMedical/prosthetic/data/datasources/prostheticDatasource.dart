@@ -4,8 +4,8 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../../core/error/exception.dart';
 import '../../../../../core/useCases/useCases.dart';
-import '../../domain/entities/prostheticEntity.dart';
-import '../../domain/entities/prostheticTreatmentFinalEntity.dart';
+import '../../domain/entities/prostheticDiagnosticEntity.dart';
+import '../../domain/entities/prostheticFinalEntity.dart';
 import '../models/prostheticTreatmentFinalModel.dart';
 
 abstract class ProstheticDatasource {

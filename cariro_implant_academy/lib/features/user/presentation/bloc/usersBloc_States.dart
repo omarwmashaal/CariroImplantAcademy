@@ -39,6 +39,42 @@ class UsersBloc_ResettingPasswordErrorState extends UsersBloc_States {
   @override
   List<Object?> get props => [message,identityHashCode(this)];
 }
+class UsersBloc_RemovedUserSuccessfullyState extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class UsersBloc_RemovingUserState extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class UsersBloc_RemovingUserErrorState extends UsersBloc_States {
+  final String message;
+
+  UsersBloc_RemovingUserErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message,identityHashCode(this)];
+}
+class UsersBloc_RefreshedCandidatesDataSuccessfullyState extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class UsersBloc_RefreshingCandidateDatatate extends UsersBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class UsersBloc_RefreshingCandidateDataErrorState extends UsersBloc_States {
+  final String message;
+
+  UsersBloc_RefreshingCandidateDataErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message,identityHashCode(this)];
+}
 class UsersBloc_ChangingRoleState extends UsersBloc_States {
   @override
   List<Object?> get props => [];

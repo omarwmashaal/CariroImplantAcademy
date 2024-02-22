@@ -17,10 +17,9 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
-    bool? finalProthesisDelivery,
     EnumFinalProthesisDeliveryStatus? finalProthesisDeliveryStatus,
     EnumFinalProthesisDeliveryNextVisit? finalProthesisDeliveryNextVisit,
-    DateTime? finalProthesisDeliveryDate,
+    DateTime? date,
   }) : super(
           id: id,
           patientId: patientId,
@@ -30,10 +29,9 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
     operator: operator,
     operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
-          finalProthesisDelivery: finalProthesisDelivery,
           finalProthesisDeliveryStatus: finalProthesisDeliveryStatus,
           finalProthesisDeliveryNextVisit: finalProthesisDeliveryNextVisit,
-          finalProthesisDeliveryDate: finalProthesisDeliveryDate,
+          date: date,
         );
 
   factory FinalProthesisDeliveryModel.fromJson(String json) {
@@ -56,7 +54,6 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
           : (map['finalProthesisTeeth'] as List<dynamic>)
           .map((e) => e as int)
           .toList(),
-      finalProthesisDelivery: map['finalProthesisDelivery'],
       finalProthesisDeliveryStatus:
       map['finalProthesisDeliveryStatus'] != null
           ? EnumFinalProthesisDeliveryStatus.values[map['finalProthesisDeliveryStatus']]
@@ -65,7 +62,7 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
       map['finalProthesisDeliveryNextVisit'] != null
           ? EnumFinalProthesisDeliveryNextVisit.values[map['finalProthesisDeliveryNextVisit']]
           : null,
-      finalProthesisDeliveryDate: DateTime.tryParse(map['finalProthesisDeliveryDate'] ?? "")?.toLocal(),
+      date: DateTime.tryParse(map['date'] ?? "")?.toLocal(),
       // ... add more properties as needed
     );
   }
@@ -78,11 +75,10 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
       'searchTeethClassification': super.searchTeethClassification,
       //'website': super.website.toString().split('.').last,
       'finalProthesisTeeth': super.finalProthesisTeeth,
-      'finalProthesisDelivery': super.finalProthesisDelivery,
       'operatorId': operatorId,
       'finalProthesisDeliveryStatus': super.finalProthesisDeliveryStatus?.index,
       'finalProthesisDeliveryNextVisit': super.finalProthesisDeliveryNextVisit?.index,
-      'finalProthesisDeliveryDate': super.finalProthesisDeliveryDate?.toUtc().toIso8601String(),
+      'date': super.date?.toUtc().toIso8601String(),
     };
   }
 
@@ -94,10 +90,9 @@ class FinalProthesisDeliveryModel extends FinalProthesisDeliveryEntity {
       searchTeethClassification: entity.searchTeethClassification,
       website: entity.website,
       finalProthesisTeeth: entity.finalProthesisTeeth,
-      finalProthesisDelivery: entity.finalProthesisDelivery,
       finalProthesisDeliveryStatus: entity.finalProthesisDeliveryStatus,
       finalProthesisDeliveryNextVisit: entity.finalProthesisDeliveryNextVisit,
-      finalProthesisDeliveryDate: entity.finalProthesisDeliveryDate,
+      date: entity.date,
       operatorId: entity.operatorId,
     );
   }

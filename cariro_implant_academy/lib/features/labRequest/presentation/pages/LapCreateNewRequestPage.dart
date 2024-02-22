@@ -136,7 +136,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               else if (state is LabRequestsBloc_CreatedLabRequestSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true, message: "Created Request Successfully");
-                dialogHelper.dismissAll(context);
+                //dialogHelper.dismissAll(context);
                 if(!widget.isDoctor)
                   context.goNamed(LabRequestsSearchPage.routeName);
 

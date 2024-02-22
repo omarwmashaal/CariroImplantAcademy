@@ -22,10 +22,10 @@ class DiagnosticImpressionEntity extends ProstheticTreatmentDiagnosticParent {
 
   @override
   List<Object?> get props => super.props
-      ..addAll([
-        diagnostic,
-        nextStep,
-      ]);
+    ..addAll([
+      diagnostic,
+      nextStep,
+    ]);
 
-
+  bool isNull() => diagnostic == null && nextStep == null;
 }

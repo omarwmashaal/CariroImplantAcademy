@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Helpers/Router.dart';
 import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
@@ -69,6 +70,10 @@ class PatientsSearchPage extends StatefulWidget {
 }
 
 class _PatientsSearchPageState extends State<PatientsSearchPage> {
+  bool? out;
+  String filter = "Id";
+  String search = "";
+
   @override
   void initState() {
     super.initState();
@@ -199,7 +204,10 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                           child: CIA_TextField(
                             label: "Search",
                             icon: Icons.search,
-                            onChange: (value) => dispatchSearch(context, value),
+                            onChange: (value) {
+                              search = value;
+                              dispatchSearch(context, value);
+                            },
                           ),
                         ),
                         Expanded(
@@ -210,10 +218,32 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                                 child: HorizontalRadioButtons(
                                   groupValue: "Id",
                                   names: ["Id", "Name", "Phone", "All"],
-                                  onChange: (value) => dispatchChangeFilter(context, value)
+                                  onChange: (value) {
+                                    filter = value;
+                                    dispatchChangeFilter(context, filter, out);
+                                  }
                                   // _getXController.searchFilter.value = value;
                                   ,
                                 ),
+                              ),
+                              SizedBox(),
+                              CIA_MultiSelectChipWidget(
+                                singleSelect: true,
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "All", isSelected: out == null),
+                                  CIA_MultiSelectChipWidgeModel(label: "Active", isSelected: out == false),
+                                  CIA_MultiSelectChipWidgeModel(label: "Out", isSelected: out == true),
+                                ],
+                                onChange: (item, isSelected) {
+                                  if (item == "All")
+                                    out = null;
+                                  else if (item == "Active")
+                                    out = false;
+                                  else if (item == "Out") out = true;
+
+                                  dispatchChangeFilter(context, filter, out);
+                                  dispatchSearch(context, search);
+                                },
                               ),
                               Expanded(child: SizedBox())
                             ],
@@ -253,7 +283,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
     BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: widget.myPatients));
   }
 
-  void dispatchChangeFilter(BuildContext context, String filter) {
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter));
+  void dispatchChangeFilter(BuildContext context, String filter, bool? out) {
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter, out));
   }
 }

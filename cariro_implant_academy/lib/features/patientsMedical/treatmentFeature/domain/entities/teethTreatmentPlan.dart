@@ -53,7 +53,6 @@ class TeethTreatmentPlanEntity extends Equatable {
     this.crown,
   });
 
-
   @override
   // TODO: implement props
   List<Object?> get props => [
@@ -78,7 +77,28 @@ class TeethTreatmentPlanEntity extends Equatable {
         gbrWithoutImplant,
         openSinusWithoutImplant,
         closedSinusWithoutImplant,
-    scaling,
-    crown,
+        scaling,
+        crown,
       ];
+
+  bool isNull() =>
+      rootCanalTreatment == null &&
+      restoration == null &&
+      pontic == null &&
+      extraction == null &&
+      simpleImplant == null &&
+      immediateImplant == null &&
+      expansionWithImplant == null &&
+      splittingWithImplant == null &&
+      gbrWithImplant == null &&
+      openSinusWithImplant == null &&
+      closedSinusWithImplant == null &&
+      guidedImplant == null &&
+      expansionWithoutImplant == null &&
+      splittingWithoutImplant == null &&
+      gbrWithoutImplant == null &&
+      openSinusWithoutImplant == null &&
+      closedSinusWithoutImplant == null &&
+      scaling == null &&
+      crown == null;
 }

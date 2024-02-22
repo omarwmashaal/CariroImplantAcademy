@@ -110,7 +110,6 @@ class ComplainsBloc extends Bloc<ComplainsBloc_Events, ComplainsBloc_States> {
   }
 }
 
-
 class ComplainsDataGridSource extends DataGridSource {
   List<ComplainsEntity> models = <ComplainsEntity>[];
   List<String> columns = [
@@ -134,17 +133,17 @@ class ComplainsDataGridSource extends DataGridSource {
   init() {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-      DataGridCell<String>(columnName: 'Id', value: e.secondaryId),
-      DataGridCell<DateTime>(columnName: 'Date', value: e.entryTime),
-      DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name??""),
-      DataGridCell<String>(columnName: 'Complain', value: e.comment??""),
-      DataGridCell<String>(columnName: 'Last Supervisor', value: e.lastSupervisor!.name??""),
-      DataGridCell<String>(columnName: 'Last Doctor', value: e.lastDoctor!.name??""),
-      DataGridCell<String>(columnName: 'Mentioned Doctor', value: e.mentionedDoctor!.name??""),
-      DataGridCell<String>(columnName: 'Notes', value: e.notes),
-      DataGridCell<String>(columnName: 'Status', value: e.status!.name),
-      DataGridCell<String>(columnName: 'Operator', value: e.resolvedBy!.name??""),
-    ]))
+              DataGridCell<String>(columnName: 'Id', value: e.secondaryId),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.entryTime),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name ?? ""),
+              DataGridCell<String>(columnName: 'Complain', value: e.comment ?? ""),
+              DataGridCell<String>(columnName: 'Last Supervisor', value: e.lastSupervisor!.name ?? ""),
+              DataGridCell<String>(columnName: 'Last Doctor', value: e.lastDoctor!.name ?? ""),
+              DataGridCell<String>(columnName: 'Mentioned Doctor', value: e.mentionedDoctor!.name ?? ""),
+              DataGridCell<String>(columnName: 'Notes', value: e.notes),
+              DataGridCell<String>(columnName: 'Status', value: e.status!.name),
+              DataGridCell<String>(columnName: 'Operator', value: e.resolvedBy!.name ?? ""),
+            ]))
         .toList();
   }
 
@@ -157,16 +156,15 @@ class ComplainsDataGridSource extends DataGridSource {
   DataGridRowAdapter buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
-          if(e.value is Widget)
-            return e.value;
-          return Container(
-            alignment: Alignment.center,
-            child: Text(
-              e.value == null ? "" : e.value.toString(),
-              style: TextStyle(fontSize: 12),
-            ),
-          );
-        }).toList());
+      if (e.value is Widget) return e.value;
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          e.value == null ? "" : e.value.toString(),
+          style: TextStyle(fontSize: 12),
+        ),
+      );
+    }).toList());
   }
 
   Future<bool> updateData({required List<ComplainsEntity> newData}) async {
@@ -176,6 +174,4 @@ class ComplainsDataGridSource extends DataGridSource {
 
     return true;
   }
-
-
 }

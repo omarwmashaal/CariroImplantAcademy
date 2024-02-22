@@ -13,6 +13,8 @@ class DentalExaminationEntity extends Equatable{
   bool? implantPlaced;
   bool? implantFailed;
   String? previousState;
+  int? interarchSpaceRT;
+  int? interarchSpaceLT;
   @override
   // TODO: implement props
   List<Object?> get props => [
@@ -28,6 +30,8 @@ class DentalExaminationEntity extends Equatable{
     implantPlaced,
     implantFailed,
     previousState,
+    interarchSpaceLT,
+    interarchSpaceRT
   ];
 
   DentalExaminationEntity({
@@ -43,6 +47,8 @@ class DentalExaminationEntity extends Equatable{
     this.implantPlaced = false,
     this.implantFailed = false,
     this.previousState,
+    this.interarchSpaceRT,
+    this.interarchSpaceLT,
   });
 
   updateToothStatus(String value)  {

@@ -5,16 +5,24 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class GetSuppliersUseCase extends LoadingUseCases {
+import '../../../../constants/enums/enums.dart';
+
+class GetSuppliersUseCase extends LoadingUseCases<GetSuppliersParams> {
   final SettingsRepository settingsRepository;
 
   GetSuppliersUseCase({required this.settingsRepository});
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(NoParams) async {
-    return await settingsRepository.getSuppliers().then((value) => value.fold(
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(params) async {
+    return await settingsRepository.getSuppliers(params.website,params.medical).then((value) => value.fold(
           (l) => Left(l..message = "Get Suppliers: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
   }
+}
+
+class GetSuppliersParams{
+  final bool medical;
+  final Website website;
+  GetSuppliersParams({required this.medical,required this.website});
 }

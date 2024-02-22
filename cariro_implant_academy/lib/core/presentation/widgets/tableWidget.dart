@@ -19,6 +19,7 @@ class TableWidget extends StatefulWidget {
         this.headerStyle,
         this.headerHeight,
       this.allowSorting = true,
+      this.allowGroupingCollapse = false,
       this.showGridLines = false})
       : super(key: key);
 
@@ -31,6 +32,7 @@ class TableWidget extends StatefulWidget {
   bool allowSorting;
   TextStyle? headerStyle;
   double? headerHeight;
+  bool allowGroupingCollapse;
 
   @override
   State<TableWidget> createState() => _TableWidgetState();
@@ -41,6 +43,7 @@ class _TableWidgetState extends State<TableWidget> {
   Widget build(BuildContext context) {
 
     return SfDataGrid(
+      allowExpandCollapseGroup: widget.allowGroupingCollapse,
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
       horizontalScrollPhysics: BouncingScrollPhysics(),

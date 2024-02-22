@@ -7,8 +7,8 @@ class DentalExaminationModel {
   int? id;
   int? patientId;
   List<DentalExaminations> dentalExaminations=[];
-  int? interarchspaceRT;
-  int? interarchspaceLT;
+  int? interarchSpaceRT;
+  int? interarchSpaceLT;
   String? date;
   String? operatorImplantNotes;
   int? operatorId;
@@ -19,8 +19,8 @@ class DentalExaminationModel {
       {this.id,
         this.patientId,
         this.dentalExaminations=const [],
-        this.interarchspaceRT=0,
-        this.interarchspaceLT=0,
+        this.interarchSpaceRT=0,
+        this.interarchSpaceLT=0,
         this.date="",
         this.operatorImplantNotes="",
         this.oralHygieneRating=EnumOralHygieneRating.GoodHygiene,
@@ -37,8 +37,8 @@ class DentalExaminationModel {
       });
     }
     else dentalExaminations = [];
-    interarchspaceRT = json['interarchspaceRT']??0;
-    interarchspaceLT = json['interarchspaceLT']??0;
+    interarchSpaceRT = json['interarchSpaceRT']??0;
+    interarchSpaceLT = json['interarchSpaceLT']??0;
     oralHygieneRating = EnumOralHygieneRating.values[json['oralHygieneRating']??2];
     date = json['date']??"";
     operatorImplantNotes = json['operatorImplantNotes']??"";
@@ -58,8 +58,8 @@ class DentalExaminationModel {
       data['dentalExaminations'] =
           this.dentalExaminations!.map((v) => v.toJson()).toList();
     }
-    data['interarchspaceRT'] = this.interarchspaceRT;
-    data['interarchspaceLT'] = this.interarchspaceLT;
+    data['interarchSpaceRT'] = this.interarchSpaceRT;
+    data['interarchSpaceLT'] = this.interarchSpaceLT;
     data['operatorImplantNotes'] = this.operatorImplantNotes;
     data['oralHygieneRating'] = this.oralHygieneRating!.index;
 

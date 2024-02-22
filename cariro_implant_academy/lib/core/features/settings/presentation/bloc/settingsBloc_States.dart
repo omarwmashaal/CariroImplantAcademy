@@ -343,12 +343,15 @@ class SettingsBloc_LoadedNonMedicalStockCategoriesSuccessfullyState extends Sett
 }
 
 class SettingsBloc_LoadingSuppliersState extends SettingsBloc_States {
+  final bool medical;
+  SettingsBloc_LoadingSuppliersState({required this.medical});
   @override
   List<Object?> get props => [];
 }
 
 class SettingsBloc_LoadingSuppliersErrorState extends SettingsBlocErrorState {
-  SettingsBloc_LoadingSuppliersErrorState({required super.message});
+  final bool medical;
+  SettingsBloc_LoadingSuppliersErrorState({required super.message,required this.medical});
 
   @override
   List<Object?> get props => [message];
@@ -356,8 +359,9 @@ class SettingsBloc_LoadingSuppliersErrorState extends SettingsBlocErrorState {
 
 class SettingsBloc_LoadedSuppliersSuccessfullyState extends SettingsBloc_States {
   final List<BasicNameIdObjectEntity> data;
+  final bool medical;
 
-  SettingsBloc_LoadedSuppliersSuccessfullyState({required this.data});
+  SettingsBloc_LoadedSuppliersSuccessfullyState({required this.data, required this.medical});
 
   @override
   List<Object?> get props => [this.data];
@@ -534,18 +538,23 @@ class SettingsBloc_AddedIncomeCategoriesSuccessfullyState extends SettingsBlocSu
 }
 
 class SettingsBloc_AddingSuppliersState extends SettingsBloc_States {
+  final bool medical;
+  SettingsBloc_AddingSuppliersState({required this.medical});
   @override
   List<Object?> get props => [];
 }
 
 class SettingsBloc_AddingSuppliersErrorState extends SettingsBlocErrorState {
-  SettingsBloc_AddingSuppliersErrorState({required super.message});
+  final bool medical;
+  SettingsBloc_AddingSuppliersErrorState({required super.message,required this.medical});
 
   @override
   List<Object?> get props => [message];
 }
 
 class SettingsBloc_AddedSuppliersSuccessfullyState extends SettingsBlocSuccessState {
+  final bool medical;
+  SettingsBloc_AddedSuppliersSuccessfullyState({required this.medical});
   @override
   List<Object?> get props => [];
 }

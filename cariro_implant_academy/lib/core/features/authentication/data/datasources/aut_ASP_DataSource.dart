@@ -14,7 +14,7 @@ import '../../../../useCases/useCases.dart';
 abstract class Auth_ASP_DataSource {
   Future<AuthenticationUserModel> login(LoginParams loginParams);
 
-  Future<NoParams> registerUser(UserEntity user);
+  Future<UserModel> registerUser(UserEntity user);
 
   Future<bool> logOut();
 
@@ -49,7 +49,7 @@ class Auth_ASP_DataSourceImpl implements Auth_ASP_DataSource {
   }
 
   @override
-  Future<NoParams> registerUser(UserEntity user) async {
+  Future<UserModel> registerUser(UserEntity user) async {
     late StandardHttpResponse result;
     try {
       result = await client.post(
@@ -61,7 +61,12 @@ class Auth_ASP_DataSourceImpl implements Auth_ASP_DataSource {
     }
 
     if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
-    return NoParams();
+
+    try {
+      return UserModel.fromJson(result.body! as Map<String, dynamic>);
+    } on Exception catch (e) {
+      throw DataConversionException(message: e.toString());
+    }
     // throw UnimplementedError();
   }
 

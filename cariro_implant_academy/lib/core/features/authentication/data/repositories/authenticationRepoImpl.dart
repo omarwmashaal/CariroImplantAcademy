@@ -49,7 +49,7 @@ class AuthenticationRepoImpl implements AuthenticationRepo
   }
 
   @override
-  Future<Either<Failure, NoParams>> registerUser(UserEntity user) async {
+  Future<Either<Failure, UserEntity>> registerUser(UserEntity user) async {
     try {
       final result = await dataSource.registerUser(user);
       return Right(result);

@@ -9,11 +9,9 @@ import 'package:equatable/equatable.dart';
 
 class FinalProthesisImpressionEntity extends FinalProthesisParentEntity
      {
-  bool? finalProthesisImpression;
   EnumFinalProthesisImpressionStatus? finalProthesisImpressionStatus;
   EnumFinalProthesisImpressionNextVisit?
   finalProthesisImpressionNextVisit;
-  DateTime? finalProthesisImpressionDate;
 
   FinalProthesisImpressionEntity({
     int? id,
@@ -23,11 +21,10 @@ class FinalProthesisImpressionEntity extends FinalProthesisParentEntity
     Website website = Website.CIA,
     int? operatorId,
     BasicNameIdObjectEntity? operator,
+    DateTime?date,
     List<int>? finalProthesisTeeth,
-    this.finalProthesisImpression,
     this.finalProthesisImpressionStatus,
     this.finalProthesisImpressionNextVisit,
-    this.finalProthesisImpressionDate,
   }) : super(
     id: id,
     patientId: patientId,
@@ -37,21 +34,21 @@ class FinalProthesisImpressionEntity extends FinalProthesisParentEntity
     operator: operator,
     operatorId: operatorId,
     finalProthesisTeeth: finalProthesisTeeth,
+    date: date,
   );
   bool isNull() {
-    return finalProthesisImpression == null &&
+    return
         finalProthesisImpressionStatus == null &&
         finalProthesisImpressionNextVisit == null &&
-        finalProthesisImpressionDate == null;
+        date == null;
   }
 
   @override
   List<Object?> get props => [
     ...super.props,
-    finalProthesisImpression,
     finalProthesisImpressionStatus,
     finalProthesisImpressionNextVisit,
-    finalProthesisImpressionDate,
+
   ];
 }
 

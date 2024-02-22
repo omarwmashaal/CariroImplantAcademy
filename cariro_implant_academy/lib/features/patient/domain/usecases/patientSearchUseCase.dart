@@ -21,8 +21,9 @@ class PatientSearchParams extends Equatable {
   final String? query;
   final String? filter;
   final bool myPatients;
+  final bool? out;
 
-  PatientSearchParams({required this.myPatients, this.query, this.filter});
+  PatientSearchParams({required this.myPatients, this.query, this.filter, this.out});
 
   @override
   // TODO: implement props

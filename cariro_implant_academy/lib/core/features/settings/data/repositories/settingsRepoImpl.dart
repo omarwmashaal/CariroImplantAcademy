@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneCompanyEnity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
@@ -83,7 +84,7 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getMembranes(int id) async {
+  Future<Either<Failure, List<MembraneEntity>>> getMembranes(int id) async {
     try {
       final result = await settingsDatasource.getMembranes(id);
       return Right(result);
@@ -93,9 +94,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getExpensesCategories() async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getExpensesCategories(Website website) async {
     try {
-      final result = await settingsDatasource.getExpensesCategories();
+      final result = await settingsDatasource.getExpensesCategories(website);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -123,9 +124,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories() async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories(Website website) async {
     try {
-      final result = await settingsDatasource.getMedicalExpensesCategories();
+      final result = await settingsDatasource.getMedicalExpensesCategories(website);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -133,9 +134,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories() async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories(Website website) async {
     try {
-      final result = await settingsDatasource.getNonMedicalNonStockExpensesCategories();
+      final result = await settingsDatasource.getNonMedicalNonStockExpensesCategories(website);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -143,9 +144,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories() async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories(Website website) async {
     try {
-      final result = await settingsDatasource.getNonMedicalStockCategories();
+      final result = await settingsDatasource.getNonMedicalStockCategories(website);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -153,9 +154,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers() async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers(Website website,bool medical) async {
     try {
-      final result = await settingsDatasource.getSuppliers();
+      final result = await settingsDatasource.getSuppliers(website,medical);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -253,9 +254,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> addSuppliers(List<BasicNameIdObjectEntity> model) async {
+  Future<Either<Failure, NoParams>> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical) async {
     try {
-      final result = await settingsDatasource.addSuppliers(model);
+      final result = await settingsDatasource.addSuppliers(model,medical);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -313,9 +314,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getStockCategories()async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getStockCategories(Website website)async {
     try {
-      final result = await settingsDatasource.getStockCategories();
+      final result = await settingsDatasource.getStockCategories(website);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -421,6 +422,8 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+
 
 
 }

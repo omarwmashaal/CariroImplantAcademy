@@ -17,6 +17,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/ta
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addExpensesCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addStockCategoriesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
@@ -59,7 +61,6 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
 
   @override
   void initState() {
-
     bloc = BlocProvider.of<SettingsBloc>(context);
     clinicTreatmentBloc = BlocProvider.of<ClinicTreatmentBloc>(context);
     bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
@@ -80,13 +81,16 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
         else if (state is SettingsBloc_AddedTacsCompaniesSuccessfullyState)
           bloc.add(SettingsBloc_LoadTacsEvent());
         else if (state is SettingsBloc_AddedExpensesCategoriesSuccessfullyState)
-          bloc.add(SettingsBloc_LoadExpensesCategoriesEvent());
+          bloc.add(SettingsBloc_LoadExpensesCategoriesEvent(website: Website.Clinic));
         else if (state is SettingsBloc_AddedIncomeCategoriesSuccessfullyState)
           bloc.add(SettingsBloc_LoadIncomeCategoriesEvent());
         else if (state is SettingsBloc_AddedStockCategoriesSuccessfullyState)
-          bloc.add(SettingsBloc_LoadStockCategoriesEvent());
+          bloc.add(SettingsBloc_LoadStockCategoriesEvent(website: Website.Clinic));
         else if (state is SettingsBloc_AddedSuppliersSuccessfullyState)
-          bloc.add(SettingsBloc_LoadSuppliersEvent());
+          bloc.add(SettingsBloc_LoadSuppliersEvent(params: GetSuppliersParams(
+            website: Website.Clinic,
+            medical: false,
+          )));
         else if (state is SettingsBloc_AddedPaymentMethodsSuccessfullyState)
           bloc.add(SettingsBloc_LoadPaymentMethodsEvent());
         else if (state is SettingsBloc_EditedRoomsSuccessfullyState)
@@ -348,7 +352,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                     SidebarXItem(
                         label: "Expenses Categories",
                         onTap: () {
-                          bloc.add(SettingsBloc_LoadExpensesCategoriesEvent());
+                          bloc.add(SettingsBloc_LoadExpensesCategoriesEvent(website: Website.Clinic));
                           //_pageController.jumpToPage(3);
                           currentIndex = 3;
                         },
@@ -364,7 +368,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                     SidebarXItem(
                         label: "Stock Categories",
                         onTap: () {
-                          bloc.add(SettingsBloc_LoadStockCategoriesEvent());
+                          bloc.add(SettingsBloc_LoadStockCategoriesEvent(website: Website.Clinic));
                           // _pageController.jumpToPage(5);
                           currentIndex = 5;
                         },
@@ -372,7 +376,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                     SidebarXItem(
                         label: "Suppliers",
                         onTap: () {
-                          bloc.add(SettingsBloc_LoadSuppliersEvent());
+                          bloc.add(SettingsBloc_LoadSuppliersEvent(params: GetSuppliersParams(medical: false, website: Website.Clinic)));
 
                           // _pageController.jumpToPage(6);
                           currentIndex = 6;
@@ -1158,8 +1162,10 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                             onSave: () {
                                               Suppliers = [...Suppliers, BasicNameIdObjectEntity(name: name)];
                                               bloc.add(SettingsBloc_AddSuppliersEvent(
+                                                  params: AddSuppliersParams(
+                                                medical: false,
                                                 model: Suppliers,
-                                              ));
+                                              )));
                                             },
                                             child: CIA_TextFormField(
                                               label: "Name",
@@ -1167,7 +1173,11 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                               controller: TextEditingController(text: ""),
                                             ));
                                       }),
-                                  CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddSuppliersEvent(model: Suppliers))),
+                                  CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddSuppliersEvent(
+                                      params: AddSuppliersParams(
+                                        medical: false,
+                                        model: Suppliers,
+                                      )))),
                                 ],
                               )
                             ],

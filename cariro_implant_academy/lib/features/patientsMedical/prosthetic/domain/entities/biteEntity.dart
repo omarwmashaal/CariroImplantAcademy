@@ -26,6 +26,5 @@ class BiteEntity extends ProstheticTreatmentDiagnosticParent {
       diagnostic,
       nextStep,
     ]);
-
-
+  bool isNull() => diagnostic == null && nextStep == null;
 }

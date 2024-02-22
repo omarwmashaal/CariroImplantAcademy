@@ -1,3 +1,5 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/bloc_constants.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
@@ -29,6 +31,7 @@ class DentalExaminationPage extends StatefulWidget {
 
   static String routePath = ":id/DentalExamination";
   int patientId;
+
   static String getRouteName({Website? site}) {
     Website website = site ?? siteController.getSite();
     switch (website) {
@@ -38,6 +41,7 @@ class DentalExaminationPage extends StatefulWidget {
         return "DentalExamination";
     }
   }
+
   @override
   State<DentalExaminationPage> createState() => _PatientDentalExaminationState();
 }
@@ -68,7 +72,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Dental Examination"));
-    medicalShellBloc.saveChanges = (){
+    medicalShellBloc.saveChanges = () {
       bloc.add(DentalExaminationBloc_SaveDataEvent(dentalExaminationEntity: dentalExaminationEntity));
     };
     // load = MedicalAPI.GetPatientDentalExamination(widget.patientId);
@@ -76,41 +80,39 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DentalExaminationBloc, DentalExaminationBloc_States>(
-      buildWhen: (previous, current) =>
-      current is DentalExaminationBloc_LoadingDataState ||
-          current is DentalExaminationBloc_LoadedSuccessfullyState ||
-          current is DentalExaminationBloc_ErrorState
-      ,
-      builder: (context, state) {
-        if (state is DentalExaminationBloc_LoadingDataState)
-          return LoadingWidget();
-        else if (state is DentalExaminationBloc_LoadedSuccessfullyState)
-        {
-          dentalExaminationEntity = state.dentalExaminationEntity;
-          medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.dentalExaminationEntity.date,data: dentalExaminationEntity));
+    return BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
+      bloc: medicalShellBloc,
+      buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
+      builder: (context, stateShell) {
+        return AbsorbPointer(
+          absorbing: () {
+            if (stateShell is MedicalInfoBlocChangeViewEditState) {
+              //   edit = stateShell.edit;
+              return !stateShell.edit;
+            } else {
+              // edit = false;
+              return true;
+            }
+          }(),
+          child: BlocConsumer<DentalExaminationBloc, DentalExaminationBloc_States>(
+            buildWhen: (previous, current) =>
+            current is DentalExaminationBloc_LoadingDataState ||
+                current is DentalExaminationBloc_LoadedSuccessfullyState ||
+                current is DentalExaminationBloc_ErrorState,
+            builder: (context, state) {
+              if (state is DentalExaminationBloc_LoadingDataState)
+                return LoadingWidget();
+              else if (state is DentalExaminationBloc_LoadedSuccessfullyState) {
+                dentalExaminationEntity = state.dentalExaminationEntity;
+                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.dentalExaminationEntity.date, data: dentalExaminationEntity));
 
-          bloc.isInitialized = true;
-          return ListView(
-            shrinkWrap: false,
-            children: [
-              FocusTraversalGroup(
-                policy: OrderedTraversalPolicy(),
-                child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
-                  bloc: medicalShellBloc,
-                  buildWhen: (previous, current) => current is MedicalInfoBlocChangeViewEditState,
-                  builder: (context, stateShell) {
-                    return AbsorbPointer(
-                      absorbing: () {
-                        if (stateShell is MedicalInfoBlocChangeViewEditState) {
-                          //   edit = stateShell.edit;
-                          return !stateShell.edit;
-                        } else {
-                          // edit = false;
-                          return true;
-                        }
-                      }(),
-                      child: Column(
+                bloc.isInitialized = true;
+                return ListView(
+                  shrinkWrap: false,
+                  children: [
+                    FocusTraversalGroup(
+                      policy: OrderedTraversalPolicy(),
+                      child:Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           BlocBuilder<DentalExaminationBloc, DentalExaminationBloc_States>(
@@ -238,10 +240,10 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "carious") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "carious")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "carious")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).carious = false;
@@ -263,10 +265,10 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "filled") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "filled")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "filled")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).filled = false;
@@ -277,26 +279,95 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                           BlocBuilder<DentalExaminationBloc, DentalExaminationBloc_States>(
                               buildWhen: (previous, current) => current is DentalExaminationBloc_TeethStatusChanged,
                               builder: (context, state) {
-                                return CIA_TagsInputWidget(
-                                  dynamicVisibility: true,
-                                  key: GlobalKey(),
-                                  label: "Missed",
-                                  initialValue: dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.missed == true)
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "missed") != null
-                                      ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "missed")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
-                                      : null,
-                                  onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).missed = false;
-                                    setState(() {});
-                                  },
+                                return Visibility(
+                                  visible: (dentalExaminationEntity.dentalExaminations ?? []).firstWhereOrNull((element) => element.missed == true) != null,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_TagsInputWidget(
+                                          dynamicVisibility: true,
+                                          key: GlobalKey(),
+                                          label: "Missed",
+                                          initialValue: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.missed == true)
+                                              .toList()
+                                              .map((e) => e.tooth.toString())
+                                              .toList(),
+                                          strikeValues:
+                                          dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "missed") != null
+                                              ? dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState == "missed")
+                                              .toList()
+                                              .map((e) => e.tooth.toString())
+                                              .toList()
+                                              : null,
+                                          onDelete: (value) {
+                                            dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).missed =
+                                            false;
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      CIA_SecondaryButton(
+                                          label: "Intra Arch Spaces",
+                                          onTab: () {
+                                            var missedTeeth =
+                                            (dentalExaminationEntity.dentalExaminations ?? []).where((element) => element.missed == true).toList();
+                                            CIA_ShowPopUp(
+                                                title: "Intra Arch Spaces",
+                                                context: context,
+                                                width: 500,
+                                                child: ListView(
+                                                  children: missedTeeth
+                                                      .map(
+                                                        (e) => Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          FormTextValueWidget(text: e.tooth!.toString()),
+                                                          SizedBox(width:10),
+                                                          Expanded(
+                                                            key: GlobalKey(),
+                                                            child: CIA_TextFormField(
+                                                              suffix: "mm",
+                                                              isNumber: true,
+                                                              label: "Inter arch space RT",
+                                                              onChange: (value) {
+                                                                e.interarchSpaceRT = int.tryParse(value) ?? 0;
+                                                              },
+                                                              controller: TextEditingController(
+                                                                text: (e.interarchSpaceRT ?? 0).toString(),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Expanded(
+                                                            key: GlobalKey(),
+                                                            child: CIA_TextFormField(
+                                                                suffix: "mm",
+                                                                isNumber: true,
+                                                                label: "Inter arch space LT",
+                                                                onChange: (value) {
+                                                                  try {
+                                                                    e.interarchSpaceLT = int.tryParse(value) ?? 0;
+                                                                  } catch (e, s) {
+                                                                    print(s);
+                                                                  }
+                                                                },
+                                                                controller: TextEditingController(
+                                                                  text: (e.interarchSpaceLT ?? 0).toString(),
+                                                                )),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                      .toList(),
+                                                ));
+                                          }),
+                                    ],
+                                  ),
                                 );
                               }),
                           BlocBuilder<DentalExaminationBloc, DentalExaminationBloc_States>(
@@ -313,10 +384,10 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "notSure") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "notSure")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "notSure")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).notSure = false;
@@ -341,16 +412,16 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .map((e) => e.tooth.toString())
                                             .toList(),
                                         strikeValues:
-                                            dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityI") != null
-                                                ? dentalExaminationEntity.dentalExaminations!
-                                                    .where((element) => element.previousState == "mobilityI")
-                                                    .toList()
-                                                    .map((e) => e.tooth.toString())
-                                                    .toList()
-                                                : null,
+                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityI") != null
+                                            ? dentalExaminationEntity.dentalExaminations!
+                                            .where((element) => element.previousState == "mobilityI")
+                                            .toList()
+                                            .map((e) => e.tooth.toString())
+                                            .toList()
+                                            : null,
                                         onDelete: (value) {
                                           dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityI =
-                                              false;
+                                          false;
                                           setState(() {});
                                         },
                                       );
@@ -358,7 +429,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               ),
                               SizedBox(
                                 width: dentalExaminationEntity.dentalExaminations != null &&
-                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty
+                                    dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty
                                     ? 10
                                     : 0,
                               ),
@@ -376,26 +447,25 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .map((e) => e.tooth.toString())
                                             .toList(),
                                         strikeValues:
-                                            dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityII") != null
-                                                ? dentalExaminationEntity.dentalExaminations!
-                                                    .where((element) => element.previousState == "mobilityII")
-                                                    .toList()
-                                                    .map((e) => e.tooth.toString())
-                                                    .toList()
-                                                : null,
+                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityII") != null
+                                            ? dentalExaminationEntity.dentalExaminations!
+                                            .where((element) => element.previousState == "mobilityII")
+                                            .toList()
+                                            .map((e) => e.tooth.toString())
+                                            .toList()
+                                            : null,
                                         onDelete: (value) {
                                           dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityII =
-                                              false;
+                                          false;
                                           setState(() {});
                                         },
                                       );
                                     }),
                               ),
                               SizedBox(
-                                width: dentalExaminationEntity.dentalExaminations != null &&(
-                                    dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityII == true).isNotEmpty ||
-                                    dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty)
-
+                                width: dentalExaminationEntity.dentalExaminations != null &&
+                                    (dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityII == true).isNotEmpty ||
+                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty)
                                     ? 10
                                     : 0,
                               ),
@@ -414,16 +484,16 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .map((e) => e.tooth.toString())
                                             .toList(),
                                         strikeValues:
-                                            dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityIII") != null
-                                                ? dentalExaminationEntity.dentalExaminations!
-                                                    .where((element) => element.previousState == "mobilityIII")
-                                                    .toList()
-                                                    .map((e) => e.tooth.toString())
-                                                    .toList()
-                                                : null,
+                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityIII") != null
+                                            ? dentalExaminationEntity.dentalExaminations!
+                                            .where((element) => element.previousState == "mobilityIII")
+                                            .toList()
+                                            .map((e) => e.tooth.toString())
+                                            .toList()
+                                            : null,
                                         onDelete: (value) {
                                           dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityIII =
-                                              false;
+                                          false;
                                         },
                                       );
                                     }),
@@ -444,14 +514,14 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "hopelessteeth") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "hopelessteeth")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "hopelessteeth")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).hopelessTeeth =
-                                        false;
+                                    false;
                                     setState(() {});
                                   },
                                 );
@@ -470,14 +540,14 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "implantPlaced") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "implantPlaced")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "implantPlaced")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).implantPlaced =
-                                        false;
+                                    false;
                                     setState(() {});
                                   },
                                 );
@@ -496,50 +566,18 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList(),
                                   strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "implantFailed") != null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                          .where((element) => element.previousState == "implantFailed")
-                                          .toList()
-                                          .map((e) => e.tooth.toString())
-                                          .toList()
+                                      .where((element) => element.previousState == "implantFailed")
+                                      .toList()
+                                      .map((e) => e.tooth.toString())
+                                      .toList()
                                       : null,
                                   onDelete: (value) {
                                     dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).implantFailed =
-                                        false;
+                                    false;
                                     setState(() {});
                                   },
                                 );
                               }),
-                          Row(
-                            children: [
-                              Expanded(
-                                key: GlobalKey(),
-                                child: CIA_TextFormField(
-                                  suffix: "mm",
-                                  isNumber: true,
-                                  label: "Inter arch space RT",
-                                  onChange: (value) {
-                                    dentalExaminationEntity.interarchSpaceRT = int.parse(value);
-                                  },
-                                  controller: TextEditingController(
-                                    text: (dentalExaminationEntity.interarchSpaceRT ?? 0).toString(),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                key: GlobalKey(),
-                                child: CIA_TextFormField(
-                                    suffix: "mm",
-                                    isNumber: true,
-                                    label: "Inter arch space LT",
-                                    onChange: (value) {
-                                      dentalExaminationEntity.interarchSpaceLT = int.parse(value);
-                                    },
-                                    controller: TextEditingController(
-                                      text: (dentalExaminationEntity.interarchSpaceLT ?? 0).toString(),
-                                    )),
-                              ),
-                            ],
-                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -587,24 +625,23 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                           ),
                         ],
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        }
-        else if(state is DentalExaminationBloc_ErrorState)
-        return BigErrorPageWidget(message: state.message);
-        return Container();
-      },
-      listener: (context, state) {
-        if(state is DentalExaminationBloc_SavedDataSuccessfullyState)
-          bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
+                    ),
+                  ],
+                );
+              }
+              else if (state is DentalExaminationBloc_ErrorState) return BigErrorPageWidget(message: state.message);
+              return Container();
+            },
+            listener: (context, state) {
+              if (state is DentalExaminationBloc_SavedDataSuccessfullyState) bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
 
-        // if(state is DentalHistoryBloc_SavingDataState)
-        //   context.l
+              // if(state is DentalHistoryBloc_SavingDataState)
+              //   context.l
+            },
+          ),
+        );
       },
     );
+
   }
 }

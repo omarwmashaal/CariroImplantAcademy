@@ -7,17 +7,24 @@ import 'package:dartz/dartz.dart';
 
 import 'addImplantsUseCase.dart';
 
-class AddSuppliersUseCase extends UseCases<NoParams, List<BasicNameIdObjectEntity>> {
+class AddSuppliersUseCase extends UseCases<NoParams, AddSuppliersParams> {
   final SettingsRepository settingsRepository;
 
   AddSuppliersUseCase({required this.settingsRepository});
 
   @override
-  Future<Either<Failure, NoParams>> call(List<BasicNameIdObjectEntity> value) async {
-    return await settingsRepository.addSuppliers(value).then((value) => value.fold(
+  Future<Either<Failure, NoParams>> call(AddSuppliersParams value) async {
+    return await settingsRepository.addSuppliers(value.model,value.medical).then((value) => value.fold(
           (l) => Left(l..message = "Add Suppliers: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
   }
 }
+
+class AddSuppliersParams{
+  final bool medical;
+  final List<BasicNameIdObjectEntity> model;
+  AddSuppliersParams({required this.medical,required this.model});
+}
+
 

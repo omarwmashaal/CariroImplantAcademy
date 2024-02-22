@@ -17,23 +17,21 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
-    bool? finalProthesisImpression,
     EnumFinalProthesisImpressionStatus? finalProthesisImpressionStatus,
     EnumFinalProthesisImpressionNextVisit? finalProthesisImpressionNextVisit,
-    DateTime? finalProthesisImpressionDate,
+    DateTime? date,
   }) : super(
           id: id,
           patientId: patientId,
           patient: patient,
           searchTeethClassification: searchTeethClassification,
           website: website,
-    operator: operator,
-    operatorId: operatorId,
+          operator: operator,
+          operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
-          finalProthesisImpression: finalProthesisImpression,
           finalProthesisImpressionStatus: finalProthesisImpressionStatus,
           finalProthesisImpressionNextVisit: finalProthesisImpressionNextVisit,
-          finalProthesisImpressionDate: finalProthesisImpressionDate,
+          date: date,
         );
 
   factory FinalProthesisImpressionModel.fromJson(String json) {
@@ -46,26 +44,15 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
       id: map['id'],
       patientId: map['patientId'],
       operatorId: map['operatorId'],
-      operator: map['operatorDTO']==null?null:BasicNameIdObjectModel.fromJson(map['operatorDTO']),
-      patient: map['patient'] != null
-          ? BasicNameIdObjectModel.fromJson(map['patient'])
-          : null,
+      operator: map['operatorDTO'] == null ? null : BasicNameIdObjectModel.fromJson(map['operatorDTO']),
+      patient: map['patient'] != null ? BasicNameIdObjectModel.fromJson(map['patient']) : null,
       searchTeethClassification: map['searchTeethClassification'],
-      finalProthesisTeeth: map['finalProthesisTeeth'] == null
-          ? null
-          : (map['finalProthesisTeeth'] as List<dynamic>)
-          .map((e) => e as int)
-          .toList(),
-      finalProthesisImpression: map['finalProthesisImpression'],
+      finalProthesisTeeth: map['finalProthesisTeeth'] == null ? null : (map['finalProthesisTeeth'] as List<dynamic>).map((e) => e as int).toList(),
       finalProthesisImpressionStatus:
-      map['finalProthesisImpressionStatus'] != null
-          ? EnumFinalProthesisImpressionStatus.values[map['finalProthesisImpressionStatus']]
-          : null,
+          map['finalProthesisImpressionStatus'] != null ? EnumFinalProthesisImpressionStatus.values[map['finalProthesisImpressionStatus']] : null,
       finalProthesisImpressionNextVisit:
-      map['finalProthesisImpressionNextVisit'] != null
-          ? EnumFinalProthesisImpressionNextVisit.values[map['finalProthesisImpressionNextVisit']]
-          : null,
-      finalProthesisImpressionDate: DateTime.tryParse(map['finalProthesisImpressionDate'] ?? "")?.toLocal(),
+          map['finalProthesisImpressionNextVisit'] != null ? EnumFinalProthesisImpressionNextVisit.values[map['finalProthesisImpressionNextVisit']] : null,
+      date: DateTime.tryParse(map['date'] ?? "")?.toLocal(),
       // ... add more properties as needed
     );
   }
@@ -75,14 +62,13 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
       'id': super.id,
       'patientId': super.patientId,
       'operatorId': operatorId,
-     // 'patient': super.patient?.toJson(),
+      // 'patient': super.patient?.toJson(),
       'searchTeethClassification': super.searchTeethClassification,
       //'website': super.website.toString().split('.').last,
       'finalProthesisTeeth': super.finalProthesisTeeth,
-      'finalProthesisImpression': super.finalProthesisImpression,
       'finalProthesisImpressionStatus': super.finalProthesisImpressionStatus?.index,
       'finalProthesisImpressionNextVisit': super.finalProthesisImpressionNextVisit?.index,
-      'finalProthesisImpressionDate': super.finalProthesisImpressionDate?.toUtc().toIso8601String(),
+      'date': super.date?.toUtc().toIso8601String(),
     };
   }
 
@@ -94,10 +80,9 @@ class FinalProthesisImpressionModel extends FinalProthesisImpressionEntity {
       searchTeethClassification: entity.searchTeethClassification,
       website: entity.website,
       finalProthesisTeeth: entity.finalProthesisTeeth,
-      finalProthesisImpression: entity.finalProthesisImpression,
       finalProthesisImpressionStatus: entity.finalProthesisImpressionStatus,
       finalProthesisImpressionNextVisit: entity.finalProthesisImpressionNextVisit,
-      finalProthesisImpressionDate: entity.finalProthesisImpressionDate,
+      date: entity.date,
       operatorId: entity.operatorId,
     );
   }

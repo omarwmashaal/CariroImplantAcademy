@@ -12,6 +12,7 @@ import '../../../../../features/patient/domain/entities/roomEntity.dart';
 import '../../../../error/failure.dart';
 import '../../../../useCases/useCases.dart';
 import '../entities/membraneCompanyEnity.dart';
+import '../entities/membraneEnity.dart';
 import '../useCases/addImplantsUseCase.dart';
 import '../useCases/addMembranesUseCase.dart';
 
@@ -20,18 +21,18 @@ abstract class SettingsRepository{
   Future<Either<Failure,TreatmentPricesEntity>> getTreatmentPrices();
   Future<Either<Failure,List<TacCompanyEntity>>> getTacs();
   Future<Either<Failure,List<MembraneCompanyEntity>>> getMembraneCompanies();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getMembranes(int id);
+  Future<Either<Failure,List<MembraneEntity>>> getMembranes(int id);
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getImplantCompanies();
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getImplantLines(int id);
   Future<Either<Failure,List<ImplantEntity>>> getImplants(int id);
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getIncomeCategories();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getExpensesCategories();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getExpensesCategories(Website website);
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getPaymentMethods();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getStockCategories();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories();
-  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getSuppliers();
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalNonStockExpensesCategories(Website website);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getNonMedicalStockCategories(Website website);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getStockCategories(Website website);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getMedicalExpensesCategories(Website website);
+  Future<Either<Failure,List<BasicNameIdObjectEntity>>> getSuppliers(Website website,bool medical);
   //Update Methods
   Future<Either<Failure,NoParams>> changeImplantCompanyName(BasicNameIdObjectEntity value);
   Future<Either<Failure,NoParams>> changeImplantLineName(BasicNameIdObjectEntity value);
@@ -43,7 +44,7 @@ abstract class SettingsRepository{
   Future<Either<Failure,NoParams>> addMembraneCompanies( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> addExpensesCategories( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> addIncomeCategories( List<BasicNameIdObjectEntity> model);
-  Future<Either<Failure,NoParams>> addSuppliers( List<BasicNameIdObjectEntity> model);
+  Future<Either<Failure,NoParams>> addSuppliers( List<BasicNameIdObjectEntity> model,bool medical);
   Future<Either<Failure,NoParams>> addStockCategories( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> addPaymentMethods( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> editRooms( List<RoomEntity> model);

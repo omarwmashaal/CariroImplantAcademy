@@ -107,4 +107,24 @@ class UsersRepositoryImpl extends UsersRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, NoParams>> removeUser(int id) async {
+    try {
+      final result = await userDatasource.removeUser(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> refreshCandidatesData(int? batchId) async {
+    try {
+      final result = await userDatasource.refreshCandidatesData(batchId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

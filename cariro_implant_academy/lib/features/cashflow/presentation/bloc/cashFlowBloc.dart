@@ -115,6 +115,7 @@ class CashFlowBloc extends Bloc<CashFlowBloc_Events, CashFlowBloc_States> {
           type: event.type,
           isStockItem: event.isStockItem,
           inventory: event.inventory,
+          isLab: event.isLab,
 
         ));
         result.fold(
@@ -212,7 +213,8 @@ class CashFlowDataGridSource extends DataGridSource {
                 DataGridCell<String>(columnName: 'Category', value: e.category!.name),
                 DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
                 DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-                DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
+                DataGridCell<int>(columnName: 'Price', value: e.price ?? 0),
+                DataGridCell<int>(columnName: 'Count', value: e.count ?? 0),
                 DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
                 DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
               ]))

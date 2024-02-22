@@ -266,7 +266,6 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
 
   @override
   void initState() {
-    dialogHelper.increaseCount();
     focus.addListener(() {
       if (!focus.hasFocus) {
         if (widget.onChange != null) {

@@ -34,11 +34,13 @@ class AddExpensesParams {
   final bool isStockItem;
   final EnumExpenseseCategoriesType type;
   final Website inventory;
+  final bool isLab;
 
   AddExpensesParams({
     required this.models,
     required this.type,
     required this.isStockItem,
      required this.inventory,
+    this.isLab = false,
   });
 }

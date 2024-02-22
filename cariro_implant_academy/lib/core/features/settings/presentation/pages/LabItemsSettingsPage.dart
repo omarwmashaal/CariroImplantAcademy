@@ -136,7 +136,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                             ),
                           );
                         },
-                        icon: Icon(Icons.edit)),
+                        icon: !siteController.getRole()!.contains("admin")?Container(): Icon(Icons.edit)),
                     onTap: () {
                       bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: e.id!));
                       currentIndex = e.id!;
@@ -242,7 +242,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                               ),
                                                             );
                                                           },
-                                                          icon: Icon(Icons.edit)),
+                                                          icon:!siteController.getRole()!.contains("admin")?Container():  Icon(Icons.edit)),
                                                     ))
                                                 .toList()),
                                       ),
@@ -360,7 +360,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                         ),
                                                       );
                                                     },
-                                                    icon: Icon(Icons.edit))))
+                                                    icon:!siteController.getRole()!.contains("admin")?Container():  Icon(Icons.edit))))
                                             .toList()),
                                   ),
                                   IconButton(

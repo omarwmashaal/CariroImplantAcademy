@@ -4,9 +4,12 @@ class DialogHelper {
   int currentDialogueCount = 0;
   int trials = 0;
 
-  DialogHelper() {}
+  DialogHelper() {
+    print("dialog helper: Constructor $currentDialogueCount}");
+  }
 
   dismissSingle(BuildContext context) {
+    print("dialog helper: single start $currentDialogueCount}");
     if (  currentDialogueCount != 0) {
       Navigator.of(context, rootNavigator: true).pop();
       currentDialogueCount--;
@@ -20,15 +23,27 @@ class DialogHelper {
         Navigator.of(context, rootNavigator: true).pop();
         trials = 0;
       }
+
+    print("dialog helper: single end $currentDialogueCount}");
   }
 
   dismissAll(BuildContext context) {
+
+    print("dialog helper: all start $currentDialogueCount}");
     while (currentDialogueCount != 0) {
       dismissSingle(context);
     }
+
+    print("dialog helper: all end $currentDialogueCount}");
   }
   clear()=>currentDialogueCount=0;
 
 
-  increaseCount() => currentDialogueCount++;
+  increaseCount() {
+
+    print("dialog helper: increase start $currentDialogueCount}");
+     currentDialogueCount++;
+
+    print("dialog helper: increase end $currentDialogueCount}");
+  }
 }

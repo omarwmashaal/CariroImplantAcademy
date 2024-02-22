@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:dropdown_plus/dropdown_plus.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -169,7 +170,6 @@ class CIA_DropDownSearchClean extends StatelessWidget {
       asyncItems: (c) async {
         if (asyncItems == null) return [];
         return await asyncItems!();
-
       },
       filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),
       itemAsString: (DropDownDTO u) => u.name!,
@@ -203,17 +203,19 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
       {Key? key,
       this.items,
       this.asyncUseCase,
+      this.asyncUseCaseDynamic,
       this.label,
       this.disableSearch = false,
       this.selectedItem,
       this.enabled = true,
       this.emptyString = "No results found",
-        this.searchParams,
-        this.onLoad,
+      this.searchParams,
+      this.onLoad,
       this.onSelect})
       : super(key: key);
   List<BasicNameIdObjectEntity>? items;
   LoadingUseCases? asyncUseCase;
+  UseCases? asyncUseCaseDynamic;
   T? searchParams;
 
   String? label;
@@ -223,6 +225,7 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
   bool disableSearch;
   Function(List<BasicNameIdObjectEntity> values)? onLoad;
   Function(BasicNameIdObjectEntity value)? onSelect;
+  //BasicNameIdObjectEntity emptyItem = BasicNameIdObjectEntity(name: "Clear Selection");
 
   @override
   Widget build(BuildContext context) {
@@ -240,22 +243,26 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
           ),
           selectedItem: selectedItem,
           asyncItems: (c) async {
-            if (asyncUseCase == null) return [];
-            var res = await bloc.searchString(
-              searchParams??NoParams(),
-              asyncUseCase!,
+            if (asyncUseCase == null && asyncUseCaseDynamic == null) return [];
+            List<BasicNameIdObjectEntity> res = [];
+
+            res = await bloc.searchString(
+              searchParams ?? NoParams(),
+              (asyncUseCase ?? asyncUseCaseDynamic)!,
             );
-            if(onLoad!=null)
-              {
-                onLoad!(res);
-              }
+            if (onLoad != null) {
+              onLoad!(res);
+            }
             return res;
           },
           filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),
-          itemAsString: (BasicNameIdObjectEntity u) => u.name??"",
-          items: items ?? [],
+          itemAsString: (BasicNameIdObjectEntity u) => AddSpacesToSentence(u.name??"") ,
+          items: items??[],
           onChanged: (v) {
-            if (onSelect != null) onSelect!(v!);
+            if (onSelect != null) {
+
+                onSelect!(v!);
+            }
           },
           dropdownDecoratorProps: DropDownDecoratorProps(
               textAlign: TextAlign.start,
@@ -279,4 +286,3 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
     );
   }
 }
-

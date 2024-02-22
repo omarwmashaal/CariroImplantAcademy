@@ -4,11 +4,14 @@ import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/resetPasswordForUserUseCase.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/canidateDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/changeRoleUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getCandidateDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/refreshCandidateDataUseCase.dart';
+import 'package:cariro_implant_academy/features/user/domain/usecases/removeUserUseCase.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_Events.dart';
 import 'package:cariro_implant_academy/features/user/presentation/bloc/usersBloc_States.dart';
 import 'package:cariro_implant_academy/features/user/presentation/userAccessWidet.dart';
@@ -41,6 +44,8 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
   final ResetPasswordForUserUseCase resetPasswordForUserUseCase;
   final ChangeRoleUseCase changeRoleUseCase;
   final GetCandidateDetailsUseCase getCandidateDetailsUseCase;
+  final RemoveUserUseCase removeUserUseCase;
+  final RefreshCandidatesDataUseCase refreshCandidatesDataUseCase;
   bool edit = false;
 
   UsersBloc({
@@ -49,9 +54,11 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
     required this.getUserInfoUseCase,
     required this.resetPasswordUseCase,
     required this.getUsersSessionsUseCase,
+    required this.refreshCandidatesDataUseCase,
     required this.changeRoleUseCase,
     required this.searchUsersByWorkPlaceUseCase,
     required this.resetPasswordForUserUseCase,
+    required this.removeUserUseCase,
     required this.getCandidateDetailsUseCase,
   }) : super(UsersBloc_LoadingUserState()) {
     on<UsersBloc_GetUserInfoEvent>(
@@ -160,6 +167,26 @@ class UsersBloc extends Bloc<UsersBloc_Events, UsersBloc_States> {
         );
       },
     );
+    on<UsersBloc_RemoveUserEvent>(
+      (event, emit) async {
+        emit(UsersBloc_RemovingUserState());
+        final result = await removeUserUseCase(event.id);
+        result.fold(
+          (l) => emit(UsersBloc_RemovingUserErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_RemovedUserSuccessfullyState()),
+        );
+      },
+    );
+    on<UsersBloc_RefreshCandidatesDataEvent>(
+      (event, emit) async {
+        emit(UsersBloc_RefreshingCandidateDatatate());
+        final result = await refreshCandidatesDataUseCase(event.batchId);
+        result.fold(
+          (l) => emit(UsersBloc_RefreshingCandidateDataErrorState(message: l.message ?? "")),
+          (r) => emit(UsersBloc_RefreshedCandidatesDataSuccessfullyState()),
+        );
+      },
+    );
   }
 }
 
@@ -196,6 +223,19 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
                   DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+                  DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
+                        },
+                      )),
                 ]))
             .toList();
       } else if (type == UserRoles.Secretary) {
@@ -206,15 +246,25 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Access',
-                      value: UserAccessWidget(user: e)),
+                  DataGridCell<Widget>(columnName: 'Access', value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
                           usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
+                        },
+                      )),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
                         },
                       )),
                 ]))
@@ -231,9 +281,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Class Year', value: e.classYear),
                   DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
 
-                  DataGridCell<Widget>(
-                      columnName: 'Access',
-                      value: UserAccessWidget(user: e)),
+                  DataGridCell<Widget>(columnName: 'Access', value: UserAccessWidget(user: e)),
 
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
@@ -241,6 +289,18 @@ class UsersDataGridSource extends DataGridSource {
                         icon: Icon(Icons.lock),
                         onPressed: () async {
                           usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
+                        },
+                      )),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
                         },
                       )),
                 ]))
@@ -253,15 +313,25 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Access',
-                      value: UserAccessWidget(user: e)),
+                  DataGridCell<Widget>(columnName: 'Access', value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
                           usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
+                        },
+                      )),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
                         },
                       )),
                 ]))
@@ -274,15 +344,25 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-                  DataGridCell<Widget>(
-                      columnName: 'Access',
-                      value: UserAccessWidget(user: e)),
+                  DataGridCell<Widget>(columnName: 'Access', value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: "Reset Password",
                       value: IconButton(
                         icon: Icon(Icons.lock),
                         onPressed: () async {
                           usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
+                        },
+                      )),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
                         },
                       )),
                 ]))
@@ -298,6 +378,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
                   DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+          DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
                 ]))
             .toList();
       } else if (type == UserRoles.Secretary) {

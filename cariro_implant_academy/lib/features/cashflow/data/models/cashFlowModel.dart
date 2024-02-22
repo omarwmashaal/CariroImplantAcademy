@@ -5,8 +5,10 @@ import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlo
 class CashFlowModel extends CashFlowEntity {
   CashFlowModel({
     super.id,
+    super.code,
     super.receiptID,
     super.receipt,
+    super.size,
     super.date,
     super.name,
     super.categoryId,
@@ -27,11 +29,15 @@ class CashFlowModel extends CashFlowEntity {
     super.implantCompany,
     super.implantLine,
     super.implant,
+    super.labItemShadeId,
   });
 
   factory CashFlowModel.fromEntity(CashFlowEntity entity) {
     return CashFlowModel(
       id: entity.id,
+      size: entity.size,
+      code: entity.code,
+      labItemShadeId: entity.labItemShadeId,
       receiptID: entity.receiptID,
       receipt: entity.receipt,
       date: entity.date,
@@ -59,7 +65,10 @@ class CashFlowModel extends CashFlowEntity {
 
   CashFlowModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    code = json['code'];
+    labItemShadeId = json['labItemShadeId'];
     receiptID = json['receiptID'];
+    size = json['size'];
     labRequestId = json['labRequestId'];
     date = DateTime.tryParse(json['date'] ?? "")?.toLocal();
     name = json['name'];
@@ -86,6 +95,9 @@ class CashFlowModel extends CashFlowEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['size'] = this.size;
+    data['code'] = this.code;
+    data['labItemShadeId'] = this.labItemShadeId;
     data['receiptID'] = this.receiptID;
     data['receipt'] = this.receipt;
     data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();

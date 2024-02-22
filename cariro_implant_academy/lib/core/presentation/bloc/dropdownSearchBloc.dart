@@ -8,7 +8,7 @@ class DropDownBlocStates {}
 class DropDownSearchBloc extends Cubit<DropDownBlocStates> {
   DropDownSearchBloc(super.initialState);
 
-  Future<List<BasicNameIdObjectEntity>> searchString<T>(T params, LoadingUseCases useCase) async {
+  Future<List<BasicNameIdObjectEntity>> searchString<T>(T params, UseCases useCase) async {
     final result = await useCase(params);
     return result.fold((l) => [], (r) => r);
   }

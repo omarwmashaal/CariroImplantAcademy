@@ -17,10 +17,9 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
     EnumTeethClassification? searchTeethClassification,
     Website website = Website.CIA,
     List<int>? finalProthesisTeeth,
-    bool? finalProthesisHealingCollar,
     EnumFinalProthesisHealingCollarStatus? finalProthesisHealingCollarStatus,
     EnumFinalProthesisHealingCollarNextVisit? finalProthesisHealingCollarNextVisit,
-    DateTime? finalProthesisHealingCollarDate,
+    DateTime? date,
   }) : super(
           id: id,
           patientId: patientId,
@@ -30,10 +29,9 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
     operator: operator,
     operatorId: operatorId,
           finalProthesisTeeth: finalProthesisTeeth,
-          finalProthesisHealingCollar: finalProthesisHealingCollar,
           finalProthesisHealingCollarStatus: finalProthesisHealingCollarStatus,
           finalProthesisHealingCollarNextVisit: finalProthesisHealingCollarNextVisit,
-          finalProthesisHealingCollarDate: finalProthesisHealingCollarDate,
+    date: date,
         );
 
   factory FinalProthesisHealingCollarModel.fromJson(String json) {
@@ -54,7 +52,6 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
           : List<int>.from((map['finalProthesisTeeth'] as List<dynamic>).map((e) => e as int)),
 
       // website: Website.values[],
-      finalProthesisHealingCollar: map['finalProthesisHealingCollar'],
       finalProthesisHealingCollarStatus:
       map['finalProthesisHealingCollarStatus'] != null
           ? EnumFinalProthesisHealingCollarStatus.values[map['finalProthesisHealingCollarStatus']]
@@ -63,9 +60,9 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
       map['finalProthesisHealingCollarNextVisit'] != null
           ? EnumFinalProthesisHealingCollarNextVisit.values[map['finalProthesisHealingCollarNextVisit']]
           : null,
-      finalProthesisHealingCollarDate: map['finalProthesisHealingCollarDate'] !=
+      date: map['date'] !=
           null
-          ? DateTime.tryParse(map['finalProthesisHealingCollarDate']??"")?.toLocal()
+          ? DateTime.tryParse(map['date']??"")?.toLocal()
           : null,
     );
   }
@@ -79,10 +76,9 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
       'searchTeethClassification': super.searchTeethClassification,
      // 'website': super.website.toString().split('.').last,
       'finalProthesisTeeth': super.finalProthesisTeeth,
-      'finalProthesisHealingCollar': super.finalProthesisHealingCollar,
       'finalProthesisHealingCollarStatus': super.finalProthesisHealingCollarStatus?.index,
       'finalProthesisHealingCollarNextVisit': super.finalProthesisHealingCollarNextVisit?.index,
-      'finalProthesisHealingCollarDate': super.finalProthesisHealingCollarDate?.toUtc().toIso8601String(),
+      'date': super.date?.toUtc().toIso8601String(),
     };
   }
 
@@ -94,10 +90,9 @@ class FinalProthesisHealingCollarModel extends FinalProthesisHealingCollarEntity
       searchTeethClassification: entity.searchTeethClassification,
       website: entity.website,
       finalProthesisTeeth: entity.finalProthesisTeeth,
-      finalProthesisHealingCollar: entity.finalProthesisHealingCollar,
       finalProthesisHealingCollarStatus: entity.finalProthesisHealingCollarStatus,
       finalProthesisHealingCollarNextVisit: entity.finalProthesisHealingCollarNextVisit,
-      finalProthesisHealingCollarDate: entity.finalProthesisHealingCollarDate,
+      date: entity.date,
       operatorId: entity.operatorId,
     );
   }

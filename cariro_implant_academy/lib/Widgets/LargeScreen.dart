@@ -104,7 +104,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               onTap: () {
                                 context.goNamed(NotificationsPage.routeName);
                               },
-                              child: Text("View All Notifications"),
+                              child: Text("All Notifications"),
                             ),
                             BlocConsumer<AppBarBloc, AppBarBlocState>(
                               bloc: appBarBloc,
@@ -129,7 +129,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                 );
                               },
                             ),
-                            SizedBox(width: 20),
+                            SizedBox(width: 10),
                             IconButton(
                                 onPressed: () {
                                   CIA_ShowPopUp(
@@ -144,7 +144,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                                   );
                                 },
                                 icon: Icon(Icons.calendar_month_sharp)),
-                            SizedBox(width: 20),
+                            SizedBox(width: 10),
                             BlocBuilder<ImageBloc, ImageBloc_State>(
                               bloc: imageBlocProfilesss,
                               builder: (context, state) {
@@ -171,7 +171,7 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               },
                             ),
                             SizedBox(
-                              width: 20,
+                              width: 10,
                             )
                           ],
                         ))

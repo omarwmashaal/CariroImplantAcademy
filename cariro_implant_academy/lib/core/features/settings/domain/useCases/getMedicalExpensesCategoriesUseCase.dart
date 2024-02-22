@@ -5,14 +5,16 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class GetMedicalExpensesCategoriesUseCase extends LoadingUseCases {
+import '../../../../constants/enums/enums.dart';
+
+class GetMedicalExpensesCategoriesUseCase extends LoadingUseCases <Website>{
   final SettingsRepository settingsRepository;
 
   GetMedicalExpensesCategoriesUseCase({required this.settingsRepository});
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(NoParams) async {
-    return await settingsRepository.getMedicalExpensesCategories().then((value) => value.fold(
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(params) async {
+    return await settingsRepository.getMedicalExpensesCategories(params).then((value) => value.fold(
           (l) => Left(l..message = "Get Medical Expenses Categories: ${l.message ?? ""}"),
           (r) => Right(r),
         ));

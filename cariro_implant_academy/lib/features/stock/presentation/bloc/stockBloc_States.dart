@@ -17,7 +17,7 @@ class StockBloc_LoadingErrorState extends StockBloc_States{
   List<Object?> get props => [message];
 }
 class StockBloc_LoadedStockSuccessfullyState extends StockBloc_States{
-  final List<StockEntity> data;
+  final List<dynamic> data;
   StockBloc_LoadedStockSuccessfullyState({required this.data});
   @override
   // TODO: implement props

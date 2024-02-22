@@ -1,10 +1,10 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/repositories/prostheticRepository.dart';
 import 'package:dartz/dartz.dart';
 
-import '../entities/prostheticTreatmentFinalEntity.dart';
+import '../entities/prostheticFinalEntity.dart';
 
 class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseCases<NoParams, ProstheticTreatmentFinalEntity> {
   final ProstheticRepository prostheticRepository;
@@ -17,7 +17,7 @@ class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseC
     data.healingCollars?.removeWhere((element) => element.isNull());
     data.tryIns?.removeWhere((element) => element.isNull());
     data.delivery?.removeWhere((element) => element.isNull());
-    return  await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisFullArch(data).then((value) => value.fold(
+    return await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisFullArch(data).then((value) => value.fold(
           (l) => Left(l..message = "Update Full Arch: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
