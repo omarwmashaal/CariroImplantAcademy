@@ -134,6 +134,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                               (e) => Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: CIA_SecondaryButton(
+                                  width: 130,
                                   icon: const Icon(Icons.add),
                                   label: e,
                                   onTab: () {
@@ -155,7 +156,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                                   (e) => Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: CIA_SecondaryButton(
-                                      width: 50,
+                                      width: 80,
                                       label: e.toString(),
                                       onTab: () {
                                         complicationsAfterSurgeryEntity = [

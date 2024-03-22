@@ -32,7 +32,8 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
       dialogHelper.dismissSingle(context);
     },
     context: context,
-    title: title,
+    title: title,  
+    style: AlertStyle(backgroundColor: Colors.white), 
     content: StatefulBuilder(
       builder: (BuildContext context, void Function(void Function()) setState) {
         return Column(
@@ -148,6 +149,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
     closeFunction: (){
       dialogHelper.dismissSingle(context);
     },
+    style: AlertStyle(backgroundColor: Colors.white), 
     context: context,
     title: title,
     content: StatefulBuilder(
@@ -293,6 +295,7 @@ CIA_ShowPopUp(
     },
     context: context,
     title: title,
+    style: AlertStyle(backgroundColor: Colors.white), 
 
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
@@ -339,6 +342,7 @@ CIA_ShowPopUpSaveRequest(
       dialogHelper.dismissSingle(context);
     },
     context: context,
+    style: AlertStyle(backgroundColor: Colors.white), 
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
@@ -401,6 +405,7 @@ CIA_ShowPopUpYesNo(
     closeFunction: (){
       dialogHelper.dismissSingle(context);
     },
+    style: AlertStyle(backgroundColor: Colors.white), 
     context: context,
     title: title,
     //content: SizedBox(width: width??120,),
@@ -448,6 +453,7 @@ dialogHelper.increaseCount();
     closeFunction: (){
       dialogHelper.dismissSingle(context);
     },
+    style: AlertStyle(backgroundColor: Colors.white), 
     context: context,
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {

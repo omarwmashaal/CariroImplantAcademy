@@ -42,7 +42,10 @@ dependencies:
   google_fonts: ^4.0.4
   custom_sliding_segmented_control: ^1.7.3
   slide_switcher: ^1.1.2
-  syncfusion_flutter_datagrid: 24.1.41
+  syncfusion_flutter_core: 24.2.7
+  pointycastle: ^3.7.4
+  crypto: ^3.0.3
+  syncfusion_flutter_datagrid: 24.2.7
   loading_indicator: ^3.1.0
   visibility_detector: ^0.4.0+2
   flutter_multi_select_items: ^0.4.2
@@ -50,7 +53,7 @@ dependencies:
   flutter_tagging: ^3.0.0
   dropdown_plus: ^0.0.9
   rflutter_alert: ^2.0.4
-  syncfusion_flutter_datepicker: 24.1.41
+  syncfusion_flutter_datepicker: 24.2.7
   flutter_time_picker_spinner: ^2.0.0
   another_stepper: ^1.1.6
   multi_state_button: ^1.1.3
@@ -62,7 +65,7 @@ dependencies:
   expansion_tile_card: ^3.0.0
   http: ^0.13.5
   material_tag_editor: ^0.1.2
-  syncfusion_flutter_calendar: 24.1.41
+  syncfusion_flutter_calendar: 24.2.7
   dropdown_search: ^5.0.6
   dio: ^5.1.1
   sidebarx: ^0.16.1

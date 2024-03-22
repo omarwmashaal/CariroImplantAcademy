@@ -193,7 +193,9 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               ),
                               CIA_SecondaryButton(
                                   label: "Create LAB Request",
-                                  icon: Icon(Icons.document_scanner_outlined),
+                                  icon: Icon(
+                                    Icons.document_scanner_outlined,
+                                  ),
                                   onTab: () async {
                                     print('check lab request');
                                     bool showRequestsPage = (await sl<CheckLabRequestsUseCase>()(patient.id!)).isRight();
@@ -261,7 +263,8 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                         builder: (context, state) {
                                           if (state is LabRequestsBloc_LoadingRequestsState)
                                             return LoadingWidget();
-                                          else if (state is LabRequestsBloc_LoadingRequestsErrorState) return BigErrorPageWidget(message: state.message);
+                                          else if (state is LabRequestsBloc_LoadingRequestsErrorState)
+                                            return BigErrorPageWidget(message: state.message);
                                           return TableWidget(
                                             dataSource: dataSource,
                                             onCellClick: (index) {
@@ -286,7 +289,8 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                 builder: (context, state) {
                                   if (state is MedicalInfoBlocChangeViewEditState && state.edit)
                                     return CIA_SecondaryButton(
-                                        label: "View mode", onTab: () => medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: false)));
+                                        label: "View mode",
+                                        onTab: () => medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: false)));
                                   return CIA_PrimaryButton(
                                     label: "Edit mode",
                                     onTab: () => medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: true)),

@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterProsthesisPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterSurgeryPage.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/export.dart';
+import 'package:pointycastle/paddings/pkcs7.dart';
 
 import '../core/features/settings/presentation/pages/UserSettingsPage.dart';
 import '../core/features/settings/presentation/pages/WebsiteSettingsPage.dart';
@@ -11,14 +16,10 @@ import '../features/cashflow/presentation/pages/cashFlowExpensesPage.dart';
 import '../features/cashflow/presentation/pages/cashFlowIncomPage.dart';
 
 import 'package:cariro_implant_academy/Constants/Colors.dart';
-import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/Models/NotificationModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
-import 'package:cariro_implant_academy/Pages/SharedPages/CashFlowSharedPage.dart';
-import 'package:cariro_implant_academy/Pages/SharedPages/StocksSharedPage.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/MedicalSlidingBar.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/pages/medicalInfo_DentalExaminationPage.dart';
@@ -28,18 +29,10 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../API/MedicalAPI.dart';
 import '../Constants/Controllers.dart';
-import '../Pages/CIA_Pages/CIA_MyProfilePage.dart';
-import '../Pages/CIA_Pages/CIA_SettingsPage.dart';
-import '../Pages/CIA_Pages/ViewUserPage.dart';
-import '../Pages/LAB_Pages/LAB_MyTasks.dart';
-import '../Pages/UsersSearchPage.dart';
 import '../Widgets/AppBarBloc_Events.dart';
 import '../Widgets/SlidingTab.dart';
 import '../core/injection_contianer.dart';
@@ -118,16 +111,18 @@ class SiteController {
         if ((path == SettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
             (path == UsersSettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
             (path == ClinicPriceSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))) {
-          if (getSite() == Website.CIA)
+          if (getSite() == Website.CIA) {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
-              SlidingTabModel(title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
+              SlidingTabModel(
+                  title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
             ]);
-          else if (getSite() == Website.Clinic) {
+          } else if (getSite() == Website.Clinic) {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
               SlidingTabModel(title: "Prices", compareName: ClinicPriceSettingsPage.routePath, namedDirectory: ClinicPriceSettingsPage.routeName),
-              SlidingTabModel(title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
+              SlidingTabModel(
+                  title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
             ]);
           }
         } else if (path == CreateOrViewPatientPage.viewPatientRoutePath.split("/").last ||
@@ -157,21 +152,29 @@ class SiteController {
             path == PatientAdvancedSearchPage.routePathProsthetic.split("/").last ||
             path == PatientAdvancedSearchPage.routePathTreatments.split("/").last ||
             path == VisitsPage.routePath.split("/").last) {
-          if (getRole()!.contains("secretary"))
+          if (getRole()!.contains("secretary")) {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
-                  title: "Patient Data", compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
-              SlidingTabModel(title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
+                  title: "Patient Data",
+                  compareName: PatientsSearchPage.routePath.split("/").last,
+                  namedDirectory: PatientsSearchPage.getRouteName()),
+              SlidingTabModel(
+                  title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
               SlidingTabModel(
                   title: "Complains", compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
             ]);
-          else
+          } else {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
-                  title: "Patient Data", compareName: PatientsSearchPage.routePath.split("/").last, namedDirectory: PatientsSearchPage.getRouteName()),
+                  title: "Patient Data",
+                  compareName: PatientsSearchPage.routePath.split("/").last,
+                  namedDirectory: PatientsSearchPage.getRouteName()),
               SlidingTabModel(
-                  title: "My Patients", compareName: PatientsSearchPage.routeMyPath.split("/").last, namedDirectory: PatientsSearchPage.getMyRouteName()),
-              SlidingTabModel(title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
+                  title: "My Patients",
+                  compareName: PatientsSearchPage.routeMyPath.split("/").last,
+                  namedDirectory: PatientsSearchPage.getMyRouteName()),
+              SlidingTabModel(
+                  title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
               SlidingTabModel(
                   title: "Complains", compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
               path == PatientAdvancedSearchPage.routeNameTreatments
@@ -180,6 +183,7 @@ class SiteController {
                       ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameProsthetic)
                       : SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNamePatients),
             ]);
+          }
         } else if (path == ViewUserProfilePage.candidateRoutePath.split("/").last || path == ViewCandidateData.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(
@@ -197,15 +201,18 @@ class SiteController {
             path == CashFlowExpensesPage.routePath.split("/").last ||
             path == CashFlowSummaryPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
             SlidingTabModel(
                 title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
-            SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
           ]);
         else if (path == StockSearchPage.routePath.split("/").last || path == StockLogsSearchPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.getRouteName(), compareName: StockSearchPage.routePath.split("/").last),
-            SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
           ]);
         else if (path == PatientMedicalHistory.routePath.split("/").last ||
             path == DentalExaminationPage.routePath.split("/").last ||
@@ -224,14 +231,12 @@ class SiteController {
       } else if (siteController.getSite() == Website.Lab) {
         if ((path == SettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
             (path == LabItemSettingsPage.routePath.split("/").last && getRole()!.contains("admin")) ||
-            (path == UsersSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))
-
-        ) {
+            (path == UsersSettingsPage.routePath.split("/").last && getRole()!.contains("admin"))) {
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Settings", compareName: SettingsPage.routePath.split("/").last, namedDirectory: SettingsPage.getRouteName()),
             SlidingTabModel(title: "Lab Items", compareName: LabItemSettingsPage.routePath, namedDirectory: LabItemSettingsPage.routeName),
-            SlidingTabModel(title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
-
+            SlidingTabModel(
+                title: "Users", compareName: UsersSettingsPage.routePath.split("/").last, namedDirectory: UsersSettingsPage.getRouteName()),
           ]);
         } else if (path == LabRequestsSearchPage.routePath.split("/").last ||
             path == LabRequestsSearchPage.routeAllPath.split("/").last ||
@@ -239,33 +244,46 @@ class SiteController {
           if (siteController.getRole()!.contains("technician")) {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
-                  title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
+                  title: "Today's Request",
+                  compareName: LabRequestsSearchPage.routePath.split("/").last,
+                  namedDirectory: LabRequestsSearchPage.routeName),
               SlidingTabModel(
-                  title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
+                  title: "All Requests",
+                  compareName: LabRequestsSearchPage.routeAllPath.split("/").last,
+                  namedDirectory: LabRequestsSearchPage.routeAllName),
               SlidingTabModel(
-                  title: "My Requests", compareName: LabRequestsSearchPage.routeMyPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeMyName),
+                  title: "My Requests",
+                  compareName: LabRequestsSearchPage.routeMyPath.split("/").last,
+                  namedDirectory: LabRequestsSearchPage.routeMyName),
             ]);
           } else {
             siteController.setAppBarWidget(context: context, tabs: [
               SlidingTabModel(
-                  title: "Today's Request", compareName: LabRequestsSearchPage.routePath.split("/").last, namedDirectory: LabRequestsSearchPage.routeName),
+                  title: "Today's Request",
+                  compareName: LabRequestsSearchPage.routePath.split("/").last,
+                  namedDirectory: LabRequestsSearchPage.routeName),
               SlidingTabModel(
-                  title: "All Requests", compareName: LabRequestsSearchPage.routeAllPath.split("/").last, namedDirectory: LabRequestsSearchPage.routeAllName),
+                  title: "All Requests",
+                  compareName: LabRequestsSearchPage.routeAllPath.split("/").last,
+                  namedDirectory: LabRequestsSearchPage.routeAllName),
             ]);
           }
         } else if (path == StockSearchPage.routePath.split("/").last || path == StockLogsSearchPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
             SlidingTabModel(title: "Stock", namedDirectory: StockSearchPage.getRouteName(), compareName: StockSearchPage.routePath.split("/").last),
-            SlidingTabModel(title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Logs", namedDirectory: StockLogsSearchPage.getRouteName(), compareName: StockLogsSearchPage.routePath.split("/").last),
           ]);
         else if (path == CashFlowIncomePage.routePath.split("/").last ||
             path == CashFlowExpensesPage.routePath.split("/").last ||
             path == CashFlowSummaryPage.routePath.split("/").last)
           siteController.setAppBarWidget(context: context, tabs: [
-            SlidingTabModel(title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Income", namedDirectory: CashFlowIncomePage.getRouteName(), compareName: CashFlowIncomePage.routePath.split("/").last),
             SlidingTabModel(
                 title: "Expenses", namedDirectory: CashFlowExpensesPage.getRouteName(), compareName: CashFlowExpensesPage.routePath.split("/").last),
-            SlidingTabModel(title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
+            SlidingTabModel(
+                title: "Summary", namedDirectory: CashFlowSummaryPage.getRouteName(), compareName: CashFlowSummaryPage.routePath.split("/").last),
           ]);
         else
           setAppBarWidget(context: context);
@@ -277,10 +295,12 @@ class SiteController {
   setMedicalAppBar({required int id, required BuildContext context}) async {
     var path = GoRouterState.of(context).fullPath!.split("/").last;
     List<MedicalSlidingModel> pages = [];
-    if (getSite() == Website.CIA)
+    if (getSite() == Website.CIA) {
       pages = [
-        MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": id.toString()})),
-        MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.getRouteName(), pathParameters: {"id": id.toString()})),
+        MedicalSlidingModel(
+            name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": id.toString()})),
+        MedicalSlidingModel(
+            name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.getRouteName(), pathParameters: {"id": id.toString()})),
         MedicalSlidingModel(
             name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.getRouteName(), pathParameters: {"id": id.toString()})),
         MedicalSlidingModel(
@@ -321,10 +341,12 @@ class SiteController {
               // if (!siteController.disableMedicalEdit.value) await MedicalAPI.UpdatePatientSurgicalTreatment(id, surgicalTreatmentModel);
             }),
       ];
-    else if (getSite() == Website.Clinic) {
+    } else if (getSite() == Website.Clinic) {
       pages = [
-        MedicalSlidingModel(name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": id.toString()})),
-        MedicalSlidingModel(name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.getRouteName(), pathParameters: {"id": id.toString()})),
+        MedicalSlidingModel(
+            name: "Medical History", onTap: () => context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": id.toString()})),
+        MedicalSlidingModel(
+            name: "Dental History", onTap: () => context.goNamed(DentalHistoryPage.getRouteName(), pathParameters: {"id": id.toString()})),
         MedicalSlidingModel(
             name: "Dental Examination", onTap: () => context.goNamed(DentalExaminationPage.getRouteName(), pathParameters: {"id": id.toString()})),
         MedicalSlidingModel(
@@ -360,9 +382,9 @@ class SiteController {
   AssetImage getSiteLogo() => _siteLogo;
 
   AssetImage getSiteLogoBySite(Website site) {
-    if (site == Website.CIA)
+    if (site == Website.CIA) {
       return AssetImage("assets/CIA_Logo3.png");
-    else if (site == Website.Lab)
+    } else if (site == Website.Lab)
       return AssetImage("assets/LAB_Logo.png");
     else
       return AssetImage("assets/Clinic_logo.png");
@@ -371,9 +393,9 @@ class SiteController {
   setSite(Website site) {
     switchTheme(site);
     sl<SharedPreferences>().setInt("Website", site.index);
-    if (site == Website.CIA)
+    if (site == Website.CIA) {
       _siteLogo = AssetImage("assets/CIA_Logo3.png");
-    else if (site == Website.Lab)
+    } else if (site == Website.Lab)
       _siteLogo = AssetImage("assets/LAB_Logo.png");
     else
       _siteLogo = AssetImage("assets/Clinic_logo.png");
@@ -397,6 +419,30 @@ class SiteController {
 
   String? getToken() {
     return sl<SharedPreferences>().getString("token");
+    var d = DateTime.now().toUtc().millisecondsSinceEpoch.toString();
+    var token = encryptString("${sl<SharedPreferences>().getString("token")}omar${d}");
+    return token;
+    //  return sl<SharedPreferences>().getString("token");
+  }
+
+  String encryptString(String plainText) {
+    final key = getHashSha256("owbm3297Enemy");
+    final iv = Uint8List.fromList(List.filled(16, 0)); // Initialization vector for AES
+
+    final cipher = PaddedBlockCipher("AES/CBC/PKCS7");
+    final keyParam = KeyParameter(key);
+    final params = ParametersWithIV(keyParam, iv);
+
+    cipher.init(true, PaddedBlockCipherParameters(params, null));
+
+    final encryptedBytes = cipher.process(utf8.encode(plainText));
+    return base64.encode(encryptedBytes);
+  }
+
+  Uint8List getHashSha256(String text) {
+    final sha256 = SHA256Digest();
+    final bytes = utf8.encode(text);
+    return Uint8List.fromList(sha256.process(bytes));
   }
 
   List<String>? getRole() => sl<SharedPreferences>().getStringList("role");
@@ -406,9 +452,9 @@ class SiteController {
   setProfileImageId(int id) => sl<SharedPreferences>().setInt("profileImageId", id);
 
   List<String> getRoles() {
-    if (getSite() == Website.CIA)
+    if (getSite() == Website.CIA) {
       return _CIA_Roles;
-    else if (getSite() == Website.Lab)
+    } else if (getSite() == Website.Lab)
       return _Lab_Roles;
     else
       return _Clinic_Roles;

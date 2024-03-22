@@ -1,28 +1,21 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/SignalR/SignalR.dart';
-import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
-import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
-import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/registerUserUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/siteChange/siteChange_blocEvents.dart';
-import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocEvents.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CardWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../Constants/Colors.dart';
 import '../../../../../Constants/Controllers.dart';
-import '../../../../../Routes/Routes.dart';
 import '../../../../../Widgets/CIA_PrimaryButton.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
-import '../../../../../features/user/domain/entities/userEntity.dart';
 import '../../../../injection_contianer.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_bloc.dart';
 import '../../../../presentation/bloc/siteChange/siteChange_blocStates.dart';
@@ -47,14 +40,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   void initState() {
-      authenticationBloc = sl<AuthenticationBloc>();
+    authenticationBloc = sl<AuthenticationBloc>();
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-   /* sl<RegisterUserUseCase>()(
+    /* sl<RegisterUserUseCase>()(
       UserEntity(
         name: "Admin",
         phoneNumber: "012312412",
@@ -78,7 +70,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         else if (state is LoggedIn) {
           sl<SignalR>().connect();
           //sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
-          if (siteController.getSite() == Website.CIA || siteController.getSite()==Website.Clinic)
+          if (siteController.getSite() == Website.CIA || siteController.getSite() == Website.Clinic)
             context.goNamed(PatientsSearchPage.getRouteName());
           else
             context.goNamed(LabRequestsSearchPage.routeName);
@@ -86,7 +78,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         if (state is! LoggingInState) CustomLoader.hide();
       },
       child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(builder: (context, state) {
-
         return Column(
           children: [
             Expanded(child: SizedBox()),
@@ -98,7 +89,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                   Expanded(flex: 3, child: SizedBox()),
                   Expanded(
                     flex: 4,
-                    child: Card(
+                    child: CardWidget(
                         elevation: 1,
                         shadowColor: Colors.black,
                         child: Column(
@@ -108,7 +99,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                               height: 60,
                               child: DefaultTabController(
                                 length: 3,
-                                initialIndex: (){
+                                initialIndex: () {
                                   print(siteController.getSite().index);
                                   return siteController.getSite().index;
                                 }(),
@@ -223,12 +214,15 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        SizedBox(height: 20,),
-                                        IconButton(onPressed: () {
-                                          siteController.clearCach();
-                                          setState(() {
-                                          });
-                                        }, icon: Icon(Icons.logout))
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              siteController.clearCach();
+                                              setState(() {});
+                                            },
+                                            icon: Icon(Icons.logout))
                                       ],
                                     ),
                                   ),

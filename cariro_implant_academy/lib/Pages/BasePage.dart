@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cariro_implant_academy/Pages/Pages.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CardWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -92,7 +93,7 @@ class _BasePageState extends State<BasePage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(200, 50, 200, 50),
-                child: Card(
+                child: CardWidget(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 40),

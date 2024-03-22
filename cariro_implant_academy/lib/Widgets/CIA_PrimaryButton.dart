@@ -4,15 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CIA_PrimaryButton extends StatelessWidget {
-  CIA_PrimaryButton(
-      {Key? key,
-      this.isLong = false,
-      this.width = 120,
-        this.height,
-      this.color,
-      this.icon,
-      required this.label,
-      required this.onTab})
+  CIA_PrimaryButton({Key? key, this.isLong = false, this.width = 120, this.height, this.color, this.icon, required this.label, required this.onTab})
       : super(key: key);
   String label;
   Function onTab;
@@ -26,14 +18,13 @@ class CIA_PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      height: height?? (isLong! ? 30 : 40),
+      height: height ?? (isLong! ? 30 : 40),
       child: ElevatedButton(
         onPressed: () {
           onTab();
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-                color != null ? color as Color : Color_Accent),
+            backgroundColor: MaterialStateProperty.all<Color>(color != null ? color as Color : Color_Accent),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
@@ -47,10 +38,7 @@ class CIA_PrimaryButton extends StatelessWidget {
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontFamily: Inter_SemiBold),
+                  style: TextStyle(color: Colors.white, fontSize: 10, fontFamily: Inter_SemiBold),
                 ),
               ),
             ),

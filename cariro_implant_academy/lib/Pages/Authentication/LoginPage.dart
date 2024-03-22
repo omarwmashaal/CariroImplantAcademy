@@ -1,23 +1,4 @@
-import 'package:cariro_implant_academy/API/AuthenticationAPI.dart';
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Controllers/PagesController.dart';
-import 'package:cariro_implant_academy/Models/API_Response.dart';
-import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/SlidingTab.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Constants/Colors.dart';
-import '../../Controllers/Auth_NavigationController.dart';
-import '../../Widgets/CIA_FutureBuilder.dart';
-import '../../Widgets/CIA_PrimaryButton.dart';
-import '../../Widgets/CIA_TextField.dart';
-import '../../Widgets/FormTextWidget.dart';
-import '../../Widgets/Horizontal_RadioButtons.dart';
 /*
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, required this.onLogin, required this.onRegister}) : super(key: key);

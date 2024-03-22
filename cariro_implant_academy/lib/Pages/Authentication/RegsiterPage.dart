@@ -1,6 +1,7 @@
 
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Routes/Routes.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CardWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ Widget RegisterPage(Function newRoute)
             Expanded(flex: 3, child: SizedBox()),
             Expanded(
               flex: 4,
-              child: Card(
+              child: CardWidget(
                   elevation: 1,
                   shadowColor: Colors.black,
                   child: Column(

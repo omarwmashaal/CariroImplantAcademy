@@ -232,12 +232,12 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 
   /// Creates the income data source class with required details.
   AdvancedTreatmentSearchDataGridSource() {
-    addColumnGroup(
+    /*addColumnGroup(
       ColumnGroup(
         name: "Patient Name",
         sortGroupRows: true,
       ),
-    );
+    );*/
   }
 
   init({AdvancedTreatmentSearchEntity? search}) {

@@ -43,7 +43,7 @@ class _TableWidgetState extends State<TableWidget> {
   Widget build(BuildContext context) {
 
     return SfDataGrid(
-      allowExpandCollapseGroup: widget.allowGroupingCollapse,
+      //allowExpandCollapseGroup: widget.allowGroupingCollapse,
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
       horizontalScrollPhysics: BouncingScrollPhysics(),

@@ -124,6 +124,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'CIA',
         theme: ThemeData(
+          useMaterial3: false,
           primaryColor: Colors.red,
           //accentColor: Color_Accent,
 
