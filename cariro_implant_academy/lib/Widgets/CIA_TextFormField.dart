@@ -29,7 +29,7 @@ class CIA_TextFormField extends StatefulWidget {
       this.onTap,
       this.onSubmit,
       this.inputFormatter,
-        this.textInputAction = TextInputAction.next,
+      this.textInputAction = TextInputAction.next,
       required this.controller,
       this.errorFunction,
       this.textInputType,
@@ -103,9 +103,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           if (widget.onTap != null) widget.onTap!();
         },
         child: TextFormField(
-
           keyboardType: widget.textInputType,
-
           onFieldSubmitted: (value) {
             if (widget.onSubmit != null) widget.onSubmit!(value);
           },
@@ -162,7 +160,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
               ? widget.inputFormatter!
               : (widget.isHours || widget.isMinutes || widget.isNumber || widget.isPhoneNumber
                   ? [
-                      FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                      FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+.?[0-9]*')),
                     ]
                   : null),
           cursorColor: Color_Accent,
@@ -269,7 +267,7 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
     focus.addListener(() {
       if (!focus.hasFocus) {
         if (widget.onChange != null) {
-          widget.onChange!(DateTime.tryParse(widget.controller.text??"")!)?.toLocal();
+          widget.onChange!(DateTime.tryParse(widget.controller.text ?? "")!)?.toLocal();
         }
       }
 
@@ -310,8 +308,8 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
             });
           },
           onChanged: (value) {
-           // if (widget.onInstantChange != null) widget.onInstantChange!(value);
-           // if (widget.onChange != null) widget.onChange!(value);
+            // if (widget.onInstantChange != null) widget.onInstantChange!(value);
+            // if (widget.onChange != null) widget.onChange!(value);
           },
           autovalidateMode: widget.isMinutes || widget.isHours || widget.validator != null ? AutovalidateMode.onUserInteraction : null,
           validator: (value) {

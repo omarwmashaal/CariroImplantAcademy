@@ -5,7 +5,7 @@ import '../../../../../Helpers/CIA_DateConverters.dart';
 
 class HbA1cEntity extends Equatable{
   DateTime? date;
-  int? reading;
+  double? reading;
 
   HbA1cEntity({this.date, this.reading});
 
