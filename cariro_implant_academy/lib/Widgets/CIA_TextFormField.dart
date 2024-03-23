@@ -231,6 +231,7 @@ class CIA_DateTimeTextFormField extends StatefulWidget {
       this.onTap,
       this.inputFormatter,
       required this.controller,
+      this.initialDate,
       this.validator})
       : super(key: key);
 
@@ -252,6 +253,7 @@ class CIA_DateTimeTextFormField extends StatefulWidget {
   bool enabled;
   List<TextInputFormatter>? inputFormatter;
   String Function(String value)? validator;
+  DateTime? initialDate;
 
   @override
   State<CIA_DateTimeTextFormField> createState() => _CIA_DateTimeTextFormFieldState();
@@ -288,24 +290,34 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
       ),
       child: CIA_GestureWidget(
         onTap: () {
-          CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (value) {
-            if (widget.onChange != null) {
-              widget.onChange!(value!);
-              widget.controller.text = DateFormat("dd-MM-yyyy").format(value!);
-            }
-            setState(() {});
-          });
-        },
-        child: TextFormField(
-          enabled: false,
-          onTap: () {
-            CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (value) {
+          CIA_PopupDialog_DateOnlyPicker(
+            context,
+            "Pick Date",
+            (value) {
               if (widget.onChange != null) {
                 widget.onChange!(value!);
                 widget.controller.text = DateFormat("dd-MM-yyyy").format(value!);
               }
               setState(() {});
-            });
+            },
+            initialDate: widget.initialDate,
+          );
+        },
+        child: TextFormField(
+          enabled: false,
+          onTap: () {
+            CIA_PopupDialog_DateOnlyPicker(
+              context,
+              "Pick Date",
+              (value) {
+                if (widget.onChange != null) {
+                  widget.onChange!(value!);
+                  widget.controller.text = DateFormat("dd-MM-yyyy").format(value!);
+                }
+                setState(() {});
+              },
+              initialDate: widget.initialDate,
+            );
           },
           onChanged: (value) {
             // if (widget.onInstantChange != null) widget.onInstantChange!(value);

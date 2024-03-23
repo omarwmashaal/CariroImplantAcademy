@@ -23,8 +23,9 @@ class SaveNonSurgicalTreatmentUseCase extends UseCases<NoParams, SaveNonSurgical
 class SaveNonSurgicalTreatmentParams extends Equatable {
   final int patientId;
   final NonSurgicalTreatmentEntity nonSurgicalTreatmentEntity;
+  final bool delete;
 
-  SaveNonSurgicalTreatmentParams({required this.patientId, required this.nonSurgicalTreatmentEntity});
+  SaveNonSurgicalTreatmentParams({required this.patientId, required this.nonSurgicalTreatmentEntity,this.delete = false});
 
   @override
   // TODO: implement props

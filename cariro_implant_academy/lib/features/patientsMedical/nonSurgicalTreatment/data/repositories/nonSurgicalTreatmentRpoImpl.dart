@@ -62,13 +62,5 @@ class NonSurgicalTreatmentRepoImpl implements NonSurgicalTreatmentRepo {
     }
   }
 
-  @override
-  Future<Either<Failure, NoParams>> updateNonSurgicalTreatmentNotes(int id, String notes) async {
-    try {
-      final result = await nonSurgicalTreatmentDatasource.updateNonSurgicalTreatmentNotes(id, notes);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
+
 }

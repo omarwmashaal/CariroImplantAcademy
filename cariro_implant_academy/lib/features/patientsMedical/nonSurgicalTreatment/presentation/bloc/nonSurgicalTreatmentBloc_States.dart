@@ -167,17 +167,3 @@ class NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully extends NonSurgic
   List<Object?> get props => [];
 }
 
-class NonSurgicalTreatmentBloc_UpdatingNotesStates extends NonSurgicalTreatmentBloc_States {
-  @override
-  List<Object?> get props => [];
-}
-class NonSurgicalTreatmentBloc_UpdatingNotesErrorStates extends NonSurgicalTreatmentBloc_States {
-  final String message;
-  NonSurgicalTreatmentBloc_UpdatingNotesErrorStates({required this.message});
-  @override
-  List<Object?> get props => [message];
-}
-class NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState extends NonSurgicalTreatmentBloc_States {
-  @override
-  List<Object?> get props => [];
-}

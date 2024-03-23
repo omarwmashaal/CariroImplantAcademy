@@ -142,7 +142,7 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
   ).show();
 }
 
-CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange) async {
+CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange,{DateTime? initialDate}) async {
   String date = "";
   dialogHelper.increaseCount();
   Alert(
@@ -158,6 +158,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
           width: 350,
           height: 350,
           child: SfDateRangePicker(
+            initialSelectedDate: initialDate,
             view: DateRangePickerView.month,
             enablePastDates: true,
             showNavigationArrow: true,

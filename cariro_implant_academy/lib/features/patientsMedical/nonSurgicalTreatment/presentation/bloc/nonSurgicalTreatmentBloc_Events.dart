@@ -3,8 +3,6 @@ import 'package:cariro_implant_academy/features/patientsMedical/dentalExaminatio
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/entities/nonSurgialTreatmentEntity.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/usecases/updateNonSurgicalTreatmentNotesUseCase.dart';
-
 abstract class NonSurgicalTreatmentBloc_Events extends Equatable {}
 
 class NonSurgicalTreatmentBloc_GetDataEvent extends NonSurgicalTreatmentBloc_Events {
@@ -25,24 +23,17 @@ class NonSurgicalTreatmentBloc_GetAllDataEvent extends NonSurgicalTreatmentBloc_
   List<Object?> get props => [id];
 }
 
-class NonSurgicalTreatmentBloc_UpdateNotesEvent extends NonSurgicalTreatmentBloc_Events {
-  final UpdateNonSurgicalTreatmentNotesParams params;
-
-  NonSurgicalTreatmentBloc_UpdateNotesEvent({required this.params});
-
-  @override
-  List<Object?> get props => [params];
-}
-
 class NonSurgicalTreatmentBloc_SaveDataEvent extends NonSurgicalTreatmentBloc_Events {
   final NonSurgicalTreatmentEntity nonSurgicalTreatmentEntity;
-  final DentalExaminationBaseEntity dentalExaminationEntity;
+  final DentalExaminationBaseEntity? dentalExaminationEntity;
   final int patientId;
+  final bool delete;
 
   NonSurgicalTreatmentBloc_SaveDataEvent({
     required this.nonSurgicalTreatmentEntity,
-    required this.dentalExaminationEntity,
+    this.dentalExaminationEntity,
     required this.patientId,
+    this.delete = false,
   });
 
   @override
