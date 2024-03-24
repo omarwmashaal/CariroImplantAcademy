@@ -23,7 +23,7 @@ class NotificationDropDownWidget extends StatefulWidget {
   List<String>? childrenString;
   List<NotificationEntity>? notifications;
 
-  Function markAsRead;
+  Function(int? id) markAsRead;
 
   @override
   State<NotificationDropDownWidget> createState() => _NotificationDropDownWidgetState();
@@ -38,7 +38,7 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<NotificationEntity>(
-        isExpanded: true,
+        isExpanded: true,        
         customButton: widget.customButton,
         hint: widget.hint != null
             ? Row(
@@ -65,7 +65,6 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
                 ],
               )
             : null,
-
         items: (widget.notifications as List<NotificationEntity>)
             .map((item) => DropdownMenuItem<NotificationEntity>(
                   value: item,
@@ -90,7 +89,7 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
                             ),
                             Expanded(child: SizedBox()),
                             Text(
-                              item.date ==null?"":DateFormat("dd-MM-yyyy hh:mm a").format(item.date !),
+                              item.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(item.date!),
                               style: TextStyle(
                                 fontSize: 14,
                                 color: ((item.read ?? false)) ? Colors.black : Colors.red,
@@ -115,17 +114,15 @@ class _NotificationDropDownWidgetState extends State<NotificationDropDownWidget>
             .toList(),
         onChanged: (value) async {
           if (value != null && value.onClickAction != null && value.infoId != null) {
-              value.onClickAction!(context);
-
+            value.onClickAction!(context);
+            widget.markAsRead(value.id);
           }
         },
-
         onMenuStateChange: (isOpen) async {
           //siteController.newNotification.value = false;
-          if (isOpen) widget.markAsRead();
         },
+        
         dropdownStyleData: DropdownStyleData(
-
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             color: Color_Background,

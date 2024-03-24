@@ -51,8 +51,9 @@ class AppBarBloc extends Bloc<AppBarBlocEvents, AppBarBlocState> {
     );
     on<AppBarMarkAllNotificationsAsReadEvent>(
       (event, emit) async {
-        final result = await markAllNotificationsAsReadUseCase(NoParams());
-        result.fold((l) => emit(AppBarMarkedNotificationsAsReadErrorState(message: l.message ?? "")), (r) => emit(AppBarMarkedNotificationsAsReadState()));
+        final result = await markAllNotificationsAsReadUseCase(event.notificationId);
+        result.fold(
+            (l) => emit(AppBarMarkedNotificationsAsReadErrorState(message: l.message ?? "")), (r) => emit(AppBarMarkedNotificationsAsReadState()));
       },
     );
     on<AppBarDeleteNotificationEvent>(

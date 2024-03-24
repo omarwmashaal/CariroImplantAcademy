@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/API/NotificationsAPI.dart';
 import 'package:cariro_implant_academy/API/UserAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc_Events.dart';
@@ -24,7 +25,7 @@ import '../../domain/entities/notificationEntity.dart';
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({Key? key}) : super(key: key);
   static String routeName = "Notifications";
-   static String routeNameClinic = "ClinicNotifications";
+  static String routeNameClinic = "ClinicNotifications";
   static String routePath = "Notifications";
 
   @override
@@ -61,30 +62,43 @@ class _NotificationsPageState extends State<NotificationsPage> {
           return LoadingWidget();
         else if (state is AppBarLoadingNotificationsErrorState)
           return BigErrorPageWidget(message: state.message);
-        else if (state is AppBarNotificationsLoadedState) notifications = state.notifications;
+        else if (state is AppBarNotificationsLoadedState) {
+          notifications = state.notifications;
+        } else if (state is AppBarNewNotificationState) {
+          notifications = state.notifications;
+        }
         notifications = notificationType == null ? notifications : notifications.where((element) => element.type == notificationType).toList();
         return Column(
           children: [
             TitleWidget(title: "Notifications"),
             SizedBox(height: 10),
-            CIA_MultiSelectChipWidget(
-              key: GlobalKey(),
-              singleSelect: true,
-              labels: () {
-                var r = [CIA_MultiSelectChipWidgeModel(label: "All", isSelected: notificationType == null)];
-                r.addAll(EnumNotificationType.values.map((e) => CIA_MultiSelectChipWidgeModel(label: e.name, isSelected: notificationType == e)).toList());
-                return r;
-              }(),
-              onChange: (item, isSelected) {
-                if (isSelected) {
-                  if (item == "All")
-                    notificationType = null;
-                  else {
-                    notificationType = EnumNotificationType.values.firstWhere((element) => element.name == item);
-                  }
-                  bloc.add(AppBarGetNotificationsEvent());
-                }
-              },
+            Row(
+              children: [
+                Expanded(child: SizedBox()),
+                CIA_MultiSelectChipWidget(
+                  key: GlobalKey(),
+                  singleSelect: true,
+                  labels: () {
+                    var r = [CIA_MultiSelectChipWidgeModel(label: "All", isSelected: notificationType == null)];
+                    r.addAll(EnumNotificationType.values
+                        .map((e) => CIA_MultiSelectChipWidgeModel(label: e.name, isSelected: notificationType == e))
+                        .toList());
+                    return r;
+                  }(),
+                  onChange: (item, isSelected) {
+                    if (isSelected) {
+                      if (item == "All")
+                        notificationType = null;
+                      else {
+                        notificationType = EnumNotificationType.values.firstWhere((element) => element.name == item);
+                      }
+                      bloc.add(AppBarGetNotificationsEvent());
+                    }
+                  },
+                ),
+                Expanded(child: SizedBox()),
+                CIA_SecondaryButton(label: "Mark All As Read", onTab: () => bloc.add(AppBarMarkAllNotificationsAsReadEvent()))
+              ],
             ),
             SizedBox(height: 10),
             Expanded(
@@ -93,6 +107,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     .map((item) => CIA_GestureWidget(
                           onTap: () {
                             if (item.onClickAction != null && item.infoId != null) item.onClickAction!(context);
+                            bloc.add(AppBarMarkAllNotificationsAsReadEvent(notificationId: item.id));
                           },
                           child: Container(
                             padding: EdgeInsets.all(5),
@@ -123,8 +138,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     Expanded(child: SizedBox()),
+                                    Visibility(
+                                      visible: item.read != true,
+                                      child: IconButton(
+                                        onPressed: () => bloc.add(AppBarMarkAllNotificationsAsReadEvent(notificationId: item.id)),
+                                        icon: Icon(Icons.mark_chat_unread_outlined),
+                                      ),
+                                    ),
                                     Text(
-                                      item.date ==null?"":DateFormat("dd-MM-yyyy hh:mm a").format(item.date !),
+                                      item.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(item.date!),
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: ((item.read ?? false)) ? Colors.black : Colors.red,
@@ -132,7 +154,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     IconButton(
-                                        onPressed: () => bloc.add(AppBarDeleteNotificationEvent(id: item.id!)), icon: Icon(Icons.remove, color: Colors.red))
+                                        onPressed: () => bloc.add(AppBarDeleteNotificationEvent(id: item.id!)),
+                                        icon: Icon(Icons.remove, color: Colors.red))
                                   ],
                                 ),
                                 Text(

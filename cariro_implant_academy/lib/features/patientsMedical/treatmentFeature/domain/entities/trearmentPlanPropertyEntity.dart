@@ -23,6 +23,8 @@ class TreatmentPlanPropertyEntity extends Equatable {
   int? planPrice;
   RequestChangeEntity? requestChangeModel;
   int? requestChangeId;
+  int? tooth;
+  String? title;
 
   TreatmentPlanPropertyEntity(
       {this.value = "",
@@ -52,29 +54,28 @@ class TreatmentPlanPropertyEntity extends Equatable {
     implant = BasicNameIdObjectEntity();
   }
 
-
   @override
   // TODO: implement props
   List<Object?> get props => [
         value,
         status,
         assignedToID,
-    this.implantIDRequest,
-    this.implantRequest,
-    this.requestChangeId,
-    this.requestChangeModel,
+        this.implantIDRequest,
+        this.implantRequest,
+        this.requestChangeId,
+        this.requestChangeModel,
         //assignedTo,
         date,
         doneByAssistantID,
-      //  doneByAssistant,
+        //  doneByAssistant,
         doneBySupervisorID,
-      //  doneBySupervisor,
+        //  doneBySupervisor,
         doneByCandidateID,
-      //  doneByCandidate,
+        //  doneByCandidate,
         doneByCandidateBatchID,
-      //  doneByCandidateBatch,
+        //  doneByCandidateBatch,
         implantID,
         planPrice,
-     //   implant
+        //   implant
       ];
 }

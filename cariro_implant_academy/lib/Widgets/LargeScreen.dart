@@ -117,8 +117,8 @@ class _CIA_LargeScreenState extends State<CIA_LargeScreen> {
                               builder: (context, state) {
                                 var notifications = BlocProvider.of<AppBarBloc>(context).notifications;
                                 return NotificationDropDownWidget(
-                                  markAsRead: () {
-                                    appBarBloc.add(AppBarMarkAllNotificationsAsReadEvent());
+                                  markAsRead: (id) {
+                                    appBarBloc.add(AppBarMarkAllNotificationsAsReadEvent(notificationId: id));
                                   },
                                   customButton: Icon(
                                     Icons.notifications,

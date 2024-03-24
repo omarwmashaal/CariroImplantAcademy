@@ -8,7 +8,7 @@ import '../../../../useCases/useCases.dart';
 
 abstract class NotificationDataSource{
   Future<List<NotificationModel>> getNotifications();
-  Future<NoParams> markAllAsRead();
+  Future<NoParams> markAllAsRead(int? id);
   Future<NoParams> deleteNotification(int id);
 }
 
@@ -49,10 +49,10 @@ class NotificationDataSourceImpl implements NotificationDataSource{
   }
 
   @override
-  Future<NoParams> markAllAsRead() async{
+  Future<NoParams> markAllAsRead(int? id) async{
     late StandardHttpResponse response;
     try{
-      response = await httpRepo.post(host: "$serverHost/$notificationController/MarkAllAsRead");
+      response = await httpRepo.post(host: "$serverHost/$notificationController/MarkAllAsRead?${id==null?"":"id=$id"}");
     }catch(e){
       throw HttpInternalServerErrorException();
     }
