@@ -99,7 +99,7 @@ class _DiagnosticProsthesis_BiteWidgetState extends State<DiagnosticProsthesis_B
                     widget.data.nextStep = EnumProstheticDiagnosticBiteNextStep.values[value.id!];
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                      widget.data.date = DateTime.now();
+                      widget.data.date =widget.data.date?? DateTime.now();
                     });
                   },
                   items: [

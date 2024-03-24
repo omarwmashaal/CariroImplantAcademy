@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
@@ -72,13 +73,12 @@ class _DiagnosticProsthesis_DiagnosticImpressionWidgetState extends State<Diagno
                     widget.data.operatorId = siteController.getUserId();
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                      widget.data.date = DateTime.now();
+                      widget.data.date =widget.data.date?? DateTime.now();
                     });
                   },
-                  items: [
-                    DropDownDTO(name: "Physical", id: 0),
-                    DropDownDTO(name: "Digital", id: 1),
-                  ],
+                  items: EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values
+                      .map((e) => DropDownDTO(name: AddSpacesToSentence(e.name), id: e.index))
+                      .toList(),
                 ),
               ),
               SizedBox(width: 10),

@@ -273,6 +273,8 @@ enum EunumComplicationsAfterSurgery {
   PusInDonorSite,
   SinusElevationFailure,
   GBRFailure,
+  Infection,
+  Inflamation,
 }
 
 enum EunumComplicationsAfterProsthesis {
@@ -282,4 +284,5 @@ enum EunumComplicationsAfterProsthesis {
   FracturedPrintedPMMA,
   FoodImpaction,
   Pain,
+  ImplantFracture,
 }

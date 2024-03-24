@@ -16,6 +16,7 @@ import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medical
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -128,7 +129,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                 return StatefulBuilder(builder: (context, _setState) {
                   return Column(
                     children: [
-                      Row(
+                      Wrap(
                         children: complicationsNames
                             .map(
                               (e) => Padding(

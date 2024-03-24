@@ -123,7 +123,7 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
                 return StatefulBuilder(builder: (context, _setState) {
                   return Column(
                     children: [
-                      Row(
+                      Wrap(
                         children: complicationsNames
                             .map(
                               (e) => Padding(

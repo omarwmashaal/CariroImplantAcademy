@@ -74,7 +74,7 @@ class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticPro
                     widget.data.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                      widget.data.date = DateTime.now();
+                      widget.data.date =widget.data.date?? DateTime.now();
                     });
                   },
                   items: [
