@@ -461,11 +461,16 @@ class _FinalProsthesis_TryInsWidgetState extends State<FinalProsthesis_TryInsWid
                     Expanded(
                         child: CIA_GestureWidget(
                       onTap: () {
-                        CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                          setState(() {
-                            widget.data.date = v;
-                          });
-                        });
+                        CIA_PopupDialog_DateOnlyPicker(
+                          context,
+                          "Change Date and Time",
+                          (v) {
+                            setState(() {
+                              widget.data.date = v;
+                            });
+                          },
+                          initialDate: widget.data.date,
+                        );
                       },
                       child: FormTextValueWidget(
                         text: widget.data.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(widget.data.date!),

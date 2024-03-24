@@ -15,25 +15,24 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../Constants/Colors.dart';
 import '../core/presentation/widgets/CIA_GestureWidget.dart';
 
-CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(DateTime) onChange,{DateTime? initDate}) async {
+CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(DateTime) onChange, {DateTime? initDate}) async {
   String date = "";
   String hour = "";
   String minute = "";
   String timey = "PM";
   dialogHelper.increaseCount();
-  if(initDate!=null)
-    {
-      hour = DateFormat("h").format(initDate);
-      minute = DateFormat("mm").format(initDate);
-      timey = DateFormat("a").format(initDate);
-    }
+  if (initDate != null) {
+    hour = DateFormat("h").format(initDate);
+    minute = DateFormat("mm").format(initDate);
+    timey = DateFormat("a").format(initDate);
+  }
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
-    title: title,  
-    style: AlertStyle(backgroundColor: Colors.white), 
+    title: title,
+    style: AlertStyle(backgroundColor: Colors.white),
     content: StatefulBuilder(
       builder: (BuildContext context, void Function(void Function()) setState) {
         return Column(
@@ -92,7 +91,6 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
                 onSelectionChanged: (value) {
                   setState(() {
                     date = value.value.toString().replaceAll(" 00:00:00.000", "");
-
                   });
                 },
               ),
@@ -115,23 +113,18 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
         width: 150,
         onPressed: () {
           DateTime? value = DateTime.tryParse(date);
-          if(value==null)
-            {
-              ShowSnackBar(context, isSuccess: false,message: "Error in date!");
+          if (value == null) {
+            ShowSnackBar(context, isSuccess: false, message: "Error in date!");
+          } else {
+            try {
+              var tempTime = DateFormat("h:mm a").parse("$hour:$minute $timey");
+              value = DateTime(value.year, value.month, value.day, tempTime.hour, tempTime.minute);
+              onChange(value);
+              dialogHelper.dismissSingle(context);
+            } catch (e) {
+              ShowSnackBar(context, isSuccess: false, message: "Error in time!");
             }
-          else{
-              try{
-                var tempTime = DateFormat("h:mm a").parse("$hour:$minute $timey");
-                value = DateTime(value.year,value.month,value.day,tempTime.hour,tempTime.minute);
-                onChange(value);
-                dialogHelper.dismissSingle(context);
-              }
-              catch(e){
-                ShowSnackBar(context, isSuccess: false,message: "Error in time!");
-
-              }
-            }
-
+          }
         },
         child: Text(
           "Save",
@@ -142,14 +135,14 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
   ).show();
 }
 
-CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange,{DateTime? initialDate}) async {
+CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange, {DateTime? initialDate}) async {
   String date = "";
   dialogHelper.increaseCount();
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     content: StatefulBuilder(
@@ -168,10 +161,18 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
             showTodayButton: true,
             navigationMode: DateRangePickerNavigationMode.snap,
             onSelectionChanged: (value) {
+              var dateTime = value.value as DateTime;
+              DateTime date_;
               setState(() {
                 date = DateFormat("dd-MM-yyyy").format(value.value);
+
+                if (initialDate != null) {
+                  date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
+                } else {
+                  date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, 0, 0, 0);
+                }
                 // date = value.value.toString().replaceAll(" 00:00:00.000", "");
-                onChange(value.value);
+                onChange(date_);
               });
             },
           ),
@@ -199,6 +200,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
     ],
   ).show();
 }
+
 /*
 CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String title, Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
@@ -291,13 +293,12 @@ CIA_ShowPopUp(
     double? width}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
     title: title,
-    style: AlertStyle(backgroundColor: Colors.white), 
-
+    style: AlertStyle(backgroundColor: Colors.white),
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
         width: width ?? 400,
@@ -339,11 +340,11 @@ CIA_ShowPopUpSaveRequest(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
@@ -403,10 +404,10 @@ CIA_ShowPopUpYesNo(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     //content: SizedBox(width: width??120,),
@@ -446,15 +447,15 @@ CIA_PopUpSearch(
     required Future<API_Response> searchFunction(String),
     String? buttonText,
     double? size}) {
-dialogHelper.increaseCount();
+  dialogHelper.increaseCount();
   String search = "";
   List<DropDownDTO> results = [];
   TextEditingController controller = TextEditingController();
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {

@@ -119,7 +119,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
               });
             }
             if (widget.isNumber && !widget.isPhoneNumber) {
-              if (value.length > 1 && value.startsWith("0")) value = value.replaceFirst(RegExp(r'0'), "");
+              if (value.length > 1 && value.startsWith("0") && value[1] != ".") value = value.replaceFirst(RegExp(r'0'), "");
               setState(() {
                 widget.controller.text = value;
               });

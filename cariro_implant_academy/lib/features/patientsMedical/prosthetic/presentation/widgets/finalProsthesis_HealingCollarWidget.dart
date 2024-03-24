@@ -4,6 +4,8 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
@@ -99,11 +101,16 @@ class _FinalProsthesis_HealingCollarWidgetState extends State<FinalProsthesis_He
                     Expanded(
                         child: CIA_GestureWidget(
                       onTap: () {
-                        CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                          setState(() {
-                            widget.data!.date = v;
-                          });
-                        });
+                        CIA_PopupDialog_DateOnlyPicker(
+                          context,
+                          "Change Date and Time",
+                          (v) {
+                            setState(() {
+                              widget.data!.date = v;
+                            });
+                          },
+                          initialDate: widget.data.date,
+                        );
                       },
                       child: FormTextValueWidget(
                         text: widget.data!.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(widget.data.date!),
@@ -111,8 +118,26 @@ class _FinalProsthesis_HealingCollarWidgetState extends State<FinalProsthesis_He
                     )),
                     SizedBox(width: 10),
                     Expanded(
-                        child: FormTextValueWidget(
-                      text: widget.data.operator?.name,
+                        child: CIA_GestureWidget(
+                      onTap: () => CIA_ShowPopUp(
+                        context: context,
+                        height: 100,
+                        onSave: () => setState(() => null),
+                        child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          asyncUseCase: sl<LoadUsersUseCase>(),
+                          searchParams: LoadUsersEnum.instructorsAndAssistants,
+                          onSelect: (value) {
+                            widget.data.operatorId = value.id;
+                            widget.data.operator = value;
+                          },
+                          //selectedItem: DropDownDTO(),
+                          selectedItem: widget.data.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
+                          label: "Operator",
+                        ),
+                      ),
+                      child: FormTextValueWidget(
+                        text: widget.data.operator?.name,
+                      ),
                     )),
                     SizedBox(width: 10),
                     SizedBox(width: 10),

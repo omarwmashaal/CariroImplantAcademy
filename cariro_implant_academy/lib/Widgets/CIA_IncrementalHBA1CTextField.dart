@@ -40,12 +40,11 @@ class _CIA_IncrementalHBA1CTextFieldState extends State<CIA_IncrementalHBA1CText
               flex: 2,
               child: CIA_TextFormField(
                 errorFunction: (value) {
-                  return double.parse(value) >= 6;
-                  
+                  return (double.tryParse(value) ?? 0) >= 6;
                 },
                 isNumber: true,
                 onChange: (value) {
-                  item.reading = double.parse(value);
+                  item.reading = double.tryParse(value) ?? 0;
                   if (widget.onChange != null) {
                     widget.onChange!(items);
                   }
