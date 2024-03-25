@@ -23,6 +23,7 @@ class CIA_TextFormField extends StatefulWidget {
       this.isPhoneNumber = false,
       this.borderColor,
       this.enabled = true,
+      this.selectAll = false,
       this.suffix,
       this.borderColorOnChange,
       this.changeColorIfFilled = false,
@@ -33,6 +34,7 @@ class CIA_TextFormField extends StatefulWidget {
       required this.controller,
       this.errorFunction,
       this.textInputType,
+      this.focusNode,
       this.validator})
       : super(key: key);
 
@@ -59,19 +61,21 @@ class CIA_TextFormField extends StatefulWidget {
   String Function(String value)? validator;
   bool Function(String value)? errorFunction;
   TextInputAction textInputAction;
+  FocusNode? focusNode;
+  bool selectAll;
 
   @override
   State<CIA_TextFormField> createState() => _CIA_TextFormFieldState();
 }
 
 class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
-  FocusNode focus = FocusNode();
   bool error = false;
 
   @override
   void initState() {
-    focus.addListener(() {
-      if (!focus.hasFocus) {
+    widget.focusNode = widget.focusNode ?? FocusNode();
+    widget.focusNode?.addListener(() {
+      if (!(widget.focusNode?.hasFocus ?? false)) {
         if (widget.onChange != null) {
           widget.onChange!(widget.controller.text);
         }
@@ -89,8 +93,6 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
     if (widget.errorFunction != null) {
       error = widget.errorFunction!(widget.controller.text ?? "");
     }
-    if (widget.controller.text != null)
-      widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
 
     return Theme(
       data: Theme.of(context).copyWith(
@@ -154,7 +156,6 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                 }
               }
             }
-            widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
           },
           inputFormatters: widget.inputFormatter != null
               ? widget.inputFormatter!
@@ -165,14 +166,19 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                   : null),
           cursorColor: Color_Accent,
           maxLines: widget.maxLines,
-          focusNode: focus,
-          controller: widget.controller,
+          focusNode: widget.focusNode,
+          controller: () {
+            if (widget.selectAll)
+              return widget.controller..selection = TextSelection(baseOffset: 0, extentOffset: widget.controller.value.text.length);
+            else
+              return widget.controller;
+          }(),
           textInputAction: widget.textInputAction,
           obscureText: widget.isObscure == null ? false : true,
           decoration: InputDecoration(
             suffixText: widget.suffix,
             prefixIcon: widget.icon != null ? Icon(Icons.search) : null,
-            prefixIconColor: focus.hasFocus ? Colors.red : null,
+            prefixIconColor: widget.focusNode?.hasFocus ?? false ? Colors.red : null,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                   color: error
@@ -199,7 +205,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
               borderSide: BorderSide(color: Color_Accent),
               borderRadius: BorderRadius.circular(8),
             ),
-            floatingLabelStyle: TextStyle(color: focus.hasFocus ? Color_Accent : Color(0xff000000), fontWeight: FontWeight.bold),
+            floatingLabelStyle: TextStyle(color: widget.focusNode?.hasFocus ?? false ? Color_Accent : Color(0xff000000), fontWeight: FontWeight.bold),
             filled: true,
             labelText: widget.label,
             fillColor: Color_Background,
@@ -279,9 +285,6 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.controller.text != null)
-      widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
-
     return Theme(
       data: Theme.of(context).copyWith(
         colorScheme: ThemeData().colorScheme.copyWith(
@@ -342,7 +345,6 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
                 }
               }
             }
-            widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length);
           },
           inputFormatters: widget.inputFormatter != null
               ? widget.inputFormatter!
