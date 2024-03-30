@@ -52,7 +52,7 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
       supervisor: map['supervisor'] == null ? null : BasicNameIdObjectModel.fromJson(map['supervisor']),
       operatorID: map['operatorID'] as int?,
       operator: map['operator'] == null ? null : BasicNameIdObjectModel.fromJson(map['operator']),
-      date: map['date'] == null ? null : DateTime.parse(map['date']),
+      date: map['date'] == null ? null : DateTime.parse(map['date']).toLocal(),
       nextVisit: DateTime.tryParse(map['nextVisit'] ?? "")?.toLocal(),
     );
   }
