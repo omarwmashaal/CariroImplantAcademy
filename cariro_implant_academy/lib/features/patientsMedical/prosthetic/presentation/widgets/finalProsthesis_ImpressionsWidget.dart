@@ -1,35 +1,17 @@
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
-import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../Models/DTOs/DropDownDTO.dart';
-import '../../../../../Widgets/CIA_CheckBoxWidget.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
-import '../../../../../Widgets/CIA_TeethChart.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
-import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
-import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
-import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
 import '../../domain/entities/finalProsthesisImpressionEntity.dart';
-import '../../domain/entities/finalProsthesisTryInEntity.dart';
-import '../../domain/entities/prostheticFinalEntity.dart';
 import '../../domain/enums/enum.dart';
 
 class FinalProsthesis_ImpressionWidget extends StatefulWidget {

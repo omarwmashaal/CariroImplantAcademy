@@ -1,10 +1,13 @@
 import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterSurgeryEntity.dart';
@@ -204,7 +207,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                                         Expanded(
                                           child: CIA_GestureWidget(
                                             onTap: () {
-                                              CIA_PopupDialog_DateTimePicker(
+                                              CIA_PopupDialog_DateOnlyPicker(
                                                 context,
                                                 "Change Date",
                                                 (p0) => _setState(() => e.date = p0),
@@ -217,8 +220,26 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                                         ),
                                         SizedBox(width: 10),
                                         Expanded(
-                                          child: FormTextValueWidget(
-                                            text: "Operator: ${e.operator?.name}",
+                                          child: CIA_GestureWidget(
+                                            onTap: () => CIA_ShowPopUp(
+                                              context: context,
+                                              height: 100,
+                                              onSave: () => setState(() => null),
+                                              child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                asyncUseCase: sl<LoadUsersUseCase>(),
+                                                searchParams: LoadUsersEnum.instructorsAndAssistants,
+                                                onSelect: (value) {
+                                                  e.operatorId = value.id;
+                                                  e.operator = value;
+                                                },
+                                                //selectedItem: DropDownDTO(),
+                                                selectedItem: e.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
+                                                label: "Operator",
+                                              ),
+                                            ),
+                                            child: FormTextValueWidget(
+                                              text: e.operator?.name,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 10),
