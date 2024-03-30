@@ -136,7 +136,10 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
 }
 
 CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange, {DateTime? initialDate}) async {
-  String date = "";
+  DateTime? dateTime;
+  String? error;
+  FocusNode focus = FocusNode();
+  focus.requestFocus();
   dialogHelper.increaseCount();
   Alert(
     closeFunction: () {
@@ -149,40 +152,92 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
       builder: (BuildContext context, void Function(void Function()) setState) {
         return Container(
           width: 350,
-          height: 350,
-          child: SfDateRangePicker(
-            initialSelectedDate: initialDate,
-            view: DateRangePickerView.month,
-            enablePastDates: true,
-            showNavigationArrow: true,
-            selectionColor: Color_Accent,
-            todayHighlightColor: Color_Accent,
-            selectionMode: DateRangePickerSelectionMode.single,
-            showTodayButton: true,
-            navigationMode: DateRangePickerNavigationMode.snap,
-            onSelectionChanged: (value) {
-              var dateTime = value.value as DateTime;
-              DateTime date_;
-              setState(() {
-                date = DateFormat("dd-MM-yyyy").format(value.value);
-
-                if (initialDate != null) {
-                  date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
-                } else {
-                  date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, 0, 0, 0);
-                }
-                // date = value.value.toString().replaceAll(" 00:00:00.000", "");
-                onChange(date_);
-              });
-            },
+          height: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CIA_TextFormFieldForDateTime(
+                  label: "Enter Date in format dd/MM/yyyy or dd-MM-yyyy",
+                  selectAll: false,
+                  focusNode: focus,
+                  onSubmit: (value) {
+                    if (error != null) {
+                      ShowSnackBar(context, isSuccess: false, message: error!);
+                    } else {
+                      if (dateTime != null) onChange(dateTime!);
+                      dialogHelper.dismissSingle(context);
+                    }
+                  },
+                  controller: TextEditingController(text: initialDate == null ? "" : DateFormat("dd/MM/yyyy").format(initialDate)),
+                  onChange: (value) {
+                    if (error != null) return;
+                    try {
+                      if (dateTime != null) {
+                        if (initialDate != null) {
+                          dateTime =
+                              DateTime(dateTime!.year, dateTime!.month, dateTime!.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
+                        } else {
+                          dateTime = DateTime(dateTime!.year, dateTime!.month, dateTime!.day, 0, 0, 0);
+                        }
+                        // date = value.value.toString().replaceAll(" 00:00:00.000", "");
+                      }
+                    } catch (e) {}
+                  },
+                  errorFunction: (value) {
+                    try {
+                      dateTime = DateFormat("dd/MM/yyyy").parse(value);
+                    } catch (e) {
+                      try {
+                        dateTime = DateFormat("dd-MM-yyyy").parse(value);
+                      } catch (e) {
+                        error = "Wrong date format";
+                        return true;
+                      }
+                    }
+                    error = null;
+                    return false;
+                  },
+                ),
+              ],
+            ),
           ),
+          // SfDateRangePicker(
+          //   initialSelectedDate: initialDate,
+          //   view: DateRangePickerView.month,
+          //   enablePastDates: true,
+          //   showNavigationArrow: true,
+          //   selectionColor: Color_Accent,
+          //   todayHighlightColor: Color_Accent,
+          //   selectionMode: DateRangePickerSelectionMode.single,
+          //   showTodayButton: true,
+          //   navigationMode: DateRangePickerNavigationMode.snap,
+          //   onSelectionChanged: (value) {
+          //     var dateTime = value.value as DateTime;
+          //     DateTime date_;
+          //     setState(() {
+          //       date = DateFormat("dd-MM-yyyy").format(value.value);
+
+          //       if (initialDate != null) {
+          //         date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
+          //       } else {
+          //         date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, 0, 0, 0);
+          //       }
+          //       // date = value.value.toString().replaceAll(" 00:00:00.000", "");
+          //       onChange(date_);
+          //     });
+          //   },
+          // ),
         );
       },
     ),
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => dialogHelper.dismissSingle(context),
+        onPressed: () {
+          dialogHelper.dismissSingle(context);
+        },
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -191,7 +246,16 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
       ),
       DialogButton(
         width: 150,
-        onPressed: () => dialogHelper.dismissSingle(context),
+        onPressed: () {
+          if (error != null)
+            ShowSnackBar(context, isSuccess: false, message: error!);
+          else {
+            if (dateTime != null) onChange(dateTime!);
+
+            dialogHelper.dismissSingle(context);
+            dialogHelper.dismissSingle(context);
+          }
+        },
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),

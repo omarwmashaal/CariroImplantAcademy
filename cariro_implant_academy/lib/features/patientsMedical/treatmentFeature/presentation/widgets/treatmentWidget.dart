@@ -537,6 +537,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
           toothData.immediateImplant!.tooth = toothData.tooth;
           procedures.add(toothData.immediateImplant!);
         }
+        if (toothData.simpleImplant != null) {
+          toothData.simpleImplant!.title = AddSpacesToSentence("simpleImplant");
+          toothData.simpleImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.simpleImplant!);
+        }
         if (toothData.expansionWithImplant != null) {
           toothData.expansionWithImplant!.title = AddSpacesToSentence("expansionWithImplant");
           toothData.expansionWithImplant!.tooth = toothData.tooth;
@@ -629,7 +634,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                   requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity)),
               patientId: widget.patientId,
               fieldModel: procedure,
-              title: AddSpacesToSentence(procedure.title ?? ""),
+              title: "Tooth:${procedure.tooth ?? ""} || " + AddSpacesToSentence(procedure.title ?? ""),
               //settingsPrice: prices.implant,
               price: true,
               onDelete: () {
