@@ -11,6 +11,7 @@ import 'package:cariro_implant_academy/core/features/authentication/presentation
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
+import 'package:cariro_implant_academy/core/routing/routingBloc.dart';
 
 //import 'package:cariro_implant_academy/Pages/Authentication/AuthenticationPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
@@ -650,7 +651,6 @@ class CIA_Router {
                       )));
                     },
                     routes: [
-
                       GoRoute(
                         path: UsersSettingsPage.routePath,
                         name: UsersSettingsPage.getRouteName(site: Website.Lab),
@@ -1302,7 +1302,7 @@ class _Authorize extends StatelessWidget {
     return BlocConsumer<AuthenticationBloc, Authentication_blocState>(
       bloc: authenticationBloc,
       listener: (context, state) {
-        if (state is ErrorState) context.go("/");
+        // if (state is ErrorState) context.go("/");
 
         if (state is LoggingInState)
           CustomLoader.show(context);
@@ -1312,7 +1312,7 @@ class _Authorize extends StatelessWidget {
       buildWhen: (previous, current) => current is LoggedIn,
       builder: (context, state) {
         if (state is LoggedIn) {
-          if (siteController.getRole()!.contains("admin") ||siteController.getRole()!.any((element) => roles.contains(element)))
+          if (siteController.getRole()!.contains("admin") || siteController.getRole()!.any((element) => roles.contains(element)))
             return child;
           else
             return BigErrorPageWidget(message: "Sorry you don't have access to this page");

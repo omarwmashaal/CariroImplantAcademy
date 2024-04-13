@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/SignalR/SignalR.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
@@ -6,11 +7,14 @@ import 'package:cariro_implant_academy/core/features/authentication/domain/useca
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_blocStates.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/CardWidget.dart';
+import 'package:cariro_implant_academy/core/routing/routingBloc.dart';
+import 'package:cariro_implant_academy/core/routing/routing_Bloc_Status.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../Constants/Colors.dart';
 import '../../../../../Constants/Controllers.dart';
@@ -61,22 +65,36 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     authenticationBloc = context.read<AuthenticationBloc>();
     if (siteController.getSite() == null) siteController.setSite(Website.CIA);
-    return BlocListener<AuthenticationBloc, Authentication_blocState>(
-      listener: (context, state) {
-        if (state is LoggingInState)
-          CustomLoader.show(context);
-        else if (state is ErrorState)
-          ShowSnackBar(context, isSuccess: false, message: state.message);
-        else if (state is LoggedIn) {
-          sl<SignalR>().connect();
-          //sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
-          if (siteController.getSite() == Website.CIA || siteController.getSite() == Website.Clinic)
-            context.goNamed(PatientsSearchPage.getRouteName());
-          else
-            context.goNamed(LabRequestsSearchPage.routeName);
-        }
-        if (state is! LoggingInState) CustomLoader.hide();
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RoutingBloc, RoutingBlocStatus>(
+          bloc: sl<RoutingBloc>(),
+          listener: (context, state) {
+            if (state is RoutingBlocStatus_UnAuthorized) {
+              ShowSnackBar(context, isSuccess: false, message: "User UnAuthorized");
+              sl<SharedPreferences>().clear();
+              context.go("/");
+            }
+          },
+        ),
+        BlocListener<AuthenticationBloc, Authentication_blocState>(
+          listener: (context, state) {
+            if (state is LoggingInState)
+              CustomLoader.show(context);
+            else if (state is ErrorState)
+              ShowSnackBar(context, isSuccess: false, message: state.message);
+            else if (state is LoggedIn) {
+              sl<SignalR>().connect();
+              //sl<AppBarBloc>().add(AppBarGetNotificationsEvent());
+              if (siteController.getSite() == Website.CIA || siteController.getSite() == Website.Clinic)
+                context.goNamed(PatientsSearchPage.getRouteName());
+              else
+                context.goNamed(LabRequestsSearchPage.routeName);
+            }
+            if (state is! LoggingInState) CustomLoader.hide();
+          },
+        ),
+      ],
       child: BlocBuilder<SiteChangeBloc, SiteChangeBlocStates>(builder: (context, state) {
         return Column(
           children: [
@@ -115,51 +133,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                               ),
                             ),
                             Expanded(
-                              child: /*isLoggedIn
-                                        ? Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Image(
-                                          image: siteController.getSiteLogo(),
-                                          width: 150,
-                                          height: 80,
-                                          fit: BoxFit.fitHeight,
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 60,
-                                          padding: EdgeInsets.symmetric(horizontal: 20),
-                                          child: GestureDetector(
-                                            onTap:()async{
-                                              await siteController.removeToken();
-                                              setState(() {
-                                              });
-                                            },
-                                            child: Card(
-                                              shadowColor: Colors.black,
-                                              elevation: 1,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Text("Welcome ",style: TextStyle(fontSize: 20),),
-                                                      Text(siteController.getUser().name!,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
-                                                    ],
-                                                  ),
-                                                  Text("Click to log in with different account",style: TextStyle(fontSize: 15))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        CIA_PrimaryButton(label: "Login", onTab: () => widget.onLogin(_email, _password)),
-
-                                      ],
-                                    )
-                                        : */
-                                  Column(
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Image(

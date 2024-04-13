@@ -72,6 +72,7 @@ import 'package:cariro_implant_academy/core/features/authentication/data/datasou
 import 'package:cariro_implant_academy/core/features/authentication/data/repositories/authenticationRepoImpl.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/repositories/authenticationRepo.dart';
 import 'package:cariro_implant_academy/core/features/authentication/domain/usecases/loginUseCase.dart';
+import 'package:cariro_implant_academy/core/routing/routingBloc.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/datasources/cashFlowDatasources.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cashFlowRepository.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';
@@ -287,6 +288,7 @@ import 'features/settings/presentation/bloc/settingsBloc.dart';
 final sl = GetIt.instance;
 
 initInjection() async {
+  print("initalizng injection");
   /*
   * SiteController
   * */
@@ -312,6 +314,7 @@ initInjection() async {
    */
   //bloc
   sl.registerFactory(() => DropDownSearchBloc(DropDownBlocStates()));
+  sl.registerLazySingleton(() => RoutingBloc());
   //usecase
   sl.registerLazySingleton(() => LoadUsersUseCase(loadingRepo: sl()));
   sl.registerLazySingleton(() => LoadCandidateBatchesUseCase(loadingRepo: sl()));
