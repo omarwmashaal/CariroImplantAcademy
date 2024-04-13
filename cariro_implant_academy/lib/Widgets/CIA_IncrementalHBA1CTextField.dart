@@ -7,19 +7,16 @@ import 'package:intl/intl.dart';
 import '../features/patientsMedical/medicalExamination/domain/entities/hba1cEntity.dart';
 
 class CIA_IncrementalHBA1CTextField extends StatefulWidget {
-  CIA_IncrementalHBA1CTextField({Key? key, required this.model, this.onChange})
-      : super(key: key);
+  CIA_IncrementalHBA1CTextField({Key? key, required this.model, this.onChange}) : super(key: key);
 
   List<HbA1cEntity> model;
-  Function( List<HbA1cEntity>)? onChange;
+  Function(List<HbA1cEntity>)? onChange;
 
   @override
-  State<CIA_IncrementalHBA1CTextField> createState() =>
-      _CIA_IncrementalHBA1CTextFieldState();
+  State<CIA_IncrementalHBA1CTextField> createState() => _CIA_IncrementalHBA1CTextFieldState();
 }
 
-class _CIA_IncrementalHBA1CTextFieldState
-    extends State<CIA_IncrementalHBA1CTextField> {
+class _CIA_IncrementalHBA1CTextFieldState extends State<CIA_IncrementalHBA1CTextField> {
   List<HbA1cEntity> items = [];
 
   @override
@@ -42,18 +39,18 @@ class _CIA_IncrementalHBA1CTextFieldState
           Expanded(
               flex: 2,
               child: CIA_TextFormField(
-                errorFunction: (value){
-                  return int.parse(value)>=6;
-;                },
+                errorFunction: (value) {
+                  return (double.tryParse(value) ?? 0) >= 6;
+                },
                 isNumber: true,
                 onChange: (value) {
-                  item.reading = int.parse(value);
+                  item.reading = double.tryParse(value) ?? 0;
                   if (widget.onChange != null) {
                     widget.onChange!(items);
                   }
                 },
                 label: "Reading",
-                controller: TextEditingController(text: item.reading.toString()??"0"),
+                controller: TextEditingController(text: item.reading.toString() ?? "0"),
               )),
           const SizedBox(width: 10),
           Expanded(
@@ -66,7 +63,7 @@ class _CIA_IncrementalHBA1CTextFieldState
                   }
                 },
                 label: "Date",
-                controller: TextEditingController(text: item.date==null?"":DateFormat("dd-MM-yyyy").format(item.date!)),
+                controller: TextEditingController(text: item.date == null ? "" : DateFormat("dd-MM-yyyy").format(item.date!)),
               )),
           Expanded(
               child: items.last == item
@@ -106,7 +103,6 @@ class _CIA_IncrementalHBA1CTextFieldState
   @override
   void initState() {
     items = widget.model;
-    if (items == null || items.length == 0)
-      items.add(HbA1cEntity(reading: 0, date: null));
+    if (items == null || items.length == 0) items.add(HbA1cEntity(reading: 0, date: null));
   }
 }

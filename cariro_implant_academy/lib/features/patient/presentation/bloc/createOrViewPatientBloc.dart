@@ -128,7 +128,7 @@ class CreateOrViewPatientBloc extends Bloc<CreateOrViewPatientBloc_Events, Creat
       (event, emit) {
         this.pageState = event.pageState;
         print("current state is ${pageState.name}");
-        emit(ChangePageState(this.pageState.name));
+        emit(ChangePageState(this.pageState.name,event.listed));
       },
     );
 

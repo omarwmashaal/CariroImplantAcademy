@@ -6,6 +6,6 @@ import '../../../../error/failure.dart';
 
 abstract class NotificationRepo{
   Future<Either<Failure,List<NotificationModel>>> getNotifications();
-  Future<Either<Failure,NoParams>> markAllAsRead();
+  Future<Either<Failure,NoParams>> markAllAsRead(int? id);
   Future<Either<Failure,NoParams>> deleteNotification(int id);
 }

@@ -14,6 +14,7 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
     id,
     nextVisit,
     treatment,
+    patientId,
   }) : super(
           date: date,
           operator: operator,
@@ -21,21 +22,24 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
           operatorID: operatorID,
           supervisor: supervisor,
           supervisorID: supervisorID,
-    id: id,
+          id: id,
           treatment: treatment,
+          patientId: patientId,
         );
 
   Map<String, dynamic> toMap() {
     return {
       'treatment': this.treatment,
+      'id': this.id,
       //'id': this.id,
       'supervisorID': this.supervisorID,
       //'supervisor': this.supervisor,
       'operatorID': this.operatorID,
-      'date': this.date==null?null:this.date!.toUtc().toIso8601String(),
-    //  'operator': this.operator==null?null:BasicNameIdObjectModel.fromEntity(this.operator!).toMap(),
-     'nextVisit':this.nextVisit==null?null:this.nextVisit!.toUtc().toIso8601String(),
-     // 'nextVisit': this.nextVisit,
+      'patientId': this.patientId,
+      'date': this.date == null ? null : this.date!.toUtc().toIso8601String(),
+      //  'operator': this.operator==null?null:BasicNameIdObjectModel.fromEntity(this.operator!).toMap(),
+      'nextVisit': this.nextVisit == null ? null : this.nextVisit!.toUtc().toIso8601String(),
+      // 'nextVisit': this.nextVisit,
     };
   }
 
@@ -43,12 +47,13 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
     return NonSurgicalTreatmentModel(
       treatment: map['treatment'] as String?,
       supervisorID: map['supervisorID'] as int?,
+      patientId: map['patientId'] as int?,
       id: map['id'] as int?,
       supervisor: map['supervisor'] == null ? null : BasicNameIdObjectModel.fromJson(map['supervisor']),
       operatorID: map['operatorID'] as int?,
       operator: map['operator'] == null ? null : BasicNameIdObjectModel.fromJson(map['operator']),
-      date:map['date']==null?null: DateTime.parse(map['date']),
-      nextVisit: DateTime.tryParse( map['nextVisit']??""),
+      date: map['date'] == null ? null : DateTime.parse(map['date']).toLocal(),
+      nextVisit: DateTime.tryParse(map['nextVisit'] ?? "")?.toLocal(),
     );
   }
 
@@ -61,6 +66,8 @@ class NonSurgicalTreatmentModel extends NonSurgicalTreatmentEntity {
       supervisor: entity.supervisor,
       supervisorID: entity.supervisorID,
       treatment: entity.treatment,
+      patientId: entity.patientId,
+      id: entity.id,
     );
   }
 }

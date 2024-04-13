@@ -1,9 +1,7 @@
-import 'package:cariro_implant_academy/Models/DTOs/DropDownDTO.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
-import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/widgets/calendarWidget.dart';
@@ -22,11 +20,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 
-import '../../../../../API/LoadinAPI.dart';
 import '../../../../../Constants/Controllers.dart';
-import '../../../../../Models/VisitsModel.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../Widgets/CIA_SecondaryButton.dart';
@@ -353,13 +348,13 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                                     return Container();
                                   },
                                   listener: (context, state) {
-                                    if (state is NonSurgicalTreatmentBloc_UpdatingNotesStates)
+                                    if (state is NonSurgicalTreatmentBloc_SavingData)
                                       CustomLoader.show(context);
                                     else {
                                       CustomLoader.hide();
-                                      if (state is NonSurgicalTreatmentBloc_UpdatingNotesErrorStates)
+                                      if (state is NonSurgicalTreatmentBloc_DataSavingError)
                                         ShowSnackBar(context, isSuccess: false, message: state.message);
-                                      else if (state is NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState) {
+                                      else if (state is NonSurgicalTreatmentBloc_DataSavedSuccessfully) {
                                         ShowSnackBar(context, isSuccess: true);
                                         bloc.add(NonSurgicalTreatmentBloc_GetAllDataEvent(id: widget.patientId));
                                       }

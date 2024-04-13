@@ -109,7 +109,7 @@ class CIA_DropDownSearch extends StatelessWidget {
         return [];
       },
       filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),
-      itemAsString: (DropDownDTO u) => u.name!,
+      itemAsString: (DropDownDTO u) => AddSpacesToSentence(u.name!),
       items: items ?? [],
       onChanged: (DropDownDTO) {
         if (onSelect != null) onSelect!(DropDownDTO!);
@@ -256,12 +256,11 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
             return res;
           },
           filterFn: (item, filter) => item.name!.toLowerCase().contains(filter.toLowerCase()),
-          itemAsString: (BasicNameIdObjectEntity u) => AddSpacesToSentence(u.name??"") ,
-          items: items??[],
+          itemAsString: (BasicNameIdObjectEntity u) => AddSpacesToSentence(u.name ?? ""),
+          items: items ?? [],
           onChanged: (v) {
             if (onSelect != null) {
-
-                onSelect!(v!);
+              onSelect!(v!);
             }
           },
           dropdownDecoratorProps: DropDownDecoratorProps(

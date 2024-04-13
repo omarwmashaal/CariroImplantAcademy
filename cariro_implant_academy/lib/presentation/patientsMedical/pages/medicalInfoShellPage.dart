@@ -150,7 +150,12 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                 children: [
                   SizedBox(width: 10),
                   Expanded(
-                    child: BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                    child: BlocConsumer<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                      listener: (context, state) {
+                        if (state is LoadedPatientInfoState && state.patient.listed != true) {
+                          context.goNamed(CreateOrViewPatientPage.getViewRouteName(), pathParameters: {"id": widget.patientId.toString()});
+                        }
+                      },
                       builder: (context, state) {
                         if (state is LoadedPatientInfoState) {
                           PatientInfoEntity patient = state.patient;

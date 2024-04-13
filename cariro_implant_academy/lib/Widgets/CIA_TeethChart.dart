@@ -1,3 +1,5 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -72,6 +74,85 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
                 ],
               ),
             ),
+            SizedBox(width: 10),
+            () {
+              bool contains = true;
+              for (var element in [
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+              ]) {
+                if (!selectedTeeth.contains(element)) {
+                  contains = false;
+                  break;
+                }
+              }
+              return contains;
+            }()
+                ? CIA_PrimaryButton(
+                    label: "Unselect Upper",
+                    isLong: true,
+                    onTab: () {
+                      selectedTeeth.removeWhere((element) => [
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                            16,
+                            17,
+                            18,
+                            21,
+                            22,
+                            23,
+                            24,
+                            25,
+                            26,
+                            27,
+                            28,
+                          ].contains(element));
+                      widget.selectedTeeth = selectedTeeth;
+                      setState(() => null);
+                    })
+                : CIA_SecondaryButton(
+                    label: "Select Upper",
+                    onTab: () {
+                      selectedTeeth.addAll([
+                        11,
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        18,
+                        21,
+                        22,
+                        23,
+                        24,
+                        25,
+                        26,
+                        27,
+                        28,
+                      ]);
+                      selectedTeeth = selectedTeeth.toSet().toList();
+                      widget.selectedTeeth = selectedTeeth;
+                      if (widget.onChange != null) widget.onChange!(selectedTeeth);
+                      setState(() => null);
+                    })
           ],
         ),
         SizedBox(height: 5),
@@ -99,7 +180,6 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
                 ],
               ),
             ),
-            SizedBox(),
             Expanded(
               child: CIA_MultiSelectChipWidget(
                 key: GlobalKey(),
@@ -122,6 +202,85 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
                 ],
               ),
             ),
+            SizedBox(width: 10),
+            () {
+              bool contains = true;
+              for (var element in [
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+              ]) {
+                if (!selectedTeeth.contains(element)) {
+                  contains = false;
+                  break;
+                }
+              }
+              return contains;
+            }()
+                ? CIA_PrimaryButton(
+                    label: "Unselect Lower",
+                    isLong: true,
+                    onTab: () {
+                      selectedTeeth.removeWhere((element) => [
+                            31,
+                            32,
+                            33,
+                            34,
+                            35,
+                            36,
+                            37,
+                            38,
+                            41,
+                            42,
+                            43,
+                            44,
+                            45,
+                            46,
+                            47,
+                            48,
+                          ].contains(element));
+                      widget.selectedTeeth = selectedTeeth;
+                      setState(() => null);
+                    })
+                : CIA_SecondaryButton(
+                    label: "Select Lower",
+                    onTab: () {
+                      selectedTeeth.addAll([
+                        31,
+                        32,
+                        33,
+                        34,
+                        35,
+                        36,
+                        37,
+                        38,
+                        41,
+                        42,
+                        43,
+                        44,
+                        45,
+                        46,
+                        47,
+                        48,
+                      ]);
+                      selectedTeeth = selectedTeeth.toSet().toList();
+                      widget.selectedTeeth = selectedTeeth;
+                      if (widget.onChange != null) widget.onChange!(selectedTeeth);
+                      setState(() => null);
+                    })
           ],
         ),
       ],

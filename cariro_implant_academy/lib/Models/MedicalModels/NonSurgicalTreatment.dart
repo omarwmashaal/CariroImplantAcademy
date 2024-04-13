@@ -11,7 +11,6 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../Helpers/CIA_DateConverters.dart';
 import '../../Widgets/CIA_TextFormField.dart';
-import '../../features/patientsMedical/nonSurgicalTreatment/domain/usecases/updateNonSurgicalTreatmentNotesUseCase.dart';
 import '../DTOs/DropDownDTO.dart';
 
 class NonSurgicalTreatmentModelsssss {

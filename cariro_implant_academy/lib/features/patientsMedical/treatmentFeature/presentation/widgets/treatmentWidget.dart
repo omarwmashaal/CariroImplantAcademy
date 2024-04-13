@@ -1,16 +1,24 @@
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import '../../../../../../Models/MedicalModels/TreatmentPrices.dart';
 import '../../../../../../Widgets/MultiSelectChipWidget.dart';
 import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
@@ -26,6 +34,12 @@ import '../bloc/treatmentBloc_States.dart';
 
 TreatmentPrices prices = TreatmentPrices();
 
+enum _EnumSorting {
+  SortDateAsc,
+  SortDateDesc,
+  GroupTeeth,
+}
+
 // TODO: Listen to models and higlight chips
 class TreatmentWidget extends StatefulWidget {
   TreatmentWidget({
@@ -36,7 +50,7 @@ class TreatmentWidget extends StatefulWidget {
 
   int patientId;
   bool surgical;
-
+  _EnumSorting sorting = _EnumSorting.GroupTeeth;
   @override
   State<TreatmentWidget> createState() => _TreatmentWidgetState();
 }
@@ -56,7 +70,6 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
   int? tempCandidateBatch;
-
 
   @override
   void dispose() {
@@ -120,7 +133,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                 bloc.emit(TreatmentBloc_ShowTickState(showTick: false));
               } else if (state is TreatmentBloc_ShowPostSurgeryState) {
                 int tempScrews = (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0);
-                int? membraneSizeId = surgicalTreatmentEntity.openSinusLift_Membrane != null ? surgicalTreatmentEntity.openSinusLift_Membrane!.id : null;
+                int? membraneSizeId =
+                    surgicalTreatmentEntity.openSinusLift_Membrane != null ? surgicalTreatmentEntity.openSinusLift_Membrane!.id : null;
                 int tacsNumber = surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0;
                 int tacCompany = surgicalTreatmentEntity.openSinusLift_TacsCompanyID ?? 0;
                 CIA_ShowPopUp(
@@ -194,7 +208,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             builder: (context, state) {
               if (state is TreatmentBloc_LoadingTreatmentDataState)
                 return LoadingWidget();
-              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState || state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
+              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
+                  state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
                 if (state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
                   surgicalTreatmentEntity = state.data;
                   medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: surgicalTreatmentEntity));
@@ -276,7 +291,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   }
                                 },
                                 onChangeList: (selectedItems) {
-                                   if (selectedTeeth.isEmpty) {
+                                  if (selectedTeeth.isEmpty) {
                                     selectedStatus.clear();
                                     bloc.emit(TreatmentBloc_SelectedStatusState());
                                   } else {
@@ -380,7 +395,9 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   CIA_GestureWidget(
                                     onTap: () {
                                       bloc.add(TreatmentBloc_UpdateTeethStatusEvent(
-                                        teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
+                                        teethData: widget.surgical
+                                            ? surgicalTreatmentEntity.surgicalTreatment ?? []
+                                            : treatmentPlanEntity.treatmentPlan ?? [],
                                         selectedStatus: selectedStatus,
                                         selectedTeeth: selectedTeeth,
                                         patientId: widget.patientId,
@@ -412,6 +429,47 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                         ),
                       ),
                       SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(child: SizedBox()),
+                          FormTextValueWidget(text: "Sort By"),
+                          SizedBox(width: 10),
+                          widget.sorting == _EnumSorting.GroupTeeth
+                              ? CIA_PrimaryButton(
+                                  label: "Teeth",
+                                  onTab: () => null,
+                                  isLong: true,
+                                )
+                              : CIA_SecondaryButton(
+                                  label: "Teeth",
+                                  onTab: () => setState(() => widget.sorting = _EnumSorting.GroupTeeth),
+                                ),
+                          SizedBox(width: 10),
+                          widget.sorting == _EnumSorting.SortDateAsc
+                              ? CIA_PrimaryButton(
+                                  label: "Date Asscending",
+                                  onTab: () => null,
+                                  icon: Icon(Icons.arrow_upward),
+                                  isLong: true,
+                                )
+                              : CIA_SecondaryButton(
+                                  label: "Date Asscending",
+                                  onTab: () => setState(() => widget.sorting = _EnumSorting.SortDateAsc),
+                                  icon: Icon(Icons.arrow_upward)),
+                          SizedBox(width: 10),
+                          widget.sorting == _EnumSorting.SortDateDesc
+                              ? CIA_PrimaryButton(
+                                  label: "Date Descending",
+                                  onTab: () => null,
+                                  isLong: true,
+                                  icon: Icon(Icons.arrow_downward),
+                                )
+                              : CIA_SecondaryButton(
+                                  label: "Date Descending",
+                                  onTab: () => setState(() => widget.sorting = _EnumSorting.SortDateDesc),
+                                  icon: Icon(Icons.arrow_downward)),
+                        ],
+                      ),
                       Expanded(
                         child: BlocBuilder<TreatmentBloc, TreatmentBloc_States>(
                           buildWhen: (previous, current) => current is TreatmentBloc_UpdatedToothState || current is TreatmentBloc_ChangedViewState,
@@ -424,7 +482,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             } else {
                               treatmentPlanEntity.treatmentPlan = state.data;
                             }
-                            return ListView(children: _buildTeethWidgets(stateShell));
+                            return ListView(
+                              children: _buildTeethWidgets(
+                                stateShell,
+                                sort: widget.sorting,
+                              ),
+                            );
                           },
                         ),
                       )
@@ -442,38 +505,180 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
     );
   }
 
-  _buildTeethWidgets(MedicalInfoShellBloc_State stateShell) {
+  _buildTeethWidgets(MedicalInfoShellBloc_State stateShell, {required _EnumSorting sort}) {
     List<Widget> returnValue = [];
-    for (var model in (widget.surgical ? surgicalTreatmentEntity.surgicalTreatment : treatmentPlanEntity.treatmentPlan) ?? []) {
-      returnValue.add(
-        AbsorbPointer(
-          absorbing: () {
-            if (stateShell is MedicalInfoBlocChangeViewEditState) {
-              editMode = stateShell.edit;
-              return !editMode;
-            } else {
-              editMode = false;
-              return true;
-            }
-          }(),
-          child: ToothWidget(
-            bloc:bloc,
-            viewOnlyMode: viewOnlyMode,
-            key: GlobalKey(),
-            patientId: widget.patientId,
-            toothID: model!.tooth!,
-            isSurgical: widget.surgical,
-            prices: prices,
-            acceptChanges: (request) => bloc.add(
-              TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity),
+
+    if (sort != _EnumSorting.GroupTeeth) {
+      List<TreatmentPlanPropertyEntity> procedures = [];
+      for (TeethTreatmentPlanEntity toothData
+          in (widget.surgical ? surgicalTreatmentEntity.surgicalTreatment : treatmentPlanEntity.treatmentPlan) ?? []) {
+        if (toothData.rootCanalTreatment != null) {
+          toothData.rootCanalTreatment!.title = AddSpacesToSentence(AddSpacesToSentence("rootCanalTreatment"));
+          toothData.rootCanalTreatment!.tooth = toothData.tooth;
+          procedures.add(toothData.rootCanalTreatment!);
+        }
+        if (toothData.restoration != null) {
+          toothData.restoration!.title = AddSpacesToSentence(AddSpacesToSentence("restoration"));
+          toothData.restoration!.tooth = toothData.tooth;
+          procedures.add(toothData.restoration!);
+        }
+        if (toothData.pontic != null) {
+          toothData.pontic!.title = AddSpacesToSentence("pontic");
+          toothData.pontic!.tooth = toothData.tooth;
+          procedures.add(toothData.pontic!);
+        }
+        if (toothData.extraction != null) {
+          toothData.extraction!.title = AddSpacesToSentence("extraction");
+          toothData.extraction!.tooth = toothData.tooth;
+          procedures.add(toothData.extraction!);
+        }
+        if (toothData.immediateImplant != null) {
+          toothData.immediateImplant!.title = AddSpacesToSentence("immediateImplant");
+          toothData.immediateImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.immediateImplant!);
+        }
+        if (toothData.simpleImplant != null) {
+          toothData.simpleImplant!.title = AddSpacesToSentence("simpleImplant");
+          toothData.simpleImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.simpleImplant!);
+        }
+        if (toothData.expansionWithImplant != null) {
+          toothData.expansionWithImplant!.title = AddSpacesToSentence("expansionWithImplant");
+          toothData.expansionWithImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.expansionWithImplant!);
+        }
+        if (toothData.splittingWithImplant != null) {
+          toothData.splittingWithImplant!.title = AddSpacesToSentence("splittingWithImplant");
+          toothData.splittingWithImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.splittingWithImplant!);
+        }
+        if (toothData.gbrWithImplant != null) {
+          toothData.gbrWithImplant!.title = AddSpacesToSentence("gbrWithImplant");
+          toothData.gbrWithImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.gbrWithImplant!);
+        }
+        if (toothData.openSinusWithImplant != null) {
+          toothData.openSinusWithImplant!.title = AddSpacesToSentence("openSinusWithImplant");
+          toothData.openSinusWithImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.openSinusWithImplant!);
+        }
+        if (toothData.closedSinusWithImplant != null) {
+          toothData.closedSinusWithImplant!.title = AddSpacesToSentence("closedSinusWithImplant");
+          toothData.closedSinusWithImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.closedSinusWithImplant!);
+        }
+        if (toothData.guidedImplant != null) {
+          toothData.guidedImplant!.title = AddSpacesToSentence("guidedImplant");
+          toothData.guidedImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.guidedImplant!);
+        }
+        if (toothData.expansionWithoutImplant != null) {
+          toothData.expansionWithoutImplant!.title = AddSpacesToSentence("expansionWithoutImplant");
+          toothData.expansionWithoutImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.expansionWithoutImplant!);
+        }
+        if (toothData.splittingWithoutImplant != null) {
+          toothData.splittingWithoutImplant!.title = AddSpacesToSentence("splittingWithoutImplant");
+          toothData.splittingWithoutImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.splittingWithoutImplant!);
+        }
+        if (toothData.gbrWithoutImplant != null) {
+          toothData.gbrWithoutImplant!.title = AddSpacesToSentence("gbrWithoutImplant");
+          toothData.gbrWithoutImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.gbrWithoutImplant!);
+        }
+        if (toothData.openSinusWithoutImplant != null) {
+          toothData.openSinusWithoutImplant!.title = AddSpacesToSentence("openSinusWithoutImplant");
+          toothData.openSinusWithoutImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.openSinusWithoutImplant!);
+        }
+        if (toothData.closedSinusWithoutImplant != null) {
+          toothData.closedSinusWithoutImplant!.title = AddSpacesToSentence("closedSinusWithoutImplant");
+          toothData.closedSinusWithoutImplant!.tooth = toothData.tooth;
+          procedures.add(toothData.closedSinusWithoutImplant!);
+        }
+        if (toothData.scaling != null) {
+          toothData.scaling!.title = AddSpacesToSentence("scaling");
+          toothData.scaling!.tooth = toothData.tooth;
+          procedures.add(toothData.scaling!);
+        }
+        if (toothData.crown != null) {
+          toothData.crown!.title = AddSpacesToSentence("crown");
+          toothData.crown!.tooth = toothData.tooth;
+          procedures.add(toothData.crown!);
+        }
+      }
+      if (sort == _EnumSorting.SortDateDesc)
+        procedures.sort((a, b) => (b.date?.millisecondsSinceEpoch ?? 0).compareTo(a.date?.millisecondsSinceEpoch ?? 0));
+      else
+        procedures.sort((a, b) => (a.date?.millisecondsSinceEpoch ?? 0).compareTo(b.date?.millisecondsSinceEpoch ?? 0));
+
+      for (var procedure in procedures) {
+        returnValue.add(
+          AbsorbPointer(
+            absorbing: () {
+              if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                editMode = stateShell.edit;
+                return !editMode;
+              } else {
+                editMode = false;
+                return true;
+              }
+            }(),
+            child: ToothStatusWidget(
+              bloc: bloc,
+              isSurgical: widget.surgical,
+              tooth: procedure.tooth!,
+              viewOnlyMode: viewOnlyMode,
+              acceptChanges: (request) => bloc.add(TreatmentBloc_AcceptChangesEvent(
+                  requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity)),
+              patientId: widget.patientId,
+              fieldModel: procedure,
+              title: "Tooth:${procedure.tooth ?? ""} || " + AddSpacesToSentence(procedure.title ?? ""),
+              //settingsPrice: prices.implant,
+              price: true,
+              onDelete: () {
+                bloc.emit(TreatmentBloc_UpdatedToothState(
+                    data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? []));
+              },
             ),
-            teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
-            onChange: () => bloc.emit(TreatmentBloc_UpdatedToothState(
-                data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [])),
           ),
-        ),
-      );
-      returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
+        );
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
+      }
+    } else {
+      for (var model in (widget.surgical ? surgicalTreatmentEntity.surgicalTreatment : treatmentPlanEntity.treatmentPlan) ?? []) {
+        returnValue.add(
+          AbsorbPointer(
+            absorbing: () {
+              if (stateShell is MedicalInfoBlocChangeViewEditState) {
+                editMode = stateShell.edit;
+                return !editMode;
+              } else {
+                editMode = false;
+                return true;
+              }
+            }(),
+            child: ToothWidget(
+              bloc: bloc,
+              viewOnlyMode: viewOnlyMode,
+              key: GlobalKey(),
+              patientId: widget.patientId,
+              toothID: model!.tooth!,
+              isSurgical: widget.surgical,
+              prices: prices,
+              acceptChanges: (request) => bloc.add(
+                TreatmentBloc_AcceptChangesEvent(
+                    requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity),
+              ),
+              teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
+              onChange: () => bloc.emit(TreatmentBloc_UpdatedToothState(
+                  data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [])),
+            ),
+          ),
+        );
+        returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
+      }
     }
     if (viewOnlyMode) {
       returnValue.add(SizedBox(height: 20));

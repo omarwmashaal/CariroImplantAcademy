@@ -33,9 +33,9 @@ class NotificationRepoImpl implements NotificationRepo{
   }
 
   @override
-  Future<Either<Failure, NoParams>> markAllAsRead() async {
+  Future<Either<Failure, NoParams>> markAllAsRead(int? id) async {
     try{
-      final result = await notificationDataSource.markAllAsRead();
+      final result = await notificationDataSource.markAllAsRead( id);
       return Right(result);
     }
     on Exception catch(e)

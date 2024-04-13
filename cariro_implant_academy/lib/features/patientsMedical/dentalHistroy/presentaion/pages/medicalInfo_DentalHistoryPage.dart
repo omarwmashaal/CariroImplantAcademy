@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/entities/cbctEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/domain/entities/dentalHistoryEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
@@ -88,10 +89,13 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
           }(),
           child: BlocConsumer<DentalHistoryBloc, DentalHistoryBloc_States>(
             listener: (context, state) {
-              if (state is DentalHistoryBloc_SavedDataSuccessfullyState) bloc.add(DentalHistoryBloc_GetDentalHistoryEvent(patientId: widget.patientId));
+              if (state is DentalHistoryBloc_SavedDataSuccessfullyState)
+                bloc.add(DentalHistoryBloc_GetDentalHistoryEvent(patientId: widget.patientId));
             },
             buildWhen: (previous, current) =>
-            current is DentalHistoryBloc_LoadingDataState || current is DentalHistoryBloc_DataLoadedSuccessfullyState || current is DentalHistoryBloc_ErrorState,
+                current is DentalHistoryBloc_LoadingDataState ||
+                current is DentalHistoryBloc_DataLoadedSuccessfullyState ||
+                current is DentalHistoryBloc_ErrorState,
             builder: (context, state) {
               if (state is DentalHistoryBloc_LoadingDataState)
                 return LoadingWidget();
@@ -116,7 +120,7 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                                   onTab: () {
                                     CIA_ShowPopUp(
                                       context: context,
-                                      width:600,
+                                      width: 600,
                                       title: "CBCT Data",
                                       child: SingleChildScrollView(
                                         child: StatefulBuilder(builder: (context, _setState) {
@@ -126,47 +130,58 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                                           return Column(
                                             children: (dentalHistoryData.cbct ?? [])
                                                 .map((e) => Row(
-                                              children: [
-                                                CIA_CheckBoxWidget(
-                                                  text: (e.done ?? false) == true ? "Done" : "Not Done",
-                                                  value: (e.done ?? false) == true,
-                                                  onChange: (value) {
-                                                    e.done = value;
-                                                    if (value == false)
-                                                      e.date = null;
-                                                    else
-                                                      e.date = DateTime.now();
-                                                    _setState(() {});
-                                                  },
-                                                ),
-                                                SizedBox(width: 10),
-                                                Expanded(
-                                                  child: FormTextValueWidget(
-                                                    text: e.date == null ? null : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    if (dentalHistoryData.cbct!.isNotEmpty && dentalHistoryData.cbct!.last!.isNull()) {
-                                                      ShowSnackBar(context, isSuccess: false, message: "Please Fill in previous CBCTs first!");
-                                                    } else {
-                                                      dentalHistoryData.cbct = [...dentalHistoryData.cbct!, CBCT_Entity()];
-                                                      _setState(() {});
-                                                    }
-                                                  },
-                                                  icon: Icon(Icons.add),
-                                                ),
-                                                SizedBox(width: 10),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    dentalHistoryData.cbct!.remove(e);
-                                                    _setState(() {});
-                                                  },
-                                                  icon: Icon(Icons.delete),
-                                                )
-                                              ],
-                                            ))
+                                                      children: [
+                                                        CIA_CheckBoxWidget(
+                                                          text: (e.done ?? false) == true ? "Done" : "Not Done",
+                                                          value: (e.done ?? false) == true,
+                                                          onChange: (value) {
+                                                            e.done = value;
+                                                            if (value == false)
+                                                              e.date = null;
+                                                            else
+                                                              e.date = DateTime.now();
+                                                            _setState(() {});
+                                                          },
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        Expanded(
+                                                          child: CIA_GestureWidget(
+                                                            onTap: () {
+                                                              CIA_PopupDialog_DateOnlyPicker(context, "Change Date", (v) {
+                                                                _setState(() {
+                                                                  e.date = DateTime(v.year, v.month, v.day, e.date?.hour ?? 0, e.date?.minute ?? 0,
+                                                                      e.date?.second ?? 0);
+                                                                });
+                                                              }, initialDate: e.date);
+                                                            },
+                                                            child: FormTextValueWidget(
+                                                              text: e.date == null ? null : DateFormat("dd-MM-yyyy").format(e.date!),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            if (dentalHistoryData.cbct!.isNotEmpty && dentalHistoryData.cbct!.last!.isNull()) {
+                                                              ShowSnackBar(context,
+                                                                  isSuccess: false, message: "Please Fill in previous CBCTs first!");
+                                                            } else {
+                                                              dentalHistoryData.cbct = [...dentalHistoryData.cbct!, CBCT_Entity()];
+                                                              _setState(() {});
+                                                            }
+                                                          },
+                                                          icon: Icon(Icons.add),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            dentalHistoryData.cbct!.remove(e);
+                                                            _setState(() {});
+                                                          },
+                                                          icon: Icon(Icons.delete),
+                                                        )
+                                                      ],
+                                                    ))
                                                 .toList(),
                                           );
                                         }),
@@ -191,7 +206,8 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                                       labels: [
                                         CIA_MultiSelectChipWidgeModel(label: "Hot or cold", isSelected: dentalHistoryData.senstiveHotCold ?? false),
                                         CIA_MultiSelectChipWidgeModel(label: "sweets", isSelected: dentalHistoryData.senstiveSweets ?? false),
-                                        CIA_MultiSelectChipWidgeModel(label: "Biting or chewing", isSelected: dentalHistoryData.bittingCheweing ?? false),
+                                        CIA_MultiSelectChipWidgeModel(
+                                            label: "Biting or chewing", isSelected: dentalHistoryData.bittingCheweing ?? false),
                                       ]))
                             ],
                           ),
@@ -214,8 +230,8 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                             children: [
                               Expanded(
                                   child: FormTextKeyWidget(
-                                    text: "Smoke Tobacco?",
-                                  )),
+                                text: "Smoke Tobacco?",
+                              )),
                               Expanded(
                                   child: CIA_TextFormField(
                                       onChange: (value) {
@@ -227,20 +243,21 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                                       },
                                       label: "Cigarette per day",
                                       isNumber: true,
-                                      controller: TextEditingController(text: dentalHistoryData.smoke == null ? null : dentalHistoryData.smoke.toString()))),
+                                      controller:
+                                          TextEditingController(text: dentalHistoryData.smoke == null ? null : dentalHistoryData.smoke.toString()))),
                               SizedBox(
                                 width: 10,
                               ),
                               Expanded(
                                   child: BlocBuilder<MedicalPagesStatesChangesBloc, MedicalPagesStatesChangesBloc_States>(
-                                    buildWhen: (previous, current) => current is ChangeSmokingStatusState,
-                                    bloc: medicalVariablesBloc,
-                                    builder: (context, state) {
-                                      SmokingStatus status = dentalHistoryData.smokingStatus ?? SmokingStatus.NoneSmoker;
-                                      if (state is ChangeSmokingStatusState) status = state.smokingStatus;
-                                      return FormTextValueWidget(text: status.name);
-                                    },
-                                  )),
+                                buildWhen: (previous, current) => current is ChangeSmokingStatusState,
+                                bloc: medicalVariablesBloc,
+                                builder: (context, state) {
+                                  SmokingStatus status = dentalHistoryData.smokingStatus ?? SmokingStatus.NoneSmoker;
+                                  if (state is ChangeSmokingStatusState) status = state.smokingStatus;
+                                  return FormTextValueWidget(text: status.name);
+                                },
+                              )),
                               Expanded(flex: 3, child: SizedBox())
                             ],
                           ),
@@ -297,8 +314,9 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
                                       label: "",
                                       isNumber: true,
                                       controller: TextEditingController(
-                                          text:
-                                          dentalHistoryData.willingForImplantScore != null ? dentalHistoryData.willingForImplantScore.toString() : null))),
+                                          text: dentalHistoryData.willingForImplantScore != null
+                                              ? dentalHistoryData.willingForImplantScore.toString()
+                                              : null))),
                               Expanded(child: FormTextKeyWidget(text: "/10")),
                               Expanded(child: SizedBox())
                             ],
@@ -317,7 +335,6 @@ class _PatientDentalHistoryState extends State<DentalHistoryPage> {
         );
       },
     );
-
   }
 
   @override

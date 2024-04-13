@@ -54,6 +54,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
       _query += "&search=${params.query}";
       if (params.filter != null) _query += "&filter=${params.filter}";
       if (params.out != null) _query += "&patientOut=${params.out}";
+      if (params.listed != null) _query += "&listed=${params.listed}";
     }
 
     try {

@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatch
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -375,8 +377,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                         ),
                                       ),
                                       Visibility(
-                                        visible:
-                                            !((widget.title.toLowerCase().contains("without implant")) || (!widget.title.toLowerCase().contains("implant"))),
+                                        visible: !((widget.title.toLowerCase().contains("without implant")) ||
+                                            (!widget.title.toLowerCase().contains("implant"))),
                                         child: Expanded(
                                           flex: 2,
                                           child: Row(
@@ -420,6 +422,22 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                 ],
                               ))
                             : SizedBox(),
+
+                    CIA_GestureWidget(
+                      onTap: () => CIA_PopupDialog_DateOnlyPicker(
+                        context,
+                        "Change date",
+                        (date) => setState(() => widget.fieldModel.date = date),
+                        initialDate: widget.fieldModel.date,
+                      ),
+                      child: SizedBox(
+                        width: 100,
+                        child: Text(
+                          widget.fieldModel.date == null ? "" : DateFormat("dd-MM-yyyy").format(widget.fieldModel.date!),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
                     //SizedBox(width: 10)
                   ],
                 ),
@@ -492,9 +510,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
           ? widget.fieldModel.doneByAssistant
           : BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
       widget.fieldModel.doneByAssistantID = widget.fieldModel.doneByAssistantID ?? widget.fieldModel.doneByAssistant?.id;
-      widget.fieldModel.doneBySupervisor = (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
-          ? widget.fieldModel.doneBySupervisor
-          : widget.bloc.tempSuperVisor;
+      widget.fieldModel.doneBySupervisor =
+          (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
+              ? widget.fieldModel.doneBySupervisor
+              : widget.bloc.tempSuperVisor;
       widget.fieldModel.doneBySupervisorID = widget.fieldModel.doneBySupervisorID ?? widget.bloc.tempSuperVisor?.id;
       widget.fieldModel.doneByCandidate = (widget.fieldModel.doneByCandidate != null && !(widget.fieldModel.doneByCandidate!.name?.isBlank ?? true))
           ? widget.fieldModel.doneByCandidate

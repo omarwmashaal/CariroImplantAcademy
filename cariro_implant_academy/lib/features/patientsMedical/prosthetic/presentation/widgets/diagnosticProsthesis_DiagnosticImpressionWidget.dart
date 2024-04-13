@@ -4,6 +4,9 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
@@ -70,13 +73,12 @@ class _DiagnosticProsthesis_DiagnosticImpressionWidgetState extends State<Diagno
                     widget.data.operatorId = siteController.getUserId();
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                      widget.data.date = DateTime.now();
+                      widget.data.date =widget.data.date?? DateTime.now();
                     });
                   },
-                  items: [
-                    DropDownDTO(name: "Physical", id: 0),
-                    DropDownDTO(name: "Digital", id: 1),
-                  ],
+                  items: EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values
+                      .map((e) => DropDownDTO(name: AddSpacesToSentence(e.name), id: e.index))
+                      .toList(),
                 ),
               ),
               SizedBox(width: 10),
@@ -133,20 +135,43 @@ class _DiagnosticProsthesis_DiagnosticImpressionWidgetState extends State<Diagno
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
-                        child: FormTextValueWidget(
-                      align: TextAlign.center,
-                      text: widget.data.operator!.name ?? "",
-                      secondaryInfo: true,
+                        child: CIA_GestureWidget(
+                      onTap: () => CIA_ShowPopUp(
+                        context: context,
+                        height: 100,
+                        onSave: () => setState(() => null),
+                        child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          asyncUseCase: sl<LoadUsersUseCase>(),
+                          searchParams: LoadUsersEnum.instructorsAndAssistants,
+                          onSelect: (value) {
+                            widget.data.operatorId = value.id;
+                            widget.data.operator = value;
+                          },
+                          //selectedItem: DropDownDTO(),
+                          selectedItem: widget.data.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
+                          label: "Operator",
+                        ),
+                      ),
+                      child: FormTextValueWidget(
+                        align: TextAlign.center,
+                        text: widget.data.operator!.name ?? "",
+                        secondaryInfo: true,
+                      ),
                     )),
                     SizedBox(width: 10),
                     Expanded(
                         child: CIA_GestureWidget(
                       onTap: () {
-                        CIA_PopupDialog_DateTimePicker(context, "Change Date and Time", (v) {
-                          setState(() {
-                            widget.data.date = v;
-                          });
-                        });
+                        CIA_PopupDialog_DateOnlyPicker(
+                          context,
+                          "Change Date and Time",
+                          (v) {
+                            setState(() {
+                              widget.data.date = v;
+                            });
+                          },
+                          initialDate: widget.data.date,
+                        );
                       },
                       child: FormTextValueWidget(
                         align: TextAlign.center,

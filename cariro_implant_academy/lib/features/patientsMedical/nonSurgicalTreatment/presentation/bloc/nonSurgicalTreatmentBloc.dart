@@ -1,9 +1,12 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
-import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPaymentUsecase.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getTreatmentPlanItemUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/updateNonSurgicalTreatmentNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import '';
 import '../../../../../Widgets/CIA_PopUp.dart';
 import '../../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../../core/features/coreReceipt/domain/usecases/addPatientReceiptUseCase.dart';
@@ -32,7 +34,6 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
   final SaveDentalExaminationUseCase saveDentalExaminationUseCase;
   final GetTreatmentPlanItemUsecase getTreatmentPlanItemUsecase;
   final AddPatientReceiptUseCase addPatientReceiptUseCase;
-  final UpdateNonSurgicalTreatmentNotesUseCase updateNonSurgicalTreatmentNotesUseCase;
   bool isInitialized = false;
 
   NonSurgicalTreatmentBloc({
@@ -43,7 +44,6 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
     required this.getDentalExaminationUseCase,
     required this.saveDentalExaminationUseCase,
     required this.getTreatmentPlanItemUsecase,
-    required this.updateNonSurgicalTreatmentNotesUseCase,
     required this.addPatientReceiptUseCase,
   }) : super(NonSurgicalTreatmentBlocInitialState()) {
     on<NonSurgicalTreatmentBloc_GetDataEvent>(
@@ -80,7 +80,8 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
     on<NonSurgicalTreatmentBloc_CheckTeethStatusEvent>(
       (event, emit) async {
         emit(NonSurgicalTreatmentBloc_CheckingTeethStatus());
-        final result = await checkNonSurgicalTreatmentTeethStatusUseCase(event.treatment == null || event.treatment == "" ? "nodata" : event.treatment);
+        final result =
+            await checkNonSurgicalTreatmentTeethStatusUseCase(event.treatment == null || event.treatment == "" ? "nodata" : event.treatment);
         result.fold(
           (l) => emit(NonSurgicalTreatmentBloc_CheckingTeethStatusError(message: l.message ?? "")),
           (r) => emit(NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully(status: r)),
@@ -97,32 +98,27 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
         );
       },
     );
-    on<NonSurgicalTreatmentBloc_UpdateNotesEvent>(
-      (event, emit) async {
-        emit(NonSurgicalTreatmentBloc_UpdatingNotesStates());
-        final result = await updateNonSurgicalTreatmentNotesUseCase(event.params);
-        result.fold(
-          (l) => emit(NonSurgicalTreatmentBloc_UpdatingNotesErrorStates(message: l.message ?? "")),
-          (r) => emit(NonSurgicalTreatmentBloc_UpdatedNotesSuccessfullyState()),
-        );
-      },
-    );
+
     on<NonSurgicalTreatmentBloc_SaveDataEvent>(
       (event, emit) async {
         emit(NonSurgicalTreatmentBloc_SavingData());
         final result = await saveNonSurgicalTreatmentUseCase(SaveNonSurgicalTreatmentParams(
           patientId: event.patientId,
           nonSurgicalTreatmentEntity: event.nonSurgicalTreatmentEntity,
+          delete: event.delete,
         ));
         result.fold(
           (l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
           (r) async {
             // emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
 
-            await saveDentalExaminationUseCase(event.dentalExaminationEntity).then((value) {
-              value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
-                  (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
-            });
+            if (event.dentalExaminationEntity != null)
+              await saveDentalExaminationUseCase(event.dentalExaminationEntity!).then((value) {
+                value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
+                    (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
+              });
+            else
+              emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
           },
         );
       },
@@ -181,31 +177,90 @@ class NonSurgicalTreatmentDataGridSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Operator', value: e.operator?.name!),
               DataGridCell<String>(columnName: 'Supervisor', value: e.supervisor?.name!),
               DataGridCell<DateTime>(columnName: 'Next Visit', value: e.nextVisit),
+              DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
+              DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
               DataGridCell<Widget>(
-                  columnName: 'Treatment',
-                  value: CIA_GestureWidget(
-                    onTap: () => (!siteController.getRole()!.contains("admin"))
-                        ? null
-                        : CIA_ShowPopUp(
-                            context: context,
-                            width: 700,
-                            onSave: () {
-                              bloc.add(NonSurgicalTreatmentBloc_UpdateNotesEvent(
-                                  params: UpdateNonSurgicalTreatmentNotesParams(notes: e.treatment!, nonSurgicalTreatmentId: e.id!)));
-                            },
-                            child: CIA_TextFormField(
-                              textInputType: TextInputType.multiline,
-                              textInputAction: TextInputAction.newline,
-                              onChange: (value) {
-                                e.treatment = value;
+                  columnName: 'Edit',
+                  value: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit_note_sharp),
+                        onPressed: () {
+                          CIA_ShowPopUp(
+                              context: context,
+                              width: 700,
+                              height: 700,
+                              onSave: () {
+                                bloc.add(NonSurgicalTreatmentBloc_SaveDataEvent(
+                                  nonSurgicalTreatmentEntity: e,
+                                  patientId: e.patientId!,
+                                ));
                               },
-                              label: "Treatment",
-                              controller: TextEditingController(text: e.treatment),
-                              maxLines: 10,
+                              child: ListView(
+                                children: [
+                                  CIA_TextFormField(
+                                    textInputType: TextInputType.multiline,
+                                    textInputAction: TextInputAction.newline,
+                                    onChange: (value) {
+                                      e.treatment = value;
+                                    },
+                                    label: "Treatment",
+                                    controller: TextEditingController(text: e.treatment),
+                                    maxLines: 10,
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    asyncUseCase: sl<LoadUsersUseCase>(),
+                                    searchParams: LoadUsersEnum.supervisors,
+                                    onSelect: (value) {
+                                      e.supervisorID = value.id;
+                                    },
+                                    //selectedItem: DropDownDTO(),
+                                    selectedItem: e.supervisor ?? BasicNameIdObjectEntity(name: "", id: 0),
+                                    label: "Supervisor",
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    asyncUseCase: sl<LoadUsersUseCase>(),
+                                    searchParams: LoadUsersEnum.instructorsAndAssistants,
+                                    onSelect: (value) {
+                                      e.operatorID = value.id;
+                                    },
+                                    //selectedItem: DropDownDTO(),
+                                    selectedItem: e.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
+                                    label: "Operator",
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DateTimeTextFormField(
+                                    label: "Date",
+                                    controller: TextEditingController(text: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!)),
+                                    initialDate: e.date,
+                                    onChange: (value) => e.date =
+                                        DateTime(value.year, value.month, value.day, e.date?.hour ?? 0, e.date?.minute ?? 0, e.date?.second ?? 0),
+                                  ),
+                                ],
+                              ));
+                        },
+                      ),
+                      SizedBox(width: 5),
+                      IconButton(
+                        color: Colors.red,
+                        onPressed: () => CIA_ShowPopUpYesNo(
+                          context: context,
+                          title: "Are you sure you want to delete this entry?",
+                          onSave: () => bloc.add(
+                            NonSurgicalTreatmentBloc_SaveDataEvent(
+                              nonSurgicalTreatmentEntity: e,
+                              patientId: e.patientId!,
+                              delete: true,
                             ),
                           ),
-                    child: Text(e.treatment ?? ""),
-                  ))
+                        ),
+                        icon: Icon(Icons.delete_forever),
+                      ),
+                    ],
+                  )),
             ]))
         .toList();
   }

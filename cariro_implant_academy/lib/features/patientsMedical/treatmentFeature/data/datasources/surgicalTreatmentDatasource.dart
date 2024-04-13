@@ -29,7 +29,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       if (response.body != null)
         return SurgicalTreatmentModel.fromJson(response.body as Map<String, dynamic>);
@@ -42,6 +42,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
 
   @override
   Future<NoParams> saveSurgicalTreatment(int id, SurgicalTreatmentEntity data) async {
+    data.requestChanges = [];
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
@@ -51,12 +52,12 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
   }
 
   @override
-  Future<RequestChangeModel> addChangeRequest(RequestChangeEntity request)async {
+  Future<RequestChangeModel> addChangeRequest(RequestChangeEntity request) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.post(
@@ -66,12 +67,10 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
-    try{
-      return RequestChangeModel.fromJson(response.body as Map<String,dynamic>);
-    }
-    catch(e)
-    {
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return RequestChangeModel.fromJson(response.body as Map<String, dynamic>);
+    } catch (e) {
       throw DataConversionException(message: "Couldn't Convert Data");
     }
   }
@@ -87,7 +86,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
-  return NoParams();
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 }

@@ -1,6 +1,9 @@
-
-
-enum EnumProstheticDiagnosticDiagnosticImpressionDiagnostic { Physical, Digital }
+enum EnumProstheticDiagnosticDiagnosticImpressionDiagnostic {
+  Physical,
+  Digital,
+  SecondaryImpression,
+  DirectImpression,
+}
 
 enum EnumProstheticDiagnosticDiagnosticImpressionNextStep { Ready_For_Implant, Bite, Needs_New_Impression, Needs_Scan_PPT }
 
@@ -31,26 +34,10 @@ enum EnumFinalProthesisTryInStatus { Try_in_abutment_scan_abutment, Try_in_PMMA,
 
 enum EnumFinalProthesisDeliveryStatus { Done, ReDesign, ReImpression, ReTryIn }
 
-enum EnumFinalProthesisHealingCollarNextVisit
-{
-  Needs_Impression
-}
-enum EnumFinalProthesisImpressionNextVisit
-{
-  Custom_Abutment,
-  Try_In,
-  Delivery
-}
-enum EnumFinalProthesisTryInNextVisit
-{
-  Delivery,
-  Try_In_PMMA,
-  ReImpression
-}
-enum EnumFinalProthesisDeliveryNextVisit
-{
-  Done,
-  ReDesign,
-  ReImpression,
-  ReTryIn
-}
+enum EnumFinalProthesisHealingCollarNextVisit { Needs_Impression }
+
+enum EnumFinalProthesisImpressionNextVisit { Custom_Abutment, Try_In, Delivery }
+
+enum EnumFinalProthesisTryInNextVisit { Delivery, Try_In_PMMA, ReImpression }
+
+enum EnumFinalProthesisDeliveryNextVisit { Done, ReDesign, ReImpression, ReTryIn }

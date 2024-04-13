@@ -87,15 +87,12 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
               return true;
             }
           }(),
-          child:BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
+          child: BlocConsumer<MedicalHistoryBloc, MedicalHistoryBloc_States>(
             listener: (context, state) {
-              if(state is MedicalHistoryBloc_SavedSuccessfully)
-                bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
+              if (state is MedicalHistoryBloc_SavedSuccessfully) bloc.add(MedicalHistoryBloc_GetMedicalHistoryEvent(id: widget.patientId));
             },
             buildWhen: (previous, current) =>
-            current is MedicalHistoryBloc_LoadingState ||
-                current is MedicalHistoryBloc_DataLoaded ||
-                current is MedicalHistoryBloc_ErrorState,
+                current is MedicalHistoryBloc_LoadingState || current is MedicalHistoryBloc_DataLoaded || current is MedicalHistoryBloc_ErrorState,
             builder: (context, state) {
               if (state is MedicalHistoryBloc_LoadingState)
                 return LoadingWidget();
@@ -109,7 +106,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                   children: [
                     FocusTraversalGroup(
                       policy: OrderedTraversalPolicy(),
-                      child:Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           FormTextKeyWidget(text: "General Health"),
@@ -139,13 +136,21 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             },
                             labels: [
                               CIA_MultiSelectChipWidgeModel(
-                                  label: "Excellent", selectedColor: Colors.green, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Excellent),
+                                  label: "Excellent",
+                                  selectedColor: Colors.green,
+                                  isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Excellent),
                               CIA_MultiSelectChipWidgeModel(
-                                  label: "Very good", selectedColor: Colors.green, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.VeryGood),
+                                  label: "Very good",
+                                  selectedColor: Colors.green,
+                                  isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.VeryGood),
                               CIA_MultiSelectChipWidgeModel(
-                                  label: "Good", selectedColor: Colors.orange, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Good),
+                                  label: "Good",
+                                  selectedColor: Colors.orange,
+                                  isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Good),
                               CIA_MultiSelectChipWidgeModel(
-                                  label: "Fair", selectedColor: Colors.orange, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Fair),
+                                  label: "Fair",
+                                  selectedColor: Colors.orange,
+                                  isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Fair),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Fail", selectedColor: Colors.red, isSelected: medicalHistoryData.generalHealth == GeneralHealthEnum.Fail),
                             ],
@@ -158,12 +163,12 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             children: [
                               Flexible(
                                   child: HorizontalRadioButtons(
-                                    names: ["None", "Pregnant", "Lactating"],
-                                    selectionColor: Colors.red,
-                                    notColoredWord: "None",
-                                    onChange: (value) => medicalHistoryData.pregnancyStatus = mapToEnum(PregnancyEnum.values, value),
-                                    groupValue: medicalHistoryData.pregnancyStatus == null ? "" : medicalHistoryData.pregnancyStatus!.name,
-                                  )),
+                                names: ["None", "Pregnant", "Lactating"],
+                                selectionColor: Colors.red,
+                                notColoredWord: "None",
+                                onChange: (value) => medicalHistoryData.pregnancyStatus = mapToEnum(PregnancyEnum.values, value),
+                                groupValue: medicalHistoryData.pregnancyStatus == null ? "" : medicalHistoryData.pregnancyStatus!.name,
+                              )),
                             ],
                           ),
                           SizedBox(
@@ -249,11 +254,13 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Kidney Disease",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.KidneyDisease)),
+                                  isSelected:
+                                      medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.KidneyDisease)),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Liver Disease",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.LiverDisease)),
+                                  isSelected:
+                                      medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.LiverDisease)),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Asthma",
                                   selectedColor: Colors.red,
@@ -261,7 +268,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Psychological",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.Psychological)),
+                                  isSelected:
+                                      medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.Psychological)),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Rhemuatic",
                                   selectedColor: Colors.red,
@@ -277,7 +285,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Heart problem",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.HeartProblem)),
+                                  isSelected:
+                                      medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.HeartProblem)),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Thyroid",
                                   selectedColor: Colors.red,
@@ -289,7 +298,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Venereal Disease",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.VenerealDisease)),
+                                  isSelected:
+                                      medicalHistoryData.diseases != null && medicalHistoryData.diseases!.contains(DiseasesEnum.VenerealDisease)),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Other",
                                   selectedColor: Colors.red,
@@ -332,7 +342,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                             labels: [
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Normal",
-                                  isSelected: medicalHistoryData.bloodPressure != null && medicalHistoryData.bloodPressure?.status == BloodPressureEnum.Normal),
+                                  isSelected: medicalHistoryData.bloodPressure != null &&
+                                      medicalHistoryData.bloodPressure?.status == BloodPressureEnum.Normal),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Hypertensive controlled",
                                   isSelected: medicalHistoryData.bloodPressure != null &&
@@ -398,7 +409,8 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       },
                                       label: "Last Reading ",
                                       controller: TextEditingController(
-                                          text: medicalHistoryData.bloodPressure != null ? (medicalHistoryData.bloodPressure?.lastReading ?? "") : "")),
+                                          text:
+                                              medicalHistoryData.bloodPressure != null ? (medicalHistoryData.bloodPressure?.lastReading ?? "") : "")),
                                 ),
                               ),
                               Expanded(
@@ -472,7 +484,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       },
                                       label: "Reading in clinic ",
                                       controller: TextEditingController(
-                                          text: medicalHistoryData.bloodPressure != null ? (medicalHistoryData.bloodPressure?.readingInClinic ?? "") : "")),
+                                          text: medicalHistoryData.bloodPressure != null
+                                              ? (medicalHistoryData.bloodPressure?.readingInClinic ?? "")
+                                              : "")),
                                 ),
                               ),
                             ],
@@ -510,11 +524,13 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   isSelected: medicalHistoryData.diabetic != null && medicalHistoryData.diabetic?.status == DiabetesEnum.Normal),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Diabetic controlled",
-                                  isSelected: medicalHistoryData.diabetic != null && medicalHistoryData.diabetic?.status == DiabetesEnum.DiabeticControlled),
+                                  isSelected:
+                                      medicalHistoryData.diabetic != null && medicalHistoryData.diabetic?.status == DiabetesEnum.DiabeticControlled),
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Diabetic uncontrolled",
                                   selectedColor: Colors.red,
-                                  isSelected: medicalHistoryData.diabetic != null && medicalHistoryData.diabetic?.status == DiabetesEnum.DiabeticUncontrolled),
+                                  isSelected: medicalHistoryData.diabetic != null &&
+                                      medicalHistoryData.diabetic?.status == DiabetesEnum.DiabeticUncontrolled),
                             ],
                           ),
                           SizedBox(
@@ -592,7 +608,9 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       },
                                       label: "Random in clinic ",
                                       controller: TextEditingController(
-                                          text: medicalHistoryData.diabetic != null ? (medicalHistoryData.diabetic?.randomInClinic ?? "").toString() : "")),
+                                          text: medicalHistoryData.diabetic != null
+                                              ? (medicalHistoryData.diabetic?.randomInClinic ?? "").toString()
+                                              : "")),
                                 ),
                               ),
                             ],
@@ -600,6 +618,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                           SizedBox(
                             height: 20,
                           ),
+                          
                           FormTextKeyWidget(text: "HBA1c"),
                           SizedBox(
                             height: 10,
@@ -664,12 +683,12 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   labels: [
                                     CIA_MultiSelectChipWidgeModel(
                                         label: "Yes",
-                                        isSelected:
-                                        medicalHistoryData.prolongedBleedingOrAspirin != null && medicalHistoryData.prolongedBleedingOrAspirin as bool),
+                                        isSelected: medicalHistoryData.prolongedBleedingOrAspirin != null &&
+                                            medicalHistoryData.prolongedBleedingOrAspirin as bool),
                                     CIA_MultiSelectChipWidgeModel(
                                         label: "No",
-                                        isSelected:
-                                        medicalHistoryData.prolongedBleedingOrAspirin != null && !(medicalHistoryData.prolongedBleedingOrAspirin as bool)),
+                                        isSelected: medicalHistoryData.prolongedBleedingOrAspirin != null &&
+                                            !(medicalHistoryData.prolongedBleedingOrAspirin as bool)),
                                   ]),
                             ],
                           ),
@@ -691,9 +710,11 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                   singleSelect: true,
                                   labels: [
                                     CIA_MultiSelectChipWidgeModel(
-                                        label: "Yes", isSelected: medicalHistoryData.chronicDigestion != null && (medicalHistoryData.chronicDigestion as bool)),
+                                        label: "Yes",
+                                        isSelected: medicalHistoryData.chronicDigestion != null && (medicalHistoryData.chronicDigestion as bool)),
                                     CIA_MultiSelectChipWidgeModel(
-                                        label: "No", isSelected: medicalHistoryData.chronicDigestion != null && !(medicalHistoryData.chronicDigestion as bool)),
+                                        label: "No",
+                                        isSelected: medicalHistoryData.chronicDigestion != null && !(medicalHistoryData.chronicDigestion as bool)),
                                   ]),
                             ],
                           ),
@@ -734,47 +755,47 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                 children: medicalHistoryData.drugsTaken!
                                     .map(
                                       (e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 10.0),
-                                    child: Row(
-                                      children: [
-                                        Text(() {
-                                          index += 1;
-                                          return index.toString();
-                                        }()),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: CIA_TextFormField(
-                                            label: "Drug",
-                                            controller: TextEditingController(text: e ?? ""),
-                                            onChange: (v) {
-                                              e = v;
-                                              medicalHistoryData.drugsTaken![index - 1] = v;
-                                            },
-                                          ),
+                                        padding: const EdgeInsets.only(bottom: 10.0),
+                                        child: Row(
+                                          children: [
+                                            Text(() {
+                                              index += 1;
+                                              return index.toString();
+                                            }()),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: CIA_TextFormField(
+                                                label: "Drug",
+                                                controller: TextEditingController(text: e ?? ""),
+                                                onChange: (v) {
+                                                  e = v;
+                                                  medicalHistoryData.drugsTaken![index - 1] = v;
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() => medicalHistoryData.drugsTaken!.add(""));
+                                              },
+                                              icon: Icon(Icons.add),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() => medicalHistoryData.drugsTaken!.remove(e));
+                                              },
+                                              icon: Icon(Icons.remove),
+                                            ),
+                                            Expanded(child: SizedBox())
+                                          ],
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() => medicalHistoryData.drugsTaken!.add(""));
-                                          },
-                                          icon: Icon(Icons.add),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() => medicalHistoryData.drugsTaken!.remove(e));
-                                          },
-                                          icon: Icon(Icons.remove),
-                                        ),
-                                        Expanded(child: SizedBox())
-                                      ],
-                                    ),
-                                  ),
-                                )
+                                      ),
+                                    )
                                     .toList(),
                               );
                             },
                           ),
                         ],
-                      ) ,
+                      ),
                     ),
                   ],
                 );
@@ -783,11 +804,10 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
               else
                 return Container();
             },
-          ) ,
+          ),
         );
       },
     );
-
   }
 
   @override

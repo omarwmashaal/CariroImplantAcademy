@@ -15,25 +15,24 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../Constants/Colors.dart';
 import '../core/presentation/widgets/CIA_GestureWidget.dart';
 
-CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(DateTime) onChange,{DateTime? initDate}) async {
+CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(DateTime) onChange, {DateTime? initDate}) async {
   String date = "";
   String hour = "";
   String minute = "";
   String timey = "PM";
   dialogHelper.increaseCount();
-  if(initDate!=null)
-    {
-      hour = DateFormat("h").format(initDate);
-      minute = DateFormat("mm").format(initDate);
-      timey = DateFormat("a").format(initDate);
-    }
+  if (initDate != null) {
+    hour = DateFormat("h").format(initDate);
+    minute = DateFormat("mm").format(initDate);
+    timey = DateFormat("a").format(initDate);
+  }
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
-    title: title,  
-    style: AlertStyle(backgroundColor: Colors.white), 
+    title: title,
+    style: AlertStyle(backgroundColor: Colors.white),
     content: StatefulBuilder(
       builder: (BuildContext context, void Function(void Function()) setState) {
         return Column(
@@ -92,7 +91,6 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
                 onSelectionChanged: (value) {
                   setState(() {
                     date = value.value.toString().replaceAll(" 00:00:00.000", "");
-
                   });
                 },
               ),
@@ -115,23 +113,18 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
         width: 150,
         onPressed: () {
           DateTime? value = DateTime.tryParse(date);
-          if(value==null)
-            {
-              ShowSnackBar(context, isSuccess: false,message: "Error in date!");
+          if (value == null) {
+            ShowSnackBar(context, isSuccess: false, message: "Error in date!");
+          } else {
+            try {
+              var tempTime = DateFormat("h:mm a").parse("$hour:$minute $timey");
+              value = DateTime(value.year, value.month, value.day, tempTime.hour, tempTime.minute);
+              onChange(value);
+              dialogHelper.dismissSingle(context);
+            } catch (e) {
+              ShowSnackBar(context, isSuccess: false, message: "Error in time!");
             }
-          else{
-              try{
-                var tempTime = DateFormat("h:mm a").parse("$hour:$minute $timey");
-                value = DateTime(value.year,value.month,value.day,tempTime.hour,tempTime.minute);
-                onChange(value);
-                dialogHelper.dismissSingle(context);
-              }
-              catch(e){
-                ShowSnackBar(context, isSuccess: false,message: "Error in time!");
-
-              }
-            }
-
+          }
         },
         child: Text(
           "Save",
@@ -142,45 +135,109 @@ CIA_PopupDialog_DateTimePicker(BuildContext context, String title, Function(Date
   ).show();
 }
 
-CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange) async {
-  String date = "";
+CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(DateTime date) onChange, {DateTime? initialDate}) async {
+  DateTime? dateTime;
+  String? error;
+  FocusNode focus = FocusNode();
+  focus.requestFocus();
   dialogHelper.increaseCount();
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     content: StatefulBuilder(
       builder: (BuildContext context, void Function(void Function()) setState) {
         return Container(
           width: 350,
-          height: 350,
-          child: SfDateRangePicker(
-            view: DateRangePickerView.month,
-            enablePastDates: true,
-            showNavigationArrow: true,
-            selectionColor: Color_Accent,
-            todayHighlightColor: Color_Accent,
-            selectionMode: DateRangePickerSelectionMode.single,
-            showTodayButton: true,
-            navigationMode: DateRangePickerNavigationMode.snap,
-            onSelectionChanged: (value) {
-              setState(() {
-                date = DateFormat("dd-MM-yyyy").format(value.value);
-                // date = value.value.toString().replaceAll(" 00:00:00.000", "");
-                onChange(value.value);
-              });
-            },
+          height: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CIA_TextFormFieldForDateTime(
+                  label: "Enter Date in format dd/MM/yyyy or dd-MM-yyyy",
+                  selectAll: false,
+                  focusNode: focus,
+                  onSubmit: (value) {
+                    if (error != null) {
+                      ShowSnackBar(context, isSuccess: false, message: error!);
+                    } else {
+                      if (dateTime != null) onChange(dateTime!);
+                      dialogHelper.dismissSingle(context);
+                    }
+                  },
+                  controller: TextEditingController(text: initialDate == null ? "" : DateFormat("dd/MM/yyyy").format(initialDate)),
+                  onChange: (value) {
+                    if (error != null) return;
+                    try {
+                      if (dateTime != null) {
+                        if (initialDate != null) {
+                          dateTime =
+                              DateTime(dateTime!.year, dateTime!.month, dateTime!.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
+                        } else {
+                          dateTime = DateTime(dateTime!.year, dateTime!.month, dateTime!.day, 0, 0, 0);
+                        }
+                        // date = value.value.toString().replaceAll(" 00:00:00.000", "");
+                      }
+                    } catch (e) {}
+                  },
+                  errorFunction: (value) {
+                    try {
+                      dateTime = DateFormat("dd/MM/yyyy").parse(value);
+                    } catch (e) {
+                      try {
+                        dateTime = DateFormat("dd-MM-yyyy").parse(value);
+                      } catch (e) {
+                        error = "Wrong date format";
+                        return true;
+                      }
+                    }
+                    error = null;
+                    return false;
+                  },
+                ),
+              ],
+            ),
           ),
+          // SfDateRangePicker(
+          //   initialSelectedDate: initialDate,
+          //   view: DateRangePickerView.month,
+          //   enablePastDates: true,
+          //   showNavigationArrow: true,
+          //   selectionColor: Color_Accent,
+          //   todayHighlightColor: Color_Accent,
+          //   selectionMode: DateRangePickerSelectionMode.single,
+          //   showTodayButton: true,
+          //   navigationMode: DateRangePickerNavigationMode.snap,
+          //   onSelectionChanged: (value) {
+          //     var dateTime = value.value as DateTime;
+          //     DateTime date_;
+          //     setState(() {
+          //       date = DateFormat("dd-MM-yyyy").format(value.value);
+
+          //       if (initialDate != null) {
+          //         date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, initialDate!.hour, initialDate!.minute, initialDate!.second);
+          //       } else {
+          //         date_ = DateTime(dateTime.year, dateTime.month, dateTime.day, 0, 0, 0);
+          //       }
+          //       // date = value.value.toString().replaceAll(" 00:00:00.000", "");
+          //       onChange(date_);
+          //     });
+          //   },
+          // ),
         );
       },
     ),
     buttons: [
       DialogButton(
         width: 150,
-        onPressed: () => dialogHelper.dismissSingle(context),
+        onPressed: () {
+          dialogHelper.dismissSingle(context);
+        },
         color: Color_Background,
         child: Text(
           "Cancel",
@@ -189,7 +246,16 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
       ),
       DialogButton(
         width: 150,
-        onPressed: () => dialogHelper.dismissSingle(context),
+        onPressed: () {
+          if (error != null)
+            ShowSnackBar(context, isSuccess: false, message: error!);
+          else {
+            if (dateTime != null) onChange(dateTime!);
+
+            dialogHelper.dismissSingle(context);
+            dialogHelper.dismissSingle(context);
+          }
+        },
         child: Text(
           "Save",
           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -198,6 +264,7 @@ CIA_PopupDialog_DateOnlyPicker(BuildContext context, String title, Function(Date
     ],
   ).show();
 }
+
 /*
 CIA_PopUpTreatmentHistory_Table(int patientId, BuildContext context, String title, Function onChange) async {
   NonSurgicalTreatmentDataSource dataSource = NonSurgicalTreatmentDataSource();
@@ -290,13 +357,12 @@ CIA_ShowPopUp(
     double? width}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
     title: title,
-    style: AlertStyle(backgroundColor: Colors.white), 
-
+    style: AlertStyle(backgroundColor: Colors.white),
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
         width: width ?? 400,
@@ -338,11 +404,11 @@ CIA_ShowPopUpSaveRequest(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
     context: context,
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
       return SizedBox(
@@ -402,10 +468,10 @@ CIA_ShowPopUpYesNo(
     double? size}) async {
   dialogHelper.increaseCount();
   await Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     //content: SizedBox(width: width??120,),
@@ -445,15 +511,15 @@ CIA_PopUpSearch(
     required Future<API_Response> searchFunction(String),
     String? buttonText,
     double? size}) {
-dialogHelper.increaseCount();
+  dialogHelper.increaseCount();
   String search = "";
   List<DropDownDTO> results = [];
   TextEditingController controller = TextEditingController();
   Alert(
-    closeFunction: (){
+    closeFunction: () {
       dialogHelper.dismissSingle(context);
     },
-    style: AlertStyle(backgroundColor: Colors.white), 
+    style: AlertStyle(backgroundColor: Colors.white),
     context: context,
     title: title,
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {

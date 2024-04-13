@@ -11,6 +11,7 @@ class PatientInfoEntity extends Equatable {
   String? secondaryId;
   EnumGender? gender;
   String? phone;
+  bool? listed;
   int? age;
   EnumMaritalStatus? maritalStatus;
   String? relative;
@@ -39,6 +40,7 @@ class PatientInfoEntity extends Equatable {
        this.id,
        this.gender,
        this.phone,
+       this.listed = true,
        this.age,
        this.out=false,
        this.maritalStatus,
@@ -71,6 +73,7 @@ class PatientInfoEntity extends Equatable {
         id,
         gender,
         phone,
+        listed,
     secondaryId,
         maritalStatus,
         relative,
