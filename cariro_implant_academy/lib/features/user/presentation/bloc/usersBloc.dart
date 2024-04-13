@@ -305,7 +305,7 @@ class UsersDataGridSource extends DataGridSource {
                       )),
                 ]))
             .toList();
-      } else if (type == UserRoles.Technician || type == UserRoles.OutSource || type == UserRoles.LabModerator) {
+      } else if (type == UserRoles.Technician || type == UserRoles.LabModerator) {
         columns = ["ID", "Name", "Email", "Phone", "Remove", "Reset Password"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
@@ -322,6 +322,35 @@ class UsersDataGridSource extends DataGridSource {
                           usersBloc.add(UsersBloc_ResetPasswordForUserEvent(id: e.idInt!));
                         },
                       )),
+                  DataGridCell<Widget>(
+                      columnName: 'Remove',
+                      value: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Are you sure you want to remove ${e.name}?",
+                            onSave: () => usersBloc.add(UsersBloc_RemoveUserEvent(id: e.idInt!)),
+                          );
+                        },
+                      )),
+                ]))
+            .toList();
+      } else if (type == UserRoles.OutSource) {
+        columns = [
+          "ID",
+          "Name",
+          "Work Place",
+          "Phone",
+          "Remove",
+        ];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+                  DataGridCell<int>(columnName: 'ID', value: e.idInt),
+                  DataGridCell<String>(columnName: 'Name', value: e.name),
+                  DataGridCell<String>(columnName: 'Work Place', value: e.workPlace?.name ?? ""),
+                  DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+                  DataGridCell<Widget>(columnName: 'Access', value: UserAccessWidget(user: e)),
                   DataGridCell<Widget>(
                       columnName: 'Remove',
                       value: IconButton(
@@ -378,7 +407,7 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Batch', value: e.batch != null ? e.batch!.name ?? "" : ""),
                   DataGridCell<String>(columnName: 'Personal Email', value: e.email),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
-          DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
+                  DataGridCell<int>(columnName: 'Implant Count', value: e.implantCount),
                 ]))
             .toList();
       } else if (type == UserRoles.Secretary) {
@@ -404,13 +433,23 @@ class UsersDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Speciality', value: e.speciality),
                 ]))
             .toList();
-      } else if (type == UserRoles.Technician || type == UserRoles.OutSource) {
+      } else if (type == UserRoles.Technician) {
         columns = ["ID", "Name", "Email", "Phone"];
         _userData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.idInt),
                   DataGridCell<String>(columnName: 'Name', value: e.name),
                   DataGridCell<String>(columnName: 'Email', value: e.email),
+                  DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
+                ]))
+            .toList();
+      } else if (type == UserRoles.OutSource) {
+        columns = ["ID", "Name", "Work Place", "Phone"];
+        _userData = models
+            .map<DataGridRow>((e) => DataGridRow(cells: [
+                  DataGridCell<int>(columnName: 'ID', value: e.idInt),
+                  DataGridCell<String>(columnName: 'Name', value: e.name),
+                  DataGridCell<String>(columnName: 'Work Place', value: e.workPlace?.name ?? ""),
                   DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber),
                 ]))
             .toList();

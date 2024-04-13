@@ -789,7 +789,7 @@ class CIA_Router {
                         ),
                         GoRoute(
                           path: UserSearchPage.routePathOutsource,
-                          name: UserSearchPage.getRouteNameOutsourceModerators(site: Website.Lab),
+                          name: UserSearchPage.getRouteNameCustomers(site: Website.Lab),
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: UserSearchPage(
                               key: GlobalKey(),

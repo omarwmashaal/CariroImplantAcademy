@@ -28,6 +28,8 @@ class UserModel extends UserEntity {
     super.profileImageId,
     super.phoneNumber,
     super.workPlaceEnum,
+    super.workPlace,
+    super.workPlaceId,
     super.batch,
     super.batchId,
     super.instagramLink,
@@ -60,6 +62,8 @@ class UserModel extends UserEntity {
       profileImageId: entity.profileImageId,
       phoneNumber: entity.phoneNumber,
       workPlaceEnum: entity.workPlaceEnum,
+      workPlace: entity.workPlace,
+      workPlaceId: entity.workPlaceId,
       instagramLink: entity.instagramLink,
       facebookLink: entity.facebookLink,
     );
@@ -72,14 +76,17 @@ class UserModel extends UserEntity {
     facebookLink = json['facebookLink'];
     dateOfBirth = DateTime.tryParse(json['dateOfBirth'] ?? "")?.toLocal();
     gender = json['gender'];
-    accessWebsites =((json['accessWebsites']??[]) as List<dynamic>).map((e) => Website.values.firstWhere((element) =>element.index== e!)).toList() ;
+    accessWebsites =
+        ((json['accessWebsites'] ?? []) as List<dynamic>).map((e) => Website.values.firstWhere((element) => element.index == e!)).toList();
     graduatedFrom = json['graduatedFrom'];
     classYear = json['classYear'];
     speciality = json['speciality'];
-    implantCount = json['implantCount']??0;
+    implantCount = json['implantCount'] ?? 0;
     maritalStatus = json['maritalStatus'];
     address = json['address'];
     city = json['city'];
+    workPlaceId = json['workPlaceId'];
+    workPlace = json['workPlace'] == null ? null : BasicNameIdObjectModel.fromJson(json['workPlace']);
     idInt = json['idInt'];
     if (idInt == null)
       try {
@@ -109,12 +116,13 @@ class UserModel extends UserEntity {
     phoneNumber2 = json['phoneNumber2'];
     workPlace = BasicNameIdObjectModel.fromJson(json['workPlace'] ?? Map<String, dynamic>());
     workPlaceId = json['workPlaceId'];
-    roles = ((json['roles']??[]) as List<dynamic>).map((e) => e as String).toList();
+    roles = ((json['roles'] ?? []) as List<dynamic>).map((e) => e as String).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['workPlaceId'] = this.workPlaceId;
     data['instagramLink'] = this.instagramLink;
     data['facebookLink'] = this.facebookLink;
     data['dateOfBirth'] = this.dateOfBirth == null ? null : DateFormat("yyyy-MM-dd").format(this.dateOfBirth!);
@@ -132,10 +140,11 @@ class UserModel extends UserEntity {
     // data['registeredBy'] = this.registeredBy;
     //data['registerationDate'] = this.registerationDate;
     data['userName'] = this.userName;
+    data['workPlace'] = workPlace == null ? null : BasicNameIdObjectModel.fromEntity(workPlace!).toJson();
     data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     data['batchId'] = this.batchId;
-    data['batch'] = this.batch==null?null:BasicNameIdObjectModel.fromEntity(this.batch!).toJson();
+    data['batch'] = this.batch == null ? null : BasicNameIdObjectModel.fromEntity(this.batch!).toJson();
     data['roles'] = this.roles?.map((e) => e as String).toList();
     data['phoneNumber2'] = this.phoneNumber2;
     data['workPlace'] = this.workPlace != null ? BasicNameIdObjectModel.fromEntity(this.workPlace!).toJson() : null;
