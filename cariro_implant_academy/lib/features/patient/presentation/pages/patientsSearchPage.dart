@@ -1,41 +1,28 @@
-import 'package:cariro_implant_academy/API/PatientAPI.dart';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Helpers/Router.dart';
-import 'package:cariro_implant_academy/Models/ComplainsModel.dart';
+import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/SearchLayout.dart';
-import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
-import 'package:cariro_implant_academy/features/patient/data/datasources/addOrRemoveMyPatientsDataSource.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import '../../../../../Widgets/CIA_SecondaryButton.dart';
-import '../../../../../Widgets/CIA_Table.dart';
 import '../../../../../Widgets/CIA_TextField.dart';
 import '../../../../../Widgets/Horizontal_RadioButtons.dart';
 import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../Widgets/Title.dart';
-import '../../../../../core/injection_contianer.dart';
 import '../../../../../core/presentation/widgets/tableWidget.dart';
-import '../../../labRequest/presentation/pages/LapCreateNewRequestPage.dart';
-import '../../../patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
 import '../bloc/addOrRemoveMyPatientsBloc.dart';
 import '../bloc/addOrRemoveMyPatientsBloc_states.dart';
 import '../bloc/patientSeachBlocEvents.dart';
 import '../bloc/patientSeachBlocStates.dart';
 import '../bloc/patientSearchBloc.dart';
 import 'createOrViewPatientPage.dart';
-import 'package:open_file/open_file.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PatientsSearchPage extends StatefulWidget {
   PatientsSearchPage({Key? key, this.myPatients = false}) : super(key: key);
@@ -73,6 +60,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   bool? out;
   String filter = "Id";
   String search = "";
+  bool listed = true;
 
   @override
   void initState() {
@@ -81,6 +69,9 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    listed = true;
+    search = "";
+    filter = "Id";
     BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
     var dataSource = PatientSearchDataSourceTable(context);
     return MultiBlocListener(
@@ -122,6 +113,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
               ),
               CIA_SecondaryButton(
                   label: "Add Range to my patients",
+                  width: 160,
                   onTab: () async {
                     int fromId = 0;
                     int toId = 0;
@@ -186,6 +178,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
               SizedBox(width: 10),
               CIA_PrimaryButton(
                   label: "Add Patient",
+                  isLong: true,
                   onTab: () {
                     context.goNamed(CreateOrViewPatientPage.getAddRouteName());
                   })
@@ -214,38 +207,67 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                           child: Row(
                             children: [
                               Expanded(
-                                flex: 8,
-                                child: HorizontalRadioButtons(
-                                  groupValue: "Id",
-                                  names: ["Id", "Name", "Phone", "All"],
-                                  onChange: (value) {
-                                    filter = value;
-                                    dispatchChangeFilter(context, filter, out);
-                                  }
-                                  // _getXController.searchFilter.value = value;
-                                  ,
+                                child: Center(
+                                  child: HorizontalRadioButtons(
+                                    groupValue: "Id",
+                                    names: ["Id", "Name", "Phone", "All"],
+                                    onChange: (value) {
+                                      filter = value;
+                                      dispatchChangeFilter(context, filter, out, listed);
+                                    }
+                                    // _getXController.searchFilter.value = value;
+                                    ,
+                                  ),
                                 ),
                               ),
-                              SizedBox(),
-                              CIA_MultiSelectChipWidget(
-                                singleSelect: true,
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(label: "All", isSelected: out == null),
-                                  CIA_MultiSelectChipWidgeModel(label: "Active", isSelected: out == false),
-                                  CIA_MultiSelectChipWidgeModel(label: "Out", isSelected: out == true),
-                                ],
-                                onChange: (item, isSelected) {
-                                  if (item == "All")
-                                    out = null;
-                                  else if (item == "Active")
-                                    out = false;
-                                  else if (item == "Out") out = true;
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Center(
+                                  child: CIA_MultiSelectChipWidget(
+                                    singleSelect: true,
+                                    labels: [
+                                      CIA_MultiSelectChipWidgeModel(label: "All", isSelected: out == null),
+                                      CIA_MultiSelectChipWidgeModel(label: "Active", isSelected: out == false),
+                                      CIA_MultiSelectChipWidgeModel(label: "Out", isSelected: out == true),
+                                    ],
+                                    onChange: (item, isSelected) {
+                                      if (item == "All")
+                                        out = null;
+                                      else if (item == "Active")
+                                        out = false;
+                                      else if (item == "Out") out = true;
 
-                                  dispatchChangeFilter(context, filter, out);
-                                  dispatchSearch(context, search);
-                                },
+                                      dispatchChangeFilter(context, filter, out, listed);
+                                      dispatchSearch(context, search);
+                                    },
+                                  ),
+                                ),
                               ),
-                              Expanded(child: SizedBox())
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Center(
+                                  child: StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 70,
+                                            child: FormTextValueWidget(text: listed ? "Listed" : "Unlisted"),
+                                          ),
+                                          Switch(
+                                            value: listed,
+                                            onChanged: (value) {
+                                              setState(() => listed = value);
+                                              dispatchChangeFilter(context, filter, out, listed);
+                                              dispatchSearch(context, search);
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -260,13 +282,13 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                         return TableWidget(
                           dataSource: dataSource,
                           onCellClick: (value) {
+                            var p = dataSource.models.firstWhere((element) => element.secondaryId == value);
                             //    setState(() {
                             //     selectedPatientID = dataSource.models[value - 1].id!;
                             //    });
                             //internalPagesController.jumpToPage(1);
-                            print("patient id = ${{"id": dataSource.models.firstWhere((element) => element.secondaryId == value).id.toString()}}");
-                            context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(),
-                                pathParameters: {"id": dataSource.models.firstWhere((element) => element.secondaryId == value).id.toString()});
+                            context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(goToVisit: p.listed != true),
+                                pathParameters: {"id": p.id.toString()});
                           },
                         );
                       },
@@ -283,7 +305,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
     BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: widget.myPatients));
   }
 
-  void dispatchChangeFilter(BuildContext context, String filter, bool? out) {
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter, out));
+  void dispatchChangeFilter(BuildContext context, String filter, bool? out, bool? listed) {
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter, out, listed));
   }
 }

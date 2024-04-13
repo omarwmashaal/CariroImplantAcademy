@@ -22,12 +22,13 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
   final PatientSearchUseCase searchUseCase;
   String _filter = "Id";
   bool? _out;
+  bool? _listed ;
 
   PatientSearchBloc({required this.searchUseCase}) : super(LoadingPatientSearchState()) {
     on<PatientSearchEvent>(
       (event, emit) async {
         emit(LoadingPatientSearchState());
-        final result = await searchUseCase(PatientSearchParams(filter: this._filter, query: event.query, myPatients: event.myPatients, out: _out));
+        final result = await searchUseCase(PatientSearchParams(filter: this._filter, query: event.query, myPatients: event.myPatients, out: _out, listed: _listed));
         result.fold(
           (l) {
             if (l is HttpInternalServerErrorFailure)
@@ -44,6 +45,7 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
       (event, emit) {
         this._filter = event.filter;
         this._out = event.out;
+        this._listed = event.listed;
       },
     );
   }

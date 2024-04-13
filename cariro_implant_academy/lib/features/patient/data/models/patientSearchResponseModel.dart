@@ -14,6 +14,7 @@ class PatientInfoModel extends PatientInfoEntity {
           phone: patientEntity.phone,
           name: patientEntity.name,
           id: patientEntity.id,
+          listed: patientEntity.listed,
     outReason: patientEntity.outReason,
     secondaryId: patientEntity.secondaryId,
           gender: patientEntity.gender,
@@ -48,6 +49,7 @@ class PatientInfoModel extends PatientInfoEntity {
     secondaryId,
     out,
     age,
+    listed,
     maritalStatus,
     relative,
     doctor,
@@ -73,6 +75,7 @@ class PatientInfoModel extends PatientInfoEntity {
     secondaryId: secondaryId,
           name: name,
           id: id,
+          listed: listed,
           gender: gender,
           age: age,
           maritalStatus: maritalStatus,
@@ -101,6 +104,7 @@ class PatientInfoModel extends PatientInfoEntity {
   factory PatientInfoModel.fromMap(Map<String, dynamic> map) {
     return PatientInfoModel(
       name: map['name'] as String?,
+      listed: map['listed'] as bool?,
       patientType: EnumPatientType.values[map['patientType']??0],
       id: map['id'] as int?,
       secondaryId: map['secondaryId'] as String?,
@@ -147,6 +151,7 @@ class PatientInfoModel extends PatientInfoEntity {
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
+      'listed': this.listed,
       'out': this.out,
       'id': this.id,
       'gender':this.gender?.index,
