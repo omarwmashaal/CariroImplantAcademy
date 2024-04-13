@@ -399,7 +399,6 @@ class _CIA_DateTimeTextFormFieldState extends State<CIA_DateTimeTextFormField> {
   }
 }
 
-
 class CIA_TextFormField extends StatefulWidget {
   CIA_TextFormField(
       {Key? key,
@@ -513,10 +512,12 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
               });
             }
             if (widget.isNumber && !widget.isPhoneNumber) {
-              if (value.length > 1 && value.startsWith("0") && value[1] != ".") value = value.replaceFirst(RegExp(r'0'), "");
-              setState(() {
-                widget.controller.text = value;
-              });
+              if (value.length > 1 && value.startsWith("0") && value[1] != ".") {
+                value = value.replaceFirst(RegExp(r'0'), "");
+                setState(() {
+                  widget.controller.text = value;
+                });
+              }
             }
             if (widget.onInstantChange != null) widget.onInstantChange!(value);
             if (widget.onChange != null) widget.onChange!(value);
@@ -608,5 +609,3 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
     );
   }
 }
-
-
