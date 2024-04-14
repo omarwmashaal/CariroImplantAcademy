@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterSurgeryEntity.dart';
 
 class ComplicationsAfterSurgeryModel extends ComplicationsAfterSurgeryEntity {

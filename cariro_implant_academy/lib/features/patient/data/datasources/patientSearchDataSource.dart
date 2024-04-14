@@ -18,7 +18,7 @@ import '../../domain/entities/advancedTreatmentSearchEntity.dart';
 import '../../domain/entities/patientInfoEntity.dart';
 import '../../domain/usecases/patientSearchUseCase.dart';
 import '../models/advancedTreatmentSearchModel.dart';
-import '../models/patientSearchResponseModel.dart';
+import '../models/patientInfoModel.dart';
 
 abstract class PatientSearchDataSource {
   Future<List<PatientInfoEntity>> searchPatients(PatientSearchParams params);

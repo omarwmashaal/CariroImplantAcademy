@@ -126,7 +126,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 dialogHelper.dismissAll(context);
                 ShowSnackBar(context, isSuccess: true, title: "Success", message: "Customer Added!");
               } else if (state is LabRequestsBloc_ChangedPatientState) {
-                if (!widget.fixDismiss) dialogHelper.dismissAll(context);
+                // if (!widget.fixDismiss) dialogHelper.dismissAll(context);
               }
               if (state is LabRequestsBloc_CreatingLabRequestState)
                 CustomLoader.show(context);
@@ -504,6 +504,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             onSave: () {},
                                                             child: CreateOrViewPatientPage(
                                                               patientID: 0,
+                                                              onCreatedPatient: (success, patient) {
+                                                                if (success) dialogHelper.dismissSingle(context);
+                                                              },
                                                             ),
                                                           );
                                                         },

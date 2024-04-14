@@ -24,7 +24,7 @@ class PatientInfoModel {
   String? city;
   DropDownDTO? relativePatient;
   int? relativePatientId;
-  EnumPatientType? patientType;
+  //EnumPatientType? patientType;
   int? customerId;
   ApplicationUserModel? customer;
   List<LabRequestEntity>? requests;
@@ -40,7 +40,7 @@ class PatientInfoModel {
   String? registerationDate;
   DropDownDTO? registeredBy;
 
-  PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus, this.patientType});
+  PatientInfoModel({this.id, this.name, this.phone, this.maritalStatus,});
 
   PatientInfoModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -65,7 +65,6 @@ class PatientInfoModel {
     idFrontPhoto = json['idFrontPhoto'];
     relativePatient = json['relativePatient'] != null ? DropDownDTO.fromJson(json['relativePatient']) : DropDownDTO();
     relativePatientId = json['relativePatientId'];
-    patientType = EnumPatientType.values[json['patientType'] ?? 0];
     customerId = json['customerId'];
     customer = ApplicationUserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
  //   requests = ((json['requests'] ?? []) as List<dynamic>).map((e) => LabRequestEntity.fromJson(e)).toList();
@@ -89,7 +88,6 @@ class PatientInfoModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['relativePatientId'] = this.relativePatientId;
-    data['patientType'] = (this.patientType ?? EnumPatientType.CIA).index;
     data['customerId'] = this.customerId;
     data['customer'] = this.customer != null ? this.customer!.toJson() : null;
   //  data['requests'] = (this.requests ?? []).map((e) => e.toJson()).toList();

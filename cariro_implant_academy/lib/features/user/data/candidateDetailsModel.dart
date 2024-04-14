@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/ImplantModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../Models/CandidateDetails.dart';

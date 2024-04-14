@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart';
 import 'package:cariro_implant_academy/features/user/data/models/userModel.dart';
 
 import '../../../../core/constants/enums/enums.dart';

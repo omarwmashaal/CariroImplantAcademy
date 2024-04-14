@@ -9,7 +9,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart' as _i3;
 import 'package:cariro_implant_academy/features/patient/data/datasources/patientSearchDataSource.dart' as _i5;
 import 'package:cariro_implant_academy/features/patient/data/models/advancedSearchPatientsModel.dart' as _i8;
 import 'package:cariro_implant_academy/features/patient/data/models/advancedTreatmentSearchModel.dart' as _i10;
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart' as _i4;
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart' as _i4;
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart' as _i9;
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart' as _i11;
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart' as _i2;

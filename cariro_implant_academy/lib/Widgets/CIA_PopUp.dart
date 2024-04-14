@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -355,6 +356,7 @@ CIA_ShowPopUp(
     double? height,
     bool? hideButton = false,
     double? width}) async {
+  var focus = FocusNode();
   dialogHelper.increaseCount();
   await Alert(
     closeFunction: () {
@@ -364,10 +366,19 @@ CIA_ShowPopUp(
     title: title,
     style: AlertStyle(backgroundColor: Colors.white),
     content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-      return SizedBox(
-        width: width ?? 400,
-        height: height ?? 400,
-        child: child,
+      return RawKeyboardListener(
+          autofocus: true,
+          focusNode: focus,   // <-- more magic
+          onKey: (RawKeyEvent event) {
+          if (event.physicalKey == PhysicalKeyboardKey.escape) {
+            dialogHelper.dereaseCount();
+          }
+        },
+        child: SizedBox(
+          width: width ?? 400,
+          height: height ?? 400,
+          child: child,
+        ),
       );
     }),
     buttons: hideButton!
