@@ -27,7 +27,7 @@ class UserAccessWidget extends StatelessWidget {
               var roles = user.roles;
               var accesswesbites = user.accessWebsites;
               CIA_ShowPopUp(
-                width: double.maxFinite,
+                  width: double.maxFinite,
                   context: context,
                   onSave: () {
                     user.accessWebsites = accesswesbites;
@@ -142,6 +142,18 @@ class UserAccessWidget extends StatelessWidget {
                               if (value) roles!.add("labmoderator");
                             },
                             value: roles?.contains("labmoderator") ?? false,
+                          ),
+                          CIA_CheckBoxWidget(
+                            text: "Lab Designer",
+                            onChange: (value) {
+                              if (value == false && (roles?.length ?? 0) < 2) {
+                                ShowSnackBar(context, isSuccess: false, message: "User must have at least one role!");
+                                return;
+                              }
+                              roles!.removeWhere((element) => element == "labdesigner");
+                              if (value) roles!.add("labdesigner");
+                            },
+                            value: roles?.contains("labdesigner") ?? false,
                           ),
                           CIA_CheckBoxWidget(
                             text: "Technician",

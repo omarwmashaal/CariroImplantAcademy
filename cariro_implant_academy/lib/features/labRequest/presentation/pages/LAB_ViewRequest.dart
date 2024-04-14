@@ -280,6 +280,24 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                               children: [
                                 Expanded(
                                   child: FormTextKeyWidget(
+                                    text: "Designer",
+                                  ),
+                                ),
+                                Expanded(
+                                  child: FormTextValueWidget(
+                                    text: request.designer?.name ?? "",
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: FormTextKeyWidget(
                                     text: "Assigend To",
                                   ),
                                 ),
