@@ -634,12 +634,6 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                       } else if (item == "Physical") {
                                         labRequest.initStatus = EnumLabRequestInitStatus.Physical;
                                         labRequest.steps![1] = LabStepEntity(step: BasicNameIdObjectEntity(name: "Cast"));
-                                      } else if (item == "Cast") {
-                                        labRequest.initStatus = EnumLabRequestInitStatus.Cast;
-                                        labRequest.steps![1] = LabStepEntity(step: BasicNameIdObjectEntity(name: "Design"));
-                                      } else if (item == "Remake") {
-                                        labRequest.initStatus = EnumLabRequestInitStatus.Remake;
-                                        labRequest.steps![1] = LabStepEntity(step: BasicNameIdObjectEntity(name: ""));
                                       }
                                       setState(() {});
                                     }
@@ -648,9 +642,37 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                     CIA_MultiSelectChipWidgeModel(label: "Scan", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Scan),
                                     CIA_MultiSelectChipWidgeModel(
                                         label: "Physical", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Physical),
-                                    CIA_MultiSelectChipWidgeModel(label: "Cast", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Cast),
-                                    CIA_MultiSelectChipWidgeModel(
-                                        label: "Remake", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Remake),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: CIA_MultiSelectChipWidget(
+                                    key: GlobalKey(),
+                                    singleSelect: true,
+                                    onChange: (item, isSelected) {
+                                      if (isSelected) {
+                                        labRequest.status2 = EnumLabRequestStatus2.values.firstWhere((element) => element.name == item);
+                                      }
+                                      setState(() {});
+                                    },
+                                    labels: EnumLabRequestStatus2.values
+                                        .map((e) => CIA_MultiSelectChipWidgeModel(label: e.name, isSelected: labRequest.status2 == e))
+                                        .toList()),
+                              ),
+                              Expanded(
+                                child: CIA_MultiSelectChipWidget(
+                                  key: GlobalKey(),
+                                  singleSelect: true,
+                                  onChange: (item, isSelected) {
+                                    if (isSelected) {
+                                      labRequest.cost = item == "Free" ? 0 : labRequest.cost;
+                                      labRequest.free = item == "Free";
+                                    }
+                                    setState(() {});
+                                  },
+                                  labels: [
+                                    CIA_MultiSelectChipWidgeModel(label: "Paid", isSelected: !(labRequest.free ?? false)),
+                                    CIA_MultiSelectChipWidgeModel(label: "Free", isSelected: labRequest.free ?? false),
                                   ],
                                 ),
                               ),

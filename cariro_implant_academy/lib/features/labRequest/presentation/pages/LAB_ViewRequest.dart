@@ -68,13 +68,11 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           nextTaskId = null;
           ShowSnackBar(context, isSuccess: true);
           dialogHelper.dismissSingle(context);
-        } else if (state is LabRequestsBloc_FinishingTaskErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
-
-        else if(state is LabRequestsBloc_PayingRequestErrorState)
-          {
-            ShowSnackBar(context, isSuccess: false,message: state.message);
-          }
-        else if(state is LabRequestsBloc_PaidRequestSuccessfullyState) {
+        } else if (state is LabRequestsBloc_FinishingTaskErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is LabRequestsBloc_PayingRequestErrorState) {
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        } else if (state is LabRequestsBloc_PaidRequestSuccessfullyState) {
           ShowSnackBar(context, isSuccess: true);
           dialogHelper.dismissAll(context);
           bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
@@ -83,8 +81,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           CustomLoader.show(context);
         else
           CustomLoader.hide();
-
-
       },
       buildWhen: (previous, current) =>
           current is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState ||
@@ -140,7 +136,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                           );*/
                         }),
                     SizedBox(width: 10),
-                    SizedBox(width: 10),
                     Visibility(
                       visible: request.patientId != null && siteController.getSite() == Website.CIA,
                       child: CIA_SecondaryButton(
@@ -148,6 +143,14 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                           onTab: () {
                             context.goNamed(PatientMedicalHistory.getRouteName(), pathParameters: {"id": request.patientId.toString()});
                           }),
+                    ),
+                    SizedBox(width: 10),
+                    Row(
+                      children: [
+                        FormTextValueWidget(text: request.status2?.name ?? ""),
+                        SizedBox(width: 10),
+                        FormTextValueWidget(text: (request.free ?? false) ? "Free" : "Not Free"),
+                      ],
                     ),
                   ],
                 ),
@@ -342,40 +345,40 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                         suffix: "EGP",
                                       ),
                                       Visibility(
-                                        visible:  (request.status == EnumLabRequestStatus.Finished) ,
-                                        child:
-
-                                        request.paid==true?
-                                            Icon(Icons.check_circle,color: Colors.green,):
-                                        CIA_SecondaryButton(
-                                          label: "Pay",
-                                          onTab: () {
-                                            CIA_ShowPopUp(
-                                                width: 700,
-                                                height: 500,
-                                                context: context,
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.center ,
-                                                  children: [
-                                                    TitleWidget(title: "Reciept"),
-                                                    LabRequestItemReceiptWidget(request: request,viewOnly: true, onTotalCalculated: (v)=>null),
-                                                    CIA_PrimaryButton(
-                                                        label: "Pay",
-                                                        onTab: () {
-                                                          CIA_ShowPopUpYesNo(
-                                                            context: context,
-                                                            title: "Pay Request for ${request.cost}?",
-                                                            
-                                                            onSave: () async {
-                                                              bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!));
-                                                            },
-                                                          );
-                                                        }),
-
-                                                  ],
-                                                ));
-                                          },
-                                        ),
+                                        visible: (request.status == EnumLabRequestStatus.Finished),
+                                        child: request.paid == true
+                                            ? Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                              )
+                                            : CIA_SecondaryButton(
+                                                label: "Pay",
+                                                onTab: () {
+                                                  CIA_ShowPopUp(
+                                                      width: 700,
+                                                      height: 500,
+                                                      context: context,
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          TitleWidget(title: "Reciept"),
+                                                          LabRequestItemReceiptWidget(
+                                                              request: request, viewOnly: true, onTotalCalculated: (v) => null),
+                                                          CIA_PrimaryButton(
+                                                              label: "Pay",
+                                                              onTab: () {
+                                                                CIA_ShowPopUpYesNo(
+                                                                  context: context,
+                                                                  title: "Pay Request for ${request.cost}?",
+                                                                  onSave: () async {
+                                                                    bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!));
+                                                                  },
+                                                                );
+                                                              }),
+                                                        ],
+                                                      ));
+                                                },
+                                              ),
                                       )
                                     ],
                                   ),
@@ -437,11 +440,16 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                   width: 300,
                                   label: "Receipt",
                                   icon: Icon(Icons.attach_money),
-                                  onTab: () => CIA_ShowPopUp(height:600,width: double.maxFinite, context: context, child: LabRequestItemReceiptWidget(
-                                    onTotalCalculated: (v) => null,
-                                    request: request,
-                                    viewOnly: true,
-                                  ),),
+                                  onTab: () => CIA_ShowPopUp(
+                                    height: 600,
+                                    width: double.maxFinite,
+                                    context: context,
+                                    child: LabRequestItemReceiptWidget(
+                                      onTotalCalculated: (v) => null,
+                                      request: request,
+                                      viewOnly: true,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
