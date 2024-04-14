@@ -10,25 +10,22 @@ class DialogHelper {
 
   dismissSingle(BuildContext context) {
     print("dialog helper: single start $currentDialogueCount}");
-    if (  currentDialogueCount != 0) {
+    if (currentDialogueCount != 0) {
       Navigator.of(context, rootNavigator: true).pop();
       currentDialogueCount--;
       trials = 0;
-    }
-    else{
+    } else {
       trials++;
     }
-    if(trials ==2)
-      {
-        Navigator.of(context, rootNavigator: true).pop();
-        trials = 0;
-      }
+    if (trials == 2) {
+      Navigator.of(context, rootNavigator: true).pop();
+      trials = 0;
+    }
 
     print("dialog helper: single end $currentDialogueCount}");
   }
 
   dismissAll(BuildContext context) {
-
     print("dialog helper: all start $currentDialogueCount}");
     while (currentDialogueCount != 0) {
       dismissSingle(context);
@@ -36,13 +33,17 @@ class DialogHelper {
 
     print("dialog helper: all end $currentDialogueCount}");
   }
-  clear()=>currentDialogueCount=0;
 
+  clear() => currentDialogueCount = 0;
+
+  dereaseCount() {
+    currentDialogueCount--;
+    if (currentDialogueCount < 0) currentDialogueCount = 0;
+  }
 
   increaseCount() {
-
     print("dialog helper: increase start $currentDialogueCount}");
-     currentDialogueCount++;
+    currentDialogueCount++;
 
     print("dialog helper: increase end $currentDialogueCount}");
   }

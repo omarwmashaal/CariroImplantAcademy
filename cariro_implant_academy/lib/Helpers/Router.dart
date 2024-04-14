@@ -158,7 +158,7 @@ class CIA_Router {
                               path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
-                                    child: const CreateOrViewPatientPage(
+                                    child:  CreateOrViewPatientPage(
                                   patientID: 0,
                                 ));
                               },
@@ -789,7 +789,7 @@ class CIA_Router {
                         ),
                         GoRoute(
                           path: UserSearchPage.routePathOutsource,
-                          name: UserSearchPage.getRouteNameOutsourceModerators(site: Website.Lab),
+                          name: UserSearchPage.getRouteNameCustomers(site: Website.Lab),
                           pageBuilder: (context, state) => NoTransitionPage(
                             child: UserSearchPage(
                               key: GlobalKey(),
@@ -880,7 +880,7 @@ class CIA_Router {
                               path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
-                                    child: const CreateOrViewPatientPage(
+                                    child: CreateOrViewPatientPage(
                                   patientID: 0,
                                 ));
                               },

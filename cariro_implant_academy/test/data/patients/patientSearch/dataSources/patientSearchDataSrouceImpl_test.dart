@@ -5,7 +5,7 @@ import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/core/error/exception.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/patientSearchDataSource.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientSearchUseCase.dart';
 import 'package:flutter_test/flutter_test.dart';

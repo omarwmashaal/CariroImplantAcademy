@@ -15,15 +15,15 @@ class PatientInfoModel extends PatientInfoEntity {
           name: patientEntity.name,
           id: patientEntity.id,
           listed: patientEntity.listed,
-    outReason: patientEntity.outReason,
-    secondaryId: patientEntity.secondaryId,
+          outReason: patientEntity.outReason,
+          secondaryId: patientEntity.secondaryId,
           gender: patientEntity.gender,
           age: patientEntity.age,
           maritalStatus: patientEntity.maritalStatus,
           doctor: patientEntity.doctor,
           doctorId: patientEntity.doctorId,
           relative: patientEntity.relative,
-    out: patientEntity.out,
+          out: patientEntity.out,
           dateOfBirth: patientEntity.dateOfBirth,
           city: patientEntity.city,
           address: patientEntity.address,
@@ -38,7 +38,7 @@ class PatientInfoModel extends PatientInfoEntity {
           profileImage: patientEntity.profileImage,
           idFrontImage: patientEntity.idFrontImage,
           idBackImage: patientEntity.idBackImage,
-    patientType: patientEntity.patientType,
+          website: patientEntity.website,
         );
 
   PatientInfoModel({
@@ -69,10 +69,10 @@ class PatientInfoModel extends PatientInfoEntity {
     profileImage,
     idFrontImage,
     idBackImage,
-    patientType,
+    website,
   }) : super(
           phone: phone,
-    secondaryId: secondaryId,
+          secondaryId: secondaryId,
           name: name,
           id: id,
           listed: listed,
@@ -80,9 +80,9 @@ class PatientInfoModel extends PatientInfoEntity {
           age: age,
           maritalStatus: maritalStatus,
           doctor: doctor,
-    outReason: outReason,
+          outReason: outReason,
           doctorId: doctorId,
-    out: out,
+          out: out,
           relative: relative,
           dateOfBirth: dateOfBirth,
           city: city,
@@ -98,35 +98,32 @@ class PatientInfoModel extends PatientInfoEntity {
           profileImage: profileImage,
           idFrontImage: idFrontImage,
           idBackImage: idBackImage,
-    patientType: patientType,
+          website: website,
         );
 
   factory PatientInfoModel.fromMap(Map<String, dynamic> map) {
     return PatientInfoModel(
       name: map['name'] as String?,
       listed: map['listed'] as bool?,
-      patientType: EnumPatientType.values[map['patientType']??0],
+      website: Website.values[map['website'] ?? 0],
       id: map['id'] as int?,
       secondaryId: map['secondaryId'] as String?,
       gender: EnumGender.values[map['gender']],
       phone: map['phone'] as String?,
       outReason: map['outReason'] as String?,
-      out: map['out']??false,
-      age: (){
+      out: map['out'] ?? false,
+      age: () {
         var age = (AgeCalculator.age(DateTime.parse(map['dateOfBirth'])).years) as int;
-        if(age<0) return null;
+        if (age < 0) return null;
         return age;
       }(),
       maritalStatus: mapToEnum(EnumMaritalStatus.values, map['maritalStatus']),
-      relative: (){
-        if(map['relativePatient']==null)
-          return null;
-        try{
-         return  map['relativePatient'] as String?;
-        }
-        catch(e)
-        {
-          return (map['relativePatient'] as Map<String,dynamic>)['name'];
+      relative: () {
+        if (map['relativePatient'] == null) return null;
+        try {
+          return map['relativePatient'] as String?;
+        } catch (e) {
+          return (map['relativePatient'] as Map<String, dynamic>)['name'];
         }
       }(),
       relativePatientId: map['relativePatientID'] as int?,
@@ -134,7 +131,7 @@ class PatientInfoModel extends PatientInfoEntity {
       doctorId: map['doctorID'] as int?,
       nationalId: map['nationalID'] as String?,
       phone2: map['phone2'] as String?,
-      dateOfBirth:DateTime.tryParse(map['dateOfBirth']??"" )?.toLocal(),
+      dateOfBirth: DateTime.tryParse(map['dateOfBirth'] ?? "")?.toLocal(),
       address: map['address'] as String?,
       city: map['city'] as String?,
       profileImageId: map['profileImageId'] as int?,
@@ -142,9 +139,9 @@ class PatientInfoModel extends PatientInfoEntity {
       idBackImageId: map['idBackImageId'] as int?,
       registrationDate: map['registrationDate'] as String?,
       registeredBy: map['registeredBy'] as String?,
-     // profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
-     // idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),
-     // idFrontImage: map['idFrontImage'] == null ? null : Uint8List.fromList((map['idFrontImage'] as List<dynamic>).map((e) => e as int).toList()),
+      // profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
+      // idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),
+      // idFrontImage: map['idFrontImage'] == null ? null : Uint8List.fromList((map['idFrontImage'] as List<dynamic>).map((e) => e as int).toList()),
     );
   }
 
@@ -154,8 +151,8 @@ class PatientInfoModel extends PatientInfoEntity {
       'listed': this.listed,
       'out': this.out,
       'id': this.id,
-      'gender':this.gender?.index,
-      'secondaryId':this.secondaryId,
+      'gender': this.gender?.index,
+      'secondaryId': this.secondaryId,
       'phone': this.phone,
       'outReason': this.outReason,
       'maritalStatus': getEnumName(this.maritalStatus),
@@ -165,10 +162,10 @@ class PatientInfoModel extends PatientInfoEntity {
       'doctorID': this.doctorId,
       'nationalId': this.nationalId,
       'phone2': this.phone2,
-      'dateOfBirth': this.dateOfBirth==null?null:DateFormat("yyyy-MM-dd").format(this.dateOfBirth!),
+      'dateOfBirth': this.dateOfBirth == null ? null : DateFormat("yyyy-MM-dd").format(this.dateOfBirth!),
       'address': this.address,
       'city': this.city,
-      'patientType': this.patientType?.index,
+      'website': this.website?.index,
     };
   }
 }

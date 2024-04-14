@@ -31,40 +31,40 @@ class PatientInfoEntity extends Equatable {
   Uint8List? idBackImage;
   String? registrationDate;
   String? registeredBy;
-  EnumPatientType patientType;
+  Website website;
   bool out;
   String? outReason;
 
-  PatientInfoEntity(
-      { this.name,
-       this.id,
-       this.gender,
-       this.phone,
-       this.listed = true,
-       this.age,
-       this.out=false,
-       this.maritalStatus,
-      this.relative,
-      this.doctor,
-      this.outReason = "",
-      this.doctorId,
-      this.city,
-      this.dateOfBirth,
-      this.profileImageId,
-      this.idBackImageId,
-      this.idFrontImageId,
-      this.registeredBy,
-      this.nationalId,
-      this.address,
-      this.secondaryId,
-      this.phone2,
-      this.registrationDate,
-      this.relativePatientId,
-      this.idBackImage,
-        this.idFrontImage,
-        this.profileImage,
-        this.patientType = EnumPatientType.CIA,
-      });
+  PatientInfoEntity({
+    this.name,
+    this.id,
+    this.gender,
+    this.phone,
+    this.listed = true,
+    this.age,
+    this.out = false,
+    this.maritalStatus,
+    this.relative,
+    this.doctor,
+    this.outReason = "",
+    this.doctorId,
+    this.city,
+    this.dateOfBirth,
+    this.profileImageId,
+    this.idBackImageId,
+    this.idFrontImageId,
+    this.registeredBy,
+    this.nationalId,
+    this.address,
+    this.secondaryId,
+    this.phone2,
+    this.registrationDate,
+    this.relativePatientId,
+    this.idBackImage,
+    this.idFrontImage,
+    this.profileImage,
+    this.website = Website.CIA,
+  });
 
   @override
   // TODO: implement props
@@ -74,22 +74,19 @@ class PatientInfoEntity extends Equatable {
         gender,
         phone,
         listed,
-    secondaryId,
+        secondaryId,
         maritalStatus,
         relative,
-    outReason,
+        outReason,
         doctor,
-    out,
+        out,
         doctorId,
         city,
         dateOfBirth,
         nationalId,
         address,
-      phone2,
+        phone2,
         relativePatientId,
-    patientType,
-
+        website,
       ];
-
-
 }

@@ -100,9 +100,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
       );
       labRequest.customerId = siteController.getUserId();
     }
-    if (widget.patientId != null) {
-      patientBloc.add(GetPatientInfoEvent(id: widget.patientId!));
-    }
+    // if (widget.patientId != null) {
+    //   patientBloc.add(GetPatientInfoEvent(id: widget.patientId!));
+    // }
   }
 
   @override
@@ -126,7 +126,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                 dialogHelper.dismissAll(context);
                 ShowSnackBar(context, isSuccess: true, title: "Success", message: "Customer Added!");
               } else if (state is LabRequestsBloc_ChangedPatientState) {
-                if (!widget.fixDismiss) dialogHelper.dismissAll(context);
+                // if (!widget.fixDismiss) dialogHelper.dismissAll(context);
               }
               if (state is LabRequestsBloc_CreatingLabRequestState)
                 CustomLoader.show(context);
@@ -137,19 +137,17 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
               else if (state is LabRequestsBloc_CreatedLabRequestSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true, message: "Created Request Successfully");
                 //dialogHelper.dismissAll(context);
-                if(!widget.isDoctor)
-                  context.goNamed(LabRequestsSearchPage.routeName);
-
+                if (!widget.isDoctor) context.goNamed(LabRequestsSearchPage.routeName);
               }
             },
           ),
           BlocListener<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
             listener: (context, state) {
-              if (state is LoadedPatientInfoState) {
-                labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
-                labRequest.patientId = state.patient!.id;
-                bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
-              }
+              // if (state is LoadedPatientInfoState) {
+              //   labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
+              //   labRequest.patientId = state.patient!.id;
+              //   bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
+              // }
             },
           )
         ],
@@ -197,7 +195,8 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                               {
                                                 EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
                                                 String search = "";
-                                                _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Doctors);
+                                                _PatientDoctorsSearchDataSource dataSource =
+                                                    _PatientDoctorsSearchDataSource(type: _SearchDataType.Doctors);
                                                 usersBloc.add(UsersBloc_SearchUsersByWorkPlaceEvent(
                                                     params: SearchUsersByWorkPlaceParams(
                                                   search: search,
@@ -261,7 +260,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                                 newWorkPlace = isSelected;
                                                                                 setState(() {});
                                                                               },
-                                                                              labels: [CIA_MultiSelectChipWidgeModel(label: "New Work Place")]),
+                                                                              labels: [
+                                                                                CIA_MultiSelectChipWidgeModel(
+                                                                                    label: "New Work Place", isSelected: newWorkPlace)
+                                                                              ]),
                                                                         ),
                                                                         Expanded(
                                                                           flex: 2,
@@ -293,7 +295,8 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                     BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
                                                                       builder: (context, state) {
                                                                         String error = "";
-                                                                        if (state is LabRequestsBloc_CreatingCustomerErrorState) error = state.message;
+                                                                        if (state is LabRequestsBloc_CreatingCustomerErrorState)
+                                                                          error = state.message;
                                                                         return Text(
                                                                           error,
                                                                           style: TextStyle(color: Colors.red),
@@ -325,7 +328,8 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             CIA_MultiSelectChipWidgeModel(
                                                                 label: "Clinic Doctors", isSelected: selectedSource == EnumLabRequestSources.Clinic),
                                                             CIA_MultiSelectChipWidgeModel(
-                                                                label: "Outsource Doctors", isSelected: selectedSource == EnumLabRequestSources.OutSource),
+                                                                label: "Outsource Doctors",
+                                                                isSelected: selectedSource == EnumLabRequestSources.OutSource),
                                                           ],
                                                         ),
                                                         SizedBox(height: 10),
@@ -473,9 +477,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                           ? null
                                           : () {
                                               {
-                                                EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
+                                                Website selectedSource = Website.CIA;
                                                 String? search;
-                                                _PatientDoctorsSearchDataSource dataSource = _PatientDoctorsSearchDataSource(type: _SearchDataType.Patients);
+                                                _PatientDoctorsSearchDataSource dataSource =
+                                                    _PatientDoctorsSearchDataSource(type: _SearchDataType.Patients);
                                                 bloc.add(LabRequestsBloc_SearchLabPatientsByTypeEvent(
                                                     params: SearchLabPatientsByTypeParams(
                                                   search: search,
@@ -499,6 +504,22 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             onSave: () {},
                                                             child: CreateOrViewPatientPage(
                                                               patientID: 0,
+                                                              onCreatedPatient: (success, patient) {
+                                                                if (success) {
+                                                                  labRequest.patient!.name = patient?.name;
+                                                                  labRequest.patient!.id = patient?.id;
+                                                                  labRequest.patientId = patient?.id;
+                                                                  bloc.emit(
+                                                                    LabRequestsBloc_ChangedPatientState(
+                                                                      patient: BasicNameIdObjectEntity(
+                                                                        name: patient?.name,
+                                                                        id: patient?.id,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                  dialogHelper.dismissAll(context);
+                                                                }
+                                                              },
                                                             ),
                                                           );
                                                         },
@@ -509,10 +530,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                         singleSelect: true,
                                                         onChange: (item, isSelected) {
                                                           if (item == "CIA Patients")
-                                                            selectedSource = EnumLabRequestSources.CIA;
+                                                            selectedSource = Website.CIA;
                                                           else if (item == "Clinic Patients")
-                                                            selectedSource = EnumLabRequestSources.Clinic;
-                                                          else if (item == "Outsource Patients") selectedSource = EnumLabRequestSources.OutSource;
+                                                            selectedSource = Website.Clinic;
+                                                          else if (item == "Outsource Patients") selectedSource = Website.Lab;
                                                           bloc.add(LabRequestsBloc_SearchLabPatientsByTypeEvent(
                                                               params: SearchLabPatientsByTypeParams(
                                                             search: search,
@@ -521,11 +542,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                         },
                                                         labels: [
                                                           CIA_MultiSelectChipWidgeModel(
-                                                              label: "CIA Patients", isSelected: selectedSource == EnumLabRequestSources.CIA),
+                                                              label: "CIA Patients", isSelected: selectedSource == Website.CIA),
                                                           CIA_MultiSelectChipWidgeModel(
-                                                              label: "Clinic Patients", isSelected: selectedSource == EnumLabRequestSources.Clinic),
+                                                              label: "Clinic Patients", isSelected: selectedSource == Website.Clinic),
                                                           CIA_MultiSelectChipWidgeModel(
-                                                              label: "Outsource Patients", isSelected: selectedSource == EnumLabRequestSources.OutSource),
+                                                              label: "Outsource Patients", isSelected: selectedSource == Website.Lab),
                                                         ],
                                                       ),
                                                       SizedBox(height: 10),
@@ -554,6 +575,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                 .toList());
                                                           else if (state is LabRequestsBloc_SearchingPatientsErrorState)
                                                             return BigErrorPageWidget(message: state.message);
+                                                          else if (state is LabRequestsBloc_SearchingPatientsState) return LoadingWidget();
                                                           return TableWidget(
                                                             dataSource: dataSource,
                                                             onCellClick: (index) {
@@ -566,6 +588,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                 name: p.name,
                                                                 id: p.id,
                                                               )));
+                                                              dialogHelper.dismissAll(context);
                                                               //context.goNamed(LabTodaysRequestsSearch.routeName);
                                                             },
                                                           );
@@ -623,9 +646,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                   },
                                   labels: [
                                     CIA_MultiSelectChipWidgeModel(label: "Scan", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Scan),
-                                    CIA_MultiSelectChipWidgeModel(label: "Physical", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Physical),
+                                    CIA_MultiSelectChipWidgeModel(
+                                        label: "Physical", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Physical),
                                     CIA_MultiSelectChipWidgeModel(label: "Cast", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Cast),
-                                    CIA_MultiSelectChipWidgeModel(label: "Remake", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Remake),
+                                    CIA_MultiSelectChipWidgeModel(
+                                        label: "Remake", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Remake),
                                   ],
                                 ),
                               ),
@@ -772,8 +797,6 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                               SizedBox(height: 10),
                             ],
                           ),
-
-
                           SizedBox(height: 10),
                           Row(
                             children: [

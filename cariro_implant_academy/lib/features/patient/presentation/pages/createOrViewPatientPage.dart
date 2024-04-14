@@ -30,9 +30,10 @@ import '../../domain/entities/patientInfoEntity.dart';
 import '../bloc/createOrViewPatientBloc_Events.dart';
 
 class CreateOrViewPatientPage extends StatelessWidget {
-  const CreateOrViewPatientPage({
+  CreateOrViewPatientPage({
     Key? key,
     required this.patientID,
+    this.onCreatedPatient,
   }) : super(key: key);
 
   static String getVisitPatientRouteName({bool goToVisit = false}) {
@@ -66,6 +67,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
   static String addPatientRoutePath = "AddPatient";
 
   final int patientID;
+  Function(bool success, PatientInfoEntity? patient)? onCreatedPatient;
 
   final double imageWidth = 200;
   final double imageHeight = 200;
@@ -74,7 +76,8 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PatientInfoEntity patient = PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married);
+    PatientInfoEntity patient =
+        PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married, website: siteController.getSite());
     final createOrViewPatientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     final imageBlocProfile = sl<ImageBloc>();
     final imageBlocIdBack = sl<ImageBloc>();
@@ -101,9 +104,15 @@ class CreateOrViewPatientPage extends StatelessWidget {
           if (state.patient.idFrontImageId != null) imageBlocIdFront.downloadImageEvent(state.patient.idFrontImageId!);
         }
         if (state is Error) {
+           if (onCreatedPatient != null) {
+            onCreatedPatient!(false, null);
+          }
           ShowSnackBar(context, isSuccess: false, message: state.message);
         } else if (state is CreatedPatientState) {
           ShowSnackBar(context, isSuccess: true);
+          if (onCreatedPatient != null) {
+            onCreatedPatient!(true, state.patient);
+          }
           //createOrViewPatientBloc.add(GetNextAvailableIdEvent());
           createOrViewPatientBloc.emit(LoadedPatientInfoState(
               patient: PatientInfoEntity(
@@ -338,17 +347,16 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                       onChange: (item, isSelected) {
                                         if (isSelected) {
                                           if (item == "CIA") {
-                                            patient.patientType = EnumPatientType.CIA;
+                                            patient.website = Website.CIA;
                                           } else if (item == "Clinic")
-                                            patient.patientType = EnumPatientType.Clinic;
-                                          else if (item == "OutSource") patient.patientType = EnumPatientType.OutSource;
+                                            patient.website = Website.Clinic;
+                                          else if (item == "OutSource") patient.website = Website.Lab;
                                         }
                                       },
                                       labels: [
-                                        CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.patientType == EnumPatientType.CIA),
-                                        CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.patientType == EnumPatientType.Clinic),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "OutSource", isSelected: patient.patientType == EnumPatientType.OutSource),
+                                        CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.website == Website.CIA),
+                                        CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.website == Website.Clinic),
+                                        CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.website == Website.Lab),
                                       ],
                                     ),
                                   );

@@ -5,7 +5,7 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/repositories/imagesRepo.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/patientSearchResponseModel.dart';
+import 'package:cariro_implant_academy/features/patient/data/models/patientInfoModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/createPatientUseCase.dart';
 import 'package:dartz/dartz.dart';

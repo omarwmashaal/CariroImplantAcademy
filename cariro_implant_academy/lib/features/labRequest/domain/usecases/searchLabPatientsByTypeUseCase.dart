@@ -24,7 +24,7 @@ class SearchLabPatientsByTypeUseCase extends UseCases<List<PatientInfoEntity>, S
 
 class SearchLabPatientsByTypeParams {
  final String? search;
- final EnumLabRequestSources type;
+ final Website type;
 
  SearchLabPatientsByTypeParams({
     required this.search,

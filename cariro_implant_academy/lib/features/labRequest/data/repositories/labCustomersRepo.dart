@@ -24,7 +24,7 @@ class LabCustomerRepoImpl implements LabCustomersRepository {
   }
 
   @override
-  Future<Either<Failure, List<PatientInfoEntity>>> searchLabPatientsByType(String? search, EnumLabRequestSources type) async {
+  Future<Either<Failure, List<PatientInfoEntity>>> searchLabPatientsByType(String? search, Website type) async {
     try {
       final result = await labCustomerDatasource.searchLabPatientsByType(search, type);
       return Right(result);

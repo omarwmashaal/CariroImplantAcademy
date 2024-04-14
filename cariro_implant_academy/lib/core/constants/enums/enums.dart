@@ -41,7 +41,6 @@ enum LabStepStatus {
 
 enum EnumLabRequestStatus { InQueue, InProgress, Finished }
 
-enum EnumPatientType { CIA, Clinic, OutSource }
 
 enum EnumLabRequestSources { CIA, Clinic, OutSource }
 
