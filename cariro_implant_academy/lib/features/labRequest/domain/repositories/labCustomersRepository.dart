@@ -9,5 +9,5 @@ import '../usecases/searchLabPatientsByTypeUseCase.dart';
 
 abstract class LabCustomersRepository{
   Future<Either<Failure,UserEntity>>createNewCustomer(UserEntity customer);
-  Future<Either<Failure,List<PatientInfoEntity>>>searchLabPatientsByType(String? search,EnumLabRequestSources type);
+  Future<Either<Failure,List<PatientInfoEntity>>>searchLabPatientsByType(String? search,Website type);
 }

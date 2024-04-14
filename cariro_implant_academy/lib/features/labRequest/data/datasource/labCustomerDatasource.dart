@@ -12,7 +12,7 @@ import '../../../user/domain/entities/userEntity.dart';
 abstract class LabCustomerDatasource {
   Future<UserEntity> createNewCustomer(UserEntity customer);
 
-  Future<List<PatientInfoModel>> searchLabPatientsByType(String? search, EnumLabRequestSources type);
+  Future<List<PatientInfoModel>> searchLabPatientsByType(String? search, Website type);
 }
 
 class LabCustomerDataSourceImpl implements LabCustomerDatasource {
@@ -41,7 +41,7 @@ class LabCustomerDataSourceImpl implements LabCustomerDatasource {
   }
 
   @override
-  Future<List<PatientInfoModel>> searchLabPatientsByType(String? search, EnumLabRequestSources type) async {
+  Future<List<PatientInfoModel>> searchLabPatientsByType(String? search, Website type) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$labCustomerController/SearchPatientsByType?type=${type.index}&${search==null?"":"search=$search"}");
