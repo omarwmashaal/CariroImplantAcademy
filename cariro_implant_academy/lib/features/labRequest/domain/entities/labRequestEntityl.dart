@@ -20,7 +20,9 @@ class LabRequestEntity extends Equatable {
   int? patientId;
   BasicNameIdObjectEntity? patient;
   EnumLabRequestStatus? status;
+  EnumLabRequestStatus2? status2;
   bool? paid;
+  bool? free;
   int? cost;
   int? paidAmount;
   int? labFees;
@@ -70,6 +72,8 @@ class LabRequestEntity extends Equatable {
     this.patientId,
     this.patient,
     this.status,
+    this.status2 = EnumLabRequestStatus2.New,
+    this.free = false,
     this.paid,
     this.cost,
     this.paidAmount,
@@ -83,11 +87,11 @@ class LabRequestEntity extends Equatable {
     this.assignedToId,
     this.assignedTo,
   }) {
-    entryBy = entryBy??BasicNameIdObjectEntity();
-    customer =customer?? UserEntity();
-    patient = patient??BasicNameIdObjectEntity();
-    file =file?? BasicNameIdObjectEntity();
-    teeth =teeth?? [];
+    entryBy = entryBy ?? BasicNameIdObjectEntity();
+    customer = customer ?? UserEntity();
+    patient = patient ?? BasicNameIdObjectEntity();
+    file = file ?? BasicNameIdObjectEntity();
+    teeth = teeth ?? [];
   }
 
   @override
@@ -96,8 +100,8 @@ class LabRequestEntity extends Equatable {
         this.date,
         this.notesFromTech,
         this.deliveryDate,
-    this.assignedTo,
-    this.assignedToId,
+        this.assignedTo,
+        this.assignedToId,
         this.labFees,
         this.entryById,
         this.entryBy,
@@ -107,7 +111,9 @@ class LabRequestEntity extends Equatable {
         this.patientId,
         this.patient,
         this.status,
+        this.status2,
         this.paid,
+        this.free,
         this.cost,
         this.paidAmount,
         this.notes,

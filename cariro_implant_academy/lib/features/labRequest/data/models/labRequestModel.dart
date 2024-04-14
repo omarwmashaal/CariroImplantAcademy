@@ -34,7 +34,9 @@ class LabRequestModel extends LabRequestEntity {
     super.others,
     super.patient,
     super.status,
+    super.status2,
     super.paid,
+    super.free,
     super.cost,
     super.paidAmount,
     super.notes,
@@ -63,7 +65,9 @@ class LabRequestModel extends LabRequestEntity {
         patientId: entity.patientId,
         patient: entity.patient,
         status: entity.status,
+        status2: entity.status2,
         paid: entity.paid,
+        free: entity.free,
         waxUp: entity.waxUp,
         zirconUnit: entity.zirconUnit,
         pfm: entity.pfm,
@@ -106,7 +110,9 @@ class LabRequestModel extends LabRequestEntity {
     patientId = json['patientId'];
     patient = json['patient'] == null ? null : BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
     status = EnumLabRequestStatus.values[json['status'] ?? 0];
+    status2 = EnumLabRequestStatus2.values[json['status2'] ?? 0];
     paid = json['paid'] ?? false;
+    free = json['free'] ?? false;
     cost = json['cost'];
     paidAmount = json['paidAmount'];
     notes = json['notes'] ?? "";
@@ -161,7 +167,9 @@ class LabRequestModel extends LabRequestEntity {
     data['patientId'] = this.patientId;
     //data['patient'] = this.patient != null ? this.patient!.toJson() : null;
     data['status'] = (this.status ?? EnumLabRequestStatus.InQueue).index;
+    data['status2'] = (this.status2 ?? EnumLabRequestStatus2.New).index;
     data['paid'] = this.paid ?? false;
+    data['free'] = this.free ?? false;
     data['cost'] = this.cost ?? 0;
     data['paidAmount'] = this.paidAmount ?? 0;
     data['waxUp'] = this.waxUp?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.waxUp!).toJson();
