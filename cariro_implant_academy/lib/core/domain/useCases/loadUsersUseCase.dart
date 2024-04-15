@@ -23,6 +23,7 @@ enum LoadUsersEnum {
   instructorsAndAssistants,
   candidates,
   technicians,
+  labDesigner,
 }
 
 

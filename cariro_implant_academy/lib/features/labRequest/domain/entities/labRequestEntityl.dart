@@ -19,6 +19,8 @@ class LabRequestEntity extends Equatable {
   UserEntity? customer;
   int? patientId;
   BasicNameIdObjectEntity? patient;
+  int? designerId;
+  BasicNameIdObjectEntity? designer;
   EnumLabRequestStatus? status;
   EnumLabRequestStatus2? status2;
   bool? paid;
@@ -54,6 +56,8 @@ class LabRequestEntity extends Equatable {
     this.zirconUnit,
     this.pfm,
     this.labFees,
+    this.designer,
+    this.designerId,
     this.compositeInlay,
     this.emaxVeneer,
     this.milledPMMA,
@@ -98,6 +102,8 @@ class LabRequestEntity extends Equatable {
   List<Object?> get props => [
         this.id,
         this.date,
+        this.designer,
+        this.designerId,
         this.notesFromTech,
         this.deliveryDate,
         this.assignedTo,

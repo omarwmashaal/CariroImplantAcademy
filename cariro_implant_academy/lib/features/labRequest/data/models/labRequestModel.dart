@@ -43,6 +43,8 @@ class LabRequestModel extends LabRequestEntity {
     super.requiredStep,
     super.steps,
     super.fileId,
+    super.designer,
+    super.designerId,
     super.file,
     super.initStatus,
     super.teeth,
@@ -69,6 +71,8 @@ class LabRequestModel extends LabRequestEntity {
         paid: entity.paid,
         free: entity.free,
         waxUp: entity.waxUp,
+        designer: entity.designer,
+        designerId: entity.designerId,
         zirconUnit: entity.zirconUnit,
         pfm: entity.pfm,
         compositeInlay: entity.compositeInlay,
@@ -102,6 +106,8 @@ class LabRequestModel extends LabRequestEntity {
     deliveryDate = DateTime.tryParse(json['deliveryDate'] ?? "")?.toLocal();
     entryById = json['entryById'];
     entryBy = json['entryBy'] == null ? null : BasicNameIdObjectModel.fromJson(json['entryBy'] ?? Map<String, dynamic>());
+    designerId = json['designerId'];
+    designer = json['designer'] == null ? null : BasicNameIdObjectModel.fromJson(json['designer'] ?? Map<String, dynamic>());
     assignedToId = json['assignedToId'];
     assignedTo = json['assignedTo'] == null ? null : BasicNameIdObjectModel.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
     source = EnumLabRequestSources.values[json['source'] ?? 0];
@@ -165,6 +171,7 @@ class LabRequestModel extends LabRequestEntity {
     data['customerId'] = this.customerId;
     //data['customer'] = this.customer != null ? this.customer!.toJson() : null;
     data['patientId'] = this.patientId;
+    data['designerId'] = this.designerId;
     //data['patient'] = this.patient != null ? this.patient!.toJson() : null;
     data['status'] = (this.status ?? EnumLabRequestStatus.InQueue).index;
     data['status2'] = (this.status2 ?? EnumLabRequestStatus2.New).index;

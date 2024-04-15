@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
@@ -618,6 +619,35 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                           SizedBox(
                             height: 10,
                           ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                  builder: (context, state) {
+                                    if (state is LabRequestsBloc_ChangedPatientState) {
+                                      labRequest.patient = state.patient;
+                                      labRequest.patientId = state.patient.id;
+                                    }
+                                    return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                      asyncUseCase: sl<LoadUsersUseCase>(),
+                                      searchParams: LoadUsersEnum.labDesigner,
+                                      label: "Assign to Lab Designer",
+                                      onSelect: (value) {
+                                        labRequest.designer = value;
+                                        labRequest.designerId = value.id;
+                                      },
+                                      selectedItem: labRequest.designer,
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(child: SizedBox())
+                            ],
+                          ),
+                          SizedBox(height: 10),
                           Row(
                             children: [
                               Expanded(
