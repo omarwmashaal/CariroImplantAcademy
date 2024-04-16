@@ -44,9 +44,9 @@ class LabRequestRepoImpl implements LabRequestRepository{
   }
 
   @override
-  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId)   async {
+  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId,int? designerId)   async {
     try {
-      final result = await labRequestDatasource.assignTaskToTechnician(id,technicianId);
+      final result = await labRequestDatasource.assignTaskToTechnician(id,technicianId,designerId);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

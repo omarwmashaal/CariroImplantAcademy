@@ -82,7 +82,7 @@ class ReceiptModel extends ReceiptEntity {
     milledPMMA = json['milledPMMA'] == null ? null : OmarModelsss.fromJson(json['milledPMMA']);
     emaxVeneer = json['emaxVeneer'] == null ? null : OmarModelsss.fromJson(json['emaxVeneer']);
     compositeInlay = json['compositeInlay'] == null ? null : OmarModelsss.fromJson(json['compositeInlay']);
-    pfm = json['pfm'];
+    pfm = json['pfm'] == null ? null : OmarModelsss.fromJson(json['pfm']);
   }
 
   Map<String, dynamic> toJson() {

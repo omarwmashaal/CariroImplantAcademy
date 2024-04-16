@@ -451,7 +451,7 @@ class SiteController {
 
   setProfileImageId(int id) => sl<SharedPreferences>().setInt("profileImageId", id);
 
-  List<String> getRoles() {
+  List<String> getDefaultRoles() {
     if (getSite() == Website.CIA) {
       return _CIA_Roles;
     } else if (getSite() == Website.Lab)

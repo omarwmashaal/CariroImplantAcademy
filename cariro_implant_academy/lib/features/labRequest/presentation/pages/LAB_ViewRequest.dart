@@ -5,11 +5,13 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDe
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewTask.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/widgets/labRequestItemReceiptWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -102,6 +104,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                     CIA_SecondaryButton(
                         label: "Medical Info",
                         onTab: () {
+                          context.goNamed(LAB_ViewTaskPage.routeName, pathParameters: {"id": widget.id.toString()});
                           /*
                           var medicalInfo = request.getMedicalInfoList();
                           CIA_ShowPopUp(
@@ -364,10 +367,15 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                       ),
                                       Visibility(
                                         visible: (request.status == EnumLabRequestStatus.Finished),
-                                        child: request.paid == true
-                                            ? Icon(
-                                                Icons.check_circle,
-                                                color: Colors.green,
+                                        child: request.paid == true || (request.free ?? false)
+                                            ? Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.check_circle,
+                                                    color: Colors.green,
+                                                  ),
+                                                  (request.free ?? false) ? FormTextValueWidget(text: " Free Request") : SizedBox()
+                                                ],
                                               )
                                             : CIA_SecondaryButton(
                                                 label: "Pay",
@@ -424,6 +432,24 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                             ),
                             SizedBox(
                               height: 10,
+                            ),
+                            Visibility(
+                              visible: !(request.designerId == siteController.getUserId() ?? false),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: FormTextKeyWidget(
+                                      text: "Delivery Date",
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: FormTextValueWidget(
+                                      text: request.deliveryDate == null ? "" : DateFormat("dd-MM-yyyy").format(request.deliveryDate!),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ],
                         ),
