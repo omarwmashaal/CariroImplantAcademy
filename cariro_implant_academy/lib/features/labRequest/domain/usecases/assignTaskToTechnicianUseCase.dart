@@ -11,7 +11,7 @@ class AssignTaskToTechnicianUseCase extends UseCases<NoParams, AssignTaskToTechn
 
   @override
   Future<Either<Failure, NoParams>> call(AssignTaskToTechnicianParams params) async {
-    return await labRequestRepository.assignTaskToTechnician(params.taskId,params.technicianId).then((value) => value.fold(
+    return await labRequestRepository.assignTaskToTechnician(params.taskId,params.technicianId,params.designerId).then((value) => value.fold(
           (l) => Left(l..message = "Assign Task to technician: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
@@ -21,9 +21,11 @@ class AssignTaskToTechnicianUseCase extends UseCases<NoParams, AssignTaskToTechn
 class AssignTaskToTechnicianParams {
   final int taskId;
   final int technicianId;
+  final int? designerId;
 
   AssignTaskToTechnicianParams({
     required this.taskId,
     required this.technicianId,
+    required this.designerId,
   });
 }

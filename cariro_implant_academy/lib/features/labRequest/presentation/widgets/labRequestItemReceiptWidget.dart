@@ -17,7 +17,7 @@ import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:get/get.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import '../../../../core/injection_contianer.dart';
@@ -44,14 +44,14 @@ class LabRequestItemReceiptWidget extends StatefulWidget {
 class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidget> {
   int tempTotal = 0;
 
-  int overAllTotal = 0;
+  var overAllTotal = 0.obs;
   late LabRequestsBloc bloc;
 
   @override
   void initState() {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      widget.onTotalCalculated(overAllTotal);
+      widget.onTotalCalculated(overAllTotal.value);
       print("Total Function called");
     });
 
@@ -61,22 +61,19 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
       buildWhen: (previous, current) =>
-
           current is LabRequestsBloc_LoadedLabReceiptuccessfullyState ||
           current is LabRequestsBloc_LoadingLabReceiptErrorState ||
-          current is LabRequestsBloc_LoadingLabReceiptState
-      ,
+          current is LabRequestsBloc_LoadingLabReceiptState,
       builder: (context, state) {
         if (state is LabRequestsBloc_LoadedLabReceiptuccessfullyState) {
           ReceiptEntity? receipt;
           receipt = state.data;
-          if(receipt==null)
-            {
-              tempTotal = 0;
-              overAllTotal = 0;
+          if (receipt == null) {
+            tempTotal = 0;
+            overAllTotal.value = 0;
+            if (!(widget.request.free ?? false)) {
               tempTotal += widget.request.zirconUnit?.totalPrice ?? 0;
               tempTotal += widget.request.pfm?.totalPrice ?? 0;
               tempTotal += widget.request.compositeInlay?.totalPrice ?? 0;
@@ -87,64 +84,107 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
               tempTotal += widget.request.tiBar?.totalPrice ?? 0;
               tempTotal += widget.request.threeDPrinting?.totalPrice ?? 0;
               tempTotal += widget.request.waxUp?.totalPrice ?? 0;
-              overAllTotal = tempTotal + (widget.request.labFees ?? 0);
             }
+            overAllTotal.value = tempTotal + (widget.request.labFees ?? 0);
+          }
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               FormTextKeyWidget(text: "Receipt Details"),
               SizedBox(height: 10),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.zirconUnit: widget.request.zirconUnit, parentItemId: 1, label: "Zircon Unit"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.pfm: widget.request.pfm, parentItemId: 2, label: "PFM"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.compositeInlay: widget.request.compositeInlay, parentItemId: 3, label: "Composite Inlay"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.emaxVeneer: widget.request.emaxVeneer, parentItemId: 4, label: "Emax Veneer"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.milledPMMA: widget.request.milledPMMA, parentItemId: 5, label: "Milled PMMA"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.printedPMMA: widget.request.printedPMMA, parentItemId: 6, label: "Printed PMMA"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.tiAbutment: widget.request.tiAbutment, parentItemId: 7, label: "Ti Abutment"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.tiBar: widget.request.tiBar, parentItemId: 8, label: "Ti Bar"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.threeDPrinting: widget.request.threeDPrinting, parentItemId: 9, label: "3D Printing"),
-              __LabRequestItemReceiptWidget(item: receipt!=null?receipt.waxUp: widget.request.waxUp, parentItemId: 10, label: "Wax Up"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.zirconUnit : widget.request.zirconUnit,
+                  parentItemId: 1,
+                  label: "Zircon Unit"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false), item: receipt != null ? receipt.pfm : widget.request.pfm, parentItemId: 2, label: "PFM"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.compositeInlay : widget.request.compositeInlay,
+                  parentItemId: 3,
+                  label: "Composite Inlay"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.emaxVeneer : widget.request.emaxVeneer,
+                  parentItemId: 4,
+                  label: "Emax Veneer"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.milledPMMA : widget.request.milledPMMA,
+                  parentItemId: 5,
+                  label: "Milled PMMA"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.printedPMMA : widget.request.printedPMMA,
+                  parentItemId: 6,
+                  label: "Printed PMMA"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.tiAbutment : widget.request.tiAbutment,
+                  parentItemId: 7,
+                  label: "Ti Abutment"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.tiBar : widget.request.tiBar,
+                  parentItemId: 8,
+                  label: "Ti Bar"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.threeDPrinting : widget.request.threeDPrinting,
+                  parentItemId: 9,
+                  label: "3D Printing"),
+              __LabRequestItemReceiptWidget(
+                  free: (widget.request.free ?? false),
+                  item: receipt != null ? receipt.waxUp : widget.request.waxUp,
+                  parentItemId: 10,
+                  label: "Wax Up"),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: SizedBox(
                   width: 300,
                   child: widget.viewOnly
                       ? Row(
-                    children: [
-                      Expanded(child: FormTextKeyWidget(text: "Lab Fees ")),
-                      Expanded(flex: 2, child: SizedBox()),
-                      Expanded(child: FormTextValueWidget(text: "total price: EGP ${receipt!=null?receipt.labFees: widget.request.labFees?.toString()}")),
-                    ],
-                  )
+                          children: [
+                            Expanded(child: FormTextKeyWidget(text: "Lab Fees ")),
+                            Expanded(flex: 2, child: SizedBox()),
+                            Expanded(
+                                child: FormTextValueWidget(
+                                    text: "total price: EGP ${receipt != null ? receipt.labFees : widget.request.labFees?.toString()}")),
+                          ],
+                        )
                       : CIA_TextFormField(
-                    label: "Add Lab Price",
-                    isNumber: true,
-                    controller: TextEditingController(text: (widget.request.labFees ?? 0).toString()),
-                    onChange: (value) {
-                      widget.request.labFees = int.parse(value);
+                          label: "Add Lab Price",
+                          isNumber: true,
+                          controller: TextEditingController(text: (widget.request.labFees ?? 0).toString()),
+                          onChange: (value) {
+                            widget.request.labFees = int.parse(value);
 
-                      overAllTotal = (widget.request.labFees ?? 0) + tempTotal;
-                      widget.onTotalCalculated(overAllTotal);
-                      setState(() {});
-                    },
-                  ),
+                            overAllTotal.value = (widget.request.labFees ?? 0) + tempTotal;
+                            widget.onTotalCalculated(overAllTotal.value);
+                            //setState(() {});
+                          },
+                        ),
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Total: EGP ${receipt!=null?receipt.total: overAllTotal}",
-                    style: TextStyle(fontSize: 20),
-                  ),
+                  Obx(
+                    () {
+                      overAllTotal.value;
+                      return Text(
+                        "Total: EGP ${receipt != null ? receipt.total : overAllTotal}",
+                        style: TextStyle(fontSize: 20),
+                      );
+                    },
+                  )
                 ],
               )
             ],
           );
-        }
-
-        else if (state is LabRequestsBloc_LoadingLabReceiptErrorState)
+        } else if (state is LabRequestsBloc_LoadingLabReceiptErrorState)
           return BigErrorPageWidget(message: state.message);
         else if (state is LabRequestsBloc_LoadingLabReceiptState) return LoadingWidget();
         return Container();
@@ -159,11 +199,13 @@ class __LabRequestItemReceiptWidget extends StatefulWidget {
     required this.item,
     required this.parentItemId,
     required this.label,
+    this.free = false,
   }) : super(key: key);
   OmarEntity? item;
 
   int parentItemId;
   String label;
+  bool free;
 
   @override
   State<__LabRequestItemReceiptWidget> createState() => __LabRequestItemReceiptWidgetState();
@@ -173,7 +215,7 @@ class __LabRequestItemReceiptWidgetState extends State<__LabRequestItemReceiptWi
   @override
   Widget build(BuildContext context) {
     if (widget.item != null) {
-      widget.item!.totalPrice = widget.item!.price! * widget.item!.number!;
+      widget.item!.totalPrice = widget.free ? 0 : widget.item!.price! * widget.item!.number!;
     }
     return widget.item == null
         ? Container()

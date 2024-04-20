@@ -27,7 +27,7 @@ abstract class LabRequestRepository {
 
   Future<Either<Failure, NoParams>> addToMyTasks(int id);
 
-  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId);
+  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId,int? designerId);
 
   Future<Either<Failure, NoParams>> finishTask(int id, int? nextTaskId, int? assignToId, String? notes);
 

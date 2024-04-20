@@ -548,6 +548,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                   }
                 }
               }
+              widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length + 1);
             }
           },
           inputFormatters: widget.inputFormatter != null

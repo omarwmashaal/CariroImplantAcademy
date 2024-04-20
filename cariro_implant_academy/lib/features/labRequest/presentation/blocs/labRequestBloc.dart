@@ -279,7 +279,7 @@ class LabRequestDataGridSource extends DataGridSource {
     _labRequestData = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
-              DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy").format(e.date!)),
+              DataGridCell<DateTime>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Source', value: e.source?.name ?? ""),
               DataGridCell<String>(columnName: 'Customer Name', value: e.customer?.name ?? ""),
               DataGridCell<String>(columnName: 'Customer Phone', value: e.customer?.phoneNumber ?? ""),
@@ -287,7 +287,8 @@ class LabRequestDataGridSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
               DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name ?? ""),
               DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last ?? ""),
-              DataGridCell<String>(columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
+              DataGridCell<String>(
+                  columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
             ]))
         .toList();
   }
@@ -302,9 +303,10 @@ class LabRequestDataGridSource extends DataGridSource {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((e) {
       if (e.value is Widget) return e.value;
+
       return Container(
         alignment: Alignment.center,
-        child: Text(e.value.toString()),
+        child: Text((e.value != null && e.value is DateTime) ? DateFormat("dd-MM-yyyy").format(e.value) : e.value.toString()),
       );
     }).toList());
   }

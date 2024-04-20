@@ -158,7 +158,7 @@ class CIA_Router {
                               path: CreateOrViewPatientPage.addPatientRoutePath,
                               pageBuilder: (context, state) {
                                 return NoTransitionPage(
-                                    child:  CreateOrViewPatientPage(
+                                    child: CreateOrViewPatientPage(
                                   patientID: 0,
                                 ));
                               },
@@ -731,7 +731,21 @@ class CIA_Router {
                           redirect: (context, state) {
                             if (siteController.getSite() == Website.CIA)
                               return "/CIA/ViewLabRequest/${state.pathParameters['id']}";
-                            else if (siteController.getRole()!.contains("technician") || siteController.getRole()!.contains("labmoderator"))
+                            else if ((state.fullPath?.contains(LAB_ViewTaskPage.routePath) ?? false) &&
+                                (siteController.getRole()!.contains("technician") ||
+                                    siteController.getRole()!.contains("labmoderator") ||
+                                    siteController.getRole()!.contains("admin") ||
+                                    siteController.getRole()!.contains("labdesigner")))
+                              return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewTaskPage.routePath}";
+                            else if ((state.fullPath?.contains(LAB_ViewRequestPage.routePath) ?? false) &&
+                                (siteController.getRole()!.contains("technician") ||
+                                    siteController.getRole()!.contains("labmoderator") ||
+                                    siteController.getRole()!.contains("admin") ||
+                                    siteController.getRole()!.contains("labdesigner")))
+                              return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewRequestPage.routePath}";
+                            else if (siteController.getRole()!.contains("technician") ||
+                                siteController.getRole()!.contains("labmoderator") ||
+                                siteController.getRole()!.contains("labdesigner"))
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewTaskPage.routePath}";
                             else
                               return "/LAB/Requests/${state.pathParameters['id']}/${LAB_ViewRequestPage.routePath}";

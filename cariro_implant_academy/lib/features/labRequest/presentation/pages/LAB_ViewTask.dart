@@ -7,10 +7,12 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finis
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -134,115 +136,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                   CIA_SecondaryButton(
                       label: "Request Info",
                       onTab: () {
-                        CIA_ShowPopUp(
-                          context: context,
-                          title: "Non-Medical Details",
-                          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "ID",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.id.toString(),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Date Added",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(request.date!),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Source",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.source == null ? "" : EnumLabRequestSources.values[request.source!.index].name,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Requester Name",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.customer?.name ?? "",
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Requester Phone",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.customer == null ? "" : request.customer!.phoneNumber,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Current Step",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(text: request.steps?.last.step?.name ?? ""),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: FormTextKeyWidget(
-                                    text: "Current Status",
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FormTextValueWidget(
-                                    text: request.status == null ? "" : EnumLabRequestStatus.values[request.status!.index].name,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ]),
-                        );
+                        context.goNamed(LAB_ViewRequestPage.routeName, pathParameters: {"id": widget.id.toString()});
                       }),
                   Visibility(
                     visible: request.patientId != null && siteController.getSite() == Website.CIA,
@@ -258,35 +152,11 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Column(
+                  Row(
                     children: [
-                      RoundCheckBox(
-                        disabledColor: Colors.green,
-                        onTap: request.status == EnumLabRequestStatus.Finished
-                            ? null
-                            : (value) async {
-                                await CIA_ShowPopUpYesNo(
-                                  context: context,
-                                  title: "Mark request as finished?",
-                                  onSave: () => CIA_ShowPopUp(
-                                    context: context,
-                                    onSave: () {
-                                      request.status = EnumLabRequestStatus.Finished;
-                                      bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                    },
-                                    child: CIA_TextFormField(
-                                      label: "Notes From Technician",
-                                      maxLines: 5,
-                                      onChange: (v) => request.notesFromTech = v,
-                                      controller: TextEditingController(
-                                        text: request.notesFromTech,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                      ),
-                      FormTextKeyWidget(text: request.status == EnumLabRequestStatus.Finished ? "Request Completed" : "Mark as Completed")
+                      FormTextValueWidget(text: request.status2?.name ?? ""),
+                      SizedBox(width: 10),
+                      FormTextValueWidget(text: (request.free ?? false) ? "Free" : "Not Free"),
                     ],
                   ),
                 ],
@@ -319,106 +189,119 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     SizedBox(
                       height: 10,
                     ),
-
-                    request.status==EnumLabRequestStatus.Finished?
-                      LabRequestItemReceiptWidget(request: request, onTotalCalculated: (t){},viewOnly: true,)  :
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          Visibility(
-                            visible: request.waxUp != null,
-                            child: LabRequestItemWidget(
-                              item: request.waxUp,
-                              name: "Wax Up",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                              showConsume: true,
+                    request.status == EnumLabRequestStatus.Finished
+                        ? LabRequestItemReceiptWidget(
+                            request: request,
+                            onTotalCalculated: (t) {},
+                            viewOnly: true,
+                          )
+                        : Expanded(
+                            child: ListView(
+                              children: [
+                                Visibility(
+                                  visible: request.waxUp != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.waxUp,
+                                    name: "Wax Up",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                    showConsume: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.printedPMMA != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.printedPMMA,
+                                    name: "Printed PMMA",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.zirconUnit != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.zirconUnit,
+                                    name: "Zircon Unit",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.tiAbutment != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.tiAbutment,
+                                    name: "Ti Abutment",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.pfm != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.pfm,
+                                    name: "PFM",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.tiBar != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.tiBar,
+                                    name: "Ti Bar",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.compositeInlay != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.compositeInlay,
+                                    name: "Composite Inlay",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.threeDPrinting != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.threeDPrinting,
+                                    name: "3D Printing",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.emaxVeneer != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.emaxVeneer,
+                                    name: "Emax Veneer",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: request.milledPMMA != null,
+                                  child: LabRequestItemWidget(
+                                    free: request.free ?? false,
+                                    item: request.milledPMMA,
+                                    name: "Milled PMMA",
+                                    onChange: (data) => null,
+                                    viewOnly: true,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Visibility(
-                            visible: request.printedPMMA != null,
-                            child: LabRequestItemWidget(
-                              item: request.printedPMMA,
-                              name: "Printed PMMA",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.zirconUnit != null,
-                            child: LabRequestItemWidget(
-                              item: request.zirconUnit,
-                              name: "Zircon Unit",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.tiAbutment != null,
-                            child: LabRequestItemWidget(
-                              item: request.tiAbutment,
-                              name: "Ti Abutment",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.pfm != null,
-                            child: LabRequestItemWidget(
-                              item: request.pfm,
-                              name: "PFM",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.tiBar != null,
-                            child: LabRequestItemWidget(
-                              item: request.tiBar,
-                              name: "Ti Bar",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.compositeInlay != null,
-                            child: LabRequestItemWidget(
-                              item: request.compositeInlay,
-                              name: "Composite Inlay",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.threeDPrinting != null,
-                            child: LabRequestItemWidget(
-                              item: request.threeDPrinting,
-                              name: "3D Printing",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.emaxVeneer != null,
-                            child: LabRequestItemWidget(
-                              item: request.emaxVeneer,
-                              name: "Emax Veneer",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                          Visibility(
-                            visible: request.milledPMMA != null,
-                            child: LabRequestItemWidget(
-                              item: request.milledPMMA,
-                              name: "Milled PMMA",
-                              onChange: (data) => null,
-                              viewOnly: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -437,7 +320,11 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       height: 10,
                     ),
                     Visibility(
-                      visible: siteController.getRole()!.contains("technician") && siteController.getUserId()==request.assignedToId,
+                      visible: siteController.getUserId() == request.assignedToId ||
+                          siteController.getUserId() == request.designerId ||
+                          siteController.getRole()!.contains("admin") ||
+                          siteController.getRole()!.contains("secretary") ||
+                          siteController.getRole()!.contains("labmoderator"),
                       child: Container(
                         child: request.status == EnumLabRequestStatus.Finished
                             ? Container()
@@ -465,6 +352,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     SizedBox(width: 10),
                                     CIA_PrimaryButton(
                                         label: "Finish Request",
+                                        isLong: true,
                                         onTab: () {
                                           PageController controller = PageController();
                                           int index = 0;
@@ -536,6 +424,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                                 })
                                                             : CIA_PrimaryButton(
                                                                 label: "Finish",
+                                                                isLong: true,
                                                                 onTab: () {
                                                                   request.status = EnumLabRequestStatus.Finished;
                                                                   bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
@@ -565,42 +454,97 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       ),
                     ),
                     Visibility(
-                      visible: siteController.getRole()!.contains("labmoderator") && request.status!=EnumLabRequestStatus.Finished,
+                      visible: (siteController.getRole()!.contains("labmoderator") ||
+                              siteController.getRole()!.contains("admin") ||
+                              siteController.getRole()!.contains("secretary")) &&
+                          request.status != EnumLabRequestStatus.Finished,
                       child: Expanded(
-                        child: Column(
+                        child: Row(
                           children: [
-                            FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}"),
-                            SizedBox(
-                              height: 10,
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Assigned to ${request.assignedTo?.name ?? "Nobody"}"),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    searchParams: LoadUsersEnum.labDesigner,
+                                    asyncUseCase: sl<LoadUsersUseCase>(),
+                                    label: "Assign Designer",
+                                    onSelect: (value) {
+                                      request.designerId = value.id!;
+                                      request.designer = value;
+                                      request.status = EnumLabRequestStatus.InProgress;
+                                      //setState(() {});
+                                    },
+                                    selectedItem: request.designer,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    searchParams: LoadUsersEnum.technicians,
+                                    asyncUseCase: sl<LoadUsersUseCase>(),
+                                    label: "Assign next step to technician",
+                                    onSelect: (value) {
+                                      nextAssignId = value.id!;
+                                      //setState(() {});
+                                    },
+                                    selectedItem: request.assignedTo,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CIA_PrimaryButton(
+                                    label: 'Assign',
+                                    isLong: true,
+                                    onTab: () async {
+                                      if (nextAssignId == null && request.assignedToId == null)
+                                        ShowSnackBar(context, isSuccess: false, message: "Please choose a technician!");
+                                      else {
+                                        bloc.add(LabRequestsBloc_AssignTaskToATechnicianEvent(
+                                          params: AssignTaskToTechnicianParams(
+                                            taskId: request.id!,
+                                            technicianId: nextAssignId ?? request.assignedToId!,
+                                            designerId: request.designerId,
+                                          ),
+                                        ));
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                            CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                              searchParams: LoadUsersEnum.technicians,
-                              asyncUseCase: sl<LoadUsersUseCase>(),
-                              label: "Assign next step to technician",
-                              onSelect: (value) {
-                                nextAssignId = value.id!;
-                                //setState(() {});
-                              },
-                              selectedItem: request.assignedTo,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CIA_PrimaryButton(
-                              label: 'Assign to technician',
-                              onTab: () async {
-                                if (nextAssignId == null)
-                                  ShowSnackBar(context, isSuccess: false, message: "Please choose a technician!");
-                                else {
-                                  bloc.add(LabRequestsBloc_AssignTaskToATechnicianEvent(
-                                    params: AssignTaskToTechnicianParams(
-                                      taskId: request.id!,
-                                      technicianId: nextAssignId!,
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Visibility(
+                                      visible: siteController.getUserId() == request.designerId, child: FormTextKeyWidget(text: "Finish Design")),
+                                  Visibility(visible: siteController.getUserId() == request.designerId, child: SizedBox(height: 10)),
+                                  Visibility(
+                                    visible: siteController.getUserId() == request.designerId,
+                                    child: RoundCheckBox(
+                                      disabledColor: Colors.green,
+                                      isChecked: request.status == EnumLabRequestStatus.FinishedDesign,
+                                      onTap: request.status == EnumLabRequestStatus.FinishedDesign
+                                          ? null
+                                          : (value) async {
+                                              await CIA_ShowPopUpYesNo(
+                                                context: context,
+                                                title: "Change Request Status To \"Finished Design\"?",
+                                                onCancel: () => setState(() {}),
+                                                onSave: () {
+                                                  request.status = EnumLabRequestStatus.FinishedDesign;
+                                                  bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                },
+                                              );
+                                            },
                                     ),
-                                  ));
-                                }
-                              },
-                            ),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -627,7 +571,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     notes: thisStepNotes,
                                   ),
                                 ));
-
+          
                                 return false;
                                 //setState(() {});
                               },

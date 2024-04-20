@@ -35,7 +35,7 @@ abstract class LabRequestDatasource {
 
   Future<NoParams> addToMyTasks(int id);
 
-  Future<NoParams> assignTaskToTechnician(int id, int technicianId);
+  Future<NoParams> assignTaskToTechnician(int id, int technicianId,int? designerId);
 
   Future<NoParams> finishTask(int id, int? nextTaskId, int? assignToId, String? notes);
 
@@ -98,10 +98,10 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<NoParams> assignTaskToTechnician(int id, int technicianId) async {
+  Future<NoParams> assignTaskToTechnician(int id, int technicianId,int? designerId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.post(host: "$serverHost/$labRequestsController/AssignToTechnician?id=$id&technicianId=$technicianId");
+      response = await httpRepo.post(host: "$serverHost/$labRequestsController/AssignToTechnician?id=$id&technicianId=$technicianId${designerId==null?"":"&designerId=$designerId"}");
     } catch (e) {
       throw mapException(e);
     }

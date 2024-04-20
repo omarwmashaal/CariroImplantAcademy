@@ -11,6 +11,7 @@ class LabRequestItemWidget extends StatefulWidget {
     required this.item,
     required this.name,
     required this.onChange,
+    this.free = false,
     this.viewOnly = false,
     this.showConsume = false,
   }) : super(key: key);
@@ -18,6 +19,7 @@ class LabRequestItemWidget extends StatefulWidget {
   String name;
   bool viewOnly;
   bool showConsume;
+  bool free;
   Function(OmarEntity data) onChange;
 
   @override
@@ -27,7 +29,7 @@ class LabRequestItemWidget extends StatefulWidget {
 class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.item != null) widget.item!.totalPrice = widget.item!.number! * widget.item!.price!;
+    if (widget.item != null) widget.item!.totalPrice = widget.free ? 0 : widget.item!.number! * widget.item!.price!;
     return SizedBox(
       width: 300,
       child: Visibility(
@@ -87,6 +89,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                               children: [
                                 FormTextKeyWidget(text: "Total Price: "),
                                 FormTextValueWidget(text: widget.item?.totalPrice?.toString()),
+                                FormTextValueWidget(text: widget.free ? " Free request" : ""),
                               ],
                             ),
                           ),
