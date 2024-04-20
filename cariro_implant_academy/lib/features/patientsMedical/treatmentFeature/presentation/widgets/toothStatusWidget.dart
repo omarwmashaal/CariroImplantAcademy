@@ -284,12 +284,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           if (v == "" || v == "0" || v == null) v = "0";
                           return widget.fieldModel.planPrice = int.parse(v);
                         },
-                        controller: TextEditingController(text: () {
-                          if (widget.fieldModel.planPrice != null && widget.fieldModel.planPrice != 0)
-                            return widget.fieldModel.planPrice.toString();
-                          else
-                            return widget.settingsPrice.toString();
-                        }()),
+                        controller: TextEditingController(text: widget.fieldModel.planPrice.toString()),
                       ))
                     else
                       SizedBox(),
@@ -495,7 +490,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
   @override
   void initState() {
     // bloc = BlocProvider.of<TreatmentBloc>(context);
-    if (widget.price && widget.fieldModel.planPrice == null || widget.fieldModel.planPrice == 0) widget.fieldModel.planPrice = widget.settingsPrice;
+    if (widget.price) widget.fieldModel.planPrice = widget.fieldModel.planPrice ?? widget.settingsPrice;
   }
 
   void teethData() {

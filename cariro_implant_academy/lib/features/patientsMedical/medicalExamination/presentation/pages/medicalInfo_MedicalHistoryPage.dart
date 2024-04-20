@@ -449,30 +449,6 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: CIA_TextFormField(
-                                      validator: (value) {
-                                        if (value == "" || value == null) value = "0";
-                                        if (value.length > 1 && value[0] == "0") value = value.replaceFirst("0", "");
-                                        var regExp = RegExp("/");
-                                        Iterable<Match> match = regExp.allMatches(
-                                          value,
-                                        );
-                                        if (match.length > 1) value = value.replaceRange(value.lastIndexOf("/"), value.lastIndexOf("/") + 1, "");
-                                        if (!value.contains("/")) {
-                                          if (int.parse(value) > 200) {
-                                            int temp = int.parse(value.substring(0, 3));
-                                            if (temp > 200)
-                                              value = value.substring(0, 2) + "/" + value.substring(2);
-                                            else {
-                                              value = value.substring(0, 3) + "/" + value.substring(3);
-                                            }
-                                          }
-                                        } else if (int.parse(value.split("/").last) > 999) {
-                                          value = value.replaceRange(value.length - 1, value.length, "");
-                                        }
-                                        if (value.contains("/0")) value = value.replaceAll("/0", "/");
-
-                                        return value;
-                                      },
                                       inputFormatter: [
                                         FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
                                       ],
@@ -483,10 +459,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                         medicalHistoryData.bloodPressure?.readingInClinic = value;
                                       },
                                       label: "Reading in clinic ",
-                                      controller: TextEditingController(
-                                          text: medicalHistoryData.bloodPressure != null
-                                              ? (medicalHistoryData.bloodPressure?.readingInClinic ?? "")
-                                              : "")),
+                                      controller: TextEditingController(text: (medicalHistoryData.bloodPressure?.readingInClinic ?? ""))),
                                 ),
                               ),
                             ],
@@ -618,7 +591,6 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                           SizedBox(
                             height: 20,
                           ),
-                          
                           FormTextKeyWidget(text: "HBA1c"),
                           SizedBox(
                             height: 10,
