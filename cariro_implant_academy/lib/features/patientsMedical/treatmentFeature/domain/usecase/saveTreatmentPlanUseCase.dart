@@ -13,7 +13,7 @@ class SaveTreatmentPlanUseCase extends UseCases<NoParams, SaveTreatmentPlanParam
   @override
   Future<Either<Failure, NoParams>> call(SaveTreatmentPlanParams data) async {
     data.data.removeWhere((element) => element.isNull());
-    return await treatmentPlanRepo.saveTreatmentPlanData(data.id, data.data).then(
+    return await treatmentPlanRepo.saveTreatmentPlanData(data.id, data.data,clearanceLower: data.clearanceLower,clearnceUpper: data.clearanceUpper).then(
           (value) => value.fold(
             (l) => Left(l..message = "Save Treatment Plan: ${l.message ?? ""}"),
             (r) => Right(r),
@@ -25,6 +25,8 @@ class SaveTreatmentPlanUseCase extends UseCases<NoParams, SaveTreatmentPlanParam
 class SaveTreatmentPlanParams {
   final int id;
   final List<TeethTreatmentPlanEntity> data;
+  final bool clearanceUpper;
+  final bool clearanceLower;
 
-  SaveTreatmentPlanParams({required this.id, required this.data});
+  SaveTreatmentPlanParams({required this.id, required this.data, this.clearanceUpper = false,this.clearanceLower = false});
 }

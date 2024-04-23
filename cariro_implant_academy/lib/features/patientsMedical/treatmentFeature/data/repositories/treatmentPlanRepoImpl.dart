@@ -22,9 +22,12 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo{
   }
 
   @override
-  Future<Either<Failure, NoParams>> saveTreatmentPlanData(int id, List<TeethTreatmentPlanEntity> data)async{
+  Future<Either<Failure, NoParams>> saveTreatmentPlanData(int id, List<TeethTreatmentPlanEntity> data, {
+    bool clearnceUpper = false,
+    bool clearanceLower = false,
+  })async{
     try{
-      final result = await  treatmentPlanDataSource.saveTreatmentPlanData(id,data);
+      final result = await  treatmentPlanDataSource.saveTreatmentPlanData(id,data,clearanceLower: clearanceLower,clearnceUpper: clearnceUpper);
       return Right(result);
     }
     on Exception catch(e)

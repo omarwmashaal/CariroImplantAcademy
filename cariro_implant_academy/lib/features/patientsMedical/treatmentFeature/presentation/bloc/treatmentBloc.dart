@@ -90,7 +90,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     );
     on<TreatmentBloc_SaveTreatmentPlanDataEvent>(
       (event, emit) async {
-        final result = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.data));
+        final result = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.data,clearanceLower: event.clearanceLower,clearanceUpper: event.clearanceUpper));
         result.fold(
           (l) => emit(TreatmentBloc_SavingTreatmentDataErrorState(message: l.message ?? "")),
           (r) => emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState()),

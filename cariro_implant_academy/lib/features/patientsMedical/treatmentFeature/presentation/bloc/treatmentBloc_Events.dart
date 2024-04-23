@@ -43,8 +43,10 @@ class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
 class TreatmentBloc_SaveTreatmentPlanDataEvent extends TreatmentBloc_Events {
   final int id;
   final List<TeethTreatmentPlanEntity> data;
+  final bool clearanceUpper;
+  final bool clearanceLower;
 
-  TreatmentBloc_SaveTreatmentPlanDataEvent({required this.id, required this.data});
+  TreatmentBloc_SaveTreatmentPlanDataEvent({required this.id, required this.data,required this.clearanceUpper, required this.clearanceLower});
 
   @override
   List<Object?> get props => [id, data];

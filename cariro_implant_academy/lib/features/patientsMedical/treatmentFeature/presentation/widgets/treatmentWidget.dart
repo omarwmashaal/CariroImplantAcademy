@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -77,7 +78,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
       if (widget.surgical) {
         bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
       } else {
-        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(id: widget.patientId, data: treatmentPlanEntity.treatmentPlan ?? []));
+        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(
+            id: widget.patientId,
+            data: treatmentPlanEntity.treatmentPlan ?? [],
+            clearanceLower: treatmentPlanEntity.clearanceLower,
+            clearanceUpper: treatmentPlanEntity.clearanceUpper));
       }
     }
     super.dispose();
@@ -97,7 +102,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
       if (widget.surgical) {
         bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
       } else {
-        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(id: widget.patientId, data: treatmentPlanEntity.treatmentPlan ?? []));
+        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(
+            id: widget.patientId,
+            data: treatmentPlanEntity.treatmentPlan ?? [],
+            clearanceLower: treatmentPlanEntity.clearanceLower,
+            clearanceUpper: treatmentPlanEntity.clearanceUpper));
       }
     };
   }
@@ -247,24 +256,40 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                               ),
                             ),
                           ),
-                          CIA_MultiSelectChipWidget(
-                            onChange: (item, isSelected) async {
-                              if (item == "View Only Mode") {
-                                bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentPlanEntity.treatmentPlan ?? []));
-                              }
-                              if (item == "Post Surgery") {
-                                bloc.emit(TreatmentBloc_ShowPostSurgeryState());
-                              }
-                            },
-                            labels: widget.surgical
-                                ? [
-                                    CIA_MultiSelectChipWidgeModel(
-                                        label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
-                                  ]
-                                : [
-                                    CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
-                                  ],
-                          ),
+                          Column(
+                            children: [
+                              CIA_MultiSelectChipWidget(
+                                onChange: (item, isSelected) async {
+                                  if (item == "View Only Mode") {
+                                    bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentPlanEntity.treatmentPlan ?? []));
+                                  }
+                                  if (item == "Post Surgery") {
+                                    bloc.emit(TreatmentBloc_ShowPostSurgeryState());
+                                  }
+                                },
+                                labels: widget.surgical
+                                    ? [
+                                        CIA_MultiSelectChipWidgeModel(
+                                            label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
+                                      ]
+                                    : [
+                                        CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
+                                      ],
+                              ),
+                              SizedBox(height: 10),
+                              CIA_CheckBoxWidget(
+                                text: "Clearance Upper",
+                                value: treatmentPlanEntity?.clearanceUpper ?? false,
+                                onChange: (value) => treatmentPlanEntity?.clearanceUpper = value,
+                              ),
+                              SizedBox(height: 10),
+                              CIA_CheckBoxWidget(
+                                text: "Clearance Lower",
+                                value: treatmentPlanEntity?.clearanceLower ?? false,
+                                onChange: (value) => treatmentPlanEntity?.clearanceLower = value,
+                              )
+                            ],
+                          )
                         ],
                       ),
                       SizedBox(height: 5),

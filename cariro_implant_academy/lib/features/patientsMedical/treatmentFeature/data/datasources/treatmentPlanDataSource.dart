@@ -11,7 +11,12 @@ import '../models/teethTreatmentPlanModel.dart';
 abstract class TreatmentPlanDataSource {
   Future<TreatmentPlanEntity> getTreatmentPlanData(int id);
 
-  Future<NoParams> saveTreatmentPlanData(int id, List<TeethTreatmentPlanEntity> data);
+  Future<NoParams> saveTreatmentPlanData(
+    int id,
+    List<TeethTreatmentPlanEntity> data, {
+    bool clearnceUpper = false,
+    bool clearanceLower = false,
+  });
 
   Future<NoParams> consumeImplant(int id);
 }
@@ -29,7 +34,7 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       if (response.body != null)
         return TreatmentPlanModel.fromJson(response.body as Map<String, dynamic>);
@@ -41,17 +46,22 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
   }
 
   @override
-  Future<NoParams> saveTreatmentPlanData(int id, List<TeethTreatmentPlanEntity> data) async {
+  Future<NoParams> saveTreatmentPlanData(
+    int id,
+    List<TeethTreatmentPlanEntity> data, {
+    bool clearnceUpper = false,
+    bool clearanceLower = false,
+  }) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id",
+        host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id&clearanceLower=$clearanceLower&clearanceUpper=$clearnceUpper",
         body: data.map((e) => TeethTreatmentPlanModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
   }
 
@@ -66,7 +76,7 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
     } catch (e) {
       throw mapException(e);
     }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode,message: response.errorMessage);
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     return NoParams();
   }
 }
