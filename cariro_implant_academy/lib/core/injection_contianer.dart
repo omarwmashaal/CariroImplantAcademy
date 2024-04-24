@@ -101,14 +101,18 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDe
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/complainsDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/roomDatasource.dart';
+import 'package:cariro_implant_academy/features/patient/data/datasources/toDoListDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/visitsDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/repositories/complainsRepositoryImpl.dart';
 import 'package:cariro_implant_academy/features/patient/data/repositories/roomRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patient/data/repositories/toDoListRepoImpl.dart';
 import 'package:cariro_implant_academy/features/patient/data/repositories/vistisRepoImpl.dart';
 import 'package:cariro_implant_academy/features/patient/domain/repositories/complainsRepository.dart';
 import 'package:cariro_implant_academy/features/patient/domain/repositories/roomRepo.dart';
+import 'package:cariro_implant_academy/features/patient/domain/repositories/toDoListRepo.dart';
 import 'package:cariro_implant_academy/features/patient/domain/repositories/visitsRepo.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addComplainUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/addToDoListItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/addToMyPatientsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedProstheticSearchUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedSearchPatientsUseCase.dart';
@@ -121,6 +125,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/getAvail
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getComplainsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getPatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/getToDoListUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getVisitsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientEntersClinicUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/patientLeavesClinicUseCase.dart';
@@ -130,11 +135,13 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveC
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/updateToDoListItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateVisit.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/toDoListBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/data/datasources/complicationsDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/data/repositories/complicationsRepository.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/repositories/complicationsRepository.dart';
@@ -595,6 +602,28 @@ initInjection() async {
   //repos
   sl.registerLazySingleton<InputValidationRepo>(() => InputValidationRepoImpl());
   //dataSources
+
+  /**
+   * To Do List
+   */
+
+  // bloc
+  sl.registerFactory(() => ToDoListBloc(
+        getToDoListUseCase: sl(),
+        updateToDoListItemUseCase: sl(),
+        addToDoListItemUseCase: sl(),
+      ));
+  //usecases
+  sl.registerLazySingleton(() => AddToDoListItemUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateToDoListItemUseCase(sl()));
+  sl.registerLazySingleton(() => GetToDoListUseCase(sl()));
+
+  //repo
+  sl.registerLazySingleton<ToDoListRepo>(() => ToDoListRepoImpl(toDoListDatasource: sl()));
+  
+
+  //datasource
+  sl.registerLazySingleton<ToDoListDatasource>(() => ToDoListDatasourceImpl(httpRepo: sl()));
 
   /**
    * Patient Visits
