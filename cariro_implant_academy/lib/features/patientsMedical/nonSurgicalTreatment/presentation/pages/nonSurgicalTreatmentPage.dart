@@ -88,11 +88,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
         dentalExaminationEntity: dentalExaminationEntity,
       ));
     }
-    //  if (!siteController.disableMedicalEdit.value) {
-    //  siteController.disableMedicalEdit.value = true;
-    //MedicalAPI.AddPatientNonSurgicalTreatment(widget.patientId, nonSurgicalTreatment);
-    //MedicalAPI.UpdatePatientDentalExamination(widget.patientId, tempDentalExamination);
-    // }
+    
 
     super.dispose();
   }

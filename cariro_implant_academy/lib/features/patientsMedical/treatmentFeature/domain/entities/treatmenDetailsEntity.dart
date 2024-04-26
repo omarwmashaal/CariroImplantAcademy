@@ -55,7 +55,7 @@ class TreatmentDetailsEntity extends Equatable {
       this.implantID,
       this.requestChangeId,
       this.requestChangeModel,
-      this.planPrice = 0,
+      this.planPrice,
       this.implant}) {
     doneByAssistant = BasicNameIdObjectEntity();
     doneByCandidate = BasicNameIdObjectEntity();
