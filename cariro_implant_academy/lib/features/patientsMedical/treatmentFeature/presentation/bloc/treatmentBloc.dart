@@ -98,12 +98,17 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     );
     on<TreatmentBloc_SaveTreatmentDetailsEvent>(
       (event, emit) async {
+        emit(TreatmentBloc_SavingTreatmentDataState());
         final result = await saveTreatmentDetailsUseCase(SaveTreatmentDetailsParams(id: event.id, data: event.data));
+        var generalResult = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.generalData));
+
         result.fold(
           (l) => emit(TreatmentBloc_SavingTreatmentDataErrorState(message: l.message ?? "")),
-          (r) async {
-            var generalResult = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.generalData));
-            emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState());
+          (r) {
+            if (generalResult.isRight())
+              emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState());
+            else
+              emit(TreatmentBloc_SavingTreatmentDataErrorState(message: "error"));
           },
         );
       },
@@ -157,18 +162,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         );
 
         emit(TreatmentBloc_UpdatedToothState(data: event.teethData));
-      },
-    );
-
-    on<TreatmentBloc_GetSurgicalTreatmentDataEvent>(
-      (event, emit) async {
-        emit(TreatmentBloc_LoadingTreatmentDataState());
-        await Future.delayed(Duration(milliseconds: 500));
-        final result = await getSurgicalTreatmentUseCase(event.id);
-        result.fold(
-          (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState(data: r)),
-        );
       },
     );
 

@@ -61,7 +61,6 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   bool viewOnlyMode = false;
   late List<TreatmentDetailsEntity> treatmentDetails;
   late TreatmentPlanEntity treatmentPlanEntity;
-  late SurgicalTreatmentEntity surgicalTreatmentEntity;
   bool editMode = false;
   late MedicalInfoShellBloc medicalShellBloc;
   late TreatmentBloc bloc;
@@ -72,19 +71,19 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   BasicNameIdObjectEntity? tempSuperVisor;
   int? tempCandidateBatch;
 
+  save() {
+    if (medicalShellBloc.allowEdit) {
+      bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
+        id: widget.patientId,
+        data: treatmentDetails,
+        generalData: treatmentPlanEntity,
+      ));
+    }
+  }
+
   @override
   void dispose() {
-    if (medicalShellBloc.allowEdit) {
-      if (widget.surgical) {
-        // bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
-      } else {
-        bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
-          id: widget.patientId,
-          data: treatmentDetails,
-          generalData: treatmentPlanEntity,
-        ));
-      }
-    }
+    save();
     super.dispose();
   }
 
@@ -92,23 +91,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   void initState() {
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc = BlocProvider.of<TreatmentBloc>(context);
-    if (widget.surgical)
-      bloc.add(TreatmentBloc_GetSurgicalTreatmentDataEvent(id: widget.patientId));
-    else
-      bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+    bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
     bloc.add(TreatmentBloc_GetTreatmentPrices());
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical ? "Surgical Treatment" : "Treatment Plan"));
-    medicalShellBloc.saveChanges = () {
-      if (widget.surgical) {
-        //  bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
-      } else {
-        bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
-          id: widget.patientId,
-          data: treatmentDetails,
-          generalData: treatmentPlanEntity,
-        ));
-      }
-    };
+    medicalShellBloc.saveChanges = () => save();
   }
 
   @override
@@ -122,10 +108,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
           return BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
             listener: (context, state) {
               if (state is TreatmentBloc_SavedTreatmentDataSuccessfullyState) {
-                if (widget.surgical)
-                  bloc.add(TreatmentBloc_GetSurgicalTreatmentDataEvent(id: widget.patientId));
-                else
-                  bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+                bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
               } else if (state is TreatmentBloc_ChangedViewState) {
                 viewOnlyMode = !state.edit;
                 if (viewOnlyMode) totalPrice = state.total;
@@ -141,7 +124,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                 bloc.emit(TreatmentBloc_SelectedStatusState());
                 bloc.emit(TreatmentBloc_ShowTickState(showTick: false));
               } else if (state is TreatmentBloc_ShowPostSurgeryState) {
-                int tempScrews = (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0);
+                /*int tempScrews = (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0);
                 int? membraneSizeId =
                     surgicalTreatmentEntity.openSinusLift_Membrane != null ? surgicalTreatmentEntity.openSinusLift_Membrane!.id : null;
                 int tacsNumber = surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0;
@@ -193,6 +176,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                   },
                   child: PostSurgeryWidget(surgicalTreatmentEntity: surgicalTreatmentEntity),
                 );
+            
+            */
               } else if (state is TreatmentBloc_AcceptingChangesErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
@@ -204,7 +189,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                   bloc.add(TreatmentBloc_ConsumeItemByIdEvent(id: state.requestChangeEntity!.dataId!, count: 1));
                 }
               }
-              if (state is TreatmentBloc_AcceptingChangesState) {
+              if (state is TreatmentBloc_AcceptingChangesState || state is TreatmentBloc_SavingTreatmentDataState) {
                 CustomLoader.show(context);
               } else
                 CustomLoader.hide();
@@ -212,21 +197,15 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             buildWhen: (previous, current) =>
                 current is TreatmentBloc_LoadingTreatmentDataState ||
                 current is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
-                current is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState ||
                 current is TreatmentBloc_LoadingTreatmentDataErrorState,
             builder: (context, state) {
               if (state is TreatmentBloc_LoadingTreatmentDataState)
                 return LoadingWidget();
-              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
-                  state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
-                if (state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
-                  surgicalTreatmentEntity = state.data;
-                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: surgicalTreatmentEntity));
-                } else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
-                  treatmentDetails = state.details;
-                  treatmentPlanEntity = state.data;
-                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentDetails));
-                }
+              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
+                treatmentDetails = state.details;
+                treatmentPlanEntity = state.data;
+                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentDetails));
+
                 return FocusTraversalGroup(
                   policy: OrderedTraversalPolicy(),
                   child: Column(
@@ -550,8 +529,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               bloc: bloc,
               isSurgical: widget.surgical,
               viewOnlyMode: viewOnlyMode,
-              acceptChanges: (request) => bloc.add(TreatmentBloc_AcceptChangesEvent(
-                  requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity)),
+              acceptChanges: (request) => bloc.add(TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId)),
               patientId: widget.patientId,
               data: procedure,
               onDelete: () {
@@ -586,8 +564,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               isSurgical: widget.surgical,
               prices: prices,
               acceptChanges: (request) => bloc.add(
-                TreatmentBloc_AcceptChangesEvent(
-                    requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity),
+                TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId),
               ),
               teethData: treatmentDetails,
               onChange: () => bloc.emit(TreatmentBloc_UpdatedToothState(

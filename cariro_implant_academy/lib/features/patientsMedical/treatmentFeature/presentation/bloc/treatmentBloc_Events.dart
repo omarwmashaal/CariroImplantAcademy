@@ -26,14 +26,14 @@ class TreatmentBloc_GetTreatmentPlanDataEvent extends TreatmentBloc_Events {
   List<Object?> get props => [id];
 }
 
-class TreatmentBloc_GetSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
-  final int id;
+// class TreatmentBloc_GetSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
+//   final int id;
 
-  TreatmentBloc_GetSurgicalTreatmentDataEvent({required this.id});
+//   TreatmentBloc_GetSurgicalTreatmentDataEvent({required this.id});
 
-  @override
-  List<Object?> get props => [id];
-}
+//   @override
+//   List<Object?> get props => [id];
+// }
 
 class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
   @override
@@ -88,12 +88,10 @@ class TreatmentBloc_GetTacsEvent extends TreatmentBloc_Events {
 
 class TreatmentBloc_AcceptChangesEvent extends TreatmentBloc_Events {
   final RequestChangeEntity requestChangeEntity;
-  final SurgicalTreatmentEntity surgicalTreatmentEntity;
   final int patientId;
 
   TreatmentBloc_AcceptChangesEvent({
     required this.requestChangeEntity,
-    required this.surgicalTreatmentEntity,
     required this.patientId,
   });
 
