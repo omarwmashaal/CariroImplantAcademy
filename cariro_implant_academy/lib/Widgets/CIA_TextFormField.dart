@@ -511,14 +511,15 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                 widget.controller.text = "0";
               });
             }
-            if (widget.isNumber && !widget.isPhoneNumber) {
-              if (value.length > 1 && value.startsWith("0") && value[1] != ".") {
-                value = value.replaceFirst(RegExp(r'0'), "");
-                setState(() {
-                  widget.controller.text = value;
-                });
-              }
-            }
+            // if (widget.isNumber && !widget.isPhoneNumber) {
+            //   if (value.length > 1 && value.startsWith("0") && value[1] != ".") {
+            //     value = value.replaceFirst(RegExp(r'0'), "");
+
+            //     widget.controller.text = value;
+            //     widget.controller.selection = TextSelection(baseOffset: value.length + 1, extentOffset: value.length + 1);
+            //     setState(() {});
+            //   }
+            // }
             if (widget.onInstantChange != null) widget.onInstantChange!(value);
             if (widget.onChange != null) widget.onChange!(value);
             if (widget.errorFunction != null) {
@@ -548,7 +549,7 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                   }
                 }
               }
-              widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length + 1);
+              // widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length + 1);
             }
           },
           inputFormatters: widget.inputFormatter != null
@@ -562,10 +563,10 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           maxLines: widget.maxLines,
           focusNode: widget.focusNode,
           controller: () {
-            if (widget.selectAll)
-              return widget.controller..selection = TextSelection(baseOffset: 0, extentOffset: widget.controller.value.text.length);
-            else
-              return widget.controller;
+            // if (widget.selectAll)
+            // return widget.controller..selection = TextSelection(baseOffset: 0, extentOffset: widget.controller.value.text.length);
+            // else
+            return widget.controller;
           }(),
           textInputAction: widget.textInputAction,
           obscureText: widget.isObscure == null ? false : true,

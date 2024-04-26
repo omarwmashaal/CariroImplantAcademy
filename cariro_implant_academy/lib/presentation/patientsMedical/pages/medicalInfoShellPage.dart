@@ -116,7 +116,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                                 buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
                                 builder: (context, state) {
-                                  if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
+                                  // if (state is MedicalInfoBlocChangeDateState) state.data.date = state.date;
                                   return MouseRegion(
                                     cursor: SystemMouseCursors.click,
                                     child: CIA_GestureWidget(

@@ -10,6 +10,7 @@ import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidg
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
@@ -36,36 +37,27 @@ import '../../../../../Widgets/SnackBar.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import '../../../../../core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
 import '../../../nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_Events.dart';
-import '../../domain/entities/trearmentPlanPropertyEntity.dart';
 
 class ToothStatusWidget extends StatefulWidget {
   ToothStatusWidget(
       {Key? key,
-      required this.fieldModel,
-      this.price = false,
-      required this.title,
+      required this.data,
       this.onDelete,
-      this.assignButton = false,
       this.isImplant = false,
       this.settingsPrice = 0,
       required this.patientId,
       required this.isSurgical,
       required this.acceptChanges,
-      required this.tooth,
       required this.bloc,
       this.viewOnlyMode = false})
       : super(key: key);
-  TreatmentPlanPropertyEntity fieldModel;
-  String title;
+  TreatmentDetailsEntity data;
   bool isImplant;
-  bool assignButton;
   Function? onDelete;
   bool viewOnlyMode;
-  bool price;
   int? settingsPrice;
   bool isSurgical;
   int patientId;
-  int tooth;
   TreatmentBloc bloc;
   Function(RequestChangeEntity request) acceptChanges;
 
@@ -77,7 +69,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.viewOnlyMode) {
-      if (widget.fieldModel.planPrice == 0) return Container();
+      if (widget.data.planPrice == 0) return Container();
       return Row(
         children: [
           Expanded(
@@ -94,19 +86,19 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 Expanded(
                   child: widget.isSurgical
                       ? RoundCheckBox(
-                          isChecked: widget.fieldModel.status,
+                          isChecked: widget.data.status,
                           onTap: siteController.getRole()!.contains("secretary")
                               ? null
                               : (selected) {
-                                  widget.fieldModel.status = selected;
+                                  widget.data.status = selected;
                                   if (selected == true) {
-                                    widget.fieldModel.doneByAssistant =
+                                    widget.data.doneByAssistant =
                                         BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-                                    widget.fieldModel.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
-                                    widget.fieldModel.date = DateTime.now().toUtc();
+                                    widget.data.doneByAssistantID = sl<SharedPreferences>().getInt("userid");
+                                    widget.data.date = DateTime.now().toUtc();
                                   } else {
-                                    widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-                                    widget.fieldModel.doneByAssistantID = null;
+                                    widget.data.doneByAssistant = BasicNameIdObjectEntity();
+                                    widget.data.doneByAssistantID = null;
                                   }
                                   setState(() {});
                                 },
@@ -118,7 +110,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           ),
                           size: 30,
                         )
-                      : widget.fieldModel.status!
+                      : widget.data.status!
                           ? Icon(
                               Icons.check,
                               color: Colors.green,
@@ -143,10 +135,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           child: Row(
                             children: [
                               FormTextKeyWidget(
-                                text: widget.title,
+                                text: widget.data.name!,
                               ),
                               FormTextValueWidget(
-                                text: ": ${widget.fieldModel.value ?? ""}",
+                                text: ": ${widget.data.value ?? ""}",
                               ),
                             ],
                           ),
@@ -154,7 +146,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         SizedBox(
                           width: 10,
                         ),
-                        widget.assignButton
+                        widget.data.hasAssign()
                             ? Expanded(
                                 child: Row(
                                   children: [
@@ -162,7 +154,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                       text: "Assigned to: ",
                                     ),
                                     FormTextValueWidget(
-                                      text: widget.fieldModel.assignedTo != null ? widget.fieldModel.assignedTo?.name ?? "" : "",
+                                      text: widget.data.assignedTo != null ? widget.data.assignedTo?.name ?? "" : "",
                                     ),
                                   ],
                                 ),
@@ -178,8 +170,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     children: [
                       FormTextKeyWidget(text: "Price: "),
                       FormTextKeyWidget(
-                          text: (widget.fieldModel.planPrice != 0 && widget.fieldModel.planPrice != null
-                                  ? widget.fieldModel.planPrice ?? widget.settingsPrice
+                          text: (widget.data.planPrice != 0 && widget.data.planPrice != null
+                                  ? widget.data.planPrice ?? widget.settingsPrice
                                   : widget.settingsPrice)
                               .toString()),
                     ],
@@ -194,14 +186,14 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
 
     return BlocListener<TreatmentBloc, TreatmentBloc_States>(
       listener: (context, state) {
-        if (state is TreatmentBloc_AcceptedChangesSuccessfullyState && state.id == widget.fieldModel.requestChangeId) {
-          widget.fieldModel.implantID = widget.fieldModel.requestChangeModel!.dataId;
-          widget.fieldModel.implant = BasicNameIdObjectEntity(
-            name: widget.fieldModel.requestChangeModel!.dataName,
-            id: widget.fieldModel.requestChangeModel!.dataId,
+        if (state is TreatmentBloc_AcceptedChangesSuccessfullyState && state.id == widget.data.requestChangeId) {
+          widget.data.implantID = widget.data.requestChangeModel!.dataId;
+          widget.data.implant = BasicNameIdObjectEntity(
+            name: widget.data.requestChangeModel!.dataName,
+            id: widget.data.requestChangeModel!.dataId,
           );
-          widget.fieldModel.requestChangeModel = null;
-          widget.fieldModel.requestChangeId = null;
+          widget.data.requestChangeModel = null;
+          widget.data.requestChangeId = null;
           setState(() {});
         }
       },
@@ -221,11 +213,11 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 Expanded(
                   child: widget.isSurgical
                       ? RoundCheckBox(
-                          isChecked: widget.fieldModel.status,
+                          isChecked: widget.data.status,
                           onTap: siteController.getRole()!.contains("secretary")
                               ? null
                               : (selected) {
-                                  widget.fieldModel.status = selected;
+                                  widget.data.status = selected;
                                   teethData();
                                 },
                           border: null,
@@ -236,7 +228,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           ),
                           size: 30,
                         )
-                      : widget.fieldModel.status!
+                      : widget.data.status!
                           ? Icon(
                               Icons.check,
                               color: Colors.green,
@@ -258,23 +250,23 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     Expanded(
                       flex: widget.isSurgical
                           ? 7
-                          : widget.price
+                          : widget.data.hasPrice()
                               ? 1
                               : 3,
                       child: widget.isSurgical
                           ? CIA_TextFormField(
                               onChange: (value) {
-                                widget.fieldModel.value = value;
+                                widget.data.value = value;
                               },
-                              label: widget.title,
+                              label: widget.data.name!,
                               controller: TextEditingController(
-                                text: (widget.fieldModel.value),
+                                text: (widget.data.value),
                               ),
                             )
-                          : FormTextKeyWidget(text: widget.title),
+                          : FormTextKeyWidget(text: widget.data.name!),
                     ),
                     SizedBox(width: 10),
-                    if (widget.price && !widget.isSurgical)
+                    if (widget.data.hasPrice() && !widget.isSurgical)
                       Expanded(
                           child: CIA_TextFormField(
                         suffix: "EGP",
@@ -282,9 +274,9 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         isNumber: true,
                         onChange: (v) {
                           if (v == "" || v == "0" || v == null) v = "0";
-                          return widget.fieldModel.planPrice = int.parse(v);
+                          return widget.data.planPrice = int.parse(v);
                         },
-                        controller: TextEditingController(text: widget.fieldModel.planPrice.toString()),
+                        controller: TextEditingController(text: widget.data.planPrice.toString()),
                       ))
                     else
                       SizedBox(),
@@ -312,7 +304,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByCandidate?.name,
+                                              text: widget.data.doneByCandidate?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -328,7 +320,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByCandidateBatch?.name,
+                                              text: widget.data.doneByCandidateBatch?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -344,7 +336,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneByAssistant?.name,
+                                              text: widget.data.doneByAssistant?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -364,7 +356,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                             ),
                                             SizedBox(width: 5),
                                             FormTextValueWidget(
-                                              text: widget.fieldModel.doneBySupervisor?.name,
+                                              text: widget.data.doneBySupervisor?.name,
                                               smallFont: true,
                                             ),
                                             SizedBox(width: 5),
@@ -372,8 +364,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                         ),
                                       ),
                                       Visibility(
-                                        visible: !((widget.title.toLowerCase().contains("without implant")) ||
-                                            (!widget.title.toLowerCase().contains("implant"))),
+                                        visible: !((widget.data.name!.toLowerCase().contains("without implant")) ||
+                                            (!widget.data.name!.toLowerCase().contains("implant"))),
                                         child: Expanded(
                                           flex: 2,
                                           child: Row(
@@ -384,7 +376,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                               ),
                                               SizedBox(width: 5),
                                               FormTextValueWidget(
-                                                text: widget.fieldModel.implant == null ? "" : widget.fieldModel.implant?.name,
+                                                text: widget.data.implant == null ? "" : widget.data.implant?.name,
                                                 smallFont: true,
                                               ),
                                               SizedBox(width: 5),
@@ -397,7 +389,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                 ],
                               ),
                             ))
-                        : widget.assignButton
+                        : widget.data.hasAssign()
                             ? Expanded(
                                 child: Row(
                                 children: [
@@ -407,10 +399,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                       searchParams: LoadUsersEnum.assistants,
                                       label: "Assign to assistant",
                                       onSelect: (value) {
-                                        widget.fieldModel.assignedTo = value;
-                                        widget.fieldModel.assignedToID = value.id;
+                                        widget.data.assignedTo = value;
+                                        widget.data.assignedToID = value.id;
                                       },
-                                      selectedItem: widget.fieldModel.assignedTo,
+                                      selectedItem: widget.data.assignedTo,
                                     ),
                                   ),
                                   SizedBox(width: 10)
@@ -422,13 +414,13 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       onTap: () => CIA_PopupDialog_DateOnlyPicker(
                         context,
                         "Change date",
-                        (date) => setState(() => widget.fieldModel.date = date),
-                        initialDate: widget.fieldModel.date,
+                        (date) => setState(() => widget.data.date = date),
+                        initialDate: widget.data.date,
                       ),
                       child: SizedBox(
                         width: 100,
                         child: Text(
-                          widget.fieldModel.date == null ? "" : DateFormat("dd-MM-yyyy").format(widget.fieldModel.date!),
+                          widget.data.date == null ? "" : DateFormat("dd-MM-yyyy").format(widget.data.date!),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -437,13 +429,13 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                   ],
                 ),
                 Visibility(
-                  visible: widget.fieldModel.requestChangeModel != null,
+                  visible: widget.data.requestChangeModel != null,
                   child: Row(
                     children: [
                       Text(
-                        widget.fieldModel.requestChangeModel == null
+                        widget.data.requestChangeModel == null
                             ? ""
-                            : "User ${widget.fieldModel.requestChangeModel?.user?.name ?? ""} requested to change ${widget.fieldModel.requestChangeModel?.description ?? ""}",
+                            : "User ${widget.data.requestChangeModel?.user?.name ?? ""} requested to change ${widget.data.requestChangeModel?.description ?? ""}",
                         maxLines: 2,
                         style: TextStyle(
                           color: Colors.red,
@@ -453,7 +445,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       SizedBox(width: 10),
                       Expanded(
                           child: Visibility(
-                        visible: siteController.getRole()!.contains("admin") && widget.fieldModel.requestChangeId != null,
+                        visible: siteController.getRole()!.contains("admin") && widget.data.requestChangeId != null,
                         child: Row(
                           children: [
                             Expanded(
@@ -461,8 +453,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                     label: "Decline",
                                     icon: Icon(Icons.cancel_outlined),
                                     onTab: () {
-                                      widget.fieldModel.requestChangeModel = null;
-                                      widget.fieldModel.requestChangeId = null;
+                                      widget.data.requestChangeModel = null;
+                                      widget.data.requestChangeId = null;
                                       setState(() {});
                                     })),
                             SizedBox(width: 10),
@@ -471,7 +463,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               isLong: true,
                               icon: Icon(Icons.check_circle_outline),
                               label: "Accept",
-                              onTab: () => widget.acceptChanges(widget.fieldModel.requestChangeModel!),
+                              onTab: () => widget.acceptChanges(widget.data.requestChangeModel!),
                             )),
                           ],
                         ),
@@ -490,7 +482,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
   @override
   void initState() {
     // bloc = BlocProvider.of<TreatmentBloc>(context);
-    if (widget.price) widget.fieldModel.planPrice = widget.fieldModel.planPrice ?? widget.settingsPrice;
+    if (widget.data.hasPrice()) widget.data.planPrice = widget.data.planPrice ?? widget.settingsPrice;
+
   }
 
   void teethData() {
@@ -500,38 +493,36 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
     int? lineID;
     List<BasicNameIdObjectEntity> implants = [];
 
-    if (widget.fieldModel.status == true) {
-      widget.fieldModel.doneByAssistant = (widget.fieldModel.doneByAssistant != null && !(widget.fieldModel.doneByAssistant!.name?.isEmpty ?? true))
-          ? widget.fieldModel.doneByAssistant
+    if (widget.data.status == true) {
+      widget.data.doneByAssistant = (widget.data.doneByAssistant != null && !(widget.data.doneByAssistant!.name?.isEmpty ?? true))
+          ? widget.data.doneByAssistant
           : BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-      widget.fieldModel.doneByAssistantID = widget.fieldModel.doneByAssistantID ?? widget.fieldModel.doneByAssistant?.id;
-      widget.fieldModel.doneBySupervisor =
-          (widget.fieldModel.doneBySupervisor != null && !(widget.fieldModel.doneBySupervisor!.name?.isBlank ?? true))
-              ? widget.fieldModel.doneBySupervisor
-              : widget.bloc.tempSuperVisor;
-      widget.fieldModel.doneBySupervisorID = widget.fieldModel.doneBySupervisorID ?? widget.bloc.tempSuperVisor?.id;
-      widget.fieldModel.doneByCandidate = (widget.fieldModel.doneByCandidate != null && !(widget.fieldModel.doneByCandidate!.name?.isBlank ?? true))
-          ? widget.fieldModel.doneByCandidate
+      widget.data.doneByAssistantID = widget.data.doneByAssistantID ?? widget.data.doneByAssistant?.id;
+      widget.data.doneBySupervisor = (widget.data.doneBySupervisor != null && !(widget.data.doneBySupervisor!.name?.isBlank ?? true))
+          ? widget.data.doneBySupervisor
+          : widget.bloc.tempSuperVisor;
+      widget.data.doneBySupervisorID = widget.data.doneBySupervisorID ?? widget.bloc.tempSuperVisor?.id;
+      widget.data.doneByCandidate = (widget.data.doneByCandidate != null && !(widget.data.doneByCandidate!.name?.isBlank ?? true))
+          ? widget.data.doneByCandidate
           : widget.bloc.tempCandidate;
-      widget.fieldModel.doneByCandidateID = widget.fieldModel.doneByCandidateID ?? widget.bloc.tempCandidate?.id;
-      widget.fieldModel.doneByCandidateBatch =
-          (widget.fieldModel.doneByCandidateBatch != null && !(widget.fieldModel.doneByCandidateBatch!.name?.isBlank ?? true))
-              ? widget.fieldModel.doneByCandidateBatch
-              : widget.bloc.tempCandidateBatch;
-      widget.fieldModel.doneByCandidateBatchID = widget.fieldModel.doneByCandidateBatchID ?? widget.bloc.tempCandidateBatch?.id;
+      widget.data.doneByCandidateID = widget.data.doneByCandidateID ?? widget.bloc.tempCandidate?.id;
+      widget.data.doneByCandidateBatch = (widget.data.doneByCandidateBatch != null && !(widget.data.doneByCandidateBatch!.name?.isBlank ?? true))
+          ? widget.data.doneByCandidateBatch
+          : widget.bloc.tempCandidateBatch;
+      widget.data.doneByCandidateBatchID = widget.data.doneByCandidateBatchID ?? widget.bloc.tempCandidateBatch?.id;
       CIA_ShowPopUp(
           context: context,
-          title: "${widget.title} Data",
+          title: "${widget.data.name!} Data",
           onSave: () {
             //  widget.fieldModel.status = selected;
-            if (widget.fieldModel.status == true) {
-              widget.fieldModel.doneByAssistant = widget.fieldModel.doneByAssistant ??
+            if (widget.data.status == true) {
+              widget.data.doneByAssistant = widget.data.doneByAssistant ??
                   BasicNameIdObjectEntity(name: siteController.getUserName(), id: sl<SharedPreferences>().getInt("userid"));
-              widget.fieldModel.doneByAssistantID = widget.fieldModel.doneByAssistantID ?? sl<SharedPreferences>().getInt("userid");
-              widget.fieldModel.date = DateTime.now().toUtc();
+              widget.data.doneByAssistantID = widget.data.doneByAssistantID ?? sl<SharedPreferences>().getInt("userid");
+              widget.data.date = DateTime.now().toUtc();
             } else {
-              widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-              widget.fieldModel.doneByAssistantID = null;
+              widget.data.doneByAssistant = BasicNameIdObjectEntity();
+              widget.data.doneByAssistantID = null;
             }
             setState(() {});
           },
@@ -542,7 +533,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Visibility(
-                    visible: !((widget.title.toLowerCase().contains("without implant")) || (!widget.title.toLowerCase().contains("implant"))),
+                    visible: !((widget.data.name!.toLowerCase().contains("without implant")) || (!widget.data.name!.toLowerCase().contains("implant"))),
                     child: Row(
                       children: [
                         Expanded(
@@ -585,23 +576,23 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
                               emptyString: "Select implant line first",
                               searchParams: lineID,
-                              selectedItem: widget.fieldModel.implant,
+                              selectedItem: widget.data.implant,
                               onSelect: (value) async {
-                                if (widget.fieldModel.implantID != null) {
-                                  widget.fieldModel.requestChangeModel = RequestChangeEntity(
-                                    description: "${widget.fieldModel.implant?.name!} to ${value.name!}",
+                                if (widget.data.implantID != null) {
+                                  widget.data.requestChangeModel = RequestChangeEntity(
+                                    description: "${widget.data.implant?.name!} to ${value.name!}",
                                     requestEnum: RequestChangeEnum.ImplantChange,
                                     patientId: widget.patientId,
                                     dataId: value.id,
                                     dataName: value.name,
                                   );
                                 } else {
-                                  widget.fieldModel.implant?.name = value.name;
-                                  widget.fieldModel.implantID = value.id;
+                                  widget.data.implant?.name = value.name;
+                                  widget.data.implantID = value.id;
                                   await CIA_ShowPopUpYesNo(
                                       context: context,
-                                      title: "Consume Implant ${widget.fieldModel.implant?.name}?",
-                                      onSave: () => widget.bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.fieldModel.implantID!)));
+                                      title: "Consume Implant ${widget.data.implant?.name}?",
+                                      onSave: () => widget.bloc.add(TreatmentBloc_ConsumeImplantEvent(id: widget.data.implantID!)));
                                 }
                                 setState(() {});
                               },
@@ -613,15 +604,15 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                   ),
                   Flexible(
                     child: Visibility(
-                        visible: widget.fieldModel.requestChangeModel != null,
+                        visible: widget.data.requestChangeModel != null,
                         child: Row(
                           children: [
-                            Text("Requested Change: ${widget.fieldModel.requestChangeModel?.dataName ?? ""}"),
+                            Text("Requested Change: ${widget.data.requestChangeModel?.dataName ?? ""}"),
                             CIA_SecondaryButton(
                                 label: "Clear Request",
                                 onTab: () {
-                                  widget.fieldModel.requestChangeModel = null;
-                                  widget.fieldModel.requestChangeId = null;
+                                  widget.data.requestChangeModel = null;
+                                  widget.data.requestChangeId = null;
                                   setState(() {});
                                 })
                           ],
@@ -631,10 +622,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     label: "Assistant",
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     searchParams: LoadUsersEnum.assistants,
-                    selectedItem: widget.fieldModel.doneByAssistant,
+                    selectedItem: widget.data.doneByAssistant,
                     onSelect: (value) {
-                      widget.fieldModel.doneByAssistant = value;
-                      widget.fieldModel.doneByAssistantID = value.id;
+                      widget.data.doneByAssistant = value;
+                      widget.data.doneByAssistantID = value.id;
                       //widget.bloc.tempSuperVisor = value;
                     },
                   ),
@@ -642,32 +633,32 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     label: "Supervisor",
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     searchParams: LoadUsersEnum.supervisors,
-                    selectedItem: widget.fieldModel.doneBySupervisor,
+                    selectedItem: widget.data.doneBySupervisor,
                     onSelect: (value) {
-                      widget.fieldModel.doneBySupervisor = value;
-                      widget.fieldModel.doneBySupervisorID = value.id;
+                      widget.data.doneBySupervisor = value;
+                      widget.data.doneBySupervisorID = value.id;
                       widget.bloc.tempSuperVisor = value;
                     },
                   ),
                   CIA_DropDownSearchBasicIdName(
                     label: "Candidate Batch",
                     asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
-                    selectedItem: widget.fieldModel.doneByCandidateBatch,
+                    selectedItem: widget.data.doneByCandidateBatch,
                     onSelect: (value) {
-                      widget.fieldModel.doneByCandidateBatch = value;
-                      widget.fieldModel.doneByCandidateBatchID = value.id;
+                      widget.data.doneByCandidateBatch = value;
+                      widget.data.doneByCandidateBatchID = value.id;
                       widget.bloc.tempCandidateBatch = value;
                       setState(() {});
                     },
                   ),
                   CIA_DropDownSearchBasicIdName<int>(
                     label: "Candidate",
-                    asyncUseCase: widget.fieldModel.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
-                    searchParams: widget.fieldModel.doneByCandidateBatchID ?? 0,
-                    selectedItem: widget.fieldModel.doneByCandidate,
+                    asyncUseCase: widget.data.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
+                    searchParams: widget.data.doneByCandidateBatchID ?? 0,
+                    selectedItem: widget.data.doneByCandidate,
                     onSelect: (value) {
-                      widget.fieldModel.doneByCandidate = value;
-                      widget.fieldModel.doneByCandidateID = value.id;
+                      widget.data.doneByCandidate = value;
+                      widget.data.doneByCandidateID = value.id;
                       widget.bloc.tempCandidate = value;
                     },
                   ),
@@ -682,7 +673,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             Future.delayed(Duration(seconds: 5)).then((value) {
                               BlocProvider.of<NonSurgicalTreatmentBloc>(context).add(NonSurgicalTreatmentBloc_AddPatientReceiptEvent(
                                 patientId: widget.patientId,
-                                tooth: widget.tooth,
+                                tooth: widget.data.tooth!,
                                 action: "implant",
                               ));
                             });
@@ -691,8 +682,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             children: [
                               Row(
                                 children: [
-                                  FormTextKeyWidget(text: "Tooth: ${widget.tooth} || "),
-                                  FormTextKeyWidget(text: widget.title),
+                                  FormTextKeyWidget(text: "Tooth: ${widget.data.tooth!} || "),
+                                  FormTextKeyWidget(text: widget.data.name!),
                                 ],
                               ),
                               SizedBox(height: 10),
@@ -700,9 +691,9 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                 label: "Price",
                                 isNumber: true,
                                 suffix: "EGP",
-                                onChange: (value) => widget.fieldModel.planPrice = int.parse(value),
+                                onChange: (value) => widget.data.planPrice = int.parse(value),
                                 controller: TextEditingController(
-                                  text: widget.fieldModel.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
+                                  text: widget.data.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
                                 ),
                               )
                             ],
@@ -714,16 +705,16 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
             },
           ));
     } else {
-      widget.fieldModel.doneByAssistant = BasicNameIdObjectEntity();
-      widget.fieldModel.doneByAssistantID = null;
-      widget.fieldModel.doneByCandidate = BasicNameIdObjectEntity();
-      widget.fieldModel.doneByCandidateID = null;
-      widget.fieldModel.doneByCandidateBatch = BasicNameIdObjectEntity();
-      widget.fieldModel.doneByCandidateBatchID = null;
-      widget.fieldModel.implantID = null;
-      widget.fieldModel.implant = BasicNameIdObjectEntity();
-      widget.fieldModel.doneBySupervisor = BasicNameIdObjectEntity();
-      widget.fieldModel.doneBySupervisorID = null;
+      widget.data.doneByAssistant = BasicNameIdObjectEntity();
+      widget.data.doneByAssistantID = null;
+      widget.data.doneByCandidate = BasicNameIdObjectEntity();
+      widget.data.doneByCandidateID = null;
+      widget.data.doneByCandidateBatch = BasicNameIdObjectEntity();
+      widget.data.doneByCandidateBatchID = null;
+      widget.data.implantID = null;
+      widget.data.implant = BasicNameIdObjectEntity();
+      widget.data.doneBySupervisor = BasicNameIdObjectEntity();
+      widget.data.doneBySupervisorID = null;
       setState(() {});
     }
   }

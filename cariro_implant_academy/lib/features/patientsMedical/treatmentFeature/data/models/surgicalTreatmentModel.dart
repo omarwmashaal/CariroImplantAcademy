@@ -2,9 +2,7 @@ import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.d
 import 'package:cariro_implant_academy/core/features/settings/data/models/membraneModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/tacCompanyModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/requestChangeModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
   SurgicalTreatmentModel({
@@ -89,7 +87,6 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     super.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth,
     super.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber,
     super.date,
-    super.surgicalTreatment,
   });
   
   factory SurgicalTreatmentModel.fromEntity(SurgicalTreatmentEntity entity)
@@ -175,7 +172,6 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
       sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth:entity.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth,
       sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber:entity.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber,
       date:entity.date,
-      surgicalTreatment:entity.surgicalTreatment,
     );
   }
 
@@ -183,7 +179,6 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     id = json['id'];
     requestChanges = json['requestChanges']==null?null:((json['requestChanges'] as List<dynamic>).map((e) => RequestChangeModel.fromJson(e as Map<String,dynamic>)).toList());
     doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
-    surgicalTreatment = ((json['surgicalTreatment'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
     patientId = json['patientId'];
     guidedBoneRegeneration = json['guidedBoneRegeneration'] ?? false;
     guidedBoneRegenerationBlockGraft = json['guidedBoneRegeneration_BlockGraft'] ?? false;
@@ -268,7 +263,6 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['requestChanges'] = this.requestChanges==null?null: (this.requestChanges!.map((e) => RequestChangeModel.fromEntity(e).toJson()).toList());
-    data['surgicalTreatment'] = (this.surgicalTreatment ?? []).map((e) =>TeethTreatmentPlanModel.fromEntity(e).toJson()).toList();
     data['patientId'] = this.patientId;
     data['guidedBoneRegeneration'] = this.guidedBoneRegeneration;
     data['guidedBoneRegeneration_BlockGraft'] = this.guidedBoneRegenerationBlockGraft;

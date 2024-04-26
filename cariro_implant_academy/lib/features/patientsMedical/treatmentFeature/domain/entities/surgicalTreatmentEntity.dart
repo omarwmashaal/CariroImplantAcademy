@@ -3,7 +3,6 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:equatable/equatable.dart';
 
 class SurgicalTreatmentEntity extends Equatable{
@@ -88,7 +87,6 @@ class SurgicalTreatmentEntity extends Equatable{
   bool? sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth;
   bool? sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber;
   DateTime? date;
-  List<TeethTreatmentPlanEntity>? surgicalTreatment;
 
   SurgicalTreatmentEntity(
       {this.id,
@@ -172,7 +170,7 @@ class SurgicalTreatmentEntity extends Equatable{
         this.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth = false,
         this.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber = false,
         this.date,
-        this.surgicalTreatment});
+        });
 
   @override
   List<Object?> get props => [
@@ -257,7 +255,6 @@ class SurgicalTreatmentEntity extends Equatable{
     sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth ,
     sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber ,
     date,
-    surgicalTreatment,
   ];
 
 

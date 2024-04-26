@@ -180,9 +180,9 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveSurgicalTreatmentUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
 import 'package:cariro_implant_academy/features/stock/data/repositories/stockRepoImpl.dart';
@@ -620,7 +620,6 @@ initInjection() async {
 
   //repo
   sl.registerLazySingleton<ToDoListRepo>(() => ToDoListRepoImpl(toDoListDatasource: sl()));
-  
 
   //datasource
   sl.registerLazySingleton<ToDoListDatasource>(() => ToDoListDatasourceImpl(httpRepo: sl()));
@@ -793,16 +792,16 @@ initInjection() async {
         consumeItemByIdUseCase: sl(),
         consumeItemByNameUseCase: sl(),
         getSurgicalTreatmentUseCase: sl(),
-        saveSurgicalTreatmentUseCase: sl(),
         getTacsUseCase: sl(),
         acceptChangesUseCase: sl(),
+        getTreatmentDetailsUseCase: sl(),
       ));
   //usecases
-  sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
+  sl.registerLazySingleton(() => SaveTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
-  sl.registerLazySingleton(() => SaveSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => AcceptChangesUseCase(surgicalTreatmentRepo: sl()));
 
   //repositories

@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/surgicalTreatmentEntity.dart';
@@ -40,23 +40,13 @@ class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
   List<Object?> get props => [];
 }
 
-class TreatmentBloc_SaveTreatmentPlanDataEvent extends TreatmentBloc_Events {
+class TreatmentBloc_SaveTreatmentDetailsEvent extends TreatmentBloc_Events {
   final int id;
-  final List<TeethTreatmentPlanEntity> data;
+  final List<TreatmentDetailsEntity> data;
   final bool clearanceUpper;
   final bool clearanceLower;
 
-  TreatmentBloc_SaveTreatmentPlanDataEvent({required this.id, required this.data,required this.clearanceUpper, required this.clearanceLower});
-
-  @override
-  List<Object?> get props => [id, data];
-}
-
-class TreatmentBloc_SaveSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
-  final int id;
-  final SurgicalTreatmentEntity data;
-
-  TreatmentBloc_SaveSurgicalTreatmentDataEvent({required this.id, required this.data});
+  TreatmentBloc_SaveTreatmentDetailsEvent({required this.id, required this.data, required this.clearanceUpper, required this.clearanceLower});
 
   @override
   List<Object?> get props => [id, data];
@@ -83,7 +73,7 @@ class TreatmentBloc_ConsumeItemByIdEvent extends TreatmentBloc_Events {
 }
 
 class TreatmentBloc_SwitchEditAndSummaryViewsEvent extends TreatmentBloc_Events {
-  final List<TeethTreatmentPlanEntity> data;
+  final List<TreatmentDetailsEntity> data;
 
   TreatmentBloc_SwitchEditAndSummaryViewsEvent({required this.data});
 
@@ -112,16 +102,16 @@ class TreatmentBloc_AcceptChangesEvent extends TreatmentBloc_Events {
 }
 
 class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
-  List<TeethTreatmentPlanEntity> teethData;
+  List<TreatmentDetailsEntity> teethData;
   final List<int> selectedTeeth;
-  final List<String> selectedStatus;
+  final List<String> selectedName;
   final int patientId;
   final bool isSurgical;
   final BasicNameIdObjectEntity? patientsDoctor;
 
   TreatmentBloc_UpdateTeethStatusEvent({
     required this.teethData,
-    required this.selectedStatus,
+    required this.selectedName,
     required this.selectedTeeth,
     required this.patientId,
     required this.isSurgical,
@@ -130,7 +120,7 @@ class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
 
   @override
   List<Object?> get props => [
-        selectedStatus,
+        selectedName,
         selectedTeeth,
         teethData,
         patientId,

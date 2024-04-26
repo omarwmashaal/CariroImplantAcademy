@@ -1,19 +1,20 @@
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentDetailsModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentPlanModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 
 import '../../../../../../core/Http/httpRepo.dart';
 import '../../../../../../core/constants/remoteConstants.dart';
 import '../../../../../../core/error/exception.dart';
-import '../../domain/entities/teethTreatmentPlan.dart';
 import '../../domain/entities/treatmentPlanEntity.dart';
-import '../models/teethTreatmentPlanModel.dart';
 
 abstract class TreatmentPlanDataSource {
   Future<TreatmentPlanEntity> getTreatmentPlanData(int id);
+  Future<List<TreatmentDetailsModel>> getPatientTreatmentDetails(int id);
 
   Future<NoParams> saveTreatmentPlanData(
     int id,
-    List<TeethTreatmentPlanEntity> data, {
+    List<TreatmentDetailsEntity> data, {
     bool clearnceUpper = false,
     bool clearanceLower = false,
   });
@@ -46,9 +47,28 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
   }
 
   @override
+  Future<List<TreatmentDetailsModel>> getPatientTreatmentDetails(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientTreatmentDetails?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if (response.body != null)
+        return ((response.body ?? []) as List<dynamic>).map((e) => TreatmentDetailsModel.fromJson(e as Map<String, dynamic>)).toList();
+      else
+        return [];
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
   Future<NoParams> saveTreatmentPlanData(
     int id,
-    List<TeethTreatmentPlanEntity> data, {
+    List<TreatmentDetailsEntity> data, {
     bool clearnceUpper = false,
     bool clearanceLower = false,
   }) async {
@@ -56,7 +76,7 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id&clearanceLower=$clearanceLower&clearanceUpper=$clearnceUpper",
-        body: data.map((e) => TeethTreatmentPlanModel.fromEntity(e).toJson()).toList(),
+        body: data.map((e) => TreatmentDetailsModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

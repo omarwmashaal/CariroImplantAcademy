@@ -11,6 +11,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreat
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
@@ -32,7 +33,6 @@ import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/injection_contianer.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
-import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 class NonSurgicalTreatmentPage extends StatefulWidget {
   NonSurgicalTreatmentPage({Key? key, required this.patientId}) : super(key: key);
@@ -123,9 +123,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully) {
           if (state.data == null) return;
-          TeethTreatmentPlanEntity model = state.data!;
+          List<TreatmentDetailsEntity> model = state.data!;
           if (state.action == "Missed") {
-            if (model.extraction != null) {
+            var extractionModel = TreatmentDetailsEntity.getTreatment(data: model, query: "extraction", tooth: state.tooth) ;
+            if (extractionModel!= null) {
               CIA_ShowPopUpYesNo(
                 context: context,
                 onSave: () async {
@@ -135,7 +136,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                     action: "extraction",
                   ));
                 },
-                title: "Extraction done at price ${model.extraction!.planPrice!.toString()}?",
+                title: "Extraction done at price ${extractionModel!.planPrice!.toString()}?",
               );
             }
           } else if (state.action == "Filled") {
@@ -167,10 +168,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               },
               child: Column(
                 children: [
-                  model.crown != null
+                 TreatmentDetailsEntity.getTreatment(data: model, query: "crown", tooth: state.tooth)  != null
                       ? Row(
                           children: [
-                            FormTextKeyWidget(text: "Crown at price ${model.crown!.planPrice!.toString()}"),
+                            FormTextKeyWidget(text: "Crown at price ${TreatmentDetailsEntity.getTreatment(data: model, query: "crown", tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
@@ -183,10 +184,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                           ],
                         )
                       : SizedBox(),
-                  model.restoration != null
+                  TreatmentDetailsEntity.getTreatment(data: model, query: "restoration", tooth: state.tooth) != null
                       ? Row(
                           children: [
-                            FormTextKeyWidget(text: "Restoration at price ${model.restoration!.planPrice!.toString()}"),
+                            FormTextKeyWidget(text: "Restoration at price ${TreatmentDetailsEntity.getTreatment(data: model, query: "restoration", tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               singleSelect: true,
@@ -199,10 +200,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                           ],
                         )
                       : SizedBox(),
-                  model.rootCanalTreatment != null
+                  TreatmentDetailsEntity.getTreatment(data: model, query: "root canal treatment", tooth: state.tooth) != null
                       ? Row(
                           children: [
-                            FormTextKeyWidget(text: "Root Canal Treatment at price ${model.rootCanalTreatment!.planPrice!.toString()}"),
+                            FormTextKeyWidget(text: "Root Canal Treatment at price ${TreatmentDetailsEntity.getTreatment(data: model, query: "root canal treatment", tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               singleSelect: true,
@@ -234,7 +235,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                 isNumber: true,
                 suffix: "EGP",
                 onChange: (value) => price = int.parse(value),
-                controller: TextEditingController(text: state.data?.scaling?.planPrice?.toString() ?? "0"),
+                controller: TextEditingController(text:TreatmentDetailsEntity.getTreatment(data: model, query: "scaling", tooth: state.tooth) ?.planPrice?.toString() ?? "0"),
               ),
             );
           }

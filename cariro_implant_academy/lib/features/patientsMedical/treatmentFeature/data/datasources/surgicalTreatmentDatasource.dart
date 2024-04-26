@@ -34,7 +34,7 @@ class SurgicalTreatmentDatasourceImpl implements SurgicalTreatmentDatasource {
       if (response.body != null)
         return SurgicalTreatmentModel.fromJson(response.body as Map<String, dynamic>);
       else
-        return SurgicalTreatmentModel(patientId: id, surgicalTreatment: []);
+        return SurgicalTreatmentModel(patientId: id, );
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }

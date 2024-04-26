@@ -2,10 +2,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/ta
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../domain/entities/teethTreatmentPlan.dart';
 
 abstract class TreatmentBloc_States extends Equatable {}
 
@@ -15,13 +14,15 @@ class TreatmentBloc_LoadingTreatmentDataState extends TreatmentBloc_States {
 }
 
 class TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState extends TreatmentBloc_States {
+  final List<TreatmentDetailsEntity> details;
   final TreatmentPlanEntity data;
 
-  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.data});
+  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.details,required this.data});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [details];
 }
+
 class TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState extends TreatmentBloc_States {
   final SurgicalTreatmentEntity data;
 
@@ -39,6 +40,7 @@ class TreatmentBloc_LoadingTreatmentDataErrorState extends TreatmentBloc_States 
   @override
   List<Object?> get props => [message];
 }
+
 class TreatmentBloc_ConsumingItemState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [];
@@ -46,7 +48,7 @@ class TreatmentBloc_ConsumingItemState extends TreatmentBloc_States {
 
 class TreatmentBloc_ConsumedItemSuccessfullyState extends TreatmentBloc_States {
   final String message;
-  TreatmentBloc_ConsumedItemSuccessfullyState({this.message=""});
+  TreatmentBloc_ConsumedItemSuccessfullyState({this.message = ""});
   @override
   List<Object?> get props => [message];
 }
@@ -66,7 +68,6 @@ class TreatmentBloc_SavingTreatmentDataState extends TreatmentBloc_States {
 }
 
 class TreatmentBloc_SavedTreatmentDataSuccessfullyState extends TreatmentBloc_States {
-
   @override
   List<Object?> get props => [];
 }
@@ -79,6 +80,7 @@ class TreatmentBloc_SavingTreatmentDataErrorState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [message];
 }
+
 class TreatmentBloc_AcceptingChangesState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [];
@@ -87,7 +89,7 @@ class TreatmentBloc_AcceptingChangesState extends TreatmentBloc_States {
 class TreatmentBloc_AcceptedChangesSuccessfullyState extends TreatmentBloc_States {
   final int id;
   final RequestChangeEntity? requestChangeEntity;
-  TreatmentBloc_AcceptedChangesSuccessfullyState({required this.id,this.requestChangeEntity});
+  TreatmentBloc_AcceptedChangesSuccessfullyState({required this.id, this.requestChangeEntity});
   @override
   List<Object?> get props => [id];
 }
@@ -123,13 +125,12 @@ class TreatmentBloc_ChangedViewState extends TreatmentBloc_States {
 }
 
 class TreatmentBloc_UpdatedToothState extends TreatmentBloc_States {
-  final List<TeethTreatmentPlanEntity> data;
+  final List<TreatmentDetailsEntity> data;
 
   TreatmentBloc_UpdatedToothState({required this.data});
   @override
   List<Object?> get props => [data];
 }
-
 
 class TreatmentBloc_TeethSelectedState extends TreatmentBloc_States {
   @override
@@ -140,6 +141,7 @@ class TreatmentBloc_SelectedStatusState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
+
 class TreatmentBloc_ShowTickState extends TreatmentBloc_States {
   final bool showTick;
   TreatmentBloc_ShowTickState({required this.showTick});
@@ -151,12 +153,14 @@ class TreatmentBloc_ShowPostSurgeryState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
+
 class TreatmentBloc_UpdateAvailableTacsState extends TreatmentBloc_States {
   final int count;
   TreatmentBloc_UpdateAvailableTacsState({required this.count});
   @override
   List<Object?> get props => [count];
 }
+
 class TreatmentBloc_LoadedTacsState extends TreatmentBloc_States {
   final List<TacCompanyEntity> tacs;
   TreatmentBloc_LoadedTacsState({required this.tacs});
