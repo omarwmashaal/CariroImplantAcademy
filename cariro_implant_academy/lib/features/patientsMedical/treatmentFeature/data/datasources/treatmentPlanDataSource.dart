@@ -12,12 +12,8 @@ abstract class TreatmentPlanDataSource {
   Future<TreatmentPlanEntity> getTreatmentPlanData(int id);
   Future<List<TreatmentDetailsModel>> getPatientTreatmentDetails(int id);
 
-  Future<NoParams> saveTreatmentPlanData(
-    int id,
-    List<TreatmentDetailsEntity> data, {
-    bool clearnceUpper = false,
-    bool clearanceLower = false,
-  });
+  Future<NoParams> saveTreatmentDetailsData(int id, List<TreatmentDetailsEntity> data);
+  Future<NoParams> saveTreatmentPlan(int id, TreatmentPlanEntity data);
 
   Future<NoParams> consumeImplant(int id);
 }
@@ -66,17 +62,31 @@ class TreatmentPlanDatasourceImpl implements TreatmentPlanDataSource {
   }
 
   @override
-  Future<NoParams> saveTreatmentPlanData(
+  Future<NoParams> saveTreatmentDetailsData(
     int id,
-    List<TreatmentDetailsEntity> data, {
-    bool clearnceUpper = false,
-    bool clearanceLower = false,
-  }) async {
+    List<TreatmentDetailsEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id&clearanceLower=$clearanceLower&clearanceUpper=$clearnceUpper",
+        host: "$serverHost/$medicalController/UpdatePatientTreatmentDetails?id=$id",
         body: data.map((e) => TreatmentDetailsModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> saveTreatmentPlan(
+    int id,
+    TreatmentPlanEntity data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$medicalController/UpdatePatientTreatmentPlan?id=$id",
+        body: TreatmentPlanModel.fromEntity(data).toJson(),
       );
     } catch (e) {
       throw mapException(e);

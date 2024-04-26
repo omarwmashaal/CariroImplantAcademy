@@ -183,6 +183,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
 import 'package:cariro_implant_academy/features/stock/data/repositories/stockRepoImpl.dart';
@@ -785,19 +786,21 @@ initInjection() async {
    */
   //bloc
   sl.registerFactory(() => TreatmentBloc(
-        saveTreatmentPlanUseCase: sl(),
+        saveTreatmentDetailsUseCase: sl(),
         getTreatmentPlanUseCase: sl(),
         getTreatmentPricesUseCase: sl(),
         consumeImplantUseCase: sl(),
         consumeItemByIdUseCase: sl(),
         consumeItemByNameUseCase: sl(),
         getSurgicalTreatmentUseCase: sl(),
+        saveTreatmentPlanUseCase: sl(),
         getTacsUseCase: sl(),
         acceptChangesUseCase: sl(),
         getTreatmentDetailsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => SaveTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
+  sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));

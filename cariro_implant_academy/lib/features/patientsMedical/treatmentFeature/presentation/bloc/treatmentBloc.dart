@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,8 @@ import '../../domain/usecase/saveTreatmentDetailsUseCase.dart';
 class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final GetTreatmentPlanUseCase getTreatmentPlanUseCase;
   final GetTreatmentDetailsUseCase getTreatmentDetailsUseCase;
-  final SaveTreatmentDetailsUseCase saveTreatmentPlanUseCase;
+  final SaveTreatmentDetailsUseCase saveTreatmentDetailsUseCase;
+  final SaveTreatmentPlanUseCase saveTreatmentPlanUseCase;
   final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
   final ConsumeImplantUseCase consumeImplantUseCase;
 
@@ -41,6 +43,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   BasicNameIdObjectEntity? tempCandidateBatch;
 
   TreatmentBloc({
+    required this.saveTreatmentDetailsUseCase,
     required this.saveTreatmentPlanUseCase,
     required this.getTreatmentPlanUseCase,
     required this.getTreatmentPricesUseCase,
@@ -95,11 +98,13 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     );
     on<TreatmentBloc_SaveTreatmentDetailsEvent>(
       (event, emit) async {
-        final result = await saveTreatmentPlanUseCase(
-            SaveTreatmentPlanParams(id: event.id, data: event.data, clearanceLower: event.clearanceLower, clearanceUpper: event.clearanceUpper));
+        final result = await saveTreatmentDetailsUseCase(SaveTreatmentDetailsParams(id: event.id, data: event.data));
         result.fold(
           (l) => emit(TreatmentBloc_SavingTreatmentDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState()),
+          (r) async {
+            var generalResult = await saveTreatmentPlanUseCase(SaveTreatmentPlanParams(id: event.id, data: event.generalData));
+            emit(TreatmentBloc_SavedTreatmentDataSuccessfullyState());
+          },
         );
       },
     );

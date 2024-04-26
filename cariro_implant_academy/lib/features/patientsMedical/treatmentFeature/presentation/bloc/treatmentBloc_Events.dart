@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/surgicalTreatmentEntity.dart';
@@ -43,10 +44,9 @@ class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
 class TreatmentBloc_SaveTreatmentDetailsEvent extends TreatmentBloc_Events {
   final int id;
   final List<TreatmentDetailsEntity> data;
-  final bool clearanceUpper;
-  final bool clearanceLower;
+  final TreatmentPlanEntity generalData;
 
-  TreatmentBloc_SaveTreatmentDetailsEvent({required this.id, required this.data, required this.clearanceUpper, required this.clearanceLower});
+  TreatmentBloc_SaveTreatmentDetailsEvent({required this.id, required this.data, required this.generalData});
 
   @override
   List<Object?> get props => [id, data];

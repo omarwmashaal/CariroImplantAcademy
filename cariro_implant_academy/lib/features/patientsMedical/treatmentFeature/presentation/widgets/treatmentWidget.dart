@@ -79,10 +79,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
         // bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
       } else {
         bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
-            id: widget.patientId,
-            data: treatmentDetails,
-            clearanceLower: treatmentPlanEntity.clearanceLower,
-            clearanceUpper: treatmentPlanEntity.clearanceUpper));
+          id: widget.patientId,
+          data: treatmentDetails,
+          generalData: treatmentPlanEntity,
+        ));
       }
     }
     super.dispose();
@@ -103,10 +103,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
         //  bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
       } else {
         bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
-            id: widget.patientId,
-            data: treatmentDetails,
-            clearanceLower: treatmentPlanEntity.clearanceLower,
-            clearanceUpper: treatmentPlanEntity.clearanceUpper));
+          id: widget.patientId,
+          data: treatmentDetails,
+          generalData: treatmentPlanEntity,
+        ));
       }
     };
   }

@@ -22,12 +22,9 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo {
   @override
   Future<Either<Failure, NoParams>> saveTreatmentDetailsData(
     int id,
-    List<TreatmentDetailsEntity> data, {
-    bool clearnceUpper = false,
-    bool clearanceLower = false,
-  }) async {
+    List<TreatmentDetailsEntity> data) async {
     try {
-      final result = await treatmentPlanDataSource.saveTreatmentPlanData(id, data, clearanceLower: clearanceLower, clearnceUpper: clearnceUpper);
+      final result = await treatmentPlanDataSource.saveTreatmentDetailsData(id, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -48,6 +45,16 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo {
   Future<Either<Failure, List<TreatmentDetailsEntity>>> getTreatmentDetails(int id) async {
     try {
       final result = await treatmentPlanDataSource.getPatientTreatmentDetails(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, NoParams>> saveTreatmentPlan(int id, TreatmentPlanEntity data) async {
+    try {
+      final result = await treatmentPlanDataSource.saveTreatmentPlan(id, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

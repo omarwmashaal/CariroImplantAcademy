@@ -1,18 +1,21 @@
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
 import 'package:dartz/dartz.dart';
 
-class SaveTreatmentDetailsUseCase extends UseCases<NoParams, SaveTreatmentDetailsParams> {
+class SaveTreatmentPlanUseCase extends UseCases<NoParams, SaveTreatmentPlanParams> {
   final TreatmentPlanRepo treatmentPlanRepo;
 
-  SaveTreatmentDetailsUseCase({required this.treatmentPlanRepo});
+  SaveTreatmentPlanUseCase({required this.treatmentPlanRepo});
 
   @override
-  Future<Either<Failure, NoParams>> call(SaveTreatmentDetailsParams data) async {
+  Future<Either<Failure, NoParams>> call(SaveTreatmentPlanParams data) async {
     //data.data.removeWhere((element) => element.isNull());
-    return await treatmentPlanRepo.saveTreatmentDetailsData(data.id, data.data).then(
+    return await treatmentPlanRepo
+        .saveTreatmentPlan(data.id, data.data)
+        .then(
           (value) => value.fold(
             (l) => Left(l..message = "Save Treatment Plan: ${l.message ?? ""}"),
             (r) => Right(r),
@@ -21,9 +24,9 @@ class SaveTreatmentDetailsUseCase extends UseCases<NoParams, SaveTreatmentDetail
   }
 }
 
-class SaveTreatmentDetailsParams {
+class SaveTreatmentPlanParams {
   final int id;
-  final List<TreatmentDetailsEntity> data;
+  final TreatmentPlanEntity data;
 
-  SaveTreatmentDetailsParams({required this.id, required this.data});
+  SaveTreatmentPlanParams({required this.id, required this.data});
 }

@@ -7,11 +7,10 @@ import 'package:dartz/dartz.dart';
 abstract class TreatmentPlanRepo {
   Future<Either<Failure, TreatmentPlanEntity>> getTreatmentPlanData(int id);
   Future<Either<Failure, List<TreatmentDetailsEntity>>> getTreatmentDetails(int id);
+  Future<Either<Failure,NoParams >> saveTreatmentPlan(int id, TreatmentPlanEntity data);
+
   Future<Either<Failure, NoParams>> saveTreatmentDetailsData(
     int id,
-    List<TreatmentDetailsEntity> data, {
-    bool clearnceUpper = false,
-    bool clearanceLower = false,
-  });
+    List<TreatmentDetailsEntity> data);
   Future<Either<Failure, NoParams>> consumeImplant(int id);
 }
