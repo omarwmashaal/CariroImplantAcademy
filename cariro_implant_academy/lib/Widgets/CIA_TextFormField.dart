@@ -533,9 +533,10 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
           autovalidateMode: widget.isMinutes || widget.isHours || widget.validator != null ? AutovalidateMode.onUserInteraction : null,
           validator: (value) {
             if (widget.isNumber && value == "" || value == null) value = "0";
-            if (widget.validator != null)
+            if (widget.validator != null) {
               widget.controller.text = widget.validator!(value ?? "");
-            else {
+              widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: widget.controller.text.length));
+            } else {
               if (widget.isHours) {
                 if (value != null && value.isNotEmpty) {
                   if (int.parse(value!) > 12) {
@@ -549,7 +550,6 @@ class _CIA_TextFormFieldState extends State<CIA_TextFormField> {
                   }
                 }
               }
-              // widget.controller.selection = TextSelection(baseOffset: widget.controller.text.length, extentOffset: widget.controller.text.length + 1);
             }
           },
           inputFormatters: widget.inputFormatter != null
