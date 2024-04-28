@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 class TreatmentDetailsEntity extends Equatable {
   int? id;
   int? patientId;
+  int? postSurgeryModelId;
   BasicNameIdObjectEntity? patient;
   String? value;
   bool? status;
@@ -34,6 +35,7 @@ class TreatmentDetailsEntity extends Equatable {
   TreatmentDetailsEntity(
       {this.id,
       this.patientId,
+      this.postSurgeryModelId,
       this.patient,
       this.tooth,
       this.value = "",
@@ -75,6 +77,7 @@ class TreatmentDetailsEntity extends Equatable {
         this.name,
         status,
         assignedToID,
+        postSurgeryModelId,
         this.implantIDRequest,
         this.implantRequest,
         this.requestChangeId,

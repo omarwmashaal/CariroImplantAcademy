@@ -171,17 +171,18 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/surgicalTreatmentDatasource.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/postSurgicalTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/treatmentPlanDataSource.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/surgicalTreatmentRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/postSurgicalTreatmentRepoImpl.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/treatmentPlanRepoImpl.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/surgicalTreatmentRepo.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/postSurgicalTreatmentRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getPostSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/savePostSurgeryDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
@@ -792,11 +793,12 @@ initInjection() async {
         consumeImplantUseCase: sl(),
         consumeItemByIdUseCase: sl(),
         consumeItemByNameUseCase: sl(),
-        getSurgicalTreatmentUseCase: sl(),
+        getPostSurgicalTreatmentUseCase: sl(),
         saveTreatmentPlanUseCase: sl(),
         getTacsUseCase: sl(),
         acceptChangesUseCase: sl(),
         getTreatmentDetailsUseCase: sl(),
+        savePostSurgeryDataUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => SaveTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
@@ -804,15 +806,16 @@ initInjection() async {
   sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));
-  sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => GetPostSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => AcceptChangesUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => SavePostSurgeryDataUseCase(postSurgeryRepo: sl()));
 
   //repositories
   sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));
-  sl.registerLazySingleton<SurgicalTreatmentRepo>(() => SurgicalTreatmentRepoImpl(surgicalTreatmentDatasource: sl()));
+  sl.registerLazySingleton<PostSurgicalTreatmentRepo>(() => PostSurgicalTreatmentRepoImpl(postSurgicalTreatmentDatasource: sl()));
   //datasources
   sl.registerLazySingleton<TreatmentPlanDataSource>(() => TreatmentPlanDatasourceImpl(httpRepo: sl()));
-  sl.registerLazySingleton<SurgicalTreatmentDatasource>(() => SurgicalTreatmentDatasourceImpl(httpRepo: sl()));
+  sl.registerLazySingleton<PostSurgicalTreatmentDatasource>(() => SurgicalTreatmentDatasourceImpl(httpRepo: sl()));
 
   /**
    * Prosthetic Treatment

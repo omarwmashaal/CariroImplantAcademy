@@ -4,7 +4,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/surgicalTreatmentEntity.dart';
+import '../../domain/entities/postSurgicalTreatmentEntity.dart';
 
 abstract class TreatmentBloc_Events extends Equatable {}
 
@@ -26,14 +26,23 @@ class TreatmentBloc_GetTreatmentPlanDataEvent extends TreatmentBloc_Events {
   List<Object?> get props => [id];
 }
 
-// class TreatmentBloc_GetSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
-//   final int id;
+class TreatmentBloc_GetPostSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
+  final int id;
 
-//   TreatmentBloc_GetSurgicalTreatmentDataEvent({required this.id});
+  TreatmentBloc_GetPostSurgicalTreatmentDataEvent({required this.id});
 
-//   @override
-//   List<Object?> get props => [id];
-// }
+  @override
+  List<Object?> get props => [id];
+}
+
+class TreatmentBloc_SavePostSurgicalTreatmentDataEvent extends TreatmentBloc_Events {
+  final PostSurgicalTreatmentEntity data;
+
+  TreatmentBloc_SavePostSurgicalTreatmentDataEvent({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
 
 class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
   @override

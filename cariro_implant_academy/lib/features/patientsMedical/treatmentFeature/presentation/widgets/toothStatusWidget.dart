@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
@@ -9,11 +11,13 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/postSurgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:flutter/cupertino.dart';
@@ -128,40 +132,41 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
             child: Row(
               children: [
                 Expanded(
-                    flex: widget.isSurgical ? 7 : 3,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              FormTextKeyWidget(
-                                text: widget.data.name!,
-                              ),
-                              FormTextValueWidget(
-                                text: ": ${widget.data.value ?? ""}",
-                              ),
-                            ],
-                          ),
+                  flex: widget.isSurgical ? 7 : 3,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            FormTextKeyWidget(
+                              text: widget.data.name!,
+                            ),
+                            FormTextValueWidget(
+                              text: ": ${widget.data.value ?? ""}",
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        widget.data.hasAssign()
-                            ? Expanded(
-                                child: Row(
-                                  children: [
-                                    FormTextKeyWidget(
-                                      text: "Assigned to: ",
-                                    ),
-                                    FormTextValueWidget(
-                                      text: widget.data.assignedTo != null ? widget.data.assignedTo?.name ?? "" : "",
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    )),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      widget.data.hasAssign()
+                          ? Expanded(
+                              child: Row(
+                                children: [
+                                  FormTextKeyWidget(
+                                    text: "Assigned to: ",
+                                  ),
+                                  FormTextValueWidget(
+                                    text: widget.data.assignedTo != null ? widget.data.assignedTo?.name ?? "" : "",
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
                 SizedBox(width: 10),
                 Visibility(
                   visible: !widget.isSurgical,
@@ -246,13 +251,9 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
             child: Column(
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      flex: widget.isSurgical
-                          ? 7
-                          : widget.data.hasPrice()
-                              ? 1
-                              : 3,
                       child: widget.isSurgical
                           ? CIA_TextFormField(
                               onChange: (value) {
@@ -266,165 +267,275 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           : FormTextKeyWidget(text: widget.data.name!),
                     ),
                     SizedBox(width: 10),
-                    if (widget.data.hasPrice() && !widget.isSurgical)
-                      Expanded(
-                          child: CIA_TextFormField(
-                        suffix: "EGP",
-                        label: 'Price',
-                        isNumber: true,
-                        onChange: (v) {
-                          if (v == "" || v == "0" || v == null) v = "0";
-                          return widget.data.planPrice = int.parse(v);
-                        },
-                        controller: TextEditingController(text: widget.data.planPrice.toString()),
-                      ))
-                    else
-                      SizedBox(),
-                    SizedBox(width: 10),
-                    widget.isSurgical
-                        ? Expanded(
-                            flex: 9,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                teethData();
-                              },
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          if (widget.data.hasPrice() && !widget.isSurgical)
+                            Expanded(
+                              child: CIA_TextFormField(
+                                suffix: "EGP",
+                                label: 'Price',
+                                isNumber: true,
+                                onChange: (v) {
+                                  if (v == "" || v == "0" || v == null) v = "0";
+                                  return widget.data.planPrice = int.parse(v);
+                                },
+                                controller: TextEditingController(text: widget.data.planPrice.toString()),
                               ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Row(
+                            )
+                          else
+                            SizedBox(),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: widget.isSurgical
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      teethData();
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all<Color>(Color_Background),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
                                           children: [
-                                            FormTextKeyWidget(
-                                              text: "Candidate",
-                                              smallFont: true,
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  FormTextKeyWidget(
+                                                    text: "Candidate",
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  FormTextValueWidget(
+                                                    text: widget.data.doneByCandidate?.name,
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                ],
+                                              ),
                                             ),
-                                            SizedBox(width: 5),
-                                            FormTextValueWidget(
-                                              text: widget.data.doneByCandidate?.name,
-                                              smallFont: true,
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  FormTextKeyWidget(
+                                                    text: "Batch",
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  FormTextValueWidget(
+                                                    text: widget.data.doneByCandidateBatch?.name,
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                ],
+                                              ),
                                             ),
-                                            SizedBox(width: 5),
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  FormTextKeyWidget(
+                                                    text: "Assistant",
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  FormTextValueWidget(
+                                                    text: widget.data.doneByAssistant?.name,
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
+                                        Row(
                                           children: [
-                                            FormTextKeyWidget(
-                                              text: "Batch",
-                                              smallFont: true,
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  FormTextKeyWidget(
+                                                    text: "Supervisor",
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                  FormTextValueWidget(
+                                                    text: widget.data.doneBySupervisor?.name,
+                                                    smallFont: true,
+                                                  ),
+                                                  SizedBox(width: 5),
+                                                ],
+                                              ),
                                             ),
-                                            SizedBox(width: 5),
-                                            FormTextValueWidget(
-                                              text: widget.data.doneByCandidateBatch?.name,
-                                              smallFont: true,
+                                            Visibility(
+                                              visible: !((widget.data.name!.toLowerCase().contains("without implant")) ||
+                                                  (!widget.data.name!.toLowerCase().contains("implant"))),
+                                              child: Expanded(
+                                                flex: 2,
+                                                child: Row(
+                                                  children: [
+                                                    FormTextKeyWidget(
+                                                      text: "Implant",
+                                                      smallFont: true,
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    FormTextValueWidget(
+                                                      text: widget.data.implant == null ? "" : widget.data.implant?.name,
+                                                      smallFont: true,
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            SizedBox(width: 5),
                                           ],
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            FormTextKeyWidget(
-                                              text: "Assistant",
-                                              smallFont: true,
+                                      ],
+                                    ),
+                                  )
+                                : widget.data.hasAssign()
+                                    ? Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                              asyncUseCase: sl<LoadUsersUseCase>(),
+                                              searchParams: LoadUsersEnum.assistants,
+                                              label: "Assign to assistant",
+                                              onSelect: (value) {
+                                                widget.data.assignedTo = value;
+                                                widget.data.assignedToID = value.id;
+                                              },
+                                              selectedItem: widget.data.assignedTo,
                                             ),
-                                            SizedBox(width: 5),
-                                            FormTextValueWidget(
-                                              text: widget.data.doneByAssistant?.name,
-                                              smallFont: true,
-                                            ),
-                                            SizedBox(width: 5),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          children: [
-                                            FormTextKeyWidget(
-                                              text: "Supervisor",
-                                              smallFont: true,
-                                            ),
-                                            SizedBox(width: 5),
-                                            FormTextValueWidget(
-                                              text: widget.data.doneBySupervisor?.name,
-                                              smallFont: true,
-                                            ),
-                                            SizedBox(width: 5),
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: !((widget.data.name!.toLowerCase().contains("without implant")) ||
-                                            (!widget.data.name!.toLowerCase().contains("implant"))),
-                                        child: Expanded(
-                                          flex: 2,
-                                          child: Row(
+                                          ),
+                                          SizedBox(width: 10),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CIA_GestureWidget(
+                              onTap: () => CIA_PopupDialog_DateOnlyPicker(
+                                context,
+                                "Change date",
+                                (date) => setState(() => widget.data.date = date),
+                                initialDate: widget.data.date,
+                              ),
+                              child: SizedBox(
+                                width: 100,
+                                child: Text(
+                                  widget.data.date == null ? "" : DateFormat("dd-MM-yyyy").format(widget.data.date!),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: widget.isSurgical != true
+                                ? SizedBox()
+                                : Visibility(
+                                    visible: widget.isSurgical && widget.data.status == true,
+                                    child: widget.data.postSurgeryModelId == null
+                                        ? FormTextValueWidget(
+                                            text: "Save to view post surgery",
+                                            smallFont: true,
+                                            align: TextAlign.center,
+                                          )
+                                        : Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
-                                              FormTextKeyWidget(
-                                                text: "Implant",
-                                                smallFont: true,
+                                              IconButton(
+                                                icon: Icon(Icons.post_add),
+                                                onPressed: () {
+                                                  late PostSurgicalTreatmentEntity postSurgery;
+                                                  int tempScrews = 0;
+                                                  int? membraneSizeId = null;
+                                                  int tacsNumber = 0;
+                                                  int? tacCompanyId = 0;
+
+                                                  CIA_ShowPopUp(
+                                                    width: 1000,
+                                                    height: 600,
+                                                    context: context,
+                                                    onSave: () async {
+                                                      if (tempScrews != (postSurgery.guidedBoneRegenerationCutByScrewsNumber ?? 0)) {
+                                                        if (((postSurgery.guidedBoneRegenerationCutByScrewsNumber ?? 0)) > tempScrews) {
+                                                          await CIA_ShowPopUpYesNo(
+                                                              title:
+                                                                  "Consume ${((postSurgery.guidedBoneRegenerationCutByScrewsNumber ?? 0)) - tempScrews} Screws?",
+                                                              context: context,
+                                                              onSave: () {
+                                                                widget.bloc.add(
+                                                                  TreatmentBloc_ConsumeItemByNameEvent(
+                                                                    name: "Screws",
+                                                                    count: ((postSurgery.guidedBoneRegenerationCutByScrewsNumber ?? 0) - tempScrews),
+                                                                  ),
+                                                                );
+                                                              });
+                                                        }
+                                                      }
+                                                      if (tacCompanyId != postSurgery.openSinusLift_TacsCompanyID) tacsNumber = 0;
+                                                      if (tacsNumber != (postSurgery.openSinusLiftTacsNumber ?? 0)) {
+                                                        if ((postSurgery.openSinusLiftTacsNumber ?? 0) > tacsNumber) {
+                                                          await CIA_ShowPopUpYesNo(
+                                                              title: "Consume ${((postSurgery.openSinusLiftTacsNumber ?? 0)) - tacsNumber} Tacs?",
+                                                              context: context,
+                                                              onSave: () async {
+                                                                widget.bloc.add(TreatmentBloc_ConsumeItemByIdEvent(
+                                                                    id: postSurgery.openSinusLift_TacsCompanyID!,
+                                                                    count: ((postSurgery.openSinusLiftTacsNumber ?? 0)) - tacsNumber));
+                                                              });
+                                                        }
+                                                      }
+
+                                                      if (membraneSizeId != postSurgery.openSinusLift_MembraneID) {
+                                                        if (postSurgery.openSinusLift_MembraneID != null) {
+                                                          await CIA_ShowPopUpYesNo(
+                                                              title: "Consume 1 ${postSurgery.openSinusLift_Membrane!.size ?? ""} Membrane?",
+                                                              context: context,
+                                                              onSave: () {
+                                                                widget.bloc.add(TreatmentBloc_ConsumeItemByIdEvent(
+                                                                    id: postSurgery.openSinusLift_MembraneID!, count: 1));
+                                                              });
+                                                        }
+                                                      }
+
+                                                      widget.bloc.add(TreatmentBloc_SavePostSurgicalTreatmentDataEvent(data: postSurgery));
+                                                      return false;
+                                                    },
+                                                    child: PostSurgeryWidget(
+                                                      postSurgeryId: widget.data.postSurgeryModelId!,
+                                                      onLoaded: (postSurgeryData) {
+                                                        postSurgery = postSurgeryData;
+                                                      },
+                                                      onChange: (screws, membraneId, _tacsNumber, _tacCompanyId) {
+                                                        tempScrews = screws;
+                                                        membraneSizeId = membraneId;
+                                                        tacsNumber = _tacsNumber;
+                                                        tacCompanyId = _tacCompanyId;
+                                                      },
+                                                    ),
+                                                  );
+                                                },
                                               ),
-                                              SizedBox(width: 5),
                                               FormTextValueWidget(
-                                                text: widget.data.implant == null ? "" : widget.data.implant?.name,
+                                                text: "Post Surgery",
                                                 smallFont: true,
-                                              ),
-                                              SizedBox(width: 5),
+                                              )
                                             ],
                                           ),
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                                ],
-                              ),
-                            ))
-                        : widget.data.hasAssign()
-                            ? Expanded(
-                                child: Row(
-                                children: [
-                                  Expanded(
-                                    child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                                      asyncUseCase: sl<LoadUsersUseCase>(),
-                                      searchParams: LoadUsersEnum.assistants,
-                                      label: "Assign to assistant",
-                                      onSelect: (value) {
-                                        widget.data.assignedTo = value;
-                                        widget.data.assignedToID = value.id;
-                                      },
-                                      selectedItem: widget.data.assignedTo,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10)
-                                ],
-                              ))
-                            : SizedBox(),
-
-                    CIA_GestureWidget(
-                      onTap: () => CIA_PopupDialog_DateOnlyPicker(
-                        context,
-                        "Change date",
-                        (date) => setState(() => widget.data.date = date),
-                        initialDate: widget.data.date,
+                          )
+                        ],
                       ),
-                      child: SizedBox(
-                        width: 100,
-                        child: Text(
-                          widget.data.date == null ? "" : DateFormat("dd-MM-yyyy").format(widget.data.date!),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
+                    ),
                     //SizedBox(width: 10)
                   ],
                 ),
@@ -483,7 +594,6 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
   void initState() {
     // bloc = BlocProvider.of<TreatmentBloc>(context);
     if (widget.data.hasPrice()) widget.data.planPrice = widget.data.planPrice ?? widget.settingsPrice;
-
   }
 
   void teethData() {
@@ -533,7 +643,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Visibility(
-                    visible: !((widget.data.name!.toLowerCase().contains("without implant")) || (!widget.data.name!.toLowerCase().contains("implant"))),
+                    visible:
+                        !((widget.data.name!.toLowerCase().contains("without implant")) || (!widget.data.name!.toLowerCase().contains("implant"))),
                     child: Row(
                       children: [
                         Expanded(

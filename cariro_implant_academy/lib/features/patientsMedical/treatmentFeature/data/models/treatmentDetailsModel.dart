@@ -6,6 +6,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   TreatmentDetailsModel({
     super.id,
     super.patientId,
+    super.postSurgeryModelId,
     super.patient,
     super.value,
     super.status,
@@ -29,11 +30,13 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     super.requestChangeId,
     super.tooth,
     super.name,
+    
   });
 
   factory TreatmentDetailsModel.fromEntity(TreatmentDetailsEntity entity) {
     return TreatmentDetailsModel(
       id: entity.id,
+      postSurgeryModelId: entity.postSurgeryModelId,
       patientId: entity.patientId,
       patient: entity.patient,
       tooth: entity.tooth,
@@ -63,6 +66,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   TreatmentDetailsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     patientId = json['patientId'];
+    postSurgeryModelId = json['postSurgeryModelId'];
     patient = json['patient'] != null ? BasicNameIdObjectModel.fromJson(json['patient']) : null;
     tooth = json['tooth'];
     name = json['name'];
@@ -92,6 +96,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
+    data['postSurgeryModelId'] = this.postSurgeryModelId;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;
     data['value'] = this.value;

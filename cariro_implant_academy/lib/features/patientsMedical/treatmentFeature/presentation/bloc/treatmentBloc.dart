@@ -7,8 +7,9 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getPostSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/savePostSurgeryDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
@@ -31,7 +32,8 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
   final ConsumeImplantUseCase consumeImplantUseCase;
 
-  final GetSurgicalTreatmentUseCase getSurgicalTreatmentUseCase;
+  final GetPostSurgicalTreatmentUseCase getPostSurgicalTreatmentUseCase;
+  final SavePostSurgeryDataUseCase savePostSurgeryDataUseCase;
   final ConsumeItemByNameUseCase consumeItemByNameUseCase;
   final ConsumeItemByIdUseCase consumeItemByIdUseCase;
   final GetTacsUseCase getTacsUseCase;
@@ -47,8 +49,9 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     required this.saveTreatmentPlanUseCase,
     required this.getTreatmentPlanUseCase,
     required this.getTreatmentPricesUseCase,
+    required this.savePostSurgeryDataUseCase,
     required this.consumeImplantUseCase,
-    required this.getSurgicalTreatmentUseCase,
+    required this.getPostSurgicalTreatmentUseCase,
     required this.consumeItemByIdUseCase,
     required this.consumeItemByNameUseCase,
     required this.getTacsUseCase,
@@ -78,6 +81,29 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         );
       },
     );
+
+    on<TreatmentBloc_GetPostSurgicalTreatmentDataEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_LoadingPostSurgicalTreatmentDataState());
+        final result = await getPostSurgicalTreatmentUseCase(event.id);
+        result.fold(
+          (l) => emit(TreatmentBloc_LoadingPostSurgicalTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_LoadedPostSurgicalTreatmentDataSuccessfullyState(data: r)),
+        );
+      },
+    );
+
+    on<TreatmentBloc_SavePostSurgicalTreatmentDataEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_SavingPostSurgicalTreatmentDataState());
+        final result = await savePostSurgeryDataUseCase(event.data);
+        result.fold(
+          (l) => emit(TreatmentBloc_SavingPostSurgicalTreatmentDataErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_SavedPostSurgicalTreatmentDataSuccessfullyState()),
+        );
+      },
+    );
+
     on<TreatmentBloc_GetTreatmentPlanDataEvent>(
       (event, emit) async {
         emit(TreatmentBloc_LoadingTreatmentDataState());

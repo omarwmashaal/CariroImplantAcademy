@@ -26,7 +26,7 @@ import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc
 import '../../../../../../presentation/widgets/bigErrorPageWidget.dart';
 import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
-import '../../domain/entities/surgicalTreatmentEntity.dart';
+import '../../domain/entities/postSurgicalTreatmentEntity.dart';
 import '../../domain/entities/treatmentPlanEntity.dart';
 import '../bloc/treatmentBloc.dart';
 import '../bloc/treatmentBloc_Events.dart';
@@ -123,62 +123,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                 selectedTeeth.clear();
                 bloc.emit(TreatmentBloc_SelectedStatusState());
                 bloc.emit(TreatmentBloc_ShowTickState(showTick: false));
-              } else if (state is TreatmentBloc_ShowPostSurgeryState) {
-                /*int tempScrews = (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0);
-                int? membraneSizeId =
-                    surgicalTreatmentEntity.openSinusLift_Membrane != null ? surgicalTreatmentEntity.openSinusLift_Membrane!.id : null;
-                int tacsNumber = surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0;
-                int tacCompany = surgicalTreatmentEntity.openSinusLift_TacsCompanyID ?? 0;
-                CIA_ShowPopUp(
-                  width: 1000,
-                  height: 600,
-                  context: context,
-                  onSave: () async {
-                    if (tempScrews != (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) {
-                      if (((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) > tempScrews) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume ${((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) - tempScrews} Screws?",
-                            context: context,
-                            onSave: () {
-                              bloc.add(
-                                TreatmentBloc_ConsumeItemByNameEvent(
-                                  name: "Screws",
-                                  count: ((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0) - tempScrews),
-                                ),
-                              );
-                            });
-                      }
-                    }
-                    if (tacCompany != surgicalTreatmentEntity.openSinusLift_TacsCompanyID) tacsNumber = 0;
-                    if (tacsNumber != (surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) {
-                      if ((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0) > tacsNumber) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume ${((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) - tacsNumber} Tacs?",
-                            context: context,
-                            onSave: () async {
-                              bloc.add(TreatmentBloc_ConsumeItemByIdEvent(
-                                  id: surgicalTreatmentEntity.openSinusLift_TacsCompanyID!,
-                                  count: ((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) - tacsNumber));
-                            });
-                      }
-                    }
-
-                    if (membraneSizeId != surgicalTreatmentEntity.openSinusLift_MembraneID) {
-                      if (surgicalTreatmentEntity.openSinusLift_MembraneID != null) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume 1 ${surgicalTreatmentEntity.openSinusLift_Membrane!.size ?? ""} Membrane?",
-                            context: context,
-                            onSave: () {
-                              bloc.add(TreatmentBloc_ConsumeItemByIdEvent(id: surgicalTreatmentEntity.openSinusLift_MembraneID!, count: 1));
-                            });
-                      }
-                    }
-                  },
-                  child: PostSurgeryWidget(surgicalTreatmentEntity: surgicalTreatmentEntity),
-                );
-            
-            */
-              } else if (state is TreatmentBloc_AcceptingChangesErrorState) {
+              }  else if (state is TreatmentBloc_AcceptingChangesErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true);
@@ -241,18 +186,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                               CIA_MultiSelectChipWidget(
                                 onChange: (item, isSelected) async {
                                   if (item == "View Only Mode") {
-                                    bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentDetails ?? []));
+                                    bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentDetails));
                                   }
-                                  if (item == "Post Surgery") {
-                                    bloc.emit(TreatmentBloc_ShowPostSurgeryState());
-                                  }
+                                 
                                 },
-                                labels: widget.surgical
-                                    ? [
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
-                                      ]
-                                    : [
+                                labels:  [
                                         CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
                                       ],
                               ),
