@@ -5,10 +5,12 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getPostSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/savePostSurgeryDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_Events.dart';
@@ -31,7 +33,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final SaveTreatmentPlanUseCase saveTreatmentPlanUseCase;
   final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
   final ConsumeImplantUseCase consumeImplantUseCase;
-
+  final GetTreatmentItemsUseCase getTreatmentItemsUseCase;
   final GetPostSurgicalTreatmentUseCase getPostSurgicalTreatmentUseCase;
   final SavePostSurgeryDataUseCase savePostSurgeryDataUseCase;
   final ConsumeItemByNameUseCase consumeItemByNameUseCase;
@@ -43,11 +45,13 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
   BasicNameIdObjectEntity? tempCandidateBatch;
+  List<TreatmentItemEntity> treatmentItems = [];
 
   TreatmentBloc({
     required this.saveTreatmentDetailsUseCase,
     required this.saveTreatmentPlanUseCase,
     required this.getTreatmentPlanUseCase,
+    required this.getTreatmentItemsUseCase,
     required this.getTreatmentPricesUseCase,
     required this.savePostSurgeryDataUseCase,
     required this.consumeImplantUseCase,
@@ -110,15 +114,16 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         await Future.delayed(Duration(milliseconds: 500));
         final result = await getTreatmentPlanUseCase(event.id);
         final treatmentDetails = await getTreatmentDetailsUseCase(event.id);
-
-        if (result.isLeft() || treatmentDetails.isLeft()) {
+        final treatmentItemsResult = await getTreatmentItemsUseCase(NoParams());
+        if (result.isLeft() || treatmentDetails.isLeft() || treatmentItemsResult.isLeft()) {
           emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: "Error"));
         }
         List<TreatmentDetailsEntity> data = [];
         treatmentDetails.fold((l) => null, (r) => data = r);
+        treatmentItemsResult.fold((l) => null, (r) => treatmentItems = r);
         result.fold(
           (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState(details: data, data: r)),
+          (r) => emit(TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState(details: data, data: r,treatmentItems: treatmentItems)),
         );
       },
     );
@@ -154,19 +159,19 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
 
     on<TreatmentBloc_UpdateTeethStatusEvent>(
       (event, emit) {
-        for (String name in event.selectedName) {
+        for (int treatmentItemId in event.selectedTreatmentItemId) {
           for (int tooth in event.selectedTeeth) {
             var currentToothData = TreatmentDetailsEntity.getTreatment(
               data: event.teethData,
-              query: name,
+              treatmentItemId: treatmentItemId,
               tooth: tooth,
             );
             if (currentToothData == null) {
               currentToothData = TreatmentDetailsEntity(
-                tooth: tooth,
-                patientId: event.patientId,
-                name: name,
-              );
+                  tooth: tooth,
+                  patientId: event.patientId,
+                  treatmentItemId: treatmentItemId,
+                  treatmentItem: treatmentItems.firstWhere((element) => element.id == treatmentItemId));
               event.teethData = [...event.teethData, currentToothData];
             }
             currentToothData.status = event.isSurgical;

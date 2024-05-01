@@ -52,7 +52,7 @@ class ToothWidget extends StatelessWidget {
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
           data: data,
-          settingsPrice: TreatmentPricesModel.fromEntity(prices).toJsonLower()[data.name?.removeAllWhitespace.toLowerCase() ?? ""],
+          settingsPrice: TreatmentPricesModel.fromEntity(prices).toJsonLower()[data.treatmentItem?. name?.removeAllWhitespace.toLowerCase() ?? ""],
           onDelete: () {
             teethData.remove(data);
             onChange();

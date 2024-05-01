@@ -1,5 +1,7 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get/get.dart';
 
@@ -30,35 +32,38 @@ class TreatmentDetailsEntity extends Equatable {
   int? requestChangeId;
   int? tooth;
   String? title;
-  String? name;
+  int? treatmentItemId;
+  TreatmentItemEntity? treatmentItem;
 
-  TreatmentDetailsEntity(
-      {this.id,
-      this.patientId,
-      this.postSurgeryModelId,
-      this.patient,
-      this.tooth,
-      this.value = "",
-      this.status = false,
-      this.assignedToID,
-      this.assignedTo,
-      this.date,
-      this.name,
-      this.doneByAssistantID,
-      this.doneByAssistant,
-      this.doneBySupervisorID,
-      this.doneBySupervisor,
-      this.doneByCandidateID,
-      this.doneByCandidate,
-      this.doneByCandidateBatchID,
-      this.doneByCandidateBatch,
-      this.implantIDRequest,
-      this.implantRequest,
-      this.implantID,
-      this.requestChangeId,
-      this.requestChangeModel,
-      this.planPrice,
-      this.implant}) {
+  TreatmentDetailsEntity({
+    this.id,
+    this.patientId,
+    this.postSurgeryModelId,
+    this.patient,
+    this.tooth,
+    this.value = "",
+    this.status = false,
+    this.assignedToID,
+    this.assignedTo,
+    this.date,
+    this.doneByAssistantID,
+    this.doneByAssistant,
+    this.doneBySupervisorID,
+    this.doneBySupervisor,
+    this.doneByCandidateID,
+    this.doneByCandidate,
+    this.doneByCandidateBatchID,
+    this.doneByCandidateBatch,
+    this.implantIDRequest,
+    this.implantRequest,
+    this.implantID,
+    this.requestChangeId,
+    this.requestChangeModel,
+    this.planPrice,
+    this.implant,
+    this.treatmentItem,
+    this.treatmentItemId,
+  }) {
     doneByAssistant = BasicNameIdObjectEntity();
     doneByCandidate = BasicNameIdObjectEntity();
     doneByCandidateBatch = BasicNameIdObjectEntity();
@@ -73,8 +78,9 @@ class TreatmentDetailsEntity extends Equatable {
         this.patientId,
         this.patient,
         this.tooth,
+        this.treatmentItem,
+        this.treatmentItemId,
         value,
-        this.name,
         status,
         assignedToID,
         postSurgeryModelId,
@@ -97,34 +103,37 @@ class TreatmentDetailsEntity extends Equatable {
         //   implant
       ];
 
-  static TreatmentDetailsEntity? getTreatment({required List<TreatmentDetailsEntity> data, required String query, required int tooth}) {
-    return data.firstWhereOrNull(
-        (element) => element.name?.removeAllWhitespace.toLowerCase() == query.removeAllWhitespace.toLowerCase() && element.tooth == tooth);
+  static TreatmentDetailsEntity? getTreatment({required List<TreatmentDetailsEntity> data, required int treatmentItemId, required int tooth}) {
+    return data.firstWhereOrNull((element) => element.treatmentItemId == treatmentItemId && element.tooth == tooth);
   }
 
   static List<TreatmentDetailsEntity> getTreatments({required List<TreatmentDetailsEntity> data, required String query}) {
-    return data.where((element) => element.name?.removeAllWhitespace.toLowerCase() == query.removeAllWhitespace.toLowerCase()).toList();
+    return data
+        .where((element) => element.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == query.removeAllWhitespace.toLowerCase())
+        .toList();
   }
 
   bool hasPrice() {
-    return this.name?.removeAllWhitespace.toLowerCase() == "Simple Implant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "immediateImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "guidedImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "expansionWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "splittingWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "gbrWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "closedSinusWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "openSinusWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "crown".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
+    return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "Simple Implant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "immediateImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "guidedImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "expansionWithImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "splittingWithImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "gbrWithImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "closedSinusWithImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "openSinusWithImplant".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "crown".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
   }
 
   bool hasAssign() {
-    return this.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
-        this.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase();
+    return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
+        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase();
   }
+
+  bool isImplant() => treatmentItem?.isImplant() ?? false;
 }

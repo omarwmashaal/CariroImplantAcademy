@@ -139,7 +139,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         child: Row(
                           children: [
                             FormTextKeyWidget(
-                              text: widget.data.name!,
+                              text: widget.data.treatmentItem!.name!,
                             ),
                             FormTextValueWidget(
                               text: ": ${widget.data.value ?? ""}",
@@ -259,12 +259,12 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               onChange: (value) {
                                 widget.data.value = value;
                               },
-                              label: widget.data.name!,
+                              label: widget.data.treatmentItem!.name!,
                               controller: TextEditingController(
                                 text: (widget.data.value),
                               ),
                             )
-                          : FormTextKeyWidget(text: widget.data.name!),
+                          : FormTextKeyWidget(text: widget.data.treatmentItem!.name!),
                     ),
                     SizedBox(width: 10),
                     Expanded(
@@ -369,8 +369,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                               ),
                                             ),
                                             Visibility(
-                                              visible: !((widget.data.name!.toLowerCase().contains("without implant")) ||
-                                                  (!widget.data.name!.toLowerCase().contains("implant"))),
+                                              visible: !((widget.data.treatmentItem!.name!.toLowerCase().contains("without implant")) ||
+                                                  (!widget.data.treatmentItem!.name!.toLowerCase().contains("implant"))),
                                               child: Expanded(
                                                 flex: 2,
                                                 child: Row(
@@ -622,7 +622,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
       widget.data.doneByCandidateBatchID = widget.data.doneByCandidateBatchID ?? widget.bloc.tempCandidateBatch?.id;
       CIA_ShowPopUp(
           context: context,
-          title: "${widget.data.name!} Data",
+          title: "${widget.data.treatmentItem!.name!} Data",
           onSave: () {
             //  widget.fieldModel.status = selected;
             if (widget.data.status == true) {
@@ -643,8 +643,8 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Visibility(
-                    visible:
-                        !((widget.data.name!.toLowerCase().contains("without implant")) || (!widget.data.name!.toLowerCase().contains("implant"))),
+                    visible: !((widget.data.treatmentItem!.name!.toLowerCase().contains("without implant")) ||
+                        (!widget.data.treatmentItem!.name!.toLowerCase().contains("implant"))),
                     child: Row(
                       children: [
                         Expanded(
@@ -794,7 +794,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                               Row(
                                 children: [
                                   FormTextKeyWidget(text: "Tooth: ${widget.data.tooth!} || "),
-                                  FormTextKeyWidget(text: widget.data.name!),
+                                  FormTextKeyWidget(text: widget.data.treatmentItem!.name!),
                                 ],
                               ),
                               SizedBox(height: 10),

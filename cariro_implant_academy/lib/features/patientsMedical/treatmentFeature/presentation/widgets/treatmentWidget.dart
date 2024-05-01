@@ -11,6 +11,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/tr
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothWidget.dart';
@@ -57,9 +58,10 @@ class TreatmentWidget extends StatefulWidget {
 
 class _TreatmentWidgetState extends State<TreatmentWidget> {
   List<int> selectedTeeth = [];
-  List<String> selectedStatus = [];
+  List<int> selectedTreatmentItemId = [];
   bool viewOnlyMode = false;
   late List<TreatmentDetailsEntity> treatmentDetails;
+  late List<TreatmentItemEntity> treatmentItems;
   late TreatmentPlanEntity treatmentPlanEntity;
   bool editMode = false;
   late MedicalInfoShellBloc medicalShellBloc;
@@ -119,11 +121,11 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               } else if (state is TreatmentBloc_ConsumeItemErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_UpdatedToothState) {
-                selectedStatus.clear();
+                selectedTreatmentItemId.clear();
                 selectedTeeth.clear();
                 bloc.emit(TreatmentBloc_SelectedStatusState());
                 bloc.emit(TreatmentBloc_ShowTickState(showTick: false));
-              }  else if (state is TreatmentBloc_AcceptingChangesErrorState) {
+              } else if (state is TreatmentBloc_AcceptingChangesErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true);
@@ -149,6 +151,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
                 treatmentDetails = state.details;
                 treatmentPlanEntity = state.data;
+                treatmentItems = state.treatmentItems;
                 medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentDetails));
 
                 return FocusTraversalGroup(
@@ -188,11 +191,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   if (item == "View Only Mode") {
                                     bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentDetails));
                                   }
-                                 
                                 },
-                                labels:  [
-                                        CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
-                                      ],
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
+                                ],
                               ),
                               SizedBox(height: 10),
                               CIA_CheckBoxWidget(
@@ -227,89 +229,101 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             return CIA_MultiSelectChipWidget(
                                 key: GlobalKey(),
                                 onChange: (item, isSelected) {
-                                  if (item == "Scaling") {
-                                    selectedStatus = [item];
+                                  if (treatmentItems.firstWhere((element) => element.id==int.parse(item)).name == "Scaling") {
+                                    selectedTreatmentItemId = [int.parse(item)];
                                     selectedTeeth = [0];
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
                                   }
                                 },
                                 onChangeList: (selectedItems) {
                                   if (selectedTeeth.isEmpty) {
-                                    selectedStatus.clear();
+                                    selectedTreatmentItemId.clear();
                                     bloc.emit(TreatmentBloc_SelectedStatusState());
                                   } else {
-                                    selectedStatus = selectedItems;
+                                    selectedTreatmentItemId = selectedItems.map((e) => int.parse(e)).toList();
 
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
                                   }
                                 },
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Simple Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Immediate Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Guided Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Expansion With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Splitting With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "GBR With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Open Sinus With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Closed Sinus With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Expansion Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Splitting Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "GBR Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Open Sinus Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Closed Sinus Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Extraction",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Restoration",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Root Canal Treatment",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Pontic",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Scaling",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Crown",
-                                  ),
-                                ]);
+                                labels: treatmentItems
+                                    .map(
+                                      (e) => CIA_MultiSelectChipWidgeModel(
+                                        label: e.name ?? "",
+                                        borderColor: e.isImplant() ? Colors.orange : null,
+                                        value: e.id?.toString()??"0",
+                                      ),
+                                    )
+                                    .toList()
+
+                                //  [
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Simple Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Immediate Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Guided Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Expansion With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Splitting With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "GBR With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Open Sinus With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Closed Sinus With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Expansion Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Splitting Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "GBR Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Open Sinus Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Closed Sinus Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Extraction",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Restoration",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Root Canal Treatment",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Pontic",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Scaling",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Crown",
+                                //   ),
+                                // ]
+
+                                );
                           },
                         ),
                       ),
@@ -339,7 +353,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                     onTap: () {
                                       bloc.add(TreatmentBloc_UpdateTeethStatusEvent(
                                         teethData: treatmentDetails,
-                                        selectedName: selectedStatus,
+                                        selectedTreatmentItemId: selectedTreatmentItemId,
                                         selectedTeeth: selectedTeeth,
                                         patientId: widget.patientId,
                                         isSurgical: widget.surgical,
@@ -354,8 +368,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   SizedBox(width: 10),
                                   CIA_GestureWidget(
                                     onTap: () {
-                                      selectedStatus.clear();
-                                      selectedStatus.clear();
+                                      selectedTreatmentItemId.clear();
+                                      selectedTreatmentItemId.clear();
                                       bloc.emit(TreatmentBloc_SelectedStatusState());
                                     },
                                     child: Icon(

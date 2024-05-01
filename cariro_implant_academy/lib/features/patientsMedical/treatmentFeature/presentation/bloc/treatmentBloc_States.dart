@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/tr
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/postSurgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,9 +16,10 @@ class TreatmentBloc_LoadingTreatmentDataState extends TreatmentBloc_States {
 
 class TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState extends TreatmentBloc_States {
   final List<TreatmentDetailsEntity> details;
+  final List<TreatmentItemEntity> treatmentItems;
   final TreatmentPlanEntity data;
 
-  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.details, required this.data});
+  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.details, required this.data,required this.treatmentItems});
 
   @override
   List<Object?> get props => [details];

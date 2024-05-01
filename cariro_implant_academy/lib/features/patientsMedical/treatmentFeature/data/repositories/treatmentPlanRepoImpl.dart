@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/treatmentPlanDataSource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
 import 'package:dartz/dartz.dart';
@@ -20,9 +21,7 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo {
   }
 
   @override
-  Future<Either<Failure, NoParams>> saveTreatmentDetailsData(
-    int id,
-    List<TreatmentDetailsEntity> data) async {
+  Future<Either<Failure, NoParams>> saveTreatmentDetailsData(int id, List<TreatmentDetailsEntity> data) async {
     try {
       final result = await treatmentPlanDataSource.saveTreatmentDetailsData(id, data);
       return Right(result);
@@ -50,11 +49,21 @@ class TreatmentPlanRepoImplementation implements TreatmentPlanRepo {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-  
+
   @override
   Future<Either<Failure, NoParams>> saveTreatmentPlan(int id, TreatmentPlanEntity data) async {
     try {
       final result = await treatmentPlanDataSource.saveTreatmentPlan(id, data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TreatmentItemEntity>>> getTreatmentItems() async {
+    try {
+      final result = await treatmentPlanDataSource.getTreatmentItems();
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

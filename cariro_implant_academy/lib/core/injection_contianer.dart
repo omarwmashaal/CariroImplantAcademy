@@ -181,6 +181,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getPostSurgicalTreatmentUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/savePostSurgeryDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentDetailsUseCase.dart';
@@ -770,6 +771,7 @@ initInjection() async {
         saveDentalExaminationUseCase: sl(),
         getTreatmentPlanItemUsecase: sl(),
         addPatientReceiptUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
@@ -799,6 +801,7 @@ initInjection() async {
         acceptChangesUseCase: sl(),
         getTreatmentDetailsUseCase: sl(),
         savePostSurgeryDataUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => SaveTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
@@ -809,6 +812,7 @@ initInjection() async {
   sl.registerLazySingleton(() => GetPostSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => AcceptChangesUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => SavePostSurgeryDataUseCase(postSurgeryRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentItemsUseCase(treatmentPlanRepo: sl()));
 
   //repositories
   sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));

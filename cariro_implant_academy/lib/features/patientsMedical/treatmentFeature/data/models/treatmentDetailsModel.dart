@@ -1,10 +1,13 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/requestChangeModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentItemModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 
 class TreatmentDetailsModel extends TreatmentDetailsEntity {
   TreatmentDetailsModel({
     super.id,
+    super.treatmentItem,
+    super.treatmentItemId,
     super.patientId,
     super.postSurgeryModelId,
     super.patient,
@@ -29,13 +32,13 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     super.requestChangeModel,
     super.requestChangeId,
     super.tooth,
-    super.name,
-    
   });
 
   factory TreatmentDetailsModel.fromEntity(TreatmentDetailsEntity entity) {
     return TreatmentDetailsModel(
       id: entity.id,
+      treatmentItem: entity.treatmentItem,
+      treatmentItemId: entity.treatmentItemId,
       postSurgeryModelId: entity.postSurgeryModelId,
       patientId: entity.patientId,
       patient: entity.patient,
@@ -60,16 +63,16 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
       implantIDRequest: entity.implantIDRequest,
       requestChangeModel: entity.requestChangeModel,
       requestChangeId: entity.requestChangeId,
-      name: entity.name,
     );
   }
   TreatmentDetailsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    treatmentItem = json['treatmentItem'] == null ? null : TreatmentItemModel.fromJson(json['treatmentItem']);
+    treatmentItemId = json['treatmentItemId'];
     patientId = json['patientId'];
     postSurgeryModelId = json['postSurgeryModelId'];
     patient = json['patient'] != null ? BasicNameIdObjectModel.fromJson(json['patient']) : null;
     tooth = json['tooth'];
-    name = json['name'];
     value = json['value'] ?? "";
     status = json['status'] ?? false;
     assignedToID = json['assignedToID'];
@@ -112,7 +115,8 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     data['implantIDRequest'] = this.implantIDRequest;
     data['requestChangeModel'] = this.requestChangeModel == null ? null : RequestChangeModel.fromEntity(this.requestChangeModel!).toJson();
     data['requestChangeId'] = this.requestChangeId;
-    data['name'] = this.name;
+    data['treatmentItem'] = this.treatmentItem == null ? null : TreatmentItemModel.fromEntity(this.treatmentItem!).toJson();
+    data['treatmentItemId'] = this.treatmentItemId;
     return data;
   }
 }

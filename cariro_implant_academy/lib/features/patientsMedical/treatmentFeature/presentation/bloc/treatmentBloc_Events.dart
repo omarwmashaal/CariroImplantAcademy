@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -111,14 +112,14 @@ class TreatmentBloc_AcceptChangesEvent extends TreatmentBloc_Events {
 class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
   List<TreatmentDetailsEntity> teethData;
   final List<int> selectedTeeth;
-  final List<String> selectedName;
+  final List<int> selectedTreatmentItemId;
   final int patientId;
   final bool isSurgical;
   final BasicNameIdObjectEntity? patientsDoctor;
 
   TreatmentBloc_UpdateTeethStatusEvent({
     required this.teethData,
-    required this.selectedName,
+    required this.selectedTreatmentItemId,
     required this.selectedTeeth,
     required this.patientId,
     required this.isSurgical,
@@ -127,7 +128,7 @@ class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
 
   @override
   List<Object?> get props => [
-        selectedName,
+        selectedTreatmentItemId,
         selectedTeeth,
         teethData,
         patientId,
