@@ -233,12 +233,13 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 
   /// Creates the income data source class with required details.
   AdvancedTreatmentSearchDataGridSource() {
-    /*addColumnGroup(
-      ColumnGroup(
-        name: "Patient Name",
-        sortGroupRows: true,
-      ),
-    );*/
+    // addColumnGroup(
+    //   ColumnGroup(
+    //     name: "Patient Name",
+    //     sortGroupRows: true,
+
+    //   ),
+    // );
   }
 
   init({AdvancedTreatmentSearchEntity? search}) {
@@ -252,12 +253,13 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
       forceShowColumns = forceShowColumns.toSet().toList();
     }
 
-    var columnsIds = ([
-      ...(query.and_treatmentIds ?? []),
-      query.or_treatmentIds ?? [],
-    ]
+    List<int> columnsIds = <int>[];
+    columnsIds.addAll(query.and_treatmentIds ?? []);
+    columnsIds.addAll(query.or_treatmentIds ?? []);
+
+    columnsIds = columnsIds
       ..toSet()
-      ..toList()) as List<int>;
+      ..toList();
 
     var resultIds = models.map((e) => e.treatmentId).toList();
     columnsIds.removeWhere((element) => !resultIds.contains(element));
@@ -283,7 +285,6 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
             }()))
         .toList();
   }
-
 
   List<DataGridRow> _data = [];
 
@@ -329,6 +330,11 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 
     return [];
   }
+
+  // @override
+  // Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
+  //   return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
+  // }
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {

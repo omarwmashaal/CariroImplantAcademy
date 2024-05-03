@@ -140,7 +140,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                           addAutomaticKeepAlives: true,
                           children: [
                             AdvancedSearchPatientFilterWidget(searchDTO: searchDTO),
-                            AdvancedSearchTreatmentFilterWidget(searchTreatmentsDTO: searchTreatmentsDTO,treatmentItems: treatmentItems),
+                            AdvancedSearchTreatmentFilterWidget(searchTreatmentsDTO: searchTreatmentsDTO, treatmentItems: treatmentItems),
                             AdvancedSearchProstheticFilterWidget(searchProstheticDTO: searchProstheticDTO),
                           ],
                         ),
@@ -316,7 +316,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                     headerHeight: 60,
                                     headerStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                                     dataSource: dataSource_treatments,
-                                    allowGroupingCollapse: true,
+                                    //allowGroupingCollapse: true,
                                     onCellClick: (value) {
                                       // setState(() {
                                       //selectedPatientID = dataSource.models[value - 1].id!;
