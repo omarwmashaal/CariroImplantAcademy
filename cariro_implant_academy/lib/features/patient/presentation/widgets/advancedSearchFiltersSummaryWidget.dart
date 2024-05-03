@@ -4,7 +4,9 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
 class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
   AdvancedSearchFiltersSummaryWidget({
@@ -13,10 +15,12 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     required this.searchProstheticDTO,
     required this.searchTreatmentsDTO,
     required this.onRemove,
+    required this.treatmentItems,
   });
 
   AdvancedPatientSearchEntity searchDTO;
   AdvancedTreatmentSearchEntity searchTreatmentsDTO;
+  List<TreatmentItemEntity> treatmentItems;
   AdvancedProstheticSearchRequestEntity searchProstheticDTO;
   Function(
     AdvancedPatientSearchEntity onRemoveSearchDTO,
@@ -162,52 +166,8 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
         filters.add("Prosthetic Complications: Pain");
       }
     }
-    if (searchTreatmentsDTO.scaling == true) filters.add("Scaling");
-    if (searchTreatmentsDTO.crown == true) filters.add("Crown");
-    if (searchTreatmentsDTO.rootCanalTreatment == true) {
-      filters.add("RootCanal Treatment");
-    }
-    if (searchTreatmentsDTO.restoration == true) filters.add("Restoration");
-    if (searchTreatmentsDTO.pontic == true) filters.add("Pontic");
-    if (searchTreatmentsDTO.extraction == true) filters.add("Extraction");
-    if (searchTreatmentsDTO.simpleImplant == true) {
-      filters.add("Simple Implant");
-    }
-    if (searchTreatmentsDTO.immediateImplant == true) {
-      filters.add("Immediate Implant");
-    }
-    if (searchTreatmentsDTO.expansionWithImplant == true) {
-      filters.add("Expansion With Implant");
-    }
-    if (searchTreatmentsDTO.splittingWithImplant == true) {
-      filters.add("Splitting With Implant");
-    }
-    if (searchTreatmentsDTO.gbrWithImplant == true) {
-      filters.add("GBR With Implant");
-    }
-    if (searchTreatmentsDTO.openSinusWithImplant == true) {
-      filters.add("Open Sinus WithImplant");
-    }
-    if (searchTreatmentsDTO.closedSinusWithImplant == true) {
-      filters.add("ClosedSinus With Implant");
-    }
-    if (searchTreatmentsDTO.guidedImplant == true) {
-      filters.add("Guided Implant");
-    }
-    if (searchTreatmentsDTO.expansionWithoutImplant == true) {
-      filters.add("Expansion Without Implant");
-    }
-    if (searchTreatmentsDTO.splittingWithoutImplant == true) {
-      filters.add("Splitting Without Implant");
-    }
-    if (searchTreatmentsDTO.gbrWithoutImplant == true) {
-      filters.add("GBRWithout Implant");
-    }
-    if (searchTreatmentsDTO.openSinusWithoutImplant == true) {
-      filters.add("OpenSinus Without Implant");
-    }
-    if (searchTreatmentsDTO.closedSinusWithoutImplant == true) {
-      filters.add("ClosedSinus Without Implant");
+    for (var queryItem in searchTreatmentsDTO.or_treatmentIds ?? []) {
+      filters.add(treatmentItems.firstWhere((element) => element.id == queryItem).name ?? "");
     }
 
     return filters;
@@ -346,54 +306,10 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     if (searchTreatmentsDTO.implantFailed == true) {
       filters.add("Implant Failed");
     }
-    if (searchTreatmentsDTO.and_scaling == true) filters.add("Scaling");
-    if (searchTreatmentsDTO.and_crown == true) filters.add("Crown");
-    if (searchTreatmentsDTO.and_rootCanalTreatment == true) {
-      filters.add("RootCanal Treatment");
-    }
-    if (searchTreatmentsDTO.and_restoration == true) filters.add("Restoration");
-    if (searchTreatmentsDTO.and_pontic == true) filters.add("Pontic");
-    if (searchTreatmentsDTO.and_extraction == true) filters.add("Extraction");
-    if (searchTreatmentsDTO.and_simpleImplant == true) {
-      filters.add("Simple Implant");
-    }
-    if (searchTreatmentsDTO.and_immediateImplant == true) {
-      filters.add("Immediate Implant");
-    }
-    if (searchTreatmentsDTO.and_expansionWithImplant == true) {
-      filters.add("Expansion With Implant");
-    }
-    if (searchTreatmentsDTO.and_splittingWithImplant == true) {
-      filters.add("Splitting With Implant");
-    }
-    if (searchTreatmentsDTO.and_gbrWithImplant == true) {
-      filters.add("GBR With Implant");
-    }
-    if (searchTreatmentsDTO.and_openSinusWithImplant == true) {
-      filters.add("Open Sinus WithImplant");
-    }
-    if (searchTreatmentsDTO.and_closedSinusWithImplant == true) {
-      filters.add("ClosedSinus With Implant");
-    }
-    if (searchTreatmentsDTO.and_guidedImplant == true) {
-      filters.add("Guided Implant");
-    }
-    if (searchTreatmentsDTO.and_expansionWithoutImplant == true) {
-      filters.add("Expansion Without Implant");
-    }
-    if (searchTreatmentsDTO.and_splittingWithoutImplant == true) {
-      filters.add("Splitting Without Implant");
-    }
-    if (searchTreatmentsDTO.and_gbrWithoutImplant == true) {
-      filters.add("GBRWithout Implant");
-    }
-    if (searchTreatmentsDTO.and_openSinusWithoutImplant == true) {
-      filters.add("OpenSinus Without Implant");
-    }
-    if (searchTreatmentsDTO.and_closedSinusWithoutImplant == true) {
-      filters.add("ClosedSinus Without Implant");
-    }
 
+    for (var queryItem in searchTreatmentsDTO.and_treatmentIds ?? []) {
+      filters.add(treatmentItems.firstWhere((element) => element.id == queryItem).name ?? "");
+    }
     return filters;
   }
 
@@ -595,81 +511,10 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     if (filter == "Implant Failed") {
       searchTreatmentsDTO.implantFailed = null;
     }
-    if (filter == "Scaling") {
-      searchTreatmentsDTO.scaling = null;
-      searchTreatmentsDTO.and_scaling = null;
-    }
-    if (filter == "Crown") {
-      searchTreatmentsDTO.crown = null;
-      searchTreatmentsDTO.and_crown = null;
-    }
-    if (filter == "RootCanal Treatment") {
-      searchTreatmentsDTO.rootCanalTreatment = null;
-      searchTreatmentsDTO.and_rootCanalTreatment = null;
-    }
-    if (filter == "Restoration") {
-      searchTreatmentsDTO.restoration = null;
-      searchTreatmentsDTO.and_restoration = null;
-    }
-    if (filter == "Pontic") {
-      searchTreatmentsDTO.pontic = null;
-      searchTreatmentsDTO.and_pontic = null;
-    }
-    if (filter == "Extraction") {
-      searchTreatmentsDTO.extraction = null;
-      searchTreatmentsDTO.and_extraction = null;
-    }
-    if (filter == "Simple Implant") {
-      searchTreatmentsDTO.simpleImplant = null;
-      searchTreatmentsDTO.and_simpleImplant = null;
-    }
-    if (filter == "Immediate Implant") {
-      searchTreatmentsDTO.immediateImplant = null;
-      searchTreatmentsDTO.and_immediateImplant = null;
-    }
-    if (filter == "Expansion With Implant") {
-      searchTreatmentsDTO.expansionWithImplant = null;
-      searchTreatmentsDTO.and_expansionWithImplant = null;
-    }
-    if (filter == "Splitting With Implant") {
-      searchTreatmentsDTO.splittingWithImplant = null;
-      searchTreatmentsDTO.and_splittingWithImplant = null;
-    }
-    if (filter == "GBR With Implant") {
-      searchTreatmentsDTO.gbrWithImplant = null;
-      searchTreatmentsDTO.and_gbrWithImplant = null;
-    }
-    if (filter == "Open Sinus WithImplant") {
-      searchTreatmentsDTO.openSinusWithImplant = null;
-      searchTreatmentsDTO.and_openSinusWithImplant = null;
-    }
-    if (filter == "ClosedSinus With Implant") {
-      searchTreatmentsDTO.closedSinusWithImplant = null;
-      searchTreatmentsDTO.and_closedSinusWithImplant = null;
-    }
-    if (filter == "Guided Implant") {
-      searchTreatmentsDTO.guidedImplant = null;
-      searchTreatmentsDTO.and_guidedImplant = null;
-    }
-    if (filter == "Expansion Without Implant") {
-      searchTreatmentsDTO.expansionWithoutImplant = null;
-      searchTreatmentsDTO.and_expansionWithoutImplant = null;
-    }
-    if (filter == "Splitting Without Implant") {
-      searchTreatmentsDTO.splittingWithoutImplant = null;
-      searchTreatmentsDTO.and_splittingWithoutImplant = null;
-    }
-    if (filter == "GBRWithout Implant") {
-      searchTreatmentsDTO.gbrWithoutImplant = null;
-      searchTreatmentsDTO.and_gbrWithoutImplant = null;
-    }
-    if (filter == "OpenSinus Without Implant") {
-      searchTreatmentsDTO.openSinusWithoutImplant = null;
-      searchTreatmentsDTO.and_openSinusWithoutImplant = null;
-    }
-    if (filter == "ClosedSinus Without Implant") {
-      searchTreatmentsDTO.closedSinusWithoutImplant = null;
-      searchTreatmentsDTO.and_closedSinusWithoutImplant = null;
+    var fromTreatmentItems = treatmentItems.firstWhereOrNull((element) => element.name == filter);
+    if (fromTreatmentItems != null) {
+      searchTreatmentsDTO.and_treatmentIds!.remove(fromTreatmentItems.id!);
+      searchTreatmentsDTO.or_treatmentIds!.remove(fromTreatmentItems.id!);
     }
 
     if (filter == "Gender: ${searchDTO.gender?.name}") searchDTO.gender = null;

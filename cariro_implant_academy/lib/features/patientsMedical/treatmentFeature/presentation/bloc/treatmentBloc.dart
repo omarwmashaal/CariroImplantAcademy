@@ -82,6 +82,18 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         );
       },
     );
+   
+
+    on<TreatmentBloc_GetTreatmentItemsEvent>(
+      (event, emit) async {
+        emit(TreatmentBloc_LoadingTreatmentItemsTreatmentDataState());
+        final result = await getTreatmentItemsUseCase(NoParams());
+        result.fold(
+          (l) => emit(TreatmentBloc_LoadingTreatmentItemsErrorState(message: l.message ?? "")),
+          (r) => emit(TreatmentBloc_LoadedTreatmentItemsSuccessfullyState(data: r)),
+        );
+      },
+    );
 
     on<TreatmentBloc_SavePostSurgicalTreatmentDataEvent>(
       (event, emit) async {

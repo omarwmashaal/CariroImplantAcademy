@@ -48,6 +48,29 @@ class TreatmentBloc_LoadingPostSurgicalTreatmentDataState extends TreatmentBloc_
   List<Object?> get props => [];
 }
 
+class TreatmentBloc_LoadedTreatmentItemsSuccessfullyState extends TreatmentBloc_States {
+  final List<TreatmentItemEntity> data;
+
+  TreatmentBloc_LoadedTreatmentItemsSuccessfullyState({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class TreatmentBloc_LoadingTreatmentItemsErrorState extends TreatmentBloc_States {
+  final String message;
+
+  TreatmentBloc_LoadingTreatmentItemsErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class TreatmentBloc_LoadingTreatmentItemsTreatmentDataState extends TreatmentBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
 class TreatmentBloc_SavedPostSurgicalTreatmentDataSuccessfullyState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [];

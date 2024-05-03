@@ -92,6 +92,11 @@ class TreatmentBloc_GetTacsEvent extends TreatmentBloc_Events {
   List<Object?> get props => [];
 }
 
+class TreatmentBloc_GetTreatmentItemsEvent extends TreatmentBloc_Events {
+  @override
+  List<Object?> get props => [];
+}
+
 class TreatmentBloc_AcceptChangesEvent extends TreatmentBloc_Events {
   final RequestChangeEntity requestChangeEntity;
   final int patientId;
