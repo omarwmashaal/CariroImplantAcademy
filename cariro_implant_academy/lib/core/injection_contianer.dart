@@ -63,7 +63,6 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
@@ -368,7 +367,7 @@ initInjection() async {
         getImplantCompaniesUseCase: sl(),
         getImplantLinesUseCase: sl(),
         getImplantSizesUseCase: sl(),
-        getTreatmentPricesUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
         getTacsUseCase: sl(),
         getMembraneCompaniesUseCase: sl(),
         getMembranesUseCase: sl(),
@@ -414,7 +413,6 @@ initInjection() async {
   sl.registerLazySingleton(() => GetImplantCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantLinesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantSizesUseCase(settingsRepository: sl()));
-  sl.registerLazySingleton(() => GetTreatmentPricesUseCase(settingsRepository: sl()));
 
   sl.registerLazySingleton(() => GetTacsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetStockCategoriesUseCase(settingsRepository: sl()));
@@ -791,7 +789,6 @@ initInjection() async {
   sl.registerFactory(() => TreatmentBloc(
         saveTreatmentDetailsUseCase: sl(),
         getTreatmentPlanUseCase: sl(),
-        getTreatmentPricesUseCase: sl(),
         consumeImplantUseCase: sl(),
         consumeItemByIdUseCase: sl(),
         consumeItemByNameUseCase: sl(),

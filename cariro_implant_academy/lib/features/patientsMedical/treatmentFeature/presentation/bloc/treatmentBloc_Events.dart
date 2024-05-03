@@ -45,11 +45,7 @@ class TreatmentBloc_SavePostSurgicalTreatmentDataEvent extends TreatmentBloc_Eve
   List<Object?> get props => [data];
 }
 
-class TreatmentBloc_GetTreatmentPrices extends TreatmentBloc_Events {
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
-}
+
 
 class TreatmentBloc_SaveTreatmentDetailsEvent extends TreatmentBloc_Events {
   final int id;

@@ -113,21 +113,21 @@ class TreatmentDetailsEntity extends Equatable {
         .toList();
   }
 
-  bool hasPrice() {
-    return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "Simple Implant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "immediateImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "guidedImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "expansionWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "splittingWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "gbrWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "closedSinusWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "openSinusWithImplant".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "crown".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
-  }
+  // bool hasPrice() {
+  //   return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "Simple Implant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "immediateImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "guidedImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "expansionWithImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "splittingWithImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "gbrWithImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "closedSinusWithImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "openSinusWithImplant".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "crown".removeAllWhitespace.toLowerCase() ||
+  //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
+  // }
 
   bool hasAssign() {
     return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||

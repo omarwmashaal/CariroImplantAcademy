@@ -17,7 +17,6 @@ class ToothWidget extends StatelessWidget {
     required this.onChange,
     this.viewOnlyMode = false,
     required this.teethData,
-    required this.prices,
     required this.isSurgical,
     required this.patientId,
     required this.acceptChanges,
@@ -27,7 +26,6 @@ class ToothWidget extends StatelessWidget {
   int toothID;
   Function onChange;
   List<TreatmentDetailsEntity> teethData;
-  TreatmentPricesEntity prices;
   bool isSurgical;
   int patientId;
   TreatmentBloc bloc;
@@ -52,7 +50,6 @@ class ToothWidget extends StatelessWidget {
           acceptChanges: (request) => acceptChanges(request),
           patientId: patientId,
           data: data,
-          settingsPrice: TreatmentPricesModel.fromEntity(prices).toJsonLower()[data.treatmentItem?. name?.removeAllWhitespace.toLowerCase() ?? ""],
           onDelete: () {
             teethData.remove(data);
             onChange();

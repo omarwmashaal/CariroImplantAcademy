@@ -25,6 +25,7 @@ import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.d
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/treatmentWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -346,7 +347,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             current is SettingsBloc_AddedImplantLinesSuccessfullyState ||
                             current is SettingsBloc_LoadingImplantLinesState,
                         builder: (context, state) {
-                          if (state is SettingsBloc_ChangedImplantLineNameSuccessfullyState || state is SettingsBloc_AddedImplantLinesSuccessfullyState)
+                          if (state is SettingsBloc_ChangedImplantLineNameSuccessfullyState ||
+                              state is SettingsBloc_AddedImplantLinesSuccessfullyState)
                             bloc.add(SettingsBloc_LoadImplantLinesEvent(companyId: companyId));
                           if (state is SettingsBloc_LoadedImplantLinesSuccessfullyState ||
                               state is SettingsBloc_LoadingImplantLinesState ||
@@ -611,7 +613,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               state is SettingsBloc_LoadingMembranesState ||
                               state is SettingsBloc_AddedMembranesSuccessfullyState ||
                               state is SettingsBloc_LoadingMembranesErrorState) {
-                            if (state is SettingsBloc_AddedMembranesSuccessfullyState) bloc.add(SettingsBloc_LoadMembranesEvent(id: membraneCompanyId));
+                            if (state is SettingsBloc_AddedMembranesSuccessfullyState)
+                              bloc.add(SettingsBloc_LoadMembranesEvent(id: membraneCompanyId));
                             List<MembraneEntity> membranes = [];
                             if (state is SettingsBloc_LoadedMembranesSuccessfullyState) membranes = state.data as List<MembraneEntity>;
                             return Expanded(
@@ -763,7 +766,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                         ],
                                       ));
                                 }),
-                            CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddTacsCompaniesEvent(model: tacCompanies))),
+                            CIA_PrimaryButton(
+                                isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddTacsCompaniesEvent(model: tacCompanies))),
                           ],
                         )
                       ],
@@ -820,7 +824,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                       ));
                                 }),
                             CIA_PrimaryButton(
-                                isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddExpensesCategoriesEvent(model: expensesCategories))),
+                                isLong: true,
+                                label: "Save",
+                                onTab: () => bloc.add(SettingsBloc_AddExpensesCategoriesEvent(model: expensesCategories))),
                           ],
                         )
                       ],
@@ -933,7 +939,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                         controller: TextEditingController(text: ""),
                                       ));
                                 }),
-                            CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddStockCategoriesEvent(model: stockCategories))),
+                            CIA_PrimaryButton(
+                                isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddStockCategoriesEvent(model: stockCategories))),
                           ],
                         )
                       ],
@@ -1070,7 +1077,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                         controller: TextEditingController(text: ""),
                                       ));
                                 }),
-                            CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddPaymentMethodsEvent(model: PaymentMethods))),
+                            CIA_PrimaryButton(
+                                isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddPaymentMethodsEvent(model: PaymentMethods))),
                           ],
                         )
                       ],
@@ -1245,9 +1253,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 } else if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState ||
                     state is SettingsBloc_LoadingTreatmentPricesErrorState ||
                     state is SettingsBloc_LoadingTreatmentPricesState) {
-                  TreatmentPricesEntity TreatmentPrices = TreatmentPricesEntity();
+                  List<TreatmentItemEntity> treatmentItems = [];
                   if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState)
-                    TreatmentPrices = state.data;
+                    treatmentItems = state.data;
                   else if (state is SettingsBloc_LoadingTreatmentPricesState)
                     return LoadingWidget();
                   else if (state is SettingsBloc_LoadingTreatmentPricesErrorState) return BigErrorPageWidget(message: state.message);
@@ -1256,77 +1264,24 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         Expanded(
                           child: ListView(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Crown",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.crown?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.crown = int.parse(value);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Scaling",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.scaling?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.scaling = int.parse(value);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Root Canal Treatment",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.rootCanalTreatment?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.rootCanalTreatment = int.parse(value);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Restoration",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.restoration?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.restoration = int.parse(value);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Extraction",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.extraction?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.extraction = int.parse(value);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_TextFormField(
-                                  label: "Implant",
-                                  isNumber: true,
-                                  controller: TextEditingController(text: TreatmentPrices.implant?.toString() ?? ""),
-                                  onChange: (value) {
-                                    TreatmentPrices.implant = int.parse(value);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                              children: treatmentItems
+                                  .map(
+                                    (e) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CIA_TextFormField(
+                                        label: e.name ?? "",
+                                        isNumber: true,
+                                        controller: TextEditingController(text: e.price?.toString() ?? ""),
+                                        onChange: (value) {
+                                          e.price = int.tryParse(value) ?? 0;
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                  .toList()),
                         ),
-                        CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: TreatmentPrices)))
+                        CIA_PrimaryButton(
+                            isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: treatmentItems)))
                       ],
                     ),
                   );

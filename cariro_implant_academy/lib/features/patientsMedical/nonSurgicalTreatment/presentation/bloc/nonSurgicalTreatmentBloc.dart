@@ -58,7 +58,7 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
         result.fold(
           (l) => emit(NonSurgicalTreatmentBloc_DataLoadingError(message: l.message ?? "")),
           (r) {
-            emit(NonSurgicalTreatmentBloc_DataLoadedSuccessfully(nonSurgicalTreatmentEntity: r,treatmentItems: treatmentItems));
+            emit(NonSurgicalTreatmentBloc_DataLoadedSuccessfully(nonSurgicalTreatmentEntity: r, treatmentItems: treatmentItems));
             treatment = r.treatment ?? "";
           },
         );
@@ -111,20 +111,23 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
           nonSurgicalTreatmentEntity: event.nonSurgicalTreatmentEntity,
           delete: event.delete,
         ));
-        result.fold(
-          (l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
-          (r) async {
-            // emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
-
-            if (event.dentalExaminationEntity != null)
-              await saveDentalExaminationUseCase(event.dentalExaminationEntity!).then((value) {
-                value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
-                    (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
-              });
-            else
-              emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
-          },
-        );
+        if (result.isLeft()) {
+          result.fold(
+            (l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
+            (r) async {
+              // emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
+            },
+          );
+          return;
+        } else {
+          if (event.dentalExaminationEntity != null)
+            await saveDentalExaminationUseCase(event.dentalExaminationEntity!).then((value) {
+              value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
+                  (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
+            });
+          else
+            emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
+        }
       },
     );
     on<NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent>(

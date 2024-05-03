@@ -2,7 +2,6 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemByName.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
@@ -31,7 +30,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final GetTreatmentDetailsUseCase getTreatmentDetailsUseCase;
   final SaveTreatmentDetailsUseCase saveTreatmentDetailsUseCase;
   final SaveTreatmentPlanUseCase saveTreatmentPlanUseCase;
-  final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
   final ConsumeImplantUseCase consumeImplantUseCase;
   final GetTreatmentItemsUseCase getTreatmentItemsUseCase;
   final GetPostSurgicalTreatmentUseCase getPostSurgicalTreatmentUseCase;
@@ -52,7 +50,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
     required this.saveTreatmentPlanUseCase,
     required this.getTreatmentPlanUseCase,
     required this.getTreatmentItemsUseCase,
-    required this.getTreatmentPricesUseCase,
     required this.savePostSurgeryDataUseCase,
     required this.consumeImplantUseCase,
     required this.getPostSurgicalTreatmentUseCase,
@@ -73,18 +70,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
       },
     );
 
-    on<TreatmentBloc_GetTreatmentPrices>(
-      (event, emit) async {
-        final pricesResult = await getTreatmentPricesUseCase(NoParams());
-        pricesResult.fold(
-          (l) => null,
-          (r) {
-            _prices = r;
-            emit(TreatmentBloc_LoadedTreatmentPricesState(prices: _prices));
-          },
-        );
-      },
-    );
+   
 
     on<TreatmentBloc_GetPostSurgicalTreatmentDataEvent>(
       (event, emit) async {

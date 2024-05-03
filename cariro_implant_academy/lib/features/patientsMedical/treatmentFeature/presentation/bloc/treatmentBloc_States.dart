@@ -138,16 +138,7 @@ class TreatmentBloc_AcceptingChangesErrorState extends TreatmentBloc_States {
   List<Object?> get props => [message];
 }
 
-class TreatmentBloc_LoadedTreatmentPricesState extends TreatmentBloc_States {
-  final TreatmentPricesEntity prices;
 
-  TreatmentBloc_LoadedTreatmentPricesState({
-    required this.prices,
-  });
-
-  @override
-  List<Object?> get props => [prices];
-}
 
 class TreatmentBloc_ChangedViewState extends TreatmentBloc_States {
   final bool edit;

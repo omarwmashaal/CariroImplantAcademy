@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../../features/patient/domain/entities/roomEntity.dart';
@@ -268,7 +269,7 @@ class SettingsBloc_EditRoomsEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_EditTreatmentPricesEvent extends SettingsBloc_Events {
-  final TreatmentPricesEntity prices;
+  final List<TreatmentItemEntity> prices;
 
   SettingsBloc_EditTreatmentPricesEvent({required this.prices});
 

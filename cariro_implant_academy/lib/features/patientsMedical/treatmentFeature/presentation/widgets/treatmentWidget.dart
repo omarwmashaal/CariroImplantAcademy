@@ -67,7 +67,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   late MedicalInfoShellBloc medicalShellBloc;
   late TreatmentBloc bloc;
   int totalPrice = 0;
-  TreatmentPricesEntity prices = TreatmentPricesEntity();
+  // TreatmentPricesEntity prices = TreatmentPricesEntity();
 
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
@@ -94,7 +94,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc = BlocProvider.of<TreatmentBloc>(context);
     bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
-    bloc.add(TreatmentBloc_GetTreatmentPrices());
+    //bloc.add(TreatmentBloc_GetTreatmentPrices());
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical ? "Surgical Treatment" : "Treatment Plan"));
     medicalShellBloc.saveChanges = () => save();
   }
@@ -114,9 +114,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               } else if (state is TreatmentBloc_ChangedViewState) {
                 viewOnlyMode = !state.edit;
                 if (viewOnlyMode) totalPrice = state.total;
-              } else if (state is TreatmentBloc_LoadedTreatmentPricesState)
-                prices = state.prices;
-              else if (state is TreatmentBloc_ConsumedItemSuccessfullyState) {
+              } else if (state is TreatmentBloc_ConsumedItemSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true, message: state.message);
               } else if (state is TreatmentBloc_ConsumeItemErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
@@ -152,7 +150,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                 treatmentDetails = state.details;
                 treatmentPlanEntity = state.data;
                 treatmentItems = state.treatmentItems;
-                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentDetails));
+                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentPlanEntity));
 
                 return FocusTraversalGroup(
                   policy: OrderedTraversalPolicy(),
@@ -229,7 +227,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             return CIA_MultiSelectChipWidget(
                                 key: GlobalKey(),
                                 onChange: (item, isSelected) {
-                                  if (treatmentItems.firstWhere((element) => element.id==int.parse(item)).name == "Scaling") {
+                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).name == "Scaling") {
                                     selectedTreatmentItemId = [int.parse(item)];
                                     selectedTeeth = [0];
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
@@ -250,7 +248,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                       (e) => CIA_MultiSelectChipWidgeModel(
                                         label: e.name ?? "",
                                         borderColor: e.isImplant() ? Colors.orange : null,
-                                        value: e.id?.toString()??"0",
+                                        value: e.id?.toString() ?? "0",
                                       ),
                                     )
                                     .toList()
@@ -514,7 +512,6 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               patientId: widget.patientId,
               toothID: tooth!,
               isSurgical: widget.surgical,
-              prices: prices,
               acceptChanges: (request) => bloc.add(
                 TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId),
               ),

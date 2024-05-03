@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/im
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../../Models/ImplantModel.dart';
@@ -104,7 +105,7 @@ class SettingsBloc_LoadingTreatmentPricesErrorState extends SettingsBlocErrorSta
 }
 
 class SettingsBloc_LoadedTreatmentPricesSuccessfullyState extends SettingsBloc_States {
-  final TreatmentPricesEntity data;
+  final List<TreatmentItemEntity> data;
 
   SettingsBloc_LoadedTreatmentPricesSuccessfullyState({required this.data});
 

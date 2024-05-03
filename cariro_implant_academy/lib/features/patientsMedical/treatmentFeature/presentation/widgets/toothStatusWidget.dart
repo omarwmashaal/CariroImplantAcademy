@@ -48,7 +48,6 @@ class ToothStatusWidget extends StatefulWidget {
       required this.data,
       this.onDelete,
       this.isImplant = false,
-      this.settingsPrice = 0,
       required this.patientId,
       required this.isSurgical,
       required this.acceptChanges,
@@ -59,7 +58,6 @@ class ToothStatusWidget extends StatefulWidget {
   bool isImplant;
   Function? onDelete;
   bool viewOnlyMode;
-  int? settingsPrice;
   bool isSurgical;
   int patientId;
   TreatmentBloc bloc;
@@ -174,11 +172,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       child: Row(
                     children: [
                       FormTextKeyWidget(text: "Price: "),
-                      FormTextKeyWidget(
-                          text: (widget.data.planPrice != 0 && widget.data.planPrice != null
-                                  ? widget.data.planPrice ?? widget.settingsPrice
-                                  : widget.settingsPrice)
-                              .toString()),
+                      FormTextKeyWidget(text: (widget.data.planPrice).toString()),
                     ],
                   )),
                 )
@@ -271,7 +265,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       flex: 2,
                       child: Row(
                         children: [
-                          if (widget.data.hasPrice() && !widget.isSurgical)
+                          if (!widget.isSurgical)
                             Expanded(
                               child: CIA_TextFormField(
                                 suffix: "EGP",
@@ -593,7 +587,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
   @override
   void initState() {
     // bloc = BlocProvider.of<TreatmentBloc>(context);
-    if (widget.data.hasPrice()) widget.data.planPrice = widget.data.planPrice ?? widget.settingsPrice;
+    widget.data.planPrice = widget.data.planPrice ?? widget.data.treatmentItem?.price ?? 0;
   }
 
   void teethData() {
@@ -804,7 +798,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                 suffix: "EGP",
                                 onChange: (value) => widget.data.planPrice = int.parse(value),
                                 controller: TextEditingController(
-                                  text: widget.data.planPrice?.toString() ?? widget.settingsPrice?.toString() ?? "0",
+                                  text: widget.data.planPrice!.toString(),
                                 ),
                               )
                             ],
