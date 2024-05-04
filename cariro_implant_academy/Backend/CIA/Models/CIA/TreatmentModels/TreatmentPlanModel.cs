@@ -270,6 +270,10 @@ namespace CIA.Models.TreatmentModels
         public String Name { get; set; }
         public int Price { get; set; } = 0;
         public String? PriceAction { get; set; }
+        public bool AllowAssign { get; set; } = true;
+        public bool ShowInSurgical { get; set; } = true;
+        public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
+        
     }
 
 }

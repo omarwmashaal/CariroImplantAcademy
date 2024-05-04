@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -36,7 +37,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 
 import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import '../../../../presentation/widgets/CIA_GestureWidget.dart';
-import '../../domain/entities/treatmentPricesEntity.dart';
+
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../bloc/settingsBloc.dart';
 import '../bloc/settingsBloc_Events.dart';
@@ -1429,95 +1430,63 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                       } else if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState ||
                           state is SettingsBloc_LoadingTreatmentPricesErrorState ||
                           state is SettingsBloc_LoadingTreatmentPricesState) {
-                        TreatmentPricesEntity TreatmentPrices = TreatmentPricesEntity();
-                        if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState)
-                          print(""); //TreatmentPrices = state.data;
-                        else if (state is SettingsBloc_LoadingTreatmentPricesState)
+                        if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState) {
+                          var treatmentItems = state.data;
+                          return Expanded(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ListView(
+                                      children: treatmentItems
+                                          .map(
+                                            (e) => Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                children: [
+                                                  CIA_TextFormField(
+                                                    label: e.name ?? "",
+                                                    isNumber: true,
+                                                    controller: TextEditingController(text: e.price?.toString() ?? ""),
+                                                    onChange: (value) {
+                                                      e.price = int.tryParse(value) ?? 0;
+                                                    },
+                                                  ),
+                                                  CIA_CheckBoxWidget(
+                                                      text: "Allow Assign", value: e.allowAssign, onChange: (value) => e.allowAssign = value),
+                                                  CIA_CheckBoxWidget(
+                                                      text: "Show in surgial",
+                                                      value: e.showInSurgical,
+                                                      onChange: (value) => e.showInSurgical = value),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                          .toList()),
+                                ),
+                                Row(
+                                  children: [
+                                    CIA_PrimaryButton(
+                                        isLong: true,
+                                        label: "Save",
+                                        onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: treatmentItems))),
+                                    CIA_SecondaryButton(
+                                        label: "Add New",
+                                        onTab: () {
+                                          CIA_ShowPopUp(
+                                              context: context,
+                                              child: Column(
+                                                children: [],
+                                              ));
+                                        })
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else if (state is SettingsBloc_LoadingTreatmentPricesState)
                           return LoadingWidget();
                         else if (state is SettingsBloc_LoadingTreatmentPricesErrorState) return BigErrorPageWidget(message: state.message);
-                        return Expanded(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: ListView(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Crown",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.crown?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.crown = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Scaling",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.scaling?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.scaling = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Root Canal Treatment",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.rootCanalTreatment?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.rootCanalTreatment = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Restoration",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.restoration?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.restoration = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Extraction",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.extraction?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.extraction = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: "Other",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: TreatmentPrices.other?.toString() ?? ""),
-                                        onChange: (value) {
-                                          TreatmentPrices.other = int.parse(value);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              CIA_PrimaryButton(
-                                isLong: true,
-                                label: "Save",
-                                onTab: () => null//bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: TreatmentPrices)),
-                              )
-                            ],
-                          ),
-                        );
                       }
 
                       return Container();

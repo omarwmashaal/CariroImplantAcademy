@@ -1,5 +1,5 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/requestChangeEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/postSurgicalTreatmentEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
@@ -19,7 +19,7 @@ class TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState extends TreatmentBl
   final List<TreatmentItemEntity> treatmentItems;
   final TreatmentPlanEntity data;
 
-  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.details, required this.data,required this.treatmentItems});
+  TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState({required this.details, required this.data, required this.treatmentItems});
 
   @override
   List<Object?> get props => [details];
@@ -160,8 +160,6 @@ class TreatmentBloc_AcceptingChangesErrorState extends TreatmentBloc_States {
   @override
   List<Object?> get props => [message];
 }
-
-
 
 class TreatmentBloc_ChangedViewState extends TreatmentBloc_States {
   final bool edit;

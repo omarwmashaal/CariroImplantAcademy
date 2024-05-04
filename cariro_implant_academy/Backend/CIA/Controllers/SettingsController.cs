@@ -4,6 +4,7 @@ using CIA.Models;
 using CIA.Models.CIA;
 using CIA.Models.CIA.DTOs;
 using CIA.Models.CIA.TreatmentModels;
+using CIA.Models.TreatmentModels;
 using CIA.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -695,12 +696,10 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpPut("EditTreatmentPrices")]
-        public async Task<IActionResult> EditTreatmentPrices(TreatmentPrice prices)
+        public async Task<IActionResult> EditTreatmentPrices(List<TreatmentItemModel> prices)
         {
-            var p = await _cia_DbContext.TreatmentPrices.FirstAsync();
-            _cia_DbContext.TreatmentPrices.Remove(p);
-            _cia_DbContext.SaveChanges();
-            _cia_DbContext.TreatmentPrices.Add(prices);
+
+            _cia_DbContext.TreatmentItems.UpdateRange(prices);
             _cia_DbContext.SaveChanges();
             _aPI_Response.Result = prices;
             return Ok(_aPI_Response);

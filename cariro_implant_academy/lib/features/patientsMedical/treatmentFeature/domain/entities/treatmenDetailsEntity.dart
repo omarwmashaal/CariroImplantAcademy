@@ -129,11 +129,7 @@ class TreatmentDetailsEntity extends Equatable {
   //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
   // }
 
-  bool hasAssign() {
-    return this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "restoration".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "rootcanaltreatment".removeAllWhitespace.toLowerCase() ||
-        this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "extraction".removeAllWhitespace.toLowerCase();
-  }
+  
 
   bool isImplant() => treatmentItem?.isImplant() ?? false;
 }

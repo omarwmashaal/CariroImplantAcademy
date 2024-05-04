@@ -155,7 +155,6 @@ namespace CIA.Controllers
                 Include(x => x.TreatmentItem).
                 ToListAsync();
 
-            var prices = await _cia_DbContext.TreatmentPrices.FirstAsync();
 
 
 
@@ -1513,7 +1512,7 @@ namespace CIA.Controllers
         [HttpGet("GetTreatmentItems")]
         public async Task<IActionResult> GetTreatmentItems()
         {
-            _aPI_Response.Result = await _cia_DbContext.TreatmentItems.OrderBy(x => x.Id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.TreatmentItems.Where(x=>x.Website==_site).OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);
         }
 

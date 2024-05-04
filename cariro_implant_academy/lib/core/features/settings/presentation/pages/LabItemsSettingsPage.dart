@@ -41,7 +41,7 @@ import '../../../../../Widgets/SlidingTab.dart';
 import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../../../presentation/widgets/CIA_GestureWidget.dart';
-import '../../domain/entities/treatmentPricesEntity.dart';
+
 import '../../domain/useCases/addLabItemsUseCase.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../bloc/settingsBloc.dart';
@@ -136,7 +136,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                             ),
                           );
                         },
-                        icon: !siteController.getRole()!.contains("admin")?Container(): Icon(Icons.edit)),
+                        icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
                     onTap: () {
                       bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: e.id!));
                       currentIndex = e.id!;
@@ -242,7 +242,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                                               ),
                                                             );
                                                           },
-                                                          icon:!siteController.getRole()!.contains("admin")?Container():  Icon(Icons.edit)),
+                                                          icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
                                                     ))
                                                 .toList()),
                                       ),
@@ -296,9 +296,9 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                             }
                           },
                           buildWhen: (previous, current) =>
-                          current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
+                              current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
                               current is SettingsBloc_LoadingLabItemsCompaniesState ||
-                              current is SettingsBloc_LoadingLabItemsCompaniesErrorState||
+                              current is SettingsBloc_LoadingLabItemsCompaniesErrorState ||
                               current is SettingsBloc_LoadedLabItemsShadesSuccessfullyState ||
                               current is SettingsBloc_LoadingLabItemsShadesErrorState ||
                               current is SettingsBloc_LoadingLabItemsShadesState,
@@ -317,86 +317,85 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                 fontSize: 10,
                               );
 
-
-                              return Column(
-                                children: [
-                                  FormTextKeyWidget(text: "Shades"),
-                                  Expanded(
-                                    child: SidebarX(
-                                        controller: SidebarXController(selectedIndex: 0, extended: true),
-                                        showToggleButton: false,
-                                        extendedTheme: SidebarXTheme(
-                                            width: 200,
-                                            selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                            decoration: BoxDecoration(
-                                              border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
-                                            )),
-                                        items: itemShades
-                                            .map((e) => SidebarXItem(
-                                                label: e.name ?? "",
-                                                onTap: () {
-                                                  shadeId = e.id!;
-                                                  bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: e.id!));
-                                                },
-                                                iconWidget: IconButton(
-                                                    onPressed: () {
-                                                      CIA_ShowPopUp(
-                                                        onSave: () {
-                                                          bloc.add(
-                                                            SettingsBloc_UpdateLabItemShadesEvent(
-                                                              params: UpdateLabItemsShadesParams(
-                                                                companyId: companyId,
-                                                                data: itemShades,
-                                                              ),
+                            return Column(
+                              children: [
+                                FormTextKeyWidget(text: "Shades"),
+                                Expanded(
+                                  child: SidebarX(
+                                      controller: SidebarXController(selectedIndex: 0, extended: true),
+                                      showToggleButton: false,
+                                      extendedTheme: SidebarXTheme(
+                                          width: 200,
+                                          selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                          decoration: BoxDecoration(
+                                            border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
+                                          )),
+                                      items: itemShades
+                                          .map((e) => SidebarXItem(
+                                              label: e.name ?? "",
+                                              onTap: () {
+                                                shadeId = e.id!;
+                                                bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: e.id!));
+                                              },
+                                              iconWidget: IconButton(
+                                                  onPressed: () {
+                                                    CIA_ShowPopUp(
+                                                      onSave: () {
+                                                        bloc.add(
+                                                          SettingsBloc_UpdateLabItemShadesEvent(
+                                                            params: UpdateLabItemsShadesParams(
+                                                              companyId: companyId,
+                                                              data: itemShades,
                                                             ),
-                                                          );
-                                                        },
-                                                        context: context,
-                                                        title: "Edit Name",
-                                                        child: CIA_TextFormField(
-                                                          label: "Name",
-                                                          controller: TextEditingController(text: e.name ?? ""),
-                                                          onChange: (value) => e.name = value,
-                                                        ),
-                                                      );
-                                                    },
-                                                    icon:!siteController.getRole()!.contains("admin")?Container():  Icon(Icons.edit))))
-                                            .toList()),
-                                  ),
-                                  IconButton(
-                                      onPressed: () {
-                                        String newName = "";
-                                        CIA_ShowPopUp(
-                                          context: context,
-                                          onSave: () {
-                                            newName == ""
-                                                ? null
-                                                : itemShades = [
-                                                    ...itemShades,
-                                                    BasicNameIdObjectEntity(
-                                                      name: newName,
-                                                    )
-                                                  ];
+                                                          ),
+                                                        );
+                                                      },
+                                                      context: context,
+                                                      title: "Edit Name",
+                                                      child: CIA_TextFormField(
+                                                        label: "Name",
+                                                        controller: TextEditingController(text: e.name ?? ""),
+                                                        onChange: (value) => e.name = value,
+                                                      ),
+                                                    );
+                                                  },
+                                                  icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit))))
+                                          .toList()),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      String newName = "";
+                                      CIA_ShowPopUp(
+                                        context: context,
+                                        onSave: () {
+                                          newName == ""
+                                              ? null
+                                              : itemShades = [
+                                                  ...itemShades,
+                                                  BasicNameIdObjectEntity(
+                                                    name: newName,
+                                                  )
+                                                ];
 
-                                            bloc.add(
-                                              SettingsBloc_UpdateLabItemShadesEvent(
-                                                params: UpdateLabItemsShadesParams(
-                                                  companyId: companyId,
-                                                  data: itemShades,
-                                                ),
+                                          bloc.add(
+                                            SettingsBloc_UpdateLabItemShadesEvent(
+                                              params: UpdateLabItemsShadesParams(
+                                                companyId: companyId,
+                                                data: itemShades,
                                               ),
-                                            );
-                                          },
-                                          child: CIA_TextFormField(
-                                            label: "Name",
-                                            controller: TextEditingController(text: ""),
-                                            onChange: (value) => newName = value,
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(Icons.add))
-                                ],
-                              );
+                                            ),
+                                          );
+                                        },
+                                        child: CIA_TextFormField(
+                                          label: "Name",
+                                          controller: TextEditingController(text: ""),
+                                          onChange: (value) => newName = value,
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.add))
+                              ],
+                            );
                           },
                         ),
                         BlocConsumer<SettingsBloc, SettingsBloc_States>(
@@ -428,67 +427,67 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
                                 message: state.message,
                                 fontSize: 10,
                               );
-                              return Expanded(
-                                child: Column(
-                                  children: [
-                                    FormTextKeyWidget(text: "Lab Items"),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        itemCount: labItems.length,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(bottom: 10.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: CIA_TextFormField(
-                                                      label: "Code",
-                                                      controller: TextEditingController(text: labItems[index].code),
-                                                      onChange: (value) => labItems[index].code = value),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Expanded(
-                                                  child: CIA_TextFormField(
-                                                      label: "Size",
-                                                      controller: TextEditingController(text: labItems[index].size),
-                                                      onChange: (value) => labItems[index].size = value),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      labItems=[...labItems,LabItemEntity(labItemShadeId: shadeId)];
-                                                      bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));
-                                                    },
-                                                    icon: Icon(Icons.add)),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
+                            return Expanded(
+                              child: Column(
+                                children: [
+                                  FormTextKeyWidget(text: "Lab Items"),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: labItems.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 10.0),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: CIA_TextFormField(
+                                                    label: "Code",
+                                                    controller: TextEditingController(text: labItems[index].code),
+                                                    onChange: (value) => labItems[index].code = value),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                child: CIA_TextFormField(
+                                                    label: "Size",
+                                                    controller: TextEditingController(text: labItems[index].size),
+                                                    onChange: (value) => labItems[index].size = value),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    labItems = [...labItems, LabItemEntity(labItemShadeId: shadeId)];
+                                                    bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));
+                                                  },
+                                                  icon: Icon(Icons.add)),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    FormTextKeyWidget(text: "Items with empty fields will be deleted!", color: Colors.red),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    CIA_PrimaryButton(
-                                        label: "Save",
-                                        onTab: () {
-                                          bloc.add(SettingsBloc_UpdateLabItemEvent(
-                                              params: UpdateLabItemsParams(
-                                            data: labItems,
-                                            shadeId: shadeId,
-                                          )));
-                                        })
-                                  ],
-                                ),
-                              );
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  FormTextKeyWidget(text: "Items with empty fields will be deleted!", color: Colors.red),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CIA_PrimaryButton(
+                                      label: "Save",
+                                      onTab: () {
+                                        bloc.add(SettingsBloc_UpdateLabItemEvent(
+                                            params: UpdateLabItemsParams(
+                                          data: labItems,
+                                          shadeId: shadeId,
+                                        )));
+                                      })
+                                ],
+                              ),
+                            );
                           },
                         ),
                       ],

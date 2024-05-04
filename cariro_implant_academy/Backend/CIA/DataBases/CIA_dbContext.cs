@@ -85,7 +85,6 @@ namespace CIA.DataBases
         public DbSet<Lab_RequestStep> Lab_RequestSteps { get; set; }
         public DbSet<Lab_DefaultStep> Lab_DefaultSteps { get; set; }
         public DbSet<Lab_CustomerWorkPlace> Lab_CustomerWorkPlaces { get; set; }
-        public DbSet<TreatmentPrice> TreatmentPrices { get; set; }
         public DbSet<PaymentLog> PaymentLogs { get; set; }
         public DbSet<NotificationModel> Notifications { get; set; }
         public DbSet<Restoration> Restorations { get; set; }
@@ -157,21 +156,21 @@ namespace CIA.DataBases
 
 
 
-            List<TreatmentPrice> treatmentPrices = new List<TreatmentPrice> {
-                new TreatmentPrice{
-                    Id = 1,
-                    Crown = 0,
-                    Extraction = 0,
-                    Restoration = 0,
-                    Scaling = 0,
-                    RootCanalTreatment = 0,
-                    Implant = 0,
-                    Other = 0,
+            //List<TreatmentPrice> treatmentPrices = new List<TreatmentPrice> {
+            //    new TreatmentPrice{
+            //        Id = 1,
+            //        Crown = 0,
+            //        Extraction = 0,
+            //        Restoration = 0,
+            //        Scaling = 0,
+            //        RootCanalTreatment = 0,
+            //        Implant = 0,
+            //        Other = 0,
 
-                },
+            //    },
 
-            };
-            modelBuilder.Entity<TreatmentPrice>().HasData(treatmentPrices);
+            //};
+            //modelBuilder.Entity<TreatmentPrice>().HasData(treatmentPrices);
 
             List<ClinicPricesModel> clinicPricesModels = new List<ClinicPricesModel>();
             int clinicPriceId = 1;

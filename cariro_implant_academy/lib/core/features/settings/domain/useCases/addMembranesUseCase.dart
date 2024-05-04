@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
@@ -23,9 +23,8 @@ class AddMembranesUseCase extends UseCases<NoParams, AddMembraneParams> {
   }
 }
 
-class AddMembraneParams{
+class AddMembraneParams {
   final int companyId;
-  final List<MembraneEntity>data;
-  AddMembraneParams({required this.companyId,required this.data});
+  final List<MembraneEntity> data;
+  AddMembraneParams({required this.companyId, required this.data});
 }
-

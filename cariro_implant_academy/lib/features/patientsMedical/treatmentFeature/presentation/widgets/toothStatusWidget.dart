@@ -148,7 +148,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       SizedBox(
                         width: 10,
                       ),
-                      widget.data.hasAssign()
+                      widget.data.treatmentItem!.allowAssign
                           ? Expanded(
                               child: Row(
                                 children: [
@@ -388,7 +388,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                       ],
                                     ),
                                   )
-                                : widget.data.hasAssign()
+                                : widget.data.treatmentItem!.allowAssign
                                     ? Row(
                                         children: [
                                           Expanded(

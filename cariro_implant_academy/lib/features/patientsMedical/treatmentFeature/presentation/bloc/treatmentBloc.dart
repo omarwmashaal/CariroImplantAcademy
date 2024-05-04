@@ -1,6 +1,6 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemByName.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
@@ -38,7 +38,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
   final ConsumeItemByIdUseCase consumeItemByIdUseCase;
   final GetTacsUseCase getTacsUseCase;
   final AcceptChangesUseCase acceptChangesUseCase;
-  TreatmentPricesEntity _prices = TreatmentPricesEntity();
   bool editMode = true;
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
@@ -70,8 +69,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
       },
     );
 
-   
-
     on<TreatmentBloc_GetPostSurgicalTreatmentDataEvent>(
       (event, emit) async {
         emit(TreatmentBloc_LoadingPostSurgicalTreatmentDataState());
@@ -82,7 +79,6 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         );
       },
     );
-   
 
     on<TreatmentBloc_GetTreatmentItemsEvent>(
       (event, emit) async {
@@ -121,7 +117,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
         treatmentItemsResult.fold((l) => null, (r) => treatmentItems = r);
         result.fold(
           (l) => emit(TreatmentBloc_LoadingTreatmentDataErrorState(message: l.message ?? "")),
-          (r) => emit(TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState(details: data, data: r,treatmentItems: treatmentItems)),
+          (r) => emit(TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState(details: data, data: r, treatmentItems: treatmentItems)),
         );
       },
     );

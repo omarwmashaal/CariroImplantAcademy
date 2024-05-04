@@ -263,22 +263,26 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final pricesFromSettings = await getTreatmentItemsUseCase(NoParams());
       pricesFromSettings.fold(
         (l) => null,
-        (r) async {
+        (r)  {
           var implantsFromSettings = r.where((element) => element.isImplant()).toList();
-          var implantPrice = r.firstWhere((element) => element.name == "Implant").price ?? 0;
+          var implantPrice = event.prices.firstWhere((element) => element.name == "Implant").price ?? 0;
           implantsFromSettings.forEach((element) {
             element.price = implantPrice;
           });
-          r.removeWhere((element) => element.name == "Implant");
-          r.addAll(implantsFromSettings);
+          event.prices.removeWhere((element) => element.name == "Implant");
+          event.prices.addAll(implantsFromSettings);
 
-          final result = await editTreatmentPricesUseCase(event.prices);
+          
+        },
+      );
+      if(pricesFromSettings.isRight())
+      {
+        final result = await editTreatmentPricesUseCase(event.prices);
           result.fold(
             (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
             (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
           );
-        },
-      );
+      }
     });
     on<SettingsBloc_ChangeImplantLineNameEvent>((event, emit) async {
       emit(SettingsBloc_ChangingImplantLineNameState());

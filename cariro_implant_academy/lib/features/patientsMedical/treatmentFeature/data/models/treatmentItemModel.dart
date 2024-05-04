@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 
 class TreatmentItemModel extends TreatmentItemEntity {
@@ -6,6 +7,9 @@ class TreatmentItemModel extends TreatmentItemEntity {
     super.name,
     super.price,
     super.priceAction,
+    super.website,
+    super.allowAssign,
+    super.showInSurgical,
   });
 
   factory TreatmentItemModel.fromJson(Map<String, dynamic> data) {
@@ -14,6 +18,9 @@ class TreatmentItemModel extends TreatmentItemEntity {
       name: data['name'],
       price: data['price'],
       priceAction: data['priceAction'],
+      website: Website.values[data['website']],
+      allowAssign: data['allowAssign'],
+      showInSurgical: data['showInSurgical'],
     );
   }
 
@@ -23,6 +30,9 @@ class TreatmentItemModel extends TreatmentItemEntity {
       name: entity.name,
       price: entity.price,
       priceAction: entity.priceAction,
+      website: entity.website,
+      allowAssign: entity.allowAssign,
+      showInSurgical: entity.showInSurgical,
     );
   }
 
@@ -31,7 +41,9 @@ class TreatmentItemModel extends TreatmentItemEntity {
     data['id'] = this.id;
     data['name'] = this.name;
     data['price'] = this.price;
-    data['priceAction'] = this.priceAction;
+    data['website'] = this.website.index;
+    data['allowAssign'] = this.allowAssign;
+    data['showInSurgical'] = this.showInSurgical;
     return data;
   }
 }

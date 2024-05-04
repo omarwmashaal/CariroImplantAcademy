@@ -1,6 +1,5 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/clinicPricesModel.dart';
-import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentItemModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
@@ -20,7 +19,6 @@ import '../../domain/entities/clinicPriceEntity.dart';
 import '../../domain/entities/implantEntity.dart';
 import '../../domain/entities/membraneCompanyEnity.dart';
 import '../../domain/entities/tacEntity.dart';
-import '../../domain/entities/treatmentPricesEntity.dart';
 import '../../domain/useCases/addImplantsUseCase.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../models/ImplantModel.dart';

@@ -851,53 +851,6 @@ namespace CIA.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.TreatmentPrice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Crown")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Extraction")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Implant")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Other")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Restoration")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RootCanalTreatment")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Scaling")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TreatmentPrices");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Crown = 0,
-                            Extraction = 0,
-                            Implant = 0,
-                            Other = 0,
-                            Restoration = 0,
-                            RootCanalTreatment = 0,
-                            Scaling = 0
-                        });
-                });
-
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>
                 {
                     b.Property<int?>("Id")
@@ -22105,6 +22058,9 @@ namespace CIA.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
+                    b.Property<bool>("AllowAssign")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -22114,6 +22070,12 @@ namespace CIA.Migrations
 
                     b.Property<string>("PriceAction")
                         .HasColumnType("text");
+
+                    b.Property<bool>("ShowInSurgical")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Website")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

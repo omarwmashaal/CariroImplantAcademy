@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
@@ -28,6 +29,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/roomEnti
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/treatmentWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +40,7 @@ import 'package:expansion_tile_card/expansion_tile_card.dart';
 import '../../../../../Widgets/SlidingTab.dart';
 import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import '../../../../presentation/widgets/CIA_GestureWidget.dart';
-import '../../domain/entities/treatmentPricesEntity.dart';
+
 import '../../domain/useCases/addMembranesUseCase.dart';
 import '../bloc/settingsBloc.dart';
 import '../bloc/settingsBloc_Events.dart';
@@ -185,9 +187,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return BlocListener<SettingsBloc, SettingsBloc_States>(
       listener: (context, state) {
+        if (state is SettingsBloc_EditingTreatmentPricesState)
+          CustomLoader.show(context);
+        else
+          CustomLoader.hide();
         if (state is SettingsBlocSuccessState)
           ShowSnackBar(context, isSuccess: true);
-        else if (state is SettingsBlocErrorState) ShowSnackBar(context, isSuccess: false);
+        else if (state is SettingsBlocErrorState)
+          ShowSnackBar(context, isSuccess: false);
+        else if (state is SettingsBloc_EditingTreatmentPricesErrorState) ShowSnackBar(context, isSuccess: false, message: state.message);
         if (state is SettingsBloc_ChangedImplantCompanyNameSuccessfullyState || state is SettingsBloc_AddedImplantCompaniesSuccessfullyState)
           bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
         else if (state is SettingsBloc_AddedMembraneCompaniesSuccessfullyState)
@@ -1268,20 +1276,68 @@ class _SettingsPageState extends State<SettingsPage> {
                                   .map(
                                     (e) => Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: CIA_TextFormField(
-                                        label: e.name ?? "",
-                                        isNumber: true,
-                                        controller: TextEditingController(text: e.price?.toString() ?? ""),
-                                        onChange: (value) {
-                                          e.price = int.tryParse(value) ?? 0;
-                                        },
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_TextFormField(
+                                              label: e.name ?? "",
+                                              isNumber: true,
+                                              controller: TextEditingController(text: e.price?.toString() ?? ""),
+                                              onChange: (value) {
+                                                e.price = int.tryParse(value) ?? 0;
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(text: "Allow Assign", value: e.allowAssign, onChange: (value) => e.allowAssign = value),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(
+                                              text: "Show in surgial", value: e.showInSurgical, onChange: (value) => e.showInSurgical = value),
+                                        ],
                                       ),
                                     ),
                                   )
                                   .toList()),
                         ),
-                        CIA_PrimaryButton(
-                            isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: treatmentItems)))
+                        Row(
+                          children: [
+                            CIA_PrimaryButton(
+                                isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: treatmentItems))),
+                            CIA_SecondaryButton(
+                                label: "Add New",
+                                onTab: () {
+                                  var newTreatmentItem = TreatmentItemEntity();
+                                  CIA_ShowPopUp(
+                                      context: context,
+                                      onSave: () {
+                                        treatmentItems = [...treatmentItems, newTreatmentItem];
+                                        bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: treatmentItems));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          CIA_TextFormField(
+                                              label: "Name", controller: TextEditingController(), onChange: (v) => newTreatmentItem.name = v),
+                                          SizedBox(height: 10),
+                                          CIA_TextFormField(
+                                              label: "Price",
+                                              isNumber: true,
+                                              controller: TextEditingController(),
+                                              onChange: (v) => newTreatmentItem.price = int.parse(v)),
+                                          SizedBox(height: 10),
+                                          CIA_CheckBoxWidget(
+                                              text: "Allow Assign",
+                                              value: newTreatmentItem.allowAssign,
+                                              onChange: (value) => newTreatmentItem.allowAssign = value),
+                                          SizedBox(height: 10),
+                                          CIA_CheckBoxWidget(
+                                              text: "Show in surgial",
+                                              value: newTreatmentItem.showInSurgical,
+                                              onChange: (value) => newTreatmentItem.showInSurgical = value),
+                                        ],
+                                      ));
+                                })
+                          ],
+                        )
                       ],
                     ),
                   );

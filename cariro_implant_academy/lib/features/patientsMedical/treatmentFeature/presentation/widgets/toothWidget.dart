@@ -1,5 +1,3 @@
-import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
@@ -42,6 +40,7 @@ class ToothWidget extends StatelessWidget {
     var currentToothData = teethData.where((element) => element.tooth == toothID).toList();
     if (currentToothData.isNotEmpty) {
       for (var data in currentToothData) {
+        if (!(data.treatmentItem!.showInSurgical) && isSurgical) continue;
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
         returnValue.add(ToothStatusWidget(
           bloc: bloc,

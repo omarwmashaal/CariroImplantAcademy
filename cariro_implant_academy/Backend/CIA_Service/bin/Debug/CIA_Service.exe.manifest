@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CIA_Service.exe" size="11744">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CIA_Service.exe" size="12256">
       <assemblyIdentity name="CIA_Service" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>wAkhHUGeJImquKu6MI7uSiv56oEWmF2rEahDsH9DVD8=</dsig:DigestValue>
+        <dsig:DigestValue>P0nxI9PaZOD8P38hk5l9dXZgBWXzL1/D9WnXTIa50hw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
