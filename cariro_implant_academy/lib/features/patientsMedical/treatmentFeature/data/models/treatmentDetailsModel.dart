@@ -115,7 +115,6 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     data['implantIDRequest'] = this.implantIDRequest;
     data['requestChangeModel'] = this.requestChangeModel == null ? null : RequestChangeModel.fromEntity(this.requestChangeModel!).toJson();
     data['requestChangeId'] = this.requestChangeId;
-    data['treatmentItem'] = this.treatmentItem == null ? null : TreatmentItemModel.fromEntity(this.treatmentItem!).toJson();
     data['treatmentItemId'] = this.treatmentItemId;
     return data;
   }

@@ -111,6 +111,9 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             listener: (context, state) {
               if (state is TreatmentBloc_SavedTreatmentDataSuccessfullyState) {
                 bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+                ShowSnackBar(context, isSuccess: true);
+              } else if (state is TreatmentBloc_SavingTreatmentDataErrorState) {
+                ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_ChangedViewState) {
                 viewOnlyMode = !state.edit;
                 if (viewOnlyMode) totalPrice = state.total;

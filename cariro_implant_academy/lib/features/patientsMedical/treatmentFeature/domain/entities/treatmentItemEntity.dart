@@ -20,5 +20,5 @@ class TreatmentItemEntity extends Equatable {
         this.priceAction,
       ];
 
-  bool isImplant() => (name?.toLowerCase().contains("implant")??false) && (name?.toLowerCase().contains("without") ?? false);
+  bool isImplant() => (name?.toLowerCase().contains("implant") ?? false) && !(name?.toLowerCase().contains("without") ?? false);
 }
