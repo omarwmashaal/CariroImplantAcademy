@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/clinicPricesModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/treatmentPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentItemModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 
 import '../../../../../features/labRequest/data/models/labItemParentModel.dart';
 import '../../../../../features/labRequest/data/models/labItemModel.dart';
@@ -27,7 +29,6 @@ import '../models/membraneModel.dart';
 import '../models/tacCompanyModel.dart';
 
 abstract class SettingsDatasource {
-  Future<TreatmentPricesModel> getTreatmentPrices();
 
   Future<List<TacCompanyModel>> getTacs();
 
@@ -85,7 +86,7 @@ abstract class SettingsDatasource {
 
   Future<NoParams> editRooms(List<RoomEntity> model);
 
-  Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices);
+Future<NoParams> editTreatmentPrices(List<TreatmentItemEntity> prices);
 
   Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category);
 
@@ -112,22 +113,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
 
   SettingsDatasourceImpl({required this.httpRepo});
 
-  @override
-  Future<TreatmentPricesModel> getTreatmentPrices() async {
-    late StandardHttpResponse response;
-    try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/GetTreatmentPrices");
-    } catch (e) {
-      throw mapException(e);
-    }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
-    try {
-      return TreatmentPricesModel.fromJson(response.body as Map<String, dynamic>);
-    } catch (e) {
-      throw DataConversionException(message: "Couldn't convert data");
-    }
-  }
-
+ 
   @override
   Future<List<BasicNameIdObjectModel>> getImplantCompanies() async {
     late StandardHttpResponse response;
@@ -538,12 +524,12 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<NoParams> editTreatmentPrices(TreatmentPricesEntity prices) async {
+  Future<NoParams> editTreatmentPrices(List<TreatmentItemEntity> prices) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/editTreatmentPrices",
-        body: TreatmentPricesModel.fromEntity(prices).toJson(),
+        body:prices.map((e) => TreatmentItemModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/im
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
@@ -18,7 +19,6 @@ import '../useCases/addMembranesUseCase.dart';
 
 abstract class SettingsRepository{
   //Get Methods
-  Future<Either<Failure,TreatmentPricesEntity>> getTreatmentPrices();
   Future<Either<Failure,List<TacCompanyEntity>>> getTacs();
   Future<Either<Failure,List<MembraneCompanyEntity>>> getMembraneCompanies();
   Future<Either<Failure,List<MembraneEntity>>> getMembranes(int id);
@@ -48,8 +48,8 @@ abstract class SettingsRepository{
   Future<Either<Failure,NoParams>> addStockCategories( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> addPaymentMethods( List<BasicNameIdObjectEntity> model);
   Future<Either<Failure,NoParams>> editRooms( List<RoomEntity> model);
-  Future<Either<Failure,NoParams>> editTreatmentPrices( TreatmentPricesEntity prices);
-  Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,List<EnumClinicPrices>? category);
+Future<Either<Failure,NoParams>> editTreatmentPrices( List<TreatmentItemEntity> prices);
+Future<Either<Failure,List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth,List<EnumClinicPrices>? category);
   Future<Either<Failure,NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
   Future<Either<Failure,List<LabItemParentEntity>>> getLabItemParents();
   Future<Either<Failure,List<BasicNameIdObjectEntity>>> getLabItemCompanies(int id);

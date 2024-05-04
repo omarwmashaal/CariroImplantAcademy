@@ -1,14 +1,13 @@
-import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
-import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/usecases/getTreatmentPlanItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/presentation/bloc/nonSurgicalTreatmentBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +33,7 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
   final SaveDentalExaminationUseCase saveDentalExaminationUseCase;
   final GetTreatmentPlanItemUsecase getTreatmentPlanItemUsecase;
   final AddPatientReceiptUseCase addPatientReceiptUseCase;
+  final GetTreatmentItemsUseCase getTreatmentItemsUseCase;
   bool isInitialized = false;
 
   NonSurgicalTreatmentBloc({
@@ -45,16 +45,20 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
     required this.saveDentalExaminationUseCase,
     required this.getTreatmentPlanItemUsecase,
     required this.addPatientReceiptUseCase,
+    required this.getTreatmentItemsUseCase,
   }) : super(NonSurgicalTreatmentBlocInitialState()) {
     on<NonSurgicalTreatmentBloc_GetDataEvent>(
       (event, emit) async {
         String treatment = "";
         emit(NonSurgicalTreatmentBloc_LoadingData());
         final result = await getNonSurgicalTreatmentUseCase(event.id);
+        final treatmentItemsData = await getTreatmentItemsUseCase(NoParams());
+        List<TreatmentItemEntity> treatmentItems = [];
+        treatmentItemsData.fold((l) => null, (r) => treatmentItems = r);
         result.fold(
           (l) => emit(NonSurgicalTreatmentBloc_DataLoadingError(message: l.message ?? "")),
           (r) {
-            emit(NonSurgicalTreatmentBloc_DataLoadedSuccessfully(nonSurgicalTreatmentEntity: r));
+            emit(NonSurgicalTreatmentBloc_DataLoadedSuccessfully(nonSurgicalTreatmentEntity: r, treatmentItems: treatmentItems));
             treatment = r.treatment ?? "";
           },
         );
@@ -107,20 +111,23 @@ class NonSurgicalTreatmentBloc extends Bloc<NonSurgicalTreatmentBloc_Events, Non
           nonSurgicalTreatmentEntity: event.nonSurgicalTreatmentEntity,
           delete: event.delete,
         ));
-        result.fold(
-          (l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
-          (r) async {
-            // emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
-
-            if (event.dentalExaminationEntity != null)
-              await saveDentalExaminationUseCase(event.dentalExaminationEntity!).then((value) {
-                value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
-                    (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
-              });
-            else
-              emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
-          },
-        );
+        if (result.isLeft()) {
+          result.fold(
+            (l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
+            (r) async {
+              // emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
+            },
+          );
+          return;
+        } else {
+          if (event.dentalExaminationEntity != null)
+            await saveDentalExaminationUseCase(event.dentalExaminationEntity!).then((value) {
+              value.fold((l) => emit(NonSurgicalTreatmentBloc_DataSavingError(message: l.message ?? "")),
+                  (r) => emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully()));
+            });
+          else
+            emit(NonSurgicalTreatmentBloc_DataSavedSuccessfully());
+        }
       },
     );
     on<NonSurgicalTreatmentBloc_GetPaidTreatmentPlanItemEvent>(

@@ -5,28 +5,18 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
 import 'package:dartz/dartz.dart';
 
-class SaveTreatmentPlanUseCase extends UseCases<NoParams, SaveTreatmentPlanParams> {
+class GetTreatmentDetailsUseCase extends UseCases<List<TreatmentDetailsEntity>, int> {
   final TreatmentPlanRepo treatmentPlanRepo;
 
-  SaveTreatmentPlanUseCase({required this.treatmentPlanRepo});
+  GetTreatmentDetailsUseCase({required this.treatmentPlanRepo});
 
   @override
-  Future<Either<Failure, NoParams>> call(SaveTreatmentPlanParams data) async {
-    //data.data.removeWhere((element) => element.isNull());
-    return await treatmentPlanRepo
-        .saveTreatmentPlan(data.id, data.data)
-        .then(
+  Future<Either<Failure, List<TreatmentDetailsEntity>>> call(int id) async {
+    return await treatmentPlanRepo.getTreatmentDetails(id).then(
           (value) => value.fold(
-            (l) => Left(l..message = "Save Treatment Plan: ${l.message ?? ""}"),
+            (l) => Left(l..message = "Get Treatment Details: ${l.message ?? ""}"),
             (r) => Right(r),
           ),
         );
   }
-}
-
-class SaveTreatmentPlanParams {
-  final int id;
-  final TreatmentPlanEntity data;
-
-  SaveTreatmentPlanParams({required this.id, required this.data});
 }

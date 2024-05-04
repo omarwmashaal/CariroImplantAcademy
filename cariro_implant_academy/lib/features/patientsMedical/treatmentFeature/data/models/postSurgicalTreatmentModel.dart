@@ -2,13 +2,12 @@ import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.d
 import 'package:cariro_implant_academy/core/features/settings/data/models/membraneModel.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/tacCompanyModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/requestChangeModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/surgicalTreatmentEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/postSurgicalTreatmentEntity.dart';
 
-class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
-  SurgicalTreatmentModel({
+class PostSurgicalTreatmentModel extends PostSurgicalTreatmentEntity {
+  PostSurgicalTreatmentModel({
     super.id,
+    super.treatmentDetailsModelId,
     super.doctor,
     super.requestChanges,
     super.patientId,
@@ -89,129 +88,131 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     super.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth,
     super.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber,
     super.date,
-    super.surgicalTreatment,
   });
-  
-  factory SurgicalTreatmentModel.fromEntity(SurgicalTreatmentEntity entity)
-  {
-    return SurgicalTreatmentModel(
-      id:entity.id,
-      requestChanges:entity.requestChanges,
-      patientId:entity.patientId,
-      guidedBoneRegeneration:entity.guidedBoneRegeneration,
-      guidedBoneRegenerationBlockGraft:entity.guidedBoneRegenerationBlockGraft,
-      guidedBoneRegenerationBlockGraftChin:entity.guidedBoneRegenerationBlockGraftChin,
-      guidedBoneRegenerationBlockGraftRamus:entity.guidedBoneRegenerationBlockGraftRamus,
-      guidedBoneRegenerationBlockGraftTuberosity:entity.guidedBoneRegenerationBlockGraftTuberosity,
-      guidedBoneRegenerationBlockGraftOther:entity.guidedBoneRegenerationBlockGraftOther,
-      guidedBoneRegenerationCutBy:entity.guidedBoneRegenerationCutBy,
-      guidedBoneRegenerationCutByDisc:entity.guidedBoneRegenerationCutByDisc,
-      guidedBoneRegenerationCutByPiezo:entity.guidedBoneRegenerationCutByPiezo,
-      guidedBoneRegenerationCutByScrews:entity.guidedBoneRegenerationCutByScrews,
-      guidedBoneRegenerationCutByScrewsNumber:entity.guidedBoneRegenerationCutByScrewsNumber,
-      guidedBoneRegenerationBoneParticle:entity.guidedBoneRegenerationBoneParticle,
-      guidedBoneRegenerationBoneParticle100Autogenous:entity.guidedBoneRegenerationBoneParticle100Autogenous,
-      guidedBoneRegenerationBoneParticle100Xenograft:entity.guidedBoneRegenerationBoneParticle100Xenograft,
-      guidedBoneRegenerationACMBur:entity.guidedBoneRegenerationACMBur,
-      guidedBoneRegenerationACMBurArea:entity.guidedBoneRegenerationACMBurArea,
-      guidedBoneRegenerationACMBurNotes:entity.guidedBoneRegenerationACMBurNotes,
-      openSinusLift:entity.openSinusLift,
-      openSinusLiftApproach:entity.openSinusLiftApproach,
-      openSinusLiftApproachString:entity.openSinusLiftApproachString,
-      openSinusLiftFillMaterial:entity.openSinusLiftFillMaterial,
-      openSinusLiftFillMaterialString:entity.openSinusLiftFillMaterialString,
-      openSinusLift_MembraneID:entity.openSinusLift_MembraneID,
-      openSinusLift_Membrane:entity.openSinusLift_Membrane,
-      openSinusLift_Membrane_CompanyID:entity.openSinusLift_Membrane_CompanyID,
-      openSinusLift_Membrane_Company:entity.openSinusLift_Membrane_Company,
-      openSinusLift_TacsCompany:entity.openSinusLift_TacsCompany,
-      openSinusLift_TacsCompanyID:entity.openSinusLift_TacsCompanyID,
-      openSinusLiftTacsNumber:entity.openSinusLiftTacsNumber,
-      softTissueGraft:entity.softTissueGraft,
-      softTissueGraftSurgeryType:entity.softTissueGraftSurgeryType,
-      softTissueGraftSurgeryTypeSoftTissueGraft:entity.softTissueGraftSurgeryTypeSoftTissueGraft,
-      softTissueGraftSurgeryTypeAdvanced:entity.softTissueGraftSurgeryTypeAdvanced,
-      softTissueGraftSurgeryTypeFreeGinivalGraft:entity.softTissueGraftSurgeryTypeFreeGinivalGraft,
-      softTissueGraftSurgeryTypeConnectiveTissueGraft:entity.softTissueGraftSurgeryTypeConnectiveTissueGraft,
-      softTissueGraftSurgeryTypeSurgeryTechnique:entity.softTissueGraftSurgeryTypeSurgeryTechnique,
-      softTissueGraftExposure:entity.softTissueGraftExposure,
-      softTissueGraftExposureCustomizedHealingCollarTeethNumber:entity.softTissueGraftExposureCustomizedHealingCollarTeethNumber,
-      softTissueGraftDonorSite:entity.softTissueGraftDonorSite,
-      softTissueGraftDonorSiteNotes:entity.softTissueGraftDonorSiteNotes,
-      softTissueGraftSuture:entity.softTissueGraftSuture,
-      softTissueGraftSutureMaterial:entity.softTissueGraftSutureMaterial,
-      softTissueGraftSutureTechnique:entity.softTissueGraftSutureTechnique,
-      softTissueGraftSuturePackType:entity.softTissueGraftSuturePackType,
-      softTissueGraftRecipientSite:entity.softTissueGraftRecipientSite,
-      softTissueGraftRecipientSiteArea:entity.softTissueGraftRecipientSiteArea,
-      softTissueGraftAugmentation:entity.softTissueGraftAugmentation,
-      softTissueGraftAugmentationBuccal:entity.softTissueGraftAugmentationBuccal,
-      softTissueGraftAugmentationCrestal:entity.softTissueGraftAugmentationCrestal,
-      softTissueGraftAugmentationLingual:entity.softTissueGraftAugmentationLingual,
-      softTissueGraftAugmentationMesial:entity.softTissueGraftAugmentationMesial,
-      softTissueGraftAugmentationDistal:entity.softTissueGraftAugmentationDistal,
-      softTissueGraftFrenectomy:entity.softTissueGraftFrenectomy,
-      softTissueGraftFrenectomyNotes:entity.softTissueGraftFrenectomyNotes,
-      softTissueGraftBoneGraft:entity.softTissueGraftBoneGraft,
-      softTissueGraftBoneGraftNotes:entity.softTissueGraftBoneGraftNotes,
-      sutureAndTemporizationAndXRay:entity.sutureAndTemporizationAndXRay,
-      sutureAndTemporizationAndXRaySutureSize:entity.sutureAndTemporizationAndXRaySutureSize,
-      sutureAndTemporizationAndXRaySutureSize30:entity.sutureAndTemporizationAndXRaySutureSize30,
-      sutureAndTemporizationAndXRaySutureSize40:entity.sutureAndTemporizationAndXRaySutureSize40,
-      sutureAndTemporizationAndXRaySutureSize50:entity.sutureAndTemporizationAndXRaySutureSize50,
-      sutureAndTemporizationAndXRaySutureSize60:entity.sutureAndTemporizationAndXRaySutureSize60,
-      sutureAndTemporizationAndXRaySutureSize70:entity.sutureAndTemporizationAndXRaySutureSize70,
-      sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal:entity.sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal,
-      sutureAndTemporizationAndXRayMaterial:entity.sutureAndTemporizationAndXRayMaterial,
-      sutureAndTemporizationAndXRayMaterialVicryl:entity.sutureAndTemporizationAndXRayMaterialVicryl,
-      sutureAndTemporizationAndXRayMaterialProline:entity.sutureAndTemporizationAndXRayMaterialProline,
-      sutureAndTemporizationAndXRayMaterialXRay:entity.sutureAndTemporizationAndXRayMaterialXRay,
-      sutureAndTemporizationAndXRayMaterialSutureTechnique:entity.sutureAndTemporizationAndXRayMaterialSutureTechnique,
-      sutureAndTemporizationAndXRayTemporary:entity.sutureAndTemporizationAndXRayTemporary,
-      sutureAndTemporizationAndXRayTemporaryHealingCollar:entity.sutureAndTemporizationAndXRayTemporaryHealingCollar,
-      sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar:entity.sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar,
-      sutureAndTemporizationAndXRayTemporaryCrown:entity.sutureAndTemporizationAndXRayTemporaryCrown,
-      sutureAndTemporizationAndXRayTemporaryMarylandBridge:entity.sutureAndTemporizationAndXRayTemporaryMarylandBridge,
-      sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth:entity.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth,
-      sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber:entity.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber,
-      date:entity.date,
-      surgicalTreatment:entity.surgicalTreatment,
+
+  factory PostSurgicalTreatmentModel.fromEntity(PostSurgicalTreatmentEntity entity) {
+    return PostSurgicalTreatmentModel(
+      id: entity.id,
+      treatmentDetailsModelId: entity.treatmentDetailsModelId,
+      requestChanges: entity.requestChanges,
+      patientId: entity.patientId,
+      guidedBoneRegeneration: entity.guidedBoneRegeneration,
+      guidedBoneRegenerationBlockGraft: entity.guidedBoneRegenerationBlockGraft,
+      guidedBoneRegenerationBlockGraftChin: entity.guidedBoneRegenerationBlockGraftChin,
+      guidedBoneRegenerationBlockGraftRamus: entity.guidedBoneRegenerationBlockGraftRamus,
+      guidedBoneRegenerationBlockGraftTuberosity: entity.guidedBoneRegenerationBlockGraftTuberosity,
+      guidedBoneRegenerationBlockGraftOther: entity.guidedBoneRegenerationBlockGraftOther,
+      guidedBoneRegenerationCutBy: entity.guidedBoneRegenerationCutBy,
+      guidedBoneRegenerationCutByDisc: entity.guidedBoneRegenerationCutByDisc,
+      guidedBoneRegenerationCutByPiezo: entity.guidedBoneRegenerationCutByPiezo,
+      guidedBoneRegenerationCutByScrews: entity.guidedBoneRegenerationCutByScrews,
+      guidedBoneRegenerationCutByScrewsNumber: entity.guidedBoneRegenerationCutByScrewsNumber,
+      guidedBoneRegenerationBoneParticle: entity.guidedBoneRegenerationBoneParticle,
+      guidedBoneRegenerationBoneParticle100Autogenous: entity.guidedBoneRegenerationBoneParticle100Autogenous,
+      guidedBoneRegenerationBoneParticle100Xenograft: entity.guidedBoneRegenerationBoneParticle100Xenograft,
+      guidedBoneRegenerationACMBur: entity.guidedBoneRegenerationACMBur,
+      guidedBoneRegenerationACMBurArea: entity.guidedBoneRegenerationACMBurArea,
+      guidedBoneRegenerationACMBurNotes: entity.guidedBoneRegenerationACMBurNotes,
+      openSinusLift: entity.openSinusLift,
+      openSinusLiftApproach: entity.openSinusLiftApproach,
+      openSinusLiftApproachString: entity.openSinusLiftApproachString,
+      openSinusLiftFillMaterial: entity.openSinusLiftFillMaterial,
+      openSinusLiftFillMaterialString: entity.openSinusLiftFillMaterialString,
+      openSinusLift_MembraneID: entity.openSinusLift_MembraneID,
+      openSinusLift_Membrane: entity.openSinusLift_Membrane,
+      openSinusLift_Membrane_CompanyID: entity.openSinusLift_Membrane_CompanyID,
+      openSinusLift_Membrane_Company: entity.openSinusLift_Membrane_Company,
+      openSinusLift_TacsCompany: entity.openSinusLift_TacsCompany,
+      openSinusLift_TacsCompanyID: entity.openSinusLift_TacsCompanyID,
+      openSinusLiftTacsNumber: entity.openSinusLiftTacsNumber,
+      softTissueGraft: entity.softTissueGraft,
+      softTissueGraftSurgeryType: entity.softTissueGraftSurgeryType,
+      softTissueGraftSurgeryTypeSoftTissueGraft: entity.softTissueGraftSurgeryTypeSoftTissueGraft,
+      softTissueGraftSurgeryTypeAdvanced: entity.softTissueGraftSurgeryTypeAdvanced,
+      softTissueGraftSurgeryTypeFreeGinivalGraft: entity.softTissueGraftSurgeryTypeFreeGinivalGraft,
+      softTissueGraftSurgeryTypeConnectiveTissueGraft: entity.softTissueGraftSurgeryTypeConnectiveTissueGraft,
+      softTissueGraftSurgeryTypeSurgeryTechnique: entity.softTissueGraftSurgeryTypeSurgeryTechnique,
+      softTissueGraftExposure: entity.softTissueGraftExposure,
+      softTissueGraftExposureCustomizedHealingCollarTeethNumber: entity.softTissueGraftExposureCustomizedHealingCollarTeethNumber,
+      softTissueGraftDonorSite: entity.softTissueGraftDonorSite,
+      softTissueGraftDonorSiteNotes: entity.softTissueGraftDonorSiteNotes,
+      softTissueGraftSuture: entity.softTissueGraftSuture,
+      softTissueGraftSutureMaterial: entity.softTissueGraftSutureMaterial,
+      softTissueGraftSutureTechnique: entity.softTissueGraftSutureTechnique,
+      softTissueGraftSuturePackType: entity.softTissueGraftSuturePackType,
+      softTissueGraftRecipientSite: entity.softTissueGraftRecipientSite,
+      softTissueGraftRecipientSiteArea: entity.softTissueGraftRecipientSiteArea,
+      softTissueGraftAugmentation: entity.softTissueGraftAugmentation,
+      softTissueGraftAugmentationBuccal: entity.softTissueGraftAugmentationBuccal,
+      softTissueGraftAugmentationCrestal: entity.softTissueGraftAugmentationCrestal,
+      softTissueGraftAugmentationLingual: entity.softTissueGraftAugmentationLingual,
+      softTissueGraftAugmentationMesial: entity.softTissueGraftAugmentationMesial,
+      softTissueGraftAugmentationDistal: entity.softTissueGraftAugmentationDistal,
+      softTissueGraftFrenectomy: entity.softTissueGraftFrenectomy,
+      softTissueGraftFrenectomyNotes: entity.softTissueGraftFrenectomyNotes,
+      softTissueGraftBoneGraft: entity.softTissueGraftBoneGraft,
+      softTissueGraftBoneGraftNotes: entity.softTissueGraftBoneGraftNotes,
+      sutureAndTemporizationAndXRay: entity.sutureAndTemporizationAndXRay,
+      sutureAndTemporizationAndXRaySutureSize: entity.sutureAndTemporizationAndXRaySutureSize,
+      sutureAndTemporizationAndXRaySutureSize30: entity.sutureAndTemporizationAndXRaySutureSize30,
+      sutureAndTemporizationAndXRaySutureSize40: entity.sutureAndTemporizationAndXRaySutureSize40,
+      sutureAndTemporizationAndXRaySutureSize50: entity.sutureAndTemporizationAndXRaySutureSize50,
+      sutureAndTemporizationAndXRaySutureSize60: entity.sutureAndTemporizationAndXRaySutureSize60,
+      sutureAndTemporizationAndXRaySutureSize70: entity.sutureAndTemporizationAndXRaySutureSize70,
+      sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal: entity.sutureAndTemporizationAndXRaySutureSizeImplantSubcrestal,
+      sutureAndTemporizationAndXRayMaterial: entity.sutureAndTemporizationAndXRayMaterial,
+      sutureAndTemporizationAndXRayMaterialVicryl: entity.sutureAndTemporizationAndXRayMaterialVicryl,
+      sutureAndTemporizationAndXRayMaterialProline: entity.sutureAndTemporizationAndXRayMaterialProline,
+      sutureAndTemporizationAndXRayMaterialXRay: entity.sutureAndTemporizationAndXRayMaterialXRay,
+      sutureAndTemporizationAndXRayMaterialSutureTechnique: entity.sutureAndTemporizationAndXRayMaterialSutureTechnique,
+      sutureAndTemporizationAndXRayTemporary: entity.sutureAndTemporizationAndXRayTemporary,
+      sutureAndTemporizationAndXRayTemporaryHealingCollar: entity.sutureAndTemporizationAndXRayTemporaryHealingCollar,
+      sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar: entity.sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar,
+      sutureAndTemporizationAndXRayTemporaryCrown: entity.sutureAndTemporizationAndXRayTemporaryCrown,
+      sutureAndTemporizationAndXRayTemporaryMarylandBridge: entity.sutureAndTemporizationAndXRayTemporaryMarylandBridge,
+      sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth: entity.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth,
+      sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber: entity.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber,
+      date: entity.date,
     );
   }
 
-  SurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
+  PostSurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    requestChanges = json['requestChanges']==null?null:((json['requestChanges'] as List<dynamic>).map((e) => RequestChangeModel.fromJson(e as Map<String,dynamic>)).toList());
-    doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
-    surgicalTreatment = ((json['surgicalTreatment'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
+    treatmentDetailsModelId = json['treatmentDetailsModelId'];
+    requestChanges = json['requestChanges'] == null
+        ? null
+        : ((json['requestChanges'] as List<dynamic>).map((e) => RequestChangeModel.fromJson(e as Map<String, dynamic>)).toList());
+    doctor = json['doctor'] == null ? null : BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String, dynamic>);
     patientId = json['patientId'];
     guidedBoneRegeneration = json['guidedBoneRegeneration'] ?? false;
     guidedBoneRegenerationBlockGraft = json['guidedBoneRegeneration_BlockGraft'] ?? false;
     guidedBoneRegenerationBlockGraftChin = json['guidedBoneRegeneration_BlockGraft_Chin'] ?? false;
     guidedBoneRegenerationBlockGraftRamus = json['guidedBoneRegeneration_BlockGraft_Ramus'] ?? false ?? false;
     guidedBoneRegenerationBlockGraftTuberosity = json['guidedBoneRegeneration_BlockGraft_Tuberosity'] ?? false ?? false;
-    guidedBoneRegenerationBlockGraftOther = json['guidedBoneRegeneration_BlockGraft_Other']??"";
+    guidedBoneRegenerationBlockGraftOther = json['guidedBoneRegeneration_BlockGraft_Other'] ?? "";
     guidedBoneRegenerationCutBy = json['guidedBoneRegeneration_CutBy'] ?? false;
     guidedBoneRegenerationCutByDisc = json['guidedBoneRegeneration_CutBy_Disc'] ?? false;
     guidedBoneRegenerationCutByPiezo = json['guidedBoneRegeneration_CutBy_Piezo'] ?? false;
     guidedBoneRegenerationCutByScrews = json['guidedBoneRegeneration_CutBy_Screws'] ?? false;
-    guidedBoneRegenerationCutByScrewsNumber = json['guidedBoneRegeneration_CutBy_ScrewsNumber']??0;
+    guidedBoneRegenerationCutByScrewsNumber = json['guidedBoneRegeneration_CutBy_ScrewsNumber'] ?? 0;
     guidedBoneRegenerationBoneParticle = json['guidedBoneRegeneration_BoneParticle'] ?? false;
     guidedBoneRegenerationBoneParticle100Autogenous = json['guidedBoneRegeneration_BoneParticle_100Autogenous'] ?? 0;
-    guidedBoneRegenerationBoneParticle100Xenograft = json['guidedBoneRegeneration_BoneParticle_100Xenograft'] ?? 100-(guidedBoneRegenerationBoneParticle100Autogenous??0);
+    guidedBoneRegenerationBoneParticle100Xenograft =
+        json['guidedBoneRegeneration_BoneParticle_100Xenograft'] ?? 100 - (guidedBoneRegenerationBoneParticle100Autogenous ?? 0);
     guidedBoneRegenerationACMBur = json['guidedBoneRegeneration_ACMBur'] ?? false;
-    guidedBoneRegenerationACMBurArea = json['guidedBoneRegeneration_ACMBur_Area']??"";
-    guidedBoneRegenerationACMBurNotes = json['guidedBoneRegeneration_ACMBur_Notes']??"";
+    guidedBoneRegenerationACMBurArea = json['guidedBoneRegeneration_ACMBur_Area'] ?? "";
+    guidedBoneRegenerationACMBurNotes = json['guidedBoneRegeneration_ACMBur_Notes'] ?? "";
     openSinusLift = json['openSinusLift'] ?? false;
     openSinusLiftApproach = json['openSinusLift_Approach'] ?? false;
-    openSinusLiftApproachString = json['openSinusLift_Approach_String']??"";
+    openSinusLiftApproachString = json['openSinusLift_Approach_String'] ?? "";
     openSinusLiftFillMaterial = json['openSinusLift_FillMaterial'] ?? false;
-    openSinusLiftFillMaterialString = json['openSinusLift_FillMaterial_String']??"";
+    openSinusLiftFillMaterialString = json['openSinusLift_FillMaterial_String'] ?? "";
     openSinusLift_MembraneID = json['openSinusLift_MembraneID'];
-    openSinusLift_Membrane = MembraneModel.fromJson(json['openSinusLift_Membrane']??Map<String,dynamic>());
+    openSinusLift_Membrane = MembraneModel.fromJson(json['openSinusLift_Membrane'] ?? Map<String, dynamic>());
     openSinusLift_Membrane_CompanyID = json['openSinusLift_Membrane_CompanyID'];
-    openSinusLift_Membrane_Company = json['openSinusLift_Membrane_Company'] != null ? new BasicNameIdObjectModel.fromJson(json['openSinusLift_Membrane_Company']) : null;
-    openSinusLift_TacsCompany = TacCompanyModel.fromJson(json['openSinusLift_TacsCompany']??Map<String,dynamic>());
+    openSinusLift_Membrane_Company =
+        json['openSinusLift_Membrane_Company'] != null ? new BasicNameIdObjectModel.fromJson(json['openSinusLift_Membrane_Company']) : null;
+    openSinusLift_TacsCompany = TacCompanyModel.fromJson(json['openSinusLift_TacsCompany'] ?? Map<String, dynamic>());
     openSinusLift_TacsCompanyID = json['openSinusLift_TacsCompanyID'];
     openSinusLiftTacsNumber = json['openSinusLiftTacsNumber'];
     softTissueGraft = json['softTissueGraft'] ?? false;
@@ -220,17 +221,17 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     softTissueGraftSurgeryTypeAdvanced = json['softTissueGraft_SurgeryType_Advanced'] ?? false;
     softTissueGraftSurgeryTypeFreeGinivalGraft = json['softTissueGraft_SurgeryType_FreeGinivalGraft'] ?? false;
     softTissueGraftSurgeryTypeConnectiveTissueGraft = json['softTissueGraft_SurgeryType_ConnectiveTissueGraft'] ?? false;
-    softTissueGraftSurgeryTypeSurgeryTechnique = json['softTissueGraft_SurgeryType_SurgeryTechnique']??"";
+    softTissueGraftSurgeryTypeSurgeryTechnique = json['softTissueGraft_SurgeryType_SurgeryTechnique'] ?? "";
     softTissueGraftExposure = json['softTissueGraft_Exposure'] ?? false;
-    softTissueGraftExposureCustomizedHealingCollarTeethNumber = json['softTissueGraft_Exposure_CustomizedHealingCollarTeethNumber']??"";
+    softTissueGraftExposureCustomizedHealingCollarTeethNumber = json['softTissueGraft_Exposure_CustomizedHealingCollarTeethNumber'] ?? "";
     softTissueGraftDonorSite = json['softTissueGraft_DonorSite'] ?? false;
-    softTissueGraftDonorSiteNotes = json['softTissueGraft_DonorSite_Notes']??"";
+    softTissueGraftDonorSiteNotes = json['softTissueGraft_DonorSite_Notes'] ?? "";
     softTissueGraftSuture = json['softTissueGraft_Suture'] ?? false;
-    softTissueGraftSutureMaterial = json['softTissueGraft_Suture_Material']??"";
-    softTissueGraftSutureTechnique = json['softTissueGraft_Suture_Technique']??"";
-    softTissueGraftSuturePackType = json['softTissueGraft_Suture_PackType']??"";
+    softTissueGraftSutureMaterial = json['softTissueGraft_Suture_Material'] ?? "";
+    softTissueGraftSutureTechnique = json['softTissueGraft_Suture_Technique'] ?? "";
+    softTissueGraftSuturePackType = json['softTissueGraft_Suture_PackType'] ?? "";
     softTissueGraftRecipientSite = json['softTissueGraft_RecipientSite'] ?? false;
-    softTissueGraftRecipientSiteArea = json['softTissueGraft_RecipientSite_Area']??"";
+    softTissueGraftRecipientSiteArea = json['softTissueGraft_RecipientSite_Area'] ?? "";
     softTissueGraftAugmentation = json['softTissueGraft_Augmentation'] ?? false;
     softTissueGraftAugmentationBuccal = json['softTissueGraft_Augmentation_Buccal'] ?? false;
     softTissueGraftAugmentationCrestal = json['softTissueGraft_Augmentation_Crestal'] ?? false;
@@ -238,9 +239,9 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     softTissueGraftAugmentationMesial = json['softTissueGraft_Augmentation_Mesial'] ?? false;
     softTissueGraftAugmentationDistal = json['softTissueGraft_Augmentation_Distal'] ?? false;
     softTissueGraftFrenectomy = json['softTissueGraft_Frenectomy'] ?? false;
-    softTissueGraftFrenectomyNotes = json['softTissueGraft_Frenectomy_Notes']??"";
+    softTissueGraftFrenectomyNotes = json['softTissueGraft_Frenectomy_Notes'] ?? "";
     softTissueGraftBoneGraft = json['softTissueGraft_BoneGraft'] ?? false;
-    softTissueGraftBoneGraftNotes = json['softTissueGraft_BoneGraft_Notes']??"";
+    softTissueGraftBoneGraftNotes = json['softTissueGraft_BoneGraft_Notes'] ?? "";
     sutureAndTemporizationAndXRay = json['sutureAndTemporizationAndXRay'] ?? false;
     sutureAndTemporizationAndXRaySutureSize = json['sutureAndTemporizationAndXRay_SutureSize'] ?? false;
     sutureAndTemporizationAndXRaySutureSize30 = json['sutureAndTemporizationAndXRay_SutureSize_3_0'] ?? false;
@@ -253,22 +254,24 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     sutureAndTemporizationAndXRayMaterialVicryl = json['sutureAndTemporizationAndXRay_Material_Vicryl'] ?? false;
     sutureAndTemporizationAndXRayMaterialProline = json['sutureAndTemporizationAndXRay_Material_Proline'] ?? false;
     sutureAndTemporizationAndXRayMaterialXRay = json['sutureAndTemporizationAndXRay_Material_XRay'] ?? false;
-    sutureAndTemporizationAndXRayMaterialSutureTechnique = json['sutureAndTemporizationAndXRay_Material_SutureTechnique']??"";
+    sutureAndTemporizationAndXRayMaterialSutureTechnique = json['sutureAndTemporizationAndXRay_Material_SutureTechnique'] ?? "";
     sutureAndTemporizationAndXRayTemporary = json['sutureAndTemporizationAndXRay_Temporary'] ?? false;
     sutureAndTemporizationAndXRayTemporaryHealingCollar = json['sutureAndTemporizationAndXRay_Temporary_HealingCollar'] ?? false;
-    sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar = json['sutureAndTemporizationAndXRay_Temporary_CustomizedHeallingCollar'] ?? false;
+    sutureAndTemporizationAndXRayTemporaryCustomizedHeallingCollar =
+        json['sutureAndTemporizationAndXRay_Temporary_CustomizedHeallingCollar'] ?? false;
     sutureAndTemporizationAndXRayTemporaryCrown = json['sutureAndTemporizationAndXRay_Temporary_Crown'] ?? false;
     sutureAndTemporizationAndXRayTemporaryMarylandBridge = json['sutureAndTemporizationAndXRay_Temporary_MarylandBridge'] ?? false;
     sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth = json['sutureAndTemporizationAndXRay_Temporary_BridgeOnTeeth'] ?? false;
     sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber = json['sutureAndTemporizationAndXRay_Temporary_DentureWithGlassFiber'] ?? false;
-    date = DateTime.tryParse(json['date']??"")?.toLocal();
+    date = DateTime.tryParse(json['date'] ?? "")?.toLocal();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['requestChanges'] = this.requestChanges==null?null: (this.requestChanges!.map((e) => RequestChangeModel.fromEntity(e).toJson()).toList());
-    data['surgicalTreatment'] = (this.surgicalTreatment ?? []).map((e) =>TeethTreatmentPlanModel.fromEntity(e).toJson()).toList();
+    data['treatmentDetailsModelId'] = this.treatmentDetailsModelId;
+    data['requestChanges'] =
+        this.requestChanges == null ? null : (this.requestChanges!.map((e) => RequestChangeModel.fromEntity(e).toJson()).toList());
     data['patientId'] = this.patientId;
     data['guidedBoneRegeneration'] = this.guidedBoneRegeneration;
     data['guidedBoneRegeneration_BlockGraft'] = this.guidedBoneRegenerationBlockGraft;
@@ -282,8 +285,9 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     data['guidedBoneRegeneration_CutBy_Screws'] = this.guidedBoneRegenerationCutByScrews;
     data['guidedBoneRegeneration_CutBy_ScrewsNumber'] = this.guidedBoneRegenerationCutByScrewsNumber;
     data['guidedBoneRegeneration_BoneParticle'] = this.guidedBoneRegenerationBoneParticle;
-    data['guidedBoneRegeneration_BoneParticle_100Autogenous'] = this.guidedBoneRegenerationBoneParticle100Autogenous??0;
-    data['guidedBoneRegeneration_BoneParticle_100Xenograft'] = this.guidedBoneRegenerationBoneParticle100Xenograft??100-(this.guidedBoneRegenerationBoneParticle100Autogenous??0);
+    data['guidedBoneRegeneration_BoneParticle_100Autogenous'] = this.guidedBoneRegenerationBoneParticle100Autogenous ?? 0;
+    data['guidedBoneRegeneration_BoneParticle_100Xenograft'] =
+        this.guidedBoneRegenerationBoneParticle100Xenograft ?? 100 - (this.guidedBoneRegenerationBoneParticle100Autogenous ?? 0);
     data['guidedBoneRegeneration_ACMBur'] = this.guidedBoneRegenerationACMBur;
     data['guidedBoneRegeneration_ACMBur_Area'] = this.guidedBoneRegenerationACMBurArea;
     data['guidedBoneRegeneration_ACMBur_Notes'] = this.guidedBoneRegenerationACMBurNotes;
@@ -344,8 +348,7 @@ class SurgicalTreatmentModel extends SurgicalTreatmentEntity {
     data['sutureAndTemporizationAndXRay_Temporary_MarylandBridge'] = this.sutureAndTemporizationAndXRayTemporaryMarylandBridge;
     data['sutureAndTemporizationAndXRay_Temporary_BridgeOnTeeth'] = this.sutureAndTemporizationAndXRayTemporaryBridgeOnTeeth;
     data['sutureAndTemporizationAndXRay_Temporary_DentureWithGlassFiber'] = this.sutureAndTemporizationAndXRayTemporaryDentureWithGlassFiber;
-    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
+    data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();
     return data;
   }
-
 }

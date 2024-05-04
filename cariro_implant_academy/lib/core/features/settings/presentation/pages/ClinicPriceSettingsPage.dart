@@ -87,7 +87,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
         else if (state is SettingsBloc_AddedStockCategoriesSuccessfullyState)
           bloc.add(SettingsBloc_LoadStockCategoriesEvent(website: Website.Clinic));
         else if (state is SettingsBloc_AddedSuppliersSuccessfullyState)
-          bloc.add(SettingsBloc_LoadSuppliersEvent(params: GetSuppliersParams(
+          bloc.add(SettingsBloc_LoadSuppliersEvent(
+              params: GetSuppliersParams(
             website: Website.Clinic,
             medical: false,
           )));
@@ -176,8 +177,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                               ?.toString() ??
                                                           "0"),
                                                   onChange: (v) => percentages
-                                                      .firstWhere(
-                                                          (element) => element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
+                                                      .firstWhere((element) =>
+                                                          element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
                                                       .price = int.parse(v),
                                                 )),
                                                 SizedBox(width: 10),
@@ -194,8 +195,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                               ?.toString() ??
                                                           "0"),
                                                   onChange: (v) => percentages
-                                                      .firstWhere(
-                                                          (element) => element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
+                                                      .firstWhere((element) =>
+                                                          element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
                                                       .price = int.parse(v),
                                                 )),
                                               ],
@@ -223,7 +224,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                                 "0"),
                                                         onChange: (v) => percentages
                                                             .firstWhere((element) =>
-                                                                element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
+                                                                element.category ==
+                                                                EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
                                                             .price = int.parse(v),
                                                       )),
                                                       SizedBox(width: 10),
@@ -242,7 +244,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                                 "0"),
                                                         onChange: (v) => percentages
                                                             .firstWhere((element) =>
-                                                                element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_OperatorPercent)
+                                                                element.category ==
+                                                                EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_OperatorPercent)
                                                             .price = int.parse(v),
                                                       )),
                                                     ],
@@ -257,13 +260,14 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                   controller: TextEditingController(
                                                       text: percentages
                                                               .firstWhere((element) =>
-                                                                  element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
+                                                                  element.category ==
+                                                                  EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
                                                               .price
                                                               ?.toString() ??
                                                           "0"),
                                                   onChange: (v) => percentages
-                                                      .firstWhere(
-                                                          (element) => element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
+                                                      .firstWhere((element) =>
+                                                          element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
                                                       .price = int.parse(v),
                                                 )),
                                               ],
@@ -273,16 +277,19 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                 onTab: () {
                                                   if ((percentages
                                                                   .firstWhere((element) =>
-                                                                      element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
+                                                                      element.category ==
+                                                                      EnumClinicPrices.DoctorsPatientDoctorsOperation_ClinicPercent)
                                                                   .price!) +
                                                               (percentages
                                                                   .firstWhere((element) =>
-                                                                      element.category == EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
+                                                                      element.category ==
+                                                                      EnumClinicPrices.DoctorsPatientDoctorsOperation_DoctorPercent)
                                                                   .price!) !=
                                                           100 ||
                                                       (percentages
                                                                   .firstWhere((element) =>
-                                                                      element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
+                                                                      element.category ==
+                                                                      EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_ClinicPercent)
                                                                   .price!) +
                                                               (percentages
                                                                   .firstWhere((element) =>
@@ -291,7 +298,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                                   .price!) +
                                                               (percentages
                                                                   .firstWhere((element) =>
-                                                                      element.category == EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
+                                                                      element.category ==
+                                                                      EnumClinicPrices.DoctorsPatientAnotherDoctorsOperation_DoctorPercent)
                                                                   .price!) !=
                                                           100)
                                                     ShowSnackBar(context, isSuccess: false, message: "Percent Should Add Up to 100%");
@@ -530,7 +538,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                   current is SettingsBloc_AddedImplantLinesSuccessfullyState ||
                                   current is SettingsBloc_LoadingImplantLinesState,
                               builder: (context, state) {
-                                if (state is SettingsBloc_ChangedImplantLineNameSuccessfullyState || state is SettingsBloc_AddedImplantLinesSuccessfullyState)
+                                if (state is SettingsBloc_ChangedImplantLineNameSuccessfullyState ||
+                                    state is SettingsBloc_AddedImplantLinesSuccessfullyState)
                                   bloc.add(SettingsBloc_LoadImplantLinesEvent(companyId: companyId));
                                 if (state is SettingsBloc_LoadedImplantLinesSuccessfullyState ||
                                     state is SettingsBloc_LoadingImplantLinesState ||
@@ -626,7 +635,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                       state is SettingsBloc_UpdatedImplantsSuccessfullyState ||
                                       state is SettingsBloc_LoadingImplantsState) {
                                     List<ImplantEntity> implants = [];
-                                    if (state is SettingsBloc_UpdatedImplantsSuccessfullyState) bloc.add(SettingsBloc_LoadImplantsEvent(lineId: lineId));
+                                    if (state is SettingsBloc_UpdatedImplantsSuccessfullyState)
+                                      bloc.add(SettingsBloc_LoadImplantsEvent(lineId: lineId));
                                     if (state is SettingsBloc_LoadedImplantsSuccessfullyState)
                                       implants = state.data as List<ImplantEntity>;
                                     else if (state is SettingsBloc_LoadingImplantsErrorState)
@@ -686,7 +696,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                   isLong: true,
                                                   label: "Save",
                                                   onTab: () {
-                                                    bloc.add(SettingsBloc_UpdateImplantsEvent(value: UpdateImplantsParams(data: implants, lineId: lineId)));
+                                                    bloc.add(SettingsBloc_UpdateImplantsEvent(
+                                                        value: UpdateImplantsParams(data: implants, lineId: lineId)));
                                                   }),
                                             ],
                                           ),
@@ -793,7 +804,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                     state is SettingsBloc_LoadingMembranesState ||
                                     state is SettingsBloc_AddedMembranesSuccessfullyState ||
                                     state is SettingsBloc_LoadingMembranesErrorState) {
-                                  if (state is SettingsBloc_AddedMembranesSuccessfullyState) bloc.add(SettingsBloc_LoadMembranesEvent(id: membraneCompanyId));
+                                  if (state is SettingsBloc_AddedMembranesSuccessfullyState)
+                                    bloc.add(SettingsBloc_LoadMembranesEvent(id: membraneCompanyId));
                                   List<MembraneEntity> membranes = [];
                                   if (state is SettingsBloc_LoadedMembranesSuccessfullyState) membranes = state.data as List<MembraneEntity>;
                                   return Expanded(
@@ -1003,7 +1015,9 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                             ));
                                       }),
                                   CIA_PrimaryButton(
-                                      isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddExpensesCategoriesEvent(model: expensesCategories))),
+                                      isLong: true,
+                                      label: "Save",
+                                      onTab: () => bloc.add(SettingsBloc_AddExpensesCategoriesEvent(model: expensesCategories))),
                                 ],
                               )
                             ],
@@ -1060,7 +1074,9 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                             ));
                                       }),
                                   CIA_PrimaryButton(
-                                      isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddIncomeCategoriesEvent(model: incomeCategories))),
+                                      isLong: true,
+                                      label: "Save",
+                                      onTab: () => bloc.add(SettingsBloc_AddIncomeCategoriesEvent(model: incomeCategories))),
                                 ],
                               )
                             ],
@@ -1117,7 +1133,9 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                             ));
                                       }),
                                   CIA_PrimaryButton(
-                                      isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddStockCategoriesEvent(model: stockCategories))),
+                                      isLong: true,
+                                      label: "Save",
+                                      onTab: () => bloc.add(SettingsBloc_AddStockCategoriesEvent(model: stockCategories))),
                                 ],
                               )
                             ],
@@ -1173,11 +1191,14 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                               controller: TextEditingController(text: ""),
                                             ));
                                       }),
-                                  CIA_PrimaryButton(isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_AddSuppliersEvent(
-                                      params: AddSuppliersParams(
-                                        medical: false,
-                                        model: Suppliers,
-                                      )))),
+                                  CIA_PrimaryButton(
+                                      isLong: true,
+                                      label: "Save",
+                                      onTab: () => bloc.add(SettingsBloc_AddSuppliersEvent(
+                                              params: AddSuppliersParams(
+                                            medical: false,
+                                            model: Suppliers,
+                                          )))),
                                 ],
                               )
                             ],
@@ -1301,7 +1322,8 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                                   height: 30,
                                                                   decoration: BoxDecoration(
                                                                     color: element,
-                                                                    border: Border.all(color: selectedColor == element ? Colors.yellow : element, width: 3),
+                                                                    border: Border.all(
+                                                                        color: selectedColor == element ? Colors.yellow : element, width: 3),
                                                                   ),
                                                                 ),
                                                               ),
@@ -1409,7 +1431,7 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                           state is SettingsBloc_LoadingTreatmentPricesState) {
                         TreatmentPricesEntity TreatmentPrices = TreatmentPricesEntity();
                         if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState)
-                          TreatmentPrices = state.data;
+                          print(""); //TreatmentPrices = state.data;
                         else if (state is SettingsBloc_LoadingTreatmentPricesState)
                           return LoadingWidget();
                         else if (state is SettingsBloc_LoadingTreatmentPricesErrorState) return BigErrorPageWidget(message: state.message);
@@ -1489,7 +1511,10 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                 ),
                               ),
                               CIA_PrimaryButton(
-                                  isLong: true, label: "Save", onTab: () => bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: TreatmentPrices)))
+                                isLong: true,
+                                label: "Save",
+                                onTab: () => null//bloc.add(SettingsBloc_EditTreatmentPricesEvent(prices: TreatmentPrices)),
+                              )
                             ],
                           ),
                         );

@@ -10,8 +10,8 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/trearmentPlanPropertyEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/postSurgeryWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothWidget.dart';
@@ -27,7 +27,7 @@ import '../../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc
 import '../../../../../../presentation/widgets/bigErrorPageWidget.dart';
 import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
-import '../../domain/entities/surgicalTreatmentEntity.dart';
+import '../../domain/entities/postSurgicalTreatmentEntity.dart';
 import '../../domain/entities/treatmentPlanEntity.dart';
 import '../bloc/treatmentBloc.dart';
 import '../bloc/treatmentBloc_Events.dart';
@@ -58,33 +58,34 @@ class TreatmentWidget extends StatefulWidget {
 
 class _TreatmentWidgetState extends State<TreatmentWidget> {
   List<int> selectedTeeth = [];
-  List<String> selectedStatus = [];
+  List<int> selectedTreatmentItemId = [];
   bool viewOnlyMode = false;
+  late List<TreatmentDetailsEntity> treatmentDetails;
+  late List<TreatmentItemEntity> treatmentItems;
   late TreatmentPlanEntity treatmentPlanEntity;
-  late SurgicalTreatmentEntity surgicalTreatmentEntity;
   bool editMode = false;
   late MedicalInfoShellBloc medicalShellBloc;
   late TreatmentBloc bloc;
   int totalPrice = 0;
-  TreatmentPricesEntity prices = TreatmentPricesEntity();
+  // TreatmentPricesEntity prices = TreatmentPricesEntity();
 
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
   int? tempCandidateBatch;
 
+  save() {
+    if (medicalShellBloc.allowEdit) {
+      bloc.add(TreatmentBloc_SaveTreatmentDetailsEvent(
+        id: widget.patientId,
+        data: treatmentDetails,
+        generalData: treatmentPlanEntity,
+      ));
+    }
+  }
+
   @override
   void dispose() {
-    if (medicalShellBloc.allowEdit) {
-      if (widget.surgical) {
-        bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
-      } else {
-        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(
-            id: widget.patientId,
-            data: treatmentPlanEntity.treatmentPlan ?? [],
-            clearanceLower: treatmentPlanEntity.clearanceLower,
-            clearanceUpper: treatmentPlanEntity.clearanceUpper));
-      }
-    }
+    save();
     super.dispose();
   }
 
@@ -92,23 +93,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   void initState() {
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc = BlocProvider.of<TreatmentBloc>(context);
-    if (widget.surgical)
-      bloc.add(TreatmentBloc_GetSurgicalTreatmentDataEvent(id: widget.patientId));
-    else
-      bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
-    bloc.add(TreatmentBloc_GetTreatmentPrices());
+    bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+    //bloc.add(TreatmentBloc_GetTreatmentPrices());
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: widget.surgical ? "Surgical Treatment" : "Treatment Plan"));
-    medicalShellBloc.saveChanges = () {
-      if (widget.surgical) {
-        bloc.add(TreatmentBloc_SaveSurgicalTreatmentDataEvent(id: widget.patientId, data: surgicalTreatmentEntity));
-      } else {
-        bloc.add(TreatmentBloc_SaveTreatmentPlanDataEvent(
-            id: widget.patientId,
-            data: treatmentPlanEntity.treatmentPlan ?? [],
-            clearanceLower: treatmentPlanEntity.clearanceLower,
-            clearanceUpper: treatmentPlanEntity.clearanceUpper));
-      }
-    };
+    medicalShellBloc.saveChanges = () => save();
   }
 
   @override
@@ -122,77 +110,22 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
           return BlocConsumer<TreatmentBloc, TreatmentBloc_States>(
             listener: (context, state) {
               if (state is TreatmentBloc_SavedTreatmentDataSuccessfullyState) {
-                if (widget.surgical)
-                  bloc.add(TreatmentBloc_GetSurgicalTreatmentDataEvent(id: widget.patientId));
-                else
-                  bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+                bloc.add(TreatmentBloc_GetTreatmentPlanDataEvent(id: widget.patientId));
+                ShowSnackBar(context, isSuccess: true);
+              } else if (state is TreatmentBloc_SavingTreatmentDataErrorState) {
+                ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_ChangedViewState) {
                 viewOnlyMode = !state.edit;
                 if (viewOnlyMode) totalPrice = state.total;
-              } else if (state is TreatmentBloc_LoadedTreatmentPricesState)
-                prices = state.prices;
-              else if (state is TreatmentBloc_ConsumedItemSuccessfullyState) {
+              } else if (state is TreatmentBloc_ConsumedItemSuccessfullyState) {
                 ShowSnackBar(context, isSuccess: true, message: state.message);
               } else if (state is TreatmentBloc_ConsumeItemErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_UpdatedToothState) {
-                selectedStatus.clear();
+                selectedTreatmentItemId.clear();
                 selectedTeeth.clear();
                 bloc.emit(TreatmentBloc_SelectedStatusState());
                 bloc.emit(TreatmentBloc_ShowTickState(showTick: false));
-              } else if (state is TreatmentBloc_ShowPostSurgeryState) {
-                int tempScrews = (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0);
-                int? membraneSizeId =
-                    surgicalTreatmentEntity.openSinusLift_Membrane != null ? surgicalTreatmentEntity.openSinusLift_Membrane!.id : null;
-                int tacsNumber = surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0;
-                int tacCompany = surgicalTreatmentEntity.openSinusLift_TacsCompanyID ?? 0;
-                CIA_ShowPopUp(
-                  width: 1000,
-                  height: 600,
-                  context: context,
-                  onSave: () async {
-                    if (tempScrews != (surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) {
-                      if (((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) > tempScrews) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume ${((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0)) - tempScrews} Screws?",
-                            context: context,
-                            onSave: () {
-                              bloc.add(
-                                TreatmentBloc_ConsumeItemByNameEvent(
-                                  name: "Screws",
-                                  count: ((surgicalTreatmentEntity.guidedBoneRegenerationCutByScrewsNumber ?? 0) - tempScrews),
-                                ),
-                              );
-                            });
-                      }
-                    }
-                    if (tacCompany != surgicalTreatmentEntity.openSinusLift_TacsCompanyID) tacsNumber = 0;
-                    if (tacsNumber != (surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) {
-                      if ((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0) > tacsNumber) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume ${((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) - tacsNumber} Tacs?",
-                            context: context,
-                            onSave: () async {
-                              bloc.add(TreatmentBloc_ConsumeItemByIdEvent(
-                                  id: surgicalTreatmentEntity.openSinusLift_TacsCompanyID!,
-                                  count: ((surgicalTreatmentEntity.openSinusLiftTacsNumber ?? 0)) - tacsNumber));
-                            });
-                      }
-                    }
-
-                    if (membraneSizeId != surgicalTreatmentEntity.openSinusLift_MembraneID) {
-                      if (surgicalTreatmentEntity.openSinusLift_MembraneID != null) {
-                        await CIA_ShowPopUpYesNo(
-                            title: "Consume 1 ${surgicalTreatmentEntity.openSinusLift_Membrane!.size ?? ""} Membrane?",
-                            context: context,
-                            onSave: () {
-                              bloc.add(TreatmentBloc_ConsumeItemByIdEvent(id: surgicalTreatmentEntity.openSinusLift_MembraneID!, count: 1));
-                            });
-                      }
-                    }
-                  },
-                  child: PostSurgeryWidget(surgicalTreatmentEntity: surgicalTreatmentEntity),
-                );
               } else if (state is TreatmentBloc_AcceptingChangesErrorState) {
                 ShowSnackBar(context, isSuccess: false, message: state.message);
               } else if (state is TreatmentBloc_AcceptedChangesSuccessfullyState) {
@@ -204,7 +137,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                   bloc.add(TreatmentBloc_ConsumeItemByIdEvent(id: state.requestChangeEntity!.dataId!, count: 1));
                 }
               }
-              if (state is TreatmentBloc_AcceptingChangesState) {
+              if (state is TreatmentBloc_AcceptingChangesState || state is TreatmentBloc_SavingTreatmentDataState) {
                 CustomLoader.show(context);
               } else
                 CustomLoader.hide();
@@ -212,20 +145,16 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             buildWhen: (previous, current) =>
                 current is TreatmentBloc_LoadingTreatmentDataState ||
                 current is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
-                current is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState ||
                 current is TreatmentBloc_LoadingTreatmentDataErrorState,
             builder: (context, state) {
               if (state is TreatmentBloc_LoadingTreatmentDataState)
                 return LoadingWidget();
-              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState ||
-                  state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
-                if (state is TreatmentBloc_LoadedSurgicalTreatmentDataSuccessfullyState) {
-                  surgicalTreatmentEntity = state.data;
-                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: surgicalTreatmentEntity));
-                } else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
-                  treatmentPlanEntity = state.data;
-                  medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: state.data.date, data: treatmentPlanEntity));
-                }
+              else if (state is TreatmentBloc_LoadedTreatmentPlanDataSuccessfullyState) {
+                treatmentDetails = state.details;
+                treatmentPlanEntity = state.data;
+                treatmentItems = state.treatmentItems;
+                medicalShellBloc.emit(MedicalInfoBlocChangeDateState(date: treatmentPlanEntity.date, data: treatmentPlanEntity));
+
                 return FocusTraversalGroup(
                   policy: OrderedTraversalPolicy(),
                   child: Column(
@@ -261,20 +190,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                               CIA_MultiSelectChipWidget(
                                 onChange: (item, isSelected) async {
                                   if (item == "View Only Mode") {
-                                    bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentPlanEntity.treatmentPlan ?? []));
-                                  }
-                                  if (item == "Post Surgery") {
-                                    bloc.emit(TreatmentBloc_ShowPostSurgeryState());
+                                    bloc.add(TreatmentBloc_SwitchEditAndSummaryViewsEvent(data: treatmentDetails));
                                   }
                                 },
-                                labels: widget.surgical
-                                    ? [
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Post Surgery", borderColor: Colors.black, round: false, isSelected: false, isButton: true),
-                                      ]
-                                    : [
-                                        CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
-                                      ],
+                                labels: [
+                                  CIA_MultiSelectChipWidgeModel(label: "View Only Mode", borderColor: Colors.black, round: false),
+                                ],
                               ),
                               SizedBox(height: 10),
                               CIA_CheckBoxWidget(
@@ -309,89 +230,101 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             return CIA_MultiSelectChipWidget(
                                 key: GlobalKey(),
                                 onChange: (item, isSelected) {
-                                  if (item == "Scaling") {
-                                    selectedStatus = [item];
+                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).name == "Scaling") {
+                                    selectedTreatmentItemId = [int.parse(item)];
                                     selectedTeeth = [0];
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
                                   }
                                 },
                                 onChangeList: (selectedItems) {
                                   if (selectedTeeth.isEmpty) {
-                                    selectedStatus.clear();
+                                    selectedTreatmentItemId.clear();
                                     bloc.emit(TreatmentBloc_SelectedStatusState());
                                   } else {
-                                    selectedStatus = selectedItems;
+                                    selectedTreatmentItemId = selectedItems.map((e) => int.parse(e)).toList();
 
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
                                   }
                                 },
-                                labels: [
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Simple Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Immediate Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Guided Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Expansion With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Splitting With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "GBR With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Open Sinus With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Closed Sinus With Implant",
-                                    borderColor: Colors.orange,
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Expansion Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Splitting Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "GBR Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Open Sinus Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Closed Sinus Without Implant",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Extraction",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Restoration",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Root Canal Treatment",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Pontic",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Scaling",
-                                  ),
-                                  CIA_MultiSelectChipWidgeModel(
-                                    label: "Crown",
-                                  ),
-                                ]);
+                                labels: treatmentItems
+                                    .map(
+                                      (e) => CIA_MultiSelectChipWidgeModel(
+                                        label: e.name ?? "",
+                                        borderColor: e.isImplant() ? Colors.orange : null,
+                                        value: e.id?.toString() ?? "0",
+                                      ),
+                                    )
+                                    .toList()
+
+                                //  [
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Simple Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Immediate Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Guided Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Expansion With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Splitting With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "GBR With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Open Sinus With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Closed Sinus With Implant",
+                                //     borderColor: Colors.orange,
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Expansion Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Splitting Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "GBR Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Open Sinus Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Closed Sinus Without Implant",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Extraction",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Restoration",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Root Canal Treatment",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Pontic",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Scaling",
+                                //   ),
+                                //   CIA_MultiSelectChipWidgeModel(
+                                //     label: "Crown",
+                                //   ),
+                                // ]
+
+                                );
                           },
                         ),
                       ),
@@ -420,14 +353,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   CIA_GestureWidget(
                                     onTap: () {
                                       bloc.add(TreatmentBloc_UpdateTeethStatusEvent(
-                                        teethData: widget.surgical
-                                            ? surgicalTreatmentEntity.surgicalTreatment ?? []
-                                            : treatmentPlanEntity.treatmentPlan ?? [],
-                                        selectedStatus: selectedStatus,
+                                        teethData: treatmentDetails,
+                                        selectedTreatmentItemId: selectedTreatmentItemId,
                                         selectedTeeth: selectedTeeth,
                                         patientId: widget.patientId,
                                         isSurgical: widget.surgical,
-                                        patientsDoctor: widget.surgical ? surgicalTreatmentEntity.doctor : treatmentPlanEntity.doctor,
+                                        patientsDoctor: treatmentPlanEntity.doctor,
                                       ));
                                     },
                                     child: Icon(
@@ -438,8 +369,8 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                   SizedBox(width: 10),
                                   CIA_GestureWidget(
                                     onTap: () {
-                                      selectedStatus.clear();
-                                      selectedStatus.clear();
+                                      selectedTreatmentItemId.clear();
+                                      selectedTreatmentItemId.clear();
                                       bloc.emit(TreatmentBloc_SelectedStatusState());
                                     },
                                     child: Icon(
@@ -502,11 +433,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             if (state is TreatmentBloc_ChangedViewState) {
                               if (!state.edit) totalPrice = state.total;
                             }
-                            if (state is TreatmentBloc_UpdatedToothState) if (widget.surgical) {
-                              surgicalTreatmentEntity.surgicalTreatment = state.data;
-                            } else {
-                              treatmentPlanEntity.treatmentPlan = state.data;
-                            }
+                            if (state is TreatmentBloc_UpdatedToothState) treatmentDetails = state.data;
                             return ListView(
                               children: _buildTeethWidgets(
                                 stateShell,
@@ -534,111 +461,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
     List<Widget> returnValue = [];
 
     if (sort != _EnumSorting.GroupTeeth) {
-      List<TreatmentPlanPropertyEntity> procedures = [];
-      for (TeethTreatmentPlanEntity toothData
-          in (widget.surgical ? surgicalTreatmentEntity.surgicalTreatment : treatmentPlanEntity.treatmentPlan) ?? []) {
-        if (toothData.rootCanalTreatment != null) {
-          toothData.rootCanalTreatment!.title = AddSpacesToSentence(AddSpacesToSentence("rootCanalTreatment"));
-          toothData.rootCanalTreatment!.tooth = toothData.tooth;
-          procedures.add(toothData.rootCanalTreatment!);
-        }
-        if (toothData.restoration != null) {
-          toothData.restoration!.title = AddSpacesToSentence(AddSpacesToSentence("restoration"));
-          toothData.restoration!.tooth = toothData.tooth;
-          procedures.add(toothData.restoration!);
-        }
-        if (toothData.pontic != null) {
-          toothData.pontic!.title = AddSpacesToSentence("pontic");
-          toothData.pontic!.tooth = toothData.tooth;
-          procedures.add(toothData.pontic!);
-        }
-        if (toothData.extraction != null) {
-          toothData.extraction!.title = AddSpacesToSentence("extraction");
-          toothData.extraction!.tooth = toothData.tooth;
-          procedures.add(toothData.extraction!);
-        }
-        if (toothData.immediateImplant != null) {
-          toothData.immediateImplant!.title = AddSpacesToSentence("immediateImplant");
-          toothData.immediateImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.immediateImplant!);
-        }
-        if (toothData.simpleImplant != null) {
-          toothData.simpleImplant!.title = AddSpacesToSentence("simpleImplant");
-          toothData.simpleImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.simpleImplant!);
-        }
-        if (toothData.expansionWithImplant != null) {
-          toothData.expansionWithImplant!.title = AddSpacesToSentence("expansionWithImplant");
-          toothData.expansionWithImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.expansionWithImplant!);
-        }
-        if (toothData.splittingWithImplant != null) {
-          toothData.splittingWithImplant!.title = AddSpacesToSentence("splittingWithImplant");
-          toothData.splittingWithImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.splittingWithImplant!);
-        }
-        if (toothData.gbrWithImplant != null) {
-          toothData.gbrWithImplant!.title = AddSpacesToSentence("gbrWithImplant");
-          toothData.gbrWithImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.gbrWithImplant!);
-        }
-        if (toothData.openSinusWithImplant != null) {
-          toothData.openSinusWithImplant!.title = AddSpacesToSentence("openSinusWithImplant");
-          toothData.openSinusWithImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.openSinusWithImplant!);
-        }
-        if (toothData.closedSinusWithImplant != null) {
-          toothData.closedSinusWithImplant!.title = AddSpacesToSentence("closedSinusWithImplant");
-          toothData.closedSinusWithImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.closedSinusWithImplant!);
-        }
-        if (toothData.guidedImplant != null) {
-          toothData.guidedImplant!.title = AddSpacesToSentence("guidedImplant");
-          toothData.guidedImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.guidedImplant!);
-        }
-        if (toothData.expansionWithoutImplant != null) {
-          toothData.expansionWithoutImplant!.title = AddSpacesToSentence("expansionWithoutImplant");
-          toothData.expansionWithoutImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.expansionWithoutImplant!);
-        }
-        if (toothData.splittingWithoutImplant != null) {
-          toothData.splittingWithoutImplant!.title = AddSpacesToSentence("splittingWithoutImplant");
-          toothData.splittingWithoutImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.splittingWithoutImplant!);
-        }
-        if (toothData.gbrWithoutImplant != null) {
-          toothData.gbrWithoutImplant!.title = AddSpacesToSentence("gbrWithoutImplant");
-          toothData.gbrWithoutImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.gbrWithoutImplant!);
-        }
-        if (toothData.openSinusWithoutImplant != null) {
-          toothData.openSinusWithoutImplant!.title = AddSpacesToSentence("openSinusWithoutImplant");
-          toothData.openSinusWithoutImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.openSinusWithoutImplant!);
-        }
-        if (toothData.closedSinusWithoutImplant != null) {
-          toothData.closedSinusWithoutImplant!.title = AddSpacesToSentence("closedSinusWithoutImplant");
-          toothData.closedSinusWithoutImplant!.tooth = toothData.tooth;
-          procedures.add(toothData.closedSinusWithoutImplant!);
-        }
-        if (toothData.scaling != null) {
-          toothData.scaling!.title = AddSpacesToSentence("scaling");
-          toothData.scaling!.tooth = toothData.tooth;
-          procedures.add(toothData.scaling!);
-        }
-        if (toothData.crown != null) {
-          toothData.crown!.title = AddSpacesToSentence("crown");
-          toothData.crown!.tooth = toothData.tooth;
-          procedures.add(toothData.crown!);
-        }
-      }
       if (sort == _EnumSorting.SortDateDesc)
-        procedures.sort((a, b) => (b.date?.millisecondsSinceEpoch ?? 0).compareTo(a.date?.millisecondsSinceEpoch ?? 0));
+        treatmentDetails.sort((a, b) => (b.date?.millisecondsSinceEpoch ?? 0).compareTo(a.date?.millisecondsSinceEpoch ?? 0));
       else
-        procedures.sort((a, b) => (a.date?.millisecondsSinceEpoch ?? 0).compareTo(b.date?.millisecondsSinceEpoch ?? 0));
+        treatmentDetails.sort((a, b) => (a.date?.millisecondsSinceEpoch ?? 0).compareTo(b.date?.millisecondsSinceEpoch ?? 0));
 
-      for (var procedure in procedures) {
+      for (var procedure in treatmentDetails) {
         returnValue.add(
           AbsorbPointer(
             absorbing: () {
@@ -653,18 +481,12 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
             child: ToothStatusWidget(
               bloc: bloc,
               isSurgical: widget.surgical,
-              tooth: procedure.tooth!,
               viewOnlyMode: viewOnlyMode,
-              acceptChanges: (request) => bloc.add(TreatmentBloc_AcceptChangesEvent(
-                  requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity)),
+              acceptChanges: (request) => bloc.add(TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId)),
               patientId: widget.patientId,
-              fieldModel: procedure,
-              title: "Tooth:${procedure.tooth ?? ""} || " + AddSpacesToSentence(procedure.title ?? ""),
-              //settingsPrice: prices.implant,
-              price: true,
+              data: procedure,
               onDelete: () {
-                bloc.emit(TreatmentBloc_UpdatedToothState(
-                    data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? []));
+                bloc.emit(TreatmentBloc_UpdatedToothState(data: treatmentDetails));
               },
             ),
           ),
@@ -672,7 +494,9 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
       }
     } else {
-      for (var model in (widget.surgical ? surgicalTreatmentEntity.surgicalTreatment : treatmentPlanEntity.treatmentPlan) ?? []) {
+      var teeth = treatmentDetails.map((e) => e.tooth).toSet().toList();
+      teeth.sort();
+      for (var tooth in teeth) {
         returnValue.add(
           AbsorbPointer(
             absorbing: () {
@@ -689,16 +513,15 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
               viewOnlyMode: viewOnlyMode,
               key: GlobalKey(),
               patientId: widget.patientId,
-              toothID: model!.tooth!,
+              toothID: tooth!,
               isSurgical: widget.surgical,
-              prices: prices,
               acceptChanges: (request) => bloc.add(
-                TreatmentBloc_AcceptChangesEvent(
-                    requestChangeEntity: request, patientId: widget.patientId, surgicalTreatmentEntity: surgicalTreatmentEntity),
+                TreatmentBloc_AcceptChangesEvent(requestChangeEntity: request, patientId: widget.patientId),
               ),
-              teethData: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [],
+              teethData: treatmentDetails,
               onChange: () => bloc.emit(TreatmentBloc_UpdatedToothState(
-                  data: widget.surgical ? surgicalTreatmentEntity.surgicalTreatment ?? [] : treatmentPlanEntity.treatmentPlan ?? [])),
+                data: treatmentDetails,
+              )),
             ),
           ),
         );

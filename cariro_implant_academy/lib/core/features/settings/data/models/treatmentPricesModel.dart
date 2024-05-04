@@ -44,4 +44,16 @@ class TreatmentPricesModel extends TreatmentPricesEntity {
     data['other'] = this.other ?? 0;
     return data;
   }
+
+  Map<String, dynamic> toJsonLower() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['crown'] = this.crown ?? 0;
+    data['scaling'] = this.scaling ?? 0;
+    data['implant'] = this.implant ?? 0;
+    data['rootcanaltreatment'] = this.rootCanalTreatment ?? 0;
+    data['restoration'] = this.restoration ?? 0;
+    data['extraction'] = this.extraction ?? 0;
+    data['other'] = this.other ?? 0;
+    return data;
+  }
 }

@@ -1,11 +1,10 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/data/models/nonSurgicalTreatmentModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentDetailsModel.dart';
 
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../../core/error/exception.dart';
 import '../../../../../core/useCases/useCases.dart';
-import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import '../../domain/entities/nonSurgialTreatmentEntity.dart';
 import '../../domain/usecases/saveNonSurgicalTreatmentUseCase.dart';
 
@@ -18,7 +17,7 @@ abstract class NonSurgicalTreatmentDatasource {
 
   Future<List<int>> checkNonSurgicalTreatmentTeethStatus(String data);
 
-  Future<TeethTreatmentPlanModel?> getPaidPlanItem(int patientId, int tooth);
+  Future<List<TreatmentDetailsModel>> getPaidPlanItem(int patientId, int tooth);
 }
 
 class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasource {
@@ -91,7 +90,7 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
   }
 
   @override
-  Future<TeethTreatmentPlanModel?> getPaidPlanItem(int patientId, int tooth) async {
+  Future<List<TreatmentDetailsModel>> getPaidPlanItem(int patientId, int tooth) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(
@@ -103,8 +102,8 @@ class NonSurgicalTreatmentDatasourceImpl implements NonSurgicalTreatmentDatasour
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      if (response.body == null) return null;
-      return TeethTreatmentPlanModel.fromJson(response.body! as Map<String, dynamic>);
+      if (response.body == null) return [];
+      return  ((response.body??[]) as List<dynamic>).map((e) => TreatmentDetailsModel.fromJson(e as Map<String, dynamic>)).toList() ;
     } catch (e) {
       throw DataConversionException();
     }

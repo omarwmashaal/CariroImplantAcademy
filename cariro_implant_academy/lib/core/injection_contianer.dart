@@ -63,7 +63,6 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTreatmentPricesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
@@ -171,17 +170,20 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/getPatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentFinalProthesisFullArchUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/surgicalTreatmentDatasource.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/postSurgicalTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/datasources/treatmentPlanDataSource.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/surgicalTreatmentRepoImpl.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/postSurgicalTreatmentRepoImpl.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/repositories/treatmentPlanRepoImpl.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/surgicalTreatmentRepo.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/postSurgicalTreatmentRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/repo/treatmentPlanRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/acceptChangesUseCASE.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/consumeImplantUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getPostSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentPlanUseCase.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveSurgicalTreatmentUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/savePostSurgeryDataUseCase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentDetailsUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/saveTreatmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
@@ -365,7 +367,7 @@ initInjection() async {
         getImplantCompaniesUseCase: sl(),
         getImplantLinesUseCase: sl(),
         getImplantSizesUseCase: sl(),
-        getTreatmentPricesUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
         getTacsUseCase: sl(),
         getMembraneCompaniesUseCase: sl(),
         getMembranesUseCase: sl(),
@@ -411,7 +413,6 @@ initInjection() async {
   sl.registerLazySingleton(() => GetImplantCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantLinesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetImplantSizesUseCase(settingsRepository: sl()));
-  sl.registerLazySingleton(() => GetTreatmentPricesUseCase(settingsRepository: sl()));
 
   sl.registerLazySingleton(() => GetTacsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetStockCategoriesUseCase(settingsRepository: sl()));
@@ -620,7 +621,6 @@ initInjection() async {
 
   //repo
   sl.registerLazySingleton<ToDoListRepo>(() => ToDoListRepoImpl(toDoListDatasource: sl()));
-  
 
   //datasource
   sl.registerLazySingleton<ToDoListDatasource>(() => ToDoListDatasourceImpl(httpRepo: sl()));
@@ -769,6 +769,7 @@ initInjection() async {
         saveDentalExaminationUseCase: sl(),
         getTreatmentPlanItemUsecase: sl(),
         addPatientReceiptUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetNonSurgicalTreatmentUseCase(nonSurgicalTreatmentRepo: sl()));
@@ -786,31 +787,36 @@ initInjection() async {
    */
   //bloc
   sl.registerFactory(() => TreatmentBloc(
-        saveTreatmentPlanUseCase: sl(),
+        saveTreatmentDetailsUseCase: sl(),
         getTreatmentPlanUseCase: sl(),
-        getTreatmentPricesUseCase: sl(),
         consumeImplantUseCase: sl(),
         consumeItemByIdUseCase: sl(),
         consumeItemByNameUseCase: sl(),
-        getSurgicalTreatmentUseCase: sl(),
-        saveSurgicalTreatmentUseCase: sl(),
+        getPostSurgicalTreatmentUseCase: sl(),
+        saveTreatmentPlanUseCase: sl(),
         getTacsUseCase: sl(),
         acceptChangesUseCase: sl(),
+        getTreatmentDetailsUseCase: sl(),
+        savePostSurgeryDataUseCase: sl(),
+        getTreatmentItemsUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => SaveTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => SaveTreatmentPlanUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => GetTreatmentPlanUseCase(treatmentPlanRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentDetailsUseCase(treatmentPlanRepo: sl()));
   sl.registerLazySingleton(() => ConsumeImplantUseCase(treatmentPlanRepo: sl()));
-  sl.registerLazySingleton(() => GetSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
-  sl.registerLazySingleton(() => SaveSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => GetPostSurgicalTreatmentUseCase(surgicalTreatmentRepo: sl()));
   sl.registerLazySingleton(() => AcceptChangesUseCase(surgicalTreatmentRepo: sl()));
+  sl.registerLazySingleton(() => SavePostSurgeryDataUseCase(postSurgeryRepo: sl()));
+  sl.registerLazySingleton(() => GetTreatmentItemsUseCase(treatmentPlanRepo: sl()));
 
   //repositories
   sl.registerLazySingleton<TreatmentPlanRepo>(() => TreatmentPlanRepoImplementation(treatmentPlanDataSource: sl()));
-  sl.registerLazySingleton<SurgicalTreatmentRepo>(() => SurgicalTreatmentRepoImpl(surgicalTreatmentDatasource: sl()));
+  sl.registerLazySingleton<PostSurgicalTreatmentRepo>(() => PostSurgicalTreatmentRepoImpl(postSurgicalTreatmentDatasource: sl()));
   //datasources
   sl.registerLazySingleton<TreatmentPlanDataSource>(() => TreatmentPlanDatasourceImpl(httpRepo: sl()));
-  sl.registerLazySingleton<SurgicalTreatmentDatasource>(() => SurgicalTreatmentDatasourceImpl(httpRepo: sl()));
+  sl.registerLazySingleton<PostSurgicalTreatmentDatasource>(() => SurgicalTreatmentDatasourceImpl(httpRepo: sl()));
 
   /**
    * Prosthetic Treatment

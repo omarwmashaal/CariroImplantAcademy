@@ -104,7 +104,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
           if (state.patient.idFrontImageId != null) imageBlocIdFront.downloadImageEvent(state.patient.idFrontImageId!);
         }
         if (state is Error) {
-           if (onCreatedPatient != null) {
+          if (onCreatedPatient != null) {
             onCreatedPatient!(false, null);
           }
           ShowSnackBar(context, isSuccess: false, message: state.message);
@@ -168,24 +168,26 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                       },
                                       child: Text("Patient Out!. Click to view Reason"))),
                               SizedBox(width: 10),
-                              Visibility(
-                                visible: !patient.out && siteController.getRole()!.contains("admin"),
-                                child: CIA_SecondaryButton(
-                                  label: "Set Patient Out",
-                                  onTab: () => CIA_ShowPopUp(
-                                      height: 400,
-                                      context: context,
-                                      onSave: () => createOrViewPatientBloc.add(SetPatientOutEvent(SetPatientOutParams(
-                                            id: patientID,
-                                            outReason: patient.outReason ?? "",
-                                          ))),
-                                      child: CIA_TextFormField(
-                                        label: "Reason",
-                                        maxLines: 10,
-                                        controller: TextEditingController(),
-                                        onChange: (v) => patient.outReason = v,
-                                      )),
-                                ),
+                              CIA_SecondaryButton(
+                                label: "Set Patient ${patient.out ? "Active" : "Out"}",
+                                onTab: () => patient.out
+                                    ? createOrViewPatientBloc.add(SetPatientOutEvent(SetPatientOutParams(
+                                        id: patientID,
+                                        outReason:  "",
+                                      )))
+                                    : CIA_ShowPopUp(
+                                        height: 400,
+                                        context: context,
+                                        onSave: () => createOrViewPatientBloc.add(SetPatientOutEvent(SetPatientOutParams(
+                                              id: patientID,
+                                              outReason: patient.outReason ?? "",
+                                            ))),
+                                        child: CIA_TextFormField(
+                                          label: "Reason",
+                                          maxLines: 10,
+                                          controller: TextEditingController(),
+                                          onChange: (v) => patient.outReason = v,
+                                        )),
                               ),
                             ],
                           );

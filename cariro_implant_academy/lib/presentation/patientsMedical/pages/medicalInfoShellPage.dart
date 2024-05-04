@@ -132,11 +132,10 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                       ),
                                       onTap: () => (!siteController.getRole()!.contains("admin"))
                                           ? null
-                                          : CIA_PopupDialog_DateOnlyPicker(
-                                              context,
-                                              "Pick Date",
-                                              (date) => medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
-                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
+                                          : CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (date) {
+                                              medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
+                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null));
+                                            }),
                                     ),
                                   );
                                 },

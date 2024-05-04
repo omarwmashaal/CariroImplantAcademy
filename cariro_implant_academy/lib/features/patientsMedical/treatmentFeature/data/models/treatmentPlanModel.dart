@@ -1,5 +1,4 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/teethTreatmentPlanModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentPlanEntity.dart';
 
 class TreatmentPlanModel extends TreatmentPlanEntity {
@@ -21,7 +20,6 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
           date: date,
           clearanceUpper: clearanceUpper,
           clearanceLower: clearanceLower,
-          treatmentPlan: treatmentPlan,
     doctor: doctor,
         );
 
@@ -33,7 +31,6 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
       operatorId: entity.operatorId,
       operator:entity. operator,
       date: entity.date,
-      treatmentPlan: entity.treatmentPlan,
       doctor: entity.doctor,
       clearanceUpper: entity.clearanceUpper,
       clearanceLower: entity.clearanceLower,
@@ -48,7 +45,6 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
     doctor = json['doctor']==null?null:BasicNameIdObjectModel.fromJson(json['doctor'] as Map<String,dynamic>);
     operator = json['operator'] != null ? new BasicNameIdObjectModel.fromJson(json['operator']) : null;
     date = DateTime.tryParse(json['date']??"")?.toLocal();
-    treatmentPlan = ((json['treatmentPlan'] ?? []) as List<dynamic>).map((e) => TeethTreatmentPlanModel.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -62,7 +58,6 @@ class TreatmentPlanModel extends TreatmentPlanEntity {
       //data['operator'] = this.operator!.toJson();
     }
     data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String();
-    data['treatmentPlan'] = (this.treatmentPlan ?? <TeethTreatmentPlanModel>[]).map((e) => (TeethTreatmentPlanModel.fromEntity(e)).toJson()).toList();
     return data;
   }
 
