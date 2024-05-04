@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "e9SHNkDPDF/DDbv+vKiqLIl/y0Z4JuRVzy0Yc1sPgwexZzUV/wEBWvC2Wvn0cfFSMNk58aLw9mBfPLf8a0Ut4w==",
+  "dgSpecHash": "8JPe4y7EUWcuPoSXnqq+SvtSaGvWSN3UJbFJoFGxkdqgHmtvZPKMwuRk+jIbDFM225XUD2FoMcS3tPaCKGde3Q==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\CIA\\Backend\\CIA_WorkerService\\CIA_WorkerService.csproj",
+  "projectFilePath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA_WorkerService\\CIA_WorkerService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\owbm9\\.nuget\\packages\\hardware.info\\100.0.1.1\\hardware.info.100.0.1.1.nupkg.sha512",
     "C:\\Users\\owbm9\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
