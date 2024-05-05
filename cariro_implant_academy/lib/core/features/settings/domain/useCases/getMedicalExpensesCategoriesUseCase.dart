@@ -1,13 +1,13 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
+
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../constants/enums/enums.dart';
 
-class GetMedicalExpensesCategoriesUseCase extends LoadingUseCases <Website>{
+class GetMedicalExpensesCategoriesUseCase extends LoadingUseCases<Website> {
   final SettingsRepository settingsRepository;
 
   GetMedicalExpensesCategoriesUseCase({required this.settingsRepository});

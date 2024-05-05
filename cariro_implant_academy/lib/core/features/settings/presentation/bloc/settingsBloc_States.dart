@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/im
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../../Models/ImplantModel.dart';
@@ -11,9 +12,7 @@ import '../../../../../Models/TacCompanyModel.dart';
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 import '../../../../data/models/BasicNameIdObjectModel.dart';
 import '../../data/models/membraneCompanyModel.dart';
-import '../../data/models/treatmentPricesModel.dart';
 import '../../domain/entities/membraneCompanyEnity.dart';
-import '../../domain/entities/treatmentPricesEntity.dart';
 
 abstract class SettingsBloc_States extends Equatable {}
 
@@ -104,7 +103,7 @@ class SettingsBloc_LoadingTreatmentPricesErrorState extends SettingsBlocErrorSta
 }
 
 class SettingsBloc_LoadedTreatmentPricesSuccessfullyState extends SettingsBloc_States {
-  final TreatmentPricesEntity data;
+  final List<TreatmentItemEntity> data;
 
   SettingsBloc_LoadedTreatmentPricesSuccessfullyState({required this.data});
 
@@ -195,6 +194,7 @@ class SettingsBloc_LoadedIncomeCategoriesSuccessfullyState extends SettingsBloc_
   @override
   List<Object?> get props => [this.data];
 }
+
 class SettingsBloc_LoadingStockCategoriesState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -276,7 +276,7 @@ class SettingsBloc_LoadedRoomsSuccessfullyState extends SettingsBloc_States {
   SettingsBloc_LoadedRoomsSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [this.data,identityHashCode(this)];
+  List<Object?> get props => [this.data, identityHashCode(this)];
 }
 
 class SettingsBloc_LoadingMedicalExpensesCategoriesState extends SettingsBloc_States {
@@ -351,7 +351,7 @@ class SettingsBloc_LoadingSuppliersState extends SettingsBloc_States {
 
 class SettingsBloc_LoadingSuppliersErrorState extends SettingsBlocErrorState {
   final bool medical;
-  SettingsBloc_LoadingSuppliersErrorState({required super.message,required this.medical});
+  SettingsBloc_LoadingSuppliersErrorState({required super.message, required this.medical});
 
   @override
   List<Object?> get props => [message];
@@ -546,7 +546,7 @@ class SettingsBloc_AddingSuppliersState extends SettingsBloc_States {
 
 class SettingsBloc_AddingSuppliersErrorState extends SettingsBlocErrorState {
   final bool medical;
-  SettingsBloc_AddingSuppliersErrorState({required super.message,required this.medical});
+  SettingsBloc_AddingSuppliersErrorState({required super.message, required this.medical});
 
   @override
   List<Object?> get props => [message];
@@ -643,6 +643,7 @@ class SettingsBloc_EditedClinicPricesSuccessfullyState extends SettingsBlocSucce
   @override
   List<Object?> get props => [];
 }
+
 class SettingsBloc_LoadingClinicPricesState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -661,6 +662,7 @@ class SettingsBloc_LoadedClinicPricesSuccessfullyState extends SettingsBlocSucce
   @override
   List<Object?> get props => [data];
 }
+
 class SettingsBloc_LoadingLabItemParentsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -677,8 +679,9 @@ class SettingsBloc_LoadedLabItemParentsSuccessfullyState extends SettingsBlocSuc
   final List<LabItemParentEntity> data;
   SettingsBloc_LoadedLabItemParentsSuccessfullyState({required this.data});
   @override
-  List<Object?> get props => [data,identityHashCode(this)];
+  List<Object?> get props => [data, identityHashCode(this)];
 }
+
 class SettingsBloc_LoadingLabItemsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -696,7 +699,7 @@ class SettingsBloc_LoadedLabItemsSuccessfullyState extends SettingsBlocSuccessSt
   SettingsBloc_LoadedLabItemsSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data,identityHashCode(this)];
+  List<Object?> get props => [data, identityHashCode(this)];
 }
 
 class SettingsBloc_LoadingLabItemsShadesState extends SettingsBloc_States {
@@ -716,7 +719,7 @@ class SettingsBloc_LoadedLabItemsShadesSuccessfullyState extends SettingsBlocSuc
   SettingsBloc_LoadedLabItemsShadesSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data,identityHashCode(this)];
+  List<Object?> get props => [data, identityHashCode(this)];
 }
 
 class SettingsBloc_LoadingLabItemsCompaniesState extends SettingsBloc_States {
@@ -736,10 +739,8 @@ class SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState extends SettingsBloc
   SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data,identityHashCode(this)];
+  List<Object?> get props => [data, identityHashCode(this)];
 }
-
-
 
 class SettingsBloc_UpdatingLabItemsCompaniesState extends SettingsBloc_States {
   @override
@@ -757,6 +758,7 @@ class SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState extends SettingsBlo
   @override
   List<Object?> get props => [];
 }
+
 class SettingsBloc_UpdatingLabItemsShadesState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -773,6 +775,7 @@ class SettingsBloc_UpdatedLabItemsShadesSuccessfullyState extends SettingsBlocSu
   @override
   List<Object?> get props => [];
 }
+
 class SettingsBloc_UpdatingLabItemsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -806,4 +809,3 @@ class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState exte
   @override
   List<Object?> get props => [];
 }
-

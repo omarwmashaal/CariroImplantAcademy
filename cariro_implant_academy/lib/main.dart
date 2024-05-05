@@ -15,6 +15,7 @@ import 'package:cariro_implant_academy/features/patient/presentation/bloc/advanc
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/toDoListBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/presentation/bloc/dentalExaminationBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalHistroy/presentaion/bloc/dentalHistoryBloc.dart';
@@ -120,6 +121,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<LabRequestsBloc>()),
         BlocProvider(create: (context) => sl<ClinicTreatmentBloc>()),
         BlocProvider(create: (context) => sl<ComplicationsBloc>()),
+        BlocProvider(create: (context) => sl<ToDoListBloc>()),
       ],
       child: MaterialApp.router(
         title: 'CIA',

@@ -10,14 +10,13 @@ late Function GlobalLoadFunction;
 class TableWidget extends StatefulWidget {
   TableWidget(
       {Key? key,
-
       this.onCellClick,
       this.isTreatment = false,
       required this.dataSource,
       this.title,
       this.showSum = false,
-        this.headerStyle,
-        this.headerHeight,
+      this.headerStyle,
+      this.headerHeight,
       this.allowSorting = true,
       this.allowGroupingCollapse = false,
       this.showGridLines = false})
@@ -41,9 +40,8 @@ class TableWidget extends StatefulWidget {
 class _TableWidgetState extends State<TableWidget> {
   @override
   Widget build(BuildContext context) {
-
     return SfDataGrid(
-      //allowExpandCollapseGroup: widget.allowGroupingCollapse,
+      allowExpandCollapseGroup: widget.allowGroupingCollapse,
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
       horizontalScrollPhysics: BouncingScrollPhysics(),
@@ -64,7 +62,8 @@ class _TableWidgetState extends State<TableWidget> {
                   ],
                   position: GridTableSummaryRowPosition.bottom),
             ]
-          : [],/*
+          : [],
+      /*
       stackedHeaderRows: title != null
           ? [
               StackedHeaderRow(cells: [
@@ -77,38 +76,40 @@ class _TableWidgetState extends State<TableWidget> {
       navigationMode: GridNavigationMode.row,
       onCellTap: (value) {
         if (widget.onCellClick != null && value.rowColumnIndex.rowIndex != 0) {
-          widget.onCellClick!(widget.dataSource.effectiveRows.elementAt(value.rowColumnIndex.rowIndex-1).getCells().firstWhere((element) => element.columnName.toLowerCase()=="id").value as dynamic);
-
-
+          widget.onCellClick!(widget.dataSource.effectiveRows
+              .elementAt(value.rowColumnIndex.rowIndex - 1)
+              .getCells()
+              .firstWhere((element) => element.columnName.toLowerCase() == "id")
+              .value as dynamic);
         }
       },
       columns: _buildColumns(),
-      headerRowHeight: widget.headerHeight??double.nan,
+      headerRowHeight: widget.headerHeight ?? double.nan,
     );
   }
 
   List<GridColumn> _buildColumns() {
     List<GridColumn> returnValue = <GridColumn>[];
-    final columns =[];// ["ID","Name","Phone","Gender","Age","Marital Status","Relative",'Add to my patients'];
+    final columns = []; // ["ID","Name","Phone","Gender","Age","Marital Status","Relative",'Add to my patients'];
     if (widget.dataSource.rows.isNotEmpty)
       for (var r in widget.dataSource.rows[0].getCells()) {
         returnValue.add(GridColumn(
-           // width: columnNames.length > 12 ? 200 : double.nan,
+            // width: columnNames.length > 12 ? 200 : double.nan,
+            width: r.columnName == "Data" ? 700 : double.nan,
             columnName: r.columnName,
-
-            columnWidthMode: r.columnName == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
+            columnWidthMode: r.columnName == "Treatment" || r.columnName == "Data" ? ColumnWidthMode.fill : ColumnWidthMode.none,
             label: Container(
 //padding: EdgeInsets.all(16.0),
                 alignment: Alignment.center,
-                child:  Text(
+                child: Text(
                   r.columnName,
-                  style: widget.headerStyle??TextStyle(fontWeight: FontWeight.w900),
+                  style: widget.headerStyle ?? TextStyle(fontWeight: FontWeight.w900),
                 ))));
       }
     else
       for (String name in columns) {
         returnValue.add(GridColumn(
-           // width: columnNames.length > 12 ? 200 : double.nan,
+            // width: columnNames.length > 12 ? 200 : double.nan,
             columnName: name,
             columnWidthMode: name == "Treatment" ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.none,
             label: Container(

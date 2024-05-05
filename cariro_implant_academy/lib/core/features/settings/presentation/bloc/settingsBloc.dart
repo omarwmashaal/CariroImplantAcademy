@@ -12,6 +12,8 @@ import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/useCases/addExpensesCategoriesUseCase.dart';
@@ -43,13 +45,12 @@ import '../../domain/useCases/getNonMedicalStockCategories.dart';
 import '../../domain/useCases/getPaymentMethodsUseCase.dart';
 import '../../domain/useCases/getSuppliersUseCase.dart';
 import '../../domain/useCases/getTacsUseCase.dart';
-import '../../domain/useCases/getTreatmentPricesUseCase.dart';
 
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetImplantCompaniesUseCase getImplantCompaniesUseCase;
   final GetImplantLinesUseCase getImplantLinesUseCase;
   final GetImplantSizesUseCase getImplantSizesUseCase;
-  final GetTreatmentPricesUseCase getTreatmentPricesUseCase;
+  final GetTreatmentItemsUseCase getTreatmentItemsUseCase;
   final GetTacsUseCase getTacsUseCase;
   final GetMembraneCompaniesUseCase getMembraneCompaniesUseCase;
   final GetMembranesUseCase getMembranesUseCase;
@@ -92,7 +93,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
     required this.getImplantSizesUseCase,
-    required this.getTreatmentPricesUseCase,
+    required this.getTreatmentItemsUseCase,
     required this.getTacsUseCase,
     required this.getMembraneCompaniesUseCase,
     required this.getMembranesUseCase,
@@ -245,7 +246,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       emit(SettingsBloc_AddingSuppliersState(medical: event.params.medical));
       final result = await addSuppliersUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "",medical: event.params.medical)),
+        (l) => emit(SettingsBloc_AddingSuppliersErrorState(message: l.message ?? "", medical: event.params.medical)),
         (r) => emit(SettingsBloc_AddedSuppliersSuccessfullyState(medical: event.params.medical)),
       );
     });
@@ -259,11 +260,29 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_EditTreatmentPricesEvent>((event, emit) async {
       emit(SettingsBloc_EditingTreatmentPricesState());
-      final result = await editTreatmentPricesUseCase(event.prices);
-      result.fold(
-        (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
+      final pricesFromSettings = await getTreatmentItemsUseCase(NoParams());
+      pricesFromSettings.fold(
+        (l) => null,
+        (r)  {
+          var implantsFromSettings = r.where((element) => element.isImplant()).toList();
+          var implantPrice = event.prices.firstWhere((element) => element.name == "Implant").price ?? 0;
+          implantsFromSettings.forEach((element) {
+            element.price = implantPrice;
+          });
+          event.prices.removeWhere((element) => element.name == "Implant");
+          event.prices.addAll(implantsFromSettings);
+
+          
+        },
       );
+      if(pricesFromSettings.isRight())
+      {
+        final result = await editTreatmentPricesUseCase(event.prices);
+          result.fold(
+            (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
+            (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
+          );
+      }
     });
     on<SettingsBloc_ChangeImplantLineNameEvent>((event, emit) async {
       emit(SettingsBloc_ChangingImplantLineNameState());
@@ -341,8 +360,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       emit(SettingsBloc_LoadingSuppliersState(medical: event.params.medical));
       final result = await getSuppliersUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "",medical: event.params.medical)),
-        (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r,medical: event.params.medical)),
+        (l) => emit(SettingsBloc_LoadingSuppliersErrorState(message: l.message ?? "", medical: event.params.medical)),
+        (r) => emit(SettingsBloc_LoadedSuppliersSuccessfullyState(data: r, medical: event.params.medical)),
       );
     });
     on<SettingsBloc_LoadPaymentMethodsEvent>((event, emit) async {
@@ -363,10 +382,21 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadTreatmentPricesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingTreatmentPricesState());
-      final result = await getTreatmentPricesUseCase(NoParams());
+      final result = await getTreatmentItemsUseCase(NoParams());
       result.fold(
         (l) => emit(SettingsBloc_LoadingTreatmentPricesErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedTreatmentPricesSuccessfullyState(data: r)),
+        (r) {
+          int implantPrice = r.firstWhere((element) => element.isImplant()).price ?? 0;
+          r.removeWhere((element) => element.isImplant());
+          r = [
+            ...r,
+            TreatmentItemEntity(
+              name: "Implant",
+              price: implantPrice,
+            )
+          ];
+          emit(SettingsBloc_LoadedTreatmentPricesSuccessfullyState(data: r));
+        },
       );
     });
     on<SettingsBloc_EditRoomsEvent>((event, emit) async {

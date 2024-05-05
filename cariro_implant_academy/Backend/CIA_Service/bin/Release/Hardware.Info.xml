@@ -1,0 +1,1538 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hardware.Info</name>
+    </assembly>
+    <members>
+        <member name="T:Hardware.Info.Battery">
+            <summary>
+            WMI class: Win32_Battery
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.FullChargeCapacity">
+            <summary>
+            Full charge capacity of the battery in milliwatt-hours. 
+            Comparison of the value to the DesignCapacity property determines when the battery requires replacement. 
+            A battery's end of life is typically when the FullChargeCapacity property falls below 80% of the DesignCapacity property.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.DesignCapacity">
+            <summary>
+            Design capacity of the battery in milliwatt-hours.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.BatteryStatus">
+            <summary>
+            Status of the battery.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.EstimatedChargeRemaining">
+            <summary>
+            Estimate of the percentage of full charge remaining
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.EstimatedRunTime">
+            <summary>
+            Estimate in minutes of the time to battery charge depletion under the present load conditions if the utility power is off, or lost and remains off, or a laptop is disconnected from a power source.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.ExpectedLife">
+            <summary>
+            Battery's expected lifetime in minutes, assuming that the battery is fully charged. 
+            The property represents the total expected life of the battery, not its current remaining life, which is indicated by the EstimatedRunTime property.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.MaxRechargeTime">
+            <summary>
+            Maximum time, in minutes, to fully charge the battery. 
+            The property represents the time to recharge a fully depleted battery, not the current remaining charge time, which is indicated in the TimeToFullCharge property.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.TimeOnBattery">
+            <summary>
+            Elapsed time in seconds since the computer system's UPS last switched to battery power, or the time since the system or UPS was last restarted, whichever is less. 
+            If the battery is "on line", 0 (zero) is returned.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.TimeToFullCharge">
+            <summary>
+            Remaining time to charge the battery fully in minutes at the current charging rate and usage.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Battery.BatteryStatusDescription">
+            <summary>
+            Battery status description
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Battery.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.BIOS">
+            <summary>
+            WMI class: Win32_BIOS
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.Caption">
+            <summary>
+            Short description of the object a one-line string.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.Manufacturer">
+            <summary>
+            Manufacturer of this software element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.Name">
+            <summary>
+            Name used to identify this software element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.ReleaseDate">
+            <summary>
+            Release date of the Windows BIOS in the Coordinated Universal Time (UTC) format of YYYYMMDDHHMMSS.MMMMMM(+-)OOO.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.SerialNumber">
+            <summary>
+            Assigned serial number of the software element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.SoftwareElementID">
+            <summary>
+            Identifier for this software element; designed to be used in conjunction with other keys to create a unique representation of this instance.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.BIOS.Version">
+            <summary>
+            Version of the BIOS. This string is created by the BIOS manufacturer.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.BIOS.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.CPU">
+            <summary>
+            WMI class: Win32_Processor
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.Caption">
+            <summary>
+            Short description of an object (a one-line string).
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.CurrentClockSpeed">
+            <summary>
+            Current speed of the processor, in MHz.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.L1InstructionCacheSize">
+            <summary>
+            Size of the Level 1 processor instruction cache. A Level 1 cache is an external memory area that has a faster access time than the main RAM memory.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.L1DataCacheSize">
+            <summary>
+            Size of the Level 1 processor data cache. A Level 1 cache is an external memory area that has a faster access time than the main RAM memory.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.L2CacheSize">
+            <summary>
+            Size of the Level 2 processor cache. A Level 2 cache is an external memory area that has a faster access time than the main RAM memory.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.L3CacheSize">
+            <summary>
+            Size of the Level 3 processor cache. A Level 3 cache is an external memory area that has a faster access time than the main RAM memory.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.Manufacturer">
+            <summary>
+            Name of the processor manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.MaxClockSpeed">
+            <summary>
+            Maximum speed of the processor, in MHz.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.NumberOfCores">
+            <summary>
+            Number of cores for the current instance of the processor. A core is a physical processor on the integrated circuit. For example, in a dual-core processor this property has a value of 2.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.NumberOfLogicalProcessors">
+            <summary>
+            Number of logical processors for the current instance of the processor. For processors capable of hyperthreading, this value includes only the processors which have hyperthreading enabled.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.ProcessorId">
+            <summary>
+            Processor information that describes the processor features. 
+            For an x86 class CPU, the field format depends on the processor support of the CPUID instruction. 
+            If the instruction is supported, the property contains 2 (two) DWORD formatted values. 
+            The first is an offset of 08h-0Bh, which is the EAX value that a CPUID instruction returns with input EAX set to 1. 
+            The second is an offset of 0Ch-0Fh, which is the EDX value that the instruction returns. 
+            Only the first two bytes of the property are significant and contain the contents of the DX register at CPU reset—all others are set to 0 (zero), and the contents are in DWORD format.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.SecondLevelAddressTranslationExtensions">
+            <summary>
+            If True, the processor supports address translation extensions used for virtualization.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.SocketDesignation">
+            <summary>
+            Type of chip socket used on the circuit.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.VirtualizationFirmwareEnabled">
+            <summary>
+            If True, the Firmware has enabled virtualization extensions.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.VMMonitorModeExtensions">
+            <summary>
+            If True, the processor supports Intel or AMD Virtual Machine Monitor extensions.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.PercentProcessorTime">
+            <summary>
+            % Processor Time is the percentage of elapsed time that the processor spends to execute a non-Idle thread. 
+            It is calculated by measuring the percentage of time that the processor spends executing the idle thread and then subtracting that value from 100%. 
+            (Each processor has an idle thread that consumes cycles when no other threads are ready to run). 
+            This counter is the primary indicator of processor activity, and displays the average percentage of busy time observed during the sample interval. 
+            It should be noted that the accounting calculation of whether the processor is idle is performed at an internal sampling interval of the system clock (10ms). 
+            On todays fast processors, % Processor Time can therefore underestimate the processor utilization as the processor may be spending a lot of time servicing threads between the system clock sampling interval. 
+            Workload based timer applications are one example of applications which are more likely to be measured inaccurately as timers are signaled just after the sample is taken.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CPU.CpuCoreList">
+            <summary>
+            List of <see cref="T:Hardware.Info.CpuCore" />
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.CPU.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.CpuCore">
+            <summary>
+            WMI class: Win32_PerfFormattedData_PerfOS_Processor
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CpuCore.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.CpuCore.PercentProcessorTime">
+            <summary>
+            % Processor Time is the percentage of elapsed time that the processor spends to execute a non-Idle thread. 
+            It is calculated by measuring the percentage of time that the processor spends executing the idle thread and then subtracting that value from 100%. 
+            (Each processor has an idle thread that consumes cycles when no other threads are ready to run). 
+            This counter is the primary indicator of processor activity, and displays the average percentage of busy time observed during the sample interval. 
+            It should be noted that the accounting calculation of whether the processor is idle is performed at an internal sampling interval of the system clock (10ms). 
+            On todays fast processors, % Processor Time can therefore underestimate the processor utilization as the processor may be spending a lot of time servicing threads between the system clock sampling interval. 
+            Workload based timer applications are one example of applications which are more likely to be measured inaccurately as timers are signaled just after the sample is taken.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.CpuCore.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Volume">
+            <summary>
+            WMI class: Win32_LogicalDisk
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.Caption">
+            <summary>
+            Short description of the object (a one-line string).
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.Compressed">
+            <summary>
+            If True, the logical volume exists as a single compressed entity, such as a DoubleSpace volume. 
+            If file based compression is supported, such as on NTFS, this property is False.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.FileSystem">
+            <summary>
+            File system on the logical disk.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.FreeSpace">
+            <summary>
+            Space, in bytes, available on the logical disk.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.Size">
+            <summary>
+            Size of the disk drive.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.VolumeName">
+            <summary>
+            Volume name of the logical disk.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Volume.VolumeSerialNumber">
+            <summary>
+            Volume serial number of the logical disk.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Volume.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Partition">
+            <summary>
+            WMI class: Win32_DiskPartition
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.VolumeList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Volume" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Bootable">
+            <summary>
+            Indicates whether the computer can be booted from this partition.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.BootPartition">
+            <summary>
+            Partition is the active partition. 
+            The operating system uses the active partition when booting from a hard disk.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.DiskIndex">
+            <summary>
+            Index number of the disk containing this partition.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Index">
+            <summary>
+            Index number of the partition.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.PrimaryPartition">
+            <summary>
+            If True, this is the primary partition.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.Size">
+            <summary>
+            Total size of the partition.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Partition.StartingOffset">
+            <summary>
+            Starting offset (in bytes) of the partition.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Partition.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Drive">
+            <summary>
+            WMI class: Win32_DiskDrive
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.PartitionList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Partition" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.FirmwareRevision">
+            <summary>
+            Revision for the disk drive firmware that is assigned by the manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Index">
+            <summary>
+            Physical drive number of the given drive.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Manufacturer">
+            <summary>
+            Name of the disk drive manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Model">
+            <summary>
+            Manufacturer's model number of the disk drive.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Partitions">
+            <summary>
+            Number of partitions on this physical disk drive that are recognized by the operating system.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.SerialNumber">
+            <summary>
+            Number allocated by the manufacturer to identify the physical media.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Drive.Size">
+            <summary>
+            Size of the disk drive.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Drive.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Keyboard">
+            <summary>
+            WMI class: Win32_Keyboard
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Keyboard.Caption">
+            <summary>
+            Short description of the object a one-line string.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Keyboard.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Keyboard.Name">
+            <summary>
+            Label by which the object is known
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Keyboard.NumberOfFunctionKeys">
+            <summary>
+            Number of function keys on the keyboard.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Keyboard.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.FormFactor">
+            <summary>
+            Implementation form factor for the chip.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.UNKNOWN">
+            <summary>
+            Represents an unknown or unspecified form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.OTHER">
+            <summary>
+            Represents a form factor that is categorized as "OTHER," not falling into specific predefined categories.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SIP">
+            <summary>
+            Represents a Single In-line Package (SIP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.DIP">
+            <summary>
+            Represents a Dual In-line Package (DIP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.ZIP">
+            <summary>
+            Represents a Zigzag In-line Package (ZIP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SOJ">
+            <summary>
+            Represents a Small Outline J-lead (SOJ) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.PROPRIETARY">
+            <summary>
+            Represents a form factor that is proprietary and not covered by other specific categories.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SIMM">
+            <summary>
+            Represents a Single Inline Memory Module (SIMM) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.DIMM">
+            <summary>
+            Represents a Dual Inline Memory Module (DIMM) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.TSOP">
+            <summary>
+            Represents a Thin Small Outline Package (TSOP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.PGA">
+            <summary>
+            Represents a Pin Grid Array (PGA) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.RIMM">
+            <summary>
+            Represents a Rambus Inline Memory Module (RIMM) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SODIMM">
+            <summary>
+            Represents a Small Outline Dual In-line Memory Module (SODIMM) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SRIMM">
+            <summary>
+            Represents a Static Random-Access Memory Inline Memory Module (SRIMM) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SMD">
+            <summary>
+            Represents a Surface Mount Device (SMD) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SSMP">
+            <summary>
+            Represents a Shrink Small-Outline Package (SSMP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.QFP">
+            <summary>
+            Represents a Quad Flat Package (QFP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.TQFP">
+            <summary>
+            Represents a Thin Quad Flat Package (TQFP) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.SOIC">
+            <summary>
+            Represents a Small Outline Integrated Circuit (SOIC) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.LCC">
+            <summary>
+            Represents a Leadless Chip Carrier (LCC) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.PLCC">
+            <summary>
+            Represents a Plastic Leaded Chip Carrier (PLCC) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.BGA">
+            <summary>
+            Represents a Ball Grid Array (BGA) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.FPBGA">
+            <summary>
+            Represents a Fine-Pitch Ball Grid Array (FPBGA) form factor.
+            </summary>
+        </member>
+        <member name="F:Hardware.Info.FormFactor.LGA">
+            <summary>
+            Represents a Land Grid Array (LGA) form factor.
+            </summary>
+        </member>
+        <member name="T:Hardware.Info.Memory">
+            <summary>
+            WMI class: Win32_PhysicalMemory
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.BankLabel">
+            <summary>
+            Physically labeled bank where the memory is located.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.Capacity">
+            <summary>
+            Total capacity of the physical memory in bytes.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.FormFactor">
+            <summary>
+            Implementation form factor for the chip.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.Manufacturer">
+            <summary>
+            Name of the organization responsible for producing the physical element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.MaxVoltage">
+            <summary>
+            The maximum operating voltage for this device, in millivolts, or 0, if the voltage is unknown.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.MinVoltage">
+            <summary>
+            The minimum operating voltage for this device, in millivolts, or 0, if the voltage is unknown.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.PartNumber">
+            <summary>
+            Part number assigned by the organization responsible for producing or manufacturing the physical element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.SerialNumber">
+            <summary>
+            Manufacturer-allocated number to identify the physical element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Memory.Speed">
+            <summary>
+            Speed of the physical memory in nanoseconds.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Memory.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.MemoryStatus">
+            <summary>
+            Memory status
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.TotalPhysical">
+            <summary>
+            The amount of actual physical memory, in bytes.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.AvailablePhysical">
+            <summary>
+            The amount of physical memory currently available, in bytes. 
+            This is the amount of physical memory that can be immediately reused without having to write its contents to disk first. 
+            It is the sum of the size of the standby, free, and zero lists.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.TotalPageFile">
+            <summary>
+            The current committed memory limit for the system or the current process, whichever is smaller, in bytes.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.AvailablePageFile">
+            <summary>
+            The maximum amount of memory the current process can commit, in bytes. 
+            This value is equal to or smaller than the system-wide available commit value.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.TotalVirtual">
+            <summary>
+            The size of the user-mode portion of the virtual address space of the calling process, in bytes. 
+            This value depends on the type of process, the type of processor, and the configuration of the operating system.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.AvailableVirtual">
+            <summary>
+            The amount of unreserved and uncommitted memory currently in the user-mode portion of the virtual address space of the calling process, in bytes.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.MemoryStatus.AvailableExtendedVirtual">
+            <summary>
+            Reserved. This value is always 0.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.MemoryStatus.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Monitor">
+            <summary>
+            WMI classes: Win32_DesktopMonitor And WmiMonitorID
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.MonitorManufacturer">
+            <summary>
+            Name of the monitor manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.MonitorType">
+            <summary>
+            Type of monitor.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.PixelsPerXLogicalInch">
+            <summary>
+            Resolution along the x-axis (horizontal direction) of the monitor.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.PixelsPerYLogicalInch">
+            <summary>
+            Resolution along the y-axis (vertical direction) of the monitor.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.Active">
+            <summary>
+            Indicates the active monitor.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.ManufacturerName">
+            <summary>
+            Name of manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.ProductCodeID">
+            <summary>
+            Vendor assigned product code ID.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.SerialNumberID">
+            <summary>
+            Serial number.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.UserFriendlyName">
+            <summary>
+            The friendly name of the monitor.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.WeekOfManufacture">
+            <summary>
+            Week of manufacture by week number. The range is from 1 through 53. Zero (0) is undefined.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Monitor.YearOfManufacture">
+            <summary>
+            Year of manufacture.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Monitor.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Motherboard">
+            <summary>
+            WMI class: Win32_BaseBoard
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Motherboard.Manufacturer">
+            <summary>
+            Name of the organization responsible for producing the physical element.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Motherboard.Product">
+            <summary>
+            Baseboard part number defined by the manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Motherboard.SerialNumber">
+            <summary>
+            Manufacturer-allocated number used to identify the physical element.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Motherboard.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Mouse">
+            <summary>
+            WMI class: Win32_PointingDevice
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Mouse.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Mouse.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Mouse.Manufacturer">
+            <summary>
+            Name of the processor's manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Mouse.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Mouse.NumberOfButtons">
+            <summary>
+            Number of buttons on the pointing device.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Mouse.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.NetworkAdapter">
+            <summary>
+            WMI class: Win32_NetworkAdapter
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.AdapterType">
+            <summary>
+            Network medium in use.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.Caption">
+            <summary>
+            Short description of the object (a one-line string).
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.MACAddress">
+            <summary>
+            Media access control address for this network adapter. 
+            A MAC address is a unique 48-bit number assigned to the network adapter by the manufacturer. 
+            It uniquely identifies this network adapter and is used for mapping TCP/IP network communications.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.Manufacturer">
+            <summary>
+            Name of the network adapter's manufacturer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.NetConnectionID">
+            <summary>
+            Name of the network connection.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.ProductName">
+            <summary>
+            Product name of the network adapter.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.Speed">
+            <summary>
+            Estimate of the current bandwidth in bits per second.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.BytesSentPersec">
+            <summary>
+            Bytes Sent/sec is the rate at which bytes are sent over each network adapter, including framing characters.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.BytesReceivedPersec">
+            <summary>
+            Bytes Received/sec is the rate at which bytes are received over each network adapter, including framing characters.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.DefaultIPGatewayList">
+            <summary>
+            Array of IP addresses of default gateways that the computer system uses.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.DHCPServer">
+            <summary>
+            IP address of the dynamic host configuration protocol (DHCP) server.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.DNSServerSearchOrderList">
+            <summary>
+            Array of server IP addresses to be used in querying for DNS servers.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.IPAddressList">
+            <summary>
+            Array of all of the IP addresses associated with the current network adapter. 
+            This property can contain either IPv6 addresses or IPv4 addresses.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.NetworkAdapter.IPSubnetList">
+            <summary>
+            Array of all of the subnet masks associated with the current network adapter.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.NetworkAdapter.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.OS">
+            <summary>
+            Operating System Info
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.OS.Name">
+            <summary>
+            OS name
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.OS.VersionString">
+            <summary>
+            OS version string
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.OS.Version">
+            <summary>
+            OS version
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.OS.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.Printer">
+            <summary>
+            WMI class: Win32_Printer
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Caption">
+            <summary>
+            Short description of an object (a one-line string).
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Default">
+            <summary>
+            If TRUE, the printer is the default printer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Description">
+            <summary>
+            Description of an object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.HorizontalResolution">
+            <summary>
+            Horizontal resolution of the printer in pixels per inch.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Local">
+            <summary>
+            If TRUE, the printer is not attached to a network. 
+            If both the Local and Network properties are set to TRUE, then the printer is a network printer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Name">
+            <summary>
+            Name of the printer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Network">
+            <summary>
+            If TRUE, the printer is a network printer. 
+            If both the Local and Network properties are set to TRUE, then the printer is a network printer.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.Shared">
+            <summary>
+            If TRUE, the printer is available as a shared network resource.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.Printer.VerticalResolution">
+            <summary>
+            Vertical resolution, in pixels-per-inch, of the printer.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.Printer.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.SoundDevice">
+            <summary>
+            WMI class: Win32_SoundDevice
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.SoundDevice.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.SoundDevice.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.SoundDevice.Manufacturer">
+            <summary>
+            Manufacturer of the sound device.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.SoundDevice.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.SoundDevice.ProductName">
+            <summary>
+            Product name of the sound device.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.SoundDevice.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.VideoController">
+            <summary>
+            WMI class: Win32_VideoController
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.AdapterRAM">
+            <summary>
+            Memory size of the video adapter.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.Caption">
+            <summary>
+            Short description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.CurrentBitsPerPixel">
+            <summary>
+            Number of bits used to display each pixel.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.CurrentHorizontalResolution">
+            <summary>
+            Current number of horizontal pixels.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.CurrentNumberOfColors">
+            <summary>
+            Number of colors supported at the current resolution.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.CurrentRefreshRate">
+            <summary>
+            Frequency at which the video controller refreshes the image for the monitor. 
+            A value of 0 (zero) indicates the default rate is being used, while 0xFFFFFFFF indicates the optimal rate is being used.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.CurrentVerticalResolution">
+            <summary>
+            Current number of vertical pixels.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.Description">
+            <summary>
+            Description of the object.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.DriverDate">
+            <summary>
+            Last modification date and time of the currently installed video driver.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.DriverVersion">
+            <summary>
+            Version number of the video driver.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.Manufacturer">
+            <summary>
+            Manufacturer of the video controller.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.MaxRefreshRate">
+            <summary>
+            Maximum refresh rate of the video controller in hertz.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.MinRefreshRate">
+            <summary>
+            Minimum refresh rate of the video controller in hertz.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.Name">
+            <summary>
+            Label by which the object is known.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.VideoModeDescription">
+            <summary>
+            Current resolution, color, and scan mode settings of the video controller.
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.VideoController.VideoProcessor">
+            <summary>
+            Free-form string describing the video processor.
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.VideoController.ToString">
+            <summary>
+            Write all property values to a string
+            </summary>
+            <returns>Each property on a new line</returns>
+        </member>
+        <member name="T:Hardware.Info.HardwareInfo">
+            <summary>
+            Main Hardware.Info class
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.OperatingSystem">
+            <summary>
+            Operating system
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.MemoryStatus">
+            <summary>
+            Memory status
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.BatteryList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Battery" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.BiosList">
+            <summary>
+            List of <see cref="T:Hardware.Info.BIOS" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.CpuList">
+            <summary>
+            List of <see cref="T:Hardware.Info.CPU" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.DriveList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Drive" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.KeyboardList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Keyboard" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.MemoryList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Memory" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.MonitorList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Monitor" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.MotherboardList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Motherboard" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.MouseList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Mouse" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.NetworkAdapterList">
+            <summary>
+            List of <see cref="T:Hardware.Info.NetworkAdapter" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.PrinterList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Printer" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.SoundDeviceList">
+            <summary>
+            List of <see cref="T:Hardware.Info.SoundDevice" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.HardwareInfo.VideoControllerList">
+            <summary>
+            List of <see cref="T:Hardware.Info.VideoController" />
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.#ctor(System.Boolean,System.Nullable{System.TimeSpan})">
+            <summary>
+            Main Hardware.Info class
+            </summary>
+            <param name="useAsteriskInWMI">causes WMI queries to use SELECT * FROM instead of SELECT with a list of property names</param>
+            <param name="timeoutInWMI">sets the Timeout property of the EnumerationOptions in the ManagementObjectSearcher that executes the query. The default value is EnumerationOptions.InfiniteTimeout</param>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshAll">
+            <summary>
+            Refresh all hardware info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshOperatingSystem">
+            <summary>
+            Refresh operating system info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshMemoryStatus">
+            <summary>
+            Refresh memory status info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshBatteryList">
+            <summary>
+            Refresh battery info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshBIOSList">
+            <summary>
+            Refresh BIOS info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshCPUList(System.Boolean)">
+            <summary>
+            Refresh CPU info
+            </summary>
+            <param name="includePercentProcessorTime">Include PercentProcessorTime info. This makes the method a bit slower.</param>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshDriveList">
+            <summary>
+            Refresh drive info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshKeyboardList">
+            <summary>
+            Refresh keyboard info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshMemoryList">
+            <summary>
+            Refresh memory info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshMonitorList">
+            <summary>
+            Refresh monitor info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshMotherboardList">
+            <summary>
+            Refresh motherboard info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshMouseList">
+            <summary>
+            Refresh mouse info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshNetworkAdapterList(System.Boolean,System.Boolean)">
+            <summary>
+            Refresh network adapter info
+            </summary>
+            <param name="includeBytesPerSec">Include BytesPerSec info. This makes the method a bit slower.</param>
+            <param name="includeNetworkAdapterConfiguration">Include NetworkAdapterConfiguration info. This makes the method a bit slower.</param>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshPrinterList">
+            <summary>
+            Refresh printer info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshSoundDeviceList">
+            <summary>
+            Refresh sound device info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.RefreshVideoControllerList">
+            <summary>
+            Refresh video controller info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.Ping(System.String,System.Action{System.Boolean})">
+            <summary>
+            Ping
+            </summary>
+            <param name="hostNameOrAddress">Host name or address to ping</param>
+            <param name="onPingComplete">On ping complete callback with "bool success" parameter</param>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.GetLocalIPv4Addresses">
+            <summary>
+            Get local IPv4 addresses
+            </summary>
+            <returns>Local IPv4 addresses</returns>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.GetLocalIPv4Addresses(System.Net.NetworkInformation.NetworkInterfaceType)">
+            <summary>
+            Get local IPv4 addresses
+            </summary>
+            <param name="networkInterfaceType">Filter by NetworkInterfaceType</param>
+            <returns>Local IPv4 addresses</returns>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.GetLocalIPv4Addresses(System.Net.NetworkInformation.OperationalStatus)">
+            <summary>
+            Get local IPv4 addresses
+            </summary>
+            <param name="operationalStatus">Filter by OperationalStatus</param>
+            <returns>Local IPv4 addresses</returns>
+        </member>
+        <member name="M:Hardware.Info.HardwareInfo.GetLocalIPv4Addresses(System.Net.NetworkInformation.NetworkInterfaceType,System.Net.NetworkInformation.OperationalStatus)">
+            <summary>
+            Get local IPv4 addresses
+            </summary>
+            <param name="networkInterfaceType">Filter by NetworkInterfaceType</param>
+            <param name="operationalStatus">Filter by OperationalStatus</param>
+            <returns>Local IPv4 addresses</returns>
+        </member>
+        <member name="T:Hardware.Info.IHardwareInfo">
+            <summary>
+            Main Hardware.Info interface
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.OperatingSystem">
+            <summary>
+            Operating system
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.MemoryStatus">
+            <summary>
+            Memory status
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.BatteryList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Battery" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.BiosList">
+            <summary>
+            List of <see cref="T:Hardware.Info.BIOS" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.CpuList">
+            <summary>
+            List of <see cref="T:Hardware.Info.CPU" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.DriveList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Drive" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.KeyboardList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Keyboard" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.MemoryList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Memory" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.MonitorList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Monitor" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.MotherboardList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Motherboard" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.MouseList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Mouse" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.NetworkAdapterList">
+            <summary>
+            List of <see cref="T:Hardware.Info.NetworkAdapter" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.PrinterList">
+            <summary>
+            List of <see cref="T:Hardware.Info.Printer" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.SoundDeviceList">
+            <summary>
+            List of <see cref="T:Hardware.Info.SoundDevice" />
+            </summary>
+        </member>
+        <member name="P:Hardware.Info.IHardwareInfo.VideoControllerList">
+            <summary>
+            List of <see cref="T:Hardware.Info.VideoController" />
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshAll">
+            <summary>
+            Refresh all hardware info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshOperatingSystem">
+            <summary>
+            Refresh operating system info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshMemoryStatus">
+            <summary>
+            Refresh memory status info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshBatteryList">
+            <summary>
+            Refresh battery info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshBIOSList">
+            <summary>
+            Refresh BIOS info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshCPUList(System.Boolean)">
+            <summary>
+            Refresh CPU info
+            </summary>
+            <param name="includePercentProcessorTime">Include PercentProcessorTime info. This makes the method a bit slower.</param>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshDriveList">
+            <summary>
+            Refresh drive info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshKeyboardList">
+            <summary>
+            Refresh keyboard info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshMemoryList">
+            <summary>
+            Refresh memory info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshMonitorList">
+            <summary>
+            Refresh monitor info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshMotherboardList">
+            <summary>
+            Refresh motherboard info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshMouseList">
+            <summary>
+            Refresh mouse info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshNetworkAdapterList(System.Boolean,System.Boolean)">
+            <summary>
+            Refresh network adapter info
+            </summary>
+            <param name="includeBytesPerSec">Include BytesPerSec info. This makes the method a bit slower.</param>
+            <param name="includeNetworkAdapterConfiguration">Include NetworkAdapterConfiguration info. This makes the method a bit slower.</param>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshPrinterList">
+            <summary>
+            Refresh printer info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshSoundDeviceList">
+            <summary>
+            Refresh sound device info
+            </summary>
+        </member>
+        <member name="M:Hardware.Info.IHardwareInfo.RefreshVideoControllerList">
+            <summary>
+            Refresh video controller info
+            </summary>
+        </member>
+    </members>
+</doc>

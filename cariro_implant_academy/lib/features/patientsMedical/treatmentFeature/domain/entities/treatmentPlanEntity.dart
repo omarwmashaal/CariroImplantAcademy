@@ -1,5 +1,4 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 import 'package:equatable/equatable.dart';
 
 class TreatmentPlanEntity extends Equatable {
@@ -7,9 +6,10 @@ class TreatmentPlanEntity extends Equatable {
   int? patientId;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
+  bool clearanceUpper;
+  bool clearanceLower;
   BasicNameIdObjectEntity? doctor;
   DateTime? date;
-  List<TeethTreatmentPlanEntity>? treatmentPlan;
 
   TreatmentPlanEntity({
     this.id,
@@ -17,11 +17,10 @@ class TreatmentPlanEntity extends Equatable {
     this.operatorId,
     this.operator,
     this.date,
-    this.treatmentPlan,
     this.doctor,
+    this.clearanceLower = false,
+    this.clearanceUpper = false,
   });
-
-
 
   @override
   // TODO: implement props
@@ -31,7 +30,6 @@ class TreatmentPlanEntity extends Equatable {
         operatorId,
         operator,
         date,
-        treatmentPlan,
-    doctor,
+        doctor,
       ];
 }

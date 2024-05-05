@@ -2,21 +2,14 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities
 
 class ToothReceiptModel extends ToothReceiptEntity {
   ToothReceiptModel({
-    super.crown,
-    super.extraction,
-    super.restoration,
-    super.rootCanalTreatment,
-    super.scaling,
+
+    super.price,
     super.tooth,
-    super.implant,
+    super.name,
   });
   ToothReceiptModel.fromJson(Map<String, dynamic> json) {
-    crown = json['crown'];
-    scaling = json['scaling'];
-    restoration = json['restoration'];
-    rootCanalTreatment = json['rootCanalTreatment'];
-    extraction = json['extraction'];
     tooth = json['tooth'];
-    implant = json['implant'];
-  }
+    name = json['name'];
+    price = json['price'];
+  }     
 }

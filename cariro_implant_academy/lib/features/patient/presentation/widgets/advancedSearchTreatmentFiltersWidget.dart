@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterSurgeryEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,9 +18,11 @@ class AdvancedSearchTreatmentFilterWidget extends StatefulWidget {
   AdvancedSearchTreatmentFilterWidget({
     Key? key,
     required this.searchTreatmentsDTO,
+    required this.treatmentItems,
   }) : super(key: key);
 
   AdvancedTreatmentSearchEntity searchTreatmentsDTO;
+  List<TreatmentItemEntity> treatmentItems;
 
   @override
   State<AdvancedSearchTreatmentFilterWidget> createState() => _AdvancedSearchTreatmentFilterWidgetState();
@@ -40,25 +43,8 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                     text: "Yes",
                     onChange: (value) {
                       if (value == true) {
-                        widget.searchTreatmentsDTO.scaling = null;
-                        widget.searchTreatmentsDTO.crown = null;
-                        widget.searchTreatmentsDTO.rootCanalTreatment = null;
-                        widget.searchTreatmentsDTO.restoration = null;
-                        widget.searchTreatmentsDTO.pontic = null;
-                        widget.searchTreatmentsDTO.extraction = null;
-                        widget.searchTreatmentsDTO.simpleImplant = null;
-                        widget.searchTreatmentsDTO.immediateImplant = null;
-                        widget.searchTreatmentsDTO.expansionWithImplant = null;
-                        widget.searchTreatmentsDTO.splittingWithImplant = null;
-                        widget.searchTreatmentsDTO.gbrWithImplant = null;
-                        widget.searchTreatmentsDTO.openSinusWithImplant = null;
-                        widget.searchTreatmentsDTO.closedSinusWithImplant = null;
-                        widget.searchTreatmentsDTO.guidedImplant = null;
-                        widget.searchTreatmentsDTO.expansionWithoutImplant = null;
-                        widget.searchTreatmentsDTO.splittingWithoutImplant = null;
-                        widget.searchTreatmentsDTO.gbrWithoutImplant = null;
-                        widget.searchTreatmentsDTO.openSinusWithoutImplant = null;
-                        widget.searchTreatmentsDTO.closedSinusWithoutImplant = null;
+                        widget.searchTreatmentsDTO.and_treatmentIds!.clear();
+                        widget.searchTreatmentsDTO.or_treatmentIds!.clear();                        
                         widget.searchTreatmentsDTO.done = null;
                       } else {
                         widget.searchTreatmentsDTO.done = false;
@@ -333,217 +319,24 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
             child: AdvancedSearchFilterChildWidget(
                 title: "Treatment Type (One of the following)",
                 child: Column(
-                  children: [
-                    CIA_CheckBoxWidget(
-                      text: "Scaling",
-                      value: widget.searchTreatmentsDTO.scaling == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.scaling = true;
-                          widget.searchTreatmentsDTO.and_scaling = null;
-                        } else
-                          widget.searchTreatmentsDTO.scaling = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Crown",
-                      value: widget.searchTreatmentsDTO.crown == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.crown = true;
-                          widget.searchTreatmentsDTO.and_crown = null;
-                        } else
-                          widget.searchTreatmentsDTO.crown = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Root Canal Treatment",
-                      value: widget.searchTreatmentsDTO.rootCanalTreatment == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.rootCanalTreatment = true;
-                          widget.searchTreatmentsDTO.and_rootCanalTreatment = null;
-                        } else
-                          widget.searchTreatmentsDTO.rootCanalTreatment = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Restoration",
-                      value: widget.searchTreatmentsDTO.restoration == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.restoration = true;
-                          widget.searchTreatmentsDTO.and_restoration = null;
-                        } else
-                          widget.searchTreatmentsDTO.restoration = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pontic",
-                      value: widget.searchTreatmentsDTO.pontic == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.pontic = true;
-                          widget.searchTreatmentsDTO.and_pontic = null;
-                        } else
-                          widget.searchTreatmentsDTO.pontic = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Extraction",
-                      value: widget.searchTreatmentsDTO.extraction == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.extraction = true;
-                          widget.searchTreatmentsDTO.and_extraction = null;
-                        } else
-                          widget.searchTreatmentsDTO.extraction = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Simple Implant",
-                      value: widget.searchTreatmentsDTO.simpleImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.simpleImplant = true;
-                          widget.searchTreatmentsDTO.and_simpleImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.simpleImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Immediate Implant",
-                      value: widget.searchTreatmentsDTO.immediateImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.immediateImplant = true;
-                          widget.searchTreatmentsDTO.and_immediateImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.immediateImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Expansion With Implant",
-                      value: widget.searchTreatmentsDTO.expansionWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.expansionWithImplant = true;
-                          widget.searchTreatmentsDTO.and_expansionWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.expansionWithImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Splitting With Implant",
-                      value: widget.searchTreatmentsDTO.splittingWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.splittingWithImplant = true;
-                          widget.searchTreatmentsDTO.and_splittingWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.splittingWithImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR With Implant",
-                      value: widget.searchTreatmentsDTO.gbrWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.gbrWithImplant = true;
-                          widget.searchTreatmentsDTO.and_gbrWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.gbrWithImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Sinus With Implant",
-                      value: widget.searchTreatmentsDTO.openSinusWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.openSinusWithImplant = true;
-                          widget.searchTreatmentsDTO.and_openSinusWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.openSinusWithImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Closed Sinus With Implant",
-                      value: widget.searchTreatmentsDTO.closedSinusWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.closedSinusWithImplant = true;
-                          widget.searchTreatmentsDTO.and_closedSinusWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.closedSinusWithImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Guided Implant",
-                      value: widget.searchTreatmentsDTO.guidedImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.guidedImplant = true;
-                          widget.searchTreatmentsDTO.and_guidedImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.guidedImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Expansion Without Implant",
-                      value: widget.searchTreatmentsDTO.expansionWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.expansionWithoutImplant = true;
-                          widget.searchTreatmentsDTO.and_expansionWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.expansionWithoutImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Splitting Without Implant",
-                      value: widget.searchTreatmentsDTO.splittingWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.splittingWithoutImplant = true;
-                          widget.searchTreatmentsDTO.and_splittingWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.splittingWithoutImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR Without Implant",
-                      value: widget.searchTreatmentsDTO.gbrWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.gbrWithoutImplant = true;
-                          widget.searchTreatmentsDTO.and_gbrWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.gbrWithoutImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Sinus Without Implant",
-                      value: widget.searchTreatmentsDTO.openSinusWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.openSinusWithoutImplant = true;
-                          widget.searchTreatmentsDTO.and_openSinusWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.openSinusWithoutImplant = null;
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Closed Sinus Without Implant",
-                      value: widget.searchTreatmentsDTO.closedSinusWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.closedSinusWithoutImplant = true;
-                          widget.searchTreatmentsDTO.and_closedSinusWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.closedSinusWithoutImplant = null;
-                      },
-                    ),
-                  ],
+                  children: widget.treatmentItems
+                      .map(
+                        (e) => CIA_CheckBoxWidget(
+                          text: e.name!,
+                          value: widget.searchTreatmentsDTO.or_treatmentIds!.contains(e.id),
+                          onChange: (value) {
+                            if (value) {
+                              widget.searchTreatmentsDTO.or_treatmentIds!.add(e.id!);
+                              widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
+                            } else
+                              widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
+
+                            widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
+                            widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
+                          },
+                        ),
+                      )
+                      .toList(),
                 )),
           ),
           Visibility(
@@ -551,236 +344,24 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
             child: AdvancedSearchFilterChildWidget(
                 title: "Treatment Type (All of the following)",
                 child: Column(
-                  children: [
-                    CIA_CheckBoxWidget(
-                      text: "Scaling",
-                      value: widget.searchTreatmentsDTO.and_scaling == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_scaling = true;
-                          widget.searchTreatmentsDTO.scaling = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_scaling = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Crown",
-                      value: widget.searchTreatmentsDTO.and_crown == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_crown = true;
-                          widget.searchTreatmentsDTO.crown = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_crown = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Root Canal Treatment",
-                      value: widget.searchTreatmentsDTO.and_rootCanalTreatment == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_rootCanalTreatment = true;
-                          widget.searchTreatmentsDTO.rootCanalTreatment = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_rootCanalTreatment = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Restoration",
-                      value: widget.searchTreatmentsDTO.and_restoration == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_restoration = true;
-                          widget.searchTreatmentsDTO.restoration = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_restoration = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pontic",
-                      value: widget.searchTreatmentsDTO.and_pontic == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_pontic = true;
-                          widget.searchTreatmentsDTO.pontic = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_pontic = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Extraction",
-                      value: widget.searchTreatmentsDTO.and_extraction == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_extraction = true;
-                          widget.searchTreatmentsDTO.extraction = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_extraction = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Simple Implant",
-                      value: widget.searchTreatmentsDTO.and_simpleImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_simpleImplant = true;
-                          widget.searchTreatmentsDTO.simpleImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_simpleImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Immediate Implant",
-                      value: widget.searchTreatmentsDTO.and_immediateImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_immediateImplant = true;
-                          widget.searchTreatmentsDTO.immediateImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_immediateImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Expansion With Implant",
-                      value: widget.searchTreatmentsDTO.and_expansionWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_expansionWithImplant = true;
-                          widget.searchTreatmentsDTO.expansionWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_expansionWithImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Splitting With Implant",
-                      value: widget.searchTreatmentsDTO.and_splittingWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_splittingWithImplant = true;
-                          widget.searchTreatmentsDTO.splittingWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_splittingWithImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR With Implant",
-                      value: widget.searchTreatmentsDTO.and_gbrWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_gbrWithImplant = true;
-                          widget.searchTreatmentsDTO.gbrWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_gbrWithImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Sinus With Implant",
-                      value: widget.searchTreatmentsDTO.and_openSinusWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_openSinusWithImplant = true;
-                          widget.searchTreatmentsDTO.openSinusWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_openSinusWithImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Closed Sinus With Implant",
-                      value: widget.searchTreatmentsDTO.and_closedSinusWithImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_closedSinusWithImplant = true;
-                          widget.searchTreatmentsDTO.closedSinusWithImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_closedSinusWithImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Guided Implant",
-                      value: widget.searchTreatmentsDTO.and_guidedImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_guidedImplant = true;
-                          widget.searchTreatmentsDTO.guidedImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_guidedImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Expansion Without Implant",
-                      value: widget.searchTreatmentsDTO.and_expansionWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_expansionWithoutImplant = true;
-                          widget.searchTreatmentsDTO.expansionWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_expansionWithoutImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Splitting Without Implant",
-                      value: widget.searchTreatmentsDTO.and_splittingWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_splittingWithoutImplant = true;
-                          widget.searchTreatmentsDTO.splittingWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_splittingWithoutImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR Without Implant",
-                      value: widget.searchTreatmentsDTO.and_gbrWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_gbrWithoutImplant = true;
-                          widget.searchTreatmentsDTO.gbrWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_gbrWithoutImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Sinus Without Implant",
-                      value: widget.searchTreatmentsDTO.and_openSinusWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_openSinusWithoutImplant = true;
-                          widget.searchTreatmentsDTO.openSinusWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_openSinusWithoutImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Closed Sinus Without Implant",
-                      value: widget.searchTreatmentsDTO.and_closedSinusWithoutImplant == true,
-                      onChange: (value) {
-                        if (value) {
-                          widget.searchTreatmentsDTO.and_closedSinusWithoutImplant = true;
-                          widget.searchTreatmentsDTO.closedSinusWithoutImplant = null;
-                        } else
-                          widget.searchTreatmentsDTO.and_closedSinusWithoutImplant = null;
-                        setState(() => null);
-                      },
-                    ),
-                  ],
+                  children: widget.treatmentItems
+                      .map(
+                        (e) => CIA_CheckBoxWidget(
+                          text: e.name!,
+                          value: widget.searchTreatmentsDTO.and_treatmentIds!.contains(e.id),
+                          onChange: (value) {
+                            if (value) {
+                              widget.searchTreatmentsDTO.and_treatmentIds!.add(e.id!);
+                              widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
+                            } else
+                              widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
+
+                            widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
+                            widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
+                          },
+                        ),
+                      )
+                      .toList(),
                 )),
           ),
         ],

@@ -1,4 +1,8 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/Widgets/TabsLayout.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
@@ -9,6 +13,9 @@ import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/la
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/entities/todoListEntity.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/toDoListBloc.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/toDoListBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc.dart';
 import 'package:cariro_implant_academy/presentation/bloc/imagesBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/createOrViewPatientBloc.dart';
@@ -20,11 +27,14 @@ import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medical
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_Events.dart';
 import 'package:cariro_implant_academy/presentation/patientsMedical/bloc/medicalInfoShellBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 import '../../../core/presentation/widgets/CIA_GestureWidget.dart';
 import '../../../features/labRequest/domain/entities/labRequestEntityl.dart';
@@ -52,6 +62,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
   late CreateOrViewPatientBloc blocInfo;
   late ImageBloc blocImage;
   late LabRequestsBloc labRequestsBloc;
+  late ToDoListBloc toDoListBloc;
 
   @override
   void initState() {
@@ -59,6 +70,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
     labRequestsBloc = sl<LabRequestsBloc>();
     blocInfo = BlocProvider.of<CreateOrViewPatientBloc>(context);
     blocImage = BlocProvider.of<ImageBloc>(context);
+    toDoListBloc = context.read<ToDoListBloc>();
 
     blocInfo.add(GetPatientInfoEvent(id: widget.patientId));
     super.initState();
@@ -67,7 +79,7 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
   @override
   Widget build(BuildContext context) {
     medicalShellBloc.add(MedicalInfoShell_ChangeViewEditEvent(allowEdit: false));
-
+    toDoListBloc.getToList(widget.patientId);
     return BlocListener<LabRequestsBloc, LabRequestsBloc_States>(
       bloc: labRequestsBloc,
       listener: (context, state) {
@@ -120,11 +132,10 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                       ),
                                       onTap: () => (!siteController.getRole()!.contains("admin"))
                                           ? null
-                                          : CIA_PopupDialog_DateOnlyPicker(
-                                              context,
-                                              "Pick Date",
-                                              (date) => medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
-                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null))),
+                                          : CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (date) {
+                                              medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
+                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null));
+                                            }),
                                     ),
                                   );
                                 },
@@ -286,6 +297,178 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                                       ),
                                     );
                                   }),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              BlocBuilder<ToDoListBloc, ToDoListBloc_States>(
+                                builder: (context, state) {
+                                  List<ToDoListEntity> toList = [];
+                                  String text = "";
+                                  if (state is ToDoListBlocState_GettingDataFailed)
+                                    text = "To Do List: error";
+                                  else if (state is ToDoListBlocState_GettingDataSuccess) {
+                                    text = "To Do List: \n waiting: ${state.data?.where((element) => !element.done).toList().length ?? 0}";
+                                    toList = state.data;
+                                  } else
+                                    text = "To Do List";
+                                  return CIA_SecondaryButton(
+                                      label: text,
+                                      icon: const Icon(Icons.check_box),
+                                      onTab: () {
+                                        CIA_ShowPopUp(
+                                          hideButton: true,
+                                          context: context,
+                                          height: 650,
+                                          width: double.maxFinite,
+                                          onSave: () {},
+                                          child: BlocConsumer<ToDoListBloc, ToDoListBloc_States>(
+                                            listener: (context, state) {
+                                              if (state is ToDoListBlocState_UpdatingDataState ||
+                                                  state is ToDoListBlocState_AddingDataState ||
+                                                  state is ToDoListBlocState_GettingDataState)
+                                                CustomLoader.show(context);
+                                              else {
+                                                CustomLoader.hide();
+                                                if (state is ToDoListBlocState_AddingDataSuccess || state is ToDoListBlocState_UpdatingDataSuccess) {
+                                                  ShowSnackBar(context, isSuccess: true);
+                                                  toDoListBloc.getToList(widget.patientId);
+                                                } else if (state is ToDoListBlocState_AddingDataFailed)
+                                                  ShowSnackBar(context, isSuccess: false, message: state.message);
+                                                else if (state is ToDoListBlocState_GettingDataFailed)
+                                                  ShowSnackBar(context, isSuccess: false, message: state.message);
+                                                else if (state is ToDoListBlocState_UpdatingDataFailed)
+                                                  ShowSnackBar(context, isSuccess: false, message: state.message);
+                                              }
+                                            },
+                                            buildWhen: (previous, current) =>
+                                                current is ToDoListBlocState_AddingDataFailed ||
+                                                current is ToDoListBlocState_UpdatingDataFailed ||
+                                                current is ToDoListBlocState_GettingDataSuccess ||
+                                                current is ToDoListBlocState_GettingDataFailed,
+                                            builder: (context, state) {
+                                              var dataSource = ToDoListDataGridSource(context, toDoListBloc);
+
+                                              if (state is ToDoListBlocState_AddingDataState ||
+                                                  state is ToDoListBlocState_UpdatingDataState ||
+                                                  state is ToDoListBlocState_GettingDataState)
+                                                return LoadingWidget();
+                                              else if (state is ToDoListBlocState_AddingDataFailed)
+                                                return BigErrorPageWidget(message: state.message);
+                                              else if (state is ToDoListBlocState_GettingDataFailed)
+                                                return BigErrorPageWidget(message: state.message);
+                                              else if (state is ToDoListBlocState_UpdatingDataFailed)
+                                                return BigErrorPageWidget(message: state.message);
+                                              else if (state is ToDoListBlocState_GettingDataSuccess) {
+                                                toList = state.data;
+                                                dataSource.models = toList;
+                                                dataSource.init(toList);
+                                              }
+                                              String newItem = "";
+                                              DateTime dueDate = DateTime.now();
+                                              return Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 50,
+                                                    child: Row(
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 2,
+                                                          child: CIA_TextFormField(
+                                                            label: "Data",
+                                                            controller: TextEditingController(text: newItem),
+                                                            onChange: (value) => newItem = value,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        Expanded(
+                                                          child: CIA_DateTimeTextFormField(
+                                                            label: "Due Date",
+                                                            controller: TextEditingController(text: ""),
+                                                            initialDate: dueDate,
+                                                            onChange: (value) => dueDate = value,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        CIA_PrimaryButton(
+                                                          label: "Add",
+                                                          onTab: () {
+                                                            toDoListBloc.addToDoListItem(ToDoListEntity(
+                                                              data: newItem,
+                                                              done: false,
+                                                              dueDate: dueDate,
+                                                              patientId: widget.patientId,
+                                                            ));
+                                                          },
+                                                          icon: Icon(Icons.add),
+                                                          isLong: true,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Divider(),
+                                                  Expanded(
+                                                    child: TableWidget(
+                                                      dataSource: dataSource,
+                                                    ),
+                                                    //   child: ListView(
+                                                    //     children: toList
+                                                    //         .mapIndexed((i, e) => Padding(
+                                                    //               padding: const EdgeInsets.all(8.0),
+                                                    //               child: Card(
+                                                    //                 child: Row(
+                                                    //                   children: [
+                                                    //                     Text("${i + 1}. "),
+                                                    //                     IconButton(
+                                                    //                       onPressed: () {
+                                                    //                         toDoListBloc.updateToListItem(e, true);
+                                                    //                       },
+                                                    //                       icon: Icon(
+                                                    //                         Icons.delete_forever,
+                                                    //                         color: Colors.red,
+                                                    //                       ),
+                                                    //                     ),
+                                                    //                     SizedBox(width: 10),
+                                                    //                     Expanded(
+                                                    //                       child: CIA_CheckBoxWidget(
+                                                    //                         text: e.data,
+                                                    //                         value: e.done,
+                                                    //                         onChange: (value) {
+                                                    //                           e.done = value;
+                                                    //                           toDoListBloc.updateToListItem(e, false);
+                                                    //                         },
+                                                    //                       ),
+                                                    //                     ),
+                                                    //                     Row(
+                                                    //                       children: [
+                                                    //                         FormTextValueWidget(
+                                                    //                           secondaryInfo: true,
+                                                    //                           text: "Created: ${DateFormat("dd-MM-yyyy").format(e.createDate!)}",
+                                                    //                         ),
+                                                    //                         SizedBox(width: 10),
+                                                    //                         FormTextValueWidget(
+                                                    //                           secondaryInfo: true,
+                                                    //                           text: e.dueDate == null
+                                                    //                               ? ""
+                                                    //                               : "Due: ${DateFormat("dd-MM-yyyy").format(e.dueDate!)}",
+                                                    //                         ),
+                                                    //                       ],
+                                                    //                     ),
+                                                    //                   ],
+                                                    //                 ),
+                                                    //               ),
+                                                    //             ))
+                                                    //         .toList(),
+                                                    //   ),
+                                                  )
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      });
+                                },
+                              ),
                               SizedBox(
                                 height: 10,
                               ),

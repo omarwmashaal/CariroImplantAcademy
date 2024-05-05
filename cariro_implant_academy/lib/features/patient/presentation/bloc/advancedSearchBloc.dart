@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachRequestModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachResponseModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
@@ -232,42 +233,40 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 
   /// Creates the income data source class with required details.
   AdvancedTreatmentSearchDataGridSource() {
-    /*addColumnGroup(
-      ColumnGroup(
-        name: "Patient Name",
-        sortGroupRows: true,
-      ),
-    );*/
+    // addColumnGroup(
+    //   ColumnGroup(
+    //     name: "Patient Name",
+    //     sortGroupRows: true,
+
+    //   ),
+    // );
   }
 
   init({AdvancedTreatmentSearchEntity? search}) {
     List<String> forceShowColumns = [];
     if (query.implantFailed != null) {
-      if (models.firstWhereOrNull((element) => element.str_simpleImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_simpleImplant");
+      for (var element in models) {
+        if (element.treatmentValue?.contains("Failed") ?? false) {
+          forceShowColumns.add(element.treatmentName!);
+        }
       }
-      if (models.firstWhereOrNull((element) => element.str_immediateImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_immediateImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_expansionWithImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_expansionWithImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_splittingWithImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_splittingWithImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_gbrWithImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_gbrWithImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_openSinusWithImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_openSinusWithImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_closedSinusWithImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_closedSinusWithImplant");
-      }
-      if (models.firstWhereOrNull((element) => element.str_guidedImplant?.contains("Failed") ?? false) != null) {
-        forceShowColumns.add("str_guidedImplant");
-      }
+      forceShowColumns = forceShowColumns.toSet().toList();
     }
+
+    List<int> columnsIds = <int>[];
+    columnsIds.addAll(query.and_treatmentIds ?? []);
+    columnsIds.addAll(query.or_treatmentIds ?? []);
+
+    columnsIds = columnsIds
+      ..toSet()
+      ..toList();
+
+    var resultIds = models.map((e) => e.treatmentId).toList();
+    columnsIds.removeWhere((element) => !resultIds.contains(element));
+
+    var columns =
+        columnsIds.map((e) => BasicNameIdObjectEntity(id: e, name: models.firstWhere((element) => element.treatmentId == e).treatmentName)).toList();
+
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: () {
               List<DataGridCell> r = [];
@@ -278,192 +277,13 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
               if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
-              if (query.scaling == true || query.and_scaling == true) r.add(DataGridCell<String>(columnName: "Scaling", value: e.str_scaling));
-              if (query.crown == true || query.and_crown == true) r.add(DataGridCell<String>(columnName: "Crown", value: e.str_crown));
-              if (query.rootCanalTreatment == true || query.and_rootCanalTreatment == true) {
-                r.add(DataGridCell<String>(columnName: "RootCanal Treatment", value: e.str_rootCanalTreatment));
+              for (var column in columns) {
+                r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }
-              if (query.restoration == true || query.and_restoration == true) {
-                r.add(DataGridCell<String>(columnName: "Restoration", value: e.str_restoration));
-              }
-              if (query.pontic == true || query.and_pontic == true) r.add(DataGridCell<String>(columnName: "Pontic", value: e.str_pontic));
-              if (query.extraction == true || query.and_extraction == true) {
-                r.add(DataGridCell<String>(columnName: "Extraction", value: e.str_extraction));
-              }
-              if (query.simpleImplant == true || query.and_simpleImplant == true || forceShowColumns.contains("str_simpleImplant")) {
-                r.add(DataGridCell<String>(columnName: "Simple Implant", value: e.str_simpleImplant));
-              }
-              if (query.immediateImplant == true || query.and_immediateImplant == true || forceShowColumns.contains("str_immediateImplant")) {
-                r.add(DataGridCell<String>(columnName: "Immediate Implant", value: e.str_immediateImplant));
-              }
-              if (query.expansionWithImplant == true ||
-                  query.and_expansionWithImplant == true ||
-                  forceShowColumns.contains("str_expansionWithImplant")) {
-                r.add(DataGridCell<String>(columnName: "Expansion With Implant", value: e.str_expansionWithImplant));
-              }
-              if (query.splittingWithImplant == true ||
-                  query.and_splittingWithImplant == true ||
-                  forceShowColumns.contains("str_splittingWithImplant")) {
-                r.add(DataGridCell<String>(columnName: "Splitting With Implant", value: e.str_splittingWithImplant));
-              }
-              if (query.gbrWithImplant == true || query.and_gbrWithImplant == true || forceShowColumns.contains("str_gbrWithImplant")) {
-                r.add(DataGridCell<String>(columnName: "GBR With Implant", value: e.str_gbrWithImplant));
-              }
-              if (query.openSinusWithImplant == true ||
-                  query.and_openSinusWithImplant == true ||
-                  forceShowColumns.contains("str_openSinusWithImplant")) {
-                r.add(DataGridCell<String>(columnName: "Open Sinus WithImplant", value: e.str_openSinusWithImplant));
-              }
-              if (query.closedSinusWithImplant == true ||
-                  query.and_closedSinusWithImplant == true ||
-                  forceShowColumns.contains("str_closedSinusWithImplant")) {
-                r.add(DataGridCell<String>(columnName: "ClosedSinus With Implant", value: e.str_closedSinusWithImplant));
-              }
-              if (query.guidedImplant == true || query.and_guidedImplant == true || forceShowColumns.contains("str_guidedImplant")) {
-                r.add(DataGridCell<String>(columnName: "Guided Implant", value: e.str_guidedImplant));
-              }
-              if (query.expansionWithoutImplant == true || query.and_expansionWithoutImplant == true) {
-                r.add(DataGridCell<String>(columnName: "Expansion Without Implant", value: e.str_expansionWithoutImplant));
-              }
-              if (query.splittingWithoutImplant == true || query.and_splittingWithoutImplant == true) {
-                r.add(DataGridCell<String>(columnName: "Splitting Without Implant", value: e.str_splittingWithoutImplant));
-              }
-              if (query.gbrWithoutImplant == true || query.and_gbrWithoutImplant == true) {
-                r.add(DataGridCell<String>(columnName: "GBRWithout Implant", value: e.str_gbrWithoutImplant));
-              }
-              if (query.openSinusWithoutImplant == true || query.and_openSinusWithoutImplant == true) {
-                r.add(DataGridCell<String>(columnName: "OpenSinus Without Implant", value: e.str_openSinusWithoutImplant));
-              }
-              if (query.closedSinusWithoutImplant == true || query.and_closedSinusWithoutImplant == true) {
-                r.add(DataGridCell<String>(columnName: "ClosedSinus Without Implant", value: e.str_closedSinusWithoutImplant));
-              }
+
               return r;
             }()))
         .toList();
-  }
-
-  _reArrangeColumns(AdvancedTreatmentSearchEntity? search, AdvancedTreatmentSearchEntity result) {
-    List<DataGridCell> cells = [
-      DataGridCell<int>(columnName: "Id", value: result.id),
-      DataGridCell<String>(columnName: "Patient Name", value: result.patientName),
-      DataGridCell<String>(columnName: "Scaling", value: result.str_scaling),
-      DataGridCell<String>(columnName: "Crown", value: result.str_crown),
-      DataGridCell<String>(columnName: "RootCanal Treatment", value: result.str_rootCanalTreatment),
-      DataGridCell<String>(columnName: "Restoration", value: result.str_restoration),
-      DataGridCell<String>(columnName: "Pontic", value: result.str_pontic),
-      DataGridCell<String>(columnName: "Extraction", value: result.str_extraction),
-      DataGridCell<String>(columnName: "Simple Implant", value: result.str_simpleImplant),
-      DataGridCell<String>(columnName: "Immediate Implant", value: result.str_immediateImplant),
-      DataGridCell<String>(columnName: "Expansion With Implant", value: result.str_expansionWithImplant),
-      DataGridCell<String>(columnName: "Splitting With Implant", value: result.str_splittingWithImplant),
-      DataGridCell<String>(columnName: "GBR With Implant", value: result.str_gbrWithImplant),
-      DataGridCell<String>(columnName: "Open Sinus WithImplant", value: result.str_openSinusWithImplant),
-      DataGridCell<String>(columnName: "ClosedSinus With Implant", value: result.str_closedSinusWithImplant),
-      DataGridCell<String>(columnName: "Guided Implant", value: result.str_guidedImplant),
-      DataGridCell<String>(columnName: "Expansion Without Implant", value: result.str_expansionWithoutImplant),
-      DataGridCell<String>(columnName: "Splitting Without Implant", value: result.str_splittingWithoutImplant),
-      DataGridCell<String>(columnName: "GBRWithout Implant", value: result.str_gbrWithoutImplant),
-      DataGridCell<String>(columnName: "OpenSinus Without Implant", value: result.str_openSinusWithoutImplant),
-      DataGridCell<String>(columnName: "ClosedSinus Without Implant", value: result.str_closedSinusWithoutImplant),
-    ];
-    if (search != null) {
-      if (search.scaling == true || search.and_scaling == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Scaling");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.crown == true || search.and_crown == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Crown");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.rootCanalTreatment == true || search.and_rootCanalTreatment == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "RootCanal Treatment");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.restoration == true || search.and_restoration == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Restoration");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.pontic == true || search.and_pontic == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Pontic");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.extraction == true || search.and_extraction == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Extraction");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.simpleImplant == true || search.and_simpleImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Simple Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.immediateImplant == true || search.and_immediateImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Immediate Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.expansionWithImplant == true || search.and_expansionWithImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Expansion With Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.splittingWithImplant == true || search.and_splittingWithImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Splitting With Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.gbrWithImplant == true || search.and_gbrWithImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "GBR With Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.openSinusWithImplant == true || search.and_openSinusWithImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Open Sinus WithImplant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.closedSinusWithImplant == true || search.and_closedSinusWithImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "ClosedSinus With Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.guidedImplant == true || search.and_guidedImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Guided Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.expansionWithoutImplant == true || search.and_expansionWithoutImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Expansion Without Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.splittingWithoutImplant == true || search.and_splittingWithoutImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "Splitting Without Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.gbrWithoutImplant == true || search.and_gbrWithoutImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "GBRWithout Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.openSinusWithoutImplant == true || search.and_openSinusWithoutImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "OpenSinus Without Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-      if (search.closedSinusWithoutImplant == true || search.and_closedSinusWithoutImplant == true) {
-        var temp = cells.firstWhere((element) => element.columnName == "ClosedSinus Without Implant");
-        cells.remove(temp);
-        cells.insert(2, temp);
-      }
-    }
-    return cells;
   }
 
   List<DataGridRow> _data = [];
@@ -510,6 +330,11 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 
     return [];
   }
+
+  // @override
+  // Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
+  //   return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
+  // }
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {

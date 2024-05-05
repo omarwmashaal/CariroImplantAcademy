@@ -1,0 +1,21 @@
+﻿Installing assembly 'D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.InstallLog
+   assemblypath = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe
+Installing service Windows Service NT...
+Service Windows Service NT has been successfully installed.
+Creating EventLog source Windows Service NT in log Application...
+Committing assembly 'D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.InstallLog
+   assemblypath = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe
+Uninstalling assembly 'D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.InstallLog
+   assemblypath = D:\Projects\CIA\Backend\CIA_Service\bin\Release\CIA_Service.exe
+Removing EventLog source Windows Service NT.
+Service Windows Service NT is being removed from the system...
+Service Windows Service NT was successfully removed from the system.

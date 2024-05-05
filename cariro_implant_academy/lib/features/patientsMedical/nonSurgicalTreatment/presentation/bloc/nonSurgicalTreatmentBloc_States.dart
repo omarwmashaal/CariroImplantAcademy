@@ -1,9 +1,10 @@
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/entities/nonSurgialTreatmentEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../dentalExamination/domain/entities/dentalExaminationBaseEntity.dart';
-import '../../../treatmentFeature/domain/entities/teethTreatmentPlan.dart';
 
 abstract class NonSurgicalTreatmentBloc_States extends Equatable {}
 
@@ -19,8 +20,9 @@ class NonSurgicalTreatmentBloc_LoadingData extends NonSurgicalTreatmentBloc_Stat
 
 class NonSurgicalTreatmentBloc_DataLoadedSuccessfully extends NonSurgicalTreatmentBloc_States {
   final NonSurgicalTreatmentEntity nonSurgicalTreatmentEntity;
+  final List<TreatmentItemEntity> treatmentItems;
 
-  NonSurgicalTreatmentBloc_DataLoadedSuccessfully({required this.nonSurgicalTreatmentEntity});
+  NonSurgicalTreatmentBloc_DataLoadedSuccessfully({required this.nonSurgicalTreatmentEntity,required this.treatmentItems});
 
   @override
   List<Object?> get props => [nonSurgicalTreatmentEntity];
@@ -138,7 +140,7 @@ class NonSurgicalTreatmentBloc_LoadingTreatmentPlanItem extends NonSurgicalTreat
 }
 
 class NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully extends NonSurgicalTreatmentBloc_States {
-  final TeethTreatmentPlanEntity? data;
+  final List<TreatmentDetailsEntity>? data;
   final String action;
   final int tooth;
 

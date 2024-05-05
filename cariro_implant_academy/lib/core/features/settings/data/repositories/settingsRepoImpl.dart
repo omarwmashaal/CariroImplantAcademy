@@ -5,12 +5,12 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/im
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneCompanyEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/treatmentPricesEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
@@ -23,15 +23,6 @@ class SettingsRepoImpl implements SettingsRepository {
 
   SettingsRepoImpl({required this.settingsDatasource});
 
-  @override
-  Future<Either<Failure, TreatmentPricesEntity>> getTreatmentPrices() async {
-    try {
-      final result = await settingsDatasource.getTreatmentPrices();
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
 
   @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getImplantCompanies() async {
@@ -303,8 +294,8 @@ class SettingsRepoImpl implements SettingsRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, NoParams>> editTreatmentPrices(TreatmentPricesEntity prices) async {
+@override
+  Future<Either<Failure, NoParams>> editTreatmentPrices(List<TreatmentItemEntity> prices) async {
     try {
       final result = await settingsDatasource.editTreatmentPrices(prices);
       return Right(result);
@@ -323,7 +314,7 @@ class SettingsRepoImpl implements SettingsRepository {
     }
   }
 
-  @override
+@override
   Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category) async {
     try {
       final result = await settingsDatasource.getTeethTreatmentPrices(teeth,category);
@@ -422,6 +413,8 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+  
+
 
 
 
