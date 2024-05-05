@@ -236,6 +236,156 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
         }
 
+        [AllowAnonymous]
+        [HttpGet("MigrateToNewReceiptSystem")]
+        public async Task<IActionResult> MigrateToNewReceiptSystem()
+        {
+            var receipt = await _ciaDbContext.Receipts.
+                Include(x => x.WaxUp).
+                Include(x => x.ZirconUnit).
+                Include(x => x.PFM).
+                Include(x => x.CompositeInlay).
+                Include(x => x.EmaxVeneer).
+                Include(x => x.MilledPMMA).
+                Include(x => x.PrintedPMMA).
+                Include(x => x.TiAbutment).
+                Include(x => x.TiBar).
+                Include(x => x.ThreeDPrinting).
+                ToListAsync();
+
+            foreach (var r in receipt)
+            {
+                List<ToothReceiptData> newReceipt = new();
+
+                if (r.ToothReceiptData != null)
+                {
+
+                    foreach (var t in r.ToothReceiptData)
+                    {
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Extraction",
+                            Price = t.Extraction,
+                            Tooth = t.Tooth,
+                        });
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Crown",
+                            Price = t.Crown,
+                            Tooth = t.Tooth,
+                        });
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Implant",
+                            Price = t.Implant,
+                            Tooth = t.Tooth,
+                        });
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Restoration",
+                            Price = t.Restoration,
+                            Tooth = t.Tooth,
+                        });
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Scaling",
+                            Price = t.Scaling,
+                            Tooth = t.Tooth,
+                        });
+                        newReceipt.Add(new ToothReceiptData
+                        {
+                            Name = "Root Canal Treatment",
+                            Price = t.RootCanalTreatment,
+                            Tooth = t.Tooth,
+                        });
+                    }
+
+                }
+
+                if (r.WaxUp != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Wax Up",
+                        Price = r.WaxUp.TotalPrice ?? 0,
+                    });
+
+                if (r.ZirconUnit != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Zircon Unit",
+                        Price = r.ZirconUnit.TotalPrice ?? 0,
+                    });
+                if (r.PFM != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "PFM",
+                        Price = r.PFM.TotalPrice ?? 0,
+                    });
+                if (r.CompositeInlay != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Composite Inlay",
+                        Price = r.CompositeInlay.TotalPrice ?? 0,
+                    });
+                if (r.EmaxVeneer != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Emax Veneer",
+                        Price = r.EmaxVeneer.TotalPrice ?? 0,
+                    });
+                if (r.MilledPMMA != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Milled PMMA",
+                        Price = r.MilledPMMA.TotalPrice ?? 0,
+                    });
+                if (r.PrintedPMMA != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Printed PMMA",
+                        Price = r.PrintedPMMA.TotalPrice ?? 0,
+                    });
+                if (r.TiAbutment != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Ti Abutment",
+                        Price = r.TiAbutment.TotalPrice ?? 0,
+                    });
+                if (r.TiBar != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "Ti Bar",
+                        Price = r.TiBar.TotalPrice ?? 0,
+                    });
+                if (r.ThreeDPrinting != null)
+                    newReceipt.Add(new ToothReceiptData
+                    {
+                        Name = "3D Printing",
+                        Price = r.ThreeDPrinting.TotalPrice ?? 0,
+                    });
+
+
+
+
+                r.ToothReceiptData = newReceipt.Where(x=>x.Price!=0).ToList();
+                var tempTotal = r.Total;
+                r.Total = r.LabFees ?? 0;
+                foreach (var t in r.ToothReceiptData)
+                {
+                    r.Total += t.Price;
+                }
+                if (tempTotal != r.Total)
+                    Console.WriteLine($"Id = {r.Id} Old Total = {tempTotal} new Total = {r.Total}    {r.Website}");
+
+
+
+
+            }
+            
+            _ciaDbContext.Receipts.UpdateRange(receipt);
+            _ciaDbContext.SaveChanges();
+            return Ok();
+        }
         //[AllowAnonymous]
         //[HttpGet("MigrateToNewTreatment")]
 
@@ -847,11 +997,11 @@ namespace CIA.Controllers
 
         //    foreach (var treatment in treatments)
         //    {
-                
+
         //            var tempTreatmentItem = treatmentItems.First(x => x.Name.ToLower() == treatment.Name.ToLower());
         //            treatment.TreatmentItemId = tempTreatmentItem.Id;
-                
-                
+
+
         //    }
         //    _ciaDbContext.TreatmentDetails.UpdateRange(treatments);
         //    _ciaDbContext.SaveChanges();

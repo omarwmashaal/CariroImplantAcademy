@@ -21,7 +21,7 @@ namespace CIA.Models
         public int Total { get; set; } = 0;
         public int Paid { get; set; } = 0;
         public int Unpaid { get; set; } = 0;
-        public int? RequestId { get; set; }
+        public int? RequestId { get; set; } 
        // public LAB_RequestsDTO? Request { get; set; }
         public int? PatientId { get; set; }
         public PatientDTO? Patient { get; set; }

@@ -48,9 +48,15 @@ namespace CIA.Models
     [Owned]
     public class ToothReceiptData
     {
-        public int Tooth { get; set; }
-        public int Price { get; set; }
+        public int Tooth { get; set; } = 0;
+        public int Price { get; set; } = 0;
         public String Name { get; set; }
+        public int Crown { get; set; }
+        public int Extraction { get; set; }
+        public int Implant { get; set; }
+        public int Restoration { get; set; }
+        public int Scaling { get; set; }
+        public int RootCanalTreatment { get; set; }
     }
 
    

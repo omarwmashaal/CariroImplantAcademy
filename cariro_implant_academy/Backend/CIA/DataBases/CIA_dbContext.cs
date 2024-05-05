@@ -30,7 +30,7 @@ namespace CIA.DataBases
         public DbSet<TreatmentItemModel> TreatmentItems { get; set; }
         public DbSet<TreatmentDetailsModel> TreatmentDetails { get; set; }
         public DbSet<TreatmentPlanSubModel> TreatmentPlansSubModels { get; set; }
-        public DbSet<NonSurgicalTreatmentModel> SurgicalTreatments { get; set; }
+        public DbSet<SurgicalTreatmentModel> SurgicalTreatments { get; set; }
 
         public DbSet<PostSurgeryModel> PostSurgeries { get; set; }
         public DbSet<TreatmentPlanModel> TreatmentPlans { get; set; }

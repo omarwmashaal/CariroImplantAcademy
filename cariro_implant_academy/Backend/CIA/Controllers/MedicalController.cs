@@ -94,25 +94,22 @@ namespace CIA.Controllers
         public async Task<ActionResult> GetPatientNonSurgicalTreatment(int id)
         {
             var user = await _iUserRepo.GetUser();
-            var patient = await _cia_DbContext.Patients.
-                Include(x => x.NonSurgicalTreatment).ThenInclude(x => x.Operator).
-                Include(x => x.NonSurgicalTreatment).ThenInclude(x => x.Supervisor).
-                FirstOrDefaultAsync(x => x.Id == id);
-            if (patient == null)
-            {
-                _aPI_Response.ErrorMessage = "Couldn't find patient!";
-                return BadRequest(_aPI_Response);
-            }
-            if (patient.NonSurgicalTreatment != null)
-            {
-                var t = patient.NonSurgicalTreatment.FirstOrDefault(X => X.Date.Value.Date == DateTime.UtcNow.Date && X.Operator == user);
-                if (t != null && t.Treatment != null)
-                {
-                    t.Treatment = t.Treatment.Replace("\n\n", "\n");
-                }
-                _aPI_Response.Result = t;
+            var nonSurgical = await _cia_DbContext.NonSurgicalTreatment
 
+                .Include(x => x.Operator)
+                .Include(x => x.Supervisor)
+                .FirstOrDefaultAsync(
+                    x => x.PatientId == id && x.OperatorID == user.IdInt && x.Date.Value.Date == DateTime.UtcNow.Date
+                    );
+
+
+            if (nonSurgical != null && nonSurgical.Treatment != null)
+            {
+                nonSurgical.Treatment = nonSurgical.Treatment.Replace("\n\n", "\n");
             }
+            _aPI_Response.Result = nonSurgical;
+
+
 
 
 
@@ -687,14 +684,14 @@ namespace CIA.Controllers
 
                     if (t.AssignedToID != currentTreatmentFromDatabase.AssignedToID)
                     {
-                     //   await _notificationRepo.TreatmentAssigned(id, (int)t.AssignedToID, (int)t.TreatmentItemId);
+                        //   await _notificationRepo.TreatmentAssigned(id, (int)t.AssignedToID, (int)t.TreatmentItemId);
 
                     }
                 }
                 else if (t.AssignedToID != null)
                 {
                     //assign users when model id is null , first time add to database
-                  //  await _notificationRepo.TreatmentAssigned(id, (int)t.AssignedToID, (int)t.TreatmentItemId);
+                    //  await _notificationRepo.TreatmentAssigned(id, (int)t.AssignedToID, (int)t.TreatmentItemId);
                 }
             }
 
@@ -1512,7 +1509,7 @@ namespace CIA.Controllers
         [HttpGet("GetTreatmentItems")]
         public async Task<IActionResult> GetTreatmentItems()
         {
-            _aPI_Response.Result = await _cia_DbContext.TreatmentItems.Where(x=>x.Website==_site).OrderBy(x => x.Id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.TreatmentItems.Where(x => x.Website == _site).OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);
         }
 
@@ -1610,11 +1607,11 @@ namespace CIA.Controllers
 
             if (request.RequestEnum == RequestChangeEnum.ImplantChange)
             {
-                var treatment = await _cia_DbContext.TreatmentDetails.FirstAsync(x =>x.PatientId==request.PatientId &&  x.RequestChangeId == request.Id);
+                var treatment = await _cia_DbContext.TreatmentDetails.FirstAsync(x => x.PatientId == request.PatientId && x.RequestChangeId == request.Id);
 
                 treatment.RequestChangeId = null;
                 treatment.RequestChangeModel = null;
-                treatment.ImplantID = request.DataId;              
+                treatment.ImplantID = request.DataId;
 
                 _cia_DbContext.TreatmentDetails.Update(treatment);
                 _cia_DbContext.SaveChanges();

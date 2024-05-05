@@ -851,6 +851,250 @@ namespace CIA.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.SurgicalTreatmentModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("GuidedBoneRegeneration")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_ACMBur")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("GuidedBoneRegeneration_ACMBur_Area")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GuidedBoneRegeneration_ACMBur_Notes")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_BlockGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_BlockGraft_Chin")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("GuidedBoneRegeneration_BlockGraft_Other")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_BlockGraft_Ramus")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_BlockGraft_Tuberosity")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_BoneParticle")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("GuidedBoneRegeneration_BoneParticle_100Autogenous")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("GuidedBoneRegeneration_BoneParticle_100Xenograft")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_CutBy")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_CutBy_Disc")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_CutBy_Piezo")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("GuidedBoneRegeneration_CutBy_Screws")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("GuidedBoneRegeneration_CutBy_ScrewsNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("OpenSinusLift")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("OpenSinusLiftTacsNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("OpenSinusLift_Approach")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("OpenSinusLift_Approach_String")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("OpenSinusLift_FillMaterial")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("OpenSinusLift_FillMaterial_String")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("OpenSinusLift_MembraneID")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OpenSinusLift_Membrane_CompanyID")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OpenSinusLift_TacsCompanyID")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool?>("SoftTissueGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation_Buccal")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation_Crestal")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation_Distal")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation_Lingual")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_Augmentation_Mesial")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_BoneGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_BoneGraft_Notes")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_DonorSite")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_DonorSite_Notes")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_Exposure")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_Exposure_CustomizedHealingCollarTeethNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_Frenectomy")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_Frenectomy_Notes")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_RecipientSite")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_RecipientSite_Area")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_SurgeryType")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_SurgeryType_Advanced")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_SurgeryType_ConnectiveTissueGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_SurgeryType_FreeGinivalGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SoftTissueGraft_SurgeryType_SoftTissueGraft")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_SurgeryType_SurgeryTechnique")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SoftTissueGraft_Suture")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SoftTissueGraft_Suture_Material")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SoftTissueGraft_Suture_PackType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SoftTissueGraft_Suture_Technique")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Material")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Material_Proline")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SutureAndTemporizationAndXRay_Material_SutureTechnique")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Material_Vicryl")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Material_XRay")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_3_0")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_4_0")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_5_0")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_6_0")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_7_0")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_SutureSize_ImplantSubcrestal")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_BridgeOnTeeth")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_Crown")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_CustomizedHeallingCollar")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_DentureWithGlassFiber")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_HealingCollar")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("SutureAndTemporizationAndXRay_Temporary_MarylandBridge")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OpenSinusLift_MembraneID");
+
+                    b.HasIndex("OpenSinusLift_Membrane_CompanyID");
+
+                    b.HasIndex("OpenSinusLift_TacsCompanyID");
+
+                    b.ToTable("SurgicalTreatments");
+                });
+
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>
                 {
                     b.Property<int?>("Id")
@@ -21498,6 +21742,9 @@ namespace CIA.Migrations
                     b.Property<int>("RequestEnum")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("SurgicalTreatmentModelId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
@@ -21509,6 +21756,8 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId");
 
                     b.HasIndex("PostSurgeryModelId");
+
+                    b.HasIndex("SurgicalTreatmentModelId");
 
                     b.HasIndex("UserId1");
 
@@ -21714,7 +21963,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("SupervisorId");
 
-                    b.ToTable("NonSurgicalTreatmentModel");
+                    b.ToTable("NonSurgicalTreatment");
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.PostSurgeryModel", b =>
@@ -23483,6 +23732,27 @@ namespace CIA.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.SurgicalTreatmentModel", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.Membrane", "OpenSinusLift_Membrane")
+                        .WithMany()
+                        .HasForeignKey("OpenSinusLift_MembraneID");
+
+                    b.HasOne("CIA.Models.CIA.MembraneCompany", "OpenSinusLift_Membrane_Company")
+                        .WithMany()
+                        .HasForeignKey("OpenSinusLift_Membrane_CompanyID");
+
+                    b.HasOne("CIA.Models.CIA.TacCompany", "OpenSinusLift_TacsCompany")
+                        .WithMany()
+                        .HasForeignKey("OpenSinusLift_TacsCompanyID");
+
+                    b.Navigation("OpenSinusLift_Membrane");
+
+                    b.Navigation("OpenSinusLift_Membrane_Company");
+
+                    b.Navigation("OpenSinusLift_TacsCompany");
+                });
+
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>
                 {
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Doctor")
@@ -24689,11 +24959,29 @@ namespace CIA.Migrations
 
                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
 
+                            b1.Property<int>("Crown")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Extraction")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Implant")
+                                .HasColumnType("integer");
+
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<int>("Price")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Restoration")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("RootCanalTreatment")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Scaling")
                                 .HasColumnType("integer");
 
                             b1.Property<int>("Tooth")
@@ -24745,6 +25033,10 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.TreatmentModels.PostSurgeryModel", null)
                         .WithMany("RequestChanges")
                         .HasForeignKey("PostSurgeryModelId");
+
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.SurgicalTreatmentModel", null)
+                        .WithMany("RequestChanges")
+                        .HasForeignKey("SurgicalTreatmentModelId");
 
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "User")
                         .WithMany()
@@ -27837,6 +28129,11 @@ namespace CIA.Migrations
                     b.Navigation("Impressions");
 
                     b.Navigation("TryIns");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.SurgicalTreatmentModel", b =>
+                {
+                    b.Navigation("RequestChanges");
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_Request", b =>

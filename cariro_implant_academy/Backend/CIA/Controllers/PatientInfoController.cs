@@ -919,12 +919,14 @@ namespace CIA.Controllers
 
             var receipt =
 
-                await _mapper.ProjectTo<ReceiptDTO>(_cia_DbContext.Receipts.OrderByDescending(x => x.Date).AsNoTracking()).FirstOrDefaultAsync(x => x.PatientId == id);
+                await _cia_DbContext.Receipts.OrderByDescending(x => x.Date).AsNoTracking().FirstOrDefaultAsync(x => x.PatientId == id);
+
+            var receiptDto = _mapper.Map<ReceiptDTO>(receipt);
 
 
-            receipt.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
+            receiptDto.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
 
-            _aPI_Response.Result = receipt;
+            _aPI_Response.Result = receiptDto;
 
 
 
@@ -939,19 +941,22 @@ namespace CIA.Controllers
 
             var receipt =
 
-                await _mapper.ProjectTo<ReceiptDTO>(
+               
                      _cia_DbContext
                 .Receipts
                 .Where(x => x.Website == _site)
 
                 .OrderByDescending(x => x.Date).AsNoTracking()
 
-                    ).FirstOrDefaultAsync(x => x.PatientId == id);
+                    .FirstOrDefaultAsync(x => x.PatientId == id);
 
 
-            receipt.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
+            var receiptDto = _mapper.Map<ReceiptDTO>(receipt);
 
-            _aPI_Response.Result = receipt;
+
+            //receipts.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
+
+            _aPI_Response.Result = receiptDto;
             return Ok(_aPI_Response);
         }
 
@@ -960,19 +965,22 @@ namespace CIA.Controllers
         {
             var receipts =
 
-                await _mapper.ProjectTo<ReceiptDTO>(
+                await 
                      _cia_DbContext
                 .Receipts
+                .Include(x=>x.Patient)
+                .Include(x=>x.Operator)
                 .Where(x => x.Website == _site && x.PatientId == id).AsNoTracking()
 
                 .OrderByDescending(x => x.Date)
 
-                    ).ToListAsync();
+                    .ToListAsync();
+            var receiptDto = _mapper.Map<List<ReceiptDTO>>(receipts);
 
 
             //receipts.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
 
-            _aPI_Response.Result = receipts;
+            _aPI_Response.Result = receiptDto;
             return Ok(_aPI_Response);
         }
         [HttpGet("GetReceiptById")]
@@ -980,19 +988,18 @@ namespace CIA.Controllers
         {
             var receipt =
 
-                await _mapper.ProjectTo<ReceiptDTO>(
-                     _cia_DbContext
+                await _cia_DbContext
                 .Receipts
                 .Where(x => x.Website == _site)
-
                 .OrderByDescending(x => x.Date).AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-                    ).FirstOrDefaultAsync(x => x.Id == id);
+            var receiptDto = _mapper.Map<ReceiptDTO>(receipt);
 
-            receipt.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
+            receiptDto.ClinicPrices = _mapper.Map<List<DropDowns>>(receipt.Prices);
 
 
-            _aPI_Response.Result = receipt;
+            _aPI_Response.Result = receiptDto;
             return Ok(_aPI_Response);
         }
 
@@ -1454,7 +1461,7 @@ namespace CIA.Controllers
                 PatientName = x.Patient.Name,
                 Tooth = x.Tooth,
                 TreatmentName = x.TreatmentItem.Name,
-                TreatmentId =(int) x.TreatmentItemId,
+                TreatmentId = (int)x.TreatmentItemId,
                 TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}"
             }).ToListAsync();
 

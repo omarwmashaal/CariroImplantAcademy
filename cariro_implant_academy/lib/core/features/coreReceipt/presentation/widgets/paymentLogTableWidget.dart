@@ -69,7 +69,8 @@ class PaymentLogTableWidget {
                                 children: [
                                   Expanded(child: FormTextKeyWidget(text: "Date")),
                                   Expanded(
-                                      child: FormTextValueWidget(text: receipt.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(receipt.date!))),
+                                      child: FormTextValueWidget(
+                                          text: receipt.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(receipt.date!))),
                                 ],
                               ),
                               SizedBox(height: 10),
@@ -97,98 +98,25 @@ class PaymentLogTableWidget {
                               Column(
                                 children: () {
                                   List<Widget> r = [];
-                                  if (siteController.getSite() == Website.CIA)
-                                    receipt.toothReceiptData!.forEach((element) {
-                                      r.add(Visibility(
-                                        visible: (element.crown ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Crown")),
-                                              Expanded(child: FormTextValueWidget(text: (element.crown ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Visibility(
-                                        visible: (element.scaling ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Scaling")),
-                                              Expanded(child: FormTextValueWidget(text: (element.scaling ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Visibility(
-                                        visible: (element.extraction ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Extraction")),
-                                              Expanded(child: FormTextValueWidget(text: (element.extraction ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Visibility(
-                                        visible: (element.restoration ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Restoration")),
-                                              Expanded(child: FormTextValueWidget(text: (element.restoration ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Visibility(
-                                        visible: (element.rootCanalTreatment ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Root Canal Treatment")),
-                                              Expanded(child: FormTextValueWidget(text: (element.rootCanalTreatment ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Visibility(
-                                        visible: (element.implant ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "tooth ${element.tooth.toString()} Implant")),
-                                              Expanded(child: FormTextValueWidget(text: (element.implant ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Divider());
-                                    });
-                                  else if (siteController.getSite() == Website.Clinic)
-                                    receipt.prices!.forEach((element) {
-                                      r.add(Visibility(
-                                        visible: (element.id ?? 0) != 0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              Expanded(child: FormTextKeyWidget(text: "${element.name.toString()}")),
-                                              Expanded(child: FormTextValueWidget(text: (element.id ?? 0).toString())),
-                                            ],
-                                          ),
-                                        ),
-                                      ));
-                                      r.add(Divider());
-                                    });
+
+                                  var teeth = (receipt.toothReceiptData ?? []).map((e) => e.tooth ?? 0).toSet().toList();
+                                  for (var tooth in teeth) {
+                                    r.add(Divider());
+                                    var toothData = (receipt.toothReceiptData ?? [])
+                                        .where((element) => element.tooth == tooth && (element.price ?? 0) != 0)
+                                        .toList();
+                                    r.addAll(toothData
+                                        .map((e) => Padding(
+                                              padding: const EdgeInsets.only(bottom: 10),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(child: FormTextKeyWidget(text: "Tooth ${e.tooth} ${e.name}")),
+                                                  Expanded(child: FormTextValueWidget(text: (e.price ?? 0).toString())),
+                                                ],
+                                              ),
+                                            ))
+                                        .toList());
+                                  }
                                   return r;
                                 }(),
                               ),
@@ -221,7 +149,8 @@ class PaymentLogTableWidget {
                           children: [
                             Expanded(child: FormTextKeyWidget(text: "Unpaid amount")),
                             Expanded(
-                                child: FormTextValueWidget(color: receipt.unpaid != 0 ? Colors.red : Colors.black, text: (receipt.unpaid ?? 0).toString())),
+                                child: FormTextValueWidget(
+                                    color: receipt.unpaid != 0 ? Colors.red : Colors.black, text: (receipt.unpaid ?? 0).toString())),
                           ],
                         ),
                       ),
