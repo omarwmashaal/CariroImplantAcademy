@@ -9,13 +9,15 @@ class TreatmentItemEntity extends Equatable {
   Website website;
   bool allowAssign;
   bool showInSurgical;
+  bool allTeeth;
   TreatmentItemEntity({
     this.id,
     this.name,
-    this.price,
+    this.price = 0,
     this.priceAction,
     this.allowAssign = true,
     this.showInSurgical = true,
+    this.allTeeth = false,
     this.website = Website.CIA,
   });
 
@@ -28,6 +30,7 @@ class TreatmentItemEntity extends Equatable {
         this.allowAssign,
         this.showInSurgical,
         this.website,
+        this.allTeeth,
       ];
 
   bool isImplant() => (name?.toLowerCase().contains("implant") ?? false) && !(name?.toLowerCase().contains("without") ?? false);

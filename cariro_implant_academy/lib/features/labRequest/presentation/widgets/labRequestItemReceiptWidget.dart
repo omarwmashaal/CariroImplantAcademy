@@ -52,7 +52,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
                             children: [
                               Expanded(
                                   child:
-                                      FormTextKeyWidget(text: "Tooth: ${e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}")),
+                                      FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}")),
                               Expanded(child: FormTextValueWidget(text: "EGP ${e.labPrice}")),
                             ],
                           ),
@@ -66,7 +66,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
                         (e) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CIA_TextFormField(
-                            label: "Tooth: ${e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}",
+                            label: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}",
                             controller: TextEditingController(text: e.labPrice!.toString()),
                             isNumber: true,
                             onChange: (value) {

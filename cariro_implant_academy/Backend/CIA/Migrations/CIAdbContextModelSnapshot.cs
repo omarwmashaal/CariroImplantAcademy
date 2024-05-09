@@ -22346,6 +22346,9 @@ namespace CIA.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
+                    b.Property<bool>("AllTeeth")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("AllowAssign")
                         .HasColumnType("boolean");
 

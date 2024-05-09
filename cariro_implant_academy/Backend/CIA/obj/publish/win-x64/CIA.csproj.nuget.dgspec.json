@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj": {}
+    "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj": {
+    "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj",
+        "projectUniqueName": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj",
         "projectName": "CIA",
-        "projectPath": "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj",
+        "projectPath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj",
         "packagesPath": "C:\\Users\\owbm9\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\CIA\\Backend\\CIA\\obj\\publish\\win-x64\\",
+        "outputPath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\obj\\publish\\win-x64\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\owbm9\\AppData\\Roaming\\NuGet\\NuGet.Config",

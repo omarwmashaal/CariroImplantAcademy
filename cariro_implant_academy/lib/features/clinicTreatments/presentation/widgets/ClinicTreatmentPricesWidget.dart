@@ -85,7 +85,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth}"),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth}"),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [
@@ -185,7 +185,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} || ${e.type?.name} Implant"),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.type?.name} Implant"),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [
@@ -248,7 +248,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth}"),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth}"),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [
@@ -397,7 +397,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} "),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [
@@ -460,7 +460,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} "),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [
@@ -523,7 +523,7 @@ class _ClinicTreatmentPricesWidgetState extends State<ClinicTreatmentPricesWidge
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  FormTextValueWidget(text: "Tooth: ${e.tooth} "),
+                                                  FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} "),
                                                   SizedBox(height: 10),
                                                   Row(
                                                     children: [

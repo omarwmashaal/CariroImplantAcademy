@@ -61,7 +61,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                 ),
                 SizedBox(width: 10),
                 FormTextValueWidget(
-                  text: "Tooth: ${widget.item.tooth}",
+                  text: "Tooth: ${widget.item.tooth==0?"All":widget.item.tooth}",
                 ),
                 // Expanded(
                 //   child: CIA_TextFormField(

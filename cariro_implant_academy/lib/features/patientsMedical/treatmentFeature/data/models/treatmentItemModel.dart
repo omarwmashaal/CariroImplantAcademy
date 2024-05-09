@@ -10,6 +10,7 @@ class TreatmentItemModel extends TreatmentItemEntity {
     super.website,
     super.allowAssign,
     super.showInSurgical,
+    super.allTeeth,
   });
 
   factory TreatmentItemModel.fromJson(Map<String, dynamic> data) {
@@ -21,6 +22,7 @@ class TreatmentItemModel extends TreatmentItemEntity {
       website: Website.values[data['website']],
       allowAssign: data['allowAssign'],
       showInSurgical: data['showInSurgical'],
+      allTeeth: data['allTeeth'],
     );
   }
 
@@ -33,6 +35,7 @@ class TreatmentItemModel extends TreatmentItemEntity {
       website: entity.website,
       allowAssign: entity.allowAssign,
       showInSurgical: entity.showInSurgical,
+      allTeeth: entity.allTeeth,
     );
   }
 
@@ -44,6 +47,7 @@ class TreatmentItemModel extends TreatmentItemEntity {
     data['website'] = this.website.index;
     data['allowAssign'] = this.allowAssign;
     data['showInSurgical'] = this.showInSurgical;
+    data['allTeeth'] = this.allTeeth;
     return data;
   }
 }

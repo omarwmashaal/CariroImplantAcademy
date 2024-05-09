@@ -263,25 +263,26 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final pricesFromSettings = await getTreatmentItemsUseCase(NoParams());
       pricesFromSettings.fold(
         (l) => null,
-        (r)  {
+        (r) {
           var implantsFromSettings = r.where((element) => element.isImplant()).toList();
-          var implantPrice = event.prices.firstWhere((element) => element.name == "Implant").price ?? 0;
+          var implantPrice = event.prices.firstWhere((element) => element.name == "Implant");
           implantsFromSettings.forEach((element) {
-            element.price = implantPrice;
+            element.price = implantPrice.price ?? 0;
+            element.showInSurgical = implantPrice.showInSurgical;
+            element.allowAssign = implantPrice.allowAssign;
           });
           event.prices.removeWhere((element) => element.name == "Implant");
           event.prices.addAll(implantsFromSettings);
-
-          
         },
       );
-      if(pricesFromSettings.isRight())
-      {
+      if (pricesFromSettings.isRight()) {
         final result = await editTreatmentPricesUseCase(event.prices);
-          result.fold(
-            (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
-            (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
-          );
+        result.fold(
+          (l) => emit(SettingsBloc_EditingTreatmentPricesErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_EditedTreatmentPricesSuccessfullyState()),
+        );
+      } else {
+        emit(SettingsBloc_EditingTreatmentPricesErrorState(message: "error"));
       }
     });
     on<SettingsBloc_ChangeImplantLineNameEvent>((event, emit) async {

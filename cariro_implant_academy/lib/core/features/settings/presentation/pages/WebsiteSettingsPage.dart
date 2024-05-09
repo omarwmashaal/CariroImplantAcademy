@@ -1293,6 +1293,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                           SizedBox(width: 10),
                                           CIA_CheckBoxWidget(
                                               text: "Show in surgial", value: e.showInSurgical, onChange: (value) => e.showInSurgical = value),
+                                          SizedBox(width: 10),
+                                          CIA_CheckBoxWidget(text: "Apply on all teeth", value: e.allTeeth, onChange: (value) => e.allTeeth = value),
                                         ],
                                       ),
                                     ),
@@ -1321,7 +1323,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                           CIA_TextFormField(
                                               label: "Price",
                                               isNumber: true,
-                                              controller: TextEditingController(),
+                                              controller: TextEditingController(text: newTreatmentItem.price?.toString()),
                                               onChange: (v) => newTreatmentItem.price = int.parse(v)),
                                           SizedBox(height: 10),
                                           CIA_CheckBoxWidget(
@@ -1333,6 +1335,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                               text: "Show in surgial",
                                               value: newTreatmentItem.showInSurgical,
                                               onChange: (value) => newTreatmentItem.showInSurgical = value),
+                                          SizedBox(height: 10),
+                                          CIA_CheckBoxWidget(
+                                              text: "Apply on all teeth",
+                                              value: newTreatmentItem.allTeeth,
+                                              onChange: (value) => newTreatmentItem.allTeeth = value),
                                         ],
                                       ));
                                 })

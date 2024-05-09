@@ -201,10 +201,10 @@ namespace CIA.Controllers
         [HttpGet("GetLabItems")]
         public async Task<IActionResult> GetLabItems(int id)
         {
-          var labItems= await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == id && !(x.Consumed ?? true)).ToListAsync();
-            foreach(var item in labItems)
+            var labItems = await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == id && !(x.Consumed ?? true)).ToListAsync();
+            foreach (var item in labItems)
             {
-                item.Name = $"{item.Code} || {item.Size}"; 
+                item.Name = $"{item.Code} || {item.Size}";
             }
             _aPI_Response.Result = labItems;
             return Ok(_aPI_Response);
@@ -703,9 +703,29 @@ namespace CIA.Controllers
         [HttpPut("EditTreatmentPrices")]
         public async Task<IActionResult> EditTreatmentPrices(List<TreatmentItemModel> prices)
         {
+            var ids = await _cia_DbContext.TreatmentItems.AsNoTracking().Select(x => x.Id).ToListAsync();
+            var nullPrices = prices.Where(x => x.Id == null).ToList();
+            int maxId = (int)ids.Max();
+            if (nullPrices != null)
+            {
+                foreach(var nn in nullPrices)
+                {
+                    nn.Id = maxId + 1;
+                    maxId = (int)nn.Id;
+                    _cia_DbContext.TreatmentItems.Add(nn);
+                    _cia_DbContext.SaveChanges();
+                    prices.Remove(nn);
+
+                }
+
+
+            }
 
             _cia_DbContext.TreatmentItems.UpdateRange(prices);
             _cia_DbContext.SaveChanges();
+
+            
+
             _aPI_Response.Result = prices;
             return Ok(_aPI_Response);
         }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jLiMmsjMtuCQ6H07tZrxliRlqiLFrTgXlBVA2HH8vAUh0DkWGE6TlzL4Ebf6dCOQTWxXg+6P8Y05Ho8BWMPniA==",
+  "dgSpecHash": "Vlih0IpveuYb62L9ZMwKX5kLAifwh6DkLAfY4MhIghLcbNnHx9PJtq7iYSS6QyvyUvuzk9SEXZJ4cYVzMyOPsg==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj",
+  "projectFilePath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\owbm9\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\owbm9\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

@@ -251,6 +251,10 @@ namespace CIA.Controllers
             //    request.Steps = null;
             //}
             var user = await _iUserRepo.GetUser();
+            if (request.DesignerId != null)
+            {
+                request.Status = EnumLabRequestStatus.InProgress;
+            }
             request.EntryBy = user;
             request.EntryById = (int)user.IdInt;
             request.Date = DateTime.UtcNow;
