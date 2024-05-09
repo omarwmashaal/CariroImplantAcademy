@@ -1,9 +1,13 @@
+import 'package:equatable/equatable.dart';
+
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getLabItemDetailsUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/labRequestEntityl.dart';
 
@@ -12,6 +16,15 @@ abstract class LabRequestsBloc_States extends Equatable {}
 class LabRequestsBloc_InitState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];
+}
+
+class LabRequestsBloc_UpdateRequestItems extends LabRequestsBloc_States {
+  final List<LabStepItemEntity> labSteps;
+  LabRequestsBloc_UpdateRequestItems({
+    required this.labSteps,
+  });
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LabRequestsBloc_UpdateQueueNumberState extends LabRequestsBloc_States {
@@ -155,6 +168,7 @@ class LabRequestsBloc_CreatingLabRequestErrorState extends LabRequestsBloc_State
   @override
   List<Object?> get props => [message];
 }
+
 class LabRequestsBloc_UpdatingLabRequestState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];
@@ -211,6 +225,7 @@ class LabRequestsBloc_MarkingRequestAsDoneErrorState extends LabRequestsBloc_Sta
   @override
   List<Object?> get props => [message];
 }
+
 class LabRequestsBloc_UpdatingRequestReceiptState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];
@@ -229,6 +244,7 @@ class LabRequestsBloc_UpdatingRequestErrorState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [message];
 }
+
 class LabRequestsBloc_AddingToMyTasksState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];
@@ -247,6 +263,7 @@ class LabRequestsBloc_AddingToMyTasksErrorState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [message];
 }
+
 class LabRequestsBloc_AssigningTaskToATechnicianState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];
@@ -270,14 +287,13 @@ class LabRequestsBloc_SwitchEditViewReceiptModeState extends LabRequestsBloc_Sta
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
+
 class LabRequestsBloc_UpdateReceiptTotalPriceState extends LabRequestsBloc_States {
   final int totalPrice;
   LabRequestsBloc_UpdateReceiptTotalPriceState({required this.totalPrice});
   @override
   List<Object?> get props => [totalPrice];
 }
-
-
 
 class LabRequestsBloc_ConsumingLabItemState extends LabRequestsBloc_States {
   @override
@@ -297,6 +313,7 @@ class LabRequestsBloc_ConsumingLabItemErrorState extends LabRequestsBloc_States 
   @override
   List<Object?> get props => [message];
 }
+
 class LabRequestsBloc_LoadingLabItemState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [];

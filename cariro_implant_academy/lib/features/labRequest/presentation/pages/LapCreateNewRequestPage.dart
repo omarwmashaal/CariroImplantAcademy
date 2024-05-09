@@ -1,8 +1,14 @@
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
@@ -47,7 +53,6 @@ import '../../../../core/injection_contianer.dart';
 import '../../../../presentation/widgets/customeLoader.dart';
 import '../../../user/domain/usecases/searchUsersByWorkPlaceUseCase.dart';
 import '../../domain/entities/labRequestEntityl.dart';
-import '../../domain/entities/labStepEntity.dart';
 
 class LabCreateNewRequestPage extends StatefulWidget {
   LabCreateNewRequestPage({
@@ -71,28 +76,32 @@ class LabCreateNewRequestPage extends StatefulWidget {
 
 class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
   late LabRequestsBloc bloc;
+  late SettingsBloc settingsBloc;
   late UsersBloc usersBloc;
   late CreateOrViewPatientBloc patientBloc;
   LabRequestEntity labRequest = LabRequestEntity(
-    steps: [
-      LabStepEntity(
-        step: BasicNameIdObjectEntity(
-          name: "Scan",
-        ),
-      ),
-      LabStepEntity(
-        step: BasicNameIdObjectEntity(
-          name: "Design",
-        ),
-      ),
-    ],
-  );
-
+      // steps: [
+      //   LabStepEntity(
+      //     step: BasicNameIdObjectEntity(
+      //       name: "Scan",
+      //     ),
+      //   ),
+      //   LabStepEntity(
+      //     step: BasicNameIdObjectEntity(
+      //       name: "Design",
+      //     ),
+      //   ),
+      // ],
+      );
+  List<int> teeth = [];
+  List<LabItemParentEntity> labItemsFromSettings = [];
   @override
   void initState() {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);
+    settingsBloc = BlocProvider.of<SettingsBloc>(context);
     patientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
+    settingsBloc.add(SettingsBloc_LoadLabItemsParentsEvent());
     if (widget.isDoctor) {
       labRequest.customer = UserEntity(
         name: siteController.getUserName(),
@@ -101,9 +110,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
       );
       labRequest.customerId = siteController.getUserId();
     }
-    // if (widget.patientId != null) {
-    //   patientBloc.add(GetPatientInfoEvent(id: widget.patientId!));
-    // }
+    if (widget.patientId != null) {
+      patientBloc.add(GetPatientInfoEvent(id: widget.patientId!));
+    }
   }
 
   @override
@@ -144,11 +153,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
           ),
           BlocListener<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
             listener: (context, state) {
-              // if (state is LoadedPatientInfoState) {
-              //   labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
-              //   labRequest.patientId = state.patient!.id;
-              //   bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
-              // }
+              if (state is LoadedPatientInfoState) {
+                labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
+                labRequest.patientId = state.patient!.id;
+                bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
+              }
             },
           )
         ],
@@ -445,17 +454,17 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Expanded(
-                                child: CIA_DropDownSearchBasicIdName(
-                                  asyncUseCase: sl<GetDefaultStepsUseCase>(),
-                                  label: "Next Step",
-                                  selectedItem: labRequest.steps![1].step,
-                                  onSelect: (value) {
-                                    labRequest.steps![1].step = value;
-                                    labRequest.steps![1].stepId = value.id;
-                                  },
-                                ),
-                              ),
+                              // Expanded(
+                              //   child: CIA_DropDownSearchBasicIdName(
+                              //     asyncUseCase: sl<GetDefaultStepsUseCase>(),
+                              //     label: "Next Step",
+                              //     selectedItem: labRequest.steps![1].step,
+                              //     onSelect: (value) {
+                              //       labRequest.steps![1].step = value;
+                              //       labRequest.steps![1].stepId = value.id;
+                              //     },
+                              //   ),
+                              // ),
                             ],
                           ),
                           SizedBox(
@@ -656,23 +665,16 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                   singleSelect: true,
                                   onChange: (item, isSelected) {
                                     if (isSelected) {
-                                      labRequest.steps![0] = LabStepEntity(step: BasicNameIdObjectEntity(name: item));
-
-                                      if (item == "Scan") {
-                                        labRequest.initStatus = EnumLabRequestInitStatus.Scan;
-                                        labRequest.steps![1] = LabStepEntity(step: BasicNameIdObjectEntity(name: "Waiting lab approval"));
-                                      } else if (item == "Physical") {
-                                        labRequest.initStatus = EnumLabRequestInitStatus.Physical;
-                                        labRequest.steps![1] = LabStepEntity(step: BasicNameIdObjectEntity(name: "Cast"));
-                                      }
+                                      labRequest.initStatus = EnumLabRequestInitStatus.values[int.parse(item)];
                                       setState(() {});
                                     }
                                   },
-                                  labels: [
-                                    CIA_MultiSelectChipWidgeModel(label: "Scan", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Scan),
-                                    CIA_MultiSelectChipWidgeModel(
-                                        label: "Physical", isSelected: labRequest.initStatus == EnumLabRequestInitStatus.Physical),
-                                  ],
+                                  labels: EnumLabRequestInitStatus.values
+                                      .map(
+                                        (e) => CIA_MultiSelectChipWidgeModel(
+                                            label: e.name, isSelected: labRequest.initStatus == e, value: e.index.toString()),
+                                      )
+                                      .toList(),
                                 ),
                               ),
                               Expanded(
@@ -738,116 +740,73 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                           ),
                           CIA_TeethChart(
                             onChange: (selectedTeethList) {
-                              labRequest.teeth = selectedTeethList;
+                              teeth = selectedTeethList;
                             },
-                            selectedTeeth: labRequest.teeth ?? [],
+                            selectedTeeth: teeth,
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.waxUp,
-                                      name: "Wax Up",
-                                      onChange: (data) => labRequest.waxUp = data,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.printedPMMA,
-                                      name: "Printed PMMA",
-                                      onChange: (data) => labRequest.printedPMMA = data,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.zirconUnit,
-                                      name: "Zircon Unit",
-                                      onChange: (data) => labRequest.zirconUnit = data,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.tiAbutment,
-                                      name: "Ti Abutment",
-                                      onChange: (data) => labRequest.tiAbutment = data,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.pfm,
-                                      name: "PFM",
-                                      onChange: (data) => labRequest.pfm = data,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.tiBar,
-                                      name: "Ti Bar",
-                                      onChange: (data) => labRequest.tiBar = data,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.compositeInlay,
-                                      name: "Composite Inlay",
-                                      onChange: (data) => labRequest.compositeInlay = data,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.threeDPrinting,
-                                      name: "3D Printing",
-                                      onChange: (data) => labRequest.threeDPrinting = data,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.emaxVeneer,
-                                      name: "Emax Veneer",
-                                      onChange: (data) => labRequest.emaxVeneer = data,
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: LabRequestItemWidget(
-                                      item: labRequest.milledPMMA,
-                                      name: "Milled PMMA",
-                                      onChange: (data) => labRequest.milledPMMA = data,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                            ],
+                          BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                            builder: (context, state) {
+                              if (state is SettingsBloc_LoadedLabItemParentsSuccessfullyState) {
+                                labItemsFromSettings = state.data;
+                              }
+                              return Wrap(
+                                children: labItemsFromSettings
+                                    .map(
+                                      (e) => Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: CIA_SecondaryButton(
+                                          label: e.name ?? "",
+                                          onTab: () {
+                                            if (teeth.isEmpty) {
+                                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth first!");
+                                              return;
+                                            }
+                                            for (var tooth in teeth) {
+                                              labRequest.labRequestStepItems!.add(LabStepItemEntity(
+                                                labItemFromSettingsId: e.id,
+                                                labItemFromSettings: e,
+                                                labPrice: e.unitPrice,
+                                                tooth: tooth,
+                                              ));
+                                            }
+                                            teeth.clear();
+                                            setState(() {});
+                                            bloc.emit(LabRequestsBloc_UpdateRequestItems(labSteps: labRequest.labRequestStepItems!));
+                                          },
+                                          icon: Icon(Icons.add),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            },
+                          ),
+                          BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                            buildWhen: (previous, current) => current is LabRequestsBloc_UpdateRequestItems,
+                            builder: (context, state) {
+                              if (state is LabRequestsBloc_UpdateRequestItems) labRequest.labRequestStepItems = state.labSteps;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: labRequest.labRequestStepItems!
+                                    .map(
+                                      (e) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: LabRequestItemWidget(
+                                          item: e,
+                                          onChange: (data) => e = data,
+                                          onDelete: () {
+                                            labRequest.labRequestStepItems!.remove(e);
+                                            bloc.emit(LabRequestsBloc_UpdateRequestItems(labSteps: labRequest.labRequestStepItems!));
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              );
+                            },
                           ),
                           SizedBox(height: 10),
                           Row(

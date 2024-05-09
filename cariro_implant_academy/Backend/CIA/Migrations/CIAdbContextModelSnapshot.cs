@@ -21189,6 +21189,45 @@ namespace CIA.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("ConsumedLabItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("LabItemFromSettingsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LabPrice")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LabRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Tooth")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsumedLabItemId");
+
+                    b.HasIndex("LabItemFromSettingsId");
+
+                    b.ToTable("LabRequestStepItems");
+                });
+
             modelBuilder.Entity("CIA.Models.LAB.Lab_CustomerWorkPlace", b =>
                 {
                     b.Property<int?>("Id")
@@ -23901,6 +23940,23 @@ namespace CIA.Migrations
                     b.Navigation("TMD");
                 });
 
+            modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.LabItem", "ConsumedLabItem")
+                        .WithMany()
+                        .HasForeignKey("ConsumedLabItemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemFromSettings")
+                        .WithMany()
+                        .HasForeignKey("LabItemFromSettingsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("ConsumedLabItem");
+
+                    b.Navigation("LabItemFromSettings");
+                });
+
             modelBuilder.Entity("CIA.Models.LAB.Lab_Request", b =>
                 {
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
@@ -23951,9 +24007,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -23991,9 +24044,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24030,9 +24080,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24077,9 +24124,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24116,9 +24160,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24157,9 +24198,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24196,9 +24234,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24237,9 +24272,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24276,9 +24308,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24317,9 +24346,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24356,9 +24382,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24560,9 +24583,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24599,9 +24619,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24640,9 +24657,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24679,9 +24693,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24720,9 +24731,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24759,9 +24767,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24800,9 +24805,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24839,9 +24841,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
@@ -24880,9 +24879,6 @@ namespace CIA.Migrations
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
-
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");
 
@@ -24919,9 +24915,6 @@ namespace CIA.Migrations
 
                             b1.Property<int?>("LabItemId")
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
                                 .HasColumnType("integer");

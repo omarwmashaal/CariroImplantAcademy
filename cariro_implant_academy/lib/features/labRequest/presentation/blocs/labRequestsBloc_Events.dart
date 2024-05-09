@@ -49,10 +49,7 @@ class LabRequestsBloc_MarkRequestAsDoneEvent extends LabRequestsBloc_Events{
   final MarkRequestAsDoneParams params;
   LabRequestsBloc_MarkRequestAsDoneEvent({required this.params});
 }
-class LabRequestsBloc_AddOrUpdateRequestReceiptEvent extends LabRequestsBloc_Events{
-  final AddOrUpdateRequestReceiptParams params;
-  LabRequestsBloc_AddOrUpdateRequestReceiptEvent({required this.params});
-}
+
 class LabRequestsBloc_AddToMyTasksEvent extends LabRequestsBloc_Events{
   final int id;
   LabRequestsBloc_AddToMyTasksEvent({required this.id});

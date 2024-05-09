@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/addOrUpdateRequestReceiptUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assignTaskToTechnicianUseCase.dart';
@@ -10,6 +11,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/creat
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getLabItemStepsFroRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/payForRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
@@ -40,9 +42,9 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final GetDefaultStepByNameUseCase getDefaultStepByNameUseCase;
   final GetPatientLabRequestsUseCase getPatientLabRequestsUseCase;
   final GetLabRequestUseCase getLabRequestUseCase;
+  final GetLabItemStepsFroRequestUseCase getLabItemStepsFroRequestUseCase;
   final FinishTaskUseCase finishTaskUseCase;
   final MarkRequestAsDoneUseCase markRequestAsDoneUseCase;
-  final AddOrUpdateRequestReceiptUseCase addOrUpdateRequestReceiptUseCase;
   final AssignTaskToTechnicianUseCase assignTaskToTechnicianUseCase;
   final UpdateLabRequestUseCase updateLabRequestUseCase;
   final GetLabItemDetailsUseCase getLabItemDetailsUseCase;
@@ -58,9 +60,9 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.getDefaultStepByNameUseCase,
     required this.getPatientLabRequestsUseCase,
     required this.getLabRequestUseCase,
+    required this.getLabItemStepsFroRequestUseCase,
     required this.finishTaskUseCase,
     required this.markRequestAsDoneUseCase,
-    required this.addOrUpdateRequestReceiptUseCase,
     required this.assignTaskToTechnicianUseCase,
     required this.updateLabRequestUseCase,
     required this.consumeLabItemUseCase,
@@ -124,9 +126,17 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
       (event, emit) async {
         emit(LabRequestsBloc_LoadingRequestsState());
         final result = await getLabRequestUseCase(event.id);
+        final stepsResult = await getLabItemStepsFroRequestUseCase(event.id);
+        if (stepsResult.isLeft() || result.isLeft()) {
+          emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: "error"));
+          return;
+        }
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: l.message ?? "")),
-          (r) => emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r)),
+          (r) {
+            stepsResult.fold((l) => null, (steps) => r.labRequestStepItems = steps);
+            emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r));
+          },
         );
       },
     );
@@ -160,16 +170,16 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         );
       },
     );
-    on<LabRequestsBloc_AddOrUpdateRequestReceiptEvent>(
-      (event, emit) async {
-        emit(LabRequestsBloc_UpdatingRequestReceiptState());
-        final result = await addOrUpdateRequestReceiptUseCase(event.params);
-        result.fold(
-          (l) => emit(LabRequestsBloc_UpdatingRequestErrorState(message: l.message ?? "")),
-          (r) => emit(LabRequestsBloc_UpdatedRequestReceiptSuccessfullyState()),
-        );
-      },
-    );
+    // on<LabRequestsBloc_AddOrUpdateRequestReceiptEvent>(
+    //   (event, emit) async {
+    //     emit(LabRequestsBloc_UpdatingRequestReceiptState());
+    //     final result = await addOrUpdateRequestReceiptUseCase(event.params);
+    //     result.fold(
+    //       (l) => emit(LabRequestsBloc_UpdatingRequestErrorState(message: l.message ?? "")),
+    //       (r) => emit(LabRequestsBloc_UpdatedRequestReceiptSuccessfullyState()),
+    //     );
+    //   },
+    // );
     on<LabRequestsBloc_ConsumeLabItemEvent>(
       (event, emit) async {
         emit(LabRequestsBloc_ConsumingLabItemState());
@@ -213,30 +223,30 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     on<LabRequestsBloc_CreateLabRequestEvent>(
       (event, emit) async {
         emit(LabRequestsBloc_CreatingLabRequestState());
-        if (event.request.steps != null && event.request.steps!.length != 0) {
-          if (event.request.steps?[0]?.step?.name != null)
-            await getDefaultStepByNameUseCase(event.request.steps![0]!.step!.name!).then((value) => value.fold(
-                  (l) {
-                    return emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? ""));
-                  },
-                  (r) {
-                    event.request.steps![0].step = r;
-                    event.request.steps![0].stepId = r.id;
-                  },
-                ));
+        // if (event.request.steps != null && event.request.steps!.length != 0) {
+        //   if (event.request.steps?[0]?.step?.name != null)
+        //     await getDefaultStepByNameUseCase(event.request.steps![0]!.step!.name!).then((value) => value.fold(
+        //           (l) {
+        //             return emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? ""));
+        //           },
+        //           (r) {
+        //             event.request.steps![0].step = r;
+        //             event.request.steps![0].stepId = r.id;
+        //           },
+        //         ));
 
-          if (event.request.steps?[1]?.step?.name != null)
-            await getDefaultStepByNameUseCase(event.request.steps![1]!.step!.name!).then((value) => value.fold(
-                  (l) {
-                    return emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? ""));
-                  },
-                  (r) {
-                    event.request.steps![1].step = r;
-                    event.request.steps![1].stepId = r.id;
-                  },
-                ));
-        }
-        final result = await createLabRequestUseCase(event.request);
+        //   if (event.request.steps?[1]?.step?.name != null)
+        //     await getDefaultStepByNameUseCase(event.request.steps![1]!.step!.name!).then((value) => value.fold(
+        //           (l) {
+        //             return emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? ""));
+        //           },
+        //           (r) {
+        //             event.request.steps![1].step = r;
+        //             event.request.steps![1].stepId = r.id;
+        //           },
+        //         ));
+        // }
+        final result = await createLabRequestUseCase(event.request);       
         result.fold(
           (l) => emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_CreatedLabRequestSuccessfullyState()),
@@ -287,8 +297,7 @@ class LabRequestDataGridSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
               DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name ?? ""),
               DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last ?? ""),
-              DataGridCell<String>(
-                  columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
+             // DataGridCell<String>(                  columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
             ]))
         .toList();
   }

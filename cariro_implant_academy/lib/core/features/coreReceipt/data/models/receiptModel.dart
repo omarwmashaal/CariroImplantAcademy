@@ -2,7 +2,6 @@ import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.d
 import 'package:cariro_implant_academy/core/features/coreReceipt/data/models/toothReceiptModel.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 
-import '../../../../../features/labRequest/data/models/OmarModel.dart';
 
 class ReceiptModel extends ReceiptEntity {
   ReceiptModel({
@@ -16,19 +15,8 @@ class ReceiptModel extends ReceiptEntity {
     super.total,
     super.paid,
     super.unpaid,
-    super.prices,
     super.isPaid,
-    super.labFees,
-    super.zirconUnit,
-    super.waxUp,
-    super.threeDPrinting,
-    super.tiBar,
-    super.tiAbutment,
-    super.printedPMMA,
-    super.milledPMMA,
-    super.emaxVeneer,
-    super.compositeInlay,
-    super.pfm,
+    
   });
 
   factory ReceiptModel.fromEntity(ReceiptEntity entity) {
@@ -43,19 +31,8 @@ class ReceiptModel extends ReceiptEntity {
       toothReceiptData: entity.toothReceiptData,
       total: entity.total,
       unpaid: entity.unpaid,
-      prices: entity.prices,
       isPaid: entity.isPaid,
-      labFees: entity.labFees,
-      zirconUnit: entity.zirconUnit,
-      waxUp: entity.waxUp,
-      threeDPrinting: entity.threeDPrinting,
-      tiBar: entity.tiBar,
-      tiAbutment: entity.tiAbutment,
-      printedPMMA: entity.printedPMMA,
-      milledPMMA: entity.milledPMMA,
-      emaxVeneer: entity.emaxVeneer,
-      compositeInlay: entity.compositeInlay,
-      pfm: entity.pfm,
+     
     );
   }
 
@@ -70,20 +47,8 @@ class ReceiptModel extends ReceiptEntity {
     total = json['total'];
     paid = json['paid'];
     unpaid = json['unpaid'];
-    prices = json['clinicPrices'] == null ? null : (json['clinicPrices'] as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e)).toList();
     isPaid = json['isPaid'];
-    labFees = json['labFees'];
-    zirconUnit = json['zirconUnit'] == null ? null : OmarModelsss.fromJson(json['zirconUnit']);
-    waxUp = json['waxUp'] == null ? null : OmarModelsss.fromJson(json['waxUp']);
-    threeDPrinting = json['threeDPrinting'] == null ? null : OmarModelsss.fromJson(json['threeDPrinting']);
-    tiBar = json['tiBar'] == null ? null : OmarModelsss.fromJson(json['tiBar']);
-    tiAbutment = json['tiAbutment'] == null ? null : OmarModelsss.fromJson(json['tiAbutment']);
-    printedPMMA = json['printedPMMA'] == null ? null : OmarModelsss.fromJson(json['printedPMMA']);
-    milledPMMA = json['milledPMMA'] == null ? null : OmarModelsss.fromJson(json['milledPMMA']);
-    emaxVeneer = json['emaxVeneer'] == null ? null : OmarModelsss.fromJson(json['emaxVeneer']);
-    compositeInlay = json['compositeInlay'] == null ? null : OmarModelsss.fromJson(json['compositeInlay']);
-    pfm = json['pfm'] == null ? null : OmarModelsss.fromJson(json['pfm']);
-  }
+    }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -97,17 +62,6 @@ class ReceiptModel extends ReceiptEntity {
     data['paid'] = this.paid;
     data['unpaid'] = this.unpaid;
     data['isPaid'] = this.isPaid;
-    data['labFees'] = this.labFees;
-    data['zirconUnit'] = this.zirconUnit?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.zirconUnit!).toJson();
-    data['waxUp'] = this.waxUp?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.waxUp!).toJson();
-    data['threeDPrinting'] = this.threeDPrinting?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.threeDPrinting!).toJson();
-    data['tiBar'] = this.tiBar?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.tiBar!).toJson();
-    data['tiAbutment'] = this.tiAbutment?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.tiAbutment!).toJson();
-    data['printedPMMA'] = this.printedPMMA?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.printedPMMA!).toJson();
-    data['milledPMMA'] = this.milledPMMA?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.milledPMMA!).toJson();
-    data['emaxVeneer'] = this.emaxVeneer?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.emaxVeneer!).toJson();
-    data['compositeInlay'] = this.compositeInlay?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.compositeInlay!).toJson();
-    data['pfm'] = this.pfm?.isNull() ?? true ? null : OmarModelsss.fromEntity(this.pfm!).toJson();
-    return data;
+     return data;
   }
 }

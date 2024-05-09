@@ -120,8 +120,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
         else if (state is LabRequestsBloc_LoadedSingleRequestsSuccessfullyState) {
           request = state.request;
           int t = 0;
-          request.steps!.forEach((element) {
-            t += element.price ?? 0;
+          request.labRequestStepItems!.forEach((element) {
+            t += element.labPrice ?? 0;
           });
           totalPrice = t;
           return Column(
@@ -172,16 +172,6 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        FormTextKeyWidget(text: "Teeth: "),
-                        FormTextValueWidget(text: () {
-                          var r = "";
-                          (request.teeth ?? []).forEach((e) => r += "${e.toString()}, ");
-                          return r;
-                        }()),
-                      ],
-                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -190,116 +180,26 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       height: 10,
                     ),
                     request.status == EnumLabRequestStatus.Finished
-                        ? LabRequestItemReceiptWidget(
-                            request: request,
-                            onTotalCalculated: (t) {},
-                            viewOnly: true,
+                        ? Expanded(
+                            child: LabRequestItemReceiptWidget(
+                              request: request,
+                              viewOnly: true,
+                            ),
                           )
                         : Expanded(
                             child: ListView(
-                              children: [
-                                Visibility(
-                                  visible: request.waxUp != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.waxUp,
-                                    name: "Wax Up",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                    showConsume: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.printedPMMA != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.printedPMMA,
-                                    name: "Printed PMMA",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.zirconUnit != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.zirconUnit,
-                                    name: "Zircon Unit",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.tiAbutment != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.tiAbutment,
-                                    name: "Ti Abutment",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.pfm != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.pfm,
-                                    name: "PFM",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.tiBar != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.tiBar,
-                                    name: "Ti Bar",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.compositeInlay != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.compositeInlay,
-                                    name: "Composite Inlay",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.threeDPrinting != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.threeDPrinting,
-                                    name: "3D Printing",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.emaxVeneer != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.emaxVeneer,
-                                    name: "Emax Veneer",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: request.milledPMMA != null,
-                                  child: LabRequestItemWidget(
-                                    free: request.free ?? false,
-                                    item: request.milledPMMA,
-                                    name: "Milled PMMA",
-                                    onChange: (data) => null,
-                                    viewOnly: true,
-                                  ),
-                                ),
-                              ],
+                              children: (request.labRequestStepItems ?? [])
+                                  .map(
+                                    (e) => LabRequestItemWidget(
+                                      free: request.free ?? false,
+                                      item: e,
+                                      onChange: (data) => null,
+                                      viewOnly: true,
+                                      showConsume: true,
+                                      onDelete: () => null,
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           ),
                     SizedBox(
@@ -384,10 +284,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                                           Padding(
                                                             padding: const EdgeInsets.all(8.0),
                                                             child: LabRequestItemReceiptWidget(
-                                                              request: request,
-                                                              onTotalCalculated: (_total) {
-                                                                total = _total;
-                                                              },
+                                                              request: request!,
                                                             ),
                                                           ),
                                                           Padding(
@@ -526,8 +423,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     visible: siteController.getUserId() == request.designerId,
                                     child: RoundCheckBox(
                                       disabledColor: Colors.green,
-                                      isChecked: request.status == EnumLabRequestStatus.FinishedDesign,
-                                      onTap: request.status == EnumLabRequestStatus.FinishedDesign
+                                      isChecked: request.status != EnumLabRequestStatus.InQueue,
+                                      onTap: request.status != EnumLabRequestStatus.InQueue
                                           ? null
                                           : (value) async {
                                               await CIA_ShowPopUpYesNo(

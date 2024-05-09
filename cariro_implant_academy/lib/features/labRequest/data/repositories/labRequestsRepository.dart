@@ -4,8 +4,9 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRequestDatasource.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labStepEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:dartz/dartz.dart';
@@ -13,15 +14,15 @@ import 'package:dartz/dartz.dart';
 class LabRequestRepoImpl implements LabRequestRepository{
   final LabRequestDatasource labRequestDatasource;
   LabRequestRepoImpl({required this.labRequestDatasource});
-  @override
-  Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps)  async {
-    try {
-      final result = await labRequestDatasource.addOrUpdateRequestReceipt(id,steps);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
+  // @override
+  // Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps)  async {
+  //   try {
+  //     final result = await labRequestDatasource.addOrUpdateRequestReceipt(id,steps);
+  //     return Right(result);
+  //   } on Exception catch (e) {
+  //     return Left(Failure.exceptionToFailure(e));
+  //   }
+  // }
 
   @override
   Future<Either<Failure, NoParams>> addRequest(LabRequestEntity model)   async {
@@ -179,6 +180,26 @@ class LabRequestRepoImpl implements LabRequestRepository{
   Future<Either<Failure, ReceiptEntity?>> getRequestReceipt(int id) async {
     try {
       final result = await labRequestDatasource.getRequestReceipt(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabStepItemEntity>>> getLabItemStepsFroRequest(int id) async {
+    try {
+      final result = await labRequestDatasource.getLabItemStepsFroRequest(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabItemParentEntity>>> getLabItemsFromSettings() async {
+    try {
+      final result = await labRequestDatasource.getLabItemsFromSettings();
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

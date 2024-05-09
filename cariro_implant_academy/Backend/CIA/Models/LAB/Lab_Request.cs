@@ -59,6 +59,10 @@ namespace CIA.Models.LAB
         public List<LabRequestItem>? Others { get; set; }
 
 
+        [NotMapped]
+        public List<LabRequestStepItem> LabRequestStepItems { get; set; } = new();
+
+
 
 
 
@@ -69,7 +73,6 @@ namespace CIA.Models.LAB
     [Owned]
     public class LabRequestItem
     {
-        public String? Name { get; set; }
         public String Description { get; set; }
         public int? Price { get; set; }
         public int? TotalPrice { get; set; }
@@ -78,5 +81,30 @@ namespace CIA.Models.LAB
         public int? LabItemId { get; set; }
         public LabItem? LabItem { get; set; }
     }
+
+
+    public class LabRequestStepItem
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        [ForeignKey("Lab_Request")]
+        public int? LabRequestId { get; set; }
+        [ForeignKey("Patient")]
+        public int? PatientId { get; set; }
+        [ForeignKey("LabItemParent")]
+        public int? LabItemFromSettingsId { get; set; }
+        public LabItemParent? LabItemFromSettings
+        { get; set; }
+        [ForeignKey("LabItem")]
+        public int? ConsumedLabItemId { get; set; }
+        public LabItem? ConsumedLabItem { get; set; }
+        public int? LabPrice { get; set; }
+        public int Tooth { get; set; }
+        public String Description { get; set; } = "";
+
+    }
+
+
 
 }

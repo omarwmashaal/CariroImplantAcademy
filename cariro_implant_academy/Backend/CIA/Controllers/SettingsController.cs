@@ -201,7 +201,12 @@ namespace CIA.Controllers
         [HttpGet("GetLabItems")]
         public async Task<IActionResult> GetLabItems(int id)
         {
-            _aPI_Response.Result = await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == id && !(x.Consumed ?? true)).ToListAsync();
+          var labItems= await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == id && !(x.Consumed ?? true)).ToListAsync();
+            foreach(var item in labItems)
+            {
+                item.Name = $"{item.Code} || {item.Size}"; 
+            }
+            _aPI_Response.Result = labItems;
             return Ok(_aPI_Response);
         }
 

@@ -2,7 +2,6 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labRequestEntityl.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labStepEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
 import 'package:dartz/dartz.dart';
 

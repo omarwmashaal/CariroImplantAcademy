@@ -62,7 +62,7 @@ namespace CIA.Models.CIA
     }
     public class LabItem : StockItem
     {
-
+        public String Name { get; set; } = "";
         public String? Code { get; set; }
         public int? ConsumedCount { get; set; } = 0;
         public bool? Consumed { get; set; } = false;

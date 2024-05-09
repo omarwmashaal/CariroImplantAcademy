@@ -85,6 +85,7 @@ namespace CIA.DataBases
         public DbSet<Lab_RequestStep> Lab_RequestSteps { get; set; }
         public DbSet<Lab_DefaultStep> Lab_DefaultSteps { get; set; }
         public DbSet<Lab_CustomerWorkPlace> Lab_CustomerWorkPlaces { get; set; }
+        public DbSet<LabRequestStepItem> LabRequestStepItems { get; set; }
         public DbSet<PaymentLog> PaymentLogs { get; set; }
         public DbSet<NotificationModel> Notifications { get; set; }
         public DbSet<Restoration> Restorations { get; set; }
@@ -464,6 +465,19 @@ namespace CIA.DataBases
               .HasOne<ApplicationUser>(x => x.DoneByCandidate)
               .WithMany()
               .HasPrincipalKey(x => x.IdInt)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            
+            modelBuilder.Entity<LabRequestStepItem>()
+              .HasOne<LabItemParent>(x => x.LabItemFromSettings)
+              .WithMany()
+              .HasPrincipalKey(x => x.Id)
+              .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<LabRequestStepItem>()
+              .HasOne<LabItem>(x => x.ConsumedLabItem)
+              .WithMany()
+              .HasPrincipalKey(x => x.Id)
               .OnDelete(DeleteBehavior.Cascade);
 
 
