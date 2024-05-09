@@ -11,7 +11,8 @@ namespace CIA.Models
         Technician,
         OutSource,
         Candidate,
-        LabModerator
+        LabModerator,
+        LabDesigner,
     }
     public enum SmokingStatus
     {
