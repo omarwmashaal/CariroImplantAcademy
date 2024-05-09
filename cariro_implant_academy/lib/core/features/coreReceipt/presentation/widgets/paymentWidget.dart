@@ -259,27 +259,7 @@ class PaymentWidget {
                                       ),
                                       SizedBox(height: 10),
                                       Column(
-                                        children: () {
-                                          List<Widget> r = [];
-
-                                          receipt.prices!.forEach((element) {
-                                            r.add(Visibility(
-                                              visible: (element.id ?? 0) != 0,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(child: FormTextKeyWidget(text: "${element.name.toString()}")),
-                                                    Expanded(child: FormTextValueWidget(text: (element.id ?? 0).toString())),
-                                                  ],
-                                                ),
-                                              ),
-                                            ));
-                                            r.add(Divider());
-                                          });
-
-                                          return r;
-                                        }(),
+                                        children: [],
                                       ),
                                     ],
                                   ),

@@ -147,129 +147,59 @@ namespace CIA.Controllers
         [HttpGet("GetRequest")]
         public async Task<IActionResult> GetRequest(int id)
         {
-            var request = await _dbContext.Lab_Requests
+            var request = await _dbContext.Lab_Requests.
             //     .Include(x => x.EntryBy)
             //     .Include(x => x.Customer)
             //    .Include(x => x.AssignedTo)
-                 .Include(x => x.Patient)
+                 Include(x => x.Customer).
+
                 // .Include(x => x.Steps).ThenInclude(x => x.Technician)
                 //.Include(x => x.Steps).ThenInclude(x => x.Step)
                 //Include(x => x.EntryBy).
                 //Include(x => x.Customer).
-                //Include(x => x.Patient).
+                Include(x => x.Patient).
                 //Include(x => x.File).
                 //Include(x => x.Steps).ThenInclude(x => x.Technician).
                 //Include(x => x.Steps).ThenInclude(x => x.Step).
-                .FirstOrDefaultAsync(x => x.Id == id);
+                FirstOrDefaultAsync(x => x.Id == id);
 
             request.AssignedTo = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.AssignedToId);
             request.EntryBy = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.EntryById);
             request.Customer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.CustomerId);
             request.Designer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.DesignerId);
 
-            if (request.WaxUp != null)
-            {
-                request.WaxUp.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Wax Up")).UnitPrice;
-                request.WaxUp.TotalPrice = request.WaxUp.Price * request.WaxUp.Number;
-                if (request.WaxUp.LabItemId != null)
-                {
-                    request.WaxUp.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.WaxUp.LabItemId);
-                }
-            }
-            if (request.ZirconUnit != null)
-            {
-                request.ZirconUnit.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Zircon Unit")).UnitPrice;
-                request.ZirconUnit.TotalPrice = request.ZirconUnit.Price * request.ZirconUnit.Number;
-                if (request.ZirconUnit.LabItemId != null)
-                {
-                    request.ZirconUnit.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.ZirconUnit.LabItemId);
-                }
-            }
-            if (request.PFM != null)
-            {
-                request.PFM.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "PFM")).UnitPrice;
-                request.PFM.TotalPrice = request.PFM.Price * request.PFM.Number;
-                if (request.PFM.LabItemId != null)
-                {
-                    request.PFM.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.PFM.LabItemId);
-                }
-            }
-            if (request.CompositeInlay != null)
-            {
-                request.CompositeInlay.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Composite Inlay")).UnitPrice;
-                request.CompositeInlay.TotalPrice = request.CompositeInlay.Price * request.CompositeInlay.Number;
-                if (request.CompositeInlay.LabItemId != null)
-                {
-                    request.CompositeInlay.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.CompositeInlay.LabItemId);
-                }
-            }
-            if (request.EmaxVeneer != null)
-            {
-                request.EmaxVeneer.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Emax Veneer")).UnitPrice;
-                request.EmaxVeneer.TotalPrice = request.EmaxVeneer.Price * request.EmaxVeneer.Number;
-                if (request.EmaxVeneer.LabItemId != null)
-                {
-                    request.EmaxVeneer.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.EmaxVeneer.LabItemId);
-                }
-            }
-            if (request.MilledPMMA != null)
-            {
-                request.MilledPMMA.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Milled PMMA")).UnitPrice;
-                request.MilledPMMA.TotalPrice = request.MilledPMMA.Price * request.MilledPMMA.Number;
-                if (request.MilledPMMA.LabItemId != null)
-                {
-                    request.MilledPMMA.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.MilledPMMA.LabItemId);
-                }
-            }
-            if (request.PrintedPMMA != null)
-            {
-                request.PrintedPMMA.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Printed PMMA")).UnitPrice;
-                request.PrintedPMMA.TotalPrice = request.PrintedPMMA.Price * request.PrintedPMMA.Number;
-                if (request.PrintedPMMA.LabItemId != null)
-                {
-                    request.PrintedPMMA.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.PrintedPMMA.LabItemId);
-                }
-            }
-            if (request.TiAbutment != null)
-            {
-                request.TiAbutment.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Ti Abutment")).UnitPrice;
-                request.TiAbutment.TotalPrice = request.TiAbutment.Price * request.TiAbutment.Number;
-                if (request.TiAbutment.LabItemId != null)
-                {
-                    request.TiAbutment.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.TiAbutment.LabItemId);
-                }
-            }
-            if (request.TiBar != null)
-            {
-                request.TiBar.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Ti Bar")).UnitPrice;
-                request.TiBar.TotalPrice = request.TiBar.Price * request.TiBar.Number;
-                if (request.TiBar.LabItemId != null)
-                {
-                    request.TiBar.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.TiBar.LabItemId);
-                }
-            }
-            if (request.ThreeDPrinting != null)
-            {
-                request.ThreeDPrinting.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "3D Printing")).UnitPrice;
-                request.ThreeDPrinting.TotalPrice = request.ThreeDPrinting.Price * request.ThreeDPrinting.Number;
-                if (request.ThreeDPrinting.LabItemId != null)
-                {
-                    request.ThreeDPrinting.LabItem = await _dbContext.LabItems.FirstOrDefaultAsync(x => x.Id == request.ThreeDPrinting.LabItemId);
-                }
-            }
 
-            if (!request.Steps.IsNullOrEmpty())
-            {
-                request.Steps = request.Steps.OrderBy(x => x.index).ToList();
-            }
-            // request.AssignedTo = request.Steps.Last().Technician;
-            //request.AssignedToId = request.Steps.Last().TechnicianId;
+            request.LabRequestStepItems = await _dbContext.LabRequestStepItems
+                .Include(x => x.LabItemFromSettings)
+                .Include(x => x.ConsumedLabItem)
+                .Where(x => x.LabRequestId == id).ToListAsync();
 
             _apiResponse.Result = request;
 
 
             return Ok(_apiResponse);
         }
+        [HttpGet("GetRequestStepItems")]
+        public async Task<IActionResult> GetRequestStepItems(int id)
+        {
+
+            var requestSteps = await _dbContext.LabRequestStepItems.
+                Where(x => x.LabRequestId == id).
+                Include(x => x.ConsumedLabItem).
+                Include(x => x.LabItemFromSettings).ToListAsync();
+
+
+            foreach (var labRequestStep in requestSteps)
+            {
+                labRequestStep.LabPrice = labRequestStep.LabPrice ?? labRequestStep.LabItemFromSettings.UnitPrice;
+            }
+
+            _apiResponse.Result = requestSteps;
+
+
+            return Ok(_apiResponse);
+        }
+
         [HttpGet("GetMyRequests")]
         public async Task<IActionResult> GetMyRequests()
         {
@@ -312,14 +242,14 @@ namespace CIA.Controllers
         public async Task<IActionResult> AddRequest([FromBody] Lab_Request request)
         {
 
-            List<Lab_RequestStep> steps = new List<Lab_RequestStep>();
-            if (request.Steps != null)
-            {
-                request.Steps[0].Status = EnumLabRequestStepStatus.Done;
-                request.Steps[0].Date = DateTime.UtcNow;
-                steps = request.Steps;
-                request.Steps = null;
-            }
+            //List<Lab_RequestStep> steps = new List<Lab_RequestStep>();
+            //if (request.Steps != null)
+            //{
+            //    request.Steps[0].Status = EnumLabRequestStepStatus.Done;
+            //    request.Steps[0].Date = DateTime.UtcNow;
+            //    steps = request.Steps;
+            //    request.Steps = null;
+            //}
             var user = await _iUserRepo.GetUser();
             request.EntryBy = user;
             request.EntryById = (int)user.IdInt;
@@ -329,17 +259,29 @@ namespace CIA.Controllers
                 request.AssignedTo = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.AssignedToId);
             await _dbContext.Lab_Requests.AddAsync(request);
             await _dbContext.SaveChangesAsync();
-            for (int i = 0; i < steps.Count; i++)
-            {
-                steps[i].index = i;
-                //steps[i].Request = request;
-                steps[i].RequestId = request.Id;
-            }
-            await _dbContext.Lab_RequestSteps.AddRangeAsync(steps);
-            await _dbContext.SaveChangesAsync();
-            request.Steps = steps;
+            //for (int i = 0; i < steps.Count; i++)
+            //{
+            //    steps[i].index = i;
+            //    //steps[i].Request = request;
+            //    steps[i].RequestId = request.Id;
+            //}
+            // await _dbContext.Lab_RequestSteps.AddRangeAsync(steps);
+            // await _dbContext.SaveChangesAsync();
+            //request.Steps = steps;
             _dbContext.Lab_Requests.Update(request);
+
             await _dbContext.SaveChangesAsync();
+
+            foreach (var labRequestItemStep in request.LabRequestStepItems)
+            {
+                labRequestItemStep.LabRequestId = request.Id;
+                labRequestItemStep.PatientId = request.PatientId;
+            }
+            _dbContext.LabRequestStepItems.UpdateRange(request.LabRequestStepItems);
+
+            await _dbContext.SaveChangesAsync();
+
+
             await _notificationRepo.LAB_RequestAdded(request.Id);
             return Ok();
         }
@@ -389,7 +331,7 @@ namespace CIA.Controllers
         }
 
         [HttpPost("AssignToTechnician")]
-        public async Task<IActionResult> AssignToTechnician(int id, int technicianId,int? designerId)
+        public async Task<IActionResult> AssignToTechnician(int id, int technicianId, int? designerId)
         {
             var technician = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == technicianId);
             var request = await _dbContext.Lab_Requests.
@@ -401,7 +343,7 @@ namespace CIA.Controllers
                 request.Designer = designer;
                 request.DesignerId = designerId;
             }
-          
+
             request.AssignedToId = technician.IdInt;
             request.AssignedTo = technician;
             request.Status = EnumLabRequestStatus.InProgress;
@@ -590,6 +532,7 @@ namespace CIA.Controllers
                 CreatedById = user.IdInt,
                 LabRequestId = request.Id,
                 LabRequest = request,
+                PatientId = request.PatientId,
 
 
             });
@@ -615,121 +558,85 @@ namespace CIA.Controllers
 
         }
 
-        [HttpPut("UpdateLabRequest")]
-        public async Task<IActionResult> UpdateLabRequest([FromBody] Lab_Request request)
-        {
-            var requestFromDB = await _dbContext.Lab_Requests.AsNoTracking().FirstAsync(x => x.Id == request.Id);
-            var receiptFromDB = await _dbContext.Receipts.FirstOrDefaultAsync(x => x.RequestId == request.Id);
-            if (request.WaxUp != null)
-            {
-                request.WaxUp.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Wax Up")).UnitPrice;
-                request.WaxUp.TotalPrice = request.WaxUp.Price * request.WaxUp.Number;
-            }
-            if (request.ZirconUnit != null)
-            {
-                request.ZirconUnit.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Zircon Unit")).UnitPrice;
-                request.ZirconUnit.TotalPrice = request.ZirconUnit.Price * request.ZirconUnit.Number;
-            }
-            if (request.PFM != null)
-            {
-                request.PFM.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "PFM")).UnitPrice;
-                request.PFM.TotalPrice = request.PFM.Price * request.PFM.Number;
-            }
-            if (request.CompositeInlay != null)
-            {
-                request.CompositeInlay.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Composite Inlay")).UnitPrice;
-                request.CompositeInlay.TotalPrice = request.CompositeInlay.Price * request.CompositeInlay.Number;
-            }
-            if (request.EmaxVeneer != null)
-            {
-                request.EmaxVeneer.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Emax Veneer")).UnitPrice;
-                request.EmaxVeneer.TotalPrice = request.EmaxVeneer.Price * request.EmaxVeneer.Number;
-            }
-            if (request.MilledPMMA != null)
-            {
-                request.MilledPMMA.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Milled PMMA")).UnitPrice;
-                request.MilledPMMA.TotalPrice = request.MilledPMMA.Price * request.MilledPMMA.Number;
-            }
-            if (request.PrintedPMMA != null)
-            {
-                request.PrintedPMMA.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Printed PMMA")).UnitPrice;
-                request.PrintedPMMA.TotalPrice = request.PrintedPMMA.Price * request.PrintedPMMA.Number;
-            }
-            if (request.TiAbutment != null)
-            {
-                request.TiAbutment.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Ti Abutment")).UnitPrice;
-                request.TiAbutment.TotalPrice = request.TiAbutment.Price * request.TiAbutment.Number;
-            }
-            if (request.TiBar != null)
-            {
-                request.TiBar.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "Ti Bar")).UnitPrice;
-                request.TiBar.TotalPrice = request.TiBar.Price * request.TiBar.Number;
-            }
-            if (request.ThreeDPrinting != null)
-            {
-                request.ThreeDPrinting.Price = (await _dbContext.LabItemParents.FirstAsync(x => x.Name == "3D Printing")).UnitPrice;
-                request.ThreeDPrinting.TotalPrice = request.ThreeDPrinting.Price * request.ThreeDPrinting.Number;
-            }
 
+        [HttpPut("UpdateLabRequest")]
+        public async Task<IActionResult> UpdateLabRequestSteps([FromBody] Lab_Request request)
+        {
+            var labRequestSteps = request.LabRequestStepItems;
+
+            var requestFromDB = await _dbContext.Lab_Requests.AsNoTracking().FirstAsync(x => x.Id == request.Id);
+            _dbContext.LabRequestStepItems.UpdateRange(labRequestSteps);
+            _dbContext.SaveChanges();
+
+            labRequestSteps = await _dbContext.LabRequestStepItems
+                .Where(x=>x.LabRequestId==request.Id)
+                .Include(x => x.ConsumedLabItem)
+                .Include(x => x.LabItemFromSettings)
+                .ToListAsync();
             bool sendNotification = false;
 
-            if (requestFromDB.Status != EnumLabRequestStatus.Finished && request.Status == EnumLabRequestStatus.Finished && receiptFromDB == null)
+            if (request.Status == EnumLabRequestStatus.Finished && requestFromDB.Status != EnumLabRequestStatus.Finished)
             {
-                var receipt = new Receipt();
-                receipt.Total = 0;
-                receipt.WaxUp = request.WaxUp;
-                receipt.ZirconUnit = request.ZirconUnit;
-                receipt.PFM = request.PFM;
-                receipt.CompositeInlay = request.CompositeInlay;
-                receipt.EmaxVeneer = request.EmaxVeneer;
-                receipt.MilledPMMA = request.MilledPMMA;
-                receipt.PrintedPMMA = request.PrintedPMMA;
-                receipt.TiAbutment = request.TiAbutment;
-                receipt.TiBar = request.TiBar;
-                receipt.ThreeDPrinting = request.ThreeDPrinting;
-                receipt.LabFees = request.LabFees;
 
-                if (!(request.Free ?? false))
+                request.Cost = request.LabFees ?? 0;
+
+                foreach (var step in labRequestSteps)
                 {
+                    request.Cost += step.LabPrice;
+                }
+
+
+                var receipt = await _dbContext.Receipts.FirstOrDefaultAsync(x => x.RequestId == request.Id);
 
 
 
-                    receipt.Total += request.WaxUp?.TotalPrice ?? 0;
-                    receipt.Total += request.ZirconUnit?.TotalPrice ?? 0;
-                    receipt.Total += request.PFM?.TotalPrice ?? 0;
-                    receipt.Total += request.CompositeInlay?.TotalPrice ?? 0;
-                    receipt.Total += request.EmaxVeneer?.TotalPrice ?? 0;
-                    receipt.Total += request.MilledPMMA?.TotalPrice ?? 0;
-                    receipt.Total += request.PrintedPMMA?.TotalPrice ?? 0;
-                    receipt.Total += request.TiAbutment?.TotalPrice ?? 0;
-                    receipt.Total += request.TiBar?.TotalPrice ?? 0;
-                    receipt.Total += request.ThreeDPrinting?.TotalPrice ?? 0;
-                    receipt.Total += request.LabFees ?? 0;
+                if (receipt == null)
+                    receipt = new Receipt();
+
+                receipt.ToothReceiptData = new();
+                receipt.Total = request.LabFees ?? 0;
+
+
+                foreach (var step in labRequestSteps)
+                {
+                    receipt.Total += step.LabPrice ?? step.LabItemFromSettings.UnitPrice;
+                    receipt.ToothReceiptData.Add(new ToothReceiptData
+                    {
+                        Tooth = (int)step.Tooth,
+                        Name = $"{step.LabItemFromSettings?.Name??""} || {step.ConsumedLabItem?.Name??""}",
+                        Price = step.LabPrice ?? step.LabItemFromSettings.UnitPrice,
+                    });
 
                 }
-                request.Cost = receipt.Total;
+                if (request.LabFees != null)
+                {
+                    receipt.ToothReceiptData.Add(new ToothReceiptData
+                    {
+                        Price = request.LabFees ?? 0,
+                        Name = "Lab Fees",
+                    });
+                }
+
+                if (requestFromDB.Free == true)
+                {
+                    request.Cost = 0;
+                    receipt.Total = 0;
+                }
+
                 receipt.Paid = 0;
-                receipt.Unpaid = receipt.Total;
+                receipt.Unpaid = receipt.Total - receipt.Paid;
                 receipt.RequestId = request.Id;
+
                 receipt.Website = EnumWebsite.Lab;
                 var user = await _iUserRepo.GetUser();
                 receipt.Operator = user;
                 receipt.OperatorId = user.IdInt;
                 receipt.Date = DateTime.UtcNow;
+                receipt.PatientId = request.PatientId;
 
-                _dbContext.Receipts.Add(receipt);
+                _dbContext.Receipts.Update(receipt);
                 sendNotification = true;
-
-
             }
-            //if (request.EntryById != null)
-            //    request.EntryBy = await _dbContext.Users.FirstAsync(x => x.IdInt == request.EntryById);
-            //if (request.AssignedToId != null)
-            //    request.AssignedTo = await _dbContext.Users.FirstAsync(x => x.IdInt == request.AssignedToId);
-            //if (request.CustomerId != null)
-            //    request.Customer = await _dbContext.Users.FirstAsync(x => x.IdInt == request.CustomerId);
-
-
 
             _dbContext.Lab_Requests.Update(request);
             _dbContext.SaveChanges();
@@ -738,6 +645,7 @@ namespace CIA.Controllers
                 await _notificationRepo.LAB_RequestReady(request.Id);
             return Ok();
         }
+
         [HttpPost("ConsumeLabItem")]
         public async Task<IActionResult> ConsumeLabItem(int id, int? number, bool consumeWholeBlock)
         {

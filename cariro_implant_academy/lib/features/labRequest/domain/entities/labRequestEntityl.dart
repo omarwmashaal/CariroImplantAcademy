@@ -1,10 +1,9 @@
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/OmarEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/constants/enums/enums.dart';
 import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'labStepEntity.dart';
 
 class LabRequestEntity extends Equatable {
   int? id;
@@ -27,45 +26,22 @@ class LabRequestEntity extends Equatable {
   bool? free;
   int? cost;
   int? paidAmount;
-  int? labFees;
   String? notes;
   String? notesFromTech;
   String? requiredStep;
-  List<LabStepEntity>? steps;
   List<int>? teeth;
   EnumLabRequestInitStatus? initStatus;
-  OmarEntity? waxUp;
-  OmarEntity? zirconUnit;
-  OmarEntity? pfm;
-  OmarEntity? compositeInlay;
-  OmarEntity? emaxVeneer;
-  OmarEntity? milledPMMA;
-  OmarEntity? printedPMMA;
-  OmarEntity? tiAbutment;
-  OmarEntity? tiBar;
-  OmarEntity? threeDPrinting;
-  List<OmarEntity>? others;
+  List<LabStepItemEntity>? labRequestStepItems;
+  int? labFees;
 
   int? fileId;
   BasicNameIdObjectEntity? file;
 
   LabRequestEntity({
     this.id,
-    this.waxUp,
     this.notesFromTech,
-    this.zirconUnit,
-    this.pfm,
-    this.labFees,
     this.designer,
     this.designerId,
-    this.compositeInlay,
-    this.emaxVeneer,
-    this.milledPMMA,
-    this.printedPMMA,
-    this.tiAbutment,
-    this.tiBar,
-    this.threeDPrinting,
-    this.others,
     this.date,
     this.deliveryDate,
     this.entryById,
@@ -83,15 +59,17 @@ class LabRequestEntity extends Equatable {
     this.paidAmount,
     this.notes,
     this.requiredStep,
-    this.steps,
     this.fileId,
     this.file,
     this.initStatus = EnumLabRequestInitStatus.Scan,
     this.teeth,
     this.assignedToId,
     this.assignedTo,
+    this.labRequestStepItems,
+    this.labFees = 0,
   }) {
     entryBy = entryBy ?? BasicNameIdObjectEntity();
+    labRequestStepItems = labRequestStepItems ?? [];
     customer = customer ?? UserEntity();
     patient = patient ?? BasicNameIdObjectEntity();
     file = file ?? BasicNameIdObjectEntity();
@@ -108,7 +86,6 @@ class LabRequestEntity extends Equatable {
         this.deliveryDate,
         this.assignedTo,
         this.assignedToId,
-        this.labFees,
         this.entryById,
         this.entryBy,
         this.source,
@@ -124,21 +101,11 @@ class LabRequestEntity extends Equatable {
         this.paidAmount,
         this.notes,
         this.requiredStep,
-        this.steps,
         this.fileId,
         this.file,
         this.initStatus,
         this.teeth,
-        waxUp,
-        zirconUnit,
-        pfm,
-        compositeInlay,
-        emaxVeneer,
-        milledPMMA,
-        printedPMMA,
-        tiAbutment,
-        tiBar,
-        threeDPrinting,
-        others,
+        this.labRequestStepItems,
+        this.labFees,
       ];
 }

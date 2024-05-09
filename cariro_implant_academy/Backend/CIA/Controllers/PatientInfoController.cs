@@ -991,6 +991,8 @@ namespace CIA.Controllers
                 await _cia_DbContext
                 .Receipts
                 .Where(x => x.Website == _site)
+                .Include(x=>x.Patient)
+                .Include(x=>x.Operator)
                 .OrderByDescending(x => x.Date).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 

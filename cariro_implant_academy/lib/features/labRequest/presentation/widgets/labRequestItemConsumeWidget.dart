@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Widgets/CIA_TextFormField.dart';
 import '../../../../core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import '../../../../core/injection_contianer.dart';
-import '../../domain/entities/OmarEntity.dart';
 import '../../domain/entities/labItemEntity.dart';
 import '../../domain/entities/labRequestEntityl.dart';
 import '../blocs/labRequestBloc.dart';
@@ -41,17 +41,11 @@ class _LabRequestItemConsumeWidgetState extends State<LabRequestItemConsumeWidge
       children: [
         FormTextKeyWidget(text: "Consume Item Details"),
         SizedBox(height: 10),
-        __LabRequestItemConsumeWidget(item: widget.request.zirconUnit, parentItemId: 1, label: "Zircon Unit"),
-        __LabRequestItemConsumeWidget(item: widget.request.pfm, parentItemId: 2, label: "PFM"),
-        __LabRequestItemConsumeWidget(item: widget.request.compositeInlay, parentItemId: 3, label: "Composite Inlay"),
-        __LabRequestItemConsumeWidget(item: widget.request.emaxVeneer, parentItemId: 4, label: "Emax Veneer"),
-        __LabRequestItemConsumeWidget(item: widget.request.milledPMMA, parentItemId: 5, label: "Milled PMMA"),
-        __LabRequestItemConsumeWidget(item: widget.request.printedPMMA, parentItemId: 6, label: "Printed PMMA"),
-        __LabRequestItemConsumeWidget(item: widget.request.tiAbutment, parentItemId: 7, label: "Ti Abutment"),
-        __LabRequestItemConsumeWidget(item: widget.request.tiBar, parentItemId: 8, label: "Ti Bar"),
-        __LabRequestItemConsumeWidget(item: widget.request.threeDPrinting, parentItemId: 9, label: "3D Printing"),
-        __LabRequestItemConsumeWidget(item: widget.request.waxUp, parentItemId: 10, label: "Wax Up"),
-      ],
+      ]..addAll((widget.request.labRequestStepItems!)
+          .map(
+            (e) => __LabRequestItemConsumeWidget(stepItem: e, parentItemId: 1),
+          )
+          .toList()),
     );
   }
 }
@@ -59,14 +53,12 @@ class _LabRequestItemConsumeWidgetState extends State<LabRequestItemConsumeWidge
 class __LabRequestItemConsumeWidget extends StatefulWidget {
   __LabRequestItemConsumeWidget({
     Key? key,
-    required this.item,
+    required this.stepItem,
     required this.parentItemId,
-    required this.label,
   }) : super(key: key);
-  OmarEntity? item;
+  LabStepItemEntity stepItem;
 
   int parentItemId;
-  String label;
 
   @override
   State<__LabRequestItemConsumeWidget> createState() => __LabRequestItemConsumeWidgetState();
@@ -77,7 +69,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
 
   BasicNameIdObjectEntity? line;
 
-  LabItemEntity? item;
+  LabStepItemEntity? stepItem;
 
   late LabRequestsBloc bloc;
 
@@ -89,8 +81,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
 
   @override
   Widget build(BuildContext context) {
-    item = widget.item?.labItem;
-    return widget.item == null
+    return widget.stepItem == null
         ? Container()
         : BlocListener<LabRequestsBloc, LabRequestsBloc_States>(
             listener: (context, state) {
@@ -102,14 +93,10 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                   ShowSnackBar(context, isSuccess: false, message: state.message);
                 else if (state is LabRequestsBloc_ConsumedLabItemSuccessfullyState) {
                   ShowSnackBar(context, isSuccess: true);
-                  bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: item!.id!));
-                }
-                else if(state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id==widget.item?.labItemId) {
-                  widget.item!.labItem = state.data;
-                  item = state.data;
-                  setState(() {
-
-                  });
+                  bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: stepItem!.id!));
+                } else if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
+                  widget.stepItem!.consumedLabItem = state.data;
+                  setState(() {});
                 }
               }
             },
@@ -118,7 +105,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormTextKeyWidget(text: widget.label),
+                  FormTextKeyWidget(text: "Tooth: ${widget.stepItem.tooth} || ${widget.stepItem.labItemFromSettings?.name ?? ""}"),
                   SizedBox(height: 10),
                   Row(
                     children: [
@@ -126,11 +113,11 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                         child: CIA_DropDownSearchBasicIdName(
                           label: "Company",
                           asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
-                          searchParams: widget.parentItemId,
+                          searchParams: widget.stepItem.labItemFromSettingsId,
                           selectedItem: company,
                           onSelect: (value) {
                             line = null;
-                            item = null;
+                            stepItem = null;
                             bloc.emit(LabRequestsBloc_LoadingLabItemErrorState(message: "message"));
                             setState(() => company = value);
                           },
@@ -145,7 +132,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                           emptyString: company?.id == null ? "Please Select Company First!" : "Empty",
                           selectedItem: line,
                           onSelect: (value) {
-                            item = null;
+                            stepItem = null;
                             bloc.emit(LabRequestsBloc_LoadingLabItemErrorState(message: "message"));
                             setState(() => line = value);
                           },
@@ -154,24 +141,22 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                       SizedBox(width: 10),
                       Expanded(
                         child: CIA_DropDownSearchBasicIdName(
-                          enabled: item?.consumed != true,
+                          enabled: stepItem?.consumedLabItem?.consumed != true,
                           label: "Size",
                           asyncUseCase: line == null ? null : sl<GetLabItemsUseCase>(),
                           searchParams: line?.id,
                           emptyString: line?.id == null ? "Please Select Shade First!" : "Empty",
-                          selectedItem: item,
+                          selectedItem: widget.stepItem.consumedLabItem,
                           onSelect: (value) {
                             CIA_ShowPopUpYesNo(
                                 context: context,
-                                title: "Consume ${widget.item?.number ?? 0} from this block?",
+                                title: "Consume 1 from ${value.name} block?",
                                 onSave: () {
                                   bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
-                                    params: ConsumeLabItemParams(id: value.id!, consumeWholeBlock: false, number: widget.item?.number!),
+                                    params: ConsumeLabItemParams(id: value.id!, consumeWholeBlock: false, number: 1),
                                   ));
                                 });
-                            item = value as LabItemEntity;
-                            widget.item!.labItem = item;
-                            widget.item!.labItemId = item?.id;
+                            widget.stepItem!.consumedLabItemId = value.id;
                             setState(() {});
                           },
                         ),
@@ -183,19 +168,18 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                     buildWhen: (previous, current) =>
                         current is LabRequestsBloc_LoadedLabItemSuccessfullyState || current is LabRequestsBloc_LoadingLabItemErrorState,
                     builder: (context, state) {
-                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.item?.labItemId) {
-                        item = state.data;
-                        widget.item!.labItem = state.data;
+                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
+                        widget.stepItem!.consumedLabItem = state.data;
                       }
 
-                      if (item != null) {
+                      if (widget.stepItem.consumedLabItem != null) {
                         return Row(
                           children: [
                             Expanded(
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Item: "),
-                                  FormTextValueWidget(text: item!.name!.toString()),
+                                  FormTextValueWidget(text: stepItem!.consumedLabItem?.name?.toString() ?? ""),
                                 ],
                               ),
                             ),
@@ -204,7 +188,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Consumed Count: "),
-                                  FormTextValueWidget(text: item!.consumedCount!.toString()),
+                                  FormTextValueWidget(text: "1"),
                                 ],
                               ),
                             ),
@@ -213,19 +197,19 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Block Consumed: "),
-                                  FormTextValueWidget(text: item!.consumed == true ? "Yes" : "No"),
+                                  FormTextValueWidget(text: stepItem!.consumedLabItem!.consumed == true ? "Yes" : "No"),
                                 ],
                               ),
                             ),
                             Expanded(child: SizedBox()),
                             Visibility(
-                              visible: item!.consumed != true,
+                              visible: stepItem!.consumedLabItem!.consumed != true,
                               child: CIA_SecondaryButton(
                                 label: "Consume The Whole Block?",
                                 onTab: () {
                                   bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
                                     params: ConsumeLabItemParams(
-                                      id: item!.id!,
+                                      id: stepItem!.id!,
                                       consumeWholeBlock: true,
                                     ),
                                   ));

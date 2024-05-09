@@ -39,6 +39,7 @@ enum LabStepStatus {
   NotYet,
 }
 
+
 enum EnumLabRequestStatus { InQueue, InProgress, FinishedDesign, Finished }
 
 enum EnumLabRequestStatus2 {

@@ -388,8 +388,12 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                         children: [
                                                           TitleWidget(title: "Reciept"),
-                                                          LabRequestItemReceiptWidget(
-                                                              request: request, viewOnly: true, onTotalCalculated: (v) => null),
+                                                          Expanded(
+                                                            child: LabRequestItemReceiptWidget(
+                                                              request: request,
+                                                              viewOnly: true,
+                                                            ),
+                                                          ),
                                                           CIA_PrimaryButton(
                                                               label: "Pay",
                                                               onTab: () {
@@ -489,7 +493,6 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                     width: double.maxFinite,
                                     context: context,
                                     child: LabRequestItemReceiptWidget(
-                                      onTotalCalculated: (v) => null,
                                       request: request,
                                       viewOnly: true,
                                     ),

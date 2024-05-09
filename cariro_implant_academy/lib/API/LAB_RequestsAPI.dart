@@ -1,6 +1,5 @@
 import 'package:cariro_implant_academy/Helpers/CIA_DateConverters.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/features/labRequest/domain/entities/labStepEntity.dart';
 
 import '../Models/API_Response.dart';
 import '../Models/DTOs/DropDownDTO.dart';
@@ -105,7 +104,7 @@ class LAB_RequestsAPI {
     return response;
   }
 
-  static Future<API_Response> AddOrUpdateRequestReceipt(int id, List<LabStepEntity> steps) async {
+  static Future<API_Response> AddOrUpdateRequestReceipt(int id, dynamic steps) async {
     var response ;//= await HTTPRequest.Post("LAB_Requests/AddOrUpdateRequestReceipt?id=$id", steps.map((e) => e.toJson()).toList());
 
     return response;

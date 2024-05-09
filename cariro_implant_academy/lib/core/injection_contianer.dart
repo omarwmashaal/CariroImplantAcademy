@@ -97,6 +97,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/repositories/l
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getLabItemStepsFroRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/complainsDatasource.dart';
 import 'package:cariro_implant_academy/features/patient/data/datasources/roomDatasource.dart';
@@ -956,7 +957,6 @@ initInjection() async {
         getPatientLabRequestsUseCase: sl(),
         finishTaskUseCase: sl(),
         getLabRequestUseCase: sl(),
-        addOrUpdateRequestReceiptUseCase: sl(),
         assignTaskToTechnicianUseCase: sl(),
         markRequestAsDoneUseCase: sl(),
         updateLabRequestUseCase: sl(),
@@ -964,6 +964,7 @@ initInjection() async {
         getLabItemDetailsUseCase: sl(),
         getRequestReceiptUseCase: sl(),
         payRequestUseCase: sl(),
+        getLabItemStepsFroRequestUseCase: sl(),
       ));
   //useCases
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
@@ -971,7 +972,6 @@ initInjection() async {
   sl.registerLazySingleton(() => CreateLabRequestUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetDefaultStepByNameUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetPatientLabRequestsUseCase(labRequestRepository: sl()));
-  sl.registerLazySingleton(() => AddOrUpdateRequestReceiptUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => AssignTaskToTechnicianUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => MarkRequestAsDoneUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetLabRequestUseCase(labRequestRepository: sl()));
@@ -984,6 +984,7 @@ initInjection() async {
   sl.registerLazySingleton(() => GetLabItemDetailsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetRequestReceiptUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => PayRequestUseCase(labRequestRepository: sl()));
+  sl.registerLazySingleton(() => GetLabItemStepsFroRequestUseCase(labRequestRepo: sl()));
   //repo
   sl.registerLazySingleton<LabRequestRepository>(() => LabRequestRepoImpl(labRequestDatasource: sl()));
   sl.registerLazySingleton<LabCustomersRepository>(() => LabCustomerRepoImpl(labCustomerDatasource: sl()));

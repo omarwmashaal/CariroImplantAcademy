@@ -89,7 +89,7 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                         child: CIA_DateTimeTextFormField(
                       label: "Date To",
                       controller: TextEditingController(text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
-                      onChange: (value) => to =value,
+                      onChange: (value) => to = value,
                     )),
                     SizedBox(
                       width: 10,
@@ -98,7 +98,7 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                         child: CIA_DropDownSearchBasicIdName<Website>(
                       label: "Category",
                       asyncUseCase: sl<GetIncomeCategoriesUseCase>(),
-                          searchParams: siteController.getSite(),
+                      searchParams: siteController.getSite(),
                       onSelect: (value) => catId = value.id,
                     )),
                     SizedBox(
@@ -134,7 +134,8 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                   ShowSnackBar(context, isSuccess: false);
                 else if (state is CashFlowBloC_LoadedCashFlowSuccessfullyState) widget.datasource.updateData(state.data);
               },
-              buildWhen: (previous, current) => current is CashFlowBloC_LoadingCashFlowErrorState || current is CashFlowBloC_LoadedCashFlowSuccessfullyState,
+              buildWhen: (previous, current) =>
+                  current is CashFlowBloC_LoadingCashFlowErrorState || current is CashFlowBloC_LoadedCashFlowSuccessfullyState,
               builder: (context, state) {
                 if (state is CashFlowBloC_LoadingCashFlowErrorState)
                   return BigErrorPageWidget(message: state.message);
@@ -143,6 +144,12 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                     dataSource: widget.datasource,
                     onCellClick: (value) async {
                       if (sl<SharedPreferences>().getInt("Website") == Website.Lab.index) {
+                        var selected = widget.datasource.models.firstWhere((element) => element.id == value);
+                        PaymentLogTableWidget(
+                          receiptId: selected.receiptID!,
+                          context: context,
+                          patientId: selected.patientId!,
+                        )();
                         //          context.goNamed(CIA_Router.routeConst_LabView, pathParameters: {"id": widget.datasource.models[value - 1].labRequestId.toString()});
                       } else {
                         //  PaymentLogDataSrouce dataSource = PaymentLogDataSrouce();
