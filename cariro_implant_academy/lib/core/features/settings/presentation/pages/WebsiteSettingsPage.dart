@@ -1280,7 +1280,18 @@ class _SettingsPageState extends State<SettingsPage> {
                                         children: [
                                           Expanded(
                                             child: CIA_TextFormField(
-                                              label: e.name ?? "",
+                                              label: "Name",
+                                              isNumber: true,
+                                              controller: TextEditingController(text: e.name?.toString() ?? ""),
+                                              onChange: (value) {
+                                                e.name =value;
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: CIA_TextFormField(
+                                              label: "Price",
                                               isNumber: true,
                                               controller: TextEditingController(text: e.price?.toString() ?? ""),
                                               onChange: (value) {
