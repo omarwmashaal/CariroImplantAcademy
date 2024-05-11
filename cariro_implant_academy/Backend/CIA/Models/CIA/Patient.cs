@@ -83,7 +83,5 @@ namespace CIA.Models
         public Image? IdFrontImage { get; set; } = new Image();
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
 
-
-
     }
 }

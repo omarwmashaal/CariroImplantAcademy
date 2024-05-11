@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/bloc/medicaHistoryBloc_States.dart';
@@ -591,13 +593,64 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                           SizedBox(
                             height: 20,
                           ),
-                          FormTextKeyWidget(text: "HBA1c"),
+                          Row(
+                            children: [
+                              FormTextKeyWidget(text: "HBA1c"),
+                              BlocBuilder<MedicalHistoryBloc, MedicalHistoryBloc_States>(
+                                buildWhen: (previous, current) => current is MedicalHistoryBloc_ChangedHBA1CState,
+                                builder: (context, state) {
+                                  return Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          if (medicalHistoryData.notification_Hba1c == null) {
+                                            medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(minutes: 2)).toLocal();
+                                          } else
+                                            medicalHistoryData.notification_Hba1c = null;
+                                          bloc.emit(MedicalHistoryBloc_ChangedHBA1CState());
+                                        },
+                                        icon: medicalHistoryData.notification_Hba1c != null
+                                            ? Icon(Icons.notifications_active)
+                                            : Icon(Icons.notifications_none),
+                                        color: medicalHistoryData.notification_Hba1c != null ? Colors.red : null,
+                                      ),
+                                      SizedBox(width: 10),
+                                      CIA_GestureWidget(
+                                        onTap: () => CIA_PopupDialog_DateOnlyPicker(
+                                          context,
+                                          "Change date",
+                                          (date) {
+                                            medicalHistoryData.notification_Hba1c = date;
+                                            bloc.emit(MedicalHistoryBloc_ChangedHBA1CState());
+                                          },
+                                          initialDate: medicalHistoryData.notification_Hba1c,
+                                        ),
+                                        child: SizedBox(
+                                          width: 200,
+                                          child: Text(
+                                            medicalHistoryData.notification_Hba1c == null
+                                                ? ""
+                                                : "Alarm on ${DateFormat("dd/MM/yyyy").format(medicalHistoryData.notification_Hba1c!)}. Click the bell to disable!",
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            ],
+                          ),
                           SizedBox(
                             height: 10,
                           ),
                           CIA_IncrementalHBA1CTextField(
                               onChange: (value) {
                                 medicalHistoryData.hbA1c = value;
+                                if ((medicalHistoryData.hbA1c?.last?.reading ?? 0) >= 7.5) {
+                                  medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(minutes: 2)).toLocal();
+                                } else
+                                  medicalHistoryData.notification_Hba1c = null;
+                                bloc.emit(MedicalHistoryBloc_ChangedHBA1CState());
                               },
                               model: medicalHistoryData.hbA1c != null ? medicalHistoryData.hbA1c as List<HbA1cEntity> : []),
                           SizedBox(

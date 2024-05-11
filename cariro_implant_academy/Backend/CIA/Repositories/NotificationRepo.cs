@@ -5,6 +5,7 @@ using CIA.Models;
 using CIA.Models.CIA;
 using CIA.Models.LAB.DTO;
 using CIA.Repositories.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -336,7 +337,7 @@ namespace CIA.Repositories
 
             await _dbContext.AddRangeAsync(notificationModels);
             await _dbContext.SaveChangesAsync();
-           foreach(var notification in notificationModels)
+            foreach (var notification in notificationModels)
             {
                 if (notification.User.Connections != null)
                     foreach (var conn in notification.User.Connections)
@@ -428,5 +429,44 @@ namespace CIA.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task HighHBA1C(int patientId, double hba1c)
+        {
+            List<ApplicationUser> secretaries = (await _userManager.GetUsersInRoleAsync("secretary")).ToList();
+            var patient = await _dbContext.Patients.Include(x => x.Doctor).Include(x=>x.MedicalExamination).FirstAsync(x => x.Id == patientId);
+            ApplicationUser? doctor = patient.Doctor;
+            var users = new List<ApplicationUser>();
+
+            if (secretaries != null)
+                users.AddRange(secretaries.ToList());
+            if (patient?.Doctor != null)
+                users.Add(patient.Doctor);
+            users = users.Distinct().ToList();
+
+            foreach (var user in users)
+            {
+                var notification = new NotificationModel()
+                {
+                    Content = $"Patient {patient.Name} has high HBA1C of {hba1c}",
+                    Title = "High HBA1C",
+                    Date = DateTime.UtcNow,
+                    InfoId = patientId,
+                    Type = EnumNotificationType.Patient,
+                    Read = false,
+                    User = user,
+                    UserId = user.IdInt,
+                };
+                _dbContext.Notifications.Add(notification);
+                if (user.Connections != null)
+                    foreach (var conn in user.Connections)
+                    {
+                        await _hubContext.Clients.Client(conn.ConnectionId).SendAsync("NewNotification", "");
+
+                    }
+            }
+
+            _dbContext.Patients.Update(patient);
+            _dbContext.SaveChanges();
+
+        }
     }
 }

@@ -40,3 +40,9 @@ class MedicalHistoryBloc_DataLoaded extends MedicalHistoryBloc_States {
   // TODO: implement props
   List<Object?> get props => [medicalExaminationEntity];
 }
+
+class MedicalHistoryBloc_ChangedHBA1CState extends MedicalHistoryBloc_States{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [identityHashCode(this)];
+}

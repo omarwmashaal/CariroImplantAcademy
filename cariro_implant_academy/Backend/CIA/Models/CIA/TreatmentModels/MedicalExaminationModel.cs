@@ -39,8 +39,9 @@ namespace CIA.Models.TreatmentModels
         public ApplicationUser? Operator { get; set; }
         public DateTime? Date { get; set; }
         public bool? HasChanges { get; set; } = false;
+        public DateTime? Notification_Hba1c { get; set; }
 
-       
+
         [Owned]
         public class BloodPressureModel
         {

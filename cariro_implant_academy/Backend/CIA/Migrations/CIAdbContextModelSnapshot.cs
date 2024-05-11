@@ -21913,6 +21913,9 @@ namespace CIA.Migrations
                     b.Property<string>("IllegalDrugs")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("Notification_Hba1c")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("OperatorComments")
                         .HasColumnType("text");
 

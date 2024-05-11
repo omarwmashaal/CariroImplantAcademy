@@ -416,8 +416,7 @@ namespace CIA.Controllers
             patient.MedicalExamination.IllegalDrugs = model.IllegalDrugs;
             patient.MedicalExamination.OperatorComments = model.OperatorComments;
             patient.MedicalExamination.DrugsTaken = model.DrugsTaken;
-
-
+            patient.MedicalExamination.Notification_Hba1c = model.Notification_Hba1c;
 
 
             _cia_DbContext.Patients.Update(patient);

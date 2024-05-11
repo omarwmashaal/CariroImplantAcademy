@@ -34,8 +34,7 @@ namespace CIA.Models.CIA.DTOs
         public DateTime? Date { get; set; }
         public bool? HasChanges { get; set; } = false;
         public EnumWebsite Website { get; set; }
-
-
+        public DateTime? Notification_Hba1c { get; set; }
 
 
     }
