@@ -220,7 +220,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var scheduledTasks = services.GetService<IScheduledTasks>();
 
-    RecurringJob.AddOrUpdate(() => scheduledTasks.RemindHBA1CIn3Month(), Cron.MonthInterval(3));
+    RecurringJob.AddOrUpdate(() => scheduledTasks.RemindHBA1CIn3Month(), Cron.MinuteInterval(10));
 
 }
 

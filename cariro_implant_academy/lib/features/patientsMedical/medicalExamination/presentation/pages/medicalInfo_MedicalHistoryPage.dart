@@ -604,7 +604,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                       IconButton(
                                         onPressed: () {
                                           if (medicalHistoryData.notification_Hba1c == null) {
-                                            medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(minutes: 2)).toLocal();
+                                            medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(days: 90)).toLocal();
                                           } else
                                             medicalHistoryData.notification_Hba1c = null;
                                           bloc.emit(MedicalHistoryBloc_ChangedHBA1CState());
@@ -626,7 +626,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                           initialDate: medicalHistoryData.notification_Hba1c,
                                         ),
                                         child: SizedBox(
-                                          width: 200,
+                                          width: 300,
                                           child: Text(
                                             medicalHistoryData.notification_Hba1c == null
                                                 ? ""
@@ -647,7 +647,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                               onChange: (value) {
                                 medicalHistoryData.hbA1c = value;
                                 if ((medicalHistoryData.hbA1c?.last?.reading ?? 0) >= 7.5) {
-                                  medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(minutes: 2)).toLocal();
+                                  medicalHistoryData.notification_Hba1c = DateTime.now().add(Duration(days: 90)).toLocal();
                                 } else
                                   medicalHistoryData.notification_Hba1c = null;
                                 bloc.emit(MedicalHistoryBloc_ChangedHBA1CState());
