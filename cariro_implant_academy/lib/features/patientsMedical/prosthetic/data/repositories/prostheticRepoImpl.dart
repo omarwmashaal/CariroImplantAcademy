@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/datasources/prostheticDatasource.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticFinalEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/repositories/prostheticRepository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -10,7 +11,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   final ProstheticDatasource prostheticDatasource;
   ProstheticRepoImpl({required this.prostheticDatasource});
   @override
-  Future<Either<Failure, ProstheticTreatmentEntity>> getPatientProstheticTreatmentDiagnostic(int id) async {
+  Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentDiagnostic(int id) async {
     try {
       final result = await prostheticDatasource.getPatientProstheticTreatmentDiagnostic(id);
       return Right(result);
@@ -20,7 +21,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, ProstheticTreatmentFinalEntity>> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
+  Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
     try {
       final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesisFullArch(id);
       return Right(result);
@@ -30,7 +31,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, ProstheticTreatmentFinalEntity>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
+  Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
     try {
       final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesisSingleBridge(id);
       return Right(result);
@@ -40,7 +41,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(ProstheticTreatmentEntity data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data) async {
     try {
       final result = await prostheticDatasource.updatePatientProstheticTreatmentDiagnostic(data);
       return Right(result);
@@ -50,7 +51,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(ProstheticTreatmentFinalEntity data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data) async {
     try {
       final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisFullArch(data);
       return Right(result);
@@ -60,7 +61,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(ProstheticTreatmentFinalEntity data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data) async {
     try {
       final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisSingleBridge(data);
       return Right(result);

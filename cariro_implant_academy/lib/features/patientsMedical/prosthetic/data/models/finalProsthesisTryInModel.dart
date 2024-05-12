@@ -202,4 +202,5 @@ class FinalProthesisTryInModel extends FinalProthesisTryInEntity {
       // ... add more properties as needed
     );
   }
+
 }

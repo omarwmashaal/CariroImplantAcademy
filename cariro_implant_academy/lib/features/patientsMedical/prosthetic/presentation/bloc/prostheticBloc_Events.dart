@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/entities/prostheticFinalEntity.dart';
@@ -27,22 +28,24 @@ class ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisFullArchEvent ex
 }
 
 class ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent extends ProstheticBloc_Event {
-  final ProstheticTreatmentEntity data;
+  final List<ProstheticStepEntity>  data;
   ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent({required this.data});
   @override
   List<Object?> get props => [data];
 }
 
 class ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent extends ProstheticBloc_Event {
-  final ProstheticTreatmentFinalEntity data;
+  final List<ProstheticStepEntity>  data;
   ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent({required this.data});
   @override
   List<Object?> get props => [data];
 }
 
 class ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent extends ProstheticBloc_Event {
-  final ProstheticTreatmentFinalEntity data;
+  final List<ProstheticStepEntity> data;
   ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent({required this.data});
   @override
   List<Object?> get props => [data];
 }
+
+

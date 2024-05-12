@@ -4,11 +4,10 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_DeliveryWidget.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_HealingCollarWidget.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_ImpressionsWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_StepWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/widgets/finalProsthesis_TryInsWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,24 +32,27 @@ import '../../domain/entities/finalProsthesisTryInEntity.dart';
 import '../../domain/entities/prostheticFinalEntity.dart';
 import '../../domain/enums/enum.dart';
 
-class FinalProsthesisWidget extends StatefulWidget {
-  FinalProsthesisWidget({
+class FinalProsthesisStepWidget extends StatefulWidget {
+  FinalProsthesisStepWidget({
     Key? key,
     required this.data,
     required this.patientId,
     this.fullArch = false,
   }) : super(key: key);
-  ProstheticTreatmentFinalEntity data;
+  List<ProstheticStepEntity> data;
   bool fullArch;
   int patientId;
 
   @override
-  State<FinalProsthesisWidget> createState() => _FinalProsthesisWidgetState();
+  State<FinalProsthesisStepWidget> createState() => _FinalProsthesisStepWidgetState();
 }
 
-class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
+class _FinalProsthesisStepWidgetState extends State<FinalProsthesisStepWidget> {
   List<int> selectedTeeth = [];
+  bool upperArch = false;
+  bool lowerArch = false;
   late ProstheticBloc bloc;
+  List<BasicNameIdObjectEntity> finalItems = [];
 
   @override
   void initState() {
@@ -63,19 +65,29 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Visibility(
-          visible: !widget.fullArch,
-          child: BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
-            buildWhen: (previous, current) => current is ProstheticBloc_UpdateTeethViewState,
-            builder: (context, state) {
-              return CIA_TeethChart(
-                onChange: (selectedTeethList) {
-                  selectedTeeth = selectedTeethList;
-                },
-                selectedTeeth: selectedTeeth,
-              );
-            },
-          ),
+        BlocBuilder<ProstheticBloc, ProstheticBloc_States>(
+          buildWhen: (previous, current) => current is ProstheticBloc_UpdateTeethViewState,
+          builder: (context, state) {
+            return widget.fullArch
+                ? CIA_MultiSelectChipWidget(
+                    labels: [
+                      CIA_MultiSelectChipWidgeModel(label: "Upper"),
+                      CIA_MultiSelectChipWidgeModel(label: "Lower"),
+                    ],
+                    onChangeList: (data) {
+                      upperArch = false;
+                      lowerArch = false;
+                      if (data.contains("Upper")) upperArch = true;
+                      if (data.contains("Lower")) upperArch = true;
+                    },
+                  )
+                : CIA_TeethChart(
+                    onChange: (selectedTeethList) {
+                      selectedTeeth = selectedTeethList;
+                    },
+                    selectedTeeth: selectedTeeth,
+                  );
+          },
         ),
         SizedBox(
           height: 10,
@@ -83,13 +95,7 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
         Expanded(
           child: StatefulBuilder(
             builder: (context, _setState) {
-              List<FinalProthesisParentEntity> models = <FinalProthesisParentEntity>[
-                ...widget.data!.impressions ?? [],
-                ...widget.data!.healingCollars ?? [],
-                ...widget.data!.tryIns ?? [],
-                ...widget.data!.delivery ?? [],
-              ];
-              models.sort(
+              widget.data.sort(
                 (a, b) => a.date?.compareTo(b.date ?? DateTime.now()) ?? 1,
               );
               return Column(
@@ -98,145 +104,79 @@ class _FinalProsthesisWidgetState extends State<FinalProsthesisWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      children: [
-                        CIA_SecondaryButton(
-                          label: "Healing Collar",
-                          icon: Icon(Icons.add),
-                          onTab: () {
-                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                            } else {
-                              _setState(
-                                () => widget.data.healingCollars = [
-                                  ...widget.data.healingCollars!,
-                                  FinalProthesisHealingCollarEntity(
-                                    patientId: widget.patientId,
-                                    date: DateTime.now(),
-                                    finalProthesisTeeth: List.from(selectedTeeth),
-                                    operatorId: siteController.getUserId(),
-                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
-                                  ),
-                                ],
-                              );
-                              selectedTeeth.clear();
-                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                            }
-                          },
-                        ),
-                        SizedBox(width: 10),
-                        CIA_SecondaryButton(
-                          label: "Impression",
-                          icon: Icon(Icons.add),
-                          onTab: () {
-                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                            } else {
-                              _setState(
-                                () => widget.data.impressions = [
-                                  ...widget.data.impressions!,
-                                  FinalProthesisImpressionEntity(
-                                    patientId: widget.patientId,
-                                    date: DateTime.now(),
-                                    finalProthesisTeeth: List.from(selectedTeeth),
-                                    operatorId: siteController.getUserId(),
-                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
-                                  ),
-                                ],
-                              );
-                              selectedTeeth.clear();
-                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                            }
-                          },
-                        ),
-                        SizedBox(width: 10),
-                        CIA_SecondaryButton(
-                          label: "Try In",
-                          icon: Icon(Icons.add),
-                          onTab: () {
-                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                            } else {
-                              _setState(
-                                () => widget.data.tryIns = [
-                                  ...widget.data.tryIns!,
-                                  FinalProthesisTryInEntity(
-                                    patientId: widget.patientId,
-                                    date: DateTime.now(),
-                                    finalProthesisTeeth: List.from(selectedTeeth),
-                                    operatorId: siteController.getUserId(),
-                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
-                                  ),
-                                ],
-                              );
-                              selectedTeeth.clear();
-                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                            }
-                          },
-                        ),
-                        SizedBox(width: 10),
-                        CIA_SecondaryButton(
-                          label: "Delivery",
-                          icon: Icon(Icons.add),
-                          onTab: () {
-                            if (selectedTeeth.isEmpty && !widget.fullArch) {
-                              ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
-                            } else {
-                              _setState(
-                                () => widget.data.delivery = [
-                                  ...widget.data.delivery!,
-                                  FinalProthesisDeliveryEntity(
-                                    patientId: widget.patientId,
-                                    date: DateTime.now(),
-                                    finalProthesisTeeth: List.from(selectedTeeth),
-                                    operatorId: siteController.getUserId(),
-                                    operator: BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId()),
-                                  ),
-                                ],
-                              );
-                              selectedTeeth.clear();
-                              bloc.emit(ProstheticBloc_UpdateTeethViewState());
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                        children: finalItems
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CIA_SecondaryButton(
+                                  label: e.name ?? "",
+                                  icon: Icon(Icons.add),
+                                  onTab: () {
+                                    if (selectedTeeth.isEmpty && !widget.fullArch) {
+                                      ShowSnackBar(context, isSuccess: false, message: "Please select teeth!");
+                                    } else if (upperArch == false && lowerArch == false && widget.fullArch) {
+                                      ShowSnackBar(context, isSuccess: false, message: "Please select Arch!");
+                                    } else if (widget.fullArch) {
+                                      _setState(
+                                        () => widget.data = [
+                                          ...widget.data,
+                                          ProstheticStepEntity(
+                                            date: DateTime.now(),
+                                            item: e,
+                                            itemId: e.id,
+                                            patientId: widget.patientId,
+                                            operator: BasicNameIdObjectEntity(
+                                              name: siteController.getUserName(),
+                                              id: siteController.getUserId(),
+                                            ),
+                                            operatorId: siteController.getUserId(),
+                                            fullArchLower: lowerArch,
+                                            fullArchUpper: upperArch,
+                                          ),
+                                        ],
+                                      );
+                                    } else if (!widget.fullArch) {
+                                      _setState(
+                                        () => widget.data = [
+                                          ...widget.data,
+                                          ProstheticStepEntity(
+                                            date: DateTime.now(),
+                                            item: e,
+                                            itemId: e.id,
+                                            patientId: widget.patientId,
+                                            operator: BasicNameIdObjectEntity(
+                                              name: siteController.getUserName(),
+                                              id: siteController.getUserId(),
+                                            ),
+                                            operatorId: siteController.getUserId(),
+                                            single: selectedTeeth.length == 1,
+                                            bridge: selectedTeeth.length > 1,
+                                            teeth: selectedTeeth,
+                                          ),
+                                        ],
+                                      );
+                                    }
+
+                                    selectedTeeth.clear();
+                                    upperArch = false;
+                                    lowerArch = false;
+                                    bloc.emit(ProstheticBloc_UpdateTeethViewState());
+                                  },
+                                ),
+                              ),
+                            )
+                            .toList()),
                   ),
                   Expanded(
                     child: ListView(
-                        children: models.mapIndexed((i, e) {
-                      if (e is FinalProthesisDeliveryEntity)
-                        return FinalProsthesis_DeliveryWidget(
-                          fullArch: widget.fullArch,
-                          index: i + 1,
-                          data: e,
-                          onDelete: () => _setState(() => widget.data.delivery!.remove(e)),
-                        );
-                      else if (e is FinalProthesisTryInEntity)
-                        return FinalProsthesis_TryInsWidget(
-                          fullArch: widget.fullArch,
-                          index: i + 1,
-                          data: e,
-                          patientId: widget.patientId,
-                          onDelete: () => _setState(() => widget.data.tryIns!.remove(e)),
-                        );
-                      else if (e is FinalProthesisImpressionEntity)
-                        return FinalProsthesis_ImpressionWidget(
-                          fullArch: widget.fullArch,
-                          index: i + 1,
-                          patientId: widget.patientId,
-                          data: e,
-                          onDelete: () => _setState(() => widget.data.impressions!.remove(e)),
-                        );
-                      else if (e is FinalProthesisHealingCollarEntity)
-                        return FinalProsthesis_HealingCollarWidget(
-                          fullArch: widget.fullArch,
-                          index: i + 1,
-                          data: e,
-                          onDelete: () => _setState(() => widget.data.healingCollars!.remove(e)),
-                        );
-
-                      return Container();
-                    }).toList()),
+                        children: widget.data
+                            .mapIndexed((i, e) => FinalProsthesis_StepWidget(
+                                  fullArch: widget.fullArch,
+                                  index: i + 1,
+                                  data: e,
+                                  onDelete: () => _setState(() => widget.data.remove(e)),
+                                ))
+                            .toList()),
                   ),
                 ],
               );

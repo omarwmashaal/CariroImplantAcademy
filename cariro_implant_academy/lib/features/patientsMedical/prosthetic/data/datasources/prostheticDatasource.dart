@@ -1,5 +1,8 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticStepModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
+import 'package:get/get.dart';
 
 import '../../../../../core/constants/remoteConstants.dart';
 import '../../../../../core/error/exception.dart';
@@ -9,17 +12,17 @@ import '../../domain/entities/prostheticFinalEntity.dart';
 import '../models/prostheticTreatmentFinalModel.dart';
 
 abstract class ProstheticDatasource {
-  Future<ProstheticTreatmentModel> getPatientProstheticTreatmentDiagnostic(int id);
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentDiagnostic(int id);
 
-  Future<ProstheticTreatmentFinalModel> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id);
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id);
 
-  Future<ProstheticTreatmentFinalModel> getPatientProstheticTreatmentFinalProthesisFullArch(int id);
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisFullArch(int id);
 
-  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(ProstheticTreatmentEntity data);
+  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data);
 
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(ProstheticTreatmentFinalEntity data);
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data);
 
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(ProstheticTreatmentFinalEntity data);
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data);
 }
 
 class ProstheticDatasourceImpl implements ProstheticDatasource {
@@ -28,7 +31,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   ProstheticDatasourceImpl({required this.httpRepo});
 
   @override
-  Future<ProstheticTreatmentModel> getPatientProstheticTreatmentDiagnostic(int id) async {
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentDiagnostic(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentDiagnostic?id=$id");
@@ -37,15 +40,15 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      if (response.body == null) return ProstheticTreatmentModel();
-      return ProstheticTreatmentModel.fromJson(response.body as Map<String, dynamic>);
+      if (response.body == null) return [];
+      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
   @override
-  Future<ProstheticTreatmentFinalModel> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesisFullArch?id=$id");
@@ -54,18 +57,15 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      if (response.body == null)
-        return ProstheticTreatmentFinalModel(
-          patientId: id,
-        );
-      return ProstheticTreatmentFinalModel.fromMap(response.body as Map<String, dynamic>);
+      if (response.body == null) return [];
+      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
   @override
-  Future<ProstheticTreatmentFinalModel> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesisSingleBridge?id=$id");
@@ -74,23 +74,20 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      if (response.body == null)
-        return ProstheticTreatmentFinalModel(
-          patientId: id,
-        );
-      return ProstheticTreatmentFinalModel.fromMap(response.body as Map<String, dynamic>);
+      if (response.body == null) return [];
+      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(ProstheticTreatmentEntity data) async {
+  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentDiagnostic?id=${data.id}",
-        body: ProstheticTreatmentModel.fromEntity(data).toJson(),
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentDiagnostic",
+        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
       );
     } catch (e) {
       print(e);
@@ -101,12 +98,12 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(ProstheticTreatmentFinalEntity data) async {
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis?id=${data.patientId}&type=1",
-        body: ProstheticTreatmentFinalModel.fromEntity(data).toJson(),
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
+        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
       );
     } catch (e) {
       print(e);
@@ -117,12 +114,12 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(ProstheticTreatmentFinalEntity data) async {
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis?id=${data.patientId}&type=0",
-        body: ProstheticTreatmentFinalModel.fromEntity(data).toJson(),
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
+        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
       );
     } catch (e) {
       print(e);

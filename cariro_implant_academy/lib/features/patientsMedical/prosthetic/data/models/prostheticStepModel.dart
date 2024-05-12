@@ -10,7 +10,7 @@ class ProstheticStepModel extends ProstheticStepEntity {
     super.operator,
     super.needsRemake,
     super.scanned,
-    super.dateTime,
+    super.date,
     super.index,
     super.itemId,
     super.item,
@@ -18,7 +18,8 @@ class ProstheticStepModel extends ProstheticStepEntity {
     super.status,
     super.nextVisitId,
     super.nextVisit,
-    super.tooth,
+    super.teeth,
+    super.tryInCheckListId,
     super.single = false,
     super.bridge = false,
     super.fullArchUpper = false,
@@ -32,7 +33,7 @@ class ProstheticStepModel extends ProstheticStepEntity {
     operator = entity.operator;
     needsRemake = entity.needsRemake;
     scanned = entity.scanned;
-    dateTime = entity.dateTime;
+    date = entity.date;
     index = entity.index;
     itemId = entity.itemId;
     item = entity.item;
@@ -40,11 +41,12 @@ class ProstheticStepModel extends ProstheticStepEntity {
     status = entity.status;
     nextVisitId = entity.nextVisitId;
     nextVisit = entity.nextVisit;
-    tooth = entity.tooth;
+    teeth = entity.teeth;
     single = entity.single;
     bridge = entity.bridge;
     fullArchUpper = entity.fullArchUpper;
     fullArchLower = entity.fullArchLower;
+    tryInCheckListId = entity.tryInCheckListId;
   }
 
   ProstheticStepModel.fromJson(Map<String, dynamic> data) {
@@ -55,13 +57,14 @@ class ProstheticStepModel extends ProstheticStepEntity {
     operator = data['operator'] == null ? null : BasicNameIdObjectModel.fromJson(data['operator']);
     needsRemake = data['needsRemake'];
     scanned = data['scanned'];
-    dateTime = DateTime.tryParse(data['dateTime'] ?? "")?.toLocal();
+    date = DateTime.tryParse(data['date'] ?? "")?.toLocal();
     index = data['index'];
-    tooth = data['tooth'];
+    teeth = ((data['teeth']??[]) as List<dynamic>).map((e) => e as int).toList();
     single = data['single'];
     bridge = data['bridge'];
     fullArchUpper = data['fullArchUpper'];
     fullArchLower = data['fullArchLower'];
+    tryInCheckListId = data['tryInCheckListId'];
 
     if (data['diagnosticItemId'] != null) {
       itemId = data['diagnosticItemId'];
@@ -105,19 +108,20 @@ class ProstheticStepModel extends ProstheticStepEntity {
     data['operatorId'] = operatorId;
     data['needsRemake'] = needsRemake;
     data['scanned'] = scanned;
-    data['dateTime'] = dateTime?.toUtc()?.toIso8601String();
+    data['date'] = date?.toUtc()?.toIso8601String();
     data['index'] = index;
-    data['tooth'] = tooth;
+    data['teeth'] = teeth;
     data['single'] = single;
     data['bridge'] = bridge;
     data['fullArchUpper'] = fullArchUpper;
-    data['fullArchLower'] = fullArchLower;    
+    data['fullArchLower'] = fullArchLower;
     data['diagnosticItemId'] = itemId;
     data['finalItemId'] = itemId;
     data['diagnosticStatusItemId'] = statusId;
     data['finalStatusItemId'] = statusId;
     data['diagnosticNextVisitItemId'] = nextVisitId;
     data['finalNextVisitItemId'] = nextVisitId;
+    data['tryInCheckListId'] = tryInCheckListId;
 
     return data;
   }

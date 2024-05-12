@@ -8,15 +8,16 @@ class ProstheticStepEntity {
   BasicNameIdObjectEntity? operator;
   bool? needsRemake;
   bool? scanned;
-  DateTime? dateTime;
+  DateTime? date;
   int? index;
+  int? tryInCheckListId;
   int? itemId;
   BasicNameIdObjectEntity? item;
   int? statusId;
   BasicNameIdObjectEntity? status;
   int? nextVisitId;
   BasicNameIdObjectEntity? nextVisit;
-  int? tooth;
+  List<int>? teeth;
   bool single;
   bool bridge;
   bool fullArchUpper;
@@ -30,15 +31,16 @@ class ProstheticStepEntity {
     this.operator,
     this.needsRemake,
     this.scanned,
-    this.dateTime,
+    this.date,
     this.index,
+    this.tryInCheckListId,
     this.itemId,
     this.item,
     this.statusId,
     this.status,
     this.nextVisitId,
     this.nextVisit,
-    this.tooth,
+    this.teeth,
     this.single = false,
     this.bridge = false,
     this.fullArchUpper = false,
