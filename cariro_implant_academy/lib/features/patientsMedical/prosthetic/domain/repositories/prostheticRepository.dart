@@ -10,7 +10,7 @@ abstract class ProstheticRepository {
   Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentDiagnostic(int id);
   Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id);
   Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisFullArch(int id);
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data);
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data);
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data);
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(int pateitnId,List<ProstheticStepEntity> data);
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(int pateitnId,List<ProstheticStepEntity> data);
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(int pateitnId,List<ProstheticStepEntity> data);
 }

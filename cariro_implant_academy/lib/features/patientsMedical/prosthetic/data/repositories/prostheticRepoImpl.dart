@@ -41,9 +41,9 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentDiagnostic(int patientId, List<ProstheticStepEntity> data) async {
     try {
-      final result = await prostheticDatasource.updatePatientProstheticTreatmentDiagnostic(data);
+      final result = await prostheticDatasource.updatePatientProstheticTreatmentDiagnostic(patientId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -51,9 +51,9 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisFullArch(int patientId, List<ProstheticStepEntity> data) async {
     try {
-      final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisFullArch(data);
+      final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisFullArch(patientId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -61,9 +61,9 @@ class ProstheticRepoImpl implements ProstheticRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data) async {
+  Future<Either<Failure, NoParams>> updatePatientProstheticTreatmentFinalProthesisSingleBridge(int patientId, List<ProstheticStepEntity> data) async {
     try {
-      final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisSingleBridge(data);
+      final result = await prostheticDatasource.updatePatientProstheticTreatmentFinalProthesisSingleBridge(patientId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

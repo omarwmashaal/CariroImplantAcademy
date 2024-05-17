@@ -14,14 +14,13 @@ import '../models/prostheticTreatmentFinalModel.dart';
 abstract class ProstheticDatasource {
   Future<List<ProstheticStepModel>> getPatientProstheticTreatmentDiagnostic(int id);
 
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id,bool single);
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id, bool single);
 
+  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(int pateitnId, List<ProstheticStepEntity> data);
 
-  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data);
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(int pateitnId, List<ProstheticStepEntity> data);
 
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data);
-
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data);
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(int pateitnId, List<ProstheticStepEntity> data);
 }
 
 class ProstheticDatasourceImpl implements ProstheticDatasource {
@@ -46,9 +45,8 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     }
   }
 
- 
   @override
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id,bool single) async {
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id, bool single) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesis?id=$id&single=$single");
@@ -65,11 +63,11 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data) async {
+  Future<NoParams> updatePatientProstheticTreatmentDiagnostic(int pateitnId, List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentDiagnostic",
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentDiagnostic?id=$pateitnId",
         body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
@@ -81,11 +79,11 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(List<ProstheticStepEntity> data) async {
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisFullArch(int pateitnId, List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis?id=$pateitnId&fullArch=true",
         body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
@@ -97,11 +95,11 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
   }
 
   @override
-  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(List<ProstheticStepEntity> data) async {
+  Future<NoParams> updatePatientProstheticTreatmentFinalProthesisSingleBridge(int pateitnId, List<ProstheticStepEntity> data) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
-        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
+        host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis?id=$pateitnId&fullArch=false",
         body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {

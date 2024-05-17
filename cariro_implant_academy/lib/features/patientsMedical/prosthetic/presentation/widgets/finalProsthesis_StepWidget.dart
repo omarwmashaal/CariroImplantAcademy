@@ -77,7 +77,11 @@ class _FinalProsthesis_StepWidgetState extends State<FinalProsthesis_StepWidget>
                         ? "Cement Retained"
                         : widget.data.screwRetained == true
                             ? "Screw Retained"
-                            : "")
+                            : widget.data.bridge == true
+                                ? "Bridge"
+                                : widget.data.single == true
+                                    ? "Single"
+                                    : "")
                     : "",
               ),
             ],

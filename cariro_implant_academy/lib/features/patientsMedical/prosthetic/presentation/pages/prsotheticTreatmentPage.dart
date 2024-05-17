@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/la
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/usecases/updatePatientProstheticTreatmentDiagnosticUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
@@ -36,9 +37,9 @@ class ProstheticTreatmentPage extends StatefulWidget {
 
 class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
   List<BasicNameIdObjectEntity> diagnosticItems = [];
-  List<ProstheticStepEntity> diagnosticSteps = [];
-  List<ProstheticStepEntity> singleBridgeEntity = [];
-  List<ProstheticStepEntity> fullArchEntity = [];
+  List<ProstheticStepEntity>? diagnosticSteps;
+  List<ProstheticStepEntity>? singleBridgeEntity;
+  List<ProstheticStepEntity>? fullArchEntity;
   late ProstheticBloc bloc;
   late SettingsBloc settingsBloc;
   late MedicalInfoShellBloc medicalInfoShellBloc;
@@ -60,20 +61,32 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
   }
 
   saveMethod() {
+    if (!medicalInfoShellBloc.allowEdit) return;
     Future.delayed(Duration.zero, () async {
       try {
-        if (fullArchEntity != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(data: fullArchEntity!));
+        if (fullArchEntity != null)
+          bloc.add(
+            ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisFullArchEvent(
+              data: UpdateProsthParams(
+                patientId: widget.patientId,
+                steps: fullArchEntity!,
+              ),
+            ),
+          );
       } on Exception catch (e) {
         // print(e);
       }
       try {
-        if (diagnosticSteps != null) bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(data: diagnosticSteps!));
+        if (diagnosticSteps != null)
+          bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentDiagnosticEvent(
+              data: UpdateProsthParams(patientId: widget.patientId, steps: diagnosticSteps!)));
       } on Exception catch (e) {
         // print(e);
       }
       try {
         if (singleBridgeEntity != null)
-          bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(data: singleBridgeEntity!));
+          bloc.add(ProstheticBloc_UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeEvent(
+              data: UpdateProsthParams(patientId: widget.patientId, steps: singleBridgeEntity!)));
       } on Exception catch (e) {
         //print(e);
       }
@@ -153,12 +166,13 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
 
                                   return StatefulBuilder(
                                     builder: (context, _setState) {
-                                      diagnosticSteps.sort(
-                                        (a, b) {
-                                          if (a.date != null && b.date != null) return a.date!.isBefore(b.date!) ? 0 : 1;
-                                          return 0;
-                                        },
-                                      );
+                                      diagnosticSteps ??
+                                          [].sort(
+                                            (a, b) {
+                                              if (a.date != null && b.date != null) return a.date!.isBefore(b.date!) ? 0 : 1;
+                                              return 0;
+                                            },
+                                          );
                                       return Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -178,7 +192,7 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                                               icon: Icon(Icons.add),
                                                               onTab: () => _setState(
                                                                 () => diagnosticSteps = [
-                                                                  ...diagnosticSteps,
+                                                                  ...(diagnosticSteps ?? []),
                                                                   ProstheticStepEntity(
                                                                     date: DateTime.now(),
                                                                     item: e,
@@ -201,11 +215,11 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                           ),
                                           Expanded(
                                             child: ListView(
-                                                children: diagnosticSteps
+                                                children: (diagnosticSteps ?? [])
                                                     .mapIndexed((i, e) => DiagnosticProsthesis_StepWidget(
                                                           index: i + 1,
                                                           data: e,
-                                                          onDelete: () => _setState(() => diagnosticSteps.remove(e)),
+                                                          onDelete: () => _setState(() => (diagnosticSteps ?? []).remove(e)),
                                                         ))
                                                     .toList()),
                                           ),
@@ -286,7 +300,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                               }(),
                                               child: FinalProsthesisStepWidget(
                                                 patientId: widget.patientId,
-                                                data: singleBridgeEntity,
+                                                data: singleBridgeEntity ?? [],
+                                                onChange: (p0) => singleBridgeEntity = p0,
                                               ));
                                         }
                                         return Container();
@@ -327,7 +342,8 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                               }(),
                                               child: FinalProsthesisStepWidget(
                                                 patientId: widget.patientId,
-                                                data: fullArchEntity,
+                                                data: fullArchEntity ?? [],
+                                                onChange: (p0) => fullArchEntity = p0,
                                                 fullArch: true,
                                               ));
                                         }

@@ -245,17 +245,30 @@ namespace CIA.Controllers
 
 
         [HttpGet("GetPatientProstheticTreatmentFinalProthesis")]
-        public async Task<ActionResult> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id,bool single)
+        public async Task<ActionResult> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id, bool single)
         {
-            _aPI_Response.Result = await _cia_DbContext.FinalSteps
-                .Where(x => x.Single == single && x.PatientId == id)
-                .Include(x=>x.FinalItem)
-                .Include(x=>x.FinalStatusItem)
-                .Include(x=>x.FinalNextVisitItem)
-                .Include(x=>x.Operator)
-                .ToListAsync();
+            if (single)
+                _aPI_Response.Result = await _cia_DbContext.FinalSteps
+                    .Where(x =>
+                    (x.FullArchUpper != true && x.FullArchLower != true) &&
+                    x.PatientId == id)
+                    .Include(x => x.FinalItem)
+                    .Include(x => x.FinalStatusItem)
+                    .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.Operator)
+                    .ToListAsync();
+            else
+                _aPI_Response.Result = await _cia_DbContext.FinalSteps
+                    .Where(x =>
+                    (x.FullArchUpper == true || x.FullArchLower == true) &&
+                    x.PatientId == id)
+                    .Include(x => x.FinalItem)
+                    .Include(x => x.FinalStatusItem)
+                    .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.Operator)
+                    .ToListAsync();
             return Ok(_aPI_Response);
-            
+
         }
 
 
@@ -767,11 +780,22 @@ namespace CIA.Controllers
 
 
         [HttpPut("UpdatePatientProstheticTreatmentDiagnostic")]
-        public async Task<ActionResult> UpdatePatientProstheticTreatmentDiagnostic([FromQuery] int id, [FromBody] ProstheticTreatmentDiagnosticModel model)
+        public async Task<ActionResult> UpdatePatientProstheticTreatmentDiagnostic([FromQuery] int id, [FromBody] List<DiagnosticStepModel> steps)
         {
             var user = await _iUserRepo.GetUser();
+            foreach (var step in steps)
+            {
+                step.Date = step.Date ?? DateTime.UtcNow;
+            }
 
-            model.Date = model.Date ?? DateTime.UtcNow;
+            var stepsFromDb = await _cia_DbContext.DiagnosticSteps.Where(x => x.PatientId == id).ToListAsync();
+
+            var missings = stepsFromDb.Except(steps);
+
+            _cia_DbContext.DiagnosticSteps.RemoveRange(missings);
+            _cia_DbContext.DiagnosticSteps.UpdateRange(steps);
+            _cia_DbContext.SaveChanges();
+
             var nonSurgicalTreatment = await _cia_DbContext.NonSurgicalTreatment.FirstOrDefaultAsync(x =>
                     x.PatientId == id &&
                     x.Date.Value.Date == DateTime.UtcNow.Date &&
@@ -792,389 +816,122 @@ namespace CIA.Controllers
             }
             if (nonSurgicalTreatment.Treatment == null) nonSurgicalTreatment.Treatment = "";
 
-            var pros = await _cia_DbContext.ProstheticTreatments
-              .Include(x => x.ProstheticDiagnostic_DiagnosticImpression)
-               .Include(x => x.ProstheticDiagnostic_Bite)
-                .Include(x => x.ProstheticDiagnostic_ScanAppliance)
-                .FirstOrDefaultAsync(x => x.PatientId == id);
+            steps = await _cia_DbContext.DiagnosticSteps
+                .Include(x => x.DiagnosticItem)
+                .Include(x => x.DiagnosticStatusItem)
+                .Include(x => x.DiagnosticNextVisitItem)
+                .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
 
-
-            if (pros == null)
+            foreach (var step in steps)
             {
-                pros = new ProstheticTreatmentDiagnosticModel()
-                {
-
-                    PatientId = id
-
-                };
-                _cia_DbContext.ProstheticTreatments.Update(pros);
-                _cia_DbContext.SaveChanges();
+                var tempNote = $"{step?.DiagnosticItem?.Name ?? ""}: {step?.DiagnosticStatusItem?.Name ?? ""} || {step?.DiagnosticNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                tempNote.Replace("  ", " ");
+                tempNote.Replace("|| ||", "||");
+                tempNote.Replace("||\n", "\n");
+                tempNote.Replace("|| \n", "\n");
+                tempNote.Replace("||  \n", "\n");
+                if (!nonSurgicalTreatment.Treatment.Contains(tempNote))
+                    nonSurgicalTreatment.Treatment += $"\n {tempNote}";
             }
-            pros.Date = model.Date ?? DateTime.UtcNow;
 
-            var missingScan = pros.ProstheticDiagnostic_ScanAppliance.Except(model.ProstheticDiagnostic_ScanAppliance);
-            var missingImpression = pros.ProstheticDiagnostic_DiagnosticImpression.Except(model.ProstheticDiagnostic_DiagnosticImpression);
-            var missingBite = pros.ProstheticDiagnostic_Bite.Except(model.ProstheticDiagnostic_Bite);
-
-            _cia_DbContext.ProstheticTreatments_ScanAppliance.RemoveRange(missingScan);
-            _cia_DbContext.ProstheticTreatments_DiagnosticImpression.RemoveRange(missingImpression);
-            _cia_DbContext.ProstheticTreatments_Bite.RemoveRange(missingBite);
-
-            _cia_DbContext.ProstheticTreatments_ScanAppliance.UpdateRange(model.ProstheticDiagnostic_ScanAppliance);
-            _cia_DbContext.ProstheticTreatments_DiagnosticImpression.UpdateRange(model.ProstheticDiagnostic_DiagnosticImpression);
-            _cia_DbContext.ProstheticTreatments_Bite.UpdateRange(model.ProstheticDiagnostic_Bite);
-
+            _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
             _cia_DbContext.SaveChanges();
 
 
-            pros.ProstheticDiagnostic_ScanAppliance = model.ProstheticDiagnostic_ScanAppliance;
-            pros.ProstheticDiagnostic_Bite = model.ProstheticDiagnostic_Bite;
-            pros.ProstheticDiagnostic_DiagnosticImpression = model.ProstheticDiagnostic_DiagnosticImpression;
-
-
-            _cia_DbContext.ProstheticTreatments.Update(pros);
-            _cia_DbContext.SaveChanges();
-            foreach (var t in pros.ProstheticDiagnostic_ScanAppliance)
-            {
-                var notes = "";
-
-                t.PatientId = id;
-                t.Date = t.Date ?? DateTime.UtcNow;
-                t.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == t.OperatorId);
-                t.OperatorId = t.Operator.IdInt;
-                //    t.ProstheticTreatmentId = pros.Id;
-                if (t.Id != null)
-                    _cia_DbContext.ProstheticTreatments_ScanAppliance.Update(t);
-                else
-                    _cia_DbContext.ProstheticTreatments_ScanAppliance.Add(t);
-
-                notes = $"Scan Appliance: {t.Diagnostic.ToString()}, {((t.NeedsRemake ?? false) ? "needs remake and" : "")} {((t.Scanned ?? false) ? "is Scanned" : "")}";
-
-
-
-                if (nonSurgicalTreatment == null)
-                {
-                    nonSurgicalTreatment = new NonSurgicalTreatmentModel()
-                    {
-                        Operator = user,
-                        OperatorID = user.IdInt,
-                        PatientId = id,
-                        Date = DateTime.UtcNow,
-                        Treatment = notes
-                    };
-                    _cia_DbContext.NonSurgicalTreatment.Add(nonSurgicalTreatment);
-
-                }
-                else
-                {
-                    if (!nonSurgicalTreatment.Treatment.Contains(notes))
-                        nonSurgicalTreatment.Treatment += $"\n{notes}";
-                    _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
-
-                }
-
-            }
-
-            foreach (var t in pros.ProstheticDiagnostic_Bite)
-            {
-                var notes = "";
-
-                t.PatientId = id;
-                t.Date = t.Date ?? DateTime.UtcNow;
-                t.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == t.OperatorId);
-                t.OperatorId = t.Operator.IdInt;
-                //   t.ProstheticTreatmentId = pros.Id;
-                if (t.Id != null)
-                    _cia_DbContext.ProstheticTreatments_Bite.Update(t);
-                else
-                    _cia_DbContext.ProstheticTreatments_Bite.Add(t);
-                notes = $"Bite: {t.Diagnostic.ToString()}{(t.NextStep == null ? "" : ", Next step: " + t.NextStep.ToString())}, {((t.NeedsRemake ?? false) ? "needs remake and" : "")}    {((t.Scanned ?? false) ? "is Scanned" : "")} ";
-
-
-
-                if (nonSurgicalTreatment == null)
-                {
-                    nonSurgicalTreatment = new NonSurgicalTreatmentModel()
-                    {
-                        Operator = user,
-                        OperatorID = user.IdInt,
-                        PatientId = id,
-                        Date = DateTime.UtcNow,
-                        Treatment = notes
-                    };
-                    _cia_DbContext.NonSurgicalTreatment.Add(nonSurgicalTreatment);
-
-                }
-                else
-                {
-                    if (!nonSurgicalTreatment.Treatment.Contains(notes))
-
-                        nonSurgicalTreatment.Treatment += $"\n{notes}";
-                    _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
-
-                }
-            }
-
-            foreach (var t in pros.ProstheticDiagnostic_DiagnosticImpression)
-            {
-                var notes = "";
-
-                t.PatientId = id;
-                t.Date = t.Date ?? DateTime.UtcNow;
-                t.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == t.OperatorId);
-                t.OperatorId = t.Operator.IdInt;
-                // t.ProstheticTreatmentId = pros.Id;
-                if (t.Id != null)
-                    _cia_DbContext.ProstheticTreatments_DiagnosticImpression.Update(t);
-                else
-                    _cia_DbContext.ProstheticTreatments_DiagnosticImpression.Add(t);
-
-                notes = $"Diagnostic Impression: {t.Diagnostic.ToString()}{(t.NextStep == null ? "" : ", Next step: " + t.NextStep.ToString())}, {((t.NeedsRemake ?? false) ? "needs remake and" : "")}  is{((t.Scanned ?? false) ? "" : "")} ";
-
-
-
-                if (nonSurgicalTreatment == null)
-                {
-                    nonSurgicalTreatment = new NonSurgicalTreatmentModel()
-                    {
-                        Operator = user,
-                        OperatorID = user.IdInt,
-                        PatientId = id,
-                        Date = DateTime.UtcNow,
-                        Treatment = notes
-                    };
-                    _cia_DbContext.NonSurgicalTreatment.Add(nonSurgicalTreatment);
-
-                }
-                else
-                {
-                    if (!nonSurgicalTreatment.Treatment.Contains(notes))
-                        nonSurgicalTreatment.Treatment += $"\n{notes}";
-                    _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
-
-                }
-            }
-
-
-            _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
 
 
         [HttpPut("UpdatePatientProstheticTreatmentFinalProthesis")]
-        public async Task<ActionResult> UpdatePatientProstheticTreatmentFinalProthesisSingleBridge(int id, int type, PorstheticTreatmentFinalParent model)
+        public async Task<ActionResult> UpdatePatientProstheticTreatmentFinalProthesisSingleBridge([FromQuery] int id, bool fullArch, [FromBody] List<FinalStepModel> steps)
         {
             var user = await _iUserRepo.GetUser();
+            foreach (var step in steps)
+            {
+                step.Date = step.Date ?? DateTime.UtcNow;
+            }
+
+            List<FinalStepModel> stepsFromDb = new List<FinalStepModel>();
+            if (fullArch)
+                stepsFromDb = await _cia_DbContext.FinalSteps.Where(x =>
+                x.PatientId == id &&
+                (x.FullArchLower == true ||
+                x.FullArchUpper == true)
+                ).ToListAsync();
+            else
+                stepsFromDb = await _cia_DbContext.FinalSteps.Where(x =>
+                x.PatientId == id &&
+                (x.FullArchLower != true &&
+                x.FullArchUpper != true)
+                ).ToListAsync();
+
+            var missings = stepsFromDb.Except(steps);
+
+            _cia_DbContext.FinalSteps.RemoveRange(missings);
+            _cia_DbContext.FinalSteps.UpdateRange(steps);
+            _cia_DbContext.SaveChanges();
+
             var nonSurgicalTreatment = await _cia_DbContext.NonSurgicalTreatment.FirstOrDefaultAsync(x =>
                     x.PatientId == id &&
                     x.Date.Value.Date == DateTime.UtcNow.Date &&
                     x.OperatorID == user.IdInt);
-
-            model.Date = model.Date ?? DateTime.UtcNow;
-            PorstheticTreatmentFinalParent pros;
-            if (type == 0)
-                pros = await _cia_DbContext.ProstheticTreatmentFinalSingleBridges
-                   .Include(x => x.HealingCollars)
-                   .Include(x => x.Delivery)
-                   .Include(x => x.TryIns)
-                   .Include(x => x.Impressions)
-                   .FirstOrDefaultAsync(x => x.PatientId == id);
-            else
-                pros = await _cia_DbContext.ProstheticTreatmentFinalFullArchs
-                   .Include(x => x.HealingCollars)
-                   .Include(x => x.Delivery)
-                   .Include(x => x.TryIns)
-                   .Include(x => x.Impressions)
-                   .FirstOrDefaultAsync(x => x.PatientId == id);
-
-            if (pros == null)
-                pros = type == 0 ? new ProstheticTreatmentFinalSingleBridge()
-                {
-                    PatientId = id
-                } : new ProstheticTreatmentFinalFullArch()
-                {
-                    PatientId = id
-                };
-
-            List<FinalProsthesisParentModel> prosCombinedFromDataBase = new List<FinalProsthesisParentModel>();
-            if (pros.TryIns != null) prosCombinedFromDataBase.AddRange(pros.TryIns);
-            if (pros.HealingCollars != null) prosCombinedFromDataBase.AddRange(pros.HealingCollars);
-            if (pros.Delivery != null) prosCombinedFromDataBase.AddRange(pros.Delivery);
-            if (pros.Impressions != null) prosCombinedFromDataBase.AddRange(pros.Impressions);
-
-
-            List<FinalProsthesisParentModel> prosCombinedFromQuery = new List<FinalProsthesisParentModel>();
-            if (model.TryIns != null) prosCombinedFromQuery.AddRange(model.TryIns);
-            if (model.HealingCollars != null) prosCombinedFromQuery.AddRange(model.HealingCollars);
-            if (model.Delivery != null) prosCombinedFromQuery.AddRange(model.Delivery);
-            if (model.Impressions != null) prosCombinedFromQuery.AddRange(model.Impressions);
-
-
-            foreach (var p in prosCombinedFromQuery)
-            {
-                if (p.OperatorId != null)
-                    p.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == p.OperatorId);
-            }
-            var missings = prosCombinedFromDataBase.Except(prosCombinedFromQuery);
-            _cia_DbContext.FinalProsthesisParents.RemoveRange(missings);
-            _cia_DbContext.FinalProsthesisParents.UpdateRange(prosCombinedFromQuery);
-
-            _cia_DbContext.SaveChanges();
-
-            pros.TryIns = model.TryIns;
-            pros.Impressions = model.Impressions;
-            pros.Delivery = model.Delivery;
-            pros.HealingCollars = model.HealingCollars;
-            pros.Date = model.Date ?? DateTime.UtcNow;
-            if (type == 0)
-                _cia_DbContext.ProstheticTreatmentFinalSingleBridges.Update((ProstheticTreatmentFinalSingleBridge)pros);
-            else
-                _cia_DbContext.ProstheticTreatmentFinalFullArchs.Update((ProstheticTreatmentFinalFullArch)pros);
-            _cia_DbContext.SaveChanges();
-
-
-
-            var notes1 = "";
-            var notes2 = "";
-            var notes3 = "";
-            var notes4 = "";
-
-            if (!model.HealingCollars.IsNullOrEmpty())
-            {
-                foreach (var c in model.HealingCollars)
-                {
-
-                    c.Date =
-                        c.Date ?? DateTime.UtcNow;
-
-
-                    notes1 += type == 0 ? $"{(c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count == 1 ?
-                        $"Single tooth {c.FinalProthesisTeeth[0]}" :
-                        c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count > 1 ?
-                        $"Bridge teeth {String.Join(",", c.FinalProthesisTeeth.ToArray())}," :
-                        ",")}" +
-                        $" Healing Collar: {(c.FinalProthesisHealingCollarStatus == null ?
-                        "," :
-                        c.FinalProthesisHealingCollarStatus.ToString())}" :
-                $"Full arch Healing Collar: {(c.FinalProthesisHealingCollarStatus == null ?
-                "," :
-                c.FinalProthesisHealingCollarStatus.ToString())}";
-
-
-                }
-            }
-            if (!model.Impressions.IsNullOrEmpty())
-            {
-                foreach (var c in model.Impressions)
-                {
-
-                    c.Date =
-                        c.Date ?? DateTime.UtcNow;
-                    notes2 += type == 0 ? $"{(notes1 != "" ? "\n" : "")}{(c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count == 1 ?
-                                $"Single tooth {c.FinalProthesisTeeth[0]}" :
-                                c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count > 1 ?
-                                $"Bridge teeth {String.Join(",", c.FinalProthesisTeeth.ToArray())}," :
-                                ",")}" +
-                                $" Impression: {(c.FinalProthesisImpressionStatus == null ?
-                                "," :
-                                c.FinalProthesisImpressionStatus.ToString())}," +
-                                $"{(c.FinalProthesisImpressionNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisImpressionNextVisit.ToString()}" :
-                                "")}" :
-                                $"{(notes1 != "" ? "\n" : "")}Full arch Impression: {(c.FinalProthesisImpressionStatus == null ?
-                                "," :
-                                c.FinalProthesisImpressionStatus.ToString())}," +
-                                $"{(c.FinalProthesisImpressionNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisImpressionNextVisit.ToString()}" :
-                                "")}"
-
-
-                                ;
-
-                }
-            }
-            if (!model.TryIns.IsNullOrEmpty())
-            {
-                foreach (var c in model.TryIns)
-                {
-
-                    c.Date =
-                        c.Date ?? DateTime.UtcNow;
-                    notes3 += type == 0 ? $"{(notes2 != "" ? "\n" : "")}{(c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count == 1 ?
-                                $"Single tooth {c.FinalProthesisTeeth[0]}" :
-                                c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count > 1 ?
-                                $"Bridge teeth {String.Join(",", c.FinalProthesisTeeth.ToArray())}," :
-                                ",")}" +
-                                $" Try In: {(c.FinalProthesisTryInStatus == null ?
-                                "," :
-                                c.FinalProthesisTryInStatus.ToString())}," +
-                                $"{(c.FinalProthesisTryInNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisTryInNextVisit.ToString()}" :
-                                "")}" : $"{(notes2 != "" ? "\n" : "")}Full arch Try In: {(c.FinalProthesisTryInStatus == null ?
-                                "," :
-                                c.FinalProthesisTryInStatus.ToString())}," +
-                                $"{(c.FinalProthesisTryInNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisTryInNextVisit.ToString()}" :
-                                "")}";
-
-                }
-            }
-            if (!model.Delivery.IsNullOrEmpty())
-            {
-                foreach (var c in model.Delivery)
-                {
-
-                    c.Date =
-                        c.Date ?? DateTime.UtcNow;
-                    notes4 += type == 0 ? $"{(notes3 != "" ? "\n" : "")}{(c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count == 1 ?
-                                 $"Single tooth {c.FinalProthesisTeeth[0]}" :
-                                c.FinalProthesisTeeth != null && c.FinalProthesisTeeth.Count > 1 ?
-                                $"Bridge teeth {String.Join(",", c.FinalProthesisTeeth.ToArray())}," :
-                                ",")}" +
-                                $" Delivery: {(c.FinalProthesisDeliveryStatus == null ?
-                                "," :
-                                c.FinalProthesisDeliveryStatus.ToString())}," +
-                                $"{(c.FinalProthesisDeliveryNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisDeliveryNextVisit.ToString()}" :
-                                "")}" : $"{(notes3 != "" ? "\n" : "")}Full arch Delivery: {(c.FinalProthesisDeliveryStatus == null ?
-                                "," :
-                                c.FinalProthesisDeliveryStatus.ToString())}," +
-                                $"{(c.FinalProthesisDeliveryNextVisit != null ?
-                                $" and Next Visit: {c.FinalProthesisDeliveryNextVisit.ToString()}" :
-                                "")}";
-
-                }
-            }
-
-
             if (nonSurgicalTreatment == null)
             {
                 nonSurgicalTreatment = new NonSurgicalTreatmentModel()
                 {
+                    Date = DateTime.UtcNow,
                     Operator = user,
                     OperatorID = user.IdInt,
                     PatientId = id,
-                    Date = DateTime.UtcNow,
-                    Treatment = notes1 + notes2 + notes3 + notes4
+
+
                 };
-                _cia_DbContext.NonSurgicalTreatment.Add(nonSurgicalTreatment);
-
+                await _cia_DbContext.NonSurgicalTreatment.AddAsync(nonSurgicalTreatment);
+                await _cia_DbContext.SaveChangesAsync();
             }
-            else
+            if (nonSurgicalTreatment.Treatment == null) nonSurgicalTreatment.Treatment = "";
+
+            steps = await _cia_DbContext.FinalSteps
+                .Include(x => x.FinalItem)
+                .Include(x => x.FinalStatusItem)
+                .Include(x => x.FinalNextVisitItem)
+                .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
+
+            foreach (var step in steps)
             {
-                if (!nonSurgicalTreatment.Treatment.Contains(notes1))
-                    nonSurgicalTreatment.Treatment += $"\n{notes1}";
-                if (!nonSurgicalTreatment.Treatment.Contains(notes2))
-                    nonSurgicalTreatment.Treatment += $"\n{notes2}";
-                if (!nonSurgicalTreatment.Treatment.Contains(notes3))
-                    nonSurgicalTreatment.Treatment += $"\n{notes3}";
-                if (!nonSurgicalTreatment.Treatment.Contains(notes4))
-                    nonSurgicalTreatment.Treatment += $"\n{notes4}";
-                _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
+                var tempNote = $"{step?.FinalItem?.Name ?? ""}: ";
+                if (!step.Teeth.IsNullOrEmpty())
+                    tempNote += String.Join(",", step.Teeth!.ToArray())+" ";
+                if (step.FullArchLower == true)
+                    tempNote += "Lower Arch ";
+                if (step.FullArchUpper == true)
+                    tempNote += "Upper Arch ";
+                if (step.Bridge == true)
+                    tempNote += "Bridge ";
+                else if (step.Single == true)
+                    tempNote += "Single ";
+                if (step.CementRetained == true)
+                    tempNote += "Cement Retained ";
+                else if (step.ScrewRetained == true)
+                    tempNote += "Screw Retained ";
 
+                tempNote += $"{step?.FinalStatusItem?.Name ?? ""} || {step?.FinalNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                tempNote.Replace("  ", " ");
+                tempNote.Replace("|| ||", "||");
+                tempNote.Replace("||\n", "\n");
+                tempNote.Replace("|| \n", "\n");
+                tempNote.Replace("||  \n", "\n");
+                if (!nonSurgicalTreatment.Treatment.Contains(tempNote))
+                    nonSurgicalTreatment.Treatment += $"\n {tempNote}";
             }
+
+            _cia_DbContext.NonSurgicalTreatment.Update(nonSurgicalTreatment);
             _cia_DbContext.SaveChanges();
+
+
             return Ok(_aPI_Response);
+
+
         }
 
         [HttpPut("updateComplicationsAfterProsthesis")]

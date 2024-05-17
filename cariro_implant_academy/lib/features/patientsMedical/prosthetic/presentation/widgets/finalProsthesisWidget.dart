@@ -40,12 +40,13 @@ class FinalProsthesisStepWidget extends StatelessWidget {
     Key? key,
     required this.data,
     required this.patientId,
+    required this.onChange,
     this.fullArch = false,
   }) : super(key: key);
   List<ProstheticStepEntity> data;
   bool fullArch;
   int patientId;
-
+  Function(List<ProstheticStepEntity>) onChange;
   List<int> selectedTeeth = [];
 
   bool upperArch = false;
@@ -187,9 +188,9 @@ class FinalProsthesisStepWidget extends StatelessWidget {
                                                     id: siteController.getUserId(),
                                                   ),
                                                   operatorId: siteController.getUserId(),
-                                                  single: selectedTeeth.length == 1,
-                                                  bridge: selectedTeeth.length > 1,
-                                                  teeth: selectedTeeth,
+                                                  single: selectedTeeth.map((e) => e).toList().length == 1,
+                                                  bridge: selectedTeeth.map((e) => e).toList().length > 1,
+                                                  teeth: selectedTeeth.map((e) => e).toList(),
                                                 ),
                                               ],
                                             );
@@ -198,6 +199,7 @@ class FinalProsthesisStepWidget extends StatelessWidget {
                                           selectedTeeth.clear();
                                           upperArch = false;
                                           lowerArch = false;
+                                          onChange(data);
                                           bloc.emit(ProstheticBloc_UpdateTeethViewState());
                                         },
                                       ),

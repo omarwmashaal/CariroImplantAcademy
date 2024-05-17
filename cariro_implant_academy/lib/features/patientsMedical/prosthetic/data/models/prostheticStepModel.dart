@@ -59,13 +59,13 @@ class ProstheticStepModel extends ProstheticStepEntity {
     patient = data['patient'] == null ? null : BasicNameIdObjectModel.fromJson(data['patient']);
     operatorId = data['operatorId'];
     operator = data['operator'] == null ? null : BasicNameIdObjectModel.fromJson(data['operator']);
-    needsRemake = data['needsRemake'];
-    scanned = data['scanned'];
+    needsRemake = data['needsRemake']??false;
+    scanned = data['scanned']??false;
     date = DateTime.tryParse(data['date'] ?? "")?.toLocal();
     index = data['index'];
     teeth = ((data['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
-    single = data['single'];
-    bridge = data['bridge'];
+    single = data['single']??false;
+    bridge = data['bridge']??false;
     fullArchUpper = data['fullArchUpper'] ?? false;
     fullArchLower = data['fullArchLower'] ?? false;
     tryInCheckListId = data['tryInCheckListId'];
