@@ -809,3 +809,60 @@ class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState exte
   @override
   List<Object?> get props => [];
 }
+
+class SettingsBloc_LoadingProstheticItemsState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingProstheticItemsErrorState extends SettingsBlocSuccessState {
+  final String message;
+  SettingsBloc_LoadingProstheticItemsErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadedProstheticItemsSuccessfullyState extends SettingsBlocSuccessState {
+  final List<BasicNameIdObjectEntity> data;
+  SettingsBloc_LoadedProstheticItemsSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingProstheticStatusState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingProstheticStatusErrorState extends SettingsBlocSuccessState {
+  final String message;
+  SettingsBloc_LoadingProstheticStatusErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadedProstheticStatusSuccessfullyState extends SettingsBlocSuccessState {
+  final List<BasicNameIdObjectEntity> data;
+  SettingsBloc_LoadedProstheticStatusSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingProstheticNextVisitState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingProstheticNextVisitErrorState extends SettingsBlocSuccessState {
+  final String message;
+  SettingsBloc_LoadingProstheticNextVisitErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadedProstheticNextVisitSuccessfullyState extends SettingsBlocSuccessState {
+  final List<BasicNameIdObjectEntity> data;
+  SettingsBloc_LoadedProstheticNextVisitSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [];
+}

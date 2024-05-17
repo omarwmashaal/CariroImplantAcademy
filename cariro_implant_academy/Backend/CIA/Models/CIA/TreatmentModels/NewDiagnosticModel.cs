@@ -72,11 +72,17 @@ namespace CIA.Models.CIA.TreatmentModels
     public class FinalStepModel : ProstheticParentStepModel
     {
 
+        public bool? ScrewRetained { get; set; }
+        public bool? CementRetained { get; set; }
         public int? Tooth { get; set; }
+        public List<int>? Teeth { get; set; } = new();
         public bool Single { get; set; } = false;
         public bool Bridge { get; set; } = false;
         public bool FullArchUpper { get; set; } = false;
         public bool FullArchLower { get; set; } = false;
+
+        [ForeignKey("TryInCheckListModel")]
+        public int? TryInCheckListId { get; set; }
 
         [ForeignKey("FinalItemModel")]
         public int? FinalItemId { get; set; }
@@ -119,6 +125,44 @@ namespace CIA.Models.CIA.TreatmentModels
         [ForeignKey("FinalItemModel")]
         public int FinalItemId { get; set; }
         public FinalItemModel? FinalItem { get; set; }
+    }
+
+
+    public class TryInCheckListModel
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        [ForeignKey("Patient")]
+        public int? PatientId { get; set; }
+        public Patient? Patient { get; set; }
+        public List<int>? Teeth { get; set; } = new();
+        [ForeignKey("FinalStepModel")]
+        public int? StepId { get; set; }
+        public FinalStatusItemModel? Step { get; set; }
+        public bool? Satisfied { get; set; }
+        public bool? NonSatisfiedNewScan { get; set; }
+        public String? NonSatisfiedDescription { get; set; }
+        public bool? Seating { get; set; }
+        public EnumTryInSeating? NonSeatingType { get; set; }
+        public String? NonSeatingOtherNotes { get; set; }
+        public EnumTryInContacts? MesialContacts { get; set; }
+        public EnumTryInContacts? DistalContacts { get; set; }
+        public EnumOcclusion? Occlusion { get; set; }
+        public EnumBuccalContour? BuccalContour { get; set; }
+        public bool? Passive { get; set; }
+        public String? Retention { get; set; }
+        public String? OcclusionNotes { get; set; }
+        public String? OcclusalPlanAndMidline { get; set; }
+        public String? CentricRelation { get; set; }
+        public String? VerticalDimension { get; set; }
+        public String? LipSupport { get; set; }
+        public String? SizeAndShapeOfTeeth { get; set; }
+        public String? Canting { get; set; }
+        public String? FrontalSmilingAndLateralPhotos { get; set; }
+        public String? Evaluation { get; set; }
+        public String? ExplainWhy { get; set; }
+
     }
 
 

@@ -1,9 +1,13 @@
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
@@ -36,15 +40,18 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
   List<ProstheticStepEntity> singleBridgeEntity = [];
   List<ProstheticStepEntity> fullArchEntity = [];
   late ProstheticBloc bloc;
+  late SettingsBloc settingsBloc;
   late MedicalInfoShellBloc medicalInfoShellBloc;
   bool edit = false;
 
   @override
   void initState() {
     bloc = BlocProvider.of<ProstheticBloc>(context);
+    settingsBloc = BlocProvider.of<SettingsBloc>(context);
     medicalInfoShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
     medicalInfoShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Prosthetic Treatment"));
+    settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Diagnostic));
     medicalInfoShellBloc.saveChanges = () {
       saveMethod();
     };
@@ -155,36 +162,42 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                                       return Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                                children: diagnosticItems
-                                                    .map(
-                                                      (e) => Padding(
-                                                        padding: const EdgeInsets.all(8.0),
-                                                        child: CIA_SecondaryButton(
-                                                          label: e.name ?? "",
-                                                          icon: Icon(Icons.add),
-                                                          onTab: () => _setState(
-                                                            () => diagnosticSteps = [
-                                                              ...diagnosticSteps,
-                                                              ProstheticStepEntity(
-                                                                date: DateTime.now(),
-                                                                item: e,
-                                                                itemId: e.id,
-                                                                patientId: widget.patientId,
-                                                                operator: BasicNameIdObjectEntity(
-                                                                  id: siteController.getUserId(),
-                                                                  name: siteController.getUserName(),
-                                                                ),
-                                                                operatorId: siteController.getUserId(),
+                                          BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                            buildWhen: (previous, current) => current is SettingsBloc_LoadedProstheticItemsSuccessfullyState,
+                                            builder: (context, state) {
+                                              if (state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) diagnosticItems = state.data;
+                                              return Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                    children: diagnosticItems
+                                                        .map(
+                                                          (e) => Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: CIA_SecondaryButton(
+                                                              label: e.name ?? "",
+                                                              icon: Icon(Icons.add),
+                                                              onTab: () => _setState(
+                                                                () => diagnosticSteps = [
+                                                                  ...diagnosticSteps,
+                                                                  ProstheticStepEntity(
+                                                                    date: DateTime.now(),
+                                                                    item: e,
+                                                                    itemId: e.id,
+                                                                    patientId: widget.patientId,
+                                                                    operator: BasicNameIdObjectEntity(
+                                                                      id: siteController.getUserId(),
+                                                                      name: siteController.getUserName(),
+                                                                    ),
+                                                                    operatorId: siteController.getUserId(),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                    .toList()),
+                                                        )
+                                                        .toList()),
+                                              );
+                                            },
                                           ),
                                           Expanded(
                                             child: ListView(

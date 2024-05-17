@@ -2,8 +2,11 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/cl
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -332,3 +335,25 @@ class SettingsBloc_UpdateLabItemParentPriceEvent extends SettingsBloc_Events {
   @override
   List<Object?> get props => [params];
 }
+
+class SettingsBloc_GetProstheticItemsEvent extends SettingsBloc_Events {
+  final EnumProstheticType type;
+  SettingsBloc_GetProstheticItemsEvent({required this.type});
+  @override
+  List<Object?> get props => [type];
+}
+
+class SettingsBloc_GetProstheticStatusEvent extends SettingsBloc_Events {
+  final GetProstheticStatusParams params;
+  SettingsBloc_GetProstheticStatusEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_GetProstheticNextVisitEvent extends SettingsBloc_Events {
+  final GetProstheticNextVisitParams params;
+  SettingsBloc_GetProstheticNextVisitEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+

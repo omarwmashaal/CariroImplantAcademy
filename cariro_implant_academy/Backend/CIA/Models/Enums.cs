@@ -75,6 +75,11 @@ namespace CIA.Models
         Pros
     }
 
+    public enum EnumProstheticType
+    {
+        Diagnostic,
+        Final
+    }
     public enum EnumProstheticDiagnosticDiagnosticImpressionDiagnostic
     {
         Physical,

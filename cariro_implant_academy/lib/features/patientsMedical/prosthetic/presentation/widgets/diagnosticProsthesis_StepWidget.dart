@@ -1,8 +1,11 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -45,7 +48,8 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
               Expanded(
                 child: CIA_DropDownSearchBasicIdName(
                   label: "Diagnostic",
-                  asyncUseCase: sl<xxx>(),
+                  asyncUseCase: sl<GetProstheticStatusUseCase>(),
+                  searchParams: GetProstheticStatusParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
                   selectedItem: () {
                     if (widget.data.status != null) {
                       return BasicNameIdObjectEntity(
@@ -70,7 +74,8 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
               Expanded(
                 child: CIA_DropDownSearchBasicIdName(
                   label: "Next Step",
-                  asyncUseCase: sl<xxx>(),
+                  asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
+                  searchParams: GetProstheticNextVisitParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
                   selectedItem: () {
                     if (widget.data.nextVisit != null) {
                       return BasicNameIdObjectEntity(

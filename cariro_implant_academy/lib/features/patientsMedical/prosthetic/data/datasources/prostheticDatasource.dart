@@ -14,9 +14,8 @@ import '../models/prostheticTreatmentFinalModel.dart';
 abstract class ProstheticDatasource {
   Future<List<ProstheticStepModel>> getPatientProstheticTreatmentDiagnostic(int id);
 
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id);
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id,bool single);
 
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisFullArch(int id);
 
   Future<NoParams> updatePatientProstheticTreatmentDiagnostic(List<ProstheticStepEntity> data);
 
@@ -41,41 +40,25 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       if (response.body == null) return [];
-      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
 
+ 
   @override
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
+  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesis(int id,bool single) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesisFullArch?id=$id");
+      response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesis?id=$id&single=$single");
     } catch (e) {
       throw mapException(e);
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
       if (response.body == null) return [];
-      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
-    } catch (e) {
-      throw DataConversionException(message: "Couldn't convert data");
-    }
-  }
-
-  @override
-  Future<List<ProstheticStepModel>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
-    late StandardHttpResponse response;
-    try {
-      response = await httpRepo.get(host: "$serverHost/$medicalController/GetPatientProstheticTreatmentFinalProthesisSingleBridge?id=$id");
-    } catch (e) {
-      throw mapException(e);
-    }
-    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
-    try {
-      if (response.body == null) return [];
-      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(response.body as Map<String, dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => ProstheticStepModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
@@ -87,7 +70,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentDiagnostic",
-        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
+        body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       print(e);
@@ -103,7 +86,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
-        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
+        body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       print(e);
@@ -119,7 +102,7 @@ class ProstheticDatasourceImpl implements ProstheticDatasource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$medicalController/UpdatePatientProstheticTreatmentFinalProthesis",
-        body:data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList() ,
+        body: data.map((e) => ProstheticStepModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       print(e);

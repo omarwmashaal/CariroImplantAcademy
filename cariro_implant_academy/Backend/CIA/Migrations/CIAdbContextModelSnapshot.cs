@@ -884,6 +884,9 @@ namespace CIA.Migrations
                     b.Property<bool>("Bridge")
                         .HasColumnType("boolean");
 
+                    b.Property<bool?>("CementRetained")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("Date")
                         .HasColumnType("timestamp with time zone");
 
@@ -917,10 +920,19 @@ namespace CIA.Migrations
                     b.Property<bool?>("Scanned")
                         .HasColumnType("boolean");
 
+                    b.Property<bool?>("ScrewRetained")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("Single")
                         .HasColumnType("boolean");
 
+                    b.Property<List<int>>("Teeth")
+                        .HasColumnType("integer[]");
+
                     b.Property<int?>("Tooth")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TryInCheckListId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -1333,6 +1345,98 @@ namespace CIA.Migrations
                     b.HasIndex("OpenSinusLift_TacsCompanyID");
 
                     b.ToTable("SurgicalTreatments");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.TryInCheckListModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("BuccalContour")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Canting")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CentricRelation")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("DistalContacts")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Evaluation")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExplainWhy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FrontalSmilingAndLateralPhotos")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LipSupport")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MesialContacts")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NonSatisfiedDescription")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("NonSatisfiedNewScan")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NonSeatingOtherNotes")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NonSeatingType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OcclusalPlanAndMidline")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Occlusion")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OcclusionNotes")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Passive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Retention")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Satisfied")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("Seating")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SizeAndShapeOfTeeth")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("StepId")
+                        .HasColumnType("integer");
+
+                    b.Property<List<int>>("Teeth")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("VerticalDimension")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.HasIndex("StepId");
+
+                    b.ToTable("TryInCheckLists");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>
@@ -24148,6 +24252,21 @@ namespace CIA.Migrations
                     b.Navigation("OpenSinusLift_Membrane_Company");
 
                     b.Navigation("OpenSinusLift_TacsCompany");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.TryInCheckListModel", b =>
+                {
+                    b.HasOne("CIA.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.FinalStatusItemModel", "Step")
+                        .WithMany()
+                        .HasForeignKey("StepId");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Step");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>

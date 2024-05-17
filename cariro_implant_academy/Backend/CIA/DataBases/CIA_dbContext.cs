@@ -36,6 +36,7 @@ namespace CIA.DataBases
         public DbSet<TreatmentPlanModel> TreatmentPlans { get; set; }
         public DbSet<NonSurgicalTreatmentModel> NonSurgicalTreatment { get; set; }
         public DbSet<ProstheticTreatmentDiagnosticModel> ProstheticTreatments { get; set; }
+        public DbSet<TryInCheckListModel> TryInCheckLists { get; set; }
         public DbSet<ScanApplianceModel> ProstheticTreatments_ScanAppliance { get; set; }
         public DbSet<BiteModel> ProstheticTreatments_Bite { get; set; }
         public DbSet<DiagnosticImpressionModel> ProstheticTreatments_DiagnosticImpression { get; set; }

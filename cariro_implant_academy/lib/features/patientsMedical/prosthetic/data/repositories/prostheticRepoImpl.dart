@@ -23,7 +23,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   @override
   Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisFullArch(int id) async {
     try {
-      final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesisFullArch(id);
+      final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesis(id, false);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -33,7 +33,7 @@ class ProstheticRepoImpl implements ProstheticRepository {
   @override
   Future<Either<Failure, List<ProstheticStepEntity>>> getPatientProstheticTreatmentFinalProthesisSingleBridge(int id) async {
     try {
-      final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesisSingleBridge(id);
+      final result = await prostheticDatasource.getPatientProstheticTreatmentFinalProthesis(id, true);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

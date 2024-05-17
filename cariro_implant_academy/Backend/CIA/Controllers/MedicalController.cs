@@ -20,6 +20,7 @@ using CIA.Models.CIA.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Routing.Matching;
 using System.Linq;
+using System;
 
 namespace CIA.Controllers
 {
@@ -232,120 +233,31 @@ namespace CIA.Controllers
         public async Task<ActionResult> GetPatientProstheticTreatmentDiagnostic(int id)
         {
 
-            var scan = await _cia_DbContext.ProstheticTreatments_ScanAppliance.Where(x => x.PatientId == id).Include(x => x.Operator).ToListAsync();
-            var bite = await _cia_DbContext.ProstheticTreatments_Bite.Where(x => x.PatientId == id).Include(x => x.Operator).ToListAsync();
-            var diagIm = await _cia_DbContext.ProstheticTreatments_DiagnosticImpression.Where(x => x.PatientId == id).Include(x => x.Operator).ToListAsync();
-
-
-
-            _aPI_Response.Result = new
-            {
-                ProstheticDiagnostic_DiagnosticImpression = diagIm,
-                ProstheticDiagnostic_Bite = bite,
-                ProstheticDiagnostic_ScanAppliance = scan,
-                Id = id,
-                Date = await _cia_DbContext.ProstheticTreatments.Where(x => x.PatientId == id).Select(x => x.Date).FirstOrDefaultAsync()
-
-
-            };
+            _aPI_Response.Result = await _cia_DbContext.DiagnosticSteps
+               .Where(x => x.PatientId == id)
+               .Include(x => x.DiagnosticItem)
+               .Include(x => x.DiagnosticStatusItem)
+               .Include(x => x.DiagnosticNextVisitItem)
+               .Include(x => x.Operator)
+               .ToListAsync();
             return Ok(_aPI_Response);
         }
 
 
-        [HttpGet("GetPatientProstheticTreatmentFinalProthesisSingleBridge")]
-        public async Task<ActionResult> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id)
+        [HttpGet("GetPatientProstheticTreatmentFinalProthesis")]
+        public async Task<ActionResult> GetPatientProstheticTreatmentFinalProthesisSingleBridge(int id,bool single)
         {
-            var pros = await _cia_DbContext.ProstheticTreatmentFinalSingleBridges
-                .Include(x => x.HealingCollars)
-                .Include(x => x.Delivery)
-                .Include(x => x.TryIns)
-                .Include(x => x.Impressions)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.PatientId == id);
-            if (pros?.HealingCollars != null)
-                foreach (var p in pros.HealingCollars)
-                {
-
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-                }
-            if (pros?.Delivery != null)
-                foreach (var p in pros.Delivery)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-            if (pros?.Impressions != null)
-                foreach (var p in pros.Impressions)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-            if (pros?.TryIns != null)
-                foreach (var p in pros.TryIns)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-
-            _aPI_Response.Result = pros;
+            _aPI_Response.Result = await _cia_DbContext.FinalSteps
+                .Where(x => x.Single == single && x.PatientId == id)
+                .Include(x=>x.FinalItem)
+                .Include(x=>x.FinalStatusItem)
+                .Include(x=>x.FinalNextVisitItem)
+                .Include(x=>x.Operator)
+                .ToListAsync();
             return Ok(_aPI_Response);
+            
         }
 
-
-        [HttpGet("GetPatientProstheticTreatmentFinalProthesisFullArch")]
-        public async Task<ActionResult> GetPatientProstheticTreatmentFinalProthesisFullArch(int id)
-        {
-            var pros = await _cia_DbContext.ProstheticTreatmentFinalFullArchs
-                .Include(x => x.HealingCollars)
-                .Include(x => x.Delivery)
-                .Include(x => x.TryIns)
-                .Include(x => x.Impressions)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.PatientId == id);
-            if (pros?.HealingCollars != null)
-
-                foreach (var p in pros.HealingCollars)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-            if (pros?.Delivery != null)
-
-                foreach (var p in pros.Delivery)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-            if (pros?.Impressions != null)
-
-                foreach (var p in pros.Impressions)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-            if (pros?.TryIns != null)
-
-                foreach (var p in pros.TryIns)
-                    p.OperatorDTO = await _cia_DbContext.Users.Select(x => new DropDowns
-                    {
-                        Name = x.Name,
-                        Id = x.IdInt,
-                    }).FirstOrDefaultAsync(x => x.Id == p.OperatorId);
-
-            _aPI_Response.Result = pros;
-
-            return Ok(_aPI_Response);
-        }
 
 
         [HttpGet("GetComplicationsAfterSurgery")]

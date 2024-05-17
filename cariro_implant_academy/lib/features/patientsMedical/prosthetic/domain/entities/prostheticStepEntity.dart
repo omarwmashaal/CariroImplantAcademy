@@ -22,6 +22,8 @@ class ProstheticStepEntity {
   bool bridge;
   bool fullArchUpper;
   bool fullArchLower;
+  bool screwRetained;
+  bool cementRetained;
 
   ProstheticStepEntity({
     this.id,
@@ -45,5 +47,7 @@ class ProstheticStepEntity {
     this.bridge = false,
     this.fullArchUpper = false,
     this.fullArchLower = false,
+    this.cementRetained = false,
+    this.screwRetained = false,
   });
 }

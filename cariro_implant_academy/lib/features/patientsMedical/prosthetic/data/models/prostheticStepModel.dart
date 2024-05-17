@@ -24,6 +24,8 @@ class ProstheticStepModel extends ProstheticStepEntity {
     super.bridge = false,
     super.fullArchUpper = false,
     super.fullArchLower = false,
+    super.cementRetained,
+    super.screwRetained,
   });
   ProstheticStepModel.fromEntity(ProstheticStepEntity entity) {
     id = entity.id;
@@ -47,6 +49,8 @@ class ProstheticStepModel extends ProstheticStepEntity {
     fullArchUpper = entity.fullArchUpper;
     fullArchLower = entity.fullArchLower;
     tryInCheckListId = entity.tryInCheckListId;
+    cementRetained = entity.cementRetained;
+    screwRetained = entity.screwRetained;
   }
 
   ProstheticStepModel.fromJson(Map<String, dynamic> data) {
@@ -59,12 +63,14 @@ class ProstheticStepModel extends ProstheticStepEntity {
     scanned = data['scanned'];
     date = DateTime.tryParse(data['date'] ?? "")?.toLocal();
     index = data['index'];
-    teeth = ((data['teeth']??[]) as List<dynamic>).map((e) => e as int).toList();
+    teeth = ((data['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
     single = data['single'];
     bridge = data['bridge'];
-    fullArchUpper = data['fullArchUpper'];
-    fullArchLower = data['fullArchLower'];
+    fullArchUpper = data['fullArchUpper'] ?? false;
+    fullArchLower = data['fullArchLower'] ?? false;
     tryInCheckListId = data['tryInCheckListId'];
+    cementRetained = data['cementRetained'] ?? false;
+    screwRetained = data['screwRetained'] ?? false;
 
     if (data['diagnosticItemId'] != null) {
       itemId = data['diagnosticItemId'];
@@ -122,6 +128,8 @@ class ProstheticStepModel extends ProstheticStepEntity {
     data['diagnosticNextVisitItemId'] = nextVisitId;
     data['finalNextVisitItemId'] = nextVisitId;
     data['tryInCheckListId'] = tryInCheckListId;
+    data['screwRetained'] = screwRetained;
+    data['cementRetained'] = cementRetained;
 
     return data;
   }

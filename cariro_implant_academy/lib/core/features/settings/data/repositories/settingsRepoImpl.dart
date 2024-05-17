@@ -10,6 +10,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:dartz/dartz.dart';
 
@@ -22,7 +23,6 @@ class SettingsRepoImpl implements SettingsRepository {
   final SettingsDatasource settingsDatasource;
 
   SettingsRepoImpl({required this.settingsDatasource});
-
 
   @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getImplantCompanies() async {
@@ -145,9 +145,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers(Website website,bool medical) async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers(Website website, bool medical) async {
     try {
-      final result = await settingsDatasource.getSuppliers(website,medical);
+      final result = await settingsDatasource.getSuppliers(website, medical);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -245,9 +245,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical) async {
+  Future<Either<Failure, NoParams>> addSuppliers(List<BasicNameIdObjectEntity> model, bool medical) async {
     try {
-      final result = await settingsDatasource.addSuppliers(model,medical);
+      final result = await settingsDatasource.addSuppliers(model, medical);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -294,7 +294,7 @@ class SettingsRepoImpl implements SettingsRepository {
     }
   }
 
-@override
+  @override
   Future<Either<Failure, NoParams>> editTreatmentPrices(List<TreatmentItemEntity> prices) async {
     try {
       final result = await settingsDatasource.editTreatmentPrices(prices);
@@ -305,7 +305,7 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getStockCategories(Website website)async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getStockCategories(Website website) async {
     try {
       final result = await settingsDatasource.getStockCategories(website);
       return Right(result);
@@ -314,10 +314,10 @@ class SettingsRepoImpl implements SettingsRepository {
     }
   }
 
-@override
+  @override
   Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category) async {
     try {
-      final result = await settingsDatasource.getTeethTreatmentPrices(teeth,category);
+      final result = await settingsDatasource.getTeethTreatmentPrices(teeth, category);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -375,9 +375,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updateLabItems(int shadeId, List<LabItemEntity> data)async {
+  Future<Either<Failure, NoParams>> updateLabItems(int shadeId, List<LabItemEntity> data) async {
     try {
-      final result = await settingsDatasource.updateLabItems(shadeId,data);
+      final result = await settingsDatasource.updateLabItems(shadeId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -387,7 +387,7 @@ class SettingsRepoImpl implements SettingsRepository {
   @override
   Future<Either<Failure, NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data) async {
     try {
-      final result = await settingsDatasource.updateLabItemsCompanies(parentItemId,data);
+      final result = await settingsDatasource.updateLabItemsCompanies(parentItemId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -397,7 +397,7 @@ class SettingsRepoImpl implements SettingsRepository {
   @override
   Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data) async {
     try {
-      final result = await settingsDatasource.updateLabItemsShades(companyId,data);
+      final result = await settingsDatasource.updateLabItemsShades(companyId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -407,16 +407,40 @@ class SettingsRepoImpl implements SettingsRepository {
   @override
   Future<Either<Failure, NoParams>> updateLabItemsParentsPrice(int parentItemId, int price) async {
     try {
-      final result = await settingsDatasource.updateLabItemsParentsPrice(parentItemId,price);
+      final result = await settingsDatasource.updateLabItemsParentsPrice(parentItemId, price);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-  
 
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticItems(EnumProstheticType type) async {
+    try {
+      final result = await settingsDatasource.getProsthticItems(type);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticNextVisit(EnumProstheticType type, int itemId) async {
+    try {
+      final result = await settingsDatasource.getProsthticNextVisit(type, itemId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 
-
-
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticStatus(EnumProstheticType type, int itemId) async {
+    try {
+      final result = await settingsDatasource.getProsthticStatus(type, itemId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

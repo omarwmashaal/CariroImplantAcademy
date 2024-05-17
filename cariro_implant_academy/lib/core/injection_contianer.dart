@@ -59,6 +59,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembranesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getNonMedicalNonStockExpensesCategories.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
@@ -365,6 +368,9 @@ initInjection() async {
    */
   //bloc
   sl.registerFactory(() => SettingsBloc(
+        getProstheticItemsUseCase: sl(),
+        getProstheticNextVisitUseCase: sl(),
+        getProstheticStatusUseCase: sl(),
         getImplantCompaniesUseCase: sl(),
         getImplantLinesUseCase: sl(),
         getImplantSizesUseCase: sl(),
@@ -408,6 +414,9 @@ initInjection() async {
         updateLabItemsParentsPriceUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => GetProstheticItemsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticStatusUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticNextVisitUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateTeethClinicPricesUseCase(settingsRepository: sl()));

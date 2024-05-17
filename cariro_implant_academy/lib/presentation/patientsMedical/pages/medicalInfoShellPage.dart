@@ -116,28 +116,30 @@ class _MedicalInfoShellPageState extends State<MedicalInfoShellPage> {
                               child: BlocBuilder<MedicalInfoShellBloc, MedicalInfoShellBloc_State>(
                                 buildWhen: (previous, current) => current is MedicalInfoBlocChangeDateState,
                                 builder: (context, state) {
-                                  if (state is MedicalInfoBlocChangeDateState && state.dontChange!=true) state.data.date = state.date;
-                                  return MouseRegion(
-                                    cursor: SystemMouseCursors.click,
-                                    child: CIA_GestureWidget(
-                                      child: Text(
-                                        "Date: " +
-                                            (state is MedicalInfoBlocChangeDateState
-                                                ? state.date == null
-                                                    ? ""
-                                                    : DateFormat("dd-MM-yyyy").format(state.date!)
-                                                : "") +
-                                            (siteController.getRole()!.contains("admin") ? " Click To Edit" : " Only Admin can edit"),
-                                        style: TextStyle(),
-                                      ),
-                                      onTap: () => (!siteController.getRole()!.contains("admin"))
-                                          ? null
-                                          : CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (date) {
-                                              medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
-                                                  date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null));
-                                            }),
-                                    ),
-                                  );
+                                  // if (state is MedicalInfoBlocChangeDateState && state.dontChange != true) state.data.date = state.date;
+                                  // if (state is MedicalInfoBlocChangeDateState && state.dontChange != true)
+                                  //   return MouseRegion(
+                                  //     cursor: SystemMouseCursors.click,
+                                  //     child: CIA_GestureWidget(
+                                  //       child: Text(
+                                  //         "Date: " +
+                                  //             (state is MedicalInfoBlocChangeDateState
+                                  //                 ? state.date == null
+                                  //                     ? ""
+                                  //                     : DateFormat("dd-MM-yyyy").format(state.date!)
+                                  //                 : "") +
+                                  //             (siteController.getRole()!.contains("admin") ? " Click To Edit" : " Only Admin can edit"),
+                                  //         style: TextStyle(),
+                                  //       ),
+                                  //       onTap: () => (!siteController.getRole()!.contains("admin"))
+                                  //           ? null
+                                  //           : CIA_PopupDialog_DateOnlyPicker(context, "Pick Date", (date) {
+                                  //               medicalShellBloc.emit(MedicalInfoBlocChangeDateState(
+                                  //                   date: date, data: state is MedicalInfoBlocChangeDateState ? state.data : null));
+                                  //             }),
+                                  //     ),
+                                  //   );
+                                  return Container();
                                 },
                               ),
                             );

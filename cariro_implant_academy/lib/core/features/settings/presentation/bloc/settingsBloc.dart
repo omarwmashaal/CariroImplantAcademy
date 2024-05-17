@@ -4,6 +4,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
@@ -47,6 +50,9 @@ import '../../domain/useCases/getSuppliersUseCase.dart';
 import '../../domain/useCases/getTacsUseCase.dart';
 
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
+  final GetProstheticItemsUseCase getProstheticItemsUseCase;
+  final GetProstheticStatusUseCase getProstheticStatusUseCase;
+  final GetProstheticNextVisitUseCase getProstheticNextVisitUseCase;
   final GetImplantCompaniesUseCase getImplantCompaniesUseCase;
   final GetImplantLinesUseCase getImplantLinesUseCase;
   final GetImplantSizesUseCase getImplantSizesUseCase;
@@ -90,6 +96,9 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateLabItemsParentsPriceUseCase updateLabItemsParentsPriceUseCase;
 
   SettingsBloc({
+    required this.getProstheticStatusUseCase,
+    required this.getProstheticNextVisitUseCase,
+    required this.getProstheticItemsUseCase,
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
     required this.getImplantSizesUseCase,
@@ -488,6 +497,33 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState()),
+      );
+    });
+
+    on<SettingsBloc_GetProstheticItemsEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticItemsState());
+      final result = await getProstheticItemsUseCase(event.type);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(data: r)),
+      );
+    });
+
+    on<SettingsBloc_GetProstheticStatusEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticStatusState());
+      final result = await getProstheticStatusUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticStatusErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticStatusSuccessfullyState(data: r)),
+      );
+    });
+
+    on<SettingsBloc_GetProstheticNextVisitEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticNextVisitState());
+      final result = await getProstheticNextVisitUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticNextVisitErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticNextVisitSuccessfullyState(data: r)),
       );
     });
   }
