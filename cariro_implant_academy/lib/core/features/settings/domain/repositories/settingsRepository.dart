@@ -62,4 +62,7 @@ abstract class SettingsRepository {
   Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateLabItemsParentsPrice(int parentItemId, int price);
+  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }

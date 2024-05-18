@@ -10,6 +10,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
@@ -94,6 +97,9 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateLabItemsShadesUseCase updateLabItemsShadesUseCase;
   final UpdateLabItemsUseCase updateLabItemsUseCase;
   final UpdateLabItemsParentsPriceUseCase updateLabItemsParentsPriceUseCase;
+  final UpdateProstheticItemsUseCase updateProstheticItemsUseCase;
+  final UpdateProstheticStatusUseCase updateProstheticStatusUseCase;
+  final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
 
   SettingsBloc({
     required this.getProstheticStatusUseCase,
@@ -140,6 +146,9 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabItemsCompaniesUseCase,
     required this.updateLabItemsShadesUseCase,
     required this.updateLabItemsParentsPriceUseCase,
+    required this.updateProstheticItemsUseCase,
+    required this.updateProstheticNextVisitUseCase,
+    required this.updateProstheticStatusUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
@@ -505,7 +514,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final result = await getProstheticItemsUseCase(event.type);
       result.fold(
         (l) => emit(SettingsBloc_LoadingProstheticItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(data: r)),
+        (r) => emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(data: r,type: event.type)),
       );
     });
 
@@ -526,5 +535,33 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         (r) => emit(SettingsBloc_LoadedProstheticNextVisitSuccessfullyState(data: r)),
       );
     });
+
+    on<SettingsBloc_UpdateProstheticItemsEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticItemsState());
+      final result = await updateProstheticItemsUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+      );
+    });
+
+    on<SettingsBloc_UpdateProstheticNextEventEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticItemsState());
+      final result = await updateProstheticNextVisitUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+      );
+    });
+
+    on<SettingsBloc_UpdateProstheticStatusEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticItemsState());
+      final result = await updateProstheticStatusUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+      );
+    });
+
   }
 }

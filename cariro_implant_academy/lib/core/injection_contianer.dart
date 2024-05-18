@@ -66,6 +66,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
@@ -412,8 +415,14 @@ initInjection() async {
         updateLabItemsShadesUseCase: sl(),
         updateLabItemsUseCase: sl(),
         updateLabItemsParentsPriceUseCase: sl(),
+        updateProstheticItemsUseCase: sl(),
+        updateProstheticNextVisitUseCase: sl(),
+        updateProstheticStatusUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticNextVisitUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticNextVisitUseCase(settingsRepository: sl()));

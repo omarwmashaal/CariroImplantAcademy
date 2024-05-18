@@ -443,4 +443,34 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateProstheticItems(type,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateProstheticNextVisit(type, itemId,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateProstheticStatus(type, itemId,data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

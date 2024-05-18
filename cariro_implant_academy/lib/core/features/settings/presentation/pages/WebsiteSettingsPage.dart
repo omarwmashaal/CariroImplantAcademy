@@ -19,6 +19,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
@@ -26,12 +28,14 @@ import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.d
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/treatmentWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:sidebarx/sidebarx.dart';
@@ -48,6 +52,8 @@ import '../bloc/settingsBloc_States.dart';
 import '../widgets/clinicPriceSettingsWidget.dart';
 import 'ClinicPriceSettingsPage.dart';
 import 'UserSettingsPage.dart';
+
+import 'package:collection/collection.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -182,6 +188,14 @@ class _SettingsPageState extends State<SettingsPage> {
               currentIndex = 9;
             },
             iconWidget: Container()),
+        SidebarXItem(
+            label: "Prosthetic Treatment",
+            onTap: () {
+              bloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Diagnostic));
+
+              currentIndex = 10;
+            },
+            iconWidget: Container()),
       ]);
     }
 
@@ -266,7 +280,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   current is SettingsBloc_LoadingRoomsState ||
                   current is SettingsBloc_LoadedTreatmentPricesSuccessfullyState ||
                   current is SettingsBloc_LoadingTreatmentPricesErrorState ||
-                  current is SettingsBloc_LoadingTreatmentPricesState,
+                  current is SettingsBloc_LoadingTreatmentPricesState ||
+                  current is SettingsBloc_LoadingProstheticItemsErrorState ||
+                  current is SettingsBloc_LoadingProstheticItemsState ||
+                  current is SettingsBloc_LoadedProstheticItemsSuccessfullyState,
               builder: (context, state) {
                 if (state is SettingsBloc_LoadedImplantCompaniesSuccessfullyState ||
                     state is SettingsBloc_LoadingImplantCompaniesState ||
@@ -1284,7 +1301,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                               isNumber: true,
                                               controller: TextEditingController(text: e.name?.toString() ?? ""),
                                               onChange: (value) {
-                                                e.name =value;
+                                                e.name = value;
                                               },
                                             ),
                                           ),
@@ -1359,6 +1376,212 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   );
+                } else if (state is SettingsBloc_LoadingProstheticItemsErrorState ||
+                    state is SettingsBloc_LoadingProstheticItemsState ||
+                    state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) {
+                  if (state is SettingsBloc_LoadingProstheticItemsErrorState)
+                    return BigErrorPageWidget(message: state.message);
+                  else if (state is SettingsBloc_LoadingProstheticItemsState)
+                    return LoadingWidget();
+                  else if (state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) {
+                    var prosItems = state.data;
+                    prosItems = [...prosItems, BasicNameIdObjectEntity()];
+                    var type = state.type;
+                    var expansionControllersstatus = prosItems.map((e) => ExpansionTileController()).toList();
+                    var expansionControllersNext = prosItems.map((e) => ExpansionTileController()).toList();
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            type == EnumProstheticType.Diagnostic
+                                ? CIA_PrimaryButton(label: "Diagnostic", isLong: true, onTab: () => null)
+                                : CIA_SecondaryButton(
+                                    label: "Diagnostic",
+                                    onTab: () => bloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Diagnostic))),
+                            SizedBox(width: 10),
+                            type == EnumProstheticType.Final
+                                ? CIA_PrimaryButton(label: "Final", isLong: true, onTab: () => null)
+                                : CIA_SecondaryButton(
+                                    label: "Final", onTab: () => bloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Final))),
+                            SizedBox(width: 10),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: ListView(
+                            children: prosItems
+                                .mapIndexed((i, e) => Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CIA_TextFormField(
+                                            label: "${i + 1}. Name",
+                                            controller: TextEditingController(text: e.name),
+                                            onChange: (value) => e.name = value,
+                                          ),
+                                        ),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: ExpansionTile(
+                                                title: Title(
+                                                  title: "Expan",
+                                                  color: Colors.red,
+                                                  child: Text("Status"),
+                                                ),
+                                                controller: expansionControllersstatus[i],
+                                                onExpansionChanged: (value) {
+                                                  if (value == true)
+                                                    bloc.add(SettingsBloc_GetProstheticStatusEvent(
+                                                        params: GetProstheticStatusParams(
+                                                      itemId: e.id!,
+                                                      type: type,
+                                                    )));
+                                                  for (int j = 0; j < expansionControllersstatus.length; j++) {
+                                                    if (j != i) expansionControllersstatus[j].collapse();
+                                                  }
+                                                  for (int j = 0; j < expansionControllersNext.length; j++) {
+                                                    if (j != i) expansionControllersNext[j].collapse();
+                                                  }
+                                                },
+                                                children: [
+                                                  BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                                    buildWhen: (previous, current) =>
+                                                        current is SettingsBloc_LoadingProstheticStatusErrorState ||
+                                                        current is SettingsBloc_LoadingProstheticStatusState ||
+                                                        current is SettingsBloc_LoadedProstheticStatusSuccessfullyState,
+                                                    builder: (context, state) {
+                                                      if (state is SettingsBloc_LoadingProstheticStatusErrorState)
+                                                        return BigErrorPageWidget(message: state.message);
+                                                      if (state is SettingsBloc_LoadingProstheticStatusState) return LoadingWidget();
+                                                      if (state is SettingsBloc_LoadedProstheticStatusSuccessfullyState) {
+                                                        var status = state.data;
+                                                        status = [...status, BasicNameIdObjectEntity()];
+                                                        return Column(children: [
+                                                          ...status
+                                                              .map((e) => Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: CIA_TextFormField(
+                                                                            label: "Name",
+                                                                            controller: TextEditingController(text: e.name),
+                                                                            onChange: (value) => e.name = value,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(width: 10),
+                                                                      IconButton(
+                                                                        onPressed: () {
+                                                                          status = [
+                                                                            ...status,
+                                                                            BasicNameIdObjectEntity(),
+                                                                          ];
+                                                                          bloc.emit(
+                                                                              SettingsBloc_LoadedProstheticStatusSuccessfullyState(data: status));
+                                                                        },
+                                                                        icon: Icon(Icons.add),
+                                                                      )
+                                                                    ],
+                                                                  ))
+                                                              .toList(),
+                                                          CIA_PrimaryButton(label: "Save", onTab: () => null)
+                                                        ]);
+                                                      }
+                                                      return Container();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: ExpansionTile(
+                                                title: Title(
+                                                  title: "Expan",
+                                                  color: Colors.red,
+                                                  child: Text("Next Visit"),
+                                                ),
+                                                controller: expansionControllersNext[i],
+                                                onExpansionChanged: (value) {
+                                                  if (value == true)
+                                                    bloc.add(SettingsBloc_GetProstheticNextVisitEvent(
+                                                        params: GetProstheticNextVisitParams(
+                                                      itemId: e.id!,
+                                                      type: type,
+                                                    )));
+                                                  for (int j = 0; j < expansionControllersstatus.length; j++) {
+                                                    if (j != i) expansionControllersstatus[j].collapse();
+                                                  }
+                                                  for (int j = 0; j < expansionControllersNext.length; j++) {
+                                                    if (j != i) expansionControllersNext[j].collapse();
+                                                  }
+                                                },
+                                                children: [
+                                                  BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                                    buildWhen: (previous, current) =>
+                                                        current is SettingsBloc_LoadingProstheticNextVisitErrorState ||
+                                                        current is SettingsBloc_LoadingProstheticNextVisitState ||
+                                                        current is SettingsBloc_LoadedProstheticNextVisitSuccessfullyState,
+                                                    builder: (context, state) {
+                                                      if (state is SettingsBloc_LoadingProstheticNextVisitErrorState)
+                                                        return BigErrorPageWidget(message: state.message);
+                                                      if (state is SettingsBloc_LoadingProstheticNextVisitState) return LoadingWidget();
+                                                      if (state is SettingsBloc_LoadedProstheticNextVisitSuccessfullyState) {
+                                                        var nextVisit = state.data;
+                                                        nextVisit = [...nextVisit, BasicNameIdObjectEntity()];
+                                                        return Column(children: [
+                                                          ...nextVisit
+                                                              .map((e) => Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: CIA_TextFormField(
+                                                                            label: "Name",
+                                                                            controller: TextEditingController(text: e.name),
+                                                                            onChange: (value) => e.name = value,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(width: 10),
+                                                                      IconButton(
+                                                                        onPressed: () {
+                                                                          nextVisit = [
+                                                                            ...nextVisit,
+                                                                            BasicNameIdObjectEntity(),
+                                                                          ];
+                                                                          bloc.emit(SettingsBloc_LoadedProstheticNextVisitSuccessfullyState(
+                                                                              data: nextVisit));
+                                                                        },
+                                                                        icon: Icon(Icons.add),
+                                                                      )
+                                                                    ],
+                                                                  ))
+                                                              .toList(),
+                                                          CIA_PrimaryButton(label: "Save", onTab: () => null)
+                                                        ]);
+                                                      }
+                                                      return Container();
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider()
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                 }
 
                 return Container();

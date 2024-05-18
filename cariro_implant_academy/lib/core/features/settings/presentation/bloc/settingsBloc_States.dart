@@ -4,6 +4,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/im
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -810,59 +811,111 @@ class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState exte
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadingProstheticItemsState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadingProstheticItemsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadingProstheticItemsErrorState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadingProstheticItemsErrorState extends SettingsBloc_States {
   final String message;
   SettingsBloc_LoadingProstheticItemsErrorState({required this.message});
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadedProstheticItemsSuccessfullyState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadedProstheticItemsSuccessfullyState extends SettingsBloc_States {
   final List<BasicNameIdObjectEntity> data;
-  SettingsBloc_LoadedProstheticItemsSuccessfullyState({required this.data});
+  final EnumProstheticType type;
+  SettingsBloc_LoadedProstheticItemsSuccessfullyState({required this.data, required this.type});
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_LoadingProstheticStatusState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadingProstheticStatusState extends SettingsBlocSuccessState {
-  @override
-  List<Object?> get props => [];
-}
-
-class SettingsBloc_LoadingProstheticStatusErrorState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadingProstheticStatusErrorState extends SettingsBloc_States {
   final String message;
   SettingsBloc_LoadingProstheticStatusErrorState({required this.message});
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadedProstheticStatusSuccessfullyState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadedProstheticStatusSuccessfullyState extends SettingsBloc_States {
   final List<BasicNameIdObjectEntity> data;
   SettingsBloc_LoadedProstheticStatusSuccessfullyState({required this.data});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class SettingsBloc_LoadingProstheticNextVisitState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadingProstheticNextVisitState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadingProstheticNextVisitErrorState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadingProstheticNextVisitErrorState extends SettingsBloc_States {
   final String message;
   SettingsBloc_LoadingProstheticNextVisitErrorState({required this.message});
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_LoadedProstheticNextVisitSuccessfullyState extends SettingsBlocSuccessState {
+class SettingsBloc_LoadedProstheticNextVisitSuccessfullyState extends SettingsBloc_States {
   final List<BasicNameIdObjectEntity> data;
   SettingsBloc_LoadedProstheticNextVisitSuccessfullyState({required this.data});
   @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_UpdatingProstheticItemsState extends SettingsBloc_States {
+  @override
   List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingProstheticItemsErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_UpdatingProstheticItemsErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatedProstheticItemsSuccessfullyState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_UpdatingProstheticNextVisitState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingProstheticNextVisitErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_UpdatingProstheticNextVisitErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_UpdatingProstheticStatusState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingProstheticStatusErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_UpdatingProstheticStatusErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatedProstheticStatusSuccessfullyState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }

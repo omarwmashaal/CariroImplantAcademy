@@ -6,6 +6,9 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
@@ -357,3 +360,25 @@ class SettingsBloc_GetProstheticNextVisitEvent extends SettingsBloc_Events {
   List<Object?> get props => [params];
 }
 
+class SettingsBloc_UpdateProstheticItemsEvent extends SettingsBloc_Events {
+  final UpdateProstheticItemsParams params;
+  SettingsBloc_UpdateProstheticItemsEvent({
+    required this.params,
+  });
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateProstheticStatusEvent extends SettingsBloc_Events {
+  final UpdateProstheticStatusParams params;
+  SettingsBloc_UpdateProstheticStatusEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateProstheticNextEventEvent extends SettingsBloc_Events {
+  final UpdateProstheticNextVisitParams params;
+  SettingsBloc_UpdateProstheticNextEventEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
