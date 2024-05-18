@@ -10,6 +10,8 @@ class UpdateProstheticNextVisitUseCase extends UseCases<NoParams, UpdateProsthet
   UpdateProstheticNextVisitUseCase({required this.settingsRepository});
   @override
   Future<Either<Failure, NoParams>> call(UpdateProstheticNextVisitParams params) async {
+    params.data.removeWhere((element) => element.id==null &&  (element.name?.isEmpty ?? true));
+  
     return await settingsRepository.updateProstheticNextVisit(params.type, params.itemId,params.data);
   }
 }

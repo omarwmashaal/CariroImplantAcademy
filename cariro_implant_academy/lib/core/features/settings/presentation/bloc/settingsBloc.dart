@@ -514,7 +514,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final result = await getProstheticItemsUseCase(event.type);
       result.fold(
         (l) => emit(SettingsBloc_LoadingProstheticItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(data: r,type: event.type)),
+        (r) => emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(data: r, type: event.type)),
       );
     });
 
@@ -541,27 +541,32 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final result = await updateProstheticItemsUseCase(event.params);
       result.fold(
         (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState(type: event.params.type)),
       );
     });
 
     on<SettingsBloc_UpdateProstheticNextEventEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingProstheticItemsState());
+      emit(SettingsBloc_UpdatingProstheticStatusState());
       final result = await updateProstheticNextVisitUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+        (l) => emit(SettingsBloc_UpdatingProstheticStatusErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticStatusSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
       );
     });
 
     on<SettingsBloc_UpdateProstheticStatusEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingProstheticItemsState());
+      emit(SettingsBloc_UpdatingProstheticNextVisitState());
       final result = await updateProstheticStatusUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingProstheticItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedProstheticItemsSuccessfullyState()),
+        (l) => emit(SettingsBloc_UpdatingProstheticNextVisitErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
       );
     });
-
   }
 }

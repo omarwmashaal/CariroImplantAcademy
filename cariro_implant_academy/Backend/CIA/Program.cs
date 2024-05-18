@@ -73,14 +73,14 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<CIA_dbContext>(
     options =>
     {
-        options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=CIA_Database;");
+        options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=CIA_Database;Include Error Detail=true;");
 
     }
     )
     ;
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<Hangfire_dbContext>(options =>
 {
-    options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=Hnagfire_Database;");
+    options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=Hnagfire_Database;Include Error Detail=true;");
 });
 
 builder.Services.AddCors(o => o.AddPolicy(

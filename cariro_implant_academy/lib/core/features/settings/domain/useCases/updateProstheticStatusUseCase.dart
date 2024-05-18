@@ -10,7 +10,8 @@ class UpdateProstheticStatusUseCase extends UseCases<NoParams, UpdateProstheticS
   UpdateProstheticStatusUseCase({required this.settingsRepository});
   @override
   Future<Either<Failure, NoParams>> call(UpdateProstheticStatusParams params) async {
-    return await settingsRepository.updateProstheticStatus(params.type, params.itemId,params.data);
+    params.data.removeWhere((element) => element.id == null && (element.name?.isEmpty ?? true));
+    return await settingsRepository.updateProstheticStatus(params.type, params.itemId, params.data);
   }
 }
 

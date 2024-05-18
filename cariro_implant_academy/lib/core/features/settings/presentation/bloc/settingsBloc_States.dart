@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
@@ -6,7 +8,6 @@ import 'package:cariro_implant_academy/features/labRequest/domain/entities/labIt
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
-import 'package:equatable/equatable.dart';
 
 import '../../../../../Models/ImplantModel.dart';
 import '../../../../../Models/TacCompanyModel.dart';
@@ -882,6 +883,10 @@ class SettingsBloc_UpdatingProstheticItemsErrorState extends SettingsBloc_States
 }
 
 class SettingsBloc_UpdatedProstheticItemsSuccessfullyState extends SettingsBloc_States {
+  final EnumProstheticType type;
+  SettingsBloc_UpdatedProstheticItemsSuccessfullyState({
+    required this.type,
+  });
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
@@ -899,6 +904,12 @@ class SettingsBloc_UpdatingProstheticNextVisitErrorState extends SettingsBloc_St
 }
 
 class SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState extends SettingsBloc_States {
+  final EnumProstheticType type;
+  final int itemId;
+  SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState({
+    required this.type,
+    required this.itemId,
+  });
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
@@ -916,6 +927,12 @@ class SettingsBloc_UpdatingProstheticStatusErrorState extends SettingsBloc_State
 }
 
 class SettingsBloc_UpdatedProstheticStatusSuccessfullyState extends SettingsBloc_States {
+  final EnumProstheticType type;
+  final int itemId;
+  SettingsBloc_UpdatedProstheticStatusSuccessfullyState({
+    required this.type,
+    required this.itemId,
+  });
   @override
   List<Object?> get props => [identityHashCode(this)];
 }

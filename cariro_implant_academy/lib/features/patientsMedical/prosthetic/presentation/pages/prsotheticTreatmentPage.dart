@@ -111,9 +111,12 @@ class _PatientProstheticTreatmentState extends State<ProstheticTreatmentPage> {
                 onTap: (value) {
                   if (value == 0) {
                     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentDiagnosticEvent(id: widget.patientId));
+                    settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Diagnostic));
                     currentPage = 0;
                   } else if (value == 1) {
                     bloc.add(ProstheticBloc_GetPatientProstheticTreatmentFinalProthesisSingleBridgeEvent(id: widget.patientId));
+                    settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: EnumProstheticType.Final));
+
                     currentPage = 1;
                   }
                   saveMethod();

@@ -108,7 +108,7 @@ abstract class SettingsDatasource {
   Future<List<BasicNameIdObjectEntity>> getProsthticItems(EnumProstheticType type);
   Future<List<BasicNameIdObjectEntity>> getProsthticNextVisit(EnumProstheticType type, int itemId);
   Future<List<BasicNameIdObjectEntity>> getProsthticStatus(EnumProstheticType type, int itemId);
-  Future<NoParams> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data);
   Future<NoParams> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<NoParams> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }
@@ -761,10 +761,10 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<NoParams> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data) async {
+  Future<NoParams> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.put(
+      response = await httpRepo.post(
         host: "$serverHost/$settingsController/UpdateProstheticItems?type=${type.index}",
         body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
@@ -779,7 +779,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   Future<NoParams> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.put(
+      response = await httpRepo.post(
         host: "$serverHost/$settingsController/UpdateProstheticNextVisit?itemId=$itemId&type=${type.index}",
         body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
@@ -794,7 +794,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   Future<NoParams> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.put(
+      response = await httpRepo.post(
         host: "$serverHost/$settingsController/UpdateProstheticStatus?itemId=$itemId&type=${type.index}",
         body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );

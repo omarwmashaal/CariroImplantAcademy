@@ -6,12 +6,13 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:dartz/dartz.dart';
 
-class UpdateProstheticItemsUseCase extends UseCases<NoParams,UpdateProstheticItemsParams> {
+class UpdateProstheticItemsUseCase extends UseCases<NoParams, UpdateProstheticItemsParams> {
   final SettingsRepository settingsRepository;
   UpdateProstheticItemsUseCase({required this.settingsRepository});
   @override
   Future<Either<Failure, NoParams>> call(UpdateProstheticItemsParams data) async {
-    return await settingsRepository.updateProstheticItems(data.type,data.data);
+    data.data.removeWhere((element) => element.id==null &&  (element.name?.isEmpty ?? true));
+    return await settingsRepository.updateProstheticItems(data.type, data.data);
   }
 }
 
