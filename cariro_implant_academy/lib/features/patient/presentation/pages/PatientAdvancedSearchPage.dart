@@ -64,7 +64,7 @@ class PatientAdvancedSearchPage extends StatefulWidget {
 
 class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with TickerProviderStateMixin {
   AdvancedPatientSearchDataGridSource dataSource_patients = AdvancedPatientSearchDataGridSource();
-  AdvancedTreatmentSearchDataGridSource dataSource_treatments = AdvancedTreatmentSearchDataGridSource();
+  late AdvancedTreatmentSearchDataGridSource dataSource_treatments;
   AdvancedProstheticSearchDataGridSource dataSource_prosthetic = AdvancedProstheticSearchDataGridSource();
   AdvancedPatientSearchEntity searchDTO = AdvancedPatientSearchEntity();
   AdvancedTreatmentSearchEntity searchTreatmentsDTO = AdvancedTreatmentSearchEntity(done: false);
@@ -77,6 +77,13 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
 
   @override
   void initState() {
+    dataSource_treatments = AdvancedTreatmentSearchDataGridSource(goToPatient: (id) {
+      if (searchTreatmentsDTO.done == true) {
+        context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {"id": id.toString()});
+      } else {
+        context.goNamed(TreatmentPage.getRouteName(), pathParameters: {"id": id.toString()});
+      }
+    });
     bloc = sl<AdvancedSearchBloc>();
     treatmentBloc = BlocProvider.of<TreatmentBloc>(context);
     treatmentBloc.add(TreatmentBloc_GetTreatmentItemsEvent());
@@ -316,22 +323,23 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                     headerHeight: 60,
                                     headerStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                                     dataSource: dataSource_treatments,
-                                    //allowGroupingCollapse: true,
+                                    allowGroupingCollapse: true,
                                     onCellClick: (value) {
                                       // setState(() {
                                       //selectedPatientID = dataSource.models[value - 1].id!;
 
                                       //});
                                       //internalPagesController.jumpToPage(1);
-                                      if (searchTreatmentsDTO.done == true) {
-                                        context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {
-                                          "id": dataSource_treatments.models.firstWhere((element) => element.secondaryId == value).id.toString()
-                                        });
-                                      } else {
-                                        context.goNamed(TreatmentPage.getRouteName(), pathParameters: {
-                                          "id": dataSource_treatments.models.firstWhere((element) => element.secondaryId == value).id.toString()
-                                        });
-                                      }
+                                      // if (searchTreatmentsDTO.done == true) {
+                                      //   context.goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {
+                                      //     "id": dataSource_treatments.models.firstWhere((element) => element.secondaryId == value).id.toString()
+                                      //   });
+                                      // } else {
+                                      //   context.goNamed(TreatmentPage.getRouteName(), pathParameters: {
+                                      //     "id": dataSource_treatments.models.firstWhere((element) => element.secondaryId == value).id.toString()
+                                      //   });
+                                      // }
+                                      print(value);
                                     },
                                   ),
                                 ),
@@ -341,8 +349,8 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                                   child: Row(
                                     children: [
                                       const Expanded(child: SizedBox()),
-                                      FormTextKeyWidget(text: "Total: "),
-                                      FormTextValueWidget(text: dataSource_treatments.models.length.toString()),
+                                      FormTextKeyWidget(text: "Total Patients: "),
+                                      FormTextValueWidget(text: dataSource_treatments.models.map((e) => e.id).toSet().length.toString()),
                                     ],
                                   ),
                                 ),

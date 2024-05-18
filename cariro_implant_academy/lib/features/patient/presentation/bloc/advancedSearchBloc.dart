@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachRequestModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachResponseModel.dart';
@@ -230,16 +231,16 @@ class AdvancedPatientSearchDataGridSource extends DataGridSource {
 class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
   List<AdvancedTreatmentSearchEntity> models = <AdvancedTreatmentSearchEntity>[];
   AdvancedTreatmentSearchEntity query = AdvancedTreatmentSearchEntity();
+  Function(int id) goToPatient;
 
   /// Creates the income data source class with required details.
-  AdvancedTreatmentSearchDataGridSource() {
-    // addColumnGroup(
-    //   ColumnGroup(
-    //     name: "Patient Name",
-    //     sortGroupRows: true,
-
-    //   ),
-    // );
+  AdvancedTreatmentSearchDataGridSource({required this.goToPatient}) {
+    addColumnGroup(
+      ColumnGroup(
+        name: "Patient Name",
+        sortGroupRows: true,
+      ),
+    );
   }
 
   init({AdvancedTreatmentSearchEntity? search}) {
@@ -272,6 +273,13 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
               List<DataGridCell> r = [];
 
               r.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
+              r.add(DataGridCell<Widget>(
+                  columnName: "Go to patient",
+                  value: CIA_SecondaryButton(
+                    label: "Go",
+                    onTab: () => goToPatient(e.id!),
+                  )));
+
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
               if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
@@ -297,24 +305,26 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        child: Text(
-          e.value
-              .toString()
-              .replaceAll("Done tooth: ", "")
-              .replaceAll("Planned tooth: ", "")
-              .replaceAll("Failed tooth: ", "")
-              .replaceAll("None", "-"),
-          style: TextStyle(
-              color: (e.value is String)
-                  ? ((e.value as String).contains("Planned")
-                      ? Colors.orange
-                      : (e.value as String).contains("Done")
-                          ? Colors.green
-                          : (e.value as String).contains("Failed")
-                              ? Colors.red
-                              : Colors.black)
-                  : Colors.black),
-        ),
+        child: e.value is Widget
+            ? e.value
+            : Text(
+                e.value
+                    .toString()
+                    .replaceAll("Done tooth: ", "")
+                    .replaceAll("Planned tooth: ", "")
+                    .replaceAll("Failed tooth: ", "")
+                    .replaceAll("None", "-"),
+                style: TextStyle(
+                    color: (e.value is String)
+                        ? ((e.value as String).contains("Planned")
+                            ? Colors.orange
+                            : (e.value as String).contains("Done")
+                                ? Colors.green
+                                : (e.value as String).contains("Failed")
+                                    ? Colors.red
+                                    : Colors.black)
+                        : Colors.black),
+              ),
       );
     }).toList());
   }
@@ -331,10 +341,10 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
     return [];
   }
 
-  // @override
-  // Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
-  //   return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
-  // }
+  @override
+  Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
+    return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
+  }
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {

@@ -941,7 +941,7 @@ namespace CIA.Controllers
 
             var receipt =
 
-               
+
                      _cia_DbContext
                 .Receipts
                 .Where(x => x.Website == _site)
@@ -965,11 +965,11 @@ namespace CIA.Controllers
         {
             var receipts =
 
-                await 
+                await
                      _cia_DbContext
                 .Receipts
-                .Include(x=>x.Patient)
-                .Include(x=>x.Operator)
+                .Include(x => x.Patient)
+                .Include(x => x.Operator)
                 .Where(x => x.Website == _site && x.PatientId == id).AsNoTracking()
 
                 .OrderByDescending(x => x.Date)
@@ -991,8 +991,8 @@ namespace CIA.Controllers
                 await _cia_DbContext
                 .Receipts
                 .Where(x => x.Website == _site)
-                .Include(x=>x.Patient)
-                .Include(x=>x.Operator)
+                .Include(x => x.Patient)
+                .Include(x => x.Operator)
                 .OrderByDescending(x => x.Date).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -1435,7 +1435,7 @@ namespace CIA.Controllers
                 }
                 foreach (var and_treatmentId in model.And_TreatmentIds)
                 {
-                    query = query.Where(x => x.TreatmentItemId == and_treatmentId && x.Status == true);
+                    tempQueries.Add(query.Where(x => x.TreatmentItemId == and_treatmentId && x.Status == true));
                 }
                 foreach (var or_treatmentId in model.Or_TreatmentIds)
                 {
@@ -1466,6 +1466,25 @@ namespace CIA.Controllers
                 TreatmentId = (int)x.TreatmentItemId,
                 TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}"
             }).ToListAsync();
+
+            if (!model.And_TreatmentIds.IsNullOrEmpty())
+            {
+                List<int> patientsToBeRemoved = new List<int>();
+                var patientIds = finalResult.Select(x => x.SecondaryId).ToList();
+                foreach (var patientId in patientIds)
+                {
+                    var patientResults = finalResult.Where(x => x.SecondaryId == patientId).ToList();
+                    foreach (var and in model.And_TreatmentIds)
+                    {
+                        if (!patientResults.Any(x => x.TreatmentId == and))
+                        {
+                            finalResult.RemoveAll(x => x.SecondaryId == patientId);
+                            break;
+                        }
+
+                    }
+                }
+            }
 
             if (model.ImplantFailed != null)
             {
