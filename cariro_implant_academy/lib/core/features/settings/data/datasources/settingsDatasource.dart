@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/clinicPricesModel.dart';
 import 'package:cariro_implant_academy/features/patient/data/models/roomModel.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentItemModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 
@@ -27,7 +28,6 @@ import '../models/membraneModel.dart';
 import '../models/tacCompanyModel.dart';
 
 abstract class SettingsDatasource {
-
   Future<List<TacCompanyModel>> getTacs();
 
   Future<List<MembraneCompanyModel>> getMembraneCompanies();
@@ -54,7 +54,7 @@ abstract class SettingsDatasource {
 
   Future<List<BasicNameIdObjectModel>> getStockCategories(Website website);
 
-  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website,bool medical);
+  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website, bool medical);
 
   Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
 
@@ -76,7 +76,7 @@ abstract class SettingsDatasource {
 
   Future<NoParams> addIncomeCategories(List<BasicNameIdObjectEntity> model);
 
-  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical);
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model, bool medical);
 
   Future<NoParams> addStockCategories(List<BasicNameIdObjectEntity> model);
 
@@ -84,7 +84,7 @@ abstract class SettingsDatasource {
 
   Future<NoParams> editRooms(List<RoomEntity> model);
 
-Future<NoParams> editTreatmentPrices(List<TreatmentItemEntity> prices);
+  Future<NoParams> editTreatmentPrices(List<TreatmentItemEntity> prices);
 
   Future<List<ClinicPricesModel>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category);
 
@@ -104,6 +104,13 @@ Future<NoParams> editTreatmentPrices(List<TreatmentItemEntity> prices);
 
   Future<NoParams> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
   Future<NoParams> updateLabItemsParentsPrice(int parentItemId, int price);
+
+  Future<List<BasicNameIdObjectEntity>> getProsthticItems(EnumProstheticType type);
+  Future<List<BasicNameIdObjectEntity>> getProsthticNextVisit(EnumProstheticType type, int itemId);
+  Future<List<BasicNameIdObjectEntity>> getProsthticStatus(EnumProstheticType type, int itemId);
+  Future<NoParams> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }
 
 class SettingsDatasourceImpl implements SettingsDatasource {
@@ -111,7 +118,6 @@ class SettingsDatasourceImpl implements SettingsDatasource {
 
   SettingsDatasourceImpl({required this.httpRepo});
 
- 
   @override
   Future<List<BasicNameIdObjectModel>> getImplantCompanies() async {
     late StandardHttpResponse response;
@@ -305,7 +311,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website,bool medical) async {
+  Future<List<BasicNameIdObjectModel>> getSuppliers(Website website, bool medical) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$settingsController/getSuppliers?website=${website.index}&medical=$medical");
@@ -453,7 +459,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model,bool medical) async {
+  Future<NoParams> addSuppliers(List<BasicNameIdObjectEntity> model, bool medical) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.put(
@@ -527,7 +533,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/editTreatmentPrices",
-        body:prices.map((e) => TreatmentItemModel.fromEntity(e).toJson()).toList(),
+        body: prices.map((e) => TreatmentItemModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);
@@ -704,7 +710,6 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     try {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/UpdateLabItemParentsPrice?id=$parentItemId&price=$price",
-
       );
     } catch (e) {
       throw mapException(e);
@@ -713,5 +718,90 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     return NoParams();
   }
 
+  @override
+  Future<List<BasicNameIdObjectEntity>> getProsthticItems(EnumProstheticType type) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticItems?type=${type.index}",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
 
+  @override
+  Future<List<BasicNameIdObjectEntity>> getProsthticNextVisit(EnumProstheticType type, int itemId) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticNextVist?type=${type.index}&itemId=$itemId",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectEntity>> getProsthticStatus(EnumProstheticType type, int itemId) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticStatus?type=${type.index}&itemId=$itemId",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  @override
+  Future<NoParams> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$settingsController/UpdateProstheticItems?type=${type.index}",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$settingsController/UpdateProstheticNextVisit?itemId=$itemId&type=${type.index}",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$settingsController/UpdateProstheticStatus?itemId=$itemId&type=${type.index}",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
 }

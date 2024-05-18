@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,7 +20,7 @@ class ProstheticBloc_LoadingDataState extends ProstheticBloc_States {
 }
 
 class ProstheticBloc_DiagnosticDataLoadedSuccessfullyState extends ProstheticBloc_States {
-  final ProstheticTreatmentEntity data;
+  final List<ProstheticStepEntity> data;
 
   ProstheticBloc_DiagnosticDataLoadedSuccessfullyState({required this.data});
 
@@ -28,7 +29,7 @@ class ProstheticBloc_DiagnosticDataLoadedSuccessfullyState extends ProstheticBlo
 }
 
 class ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState extends ProstheticBloc_States {
-  final ProstheticTreatmentFinalEntity data;
+  final List<ProstheticStepEntity> data;
 
   ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState({required this.data});
 
@@ -37,7 +38,7 @@ class ProstheticBloc_SingleAndBridgeDataLoadedSuccessfullyState extends Prosthet
 }
 
 class ProstheticBloc_FullArchDataLoadedSuccessfullyState extends ProstheticBloc_States {
-  final ProstheticTreatmentFinalEntity data;
+  final List<ProstheticStepEntity> data;
 
   ProstheticBloc_FullArchDataLoadedSuccessfullyState({required this.data});
 

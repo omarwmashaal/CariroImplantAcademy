@@ -75,6 +75,11 @@ namespace CIA.Models
         Pros
     }
 
+    public enum EnumProstheticType
+    {
+        Diagnostic,
+        Final
+    }
     public enum EnumProstheticDiagnosticDiagnosticImpressionDiagnostic
     {
         Physical,
@@ -126,7 +131,7 @@ namespace CIA.Models
     {
         Try_in_abutment_scan_abutment,
         Try_in_PMMA,
-        Try_in_on_scan_abutment_PMMY,
+        Try_in_on_scan_abutment_PMMA,
         Physical_Impression_closed_tray
     }
     public enum EnumFinalProthesisDeliveryStatus

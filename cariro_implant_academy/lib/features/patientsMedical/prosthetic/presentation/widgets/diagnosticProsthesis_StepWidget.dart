@@ -1,52 +1,37 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
-import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
-import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/biteEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/diagnosticImpressionEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/scanApplianceEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/presentation/bloc/prostheticBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../Models/DTOs/DropDownDTO.dart';
 import '../../../../../Widgets/CIA_CheckBoxWidget.dart';
 import '../../../../../Widgets/CIA_DropDown.dart';
 import '../../../../../Widgets/CIA_PopUp.dart';
-import '../../../../../Widgets/CIA_TeethChart.dart';
 import '../../../../../Widgets/FormTextWidget.dart';
-import '../../../../../core/constants/enums/enums.dart';
 import '../../../../../core/presentation/widgets/CIA_GestureWidget.dart';
-import '../../domain/entities/finalProsthesisDeliveryEntity.dart';
-import '../../domain/entities/finalProsthesisHealingCollarEntity.dart';
-import '../../domain/entities/finalProsthesisImpressionEntity.dart';
-import '../../domain/entities/finalProsthesisTryInEntity.dart';
-import '../../domain/entities/prostheticFinalEntity.dart';
-import '../../domain/enums/enum.dart';
 
-class DiagnosticProsthesis_ScanApplianceWidget extends StatefulWidget {
-  DiagnosticProsthesis_ScanApplianceWidget({
+class DiagnosticProsthesis_StepWidget extends StatefulWidget {
+  DiagnosticProsthesis_StepWidget({
     Key? key,
     required this.data,
     required this.onDelete,
     required this.index,
   }) : super(key: key);
-  ScanApplianceEntity data;
+  ProstheticStepEntity data;
   Function() onDelete;
   int index;
 
   @override
-  State<DiagnosticProsthesis_ScanApplianceWidget> createState() => _DiagnosticProsthesis_ScanApplianceWidgetState();
+  State<DiagnosticProsthesis_StepWidget> createState() => _DiagnosticProsthesis_StepWidgetState();
 }
 
-class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticProsthesis_ScanApplianceWidget> {
+class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_StepWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,41 +39,63 @@ class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticPro
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: FormTextKeyWidget(text: "${widget.index}. Scan Appliance"),
+          child: FormTextKeyWidget(text: "${widget.index}. ${widget.data.item?.name}"),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Row(
             children: [
               Expanded(
-                child: CIA_DropDownSearch(
+                child: CIA_DropDownSearchBasicIdName(
                   label: "Diagnostic",
+                  asyncUseCase: sl<GetProstheticStatusUseCase>(),
+                  searchParams: GetProstheticStatusParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
                   selectedItem: () {
-                    if (widget.data.diagnostic != null) {
-                      return DropDownDTO(name: widget.data.diagnostic!.name.replaceAll("_", " "));
+                    if (widget.data.status != null) {
+                      return BasicNameIdObjectEntity(
+                        name: widget.data.status!.name,
+                        id: widget.data.statusId,
+                      );
                     }
                     return null;
                   }(),
                   onSelect: (value) {
+                    widget.data.status = value;
+                    widget.data.statusId = value.id;
                     widget.data.operatorId = siteController.getUserId();
-                    widget.data.diagnostic = EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
-                      widget.data.date =widget.data.date?? DateTime.now();
+                      widget.data.date = widget.data.date ?? DateTime.now();
                     });
                   },
-                  items: [
-                    DropDownDTO(name: "Done", id: 0),
-                    DropDownDTO(name: "Needs ReBite", id: 1),
-                    DropDownDTO(name: "Needs ReImpression", id: 2),
-                    DropDownDTO(name: "Needs ReDesign", id: 3),
-                  ],
                 ),
               ),
-              SizedBox(
-                width: 10,
+              SizedBox(width: 10),
+              Expanded(
+                child: CIA_DropDownSearchBasicIdName(
+                  label: "Next Step",
+                  asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
+                  searchParams: GetProstheticNextVisitParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
+                  selectedItem: () {
+                    if (widget.data.nextVisit != null) {
+                      return BasicNameIdObjectEntity(
+                        name: widget.data.nextVisit!.name,
+                        id: widget.data.nextVisitId,
+                      );
+                    }
+                    return null;
+                  }(),
+                  onSelect: (value) {
+                    widget.data.nextVisit = value;
+                    widget.data.nextVisitId = value.id;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
+                ),
               ),
-              Expanded(child: SizedBox()),
               SizedBox(width: 10),
               CIA_CheckBoxWidget(
                 text: "Needs Remake",
@@ -96,7 +103,7 @@ class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticPro
                   widget.data.operatorId = siteController.getUserId();
                   if (v) widget.data.scanned = false;
                   setState(() {});
-                  return widget.data.needsRemake = v;
+                  widget.data.needsRemake = v;
                 },
                 value: widget.data.needsRemake ?? false,
               ),
@@ -117,30 +124,29 @@ class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticPro
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: CIA_GestureWidget(
-                        onTap: () => CIA_ShowPopUp(
-                          context: context,
-                          height: 100,
-                          onSave: () => setState(() => null),
-                          child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
-                            asyncUseCase: sl<LoadUsersUseCase>(),
-                            searchParams: LoadUsersEnum.instructorsAndAssistants,
-                            onSelect: (value) {
-                              widget.data.operatorId = value.id;
-                              widget.data.operator = value;
-                            },
-                            //selectedItem: DropDownDTO(),
-                            selectedItem: widget.data.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
-                            label: "Operator",
-                          ),
-                        ),
-                        child: FormTextValueWidget(
-                          align: TextAlign.center,
-                          text: widget.data.operator!.name ?? "",
-                          secondaryInfo: true,
+                        child: CIA_GestureWidget(
+                      onTap: () => CIA_ShowPopUp(
+                        context: context,
+                        height: 100,
+                        onSave: () => setState(() => null),
+                        child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          asyncUseCase: sl<LoadUsersUseCase>(),
+                          searchParams: LoadUsersEnum.instructorsAndAssistants,
+                          onSelect: (value) {
+                            widget.data.operatorId = value.id;
+                            widget.data.operator = value;
+                          },
+                          //selectedItem: DropDownDTO(),
+                          selectedItem: widget.data.operator ?? BasicNameIdObjectEntity(name: "", id: 0),
+                          label: "Operator",
                         ),
                       ),
-                    ),
+                      child: FormTextValueWidget(
+                        align: TextAlign.center,
+                        text: widget.data.operator!.name ?? "",
+                        secondaryInfo: true,
+                      ),
+                    )),
                     SizedBox(width: 10),
                     Expanded(
                         child: CIA_GestureWidget(
@@ -169,7 +175,7 @@ class _DiagnosticProsthesis_ScanApplianceWidgetState extends State<DiagnosticPro
               IconButton(onPressed: () => widget.onDelete(), icon: Icon(Icons.delete)),
             ],
           ),
-        ),
+        )
       ],
     );
   }

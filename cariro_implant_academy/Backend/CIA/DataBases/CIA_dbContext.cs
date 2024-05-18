@@ -36,6 +36,7 @@ namespace CIA.DataBases
         public DbSet<TreatmentPlanModel> TreatmentPlans { get; set; }
         public DbSet<NonSurgicalTreatmentModel> NonSurgicalTreatment { get; set; }
         public DbSet<ProstheticTreatmentDiagnosticModel> ProstheticTreatments { get; set; }
+        public DbSet<TryInCheckListModel> TryInCheckLists { get; set; }
         public DbSet<ScanApplianceModel> ProstheticTreatments_ScanAppliance { get; set; }
         public DbSet<BiteModel> ProstheticTreatments_Bite { get; set; }
         public DbSet<DiagnosticImpressionModel> ProstheticTreatments_DiagnosticImpression { get; set; }
@@ -49,6 +50,15 @@ namespace CIA.DataBases
 
         public DbSet<FinalProsthesisParentModel> FinalProsthesisParents { get; set; }
         public DbSet<ProstheticTreatmentDiagnosticParentModel> DiagnosticProsthesisParents { get; set; }
+        
+        public DbSet<DiagnosticStepModel> DiagnosticSteps { get; set; }
+        public DbSet<DiagnosticItemModel> DiagnosticItems { get; set; }
+        public DbSet<DiagnosticStatusItemModel> DiagnosticStatusItems { get; set; }
+        public DbSet<DiagnosticNextVisitItemModel> DiagnosticNextVisitItems { get; set; }
+        public DbSet<FinalStepModel> FinalSteps { get; set; }
+        public DbSet<FinalItemModel> FinalItems { get; set; }
+        public DbSet<FinalStatusItemModel> FinalStatusItems { get; set; }
+        public DbSet<FinalNextVisitItemModel> FinalNextVisitItems { get; set; }
         public DbSet<StockItem> Stock { get; set; }
         public DbSet<StockLog> StockLogs { get; set; }
         public DbSet<CashFlowModel> CashFlow { get; set; }
@@ -478,6 +488,17 @@ namespace CIA.DataBases
               .HasOne<LabItem>(x => x.ConsumedLabItem)
               .WithMany()
               .HasPrincipalKey(x => x.Id)
+              .OnDelete(DeleteBehavior.Cascade);
+              
+            modelBuilder.Entity<DiagnosticStepModel>()
+              .HasOne<ApplicationUser>(x => x.Operator)
+              .WithMany()
+              .HasPrincipalKey(x => x.IdInt)
+              .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<FinalStepModel>()
+              .HasOne<ApplicationUser>(x => x.Operator)
+              .WithMany()
+              .HasPrincipalKey(x => x.IdInt)
               .OnDelete(DeleteBehavior.Cascade);
 
 
