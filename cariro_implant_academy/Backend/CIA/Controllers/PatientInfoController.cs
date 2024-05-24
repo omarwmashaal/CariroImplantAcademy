@@ -1530,22 +1530,29 @@ namespace CIA.Controllers
         {
 
 
-            IQueryable<FinalProsthesisParentModel> finalParentsQuery = _cia_DbContext.FinalProsthesisParents;
-            IQueryable<ProstheticTreatmentDiagnosticParentModel> diagnosticParentQuery = _cia_DbContext.DiagnosticProsthesisParents;
-            IQueryable<ComplicationsAfterProsthesisParentModel> complicationsProsthesisParentsQuery = _cia_DbContext.ComplicationsAfterProsthesisParents.Include(x => x.Complications);
+            IQueryable<FinalStepModel> finalStepsQuery = _cia_DbContext
+                .FinalSteps
+                .Include(x => x.FinalItem)
+                .Include(x => x.FinalStatusItem)
+                .Include(x => x.FinalNextVisitItem)
+                ;
+            IQueryable<DiagnosticStepModel> diagnosticStepsQuery = _cia_DbContext
+                .DiagnosticSteps
+                .Include(x => x.DiagnosticItem)
+                .Include(x => x.DiagnosticStatusItem)
+                .Include(x => x.DiagnosticNextVisitItem)
+                ;
+            List<DiagnosticStepModel> diagnosticStepsResult = new();
+            List<FinalStepModel> finalStepsResult = new();
+            IQueryable<ComplicationsAfterProsthesisModel> complicationsProsthesisQuery = _cia_DbContext.ComplicationsAfterProsthesis;
             List<ComplicationsAfterProsthesisModel> complicationProsthesisParents = new List<ComplicationsAfterProsthesisModel>();
 
-            List<FinalProsthesisHealingCollar> healingCollars = new List<FinalProsthesisHealingCollar>();
-            List<FinalProsthesisTryIn> tryIns = new List<FinalProsthesisTryIn>();
-            List<FinalProsthesisDelivery> deliveries = new List<FinalProsthesisDelivery>();
-            List<FinalProsthesisImpression> impressions = new List<FinalProsthesisImpression>();
-            List<ProstheticTreatmentDiagnosticParentModel> diagnostics = new List<ProstheticTreatmentDiagnosticParentModel>();
 
             if (!model.Ids.IsNullOrEmpty())
             {
-                finalParentsQuery = finalParentsQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
-                diagnosticParentQuery = diagnosticParentQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
-                complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
+                finalStepsQuery = finalStepsQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
+                diagnosticStepsQuery = diagnosticStepsQuery.AsNoTracking().Include(x => x.DiagnosticNextVisitItem).Where(x => model.Ids!.Contains(x.PatientId ?? 0));
+                complicationsProsthesisQuery = complicationsProsthesisQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
             }
 
             if (model.complicationsAnd != null)
@@ -1553,57 +1560,57 @@ namespace CIA.Controllers
                 IQueryable<ComplicationsAfterProsthesisModel> complicationsQuery = _cia_DbContext.ComplicationsAfterProsthesis;
 
                 if (model.complicationsAnd!.ScrewLoosness == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "ScrewLoosness"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "ScrewLoosness");
                 if (model.complicationsAnd!.CrownFall == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "CrownFall"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "CrownFall");
                 if (model.complicationsAnd!.FracturedZirconia == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FracturedZirconia"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedZirconia");
                 if (model.complicationsAnd!.FracturedPrintedPMMA == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FracturedPrintedPMMA"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedPrintedPMMA");
                 if (model.complicationsAnd!.FoodImpaction == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FoodImpaction"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FoodImpaction");
                 if (model.complicationsAnd!.Pain == true)
-                    complicationsProsthesisParentsQuery = complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "Pain"));
+                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "Pain");
 
 
 
-                List<int> compliactionsPatientIds = await complicationsProsthesisParentsQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
+                List<int> compliactionsPatientIds = await complicationsProsthesisQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
 
-                finalParentsQuery = finalParentsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                diagnosticParentQuery = diagnosticParentQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
+                finalStepsQuery = finalStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
+                diagnosticStepsQuery = diagnosticStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
                 model.Ids = compliactionsPatientIds;
             }
             if (model.complicationsOr != null)
             {
 
-                List<IQueryable<ComplicationsAfterProsthesisParentModel>> complicationsQueries = new List<IQueryable<ComplicationsAfterProsthesisParentModel>>();
+                List<IQueryable<ComplicationsAfterProsthesisModel>> complicationsQueries = new List<IQueryable<ComplicationsAfterProsthesisModel>>();
 
                 if (model.complicationsOr!.ScrewLoosness == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "ScrewLoosness")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "ScrewLoosness"));
                 if (model.complicationsOr!.CrownFall == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "CrownFall")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "CrownFall"));
                 if (model.complicationsOr!.FracturedZirconia == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FracturedZirconia")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedZirconia"));
                 if (model.complicationsOr!.FracturedPrintedPMMA == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FracturedPrintedPMMA")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedPrintedPMMA"));
                 if (model.complicationsOr!.FoodImpaction == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "FoodImpaction")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FoodImpaction"));
                 if (model.complicationsOr!.Pain == true)
-                    complicationsQueries.Add(complicationsProsthesisParentsQuery.Where(x => x.Complications.Any(y => y.Name.Replace(" ", "") == "Pain")));
+                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "Pain"));
 
                 if (complicationsQueries.Count != 0)
                 {
-                    IQueryable<ComplicationsAfterProsthesisParentModel> finalComplicationsQuery = complicationsQueries.First();
+                    IQueryable<ComplicationsAfterProsthesisModel> finalComplicationsQuery = complicationsQueries.First();
                     foreach (var q in complicationsQueries)
                     {
                         finalComplicationsQuery = finalComplicationsQuery.Union(q);
                     }
-                    complicationsProsthesisParentsQuery = finalComplicationsQuery;
+                    complicationsProsthesisQuery = finalComplicationsQuery;
 
-                    List<int> compliactionsPatientIds = await complicationsProsthesisParentsQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
+                    List<int> compliactionsPatientIds = await complicationsProsthesisQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
 
-                    finalParentsQuery = finalParentsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                    diagnosticParentQuery = diagnosticParentQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
+                    finalStepsQuery = finalStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
+                    diagnosticStepsQuery = diagnosticStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
                     model.Ids = compliactionsPatientIds;
 
 
@@ -1613,234 +1620,57 @@ namespace CIA.Controllers
             }
 
 
-
-
-            if (model.DiagnosticAnd != null)
+            if (model.Type == EnumProstheticType.Diagnostic)
             {
 
-                diagnostics = await diagnosticParentQuery.GroupBy(x => x.PatientId ?? 0).Select(x => x.OrderByDescending(y => y.Date).FirstOrDefault()).ToListAsync();
+                var tempdiagnosticStepsQuery = diagnosticStepsQuery
+                  .OrderBy(x => x.Date)
+                  .GroupBy(x => x.PatientId);
 
-                //searching diagnostic impression
-                if (!(model.DiagnosticAnd?.ProstheticDiagnostic_DiagnosticImpression?.IsNullOrEmpty() ?? true))
+
+                if (model.ItemId != null)
+                    tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticItemId == model.ItemId);
+                if (model.StatusId != null)
+                    tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticStatusItemId == model.StatusId);
+                if (model.NextId != null)
+                    tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticNextVisitItemId == model.NextId);
+
+                diagnosticStepsQuery = tempdiagnosticStepsQuery.Select(x => x.OrderBy(x => x.Date).Last());
+            }
+            else
+            {
+
+
+                if (model.ScrewRetained == true)
+                    finalStepsQuery = finalStepsQuery.Where(x => x.ScrewRetained == true);
+                else if (model.CementRetained == true)
+                    finalStepsQuery = finalStepsQuery.Where(x => x.CementRetained == true);
+                if (model.FullArch)
                 {
-                    var tempModel = model.DiagnosticAnd!.ProstheticDiagnostic_DiagnosticImpression.FirstOrDefault();
-
-                    if (tempModel.Scanned == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(DiagnosticImpressionModel) && ((DiagnosticImpressionModel)x).Scanned == true).ToList();
-
-                    if (tempModel.NeedsRemake == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(DiagnosticImpressionModel) && ((DiagnosticImpressionModel)x).NeedsRemake == true).ToList();
-
-                    if (tempModel.Diagnostic != null)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(DiagnosticImpressionModel) && ((DiagnosticImpressionModel)x).Diagnostic == tempModel.Diagnostic).ToList();
-
-                    if (tempModel.NextStep != null)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(DiagnosticImpressionModel) && ((DiagnosticImpressionModel)x).NextStep == tempModel.NextStep).ToList();
-
-
+                    finalStepsQuery = finalStepsQuery.Where(x => x.FullArchLower == true || x.FullArchUpper == true);
                 }
-
-                //searching Bite 
-                else if (!(model.DiagnosticAnd?.ProstheticDiagnostic_Bite?.IsNullOrEmpty() ?? true))
+                else
                 {
-                    var tempModel = model.DiagnosticAnd!.ProstheticDiagnostic_Bite.FirstOrDefault();
-                    if (tempModel.Scanned == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(BiteModel) && ((BiteModel)x).Scanned == true).ToList();
-
-                    if (tempModel.NeedsRemake == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(BiteModel) && ((BiteModel)x).NeedsRemake == true).ToList();
-
-                    if (tempModel.Diagnostic != null)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(BiteModel) && ((BiteModel)x).Diagnostic == tempModel.Diagnostic).ToList();
-
-                    if (tempModel.NextStep != null)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(BiteModel) && ((BiteModel)x).NextStep == tempModel.NextStep).ToList();
-
+                    finalStepsQuery = finalStepsQuery.Where(x => x.FullArchLower != true && x.FullArchUpper != true);
                 }
+                var tempfinalStepsQuery = finalStepsQuery
+                  .OrderBy(x => x.Date)
+                  .GroupBy(x => x.PatientId);
 
 
+                if (model.ItemId != null)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalItemId == model.ItemId);
+                if (model.StatusId != null)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalStatusItemId == model.StatusId);
+                if (model.NextId != null)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalNextVisitItemId == model.NextId);
 
-                //searching Scan Appliance 
-                else if (!(model.DiagnosticAnd?.ProstheticDiagnostic_ScanAppliance?.IsNullOrEmpty() ?? true))
-                {
-
-                    var tempModel = model.DiagnosticAnd!.ProstheticDiagnostic_ScanAppliance.FirstOrDefault();
-
-                    if (tempModel.Scanned == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(ScanApplianceModel) && ((ScanApplianceModel)x).Scanned == true).ToList();
-
-                    if (tempModel.NeedsRemake == true)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(ScanApplianceModel) && ((ScanApplianceModel)x).NeedsRemake == true).ToList();
-
-                    if (tempModel.Diagnostic != null)
-                        diagnostics = diagnostics.Where(x => x.GetType() == typeof(ScanApplianceModel) && ((ScanApplianceModel)x).Diagnostic == tempModel.Diagnostic).ToList();
-
-
-
-                }
-
+                finalStepsQuery = tempfinalStepsQuery.Select(x => x.OrderBy(x => x.Date).Last());
 
 
 
             }
 
-
-
-
-
-
-            else if (model.SingleAndBridgeAnd != null)
-            {
-                var singleList = await finalParentsQuery.ToListAsync();
-
-                singleList = singleList
-                    .Where(x => !x.FinalProthesisTeeth.IsNullOrEmpty())
-                    .ToList();
-
-                var groupedByPatients = singleList.GroupBy(x => x.PatientId).ToList();
-
-
-
-                var tempSingle = new List<FinalProsthesisParentModel>();
-                List<FinalProsthesisParentModel> patientTreatments = new List<FinalProsthesisParentModel>();
-
-                foreach (var p in groupedByPatients)
-                {
-
-                    foreach (var treatment in p)
-                    {
-                        var teeth = treatment.FinalProthesisTeeth;
-                        foreach (var tooth in teeth)
-                        {
-                            if (treatment.GetType() == typeof(FinalProsthesisHealingCollar))
-                                patientTreatments.Add(((FinalProsthesisHealingCollar)treatment).CopyWithTeeth(new List<int> { tooth }));
-                            else if (treatment.GetType() == typeof(FinalProsthesisImpression))
-                                patientTreatments.Add(((FinalProsthesisImpression)treatment).CopyWithTeeth(new List<int> { tooth }));
-                            else if (treatment.GetType() == typeof(FinalProsthesisDelivery))
-                                patientTreatments.Add(((FinalProsthesisDelivery)treatment).CopyWithTeeth(new List<int> { tooth }));
-                            else if (treatment.GetType() == typeof(FinalProsthesisTryIn))
-                                patientTreatments.Add(((FinalProsthesisTryIn)treatment).CopyWithTeeth(new List<int> { tooth }));
-
-                        }
-                    }
-
-                }
-
-                singleList = patientTreatments
-                    .GroupBy(x => x.PatientId)
-                    .SelectMany(x => x.GroupBy(y => y.FinalProthesisTeeth.FirstOrDefault()).Select(y => y.OrderByDescending(z => z.Date).FirstOrDefault()).ToList())
-                    .ToList();
-
-
-                if (!(model.SingleAndBridgeAnd?.HealingCollars?.IsNullOrEmpty() ?? true))
-                {
-                    healingCollars = singleList.Where(x => x.GetType() == typeof(FinalProsthesisHealingCollar)).Select(x => (FinalProsthesisHealingCollar)x).ToList();
-
-                    var tempModel = model.SingleAndBridgeAnd!.HealingCollars.FirstOrDefault();
-                    if (tempModel.FinalProthesisHealingCollarNextVisit != null)
-                        healingCollars = healingCollars.Where(x => x.FinalProthesisHealingCollarNextVisit == tempModel.FinalProthesisHealingCollarNextVisit).ToList();
-                    if (tempModel.FinalProthesisHealingCollarStatus != null)
-                        healingCollars = healingCollars.Where(x => x.FinalProthesisHealingCollarStatus == tempModel.FinalProthesisHealingCollarStatus).ToList();
-
-                }
-                else if (!(model.SingleAndBridgeAnd?.TryIns?.IsNullOrEmpty() ?? true))
-                {
-                    tryIns = singleList.Where(x => x.GetType() == typeof(FinalProsthesisTryIn)).Select(x => (FinalProsthesisTryIn)x).ToList();
-
-                    var tempModel = model.SingleAndBridgeAnd!.TryIns.FirstOrDefault();
-                    if (tempModel.FinalProthesisTryInNextVisit != null)
-                        tryIns = tryIns.Where(x => x.FinalProthesisTryInNextVisit == tempModel.FinalProthesisTryInNextVisit).ToList();
-                    if (tempModel.FinalProthesisTryInStatus != null)
-                        tryIns = tryIns.Where(x => x.FinalProthesisTryInStatus == tempModel.FinalProthesisTryInStatus).ToList();
-
-                }
-                else if (!(model.SingleAndBridgeAnd?.Impressions?.IsNullOrEmpty() ?? true))
-                {
-                    impressions = singleList.Where(x => x.GetType() == typeof(FinalProsthesisImpression)).Select(x => (FinalProsthesisImpression)x).ToList();
-
-                    var tempModel = model.SingleAndBridgeAnd!.Impressions.FirstOrDefault();
-                    if (tempModel.FinalProthesisImpressionStatus != null)
-                        impressions = impressions.Where(x => x.FinalProthesisImpressionStatus == tempModel.FinalProthesisImpressionStatus).ToList();
-                    if (tempModel.FinalProthesisImpressionNextVisit != null)
-                        impressions = impressions.Where(x => x.FinalProthesisImpressionNextVisit == tempModel.FinalProthesisImpressionNextVisit).ToList();
-                }
-                else if (!(model.SingleAndBridgeAnd?.Delivery?.IsNullOrEmpty() ?? true))
-                {
-                    deliveries = singleList.Where(x => x.GetType() == typeof(FinalProsthesisDelivery)).Select(x => (FinalProsthesisDelivery)x).ToList();
-
-                    var tempModel = model.SingleAndBridgeAnd!.Delivery.FirstOrDefault();
-                    if (tempModel.FinalProthesisDeliveryNextVisit != null)
-                        deliveries = deliveries.Where(x => x.FinalProthesisDeliveryNextVisit == tempModel.FinalProthesisDeliveryNextVisit).ToList();
-                    if (tempModel.FinalProthesisDeliveryStatus != null)
-                        deliveries = deliveries.Where(x => x.FinalProthesisDeliveryStatus == tempModel.FinalProthesisDeliveryStatus).ToList();
-
-
-                }
-
-
-            }
-
-
-
-            else if (model.FullArchAnd != null)
-            {
-                var fullArchList = await finalParentsQuery.ToListAsync();
-
-                fullArchList = (fullArchList
-                    .Where(x => x.FinalProthesisTeeth.IsNullOrEmpty())
-                  .GroupBy(x => x.PatientId ?? 0)
-                  .Select(x => x.OrderByDescending(y => y.Date).FirstOrDefault())
-                  .ToList()).ToList();
-
-
-                if (!(model.FullArchAnd?.HealingCollars?.IsNullOrEmpty() ?? true))
-                {
-                    healingCollars = fullArchList.Where(x => x.GetType() == typeof(FinalProsthesisHealingCollar)).Select(x => (FinalProsthesisHealingCollar)x).ToList();
-
-                    var tempModel = model.FullArchAnd!.HealingCollars.FirstOrDefault();
-                    if (tempModel.FinalProthesisHealingCollarNextVisit != null)
-                        healingCollars = healingCollars.Where(x => x.FinalProthesisHealingCollarNextVisit == tempModel.FinalProthesisHealingCollarNextVisit).ToList();
-                    if (tempModel.FinalProthesisHealingCollarStatus != null)
-                        healingCollars = healingCollars.Where(x => x.FinalProthesisHealingCollarStatus == tempModel.FinalProthesisHealingCollarStatus).ToList();
-
-                }
-                else if (!(model.FullArchAnd?.TryIns?.IsNullOrEmpty() ?? true))
-                {
-                    tryIns = fullArchList.Where(x => x.GetType() == typeof(FinalProsthesisTryIn)).Select(x => (FinalProsthesisTryIn)x).ToList();
-
-                    var tempModel = model.FullArchAnd!.TryIns.FirstOrDefault();
-                    if (tempModel.FinalProthesisTryInNextVisit != null)
-                        tryIns = tryIns.Where(x => x.FinalProthesisTryInNextVisit == tempModel.FinalProthesisTryInNextVisit).ToList();
-                    if (tempModel.FinalProthesisTryInStatus != null)
-                        tryIns = tryIns.Where(x => x.FinalProthesisTryInStatus == tempModel.FinalProthesisTryInStatus).ToList();
-
-                }
-                else if (!(model.FullArchAnd?.Impressions?.IsNullOrEmpty() ?? true))
-                {
-                    impressions = fullArchList.Where(x => x.GetType() == typeof(FinalProsthesisImpression)).Select(x => (FinalProsthesisImpression)x).ToList();
-
-                    var tempModel = model.FullArchAnd!.Impressions.FirstOrDefault();
-                    if (tempModel.FinalProthesisImpressionStatus != null)
-                        impressions = impressions.Where(x => x.FinalProthesisImpressionStatus == tempModel.FinalProthesisImpressionStatus).ToList();
-                    if (tempModel.FinalProthesisImpressionNextVisit != null)
-                        impressions = impressions.Where(x => x.FinalProthesisImpressionNextVisit == tempModel.FinalProthesisImpressionNextVisit).ToList();
-
-                }
-                else if (!(model.FullArchAnd?.Delivery?.IsNullOrEmpty() ?? true))
-                {
-                    deliveries = deliveries.Where(x => x.GetType() == typeof(FinalProsthesisDelivery)).Select(x => (FinalProsthesisDelivery)x).ToList();
-
-                    var tempModel = model.FullArchAnd!.Delivery.FirstOrDefault();
-                    if (tempModel.FinalProthesisDeliveryNextVisit != null)
-                        deliveries = deliveries.Where(x => x.FinalProthesisDeliveryNextVisit == tempModel.FinalProthesisDeliveryNextVisit).ToList();
-                    if (tempModel.FinalProthesisDeliveryStatus != null)
-                        deliveries = deliveries.Where(x => x.FinalProthesisDeliveryStatus == tempModel.FinalProthesisDeliveryStatus).ToList();
-
-
-
-                }
-
-            }
 
 
 
@@ -1856,23 +1686,40 @@ namespace CIA.Controllers
 
 
             List<AdvancedProstheticSearchResponseDTO> result = new List<AdvancedProstheticSearchResponseDTO>();
-            var patients = await _cia_DbContext.Patients.Where(x => model.Ids.Contains((int)x.Id)).Distinct().ToListAsync();
 
-
-            List<ComplicationsAfterProsthesisParentModel> complications = new List<ComplicationsAfterProsthesisParentModel>();
-
-
-            if ((!model.DiagnosticAnd?.ProstheticDiagnostic_DiagnosticImpression.IsNullOrEmpty()) ?? false)
+            List<Patient> patients = new();
+            List<int?> ids = new();
+            if (model.Type == EnumProstheticType.Diagnostic)
             {
-                var tempPatients = patients.Where(x => diagnostics.Where(y => y.GetType() == typeof(DiagnosticImpressionModel)).Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-                foreach (var patient in tempPatients)
+                diagnosticStepsResult = await diagnosticStepsQuery.ToListAsync();
+                ids = diagnosticStepsResult.Select(x => x.PatientId).Distinct().ToList();
+                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id)).ToListAsync();
+
+            }
+            else
+            {
+                finalStepsResult = (await finalStepsQuery.ToListAsync());
+                ids = finalStepsResult.Select(x => x.PatientId).Distinct().ToList();
+                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id)).ToListAsync();
+            }
+
+
+
+
+            List<ComplicationsAfterProsthesisModel> complications = await _cia_DbContext.ComplicationsAfterProsthesis.Where(x => ids.Contains(x.PatientId)).ToListAsync();
+
+
+
+            if (model.Type == EnumProstheticType.Diagnostic)
+                foreach (var step in diagnosticStepsResult)
                 {
+                    var patient = patients.First(x => x.Id == step.PatientId);
                     List<String>? com = null;
                     if (model.complicationsAnd != null || model.complicationsOr != null)
                     {
-                        complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                        com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
+                        com = complications
+                            .Where(x => x.PatientId == step.PatientId)?
+                            .Select(x => x.Name).ToList();
 
                     }
                     result.Add(new AdvancedProstheticSearchResponseDTO
@@ -1880,420 +1727,39 @@ namespace CIA.Controllers
                         Id = patient.Id,
                         SecondaryId = patient.SecondaryId,
                         PatientName = patient.Name,
-                        DiagnosticImpression = diagnostics.Where(x => x.PatientId == patient.Id && x.GetType() == typeof(DiagnosticImpressionModel)).Select(x => (DiagnosticImpressionModel)x).FirstOrDefault(),
+                        DiagnosticStep = step,
                         Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
 
                     });
                 }
-            }
-
-            else if ((!model.DiagnosticAnd?.ProstheticDiagnostic_Bite.IsNullOrEmpty()) ?? false)
+            else
             {
-                var tempPatients = patients.Where(x => diagnostics.Where(y => y.GetType() == typeof(BiteModel)).Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-                foreach (var patient in tempPatients)
+                foreach (var step in finalStepsResult)
                 {
+                    var patient = patients.First(x => x.Id == step.PatientId);
                     List<String>? com = null;
                     if (model.complicationsAnd != null || model.complicationsOr != null)
                     {
-                        complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                        com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
+                        com = complications
+                            .Where(x =>
+                                    x.PatientId == step.PatientId &&
+                                    x.Tooth == null ? true : step.Teeth.Contains((int)x.Tooth)
+                            )?
+                            .Select(x => x.Name).ToList();
                     }
                     result.Add(new AdvancedProstheticSearchResponseDTO
                     {
                         Id = patient.Id,
                         SecondaryId = patient.SecondaryId,
                         PatientName = patient.Name,
-                        Bite = diagnostics.Where(x => x.PatientId == patient.Id && x.GetType() == typeof(BiteModel)).Select(x => (BiteModel)x).FirstOrDefault(),
+                        FinalStep = step,
                         Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
 
                     });
                 }
             }
-            else if ((!model.DiagnosticAnd?.ProstheticDiagnostic_ScanAppliance.IsNullOrEmpty()) ?? false)
-            {
-                var tempPatients = patients.Where(x => diagnostics.Where(y => y.GetType() == typeof(ScanApplianceModel)).Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-                foreach (var patient in tempPatients)
-                {
-                    List<String>? com = null;
-                    if (model.complicationsAnd != null || model.complicationsOr != null)
-                    {
-                        complications = await complicationsProsthesisParentsQuery.ToListAsync();
 
-                        com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
 
-                    }
-                    result.Add(new AdvancedProstheticSearchResponseDTO
-                    {
-                        Id = patient.Id,
-                        SecondaryId = patient.SecondaryId,
-                        PatientName = patient.Name,
-                        ScanAppliance = diagnostics.Where(x => x.PatientId == patient.Id && x.GetType() == typeof(ScanApplianceModel)).Select(x => (ScanApplianceModel)x).FirstOrDefault(),
-                        Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-                    });
-                }
-            }
-            else if (model.SingleAndBridgeAnd != null)
-            {
-
-
-                if (!model.SingleAndBridgeAnd!.HealingCollars.IsNullOrEmpty())
-                {
-                    healingCollars = healingCollars.Where(x => !x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsHealing = patients.Where(x => healingCollars.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-                    foreach (var patient in tempPatientsHealing)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-                        var temp = healingCollars.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            foreach (var tooth in t.FinalProthesisTeeth ?? new List<int>())
-                            {
-                                result.Add(new AdvancedProstheticSearchResponseDTO
-                                {
-                                    Id = patient.Id,
-                                    SecondaryId = patient.SecondaryId,
-                                    PatientName = patient.Name,
-                                    SingleAndBridge_HealingCollar = new FinalProsthesisHealingCollar
-                                    {
-                                        Date = t.Date,
-                                        FinalProthesisTeeth = new List<int> { tooth },
-                                        PatientId = t.PatientId,
-                                        FinalProthesisHealingCollarNextVisit = t.FinalProthesisHealingCollarNextVisit,
-                                        FinalProthesisHealingCollarStatus = t.FinalProthesisHealingCollarStatus,
-                                        Id = t.Id,
-                                    },
-                                    Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-                                });
-                            }
-                        }
-
-                    }
-
-
-
-
-
-
-                }
-                if (!model.SingleAndBridgeAnd!.TryIns.IsNullOrEmpty())
-                {
-                    tryIns = tryIns.Where(x => !x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsTryIn = patients.Where(x => tryIns.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-
-                    foreach (var patient in tempPatientsTryIn)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-                        var temp = tryIns.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            foreach (var tooth in t.FinalProthesisTeeth ?? new List<int>())
-                            {
-                                result.Add(new AdvancedProstheticSearchResponseDTO
-                                {
-                                    Id = patient.Id,
-                                    SecondaryId = patient.SecondaryId,
-                                    PatientName = patient.Name,
-                                    SingleAndBridge_TryIn = new FinalProsthesisTryIn
-                                    {
-                                        Date = t.Date,
-                                        FinalProthesisTeeth = new List<int> { tooth },
-                                        PatientId = t.PatientId,
-                                        FinalProthesisTryInNextVisit = t.FinalProthesisTryInNextVisit,
-                                        FinalProthesisTryInStatus = t.FinalProthesisTryInStatus,
-                                        Id = t.Id,
-                                    },
-                                    Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-                                });
-                            }
-                        }
-
-                    }
-
-                }
-                if (!model.SingleAndBridgeAnd!.Delivery.IsNullOrEmpty())
-                {
-                    deliveries = deliveries.Where(x => !x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsDelivery = patients.Where(x => deliveries.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-
-                    foreach (var patient in tempPatientsDelivery)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-
-                        var temp = deliveries.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            foreach (var tooth in t.FinalProthesisTeeth ?? new List<int>())
-                            {
-                                result.Add(new AdvancedProstheticSearchResponseDTO
-                                {
-                                    Id = patient.Id,
-                                    SecondaryId = patient.SecondaryId,
-                                    PatientName = patient.Name,
-                                    SingleAndBridge_Delivery = new FinalProsthesisDelivery
-                                    {
-                                        Date = t.Date,
-                                        FinalProthesisTeeth = new List<int> { tooth },
-                                        PatientId = t.PatientId,
-                                        FinalProthesisDeliveryNextVisit = t.FinalProthesisDeliveryNextVisit,
-                                        FinalProthesisDeliveryStatus = t.FinalProthesisDeliveryStatus,
-                                        Id = t.Id,
-                                    },
-                                    Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-
-                                });
-                            }
-                        }
-
-                    }
-
-                }
-                if (!model.SingleAndBridgeAnd!.Impressions.IsNullOrEmpty())
-                {
-                    impressions = impressions.Where(x => !x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsImpression = patients.Where(x => impressions.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-                    foreach (var patient in tempPatientsImpression)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-
-                        var temp = impressions.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            foreach (var tooth in t.FinalProthesisTeeth ?? new List<int>())
-                            {
-                                result.Add(new AdvancedProstheticSearchResponseDTO
-                                {
-                                    Id = patient.Id,
-                                    SecondaryId = patient.SecondaryId,
-                                    PatientName = patient.Name,
-                                    SingleAndBridge_Impression = new FinalProsthesisImpression
-                                    {
-                                        Date = t.Date,
-                                        FinalProthesisTeeth = new List<int> { tooth },
-                                        PatientId = t.PatientId,
-                                        FinalProthesisImpressionNextVisit = t.FinalProthesisImpressionNextVisit,
-                                        FinalProthesisImpressionStatus = t.FinalProthesisImpressionStatus,
-                                        Id = t.Id,
-                                    },
-                                    Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-
-                                });
-                            }
-                        }
-
-                    }
-
-                }
-
-            }
-            else if (model.FullArchAnd != null)
-            {
-
-                if (!model.FullArchAnd!.HealingCollars.IsNullOrEmpty())
-                {
-                    healingCollars = healingCollars.Where(x => x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsHealing = patients.Where(x => healingCollars.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-                    foreach (var patient in tempPatientsHealing)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-
-                        var temp = healingCollars.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-
-                            result.Add(new AdvancedProstheticSearchResponseDTO
-                            {
-                                Id = patient.Id,
-                                SecondaryId = patient.SecondaryId,
-                                PatientName = patient.Name,
-                                FullArch_HealingCollar = t,
-                                Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-
-                            });
-
-                        }
-
-                    }
-
-                }
-                if (!model.FullArchAnd!.TryIns.IsNullOrEmpty())
-                {
-                    tryIns = tryIns.Where(x => x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsTryIn = patients.Where(x => tryIns.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-
-                    foreach (var patient in tempPatientsTryIn)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-                        var temp = tryIns.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            result.Add(new AdvancedProstheticSearchResponseDTO
-                            {
-                                Id = patient.Id,
-                                SecondaryId = patient.SecondaryId,
-                                PatientName = patient.Name,
-                                FullArch_TryIn = t,
-                                Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-
-                            });
-
-                        }
-
-                    }
-
-                }
-                if (!model.FullArchAnd!.Delivery.IsNullOrEmpty())
-                {
-                    deliveries = deliveries.Where(x => x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsDelivery = patients.Where(x => deliveries.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-
-                    foreach (var patient in tempPatientsDelivery)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-
-                        var temp = deliveries.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            result.Add(new AdvancedProstheticSearchResponseDTO
-                            {
-                                Id = patient.Id,
-                                SecondaryId = patient.SecondaryId,
-                                PatientName = patient.Name,
-                                FullArch_Delivery = t,
-                                Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-                            });
-                        }
-
-                    }
-
-                }
-                if (!model.FullArchAnd!.Impressions.IsNullOrEmpty())
-                {
-                    impressions = impressions.Where(x => x.FinalProthesisTeeth.IsNullOrEmpty()).ToList();
-
-                    var tempPatientsImpression = patients.Where(x => impressions.Select(y => y.PatientId).ToList().Contains(x.Id)).ToList();
-
-                    foreach (var patient in tempPatientsImpression)
-                    {
-                        List<String>? com = null;
-                        if (model.complicationsAnd != null || model.complicationsOr != null)
-                        {
-                            complications = await complicationsProsthesisParentsQuery.ToListAsync();
-
-                            com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                        }
-                        var temp = impressions.Where(x => x.PatientId == patient.Id).ToList();
-                        foreach (var t in temp)
-                        {
-                            result.Add(new AdvancedProstheticSearchResponseDTO
-                            {
-                                Id = patient.Id,
-                                SecondaryId = patient.SecondaryId,
-                                PatientName = patient.Name,
-                                FullArch_Impression = t,
-                                Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-
-
-                            });
-                        }
-
-                    }
-
-                }
-
-            }
-            else if (model.complicationsAnd != null || model.complicationsOr != null)
-            {
-                complications = await complicationsProsthesisParentsQuery.ToListAsync();
-                foreach (var patient in patients)
-                {
-                    var com = complications.FirstOrDefault(x => x.PatientId == patient.Id)?.Complications?.Select(x => x.Name).ToList();
-
-                    result.Add(new AdvancedProstheticSearchResponseDTO
-                    {
-                        Id = patient.Id,
-                        SecondaryId = patient.SecondaryId,
-                        PatientName = patient.Name,
-                        Str_ComplicationsAfterProsthesis = com == null ? null : String.Join(", ", com.ToArray())
-                    });
-
-                }
-
-
-            }
 
             if (model.complicationsAnd != null || model.complicationsOr != null)
             {

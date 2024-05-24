@@ -197,95 +197,95 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
       }
     }
 
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic != null) {
-      filters.add(
-          "Diagnostic Impression Diagnosis ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic?.name}");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep != null) {
-      filters.add(
-          "Diagnostic Impression Next Step ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep?.name}");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake != null) {
-      filters.add("Diagnostic Impression Needs Remake");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned != null) {
-      filters.add("Diagnostic Impression Scanned");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic != null) {
-      filters.add("Bite Diagnostic ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic?.name}");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep != null) {
-      filters.add("Bite Next Step ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep?.name}");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake != null) {
-      filters.add("Bite Needs Remake");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.scanned != null) {
-      filters.add("Bite Scanned");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic != null) {
-      filters
-          .add("Scan Appliance Diagnostic ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic?.name}");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake != null) {
-      filters.add("Scan Appliance Needs Remake");
-    }
-    if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned != null) {
-      filters.add("Scan Appliance Scanned");
-    }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic != null) {
+    //   filters.add(
+    //       "Diagnostic Impression Diagnosis ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic?.name}");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep != null) {
+    //   filters.add(
+    //       "Diagnostic Impression Next Step ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep?.name}");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake != null) {
+    //   filters.add("Diagnostic Impression Needs Remake");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned != null) {
+    //   filters.add("Diagnostic Impression Scanned");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic != null) {
+    //   filters.add("Bite Diagnostic ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic?.name}");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep != null) {
+    //   filters.add("Bite Next Step ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep?.name}");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake != null) {
+    //   filters.add("Bite Needs Remake");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.scanned != null) {
+    //   filters.add("Bite Scanned");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic != null) {
+    //   filters
+    //       .add("Scan Appliance Diagnostic ${searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic?.name}");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake != null) {
+    //   filters.add("Scan Appliance Needs Remake");
+    // }
+    // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned != null) {
+    //   filters.add("Scan Appliance Scanned");
+    // }
 
-    if (searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
-      filters.add(
-          "Single & Bridge Healing Collar Status ${searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
-      filters.add(
-          "Single & Bridge Impression Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
-      filters.add(
-          "Single & Bridge Impression Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
-      filters
-          .add("Single & Bridge Try In Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
-      filters.add(
-          "Single & Bridge Try In Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
-      filters.add(
-          "Single & Bridge Delivery Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name}");
-    }
-    if (searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
-      filters.add(
-          "Single & Bridge Delivery Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
-      filters.add(
-          "Full Arch Healing Collar Status ${searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
-      filters
-          .add("Full Arch Impression Procedure ${searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
-      filters.add(
-          "Full Arch Impression Next Visit ${searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
-      filters.add("Full Arch Try In Procedure ${searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
-      filters.add("Full Arch Try In Next Visit ${searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
-      filters.add("Full Arch Delivery Procedure ${searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name}");
-    }
-    if (searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
-      filters.add("Full Arch Delivery Next Visit ${searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name}");
-    }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
+    //   filters.add(
+    //       "Single & Bridge Healing Collar Status ${searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
+    //   filters.add(
+    //       "Single & Bridge Impression Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
+    //   filters.add(
+    //       "Single & Bridge Impression Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
+    //   filters
+    //       .add("Single & Bridge Try In Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
+    //   filters.add(
+    //       "Single & Bridge Try In Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
+    //   filters.add(
+    //       "Single & Bridge Delivery Procedure ${searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
+    //   filters.add(
+    //       "Single & Bridge Delivery Next Visit ${searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
+    //   filters.add(
+    //       "Full Arch Healing Collar Status ${searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
+    //   filters
+    //       .add("Full Arch Impression Procedure ${searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
+    //   filters.add(
+    //       "Full Arch Impression Next Visit ${searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
+    //   filters.add("Full Arch Try In Procedure ${searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
+    //   filters.add("Full Arch Try In Next Visit ${searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
+    //   filters.add("Full Arch Delivery Procedure ${searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name}");
+    // }
+    // if (searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
+    //   filters.add("Full Arch Delivery Next Visit ${searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name}");
+    // }
 
     if (!(searchProstheticDTO.complicationsAnd?.isNull() ?? true)) {
       if (searchProstheticDTO.complicationsAnd!.screwLoosness == true) {
@@ -394,119 +394,120 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
         searchProstheticDTO.complicationsOr = null;
       }
     }
-    if (filter.contains("Diagnostic Impression Diagnosis")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic = null;
-    }
-    if (filter.contains("Diagnostic Impression Next Step")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep = null;
-    }
-    if (filter.contains("Diagnostic Impression Needs Remake")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake = null;
-    }
-    if (filter.contains("Diagnostic Impression Scanned")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned = null;
-    }
-    if (filter.contains("Bite Diagnostic")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic = null;
-    }
-    if (filter.contains("Bite Next Step")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep = null;
-    }
-    if (filter.contains("Bite Needs Remake")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake = null;
-    }
-    if (filter.contains("Bite Scanned")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.scanned = null;
-    }
-    if (filter.contains("Scan Appliance Diagnostic")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic = null;
-    }
-    if (filter.contains("Scan Appliance Needs Remake")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake = null;
-    }
-    if (filter.contains("Scan Appliance Scanned")) {
-      searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned = null;
-    }
+    
+    // if (filter.contains("Diagnostic Impression Diagnosis")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic = null;
+    // }
+    // if (filter.contains("Diagnostic Impression Next Step")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep = null;
+    // }
+    // if (filter.contains("Diagnostic Impression Needs Remake")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake = null;
+    // }
+    // if (filter.contains("Diagnostic Impression Scanned")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned = null;
+    // }
+    // if (filter.contains("Bite Diagnostic")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic = null;
+    // }
+    // if (filter.contains("Bite Next Step")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep = null;
+    // }
+    // if (filter.contains("Bite Needs Remake")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake = null;
+    // }
+    // if (filter.contains("Bite Scanned")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.scanned = null;
+    // }
+    // if (filter.contains("Scan Appliance Diagnostic")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic = null;
+    // }
+    // if (filter.contains("Scan Appliance Needs Remake")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake = null;
+    // }
+    // if (filter.contains("Scan Appliance Scanned")) {
+    //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned = null;
+    // }
 
-    if (filter.contains("Single & Bridge Healing Collar Status")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus = null;
-    }
-    if (filter.contains("Single & Bridge Impression Procedure")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus = null;
-    }
-    if (filter.contains("Single & Bridge Impression Next Visit")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit = null;
-    }
-    if (filter.contains("Single & Bridge Try In Procedure")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus = null;
-    }
-    if (filter.contains("Single & Bridge Try In Next Visit")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit = null;
-    }
-    if (filter.contains("Single & Bridge Delivery Procedure")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus = null;
-    }
-    if (filter.contains("Single & Bridge Delivery Next Visit")) {
-      searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit = null;
-    }
-    if (filter.contains("Full Arch Healing Collar Status")) {
-      searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus = null;
-    }
-    if (filter.contains("Full Arch Impression Procedure")) {
-      searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus = null;
-    }
-    if (filter.contains("Full Arch Impression Next Visit")) {
-      searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit = null;
-    }
-    if (filter.contains("Full Arch Try In Procedure")) {
-      searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus = null;
-    }
-    if (filter.contains("Full Arch Try In Next Visit")) {
-      searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit = null;
-    }
-    if (filter.contains("Full Arch Delivery Procedure")) {
-      searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus = null;
-    }
-    if (filter.contains("Full Arch Delivery Next Visit")) {
-      searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit = null;
-    }
-    if ((searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.singleAndBridgeAnd?.healingCollars = null;
-    }
-    if ((searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.singleAndBridgeAnd?.tryIns = null;
-    }
-    if ((searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.singleAndBridgeAnd?.tryIns = null;
-    }
-    if ((searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.singleAndBridgeAnd?.impressions = null;
-    }
-    if ((searchProstheticDTO.singleAndBridgeAnd?.isNull() ?? true)) searchProstheticDTO.singleAndBridgeAnd = null;
-    if ((searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.fullArchAnd?.healingCollars = null;
-    }
-    if ((searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.fullArchAnd?.tryIns = null;
-    }
-    if ((searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.fullArchAnd?.tryIns = null;
-    }
-    if ((searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.fullArchAnd?.impressions = null;
-    }
-    if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite = null;
-    }
-    if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance = null;
-    }
-    if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.isNull() ?? true)) {
-      searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression = null;
-    }
-    if ((searchProstheticDTO.fullArchAnd?.isNull() ?? true)) searchProstheticDTO.fullArchAnd = null;
-    if ((searchProstheticDTO.singleAndBridgeAnd?.isNull() ?? true)) searchProstheticDTO.singleAndBridgeAnd = null;
-    if ((searchProstheticDTO.diagnosticAnd?.isNull() ?? true)) searchProstheticDTO.diagnosticAnd = null;
+    // if (filter.contains("Single & Bridge Healing Collar Status")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus = null;
+    // }
+    // if (filter.contains("Single & Bridge Impression Procedure")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus = null;
+    // }
+    // if (filter.contains("Single & Bridge Impression Next Visit")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit = null;
+    // }
+    // if (filter.contains("Single & Bridge Try In Procedure")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus = null;
+    // }
+    // if (filter.contains("Single & Bridge Try In Next Visit")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit = null;
+    // }
+    // if (filter.contains("Single & Bridge Delivery Procedure")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus = null;
+    // }
+    // if (filter.contains("Single & Bridge Delivery Next Visit")) {
+    //   searchProstheticDTO?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit = null;
+    // }
+    // if (filter.contains("Full Arch Healing Collar Status")) {
+    //   searchProstheticDTO?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus = null;
+    // }
+    // if (filter.contains("Full Arch Impression Procedure")) {
+    //   searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus = null;
+    // }
+    // if (filter.contains("Full Arch Impression Next Visit")) {
+    //   searchProstheticDTO?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit = null;
+    // }
+    // if (filter.contains("Full Arch Try In Procedure")) {
+    //   searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus = null;
+    // }
+    // if (filter.contains("Full Arch Try In Next Visit")) {
+    //   searchProstheticDTO?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit = null;
+    // }
+    // if (filter.contains("Full Arch Delivery Procedure")) {
+    //   searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus = null;
+    // }
+    // if (filter.contains("Full Arch Delivery Next Visit")) {
+    //   searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit = null;
+    // }
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.singleAndBridgeAnd?.healingCollars = null;
+    // }
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.singleAndBridgeAnd?.tryIns = null;
+    // }
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.singleAndBridgeAnd?.tryIns = null;
+    // }
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.singleAndBridgeAnd?.impressions = null;
+    // }
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.isNull() ?? true)) searchProstheticDTO.singleAndBridgeAnd = null;
+    // if ((searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.fullArchAnd?.healingCollars = null;
+    // }
+    // if ((searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.fullArchAnd?.tryIns = null;
+    // }
+    // if ((searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.fullArchAnd?.tryIns = null;
+    // }
+    // if ((searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.fullArchAnd?.impressions = null;
+    // }
+    // if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite = null;
+    // }
+    // if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance = null;
+    // }
+    // if ((searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.isNull() ?? true)) {
+    //   searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression = null;
+    // }
+    // if ((searchProstheticDTO.fullArchAnd?.isNull() ?? true)) searchProstheticDTO.fullArchAnd = null;
+    // if ((searchProstheticDTO.singleAndBridgeAnd?.isNull() ?? true)) searchProstheticDTO.singleAndBridgeAnd = null;
+    // if ((searchProstheticDTO.diagnosticAnd?.isNull() ?? true)) searchProstheticDTO.diagnosticAnd = null;
 
     if (filter == "Implant Failed") {
       searchTreatmentsDTO.implantFailed = null;

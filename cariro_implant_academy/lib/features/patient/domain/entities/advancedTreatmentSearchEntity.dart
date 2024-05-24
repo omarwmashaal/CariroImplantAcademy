@@ -74,7 +74,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
         this.treatmentId,
       ];
 
-  bool isNull() => noTreatmentPlan == null && !(and_treatmentIds?.isEmpty ?? false) && !(or_treatmentIds?.isEmpty ?? false);
+  bool isNull() => noTreatmentPlan == null && (and_treatmentIds?.isEmpty ?? true) && (or_treatmentIds?.isEmpty ?? true);
 
   // AdvancedTreatmentSearchEntity copyWith({
   //   ValueGetter<List<int>?>? ids,

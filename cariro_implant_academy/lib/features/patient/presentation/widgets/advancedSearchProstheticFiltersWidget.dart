@@ -1,6 +1,14 @@
 import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/biteModel.dart';
@@ -13,22 +21,14 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticTreatmentFinalModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/scanApplianceModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
+import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'advancedSearchFilterChildWidgert.dart';
-
-enum EnumProstheticType {
-  Diagnostic,
-  Bite,
-  ScanAppliance,
-  HealingColar,
-  TryIn,
-  Delivery,
-  Impression,
-}
-
 
 class AdvancedSearchProstheticFilterWidget extends StatefulWidget {
   AdvancedSearchProstheticFilterWidget({
@@ -43,6 +43,15 @@ class AdvancedSearchProstheticFilterWidget extends StatefulWidget {
 }
 
 class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchProstheticFilterWidget> {
+  late SettingsBloc settingsBloc;
+  List<BasicNameIdObjectEntity> prostheticItems = [];
+  @override
+  void initState() {
+    settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -51,665 +60,158 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
         children: [
           AdvancedSearchFilterChildWidget(
             title: "Prostheic Type",
-            child: Column(
-              children: [
-                CIA_CheckBoxWidget(
-                  text: "All",
-                  value: widget.searchProstheticDTO.searchType == null || widget.searchProstheticDTO.isNull(),
-                  onChange: (value) {
-                    if (value == true)
-                      setState(() {
-                        widget.searchProstheticDTO.setNull();
-                      });
-                  },
-                ),
-                CIA_CheckBoxWidget(
-                  text: "Diagnostic",
-                  value: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.Diagnostic,
-                  onChange: (value) {
-                    if (value == true) {
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.Diagnostic;
-                      widget.searchProstheticDTO.fullArchAnd = null;
-                      widget.searchProstheticDTO.fullArchOr = null;
-                      widget.searchProstheticDTO.singleAndBridgeAnd = null;
-                      widget.searchProstheticDTO.singleAndBridgeOr = null;
-                      widget.searchProstheticDTO.prostheticType = EnumProstheticType.Diagnostic;
-                    } else {
-                      widget.searchProstheticDTO.searchType = null;
-                      widget.searchProstheticDTO.setNull();
-                    }
-                    setState(() {});
-                  },
-                ),
-                CIA_CheckBoxWidget(
-                  text: "Sinlge And Bridge",
-                  value: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.SingleAndBridge,
-                  onChange: (value) {
-                    if (value == true) {
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.SingleAndBridge;
-                      widget.searchProstheticDTO.fullArchAnd = null;
-                      widget.searchProstheticDTO.fullArchOr = null;
-                      widget.searchProstheticDTO.diagnosticAnd = null;
-                      widget.searchProstheticDTO.diagnosticOr = null;
-                      widget.searchProstheticDTO.prostheticType = EnumProstheticType.HealingColar;
-                    } else {
-                      widget.searchProstheticDTO.searchType = null;
-                      widget.searchProstheticDTO.setNull();
-                    }
-                    setState(() {});
-                  },
-                ),
-                CIA_CheckBoxWidget(
-                  text: "Full Arch",
-                  value: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.FullArch,
-                  onChange: (value) {
-                    if (value == true) {
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.FullArch;
-                      widget.searchProstheticDTO.singleAndBridgeAnd = null;
-                      widget.searchProstheticDTO.singleAndBridgeOr = null;
-                      widget.searchProstheticDTO.diagnosticAnd = null;
-                      widget.searchProstheticDTO.diagnosticOr = null;
-                      widget.searchProstheticDTO.prostheticType = EnumProstheticType.HealingColar;
-                    } else {
-                      widget.searchProstheticDTO.searchType = null;
-                      widget.searchProstheticDTO.setNull();
-                    }
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-          ),
-          Visibility(
-            visible: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.Diagnostic,
-            child: AdvancedSearchFilterChildWidget(
-              title: "Diagnostic (All of the following)",
-              child: Column(
-                children: [
-                  CIA_DropDownSearchBasicIdName(
-                    items: EnumProstheticType.values.getRange(0, 3).map((e) => BasicNameIdObjectEntity(name: e.name, id: e.index)).toList(),
-                    onSelect: (value) {
-                      widget.searchProstheticDTO.setNull();
-                      widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                      if (value.id == 0)
-                        widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression = [DiagnosticImpressionModel()];
-                      else if (value.id == 1)
-                        widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_Bite = [BiteModel()];
-                      else if (value.id == 2) widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_ScanAppliance = [ScanApplianceModel()];
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.Diagnostic;
-                      setState(() => widget.searchProstheticDTO.prostheticType = EnumProstheticType.values[value.id!]);
-                    },
-                    selectedItem: BasicNameIdObjectEntity(
-                        id: widget.searchProstheticDTO.prostheticType.index, name: widget.searchProstheticDTO.prostheticType.name),
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Diagnostic,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Diagnostic Impression"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Diagnostic",
-                          items: EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values
-                              .map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name))
-                              .toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic?.index,
-                            name: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic?.name,
+            child: BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                buildWhen: (previous, current) =>
+                    current is SettingsBloc_LoadingProstheticItemsErrorState ||
+                    current is SettingsBloc_LoadingProstheticItemsState ||
+                    current is SettingsBloc_LoadedProstheticItemsSuccessfullyState,
+                builder: (context, state) {
+                  if (state is SettingsBloc_LoadingProstheticItemsErrorState)
+                    return BigErrorPageWidget(message: state.message);
+                  else if (state is SettingsBloc_LoadingProstheticItemsState)
+                    return LoadingWidget();
+                  else if (state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) {
+                    prostheticItems = state.data;
+                  }
+                  return Column(
+                    children: [
+                      Column(
+                        children: [
+                          CIA_CheckBoxWidget(
+                            text: "Diagnostic",
+                            value: widget.searchProstheticDTO.type == EnumProstheticType.Diagnostic,
+                            onChange: (value) {
+                              if (value == true) {
+                                widget.searchProstheticDTO.type = EnumProstheticType.Diagnostic;
+                                widget.searchProstheticDTO.cementRetained = false;
+                                widget.searchProstheticDTO.screwRetained = false;
+                                widget.searchProstheticDTO.fullArch = null;
+                                widget.searchProstheticDTO.itemId = null;
+                                widget.searchProstheticDTO.statusId = null;
+                                widget.searchProstheticDTO.nextId = null;
+                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                              }
+                            },
                           ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression ??= [DiagnosticImpressionModel()];
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.first.diagnostic =
-                                EnumProstheticDiagnosticDiagnosticImpressionDiagnostic.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Step",
-                          items: EnumProstheticDiagnosticDiagnosticImpressionNextStep.values
-                              .map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name))
-                              .toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep?.index,
-                            name: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep?.name,
+                          CIA_CheckBoxWidget(
+                            text: "Sinlge And Bridge",
+                            value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch != true,
+                            onChange: (value) {
+                              if (value == true) {
+                                widget.searchProstheticDTO.type = EnumProstheticType.Final;
+                                widget.searchProstheticDTO.cementRetained = false;
+                                widget.searchProstheticDTO.screwRetained = false;
+                                widget.searchProstheticDTO.fullArch = null;
+                                widget.searchProstheticDTO.itemId = null;
+                                widget.searchProstheticDTO.statusId = null;
+                                widget.searchProstheticDTO.nextId = null;
+                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                              }
+                            },
                           ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression ??= [DiagnosticImpressionModel()];
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.first.nextStep =
-                                EnumProstheticDiagnosticDiagnosticImpressionNextStep.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            CIA_CheckBoxWidget(
-                              text: "Scanned",
-                              value:
-                                  widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned == true,
-                              onChange: (value) {
-                                if (value == true) {
-                                  widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression ??= [
-                                    DiagnosticImpressionModel()
-                                  ];
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.firstOrNull?.scanned = true;
-                                } else {
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.firstOrNull?.scanned = null;
-                                }
-
-                                setState(() {});
-                              },
+                          CIA_CheckBoxWidget(
+                            text: "Full Arch",
+                            value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
+                            onChange: (value) {
+                              if (value == true) {
+                                widget.searchProstheticDTO.type = EnumProstheticType.Final;
+                                widget.searchProstheticDTO.cementRetained = false;
+                                widget.searchProstheticDTO.screwRetained = false;
+                                widget.searchProstheticDTO.fullArch = true;
+                                widget.searchProstheticDTO.itemId = null;
+                                widget.searchProstheticDTO.statusId = null;
+                                widget.searchProstheticDTO.nextId = null;
+                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                              }
+                            },
+                          ),
+                          Visibility(
+                            visible: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
+                            child: Row(
+                              children: [
+                                CIA_CheckBoxWidget(
+                                  text: "Screw Retained",
+                                  value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
+                                      widget.searchProstheticDTO.fullArch == true &&
+                                      widget.searchProstheticDTO.screwRetained == true,
+                                  onChange: (value) {
+                                    widget.searchProstheticDTO.screwRetained = value;
+                                    setState(() {});
+                                  },
+                                ),
+                                CIA_CheckBoxWidget(
+                                  text: "Cement Retained",
+                                  value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
+                                      widget.searchProstheticDTO.fullArch == true &&
+                                      widget.searchProstheticDTO.cementRetained == true,
+                                  onChange: (value) {
+                                    widget.searchProstheticDTO.cementRetained = value;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 10),
-                            CIA_CheckBoxWidget(
-                              text: "Needs Remake",
-                              value: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake ==
-                                  true,
-                              onChange: (value) {
-                                if (value == true) {
-                                  widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression ??= [
-                                    DiagnosticImpressionModel()
-                                  ];
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.firstOrNull?.needsRemake =
-                                      true;
-                                } else {
-                                  widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_DiagnosticImpression!.firstOrNull?.needsRemake =
-                                      null;
-                                }
-
-                                setState(() {});
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Bite,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Bite"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Diagnostic",
-                          items:
-                              EnumProstheticDiagnosticBiteDiagnostic.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic?.index,
-                            name: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic?.name,
                           ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_Bite ??= [BiteModel()];
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_Bite!.first.diagnostic =
-                                EnumProstheticDiagnosticBiteDiagnostic.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Step",
-                          items: EnumProstheticDiagnosticBiteNextStep.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep?.index,
-                            name: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep?.name,
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "${widget.searchProstheticDTO.type.name} Items",
                           ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_Bite ??= [BiteModel()];
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_Bite!.first.nextStep =
-                                EnumProstheticDiagnosticBiteNextStep.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.ScanAppliance,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Scan Appliance"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Diagnostic",
-                          items: EnumProstheticDiagnosticScanApplianceDiagnostic.values
-                              .map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name))
-                              .toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic?.index,
-                            name: widget.searchProstheticDTO.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.diagnosticAnd ??= ProstheticTreatmentModel();
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_ScanAppliance ??= [ScanApplianceModel()];
-                            widget.searchProstheticDTO.diagnosticAnd!.prostheticDiagnostic_ScanAppliance!.first.diagnostic =
-                                EnumProstheticDiagnosticScanApplianceDiagnostic.values[value.id!];
-
-                            setState(() {});
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.SingleAndBridge,
-            child: AdvancedSearchFilterChildWidget(
-              title: "Single And Bridge (All of the following)",
-              child: Column(
-                children: [
-                  CIA_DropDownSearchBasicIdName(
-                    items: EnumProstheticType.values
-                        .getRange(3, EnumProstheticType.values.length)
-                        .map((e) => BasicNameIdObjectEntity(name: e.name, id: e.index))
-                        .toList(),
-                    onSelect: (value) {
-                      widget.searchProstheticDTO.setNull();
-                      widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                      if (value.id == 3)
-                        widget.searchProstheticDTO.singleAndBridgeAnd!.healingCollars = [FinalProthesisHealingCollarModel()];
-                      else if (value.id == 4)
-                        widget.searchProstheticDTO.singleAndBridgeAnd!.tryIns = [FinalProthesisTryInModel()];
-                      else if (value.id == 5)
-                        widget.searchProstheticDTO!.singleAndBridgeAnd!.delivery = [FinalProthesisDeliveryModel()];
-                      else if (value.id == 6) widget.searchProstheticDTO.singleAndBridgeAnd!.impressions = [FinalProthesisImpressionModel()];
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.SingleAndBridge;
-                      setState(() => widget.searchProstheticDTO.prostheticType = EnumProstheticType.values[value.id!]);
-                    },
-                    selectedItem: BasicNameIdObjectEntity(
-                        id: widget.searchProstheticDTO.prostheticType.index, name: widget.searchProstheticDTO.prostheticType.name),
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.HealingColar,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Healing Collars"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisHealingCollarStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.healingCollars ??= [FinalProthesisHealingCollarModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.healingCollars!.first.finalProthesisHealingCollarStatus =
-                                EnumFinalProthesisHealingCollarStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items:
-                              EnumFinalProthesisHealingCollarNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget
-                                .searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarNextVisit?.index,
-                            name: widget
-                                .searchProstheticDTO.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.healingCollars ??= [FinalProthesisHealingCollarModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.healingCollars!.first.finalProthesisHealingCollarNextVisit =
-                                EnumFinalProthesisHealingCollarNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Impression,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Impressions"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisImpressionStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.impressions ??= [FinalProthesisImpressionModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.impressions!.first.finalProthesisImpressionStatus =
-                                EnumFinalProthesisImpressionStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisImpressionNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.impressions ??= [FinalProthesisImpressionModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.impressions!.first.finalProthesisImpressionNextVisit =
-                                EnumFinalProthesisImpressionNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.TryIn,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Try Ins"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisTryInStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.tryIns ??= [FinalProthesisTryInModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.tryIns!.first.finalProthesisTryInStatus =
-                                EnumFinalProthesisTryInStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisTryInNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.tryIns ??= [FinalProthesisTryInModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.tryIns!.first.finalProthesisTryInNextVisit =
-                                EnumFinalProthesisTryInNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Delivery,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Deliveries"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisDeliveryStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.delivery ??= [FinalProthesisDeliveryModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.delivery!.first.finalProthesisDeliveryStatus =
-                                EnumFinalProthesisDeliveryStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisDeliveryNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.index,
-                            name: widget.searchProstheticDTO.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.singleAndBridgeAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.delivery ??= [FinalProthesisDeliveryModel()];
-                            widget.searchProstheticDTO.singleAndBridgeAnd!.delivery!.first.finalProthesisDeliveryNextVisit =
-                                EnumFinalProthesisDeliveryNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.searchProstheticDTO.searchType == EnumProstheticSearchType.FullArch,
-            child: AdvancedSearchFilterChildWidget(
-              title: "Full Arch (All of the following)",
-              child: Column(
-                children: [
-                  CIA_DropDownSearchBasicIdName(
-                    items: EnumProstheticType.values
-                        .getRange(3, EnumProstheticType.values.length)
-                        .map((e) => BasicNameIdObjectEntity(name: e.name, id: e.index))
-                        .toList(),
-                    onSelect: (value) {
-                      widget.searchProstheticDTO.setNull();
-                      widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                      if (value.id == 3)
-                        widget.searchProstheticDTO.fullArchAnd!.healingCollars = [FinalProthesisHealingCollarModel()];
-                      else if (value.id == 4)
-                        widget.searchProstheticDTO.fullArchAnd!.tryIns = [FinalProthesisTryInModel()];
-                      else if (value.id == 5)
-                        widget.searchProstheticDTO!.fullArchAnd!.delivery = [FinalProthesisDeliveryModel()];
-                      else if (value.id == 6) widget.searchProstheticDTO.fullArchAnd!.impressions = [FinalProthesisImpressionModel()];
-                      widget.searchProstheticDTO.searchType = EnumProstheticSearchType.FullArch;
-                      setState(() => widget.searchProstheticDTO.prostheticType = EnumProstheticType.values[value.id!]);
-                    },
-                    selectedItem: BasicNameIdObjectEntity(
-                        id: widget.searchProstheticDTO.prostheticType.index, name: widget.searchProstheticDTO.prostheticType.name),
-                  ),
-                  SizedBox(height: 10),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.HealingColar,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Healing Collars"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisHealingCollarStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.healingCollars ??= [FinalProthesisHealingCollarModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.healingCollars!.first.finalProthesisHealingCollarStatus =
-                                EnumFinalProthesisHealingCollarStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items:
-                              EnumFinalProthesisHealingCollarNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarNextVisit?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.healingCollars ??= [FinalProthesisHealingCollarModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.healingCollars!.first.finalProthesisHealingCollarNextVisit =
-                                EnumFinalProthesisHealingCollarNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Impression,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Impressions"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisImpressionStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.impressions ??= [FinalProthesisImpressionModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.impressions!.first.finalProthesisImpressionStatus =
-                                EnumFinalProthesisImpressionStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisImpressionNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.impressions ??= [FinalProthesisImpressionModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.impressions!.first.finalProthesisImpressionNextVisit =
-                                EnumFinalProthesisImpressionNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.TryIn,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Try Ins"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisTryInStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.tryIns ??= [FinalProthesisTryInModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.tryIns!.first.finalProthesisTryInStatus =
-                                EnumFinalProthesisTryInStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisTryInNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.tryIns ??= [FinalProthesisTryInModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.tryIns!.first.finalProthesisTryInNextVisit =
-                                EnumFinalProthesisTryInNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Visibility(
-                    visible: widget.searchProstheticDTO.prostheticType == EnumProstheticType.Delivery,
-                    child: Column(
-                      children: [
-                        FormTextValueWidget(text: "Deliveries"),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Status",
-                          items: EnumFinalProthesisDeliveryStatus.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.delivery ??= [FinalProthesisDeliveryModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.delivery!.first.finalProthesisDeliveryStatus =
-                                EnumFinalProthesisDeliveryStatus.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        CIA_DropDownSearchBasicIdName(
-                          label: "Next Visit",
-                          items: EnumFinalProthesisDeliveryNextVisit.values.map((e) => BasicNameIdObjectEntity(id: e.index, name: e.name)).toList(),
-                          selectedItem: BasicNameIdObjectEntity(
-                            id: widget.searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.index,
-                            name: widget.searchProstheticDTO.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name,
-                          ),
-                          onSelect: (value) {
-                            widget.searchProstheticDTO.fullArchAnd ??= ProstheticTreatmentFinalModel();
-                            widget.searchProstheticDTO.fullArchAnd!.delivery ??= [FinalProthesisDeliveryModel()];
-                            widget.searchProstheticDTO.fullArchAnd!.delivery!.first.finalProthesisDeliveryNextVisit =
-                                EnumFinalProthesisDeliveryNextVisit.values[value.id!];
-
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                          ...prostheticItems
+                              .map(
+                                (e) => CIA_CheckBoxWidget(
+                                  text: AddSpacesToSentence(e.name ?? ""),
+                                  value: widget.searchProstheticDTO.itemId == e.id,
+                                  onChange: (value) {
+                                    widget.searchProstheticDTO.itemId = e.id;
+                                    widget.searchProstheticDTO.statusId = null;
+                                    widget.searchProstheticDTO.nextId = null;
+                                    settingsBloc.emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(
+                                      data: prostheticItems,
+                                      type: widget.searchProstheticDTO.type,
+                                    ));
+                                  },
+                                ),
+                              )
+                              .toList()
+                        ],
+                      ),
+                      widget.searchProstheticDTO.itemId == null
+                          ? Container()
+                          : Column(
+                              children: [
+                                CIA_DropDownSearchBasicIdName(
+                                  label:
+                                      "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Procedure",
+                                  asyncUseCase: sl<GetProstheticStatusUseCase>(),
+                                  selectedItem: widget.searchProstheticDTO.status,
+                                  searchParams:
+                                      GetProstheticStatusParams(itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                  onSelect: (value) {
+                                    widget.searchProstheticDTO.statusId = value.id;
+                                    widget.searchProstheticDTO.status = value;
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                CIA_DropDownSearchBasicIdName(
+                                  label:
+                                      "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Step",
+                                  asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
+                                  searchParams:
+                                      GetProstheticNextVisitParams(itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                  selectedItem: widget.searchProstheticDTO.nextVisit,
+                                  onSelect: (value) {
+                                    widget.searchProstheticDTO.nextId = value.id;
+                                    widget.searchProstheticDTO.nextVisit = value;
+                                  },
+                                ),
+                              ],
+                            )
+                    ],
+                  );
+                }),
           ),
           AdvancedSearchFilterChildWidget(
               title: "Post Prosthesis Complications (One of the following)",
@@ -784,7 +286,7 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                       setState(() {});
                     },
                   ),
-                  ],
+                ],
               )),
           AdvancedSearchFilterChildWidget(
               title: "Post Prosthesis Complications (All of the following)",
@@ -859,7 +361,7 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                       setState(() {});
                     },
                   ),
-                  ],
+                ],
               )),
         ],
       ),
