@@ -235,6 +235,7 @@ namespace CIA.Controllers
 
             _aPI_Response.Result = await _cia_DbContext.DiagnosticSteps
                .Where(x => x.PatientId == id)
+               .OrderBy(x => x.Date)
                .Include(x => x.DiagnosticItem)
                .Include(x => x.DiagnosticStatusItem)
                .Include(x => x.DiagnosticNextVisitItem)
@@ -252,6 +253,7 @@ namespace CIA.Controllers
                     .Where(x =>
                     (x.FullArchUpper != true && x.FullArchLower != true) &&
                     x.PatientId == id)
+                    .OrderBy(x => x.Date)
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
@@ -262,6 +264,7 @@ namespace CIA.Controllers
                     .Where(x =>
                     (x.FullArchUpper == true || x.FullArchLower == true) &&
                     x.PatientId == id)
+                    .OrderBy(x => x.Date)
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
@@ -901,7 +904,7 @@ namespace CIA.Controllers
             {
                 var tempNote = $"{step?.FinalItem?.Name ?? ""}: ";
                 if (!step.Teeth.IsNullOrEmpty())
-                    tempNote += String.Join(",", step.Teeth!.ToArray())+" ";
+                    tempNote += String.Join(",", step.Teeth!.ToArray()) + " ";
                 if (step.FullArchLower == true)
                     tempNote += "Lower Arch ";
                 if (step.FullArchUpper == true)

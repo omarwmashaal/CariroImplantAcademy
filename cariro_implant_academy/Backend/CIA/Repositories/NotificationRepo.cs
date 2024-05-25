@@ -468,5 +468,44 @@ namespace CIA.Repositories
             _dbContext.SaveChanges();
 
         }
+        public async Task ToDoList(int patientId,int operatorId)
+        {
+            List<ApplicationUser> secretaries = (await _userManager.GetUsersInRoleAsync("secretary")).ToList();
+            var patient = await _dbContext.Patients.Include(x => x.Doctor).FirstAsync(x => x.Id == patientId);
+            ApplicationUser? doctor = patient.Doctor;
+            var users = new List<ApplicationUser>();
+
+            if (secretaries != null)
+                users.AddRange(secretaries.ToList());
+            if (patient?.Doctor != null)
+                users.Add(patient.Doctor);
+            users.Add(await _dbContext.Users.FirstAsync(x => x.IdInt == operatorId));
+            users = users.Distinct().ToList();
+
+            foreach (var user in users)
+            {
+                var notification = new NotificationModel()
+                {
+                    Content = $"Patient {patient.Name} has OverDue To Do List",
+                    Title = "OverDue To Do List",
+                    Date = DateTime.UtcNow,
+                    InfoId = patientId,
+                    Type = EnumNotificationType.Patient,
+                    Read = false,
+                    User = user,
+                    UserId = user.IdInt,
+                };
+                _dbContext.Notifications.Add(notification);
+                if (user.Connections != null)
+                    foreach (var conn in user.Connections)
+                    {
+                        await _hubContext.Clients.Client(conn.ConnectionId).SendAsync("NewNotification", "");
+
+                    }
+            }
+
+            _dbContext.SaveChanges();
+
+        }
     }
 }

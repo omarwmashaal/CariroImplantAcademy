@@ -1,4 +1,5 @@
 ﻿using CIA.DataBases;
+using CIA.Models;
 using CIA.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,21 @@ namespace CIA.Repositories
             _dbContext = dbContext;
             _iNotification = iNotification;
         }
+
+        public async Task PatientToDoListCheck()
+        {
+            var toDoLists = await _dbContext.ToDoLists.Where(x => x.DueDate.Value.Date <= DateTime.UtcNow.Date && x.Done != true).Select(x => new
+            {
+                x.PatientId,
+                x.OperatorId,
+            }).Distinct().ToListAsync();
+
+            foreach (var toDoList in toDoLists)
+            {
+                await _iNotification.ToDoList((int)toDoList.PatientId,toDoList.OperatorId??0);
+            }
+        }
+
         public async Task RemindHBA1CIn3Month()
         {
             var patients = await _dbContext.Patients.Include(x => x.MedicalExamination)
