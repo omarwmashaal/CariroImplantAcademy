@@ -1285,7 +1285,18 @@ namespace CIA.Controllers
 
 
             List<DentalExaminationModel> faildImplantsDentalExaminations = new List<DentalExaminationModel>();
+            List<TreatmentPlanModel> treatmentPlans = new();
+            if (model.ClearanceUpper == true)
+                model.Ids = await _cia_DbContext.TreatmentPlans
+                    .Where(x => model.Ids.Contains((int)x.PatientId) && x.ClearanceUpper == true)
+                    .Select(x => (int)x.PatientId)
+                    .ToListAsync();
 
+            if (model.ClearanceLower == true)
+                model.Ids = await _cia_DbContext.TreatmentPlans
+                    .Where(x => model.Ids.Contains((int)x.PatientId) && x.ClearanceLower == true)
+                    .Select(x => (int)x.PatientId)
+                    .ToListAsync();
 
 
             if (!model.Ids.IsNullOrEmpty())
@@ -1466,10 +1477,11 @@ namespace CIA.Controllers
                 TreatmentId = (int)x.TreatmentItemId,
                 TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}"
             }).ToListAsync();
+            if (model.ClearanceLower == true || model.ClearanceUpper == true)
+                treatmentPlans = await _cia_DbContext.TreatmentPlans.Where(x => finalResult.Select(x => x.Id).Contains((int)x.PatientId)).ToListAsync();
 
             if (!model.And_TreatmentIds.IsNullOrEmpty())
             {
-                List<int> patientsToBeRemoved = new List<int>();
                 var patientIds = finalResult.Select(x => x.SecondaryId).ToList();
                 foreach (var patientId in patientIds)
                 {
@@ -1517,7 +1529,15 @@ namespace CIA.Controllers
 
 
 
-
+            if (model.ClearanceLower == true || model.ClearanceUpper == true)
+            {
+                foreach (var r in finalResult)
+                {
+                    var t = treatmentPlans.FirstOrDefault(x => x.PatientId == r.Id);
+                    r.ClearanceUpper = t?.ClearanceUpper;
+                    r.ClearanceLower = t?.ClearanceLower;
+                }
+            }
 
             _aPI_Response.Result = finalResult;
 

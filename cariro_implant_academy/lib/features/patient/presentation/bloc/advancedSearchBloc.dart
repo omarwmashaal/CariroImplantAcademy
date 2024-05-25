@@ -275,12 +275,14 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
                     label: "Go",
                     onTab: () => goToPatient(e.id!),
                   )));
-
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
               if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
+              if (query.clearnaceLower == true) r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower==true? "Yes":"No"));
+              if (query.clearnaceUpper == true) r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper==true? "Yes":"No"));
+
               for (var column in columns) {
                 r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }

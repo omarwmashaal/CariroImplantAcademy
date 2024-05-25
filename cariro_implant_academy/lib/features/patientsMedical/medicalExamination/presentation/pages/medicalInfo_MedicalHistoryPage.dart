@@ -31,6 +31,7 @@ import '../../domain/entities/diabeticEntity.dart';
 import '../../domain/entities/hba1cEntity.dart';
 import '../../domain/entities/medicalExaminationEntity.dart';
 import '../bloc/medicaHistoryBloc.dart';
+import 'package:collection/collection.dart';
 
 class PatientMedicalHistory extends StatefulWidget {
   PatientMedicalHistory({Key? key, required this.patientId}) : super(key: key);
@@ -772,20 +773,17 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                           ),
                           StatefulBuilder(
                             builder: (context, setState) {
-                              int index = 0;
-
                               if (medicalHistoryData.drugsTaken == null) medicalHistoryData.drugsTaken = [];
                               if (medicalHistoryData.drugsTaken!.isEmpty) medicalHistoryData.drugsTaken!.add("");
                               return Column(
                                 children: medicalHistoryData.drugsTaken!
-                                    .map(
-                                      (e) => Padding(
+                                    .mapIndexed(
+                                      (index, e) => Padding(
                                         padding: const EdgeInsets.only(bottom: 10.0),
                                         child: Row(
                                           children: [
                                             Text(() {
-                                              index += 1;
-                                              return index.toString();
+                                              return (index + 1).toString();
                                             }()),
                                             SizedBox(width: 10),
                                             Expanded(
@@ -794,7 +792,7 @@ class _PatientMedicalHistoryState extends State<PatientMedicalHistory> {
                                                 controller: TextEditingController(text: e ?? ""),
                                                 onChange: (v) {
                                                   e = v;
-                                                  medicalHistoryData.drugsTaken![index - 1] = v;
+                                                  medicalHistoryData.drugsTaken![index] = v;
                                                 },
                                               ),
                                             ),

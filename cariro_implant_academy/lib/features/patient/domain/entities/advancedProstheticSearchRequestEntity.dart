@@ -48,8 +48,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
       this.nextId == null &&
       complicationsAnd == null &&
       complicationsOr == null &&
-      screwRetained == false &&
-      cementRetained == false;
+      screwRetained != true &&
+      cementRetained != true;
 
   setNull() {
     itemId = null;

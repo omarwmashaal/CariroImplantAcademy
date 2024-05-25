@@ -13,6 +13,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   String? secondaryId;
   String? patientName;
   bool? noTreatmentPlan;
+  bool? clearnaceUpper;
+  bool? clearnaceLower;
   bool? done;
   List<int>? and_treatmentIds;
   List<int>? or_treatmentIds;
@@ -39,6 +41,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.implantFailed,
     this.complicationsAfterSurgery,
     this.noTreatmentPlan,
+    this.clearnaceLower = false,
+    this.clearnaceUpper = false,
     this.str_complicationsAfterSurgery,
     this.str_complicationsAfterProsthesis,
     this.str_implantFailed,
@@ -74,7 +78,12 @@ class AdvancedTreatmentSearchEntity extends Equatable {
         this.treatmentId,
       ];
 
-  bool isNull() => noTreatmentPlan == null && (and_treatmentIds?.isEmpty ?? true) && (or_treatmentIds?.isEmpty ?? true);
+  bool isNull() =>
+      noTreatmentPlan == null &&
+      (and_treatmentIds?.isEmpty ?? true) &&
+      (or_treatmentIds?.isEmpty ?? true) &&
+      clearnaceLower != true &&
+      clearnaceUpper != true;
 
   // AdvancedTreatmentSearchEntity copyWith({
   //   ValueGetter<List<int>?>? ids,
