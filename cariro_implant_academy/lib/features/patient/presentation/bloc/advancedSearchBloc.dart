@@ -388,9 +388,9 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
               }
 
               if (request?.screwRetained == true) {
-                cells.add(DataGridCell<bool>(columnName: "Screw Retained", value: e.step?.screwRetained));
+                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained==true?'Yes':'No'));
               } else if (request?.cementRetained == true) {
-                cells.add(DataGridCell<bool>(columnName: "Cement Retained", value: e.step?.cementRetained));
+                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained==true?'Yes':'No'));
               }
               cells.add(DataGridCell<String>(columnName: "Step", value: e.step?.item?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Status", value: e.step?.status?.name ?? ""));

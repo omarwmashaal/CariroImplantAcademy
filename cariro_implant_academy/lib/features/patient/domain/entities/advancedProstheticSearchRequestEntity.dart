@@ -25,8 +25,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     this.fullArch = false,
     this.complicationsAnd,
     this.complicationsOr,
-    screwRetained = false,
-    cementRetained = false,
+    this.screwRetained = false,
+    this.cementRetained = false,
     this.type = EnumProstheticType.Diagnostic,
   });
 

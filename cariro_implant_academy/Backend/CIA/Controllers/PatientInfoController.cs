@@ -1661,10 +1661,6 @@ namespace CIA.Controllers
             {
 
 
-                if (model.ScrewRetained == true)
-                    finalStepsQuery = finalStepsQuery.Where(x => x.ScrewRetained == true);
-                else if (model.CementRetained == true)
-                    finalStepsQuery = finalStepsQuery.Where(x => x.CementRetained == true);
                 if (model.FullArch)
                 {
                     finalStepsQuery = finalStepsQuery.Where(x => x.FullArchLower == true || x.FullArchUpper == true);
@@ -1684,7 +1680,10 @@ namespace CIA.Controllers
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalStatusItemId == model.StatusId);
                 if (model.NextId != null)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalNextVisitItemId == model.NextId);
-
+                if (model.ScrewRetained == true)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().ScrewRetained == true);
+                else if (model.CementRetained == true)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().CementRetained == true);
                 finalStepsQuery = tempfinalStepsQuery.Select(x => x.OrderBy(x => x.Date).Last());
 
 
