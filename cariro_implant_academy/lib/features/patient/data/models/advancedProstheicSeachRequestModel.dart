@@ -18,7 +18,7 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['ids'] = ids?.map((e) => e as int).toList();
-    data['fullArch'] = this.fullArch;
+    data['fullArch'] = this.fullArch??false;
     data['itemId'] = this.itemId;
     data['nextId'] = this.nextId;
     data['statusId'] = this.statusId;

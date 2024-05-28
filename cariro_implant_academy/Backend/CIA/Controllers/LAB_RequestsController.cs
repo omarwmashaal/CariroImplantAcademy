@@ -259,6 +259,7 @@ namespace CIA.Controllers
             request.EntryById = (int)user.IdInt;
             request.Date = DateTime.UtcNow;
             request.Customer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.CustomerId);
+            request.Designer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.DesignerId);
             if (request.AssignedToId != null)
                 request.AssignedTo = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.AssignedToId);
             await _dbContext.Lab_Requests.AddAsync(request);
@@ -573,7 +574,7 @@ namespace CIA.Controllers
             _dbContext.SaveChanges();
 
             labRequestSteps = await _dbContext.LabRequestStepItems
-                .Where(x=>x.LabRequestId==request.Id)
+                .Where(x => x.LabRequestId == request.Id)
                 .Include(x => x.ConsumedLabItem)
                 .Include(x => x.LabItemFromSettings)
                 .ToListAsync();
@@ -607,7 +608,7 @@ namespace CIA.Controllers
                     receipt.ToothReceiptData.Add(new ToothReceiptData
                     {
                         Tooth = (int)step.Tooth,
-                        Name = $"{step.LabItemFromSettings?.Name??""} || {step.ConsumedLabItem?.Name??""}",
+                        Name = $"{step.LabItemFromSettings?.Name ?? ""} || {step.ConsumedLabItem?.Name ?? ""}",
                         Price = step.LabPrice ?? step.LabItemFromSettings.UnitPrice,
                     });
 
@@ -641,7 +642,11 @@ namespace CIA.Controllers
                 _dbContext.Receipts.Update(receipt);
                 sendNotification = true;
             }
+            if (request.Status == EnumLabRequestStatus.FinishedDesign && requestFromDB.Status != EnumLabRequestStatus.FinishedDesign)
+            {
+                await _notificationRepo.LAB_RequestFinishedDesign(request.Id);
 
+            }
             _dbContext.Lab_Requests.Update(request);
             _dbContext.SaveChanges();
 

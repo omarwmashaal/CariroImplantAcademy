@@ -401,14 +401,20 @@ namespace CIA.Repositories
         {
 
             var sender = await _userRepo.GetUser();
-            var request = await _dbContext.Lab_Requests.Include(x => x.Patient).Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == requestId);
+            var request = await _dbContext.Lab_Requests
+                .Include(x => x.Patient)
+                .Include(x => x.Customer)
+                .Include(x => x.Designer)
+                .FirstOrDefaultAsync(x => x.Id == requestId);
             var users = await _userManager.GetUsersInRoleAsync("labmoderator");
-
+            users.Add(request.Designer);
             foreach (var user in users)
             {
                 var notification = new NotificationModel()
                 {
-                    Content = $"Lab Request for patient {request.Patient.Name} is added by {sender.Name}",
+                    Content = user == request.Designer ?
+                           $"Your are assigned as Designer for Request of patient {request.Patient.Name}, added by {sender.Name}"
+                    : $"Lab Request for patient {request.Patient.Name} is added by {sender.Name}",
                     Title = "New Lab Request",
                     Date = DateTime.UtcNow,
                     InfoId = requestId,
@@ -432,7 +438,7 @@ namespace CIA.Repositories
         public async Task HighHBA1C(int patientId, double hba1c)
         {
             List<ApplicationUser> secretaries = (await _userManager.GetUsersInRoleAsync("secretary")).ToList();
-            var patient = await _dbContext.Patients.Include(x => x.Doctor).Include(x=>x.MedicalExamination).FirstAsync(x => x.Id == patientId);
+            var patient = await _dbContext.Patients.Include(x => x.Doctor).Include(x => x.MedicalExamination).FirstAsync(x => x.Id == patientId);
             ApplicationUser? doctor = patient.Doctor;
             var users = new List<ApplicationUser>();
 
@@ -468,7 +474,7 @@ namespace CIA.Repositories
             _dbContext.SaveChanges();
 
         }
-        public async Task ToDoList(int patientId,int operatorId)
+        public async Task ToDoList(int patientId, int operatorId)
         {
             List<ApplicationUser> secretaries = (await _userManager.GetUsersInRoleAsync("secretary")).ToList();
             var patient = await _dbContext.Patients.Include(x => x.Doctor).FirstAsync(x => x.Id == patientId);
@@ -505,6 +511,41 @@ namespace CIA.Repositories
             }
 
             _dbContext.SaveChanges();
+
+        }
+
+        public async Task LAB_RequestFinishedDesign(int requestId)
+        {
+            var request = await _dbContext.Lab_Requests.AsNoTracking().FirstAsync(x => x.Id == requestId);
+            List<ApplicationUser> users = new();
+            users.AddRange(await _userManager.GetUsersInRoleAsync("labmoderator"));
+            users.AddRange(await _userManager.GetUsersInRoleAsync("secretary"));
+            var sender = await _userRepo.GetUser();
+            foreach (var user in users)
+            {
+
+                var notification = new NotificationModel()
+                {
+                    Content = $"{sender.Name} has finished Design of request {requestId}",
+                    Title = "Lab Request Design Finished",
+                    Date = DateTime.UtcNow,
+                    InfoId = requestId,
+                    Type = EnumNotificationType.LabRequest,
+                    Read = false,
+                    User = user,
+                    UserId = user.IdInt,
+                };
+                await _dbContext.AddAsync(notification);
+                await _dbContext.SaveChangesAsync();
+                if (user.Connections != null)
+                    foreach (var conn in user.Connections)
+                    {
+                        await _hubContext.Clients.Client(conn.ConnectionId).SendAsync("NewNotification", "");
+
+                    }
+
+            }
+
 
         }
     }
