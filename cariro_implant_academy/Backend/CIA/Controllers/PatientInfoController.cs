@@ -59,6 +59,7 @@ namespace CIA.Controllers
         {
 
             var user = await _userRepo.GetUser();
+            patient.Website = _site;
             var patient_ = _mapper.Map<Patient>(patient);
             patient_.RegisteredById = user.IdInt;
             patient_.RegisteredBy = user;
