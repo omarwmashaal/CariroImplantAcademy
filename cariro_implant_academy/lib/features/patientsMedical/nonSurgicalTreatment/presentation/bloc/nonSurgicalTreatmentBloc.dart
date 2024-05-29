@@ -185,7 +185,6 @@ class NonSurgicalTreatmentDataGridSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Supervisor', value: e.supervisor?.name!),
               DataGridCell<DateTime>(columnName: 'Next Visit', value: e.nextVisit),
               DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
-              DataGridCell<String>(columnName: 'Treatment', value: e.treatment ?? ""),
               DataGridCell<Widget>(
                   columnName: 'Edit',
                   value: Row(

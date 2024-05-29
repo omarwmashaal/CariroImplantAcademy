@@ -272,6 +272,7 @@ namespace CIA.Models.TreatmentModels
         public String? PriceAction { get; set; }
         public bool AllowAssign { get; set; } = true;
         public bool ShowInSurgical { get; set; } = true;
+        public bool AllTeeth { get; set; } = false;
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
         
     }

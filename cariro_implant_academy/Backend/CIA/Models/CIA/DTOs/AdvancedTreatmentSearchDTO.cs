@@ -51,8 +51,10 @@ namespace CIA.Models.CIA.DTOs
         public bool? And_gbrWithoutImplant { get; set; }
         public bool? And_openSinusWithoutImplant { get; set; }
         public bool? And_closedSinusWithoutImplant { get; set; }
+        public bool? ClearanceUpper { get; set; }
+        public bool? ClearanceLower { get; set; }
 
-         public ComplicationsAfterSurgeryModel? complicationsAfterSurgery { get; set; }
+        public ComplicationsAfterSurgeryModel? complicationsAfterSurgery { get; set; }
         public ComplicationsAfterSurgeryModel? complicationsAfterSurgeryOr { get; set; }
         public bool? ImplantFailed { get; set; }
      

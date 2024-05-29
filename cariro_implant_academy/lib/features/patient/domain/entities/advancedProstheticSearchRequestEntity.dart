@@ -1,106 +1,64 @@
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:cariro_implant_academy/features/patient/presentation/widgets/advancedSearchProstheticFiltersWidget.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticModel.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/data/models/prostheticTreatmentFinalModel.dart';
-
-import '../../../patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
-
-enum EnumProstheticSearchType {
-  Diagnostic,
-  SingleAndBridge,
-  FullArch,
-}
 
 class AdvancedProstheticSearchRequestEntity extends Equatable {
   List<int>? ids;
-  ProstheticTreatmentModel? diagnosticAnd;
-  ProstheticTreatmentFinalModel? singleAndBridgeAnd;
-  ProstheticTreatmentFinalModel? fullArchAnd;
-  ProstheticTreatmentModel? diagnosticOr;
-  ProstheticTreatmentFinalModel? singleAndBridgeOr;
-  ProstheticTreatmentFinalModel? fullArchOr;
+  int? itemId;
+  int? statusId;
+  BasicNameIdObjectEntity? status;
+  BasicNameIdObjectEntity? nextVisit;
+  int? nextId;
+  EnumProstheticType type;
+  bool? fullArch;
+  bool? screwRetained;
+  bool? cementRetained;
   ComplicationsAfterProsthesisEntity? complicationsAnd;
   ComplicationsAfterProsthesisEntity? complicationsOr;
-  EnumProstheticSearchType? searchType;
-  EnumProstheticType prostheticType = EnumProstheticType.Diagnostic;
 
   AdvancedProstheticSearchRequestEntity({
     this.ids,
-    this.diagnosticAnd,
-    this.singleAndBridgeAnd,
-    this.fullArchAnd,
-    this.diagnosticOr,
-    this.singleAndBridgeOr,
-    this.fullArchOr,
+    this.itemId,
+    this.statusId,
+    this.nextId,
+    this.fullArch = false,
     this.complicationsAnd,
     this.complicationsOr,
-    this.searchType,
-    prostheticType = EnumProstheticType.Diagnostic,
+    this.screwRetained = false,
+    this.cementRetained = false,
+    this.type = EnumProstheticType.Diagnostic,
   });
 
   @override
   List<Object?> get props => [
         ids,
-        diagnosticAnd,
-        singleAndBridgeAnd,
-        fullArchAnd,
-        diagnosticOr,
-        singleAndBridgeOr,
-        fullArchOr,
-        complicationsAnd,
-        complicationsOr,
-        searchType,
+        this.type,
+        this.itemId,
+        this.statusId,
+        this.nextId,
+        this.fullArch,
+        screwRetained,
+        cementRetained,
       ];
 
   bool isNull() =>
-      (diagnosticAnd?.isNull() ?? true) &&
-      (singleAndBridgeAnd?.isNull() ?? true) &&
-      (fullArchAnd?.isNull() ?? true) &&
-      (diagnosticOr?.isNull() ?? true) &&
-      (singleAndBridgeOr?.isNull() ?? true) &&
-      (fullArchOr?.isNull() ?? true) &&
-      (complicationsAnd?.isNull() ?? true) &&
-      (complicationsOr?.isNull() ?? true);
+      this.itemId == null &&
+      this.statusId == null &&
+      this.nextId == null &&
+      complicationsAnd == null &&
+      complicationsOr == null &&
+      screwRetained != true &&
+      cementRetained != true;
 
   setNull() {
-    diagnosticAnd = null;
-    singleAndBridgeAnd = null;
-    fullArchAnd = null;
-    diagnosticOr = null;
-    singleAndBridgeOr = null;
-    fullArchOr = null;
+    itemId = null;
+    statusId = null;
+    nextId = null;
     complicationsAnd = null;
     complicationsOr = null;
-    searchType = null;
-  }
-
-  AdvancedProstheticSearchRequestEntity copyWith({
-    ValueGetter<List<int>?>? ids,
-    ValueGetter<ProstheticTreatmentModel?>? diagnosticAnd,
-    ValueGetter<ProstheticTreatmentFinalModel?>? singleAndBridgeAnd,
-    ValueGetter<ProstheticTreatmentFinalModel?>? fullArchAnd,
-    ValueGetter<ProstheticTreatmentModel?>? diagnosticOr,
-    ValueGetter<ProstheticTreatmentFinalModel?>? singleAndBridgeOr,
-    ValueGetter<ProstheticTreatmentFinalModel?>? fullArchOr,
-    ValueGetter<ComplicationsAfterProsthesisEntity?>? complicationsAnd,
-    ValueGetter<ComplicationsAfterProsthesisEntity?>? complicationsOr,
-    ValueGetter<EnumProstheticSearchType?>? searchType,
-    EnumProstheticType? prostheticType,
-  }) {
-    return AdvancedProstheticSearchRequestEntity(
-      ids: ids != null ? ids() : this.ids,
-      diagnosticAnd: diagnosticAnd != null ? diagnosticAnd() : this.diagnosticAnd,
-      singleAndBridgeAnd: singleAndBridgeAnd != null ? singleAndBridgeAnd() : this.singleAndBridgeAnd,
-      fullArchAnd: fullArchAnd != null ? fullArchAnd() : this.fullArchAnd,
-      diagnosticOr: diagnosticOr != null ? diagnosticOr() : this.diagnosticOr,
-      singleAndBridgeOr: singleAndBridgeOr != null ? singleAndBridgeOr() : this.singleAndBridgeOr,
-      fullArchOr: fullArchOr != null ? fullArchOr() : this.fullArchOr,
-      complicationsAnd: complicationsAnd != null ? complicationsAnd() : this.complicationsAnd,
-      complicationsOr: complicationsOr != null ? complicationsOr() : this.complicationsOr,
-      searchType: searchType != null ? searchType() : this.searchType,
-      prostheticType: prostheticType ?? this.prostheticType,
-    );
+    fullArch = false;
+    screwRetained = false;
+    cementRetained = false;
   }
 }

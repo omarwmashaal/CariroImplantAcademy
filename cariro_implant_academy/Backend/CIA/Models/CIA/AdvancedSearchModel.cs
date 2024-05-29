@@ -54,6 +54,8 @@ namespace CIA.Models.CIA
         public string TreatmentValue { get; set; }
         public string TreatmentName { get; set; }
         public int TreatmentId { get; set; }
+        public bool? ClearanceUpper { get; set; }
+        public bool? ClearanceLower { get; set; }
         public DentalExaminationModel.DentalExamination? ImplantFailed { get; set; }
         public String? Str_ComplicationsAfterSurgery { get; set; }
         public String? Str_ComplicationsAfterProsthesis { get; set; }

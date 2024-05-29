@@ -105,7 +105,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormTextKeyWidget(text: "Tooth: ${widget.stepItem.tooth} || ${widget.stepItem.labItemFromSettings?.name ?? ""}"),
+                  FormTextKeyWidget(text: "Tooth: ${widget.stepItem.tooth==0?"All":widget.stepItem.tooth} || ${widget.stepItem.labItemFromSettings?.name ?? ""}"),
                   SizedBox(height: 10),
                   Row(
                     children: [

@@ -41,3 +41,5 @@ enum EnumFinalProthesisImpressionNextVisit { Custom_Abutment, Try_In, Delivery }
 enum EnumFinalProthesisTryInNextVisit { Delivery, Try_In_PMMA, ReImpression }
 
 enum EnumFinalProthesisDeliveryNextVisit { Done, ReDesign, ReImpression, ReTryIn }
+
+enum EnumProstheticType { Diagnostic, Final }

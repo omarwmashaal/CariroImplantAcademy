@@ -367,7 +367,7 @@ namespace CIA.Controllers
 
 
 
-                r.ToothReceiptData = newReceipt.Where(x=>x.Price!=0).ToList();
+                r.ToothReceiptData = newReceipt.Where(x => x.Price != 0).ToList();
                 var tempTotal = r.Total;
                 r.Total = r.LabFees ?? 0;
                 foreach (var t in r.ToothReceiptData)
@@ -381,11 +381,551 @@ namespace CIA.Controllers
 
 
             }
-            
+
             _ciaDbContext.Receipts.UpdateRange(receipt);
             _ciaDbContext.SaveChanges();
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpGet("MigrateToNewProstheticSystem")]
+        public async Task<IActionResult> MigrateToNewProstheticSystem()
+        {
+            //_ciaDbContext.FinalItems.Add(new FinalItemModel { Id = 1, Name = "Healing Collar" });
+            //_ciaDbContext.FinalItems.Add(new FinalItemModel { Id = 2, Name = "Impression" });
+            //_ciaDbContext.FinalItems.Add(new FinalItemModel { Id = 3, Name = "Try In" });
+            //_ciaDbContext.FinalItems.Add(new FinalItemModel { Id = 4, Name = "Delivery" });
+            //_ciaDbContext.SaveChanges();
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 1, FinaltemId = 1, Name = "With Customization" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 2, FinaltemId = 1, Name = "Without Customization" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 3, FinaltemId = 2, Name = "Scan by scan body" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 4, FinaltemId = 2, Name = "Scan by abutment" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 5, FinaltemId = 2, Name = "Physical Impression open tray" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 6, FinaltemId = 2, Name = "Physical Impression closed tray" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 7, FinaltemId = 3, Name = "Try in abutment + scan abutment" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 8, FinaltemId = 3, Name = "Try In PMMA" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 9, FinaltemId = 3, Name = "Try In On Scan Abutment PMMA" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 10, FinaltemId = 3, Name = "Physical Impression Closed Tray" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 11, FinaltemId = 4, Name = "Done" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 12, FinaltemId = 4, Name = "Redesign" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 13, FinaltemId = 4, Name = "Reimpression" });
+            //_ciaDbContext.FinalStatusItems.Add(new FinalStatusItemModel { Id = 14, FinaltemId = 4, Name = "ReTry in" });
+            //_ciaDbContext.SaveChanges();
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 1, FinalItemId = 2, Name = "Custom Abutment" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 2, FinalItemId = 2, Name = "Try In" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 3, FinalItemId = 2, Name = "Delivery" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 4, FinalItemId = 3, Name = "Delivery" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 5, FinalItemId = 3, Name = "Try In PMMA" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 6, FinalItemId = 3, Name = "Reimpression" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 7, FinalItemId = 4, Name = "Done" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 8, FinalItemId = 4, Name = "Redesign" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 9, FinalItemId = 4, Name = "Reimpression" });
+            //_ciaDbContext.FinalNextVisitItems.Add(new FinalNextVisitItemModel { Id = 10, FinalItemId = 4, Name = "ReTry in" });
+            //_ciaDbContext.SaveChanges();
+
+
+            //_ciaDbContext.DiagnosticItems.Add(
+            //    new DiagnosticItemModel
+            //    {
+            //        Id = 1,
+            //        Name = "Diagnostic Impression"
+            //    }
+            //    );
+            //_ciaDbContext.DiagnosticItems.Add(
+            //    new DiagnosticItemModel
+            //    {
+            //        Id = 2,
+            //        Name = "Bite"
+            //    }
+            //    );
+            //_ciaDbContext.DiagnosticItems.Add(
+            // new DiagnosticItemModel
+            // {
+            //     Id = 3,
+            //     Name = "Scan Appliance"
+            // }
+            // );
+
+            //_ciaDbContext.SaveChanges();
+
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 1,
+            //    DiagnosticItemId = 1,
+            //    Name = "Physical"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 2,
+            //    DiagnosticItemId = 1,
+            //    Name = "Digital"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 3,
+            //    DiagnosticItemId = 1,
+            //    Name = "Secondary Impression"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 4,
+            //    DiagnosticItemId = 1,
+            //    Name = "Direct Impression"
+            //});
+
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 5,
+            //    DiagnosticItemId = 2,
+            //    Name = "Done"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 6,
+            //    DiagnosticItemId = 2,
+            //    Name = "Needs Rescan"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 7,
+            //    DiagnosticItemId = 2,
+            //    Name = "Needs Reimpression"
+            //});
+
+
+
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 8,
+            //    DiagnosticItemId = 3,
+            //    Name = "Done"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 9,
+            //    DiagnosticItemId = 3,
+            //    Name = "Needs Reimpression"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 10,
+            //    DiagnosticItemId = 3,
+            //    Name = "Needs Rebite"
+            //});
+            //_ciaDbContext.DiagnosticStatusItems.Add(new DiagnosticStatusItemModel
+            //{
+            //    Id = 11,
+            //    DiagnosticItemId = 3,
+            //    Name = "Needs Rescan"
+            //});
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 2,
+            //    Name = "Scan Appliance"
+            //});
+
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 2,
+            //    Name = "Reimpression"
+            //});
+
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 2,
+            //    Name = "Rebite"
+            //});
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 1,
+            //    Name = "Ready For Implant"
+            //});
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 1,
+            //    Name = "Bite"
+            //});
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 1,
+            //    Name = "Needs New Impression"
+            //});
+            //_ciaDbContext.DiagnosticNextVisitItems.Add(new DiagnosticNextVisitItemModel
+            //{
+            //    DiagnosticItemId = 1,
+            //    Name = "Needs Scan PPT"
+            //});
+            //_ciaDbContext.SaveChanges();
+
+
+            var diagnosticItems = await _ciaDbContext.DiagnosticItems.ToListAsync();
+            var diagnosticStatus = await _ciaDbContext.DiagnosticStatusItems.ToListAsync();
+            var diagnosticNextVisit = await _ciaDbContext.DiagnosticNextVisitItems.ToListAsync();
+
+
+            var fullArchItems = await _ciaDbContext.FinalItems.ToListAsync();
+            var finalStatus = await _ciaDbContext.FinalStatusItems.ToListAsync();
+            var finalNextVisit = await _ciaDbContext.FinalNextVisitItems.ToListAsync();
+
+
+            var diagnosticImpression = await _ciaDbContext.ProstheticTreatments_DiagnosticImpression.ToListAsync();
+            var bite = await _ciaDbContext.ProstheticTreatments_Bite.ToListAsync();
+            var scanAppliance = await _ciaDbContext.ProstheticTreatments_ScanAppliance.ToListAsync();
+
+            var deliveries = await _ciaDbContext.FinalProsthesisDeliveries.ToListAsync();
+            var heallingColalrs = await _ciaDbContext.FinalProsthesisHealingCollars.ToListAsync();
+            var tryIns = await _ciaDbContext.FinalProsthesisTryIns.ToListAsync();
+            var finalImpresion = await _ciaDbContext.FinalProsthesisImpressions.ToListAsync();
+
+            foreach (var item in diagnosticImpression)
+            {
+                var statusOld = item.Diagnostic?.ToString();
+                var nextOld = item.NextStep?.ToString();
+                var toAdd = new DiagnosticStepModel
+                {
+                    Date = item.Date,
+                    DiagnosticItemId = 1,
+                    NeedsRemake = item.NeedsRemake,
+                    Scanned = item.Scanned,
+                    OperatorId = item.OperatorId,
+                    DiagnosticStatusItemId = item.Diagnostic == null ? null : diagnosticStatus.First(x => x.DiagnosticItemId == 1 && x.Name.ToLower().Replace(" ", "") == Enum.GetName<EnumProstheticDiagnosticDiagnosticImpressionDiagnostic>((EnumProstheticDiagnosticDiagnosticImpressionDiagnostic)item.Diagnostic!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    DiagnosticNextVisitItemId = item.NextStep == null ? null : diagnosticNextVisit.First(x => x.DiagnosticItemId == 1 && x.Name.ToLower().Replace(" ", "") == Enum.GetName<EnumProstheticDiagnosticDiagnosticImpressionNextStep>((EnumProstheticDiagnosticDiagnosticImpressionNextStep)item.NextStep!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    PatientId = item.PatientId,
+
+                };
+                var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
+                var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
+                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                }
+                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                }
+                else
+                {
+                    Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                }
+                _ciaDbContext.DiagnosticSteps.Add(toAdd);
+            }
+            foreach (var item in bite)
+            {
+                var statusOld = item.Diagnostic?.ToString();
+                var nextOld = item.NextStep?.ToString();
+
+                try
+                {
+                    var toAdd = new DiagnosticStepModel
+                    {
+                        Date = item.Date,
+                        DiagnosticItemId = 2,
+                        NeedsRemake = item.NeedsRemake,
+                        Scanned = item.Scanned,
+                        OperatorId = item.OperatorId,
+                        DiagnosticStatusItemId = item.Diagnostic == null ? null : diagnosticStatus.First(x => x.DiagnosticItemId == 2 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumProstheticDiagnosticBiteDiagnostic)item.Diagnostic!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                        DiagnosticNextVisitItemId = item.NextStep == null ? null : diagnosticNextVisit.First(x => x.DiagnosticItemId == 2 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumProstheticDiagnosticBiteNextStep)item.NextStep!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                        PatientId = item.PatientId,
+
+                    };
+                    var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
+                    var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
+                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    {
+                        Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                    }
+                    else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                    {
+                        Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                    }
+                    _ciaDbContext.DiagnosticSteps.Add(toAdd);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{statusOld} {nextOld}");
+                }
+            }
+            foreach (var item in scanAppliance)
+            {
+                var statusOld = item.Diagnostic?.ToString();
+
+                try
+                {
+                    var toAdd = new DiagnosticStepModel
+                    {
+                        Date = item.Date,
+                        DiagnosticItemId = 3,
+                        NeedsRemake = item.NeedsRemake,
+                        Scanned = item.Scanned,
+                        OperatorId = item.OperatorId,
+                        DiagnosticStatusItemId = item.Diagnostic == null ? null : diagnosticStatus.First(x => x.DiagnosticItemId == 3 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumProstheticDiagnosticScanApplianceDiagnostic)item.Diagnostic!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                        PatientId = item.PatientId,
+
+                    };
+                    var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
+                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    {
+                        Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                    }
+                    
+                    else
+                    {
+                        Console.WriteLine($"{statusOld} {statusNew} ");
+                    }
+                    _ciaDbContext.DiagnosticSteps.Add(toAdd);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{statusOld}");
+                }
+            }
+
+            foreach (var item in finalImpresion)
+            {
+                var statusOld = item.FinalProthesisImpressionStatus?.ToString();
+                var nextOld = item.FinalProthesisImpressionNextVisit?.ToString();
+                var toAdd = new FinalStepModel
+                {
+                    Date = item.Date,
+                    FinalItemId = 2,
+                    OperatorId = item.OperatorId,
+                    FinalStatusItemId = item.FinalProthesisImpressionStatus == null ? null : finalStatus.First(x => x.FinaltemId == 2 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisImpressionStatus)item.FinalProthesisImpressionStatus!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    FinalNextVisitItemId = item.FinalProthesisImpressionNextVisit == null ? null : finalNextVisit.First(x => x.FinalItemId == 2 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisImpressionNextVisit)item.FinalProthesisImpressionNextVisit!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    PatientId = item.PatientId,
+                    Teeth = item.FinalProthesisTeeth,
+                    ScrewRetained = item.FinalProthesisTeeth == null,
+                    FullArchLower = item.FinalProthesisTeeth == null,
+                    FullArchUpper = item.FinalProthesisTeeth == null,
+                    Single = (item.FinalProthesisTeeth?.Count ?? 0) == 1,
+                    Bridge = (item.FinalProthesisTeeth?.Count ?? 0) > 1,
+
+                };
+                var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
+                var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
+                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                }
+                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                }
+                else
+                {
+                    Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                }
+                _ciaDbContext.FinalSteps.Add(toAdd);
+
+
+
+            }
+
+            foreach (var item in heallingColalrs)
+            {
+                var statusOld = item.FinalProthesisHealingCollarStatus?.ToString();
+                var nextOld = item.FinalProthesisHealingCollarNextVisit?.ToString();
+
+                var toAdd = new FinalStepModel
+                {
+                    Date = item.Date,
+                    FinalItemId = 1,
+                    OperatorId = item.OperatorId,
+                    FinalStatusItemId = item.FinalProthesisHealingCollarStatus == null ? null : finalStatus.First(x => x.FinaltemId == 1 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisHealingCollarStatus)item.FinalProthesisHealingCollarStatus!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    FinalNextVisitItemId = item.FinalProthesisHealingCollarNextVisit == null ? null : finalNextVisit.First(x => x.FinalItemId == 1 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisHealingCollarNextVisit)item.FinalProthesisHealingCollarNextVisit!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    PatientId = item.PatientId,
+                    Teeth = item.FinalProthesisTeeth,
+                    ScrewRetained = item.FinalProthesisTeeth == null,
+                    FullArchLower = item.FinalProthesisTeeth == null,
+                    FullArchUpper = item.FinalProthesisTeeth == null,
+                    Single = (item.FinalProthesisTeeth?.Count ?? 0) == 1,
+                    Bridge = (item.FinalProthesisTeeth?.Count ?? 0) > 1,
+
+                };
+                var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
+                var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
+                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                }
+                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                }
+                else
+                {
+                    Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                }
+                _ciaDbContext.FinalSteps.Add(toAdd);
+
+
+            }
+
+            foreach (var item in tryIns)
+            {
+
+                var statusOld = item.FinalProthesisTryInStatus?.ToString();
+                var nextOld = item.FinalProthesisTryInNextVisit?.ToString();
+                var newTryInCheckList = new TryInCheckListModel()
+                {
+                    Teeth = item.FinalProthesisTeeth,
+                    BuccalContour = item.BuccalContour,
+                    PatientId = item.PatientId,
+                    Satisfied = item.Satisfied,
+                    NonSatisfiedNewScan = item.NonSatisfiedNewScan,
+                    NonSatisfiedDescription = item.NonSatisfiedDescription,
+                    Seating = item.Seating,
+                    NonSeatingType = item.NonSeatingType,
+                    NonSeatingOtherNotes = item.NonSeatingOtherNotes,
+                    MesialContacts = item.MesialContacts,
+                    DistalContacts = item.DistalContacts,
+                    Occlusion = item.Occlusion,
+                    Passive = item.Passive,
+                    Retention = item.Retention,
+                    OcclusionNotes = item.OcclusionNotes,
+                    OcclusalPlanAndMidline = item.OcclusalPlanAndMidline,
+                    CentricRelation = item.CentricRelation,
+                    VerticalDimension = item.VerticalDimension,
+                    LipSupport = item.LipSupport,
+                    SizeAndShapeOfTeeth = item.SizeAndShapeOfTeeth,
+                    Canting = item.Canting,
+                    FrontalSmilingAndLateralPhotos = item.FrontalSmilingAndLateralPhotos,
+                    Evaluation = item.Evaluation,
+                    ExplainWhy = item.ExplainWhy,
+                };
+                _ciaDbContext.TryInCheckLists.Add(newTryInCheckList);
+                _ciaDbContext.SaveChanges();
+
+                var toAdd = new FinalStepModel
+                {
+                    Date = item.Date,
+                    FinalItemId = 3,
+                    OperatorId = item.OperatorId,
+                    FinalStatusItemId = item.FinalProthesisTryInStatus == null ? null : finalStatus.First(x => x.FinaltemId == 3 && x.Name.ToLower().Replace(" ", "").Replace("+", "") == Enum.GetName((EnumFinalProthesisTryInStatus)item.FinalProthesisTryInStatus!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    FinalNextVisitItemId = item.FinalProthesisTryInNextVisit == null ? null : finalNextVisit.First(x => x.FinalItemId == 3 && x.Name.ToLower().Replace(" ", "").Replace("+", "") == Enum.GetName((EnumFinalProthesisTryInNextVisit)item.FinalProthesisTryInNextVisit!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    PatientId = item.PatientId,
+                    Teeth = item.FinalProthesisTeeth,
+                    FullArchLower = item.FinalProthesisTeeth == null,
+                    FullArchUpper = item.FinalProthesisTeeth == null,
+                    ScrewRetained = item.FinalProthesisTeeth == null,
+                    Single = (item.FinalProthesisTeeth?.Count ?? 0) == 1,
+                    Bridge = (item.FinalProthesisTeeth?.Count ?? 0) > 1,
+                    TryInCheckListId = newTryInCheckList.Id,
+
+                };
+                var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
+                var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
+                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                }
+                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                }
+                else
+                {
+                    Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                }
+                _ciaDbContext.FinalSteps.Add(toAdd);
+
+
+            }
+
+            foreach (var item in deliveries)
+            {
+                var statusOld = item.FinalProthesisDeliveryStatus?.ToString();
+                var nextOld = item.FinalProthesisDeliveryNextVisit?.ToString();
+
+                var toAdd = new FinalStepModel
+                {
+                    Date = item.Date,
+                    FinalItemId = 4,
+                    OperatorId = item.OperatorId,
+                    FinalStatusItemId = item.FinalProthesisDeliveryStatus == null ? null : finalStatus.First(x => x.FinaltemId == 4 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisDeliveryStatus)item.FinalProthesisDeliveryStatus!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    FinalNextVisitItemId = item.FinalProthesisDeliveryNextVisit == null ? null : finalNextVisit.First(x => x.FinalItemId == 4 && x.Name.ToLower().Replace(" ", "") == Enum.GetName((EnumFinalProthesisDeliveryNextVisit)item.FinalProthesisDeliveryNextVisit!)!.ToLower().Replace(" ", "").Replace("_", "")).Id,
+                    PatientId = item.PatientId,
+                    Teeth = item.FinalProthesisTeeth,
+                    ScrewRetained = item.FinalProthesisTeeth == null,
+                    FullArchLower = item.FinalProthesisTeeth == null,
+                    FullArchUpper = item.FinalProthesisTeeth == null,
+                    Single = (item.FinalProthesisTeeth?.Count ?? 0) == 1,
+                    Bridge = (item.FinalProthesisTeeth?.Count ?? 0) > 1,
+
+                };
+                var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
+                var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
+                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
+
+                }
+                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                {
+                    Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
+
+                }
+                else
+                {
+                    Console.WriteLine($"{statusOld} {statusNew} {nextOld} {nextNew}");
+                }
+
+
+                _ciaDbContext.FinalSteps.Add(toAdd);
+
+            }
+
+            _ciaDbContext.SaveChanges();
+            var resultDiagnostic = await _ciaDbContext.DiagnosticSteps
+                .Include(x => x.DiagnosticItem)
+                .Include(x => x.DiagnosticStatusItem)
+                .Include(x => x.DiagnosticNextVisitItem)
+                .ToListAsync();
+            var resultFinal = await _ciaDbContext.FinalSteps
+                .Include(x => x.FinalItem)
+                .Include(x => x.FinalStatusItem)
+                .Include(x => x.FinalNextVisitItem)
+                .ToListAsync();
+
+            foreach (var r in resultDiagnostic)
+            {
+                Console.WriteLine($"{r.DiagnosticItem?.Name} {r.DiagnosticStatusItem?.Name} {r.DiagnosticNextVisitItem?.Name}");
+            }
+            foreach (var r in resultFinal)
+            {
+                Console.WriteLine($"{r.FinalItem?.Name} {r.FinalStatusItem?.Name} {r.FinalNextVisitItem?.Name}");
+            }
+            return Ok();
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("DeletePros")]
+        public async Task<IActionResult> DeletePros()
+        {
+            var result = await _ciaDbContext.FinalSteps.ToListAsync();
+            var diresult = await _ciaDbContext.DiagnosticSteps.ToListAsync();
+            _ciaDbContext.FinalSteps.RemoveRange(result);
+           _ciaDbContext.DiagnosticSteps.RemoveRange(diresult);
+            _ciaDbContext.SaveChanges();
+            return Ok();
+        }
+
+
         //[AllowAnonymous]
         //[HttpGet("MigrateToNewTreatment")]
 
@@ -2797,6 +3337,7 @@ namespace CIA.Controllers
         {
             return Ok("Connected");
         }
+
 
 
         [HttpPost("GenerateClinicPrices")]

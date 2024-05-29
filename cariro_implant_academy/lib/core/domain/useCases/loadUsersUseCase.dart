@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/user/domain/entities/enum.dart';
 import 'package:dartz/dartz.dart';
 
 import '../repositories/loadingRepo.dart';
@@ -11,7 +12,6 @@ class LoadUsersUseCase extends LoadingUseCases<LoadUsersEnum> {
   @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(LoadUsersEnum params) async{
     return await loadingRepo.loadUsers(userType: params);
-
   }
 }
 

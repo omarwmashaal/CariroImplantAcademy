@@ -25,6 +25,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     super.treatmentValue,
     super.treatmentName,
     super.treatmentId,
+    super.clearnaceLower,
+    super.clearnaceUpper,
   });
 
   factory AdvancedTreatmentSearchModel.fromEntity(AdvancedTreatmentSearchEntity entity) {
@@ -41,6 +43,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
       teethClassification: entity.teethClassification,
       and_treatmentIds: entity.and_treatmentIds,
       or_treatmentIds: entity.or_treatmentIds,
+      clearnaceLower: entity.clearnaceLower,
+      clearnaceUpper: entity.clearnaceUpper,
     );
   }
 
@@ -54,6 +58,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     treatmentValue = json['treatmentValue'];
     treatmentName = json['treatmentName'];
     treatmentId = json['treatmentId'];
+    clearnaceUpper = json['clearanceUpper'];
+    clearnaceLower = json['clearanceLower'];
     str_complicationsAfterSurgery = json['str_ComplicationsAfterSurgery'];
   }
 
@@ -65,6 +71,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     data['patientName'] = this.patientName;
     data['done'] = this.done;
     data['noTreatmentPlan'] = this.noTreatmentPlan;
+    data['clearanceUpper'] = this.clearnaceUpper;
+    data['clearanceLower'] = this.clearnaceLower;
     data['teethClassification'] = this.teethClassification == null ? null : this.teethClassification!.index;
 
     data['implantFailed'] = this.implantFailed;

@@ -76,7 +76,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
       usersBloc: usersBloc,
     );
     reloadUsers();
-    tabController = TabController(length: 7, vsync: this);
+    tabController = TabController(length: 8, vsync: this);
   }
 
   @override
@@ -114,7 +114,9 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                   role = "secretary";
                 else if (tabController.index == 5)
                   role = "labmoderator";
-                else if (tabController.index == 6) role = "technician";
+                else if (tabController.index == 6)
+                  role = "technician";
+                else if (tabController.index == 7) role = "labdesigner";
                 UserEntity newUser = UserEntity(roles: [role], gender: "Male", accessWebsites: [chosenWebsite]);
                 bool newBatch = false;
                 Uint8List? userProfilePicture;
@@ -314,7 +316,8 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                                         type: EnumImageType.UserProfile,
                                         data: newUser.profileImage!,
                                       ));
-                                      if (result == false) ShowSnackBar(context, isSuccess: false, message: "User Created But failed to upload image!");
+                                      if (result == false)
+                                        ShowSnackBar(context, isSuccess: false, message: "User Created But failed to upload image!");
                                     }
                                     dialogHelper.dismissSingle(context);
                                     reloadUsers();
@@ -437,6 +440,9 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                       Tab(
                         text: "Lab Tech",
                       ),
+                      Tab(
+                        text: "Lab Designer",
+                      ),
                     ],
                   ),
                 ),
@@ -444,6 +450,7 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                   child: TabBarView(
                     controller: tabController,
                     children: [
+                      _buildWidget(),
                       _buildWidget(),
                       _buildWidget(),
                       _buildWidget(),

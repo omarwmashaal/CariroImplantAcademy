@@ -44,7 +44,7 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                     onChange: (value) {
                       if (value == true) {
                         widget.searchTreatmentsDTO.and_treatmentIds!.clear();
-                        widget.searchTreatmentsDTO.or_treatmentIds!.clear();                        
+                        widget.searchTreatmentsDTO.or_treatmentIds!.clear();
                         widget.searchTreatmentsDTO.done = null;
                       } else {
                         widget.searchTreatmentsDTO.done = false;
@@ -313,6 +313,21 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                     ),
                   ],
                 )),
+          ),
+          CIA_CheckBoxWidget(
+            text: "Clearance Upper",
+            value: widget.searchTreatmentsDTO.clearnaceUpper == true,
+            onChange: (value) {
+              widget.searchTreatmentsDTO.clearnaceUpper = value;
+            },
+          ),
+          SizedBox(height: 10),
+          CIA_CheckBoxWidget(
+            text: "Clearance Lower",
+            value: widget.searchTreatmentsDTO.clearnaceLower == true,
+            onChange: (value) {
+              widget.searchTreatmentsDTO.clearnaceLower = value;
+            },
           ),
           Visibility(
             visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,

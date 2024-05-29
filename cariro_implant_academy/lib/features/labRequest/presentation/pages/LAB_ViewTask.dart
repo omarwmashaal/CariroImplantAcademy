@@ -353,6 +353,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                     Visibility(
                       visible: (siteController.getRole()!.contains("labmoderator") ||
                               siteController.getRole()!.contains("admin") ||
+                              siteController.getRole()!.contains("labdesigner") ||
                               siteController.getRole()!.contains("secretary")) &&
                           request.status != EnumLabRequestStatus.Finished,
                       child: Expanded(
@@ -423,8 +424,8 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     visible: siteController.getUserId() == request.designerId,
                                     child: RoundCheckBox(
                                       disabledColor: Colors.green,
-                                      isChecked: request.status != EnumLabRequestStatus.InQueue,
-                                      onTap: request.status != EnumLabRequestStatus.InQueue
+                                      isChecked: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index,
+                                      onTap: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index
                                           ? null
                                           : (value) async {
                                               await CIA_ShowPopUpYesNo(

@@ -1458,6 +1458,10 @@ class _ClinicPriceSettingsPageState extends State<ClinicPriceSettingsPage> {
                                                       text: "Show in surgial",
                                                       value: e.showInSurgical,
                                                       onChange: (value) => e.showInSurgical = value),
+                                                  CIA_CheckBoxWidget(
+                                                      text: "Apply on all teeth",
+                                                      value: e.allTeeth,
+                                                      onChange: (value) => e.allTeeth = value),
                                                 ],
                                               ),
                                             ),

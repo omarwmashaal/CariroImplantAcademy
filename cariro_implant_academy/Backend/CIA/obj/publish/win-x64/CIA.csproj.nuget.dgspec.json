@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj": {}
+    "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj": {
+    "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj",
+        "projectUniqueName": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj",
         "projectName": "CIA",
-        "projectPath": "D:\\Projects\\CIA\\Backend\\CIA\\CIA.csproj",
+        "projectPath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\CIA.csproj",
         "packagesPath": "C:\\Users\\owbm9\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\CIA\\Backend\\CIA\\obj\\publish\\win-x64\\",
+        "outputPath": "D:\\Projects\\CIA\\Frontend_\\cariro_implant_academy\\CariroImplantAcademy\\cariro_implant_academy\\Backend\\CIA\\obj\\publish\\win-x64\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\owbm9\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -51,6 +51,26 @@
             "Carter": {
               "target": "Package",
               "version": "[7.2.0, )"
+            },
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.8.12, )"
+            },
+            "Hangfire.AspNetCore": {
+              "target": "Package",
+              "version": "[1.8.12, )"
+            },
+            "Hangfire.PostgreSql": {
+              "target": "Package",
+              "version": "[1.20.8, )"
+            },
+            "Hangfire.SQLite": {
+              "target": "Package",
+              "version": "[1.4.2, )"
+            },
+            "Hangfire.SqlServer": {
+              "target": "Package",
+              "version": "[1.8.12, )"
             },
             "Hardware.Info": {
               "target": "Package",
@@ -131,6 +151,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

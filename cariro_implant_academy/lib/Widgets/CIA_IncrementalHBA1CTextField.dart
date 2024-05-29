@@ -69,12 +69,13 @@ class _CIA_IncrementalHBA1CTextFieldState extends State<CIA_IncrementalHBA1CText
               child: items.last == item
                   ? IconButton(
                       onPressed: () {
+                         setState(() {
+                          items.add(HbA1cEntity(reading: 0));
+                        });
                         if (widget.onChange != null) {
                           widget.onChange!(items);
                         }
-                        setState(() {
-                          items.add(HbA1cEntity(reading: 0));
-                        });
+                       
                       },
                       icon: Icon(Icons.add))
                   : const SizedBox()),
@@ -83,12 +84,13 @@ class _CIA_IncrementalHBA1CTextFieldState extends State<CIA_IncrementalHBA1CText
                   ? SizedBox()
                   : IconButton(
                       onPressed: () {
+                         setState(() {
+                          items.remove(item);
+                        });
                         if (widget.onChange != null) {
                           widget.onChange!(items);
                         }
-                        setState(() {
-                          items.remove(item);
-                        });
+                       
                       },
                       icon: Icon(Icons.delete))),
           const Expanded(child: SizedBox())

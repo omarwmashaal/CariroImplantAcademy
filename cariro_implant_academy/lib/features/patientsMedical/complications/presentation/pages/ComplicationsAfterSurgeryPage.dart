@@ -194,7 +194,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Expanded(child: FormTextKeyWidget(text: "${i + 1}. Tooth: ${e.tooth} || ${e.name}")),
+                                        Expanded(child: FormTextKeyWidget(text: "${i + 1}. Tooth: ${e.tooth==0?"All":e.tooth} || ${e.name}")),
                                         SizedBox(width: 10),
                                         Expanded(
                                           child: CIA_TextFormField(

@@ -487,7 +487,6 @@ class _FinalProsthesis_TryInsWidgetState extends State<FinalProsthesis_TryInsWid
                         text: widget.data.operator?.name,
                       ),
                     )),
-                   
                     SizedBox(width: 10),
                     IconButton(onPressed: () => widget.onDelete(), icon: Icon(Icons.delete)),
                   ],

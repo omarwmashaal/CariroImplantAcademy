@@ -19,8 +19,17 @@ using Carter;
 using System.Net;
 using Hardware.Info;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Hangfire;
+using System.Configuration;
+using Microsoft.AspNetCore.Http;
+using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.Extensions.Hosting;
+using Hangfire.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 builder.Services.AddAuthorization(options =>
 {
@@ -64,10 +73,15 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<CIA_dbContext>(
     options =>
     {
-        options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=CIA_Database;");
+        options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=CIA_Database;Include Error Detail=true;");
 
     }
-    );
+    )
+    ;
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<Hangfire_dbContext>(options =>
+{
+    options.UseNpgsql("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=Hnagfire_Database;Include Error Detail=true;");
+});
 
 builder.Services.AddCors(o => o.AddPolicy(
     name: "AllowAllOrigins",
@@ -89,6 +103,7 @@ builder.Services.AddCors(o => o.AddPolicy(
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<CIA_dbContext>().AddDefaultTokenProviders();
 
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(new AuthorizeFilter("RequireLoggedIn"));
@@ -107,6 +122,7 @@ builder.Services.AddScoped<IEnumRepo, EnumRepo>();
 builder.Services.AddScoped<INotificationRepo, NotificationRepo>();
 builder.Services.AddScoped<IClinicRepos, ClinicRepo>();
 builder.Services.AddScoped<IHardwareInfo, HardwareInfo>();
+builder.Services.AddTransient<IScheduledTasks, ScheduledTasks>();
 builder.Services.AddSignalR();
 builder.Services.AddAuthentication(x =>
 {
@@ -141,7 +157,22 @@ builder.Services.AddAuthentication(x =>
         }
     };
 });
+
+
+
+builder.Services.AddHangfire(configuration => configuration.UsePostgreSqlStorage("User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=Hnagfire_Database;"));
+builder.Services.AddHangfireServer();
+
+
+
+
+
+
 var app = builder.Build();
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -158,7 +189,9 @@ app.UseAuthorization();
 using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<CIA_dbContext>();
+    var hangfireContext = scope.ServiceProvider.GetRequiredService<Hangfire_dbContext>();
     dataContext.Database.Migrate();
+    hangfireContext.Database.Migrate();
 }
 
 app.MapControllers()
@@ -172,6 +205,24 @@ app.UseCors("AllowAllOrigins");
 
 //app.MapHubMapHub<NotificationHub>("/notificationhub");
 app.UseEndpoints(endpoints =>
-endpoints.MapHub<NotificationHub>("/notificationhub")
+{
+    endpoints.MapHub<NotificationHub>("/notificationhub");
+    endpoints.MapHangfireDashboard();
+
+}
 );
+
+app.UseHangfireDashboard();
+app.UseHangfireServer();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var scheduledTasks = services.GetService<IScheduledTasks>();
+
+    RecurringJob.AddOrUpdate(() => scheduledTasks.RemindHBA1CIn3Month(), Cron.Daily);
+    RecurringJob.AddOrUpdate(() => scheduledTasks.PatientToDoListCheck(), Cron.Daily);
+
+}
+
 app.Run();

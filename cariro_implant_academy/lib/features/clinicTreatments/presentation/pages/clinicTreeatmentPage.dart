@@ -461,7 +461,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                FormTextKeyWidget(text: "Tooth: ${e.tooth!}"),
+                                                FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth}"),
                                                 SizedBox(
                                                   height: 10,
                                                 ),
@@ -627,7 +627,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    FormTextKeyWidget(text: "Tooth: ${e.tooth!} || ${e.type!.name} Implant"),
+                                                    FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.type!.name} Implant"),
                                                     SizedBox(
                                                       height: 10,
                                                     ),
@@ -820,7 +820,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        FormTextValueWidget(text: "Tooth: ${e.tooth ?? ""}"),
+                                                        FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth ?? ""}"),
                                                         SizedBox(width: 10),
                                                         AbsorbPointer(
                                                           absorbing: widget.plan,

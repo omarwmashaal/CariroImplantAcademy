@@ -42,6 +42,11 @@ class _TableWidgetState extends State<TableWidget> {
   Widget build(BuildContext context) {
     return SfDataGrid(
       allowExpandCollapseGroup: widget.allowGroupingCollapse,
+      groupCaptionTitleFormat: '{ColumnName} : {Key} - #{ItemsCount}',
+      onCellSecondaryTap: (details) {
+        print("");
+      },
+      autoExpandGroups: false,
       isScrollbarAlwaysShown: true,
       horizontalScrollController: ScrollController(),
       horizontalScrollPhysics: BouncingScrollPhysics(),
@@ -75,7 +80,7 @@ class _TableWidgetState extends State<TableWidget> {
       columnWidthMode: widget.isTreatment! ? ColumnWidthMode.lastColumnFill : ColumnWidthMode.fill,
       navigationMode: GridNavigationMode.row,
       onCellTap: (value) {
-        if (widget.onCellClick != null && value.rowColumnIndex.rowIndex != 0) {
+        if (widget.onCellClick != null && value.rowColumnIndex.rowIndex != 0 && widget.allowGroupingCollapse != true) {
           widget.onCellClick!(widget.dataSource.effectiveRows
               .elementAt(value.rowColumnIndex.rowIndex - 1)
               .getCells()

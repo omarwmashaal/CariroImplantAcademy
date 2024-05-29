@@ -787,7 +787,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             children: [
                               Row(
                                 children: [
-                                  FormTextKeyWidget(text: "Tooth: ${widget.data.tooth!} || "),
+                                  FormTextKeyWidget(text: "Tooth: ${widget.data.tooth==0?"All":widget.data.tooth} || "),
                                   FormTextKeyWidget(text: widget.data.treatmentItem!.name!),
                                 ],
                               ),

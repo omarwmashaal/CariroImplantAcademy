@@ -230,7 +230,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             return CIA_MultiSelectChipWidget(
                                 key: GlobalKey(),
                                 onChange: (item, isSelected) {
-                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).name == "Scaling") {
+                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).allTeeth==true) {
                                     selectedTreatmentItemId = [int.parse(item)];
                                     selectedTeeth = [0];
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));

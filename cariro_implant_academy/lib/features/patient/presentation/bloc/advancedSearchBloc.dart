@@ -1,6 +1,5 @@
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachRequestModel.dart';
-import 'package:cariro_implant_academy/features/patient/data/models/advancedProstheicSeachResponseModel.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchRequestEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedProstheticSearchResonseEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/advancedProstheticSearchUseCase.dart';
@@ -9,15 +8,13 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/advanced
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/advancedSearchBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/PatientAdvancedSearchPage.dart';
-import 'package:cariro_implant_academy/features/patient/presentation/widgets/advancedSearchTreatmentFiltersWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import '../../../patientsMedical/prosthetic/domain/entities/prostheticDiagnosticEntity.dart';
 import '../../domain/entities/advancedPatientSearchEntity.dart';
 import '../../domain/entities/advancedTreatmentSearchEntity.dart';
 
@@ -55,7 +52,7 @@ class AdvancedSearchBloc extends Bloc<AdvancedSearchBloc_Events, AdvancedSearchB
           },
         );
 
-        if (!failed) {
+        if (!failed && !event.treatmentQuery.isNull()) {
           event.treatmentQuery.ids = ids;
           final resultTreatments = await advancedTreatmentSearchUseCase(event.treatmentQuery);
           resultTreatments.fold(
@@ -230,16 +227,16 @@ class AdvancedPatientSearchDataGridSource extends DataGridSource {
 class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
   List<AdvancedTreatmentSearchEntity> models = <AdvancedTreatmentSearchEntity>[];
   AdvancedTreatmentSearchEntity query = AdvancedTreatmentSearchEntity();
+  Function(int id) goToPatient;
 
   /// Creates the income data source class with required details.
-  AdvancedTreatmentSearchDataGridSource() {
-    // addColumnGroup(
-    //   ColumnGroup(
-    //     name: "Patient Name",
-    //     sortGroupRows: true,
-
-    //   ),
-    // );
+  AdvancedTreatmentSearchDataGridSource({required this.goToPatient}) {
+    addColumnGroup(
+      ColumnGroup(
+        name: "Patient Name",
+        sortGroupRows: true,
+      ),
+    );
   }
 
   init({AdvancedTreatmentSearchEntity? search}) {
@@ -272,11 +269,20 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
               List<DataGridCell> r = [];
 
               r.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
+              r.add(DataGridCell<Widget>(
+                  columnName: "Go to patient",
+                  value: CIA_SecondaryButton(
+                    label: "Go",
+                    onTab: () => goToPatient(e.id!),
+                  )));
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
               if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
+              if (query.clearnaceLower == true) r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower==true? "Yes":"No"));
+              if (query.clearnaceUpper == true) r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper==true? "Yes":"No"));
+
               for (var column in columns) {
                 r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }
@@ -297,24 +303,26 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
         cells: row.getCells().map<Widget>((e) {
       return Container(
         alignment: Alignment.center,
-        child: Text(
-          e.value
-              .toString()
-              .replaceAll("Done tooth: ", "")
-              .replaceAll("Planned tooth: ", "")
-              .replaceAll("Failed tooth: ", "")
-              .replaceAll("None", "-"),
-          style: TextStyle(
-              color: (e.value is String)
-                  ? ((e.value as String).contains("Planned")
-                      ? Colors.orange
-                      : (e.value as String).contains("Done")
-                          ? Colors.green
-                          : (e.value as String).contains("Failed")
-                              ? Colors.red
-                              : Colors.black)
-                  : Colors.black),
-        ),
+        child: e.value is Widget
+            ? e.value
+            : Text(
+                e.value
+                    .toString()
+                    .replaceAll("Done tooth: ", "")
+                    .replaceAll("Planned tooth: ", "")
+                    .replaceAll("Failed tooth: ", "")
+                    .replaceAll("None", "-"),
+                style: TextStyle(
+                    color: (e.value is String)
+                        ? ((e.value as String).contains("Planned")
+                            ? Colors.orange
+                            : (e.value as String).contains("Done")
+                                ? Colors.green
+                                : (e.value as String).contains("Failed")
+                                    ? Colors.red
+                                    : Colors.black)
+                        : Colors.black),
+              ),
       );
     }).toList());
   }
@@ -331,10 +339,10 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
     return [];
   }
 
-  // @override
-  // Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
-  //   return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
-  // }
+  @override
+  Widget? buildGroupCaptionCellWidget(RowColumnIndex rowColumnIndex, String summaryValue) {
+    return Container(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15), child: Text(summaryValue));
+  }
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {
@@ -371,156 +379,25 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
               List<DataGridCell> cells = [];
               cells.add(DataGridCell<String>(columnName: "Id", value: e.secondaryId));
               cells.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName ?? ""));
+              cells.add(DataGridCell<DateTime>(columnName: "Date", value: e.step?.date));
+
+              cells.add(DataGridCell<String>(columnName: "Type", value: request?.type.name));
 
               if (!(request?.complicationsAnd?.isNull() ?? true) || !(request?.complicationsOr?.isNull() ?? true)) {
                 cells.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterProsthesis));
               }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic != null) {
-                cells.add(DataGridCell<String>(columnName: "Diagnostic Impression Diagnosis", value: e.diagnosticImpression?.diagnostic?.name ?? ""));
 
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.diagnosticImpression?.date);
+              if (request?.screwRetained == true) {
+                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained==true?'Yes':'No'));
+              } else if (request?.cementRetained == true) {
+                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained==true?'Yes':'No'));
               }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.nextStep != null) {
-                cells.add(DataGridCell<String>(columnName: "Diagnostic Impression Next Step", value: e.diagnosticImpression?.nextStep?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.diagnosticImpression?.date);
+              cells.add(DataGridCell<String>(columnName: "Step", value: e.step?.item?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Status", value: e.step?.status?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Next Visit", value: e.step?.nextVisit?.name ?? ""));
+              if (request?.type == EnumProstheticType.Final && request?.fullArch != true) {
+                cells.add(DataGridCell<String>(columnName: "Teeth", value: e.step?.teeth?.toString() ?? ""));
               }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.needsRemake != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Diagnostic Impression Needs Remake", value: e.diagnosticImpression?.needsRemake ?? false ? "Needs Remake" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.diagnosticImpression?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.scanned != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Diagnostic Impression Scanned", value: e.diagnosticImpression?.scanned ?? false ? "Scanned" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.diagnosticImpression?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_Bite?.firstOrNull?.diagnostic != null) {
-                cells.add(DataGridCell<String>(columnName: "Bite Diagnostic", value: e.bite?.diagnostic?.name ?? ""));
-
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.bite?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_Bite?.firstOrNull?.nextStep != null) {
-                cells.add(DataGridCell<String>(columnName: "Bite Next Step", value: e.bite?.nextStep?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.bite?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_Bite?.firstOrNull?.needsRemake != null) {
-                cells.add(DataGridCell<String>(columnName: "Bite Needs Remake", value: e.bite?.needsRemake ?? false ? "Needs Remake" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.bite?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_Bite?.firstOrNull?.scanned != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_Bite?.firstOrNull?.scanned != null) {
-                cells.add(DataGridCell<String>(columnName: "Bite Scanned", value: e.bite?.scanned ?? false ? "Scanned" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.bite?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.diagnostic != null) {
-                cells.add(DataGridCell<String>(columnName: "Scan Appliance Diagnostic", value: e.scanAppliance?.diagnostic?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.scanAppliance?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.needsRemake != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Scan Appliance Needs Remake", value: e.scanAppliance?.needsRemake ?? false ? "Needs Remake" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.scanAppliance?.date);
-              }
-              if (request?.diagnosticAnd?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned != null ||
-                  request?.diagnosticOr?.prostheticDiagnostic_ScanAppliance?.firstOrNull?.scanned != null) {
-                cells.add(DataGridCell<String>(columnName: "Scan Appliance Scanned", value: e.scanAppliance?.scanned ?? false ? "Scanned" : "-"));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.scanAppliance?.date);
-              }
-
-              if (request?.singleAndBridgeAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Healing Collar Status",
-                    value: e.singleAndBridge_HealingCollar?.finalProthesisHealingCollarStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_HealingCollar?.date);
-
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_HealingCollar?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Impression Procedure",
-                    value: e.singleAndBridge_Impression?.finalProthesisImpressionStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_Impression?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_Impression?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Impression Next Visit",
-                    value: e.singleAndBridge_Impression?.finalProthesisImpressionNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_Impression?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_Impression?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Try In Procedure", value: e.singleAndBridge_TryIn?.finalProthesisTryInStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_TryIn?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_TryIn?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Try In Next Visit", value: e.singleAndBridge_TryIn?.finalProthesisTryInNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_TryIn?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_TryIn?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Delivery Procedure", value: e.singleAndBridge_Delivery?.finalProthesisDeliveryStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_Delivery?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_Delivery?.finalProthesisTeeth?.first);
-              }
-              if (request?.singleAndBridgeAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Single & Bridge Delivery Next Visit",
-                    value: e.singleAndBridge_Delivery?.finalProthesisDeliveryNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.singleAndBridge_Delivery?.date);
-                toothColumn = DataGridCell<int>(columnName: "Tooth", value: e.singleAndBridge_Delivery?.finalProthesisTeeth?.first);
-              }
-              if (request?.fullArchAnd?.healingCollars?.firstOrNull?.finalProthesisHealingCollarStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Healing Collar Status", value: e.fullArch_HealingCollar?.finalProthesisHealingCollarStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_HealingCollar?.date);
-              }
-              if (request?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Impression Procedure", value: e.fullArch_Impression?.finalProthesisImpressionStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_Impression?.date);
-              }
-              if (request?.fullArchAnd?.impressions?.firstOrNull?.finalProthesisImpressionNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Impression Next Visit", value: e.fullArch_Impression?.finalProthesisImpressionNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_Impression?.date);
-              }
-              if (request?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInStatus != null) {
-                cells.add(
-                    DataGridCell<String>(columnName: "Full Arch Try In Procedure", value: e.fullArch_TryIn?.finalProthesisTryInStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_TryIn?.date);
-              }
-              if (request?.fullArchAnd?.tryIns?.firstOrNull?.finalProthesisTryInNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Try In Next Visit", value: e.fullArch_TryIn?.finalProthesisTryInNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_TryIn?.date);
-              }
-              if (request?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryStatus != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Delivery Procedure", value: e.fullArch_Delivery?.finalProthesisDeliveryStatus?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_Delivery?.date);
-              }
-              if (request?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit != null) {
-                cells.add(DataGridCell<String>(
-                    columnName: "Full Arch Delivery Next Visit", value: e.fullArch_Delivery?.finalProthesisDeliveryNextVisit?.name ?? ""));
-                dateColumn = DataGridCell<DateTime>(columnName: "Date", value: e.fullArch_Delivery?.date);
-              }
-
-              if (toothColumn != null) cells.insert(2, toothColumn);
-              if (dateColumn != null) cells.insert(2, dateColumn);
               return cells;
             }()))
         .toList();
