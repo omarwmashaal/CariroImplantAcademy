@@ -105,7 +105,7 @@ namespace CIA.Controllers
                     supplier = await _cia_DbContext.NonMedicalSuppliers.FirstOrDefaultAsync(x => x.Id == model[0].SupplierId && x.Website == inventoryWebsite);
                 if (supplier == null && model[0].Supplier != null)
                 {
-
+                    
                     supplier = type == EnumExpenseseCategoriesType.BoughtMedical ? new MedicalSuppliersModel() : new NonMedicalSuppliersModel();
                     supplier.Name = model[0].Supplier.Name;
                     supplier.Website = inventoryWebsite;

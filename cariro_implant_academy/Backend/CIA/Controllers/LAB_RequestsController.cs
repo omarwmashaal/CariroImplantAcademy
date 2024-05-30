@@ -170,7 +170,7 @@ namespace CIA.Controllers
 
 
             request.LabRequestStepItems = await _dbContext.LabRequestStepItems
-                .Include(x => x.LabItemFromSettings)
+                .Include(x => x.LabOption)
                 .Include(x => x.ConsumedLabItem)
                 .Where(x => x.LabRequestId == id).ToListAsync();
 
@@ -186,12 +186,12 @@ namespace CIA.Controllers
             var requestSteps = await _dbContext.LabRequestStepItems.
                 Where(x => x.LabRequestId == id).
                 Include(x => x.ConsumedLabItem).
-                Include(x => x.LabItemFromSettings).ToListAsync();
+                Include(x => x.LabOption).ToListAsync();
 
 
             foreach (var labRequestStep in requestSteps)
             {
-                labRequestStep.LabPrice = labRequestStep.LabPrice ?? labRequestStep.LabItemFromSettings.UnitPrice;
+                labRequestStep.LabPrice = labRequestStep.LabPrice ?? labRequestStep.LabOption.Price;
             }
 
             _apiResponse.Result = requestSteps;
@@ -576,7 +576,7 @@ namespace CIA.Controllers
             labRequestSteps = await _dbContext.LabRequestStepItems
                 .Where(x => x.LabRequestId == request.Id)
                 .Include(x => x.ConsumedLabItem)
-                .Include(x => x.LabItemFromSettings)
+                .Include(x => x.LabOption)
                 .ToListAsync();
             bool sendNotification = false;
 
@@ -604,12 +604,12 @@ namespace CIA.Controllers
 
                 foreach (var step in labRequestSteps)
                 {
-                    receipt.Total += step.LabPrice ?? step.LabItemFromSettings.UnitPrice;
+                    receipt.Total += step.LabPrice ?? step.LabOption.Price;
                     receipt.ToothReceiptData.Add(new ToothReceiptData
                     {
                         Tooth = (int)step.Tooth,
-                        Name = $"{step.LabItemFromSettings?.Name ?? ""} || {step.ConsumedLabItem?.Name ?? ""}",
-                        Price = step.LabPrice ?? step.LabItemFromSettings.UnitPrice,
+                        Name = $"{step.LabOption?.Name ?? ""} || {step.ConsumedLabItem?.Name ?? ""}",
+                        Price = step.LabPrice ?? step.LabOption.Price,
                     });
 
                 }

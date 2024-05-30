@@ -1119,7 +1119,7 @@ namespace CIA.Controllers
         [HttpPost("AdvancedSearchPatient")]
         public async Task<IActionResult> AdvancedSearchPatient([FromBody] AdvancedPatientSearchDTO model)
         {
-            IQueryable<Patient> query = _cia_DbContext.Patients.Include(x => x.MedicalExamination).Include(x => x.DentalExamination).Include(x => x.DentalHistory);
+            IQueryable<Patient> query = _cia_DbContext.Patients.Where(x=>x.Listed==true).Include(x => x.MedicalExamination).Include(x => x.DentalExamination).Include(x => x.DentalHistory);
             List<IQueryable> selectables;
 
             if (!model.Ids.IsNullOrEmpty())
@@ -1128,7 +1128,7 @@ namespace CIA.Controllers
             }
             if (model.NoTreatmentPlan == true)
             {
-                List<int> patientIds = (await _cia_DbContext.Patients.Select(x => x.Id).ToListAsync()) ?? new List<int>();
+                List<int> patientIds = (await _cia_DbContext.Patients.Where(x => x.Listed == true).Select(x => x.Id).ToListAsync()) ?? new List<int>();
 
                 List<int> treatmentIds = (await _cia_DbContext.TreatmentDetails.Select(x => x.PatientId ?? 0).ToListAsync());
 
@@ -1407,13 +1407,13 @@ namespace CIA.Controllers
 
             if (model.NoTreatmentPlan == true)
             {
-                List<int> patientIds = (await _cia_DbContext.Patients.Where(x => model.Ids.Contains(x.Id)).Select(x => x.Id).ToListAsync()) ?? new List<int>();
+                List<int> patientIds = (await _cia_DbContext.Patients.Where(x => x.Listed == true).Where(x => model.Ids.Contains(x.Id)).Select(x => x.Id).ToListAsync()) ?? new List<int>();
 
                 List<int> patientIdsWithTreatments = (await query.Select(x => x.PatientId ?? 0).ToListAsync());
 
                 var selectedIds = patientIds.Except(patientIdsWithTreatments);
 
-                _aPI_Response.Result = await _cia_DbContext.Patients.Select(x => new
+                _aPI_Response.Result = await _cia_DbContext.Patients.Where(x => x.Listed == true).Select(x => new
                 {
                     x.Id,
                     PatientName = x.Name,
@@ -1713,14 +1713,14 @@ namespace CIA.Controllers
             {
                 diagnosticStepsResult = await diagnosticStepsQuery.ToListAsync();
                 ids = diagnosticStepsResult.Select(x => x.PatientId).Distinct().ToList();
-                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id)).ToListAsync();
+                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id) && x.Listed==true).ToListAsync();
 
             }
             else
             {
                 finalStepsResult = (await finalStepsQuery.ToListAsync());
                 ids = finalStepsResult.Select(x => x.PatientId).Distinct().ToList();
-                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id)).ToListAsync();
+                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id) && x.Listed == true).ToListAsync();
             }
 
 

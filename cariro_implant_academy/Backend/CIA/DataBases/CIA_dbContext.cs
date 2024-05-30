@@ -107,29 +107,12 @@ namespace CIA.DataBases
         public DbSet<Scaling> Scalings { get; set; }
         public DbSet<ClinicPricesModel> ClinicPrices { get; set; }
         public DbSet<ClinicReceiptModel> ClinicReceipts { get; set; }
-        public DbSet<ClinicDoctorClinicPercentageModel> ClinicDoctorClinicPercentageModels { get; set; }
-        public DbSet<LabItem_WaxUp> LabItem_WaxUps { get; set; }
-        public DbSet<LabItem_ZirconUnit> LabItem_ZirconUnits { get; set; }
-
-        public DbSet<LabItem_PFM> LabItem_PFMs { get; set; }
-
-        public DbSet<LabItem_CompositeInlay> LabItem_CompositeInlays { get; set; }
-
-        public DbSet<LabItem_EmaxVeneer> LabItem_EmaxVeneers { get; set; }
-
-        public DbSet<LabItem_MilledPMMA> LabItem_MilledPMMA { get; set; }
-
-        public DbSet<LabItem_PrintedPMMA> LabItem_PrintedPMMA { get; set; }
-
-        public DbSet<LabItem_TiAbutment> LabItem_TiAbutments { get; set; }
-
-        public DbSet<LabItem_TiBar> LabItem_TiBars { get; set; }
-
-        public DbSet<LabItem_ThreeDPrinting> LabItem_ThreeDPrintings { get; set; }
+        public DbSet<ClinicDoctorClinicPercentageModel> ClinicDoctorClinicPercentageModels { get; set; }       
         public DbSet<LabItemCompany> LabItemCompanies { get; set; }
         public DbSet<LabItemShade> LabItemShades { get; set; }
         public DbSet<LabItem> LabItems { get; set; }
         public DbSet<LabItemParent> LabItemParents { get; set; }
+        public DbSet<LabOptions> LabOptions { get; set; }
 
 
 
@@ -477,9 +460,9 @@ namespace CIA.DataBases
               .HasPrincipalKey(x => x.IdInt)
               .OnDelete(DeleteBehavior.Cascade);
 
-            
+
             modelBuilder.Entity<LabRequestStepItem>()
-              .HasOne<LabItemParent>(x => x.LabItemFromSettings)
+              .HasOne<LabOptions>(x => x.LabOption)
               .WithMany()
               .HasPrincipalKey(x => x.Id)
               .OnDelete(DeleteBehavior.Cascade);
@@ -505,65 +488,6 @@ namespace CIA.DataBases
 
 
 
-
-            modelBuilder.Entity<LabItem_WaxUp>().HasData(new LabItem_WaxUp
-            {
-                Id = 10,
-                Name = "Wax Up",
-            });
-            modelBuilder.Entity<LabItem_ZirconUnit>().HasData(new LabItem_ZirconUnit
-            {
-                Id = 1,
-                Name = "Zircon Unit",
-            });
-
-            modelBuilder.Entity<LabItem_PFM>().HasData(new LabItem_PFM
-            {
-                Id = 2,
-                Name = "PFM",
-            });
-
-            modelBuilder.Entity<LabItem_CompositeInlay>().HasData(new LabItem_CompositeInlay
-            {
-                Id = 3,
-                Name = "Composite Inlay",
-            });
-
-            modelBuilder.Entity<LabItem_EmaxVeneer>().HasData(new LabItem_EmaxVeneer
-            {
-                Id = 4,
-                Name = "Emax Veneer",
-            });
-
-            modelBuilder.Entity<LabItem_MilledPMMA>().HasData(new LabItem_MilledPMMA
-            {
-                Id = 5,
-                Name = "Milled PMMA",
-            });
-
-            modelBuilder.Entity<LabItem_PrintedPMMA>().HasData(new LabItem_PrintedPMMA
-            {
-                Id = 6,
-                Name = "Printed PMMA",
-            });
-
-            modelBuilder.Entity<LabItem_TiAbutment>().HasData(new LabItem_TiAbutment
-            {
-                Id = 7,
-                Name = "Ti Abutment",
-            });
-
-            modelBuilder.Entity<LabItem_TiBar>().HasData(new LabItem_TiBar
-            {
-                Id = 8,
-                Name = "Ti Bar",
-            });
-
-            modelBuilder.Entity<LabItem_ThreeDPrinting>().HasData(new LabItem_ThreeDPrinting
-            {
-                Id = 9,
-                Name = "3D Printing",
-            });
 
 
             base.OnModelCreating(modelBuilder);

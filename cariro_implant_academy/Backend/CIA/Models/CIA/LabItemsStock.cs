@@ -10,28 +10,14 @@ namespace CIA.Models.CIA
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
         public String? Name { get; set; }
-        public int UnitPrice { get; set; } = 0;
-        public List<LabItemCompany> Companies { get; set; }
+        public bool HasCompanies { get; set; }
+        public bool HasShades { get; set; } 
+        public bool HasSize { get; set; }
+        public bool HasCode { get; set; }
+        public bool IsStock { get; set; }
+        public int Threshold { get; set; } = 0;
     }
-   
-    public class LabItem_WaxUp : LabItemParent { }
-    public class LabItem_ZirconUnit : LabItemParent { }
-
-    public class LabItem_PFM : LabItemParent { }
-
-    public class LabItem_CompositeInlay : LabItemParent { }
-
-    public class LabItem_EmaxVeneer : LabItemParent { }
-
-    public class LabItem_MilledPMMA : LabItemParent { }
-
-    public class LabItem_PrintedPMMA : LabItemParent { }
-
-    public class LabItem_TiAbutment : LabItemParent { }
-
-    public class LabItem_TiBar : LabItemParent { }
-
-    public class LabItem_ThreeDPrinting : LabItemParent { }
+      
 
     public class LabItemCompany
     {
@@ -53,8 +39,11 @@ namespace CIA.Models.CIA
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
         public string? Name { get; set; }
-       
         public List<LabItem>? Items { get; set; } = new List<LabItem>();
+
+        [ForeignKey("LabItemParent")]
+        public int? LabItemParentId { get; set; }
+        public LabItemParent? LabItemParent { get; set; }
 
         [ForeignKey("LabItemCompany")]
         public int? LabItemCompanyId { get; set; }
@@ -62,13 +51,51 @@ namespace CIA.Models.CIA
     }
     public class LabItem : StockItem
     {
-        public String Name { get; set; } = "";
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        public void setName()
+        {
+            this.Name = "";
+            if ((this.Code ?? "") != "")
+                this.Name += $"{this.Code}";
+            if (((this.Code ?? "") != "") && ((this.Size ?? "") != ""))
+                this.Name += " || ";
+            if ((this.Size ?? "") != "")
+                this.Name += $"{this.Size}";
+        }
         public String? Code { get; set; }
+        public String? Size { get; set; }
         public int? ConsumedCount { get; set; } = 0;
         public bool? Consumed { get; set; } = false;
+
+        [ForeignKey("LabItemParent")]
+        public int? LabItemParentId { get; set; }
+        public LabItemParent? LabItemParent { get; set; }
+        [ForeignKey("LabItemCompany")]
+        public int? LabItemCompanyId { get; set; }
+        public LabItemCompany? LabItemCompany { get; set; }
         [ForeignKey("LabItemShade")]
-        public int? LabItemShadeId { get; set   ; }
+        public int? LabItemShadeId { get; set; }
         public LabItemShade? LabItemShade { get; set; }
+
+        public  EnumWebsite Website { get; set; } = EnumWebsite.Lab;
+        public  EnumWebsite InventoryWebsite { get; set; } = EnumWebsite.Lab;
+
+    }
+
+    public class LabOptions
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        public String Name { get; set; } = "";
+        public int Price { get; set; } = 0;
+
+        [ForeignKey("LabItemParent")]
+        public int? LabItemParentId { get; set; }
+        public LabItemParent? LabItemParent { get; set; }
+        
 
     }
 }

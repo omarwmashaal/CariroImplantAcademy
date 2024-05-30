@@ -339,23 +339,30 @@ namespace CIA.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("HasCode")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HasCompanies")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HasShades")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("HasSize")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsStock")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int>("UnitPrice")
+                    b.Property<int>("Threshold")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("LabItemParents");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("LabItemParent");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabItemShade", b =>
@@ -369,6 +376,9 @@ namespace CIA.Migrations
                     b.Property<int?>("LabItemCompanyId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("LabItemParentId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -376,7 +386,34 @@ namespace CIA.Migrations
 
                     b.HasIndex("LabItemCompanyId");
 
+                    b.HasIndex("LabItemParentId");
+
                     b.ToTable("LabItemShades");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.LabOptions", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("LabItemParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LabItemParentId");
+
+                    b.ToTable("LabOptions");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.MembraneCompany", b =>
@@ -21548,7 +21585,7 @@ namespace CIA.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("LabItemFromSettingsId")
+                    b.Property<int?>("LabOptionId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("LabPrice")
@@ -21567,7 +21604,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ConsumedLabItemId");
 
-                    b.HasIndex("LabItemFromSettingsId");
+                    b.HasIndex("LabOptionId");
 
                     b.ToTable("LabRequestStepItems");
                 });
@@ -23025,156 +23062,6 @@ namespace CIA.Migrations
                     b.HasDiscriminator().HasValue("SuppliersModel");
                 });
 
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_CompositeInlay", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_CompositeInlay");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 3,
-                            Name = "Composite Inlay",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_EmaxVeneer", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_EmaxVeneer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 4,
-                            Name = "Emax Veneer",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_MilledPMMA", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_MilledPMMA");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 5,
-                            Name = "Milled PMMA",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_PFM", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_PFM");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            Name = "PFM",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_PrintedPMMA", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_PrintedPMMA");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 6,
-                            Name = "Printed PMMA",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_ThreeDPrinting", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_ThreeDPrinting");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 9,
-                            Name = "3D Printing",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_TiAbutment", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_TiAbutment");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 7,
-                            Name = "Ti Abutment",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_TiBar", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_TiBar");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 8,
-                            Name = "Ti Bar",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_WaxUp", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_WaxUp");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 10,
-                            Name = "Wax Up",
-                            UnitPrice = 0
-                        });
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItem_ZirconUnit", b =>
-                {
-                    b.HasBaseType("CIA.Models.CIA.LabItemParent");
-
-                    b.HasDiscriminator().HasValue("LabItem_ZirconUnit");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Zircon Unit",
-                            UnitPrice = 0
-                        });
-                });
-
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ClinicImplant", b =>
                 {
                     b.HasBaseType("CIA.Models.CIA.TreatmentModels.ClinicTreatmentParent");
@@ -23682,10 +23569,20 @@ namespace CIA.Migrations
                     b.Property<int?>("ConsumedCount")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("LabItemCompanyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LabItemParentId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("LabItemShadeId")
                         .HasColumnType("integer");
 
                     b.HasIndex("ImplantLineId");
+
+                    b.HasIndex("LabItemCompanyId");
+
+                    b.HasIndex("LabItemParentId");
 
                     b.HasIndex("LabItemShadeId");
 
@@ -23838,7 +23735,7 @@ namespace CIA.Migrations
             modelBuilder.Entity("CIA.Models.CIA.LabItemCompany", b =>
                 {
                     b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemParent")
-                        .WithMany("Companies")
+                        .WithMany()
                         .HasForeignKey("LabItemParentId");
 
                     b.Navigation("LabItemParent");
@@ -23850,7 +23747,22 @@ namespace CIA.Migrations
                         .WithMany("Shades")
                         .HasForeignKey("LabItemCompanyId");
 
+                    b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemParent")
+                        .WithMany()
+                        .HasForeignKey("LabItemParentId");
+
                     b.Navigation("LabItemCompany");
+
+                    b.Navigation("LabItemParent");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.LabOptions", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemParent")
+                        .WithMany()
+                        .HasForeignKey("LabItemParentId");
+
+                    b.Navigation("LabItemParent");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ClinicTreatmentParent", b =>
@@ -24424,14 +24336,14 @@ namespace CIA.Migrations
                         .HasForeignKey("ConsumedLabItemId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemFromSettings")
+                    b.HasOne("CIA.Models.CIA.LabOptions", "LabOption")
                         .WithMany()
-                        .HasForeignKey("LabItemFromSettingsId")
+                        .HasForeignKey("LabOptionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ConsumedLabItem");
 
-                    b.Navigation("LabItemFromSettings");
+                    b.Navigation("LabOption");
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_Request", b =>
@@ -24471,117 +24383,6 @@ namespace CIA.Migrations
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "CompositeInlay", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "EmaxVeneer", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "MilledPMMA", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
 
                     b.OwnsMany("CIA.Models.LAB.LabRequestItem", "Others", b1 =>
                         {
@@ -24626,298 +24427,19 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "PFM", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "PrintedPMMA", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "ThreeDPrinting", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "TiAbutment", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "TiBar", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "WaxUp", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "ZirconUnit", b1 =>
-                        {
-                            b1.Property<int>("Lab_RequestId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Lab_RequestId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Lab_Requests");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Lab_RequestId");
-
-                            b1.Navigation("LabItem");
-                        });
-
                     b.Navigation("AssignedTo");
-
-                    b.Navigation("CompositeInlay");
 
                     b.Navigation("Customer");
 
                     b.Navigation("Designer");
 
-                    b.Navigation("EmaxVeneer");
-
                     b.Navigation("EntryBy");
 
                     b.Navigation("File");
 
-                    b.Navigation("MilledPMMA");
-
                     b.Navigation("Others");
 
-                    b.Navigation("PFM");
-
                     b.Navigation("Patient");
-
-                    b.Navigation("PrintedPMMA");
-
-                    b.Navigation("ThreeDPrinting");
-
-                    b.Navigation("TiAbutment");
-
-                    b.Navigation("TiBar");
-
-                    b.Navigation("WaxUp");
-
-                    b.Navigation("ZirconUnit");
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_RequestStep", b =>
@@ -28499,11 +28021,23 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("ImplantLineId");
 
+                    b.HasOne("CIA.Models.CIA.LabItemCompany", "LabItemCompany")
+                        .WithMany()
+                        .HasForeignKey("LabItemCompanyId");
+
+                    b.HasOne("CIA.Models.CIA.LabItemParent", "LabItemParent")
+                        .WithMany()
+                        .HasForeignKey("LabItemParentId");
+
                     b.HasOne("CIA.Models.CIA.LabItemShade", "LabItemShade")
                         .WithMany("Items")
                         .HasForeignKey("LabItemShadeId");
 
                     b.Navigation("ImplantLine");
+
+                    b.Navigation("LabItemCompany");
+
+                    b.Navigation("LabItemParent");
 
                     b.Navigation("LabItemShade");
                 });
@@ -28548,11 +28082,6 @@ namespace CIA.Migrations
             modelBuilder.Entity("CIA.Models.CIA.LabItemCompany", b =>
                 {
                     b.Navigation("Shades");
-                });
-
-            modelBuilder.Entity("CIA.Models.CIA.LabItemParent", b =>
-                {
-                    b.Navigation("Companies");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabItemShade", b =>

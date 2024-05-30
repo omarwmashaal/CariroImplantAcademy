@@ -46,18 +46,7 @@ namespace CIA.Models.LAB
         public Lab_File? File { get; set; }
         public List<int>? Teeth { get; set; }
         public EnumLabRequestInitStatus? InitStatus { get; set; }
-        public LabRequestItem? WaxUp { get; set; }
-        public LabRequestItem? ZirconUnit { get; set; }
-        public LabRequestItem? PFM { get; set; }
-        public LabRequestItem? CompositeInlay { get; set; }
-        public LabRequestItem? EmaxVeneer { get; set; }
-        public LabRequestItem? MilledPMMA { get; set; }
-        public LabRequestItem? PrintedPMMA { get; set; }
-        public LabRequestItem? TiAbutment { get; set; }
-        public LabRequestItem? TiBar { get; set; }
-        public LabRequestItem? ThreeDPrinting { get; set; }
         public List<LabRequestItem>? Others { get; set; }
-
 
         [NotMapped]
         public List<LabRequestStepItem> LabRequestStepItems { get; set; } = new();
@@ -92,10 +81,10 @@ namespace CIA.Models.LAB
         public int? LabRequestId { get; set; }
         [ForeignKey("Patient")]
         public int? PatientId { get; set; }
-        [ForeignKey("LabItemParent")]
-        public int? LabItemFromSettingsId { get; set; }
-        public LabItemParent? LabItemFromSettings
-        { get; set; }
+        
+        [ForeignKey("LabOptions")]
+        public int? LabOptionId { get; set; }
+        public LabOptions? LabOption { get; set; }
         [ForeignKey("LabItem")]
         public int? ConsumedLabItemId { get; set; }
         public LabItem? ConsumedLabItem { get; set; }

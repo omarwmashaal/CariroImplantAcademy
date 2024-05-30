@@ -186,6 +186,12 @@ namespace CIA.Controllers
             _aPI_Response.Result = await _cia_DbContext.LabItemParents.OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);
         }
+        [HttpGet("GetLabOptions")]
+        public async Task<IActionResult> GetLabOptions(int parentId)
+        {
+            _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).OrderBy(x => x.Id).ToListAsync();
+            return Ok(_aPI_Response);
+        }
         [HttpGet("GetLabItemCompanies")]
         public async Task<IActionResult> GetLabItemCompanies(int id)
         {
@@ -199,12 +205,24 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItems")]
-        public async Task<IActionResult> GetLabItems(int id)
+        public async Task<IActionResult> GetLabItems(int? parentId, int? companyId, int? shadeId)
         {
-            var labItems = await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == id && !(x.Consumed ?? true)).ToListAsync();
+            List<LabItem> labItems = new();
+            if (shadeId != null)
+                labItems = await _cia_DbContext.LabItems.Where(x => x.LabItemShadeId == shadeId && !(x.Consumed ?? true)).ToListAsync();
+            else if (companyId != null)
+                labItems = await _cia_DbContext.LabItems.Where(x => x.LabItemCompanyId == companyId && !(x.Consumed ?? true)).ToListAsync();
+            else if (parentId != null)
+                labItems = await _cia_DbContext.LabItems.Where(x => x.LabItemParentId == parentId && !(x.Consumed ?? true)).ToListAsync();
+            else
+            {
+                _aPI_Response.ErrorMessage = "No Id provided!";
+                return BadRequest(_aPI_Response);
+            }
+
             foreach (var item in labItems)
             {
-                item.Name = $"{item.Code} || {item.Size}";
+                item.setName();
             }
             _aPI_Response.Result = labItems;
             return Ok(_aPI_Response);
@@ -763,52 +781,38 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
 
-        [HttpPut("UpdateLabItemParentsPrice")]
-        public async Task<IActionResult> UpdateLabItemParentsPrice(int id, int price)
+        [HttpPut("UpdateLabItems")]
+        public async Task<IActionResult> UpdateLabItems(List<LabItemParent> parents)
         {
-
-            // var items = await _cia_DbContext.LabItemParents.Include(x=>x.Companies).ToListAsync();
-            var item = await _cia_DbContext.LabItemParents.FirstAsync(x => x.Id == id);
-            item.UnitPrice = price;
-
-            _cia_DbContext.LabItemParents.Update(item);
+            _cia_DbContext.LabItemParents.UpdateRange(parents);
             _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateLabItemCompanies")]
-        public async Task<IActionResult> UpdateLabItemCompanies(int id, List<LabItemCompany> data)
+        public async Task<IActionResult> UpdateLabItemCompanies( List<LabItemCompany> data)
         {
-
-            // var items = await _cia_DbContext.LabItemParents.Include(x=>x.Companies).ToListAsync();
-
-            foreach (var c in data)
-            {
-                c.LabItemParentId = id;
-            }
+            
             _cia_DbContext.LabItemCompanies.UpdateRange(data);
             _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateLabItemShades")]
-        public async Task<IActionResult> UpdateLabItemShades(int id, List<DropDowns> data)
+        public async Task<IActionResult> UpdateLabItemShades(List<LabItemShade> data)
         {
-
-            var dataFromQuery = data.Select(x => new LabItemShade
-            {
-                Id = x.Id,
-                Name = x.Name,
-                LabItemCompanyId = id,
-            }).ToList();
-
-            _cia_DbContext.LabItemShades.UpdateRange(dataFromQuery);
+            _cia_DbContext.LabItemShades.UpdateRange(data);
+            _cia_DbContext.SaveChanges();
+            return Ok(_aPI_Response);
+        }
+        [HttpPut("UpdateLabOptions")]
+        public async Task<IActionResult> UpdateLabOptions(List<LabOptions> data)
+        {
+            _cia_DbContext.LabOptions.UpdateRange(data);
             _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateLabItems")]
-        public async Task<IActionResult> UpdateLabItems(int id, List<LabItem> data)
+        public async Task<IActionResult> UpdateLabItems(List<LabItem> data)
         {
-
-
             var cat = await _cia_DbContext.StockCategories.FirstOrDefaultAsync(x => x.Name == "Lab Medical Item");
             if (cat == null)
             {
@@ -823,14 +827,10 @@ namespace CIA.Controllers
             }
             foreach (var item in data)
             {
-                item.LabItemShadeId = id;
-                item.Name = item.Code;
-                item.Website = EnumWebsite.Lab;
-                item.InventoryWebsite = EnumWebsite.Lab;
+                item.setName();
                 item.Category = cat;
                 if (item.Consumed == false)
                     item.Count = 1;
-
             }
 
             _cia_DbContext.LabItems.UpdateRange(data);
@@ -893,7 +893,7 @@ namespace CIA.Controllers
         }
 
         [HttpPost("UpdateProstheticStatus")]
-        public async Task<IActionResult> UpdateProstheticStatus(int itemId,EnumProstheticType type, [FromBody] List<DropDowns> data)
+        public async Task<IActionResult> UpdateProstheticStatus(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
         {
             if (type == EnumProstheticType.Diagnostic)
             {
@@ -918,9 +918,9 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok();
         }
-        
+
         [HttpPost("UpdateProstheticNextVisit")]
-        public async Task<IActionResult> UpdateProstheticNextVisit(int itemId,EnumProstheticType type, [FromBody] List<DropDowns> data)
+        public async Task<IActionResult> UpdateProstheticNextVisit(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
         {
             if (type == EnumProstheticType.Diagnostic)
             {
