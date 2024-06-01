@@ -9,7 +9,9 @@ class LabItemModel extends LabItemEntity {
     super.size,
     super.labItemShadeId,
     super.labItemShade,
-    super.name
+    super.name,
+    super.labItemCompanyId,
+    super.labItemParentId,
   });
 
   factory LabItemModel.fromJson(Map<String, dynamic> map) {
@@ -21,7 +23,9 @@ class LabItemModel extends LabItemEntity {
       size: map['size'],
       labItemShadeId: map['labItemShadeId'],
       labItemShade: map['labItemShade'],
-      name: map['name']
+      name: map['name'],
+      labItemCompanyId: map['labItemCompanyId'],
+      labItemParentId: map['labItemParentId'],
     );
   }
 
@@ -34,6 +38,8 @@ class LabItemModel extends LabItemEntity {
       size: entity.size,
       labItemShadeId: entity.labItemShadeId,
       labItemShade: entity.labItemShade,
+      labItemCompanyId: entity.labItemCompanyId,
+      labItemParentId: entity.labItemParentId,
     );
   }
 
@@ -46,6 +52,8 @@ class LabItemModel extends LabItemEntity {
     data['size'] = this.size;
     data['labItemShadeId'] = this.labItemShadeId;
     data['labItemShade'] = this.labItemShade;
+    data['labItemCompanyId'] = this.labItemCompanyId;
+    data['labItemParentId'] = this.labItemParentId;
     return data;
   }
 }

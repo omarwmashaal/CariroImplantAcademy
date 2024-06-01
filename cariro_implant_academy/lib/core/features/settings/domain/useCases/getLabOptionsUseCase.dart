@@ -1,0 +1,21 @@
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
+import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
+import 'package:dartz/dartz.dart';
+
+class GetLabOptionsUseCase extends LoadingUseCases<int?> {
+  final SettingsRepository settingsRepository;
+
+  GetLabOptionsUseCase({required this.settingsRepository});
+
+  @override
+  Future<Either<Failure, List<LabOptionEntity>>> call(int? parentId) async {
+    return await settingsRepository.getLabOptions(parentId).then((value) => value.fold(
+          (l) => Left(l..message = "Get Lab Options: ${l.message}"),
+          (r) => Right(r),
+        ));
+  }
+}

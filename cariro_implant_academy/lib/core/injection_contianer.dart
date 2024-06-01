@@ -51,9 +51,11 @@ import 'package:cariro_implant_academy/core/features/settings/domain/repositorie
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getIncomeCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMedicalExpensesCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembraneCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getMembranesUseCase.dart';
@@ -298,7 +300,7 @@ import 'features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
 import 'features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'features/settings/domain/useCases/getNonMedicalStockCategories.dart';
-import 'features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
+import 'features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'features/settings/presentation/bloc/settingsBloc.dart';
 
 final sl = GetIt.instance;
@@ -414,10 +416,12 @@ initInjection() async {
         updateLabItemsCompaniesUseCase: sl(),
         updateLabItemsShadesUseCase: sl(),
         updateLabItemsUseCase: sl(),
-        updateLabItemsParentsPriceUseCase: sl(),
+        updateLabItemsParentsUseCase: sl(),
         updateProstheticItemsUseCase: sl(),
         updateProstheticNextVisitUseCase: sl(),
         updateProstheticStatusUseCase: sl(),
+        getLabOptionsUseCase:  sl(),
+        updateLabOptionsUseCase:  sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
@@ -484,12 +488,14 @@ initInjection() async {
 
   sl.registerLazySingleton(() => EditTreatmentPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetLabOptionsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemsLinesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemsCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsCompaniesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsShadesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateLabItemsUseCase(settingsRepository: sl()));
-  sl.registerLazySingleton(() => UpdateLabItemsParentsPriceUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabOptionsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateLabItemsParentsUseCase(settingsRepository: sl()));
 
   //repositories
   sl.registerLazySingleton<SettingsRepository>(() => SettingsRepoImpl(settingsDatasource: sl()));

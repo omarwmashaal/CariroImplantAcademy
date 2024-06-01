@@ -187,9 +187,12 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabOptions")]
-        public async Task<IActionResult> GetLabOptions(int parentId)
+        public async Task<IActionResult> GetLabOptions(int? parentId)
         {
-            _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).OrderBy(x => x.Id).ToListAsync();
+            if(parentId==null || parentId ==0)
+            _aPI_Response.Result = await _cia_DbContext.LabOptions.OrderBy(x => x.Id).Include(x=>x.LabItemParent).ToListAsync();
+           else
+            _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).Include(x => x.LabItemParent).OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItemCompanies")]
@@ -198,10 +201,14 @@ namespace CIA.Controllers
             _aPI_Response.Result = await _cia_DbContext.LabItemCompanies.Where(x => x.LabItemParentId == id).ToListAsync();
             return Ok(_aPI_Response);
         }
-        [HttpGet("GetLabItemLines")]
-        public async Task<IActionResult> GetLabItemLines(int id)
+        [HttpGet("GetLabItemShades")]
+        public async Task<IActionResult> GetLabItemShades(int? parentId, int? companyId)
         {
-            _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemCompanyId == id).ToListAsync();
+            if(companyId !=null)
+            _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemCompanyId == companyId).ToListAsync();
+            else if(parentId != null)
+            _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemParentId == parentId).ToListAsync();
+            
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItems")]
@@ -781,8 +788,8 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
 
-        [HttpPut("UpdateLabItems")]
-        public async Task<IActionResult> UpdateLabItems(List<LabItemParent> parents)
+        [HttpPut("UpdateLabItemParents")]
+        public async Task<IActionResult> UpdateLabItemParents(List<LabItemParent> parents)
         {
             _cia_DbContext.LabItemParents.UpdateRange(parents);
             _cia_DbContext.SaveChanges();
@@ -828,6 +835,8 @@ namespace CIA.Controllers
             foreach (var item in data)
             {
                 item.setName();
+                item.Website = EnumWebsite.Lab;
+                item.InventoryWebsite = EnumWebsite.Lab;
                 item.Category = cat;
                 if (item.Consumed == false)
                     item.Count = 1;

@@ -22,7 +22,7 @@ class LabStepItemModel extends LabStepItemEntity {
     id = data['id'];
     labItemFromSettings = data['labItemFromSettings'] == null ? null : LabItemParentModel.fromJson(data['labItemFromSettings']);
     labItemFromSettingsId = data['labItemFromSettingsId'];
-    labPrice = data['labPrice'] ?? labItemFromSettings?.unitPrice ?? 0;
+    labPrice = data['labPrice'] ?? 0;
     labRequestId = data['labRequestId'];
     patientId = data['patientId'];
     tooth = data['tooth'];

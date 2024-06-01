@@ -10,6 +10,8 @@ class LabItemEntity extends StockEntity {
   bool? consumed;
   String? size;
   int? labItemShadeId;
+  int? labItemCompanyId;
+  int? labItemParentId;
   BasicNameIdObjectEntity? labItemShade;
 
   LabItemEntity({
@@ -20,6 +22,8 @@ class LabItemEntity extends StockEntity {
     this.size,
     this.labItemShadeId,
     this.labItemShade,
+    this.labItemCompanyId,
+    this.labItemParentId,
     super.name,
   });
 

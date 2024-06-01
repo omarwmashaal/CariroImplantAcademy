@@ -3,7 +3,10 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:dartz/dartz.dart';
@@ -55,14 +58,16 @@ abstract class SettingsRepository {
   Future<Either<Failure, List<ClinicPriceEntity>>> getTeethTreatmentPrices(List<int>? teeth, List<EnumClinicPrices>? category);
   Future<Either<Failure, NoParams>> updateTeethTreatmentPrices(List<ClinicPriceEntity> params);
   Future<Either<Failure, List<LabItemParentEntity>>> getLabItemParents();
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemCompanies(int id);
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemLines(int id);
-  Future<Either<Failure, List<LabItemEntity>>> getLabItems(int id);
-  Future<Either<Failure, NoParams>> updateLabItems(int shadeId, List<LabItemEntity> data);
-  Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data);
-  Future<Either<Failure, NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data);
-  Future<Either<Failure, NoParams>> updateLabItemsParentsPrice(int parentItemId, int price);
-  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, List<LabItemCompanyEntity>>> getLabItemCompanies(int id);
+  Future<Either<Failure, List<LabItemShadeEntity>>> getLabItemLines(int? parentId, int? companyId);
+  Future<Either<Failure, List<LabItemEntity>>> getLabItems(int? parentId, int? companyId, int? shadeId);
+  Future<Either<Failure, List<LabOptionEntity>>> getLabOptions(int? parentId);
+  Future<Either<Failure, NoParams>> updateLabItems(List<LabItemEntity> data);
+  Future<Either<Failure, NoParams>> updateLabItemsShades(List<LabItemShadeEntity> data);
+  Future<Either<Failure, NoParams>> updateLabItemsCompanies(List<LabItemCompanyEntity> data);
+  Future<Either<Failure, NoParams>> updateLabItemsParents(List<LabItemParentEntity> data);
+  Future<Either<Failure, NoParams>> updateLabOptions(List<LabOptionEntity> data);
+  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }

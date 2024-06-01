@@ -51,9 +51,7 @@ namespace CIA.Models.CIA
     }
     public class LabItem : StockItem
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? Id { get; set; }
+        
         public void setName()
         {
             this.Name = "";
@@ -65,7 +63,6 @@ namespace CIA.Models.CIA
                 this.Name += $"{this.Size}";
         }
         public String? Code { get; set; }
-        public String? Size { get; set; }
         public int? ConsumedCount { get; set; } = 0;
         public bool? Consumed { get; set; } = false;
 
@@ -79,8 +76,6 @@ namespace CIA.Models.CIA
         public int? LabItemShadeId { get; set; }
         public LabItemShade? LabItemShade { get; set; }
 
-        public  EnumWebsite Website { get; set; } = EnumWebsite.Lab;
-        public  EnumWebsite InventoryWebsite { get; set; } = EnumWebsite.Lab;
 
     }
 

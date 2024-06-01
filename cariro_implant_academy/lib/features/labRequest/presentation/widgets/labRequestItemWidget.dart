@@ -30,7 +30,7 @@ class LabRequestItemWidget extends StatefulWidget {
 class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.item != null) widget.item!.labPrice = widget.free ? 0 : widget.item!.labPrice ?? widget.item?.labItemFromSettings?.unitPrice ?? 0;
+   // if (widget.item != null) widget.item!.labPrice = widget.free ? 0 : widget.item!.labPrice ?? widget.item?.labItemFromSettings?.unitPrice ?? 0;
     return SizedBox(
       width: 300,
       child: Padding(

@@ -239,7 +239,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("CashFlow");
+                    b.ToTable("CashFlow", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("CashFlowModel");
 
@@ -266,7 +266,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DropDowns");
+                    b.ToTable("DropDowns", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("DropDowns");
 
@@ -286,7 +286,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ImplantCompanies");
+                    b.ToTable("ImplantCompanies", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.ImplantLine", b =>
@@ -307,7 +307,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ImplantCompanyId");
 
-                    b.ToTable("ImplantLines");
+                    b.ToTable("ImplantLines", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabItemCompany", b =>
@@ -328,7 +328,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("LabItemParentId");
 
-                    b.ToTable("LabItemCompanies");
+                    b.ToTable("LabItemCompanies", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabItemParent", b =>
@@ -362,7 +362,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LabItemParents");
+                    b.ToTable("LabItemParents", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabItemShade", b =>
@@ -388,7 +388,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("LabItemParentId");
 
-                    b.ToTable("LabItemShades");
+                    b.ToTable("LabItemShades", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.LabOptions", b =>
@@ -413,7 +413,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("LabItemParentId");
 
-                    b.ToTable("LabOptions");
+                    b.ToTable("LabOptions", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.MembraneCompany", b =>
@@ -429,7 +429,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MembraneCompanies");
+                    b.ToTable("MembraneCompanies", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.RoomModel", b =>
@@ -452,7 +452,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ClinicTreatmentParent", b =>
@@ -507,7 +507,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ReceiptId");
 
-                    b.ToTable("ClinicTreatmentParent");
+                    b.ToTable("ClinicTreatmentParent", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("ClinicTreatmentParent");
 
@@ -551,7 +551,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ComplicationsAfterProsthesis");
+                    b.ToTable("ComplicationsAfterProsthesis", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ComplicationsAfterProsthesisParentModel", b =>
@@ -572,7 +572,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ComplicationsAfterProsthesisParents");
+                    b.ToTable("ComplicationsAfterProsthesisParents", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ComplicationsAfterSurgeryModel", b =>
@@ -612,7 +612,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ComplicationsAfterSurgery");
+                    b.ToTable("ComplicationsAfterSurgery", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ComplicationsAfterSurgeryParentModel", b =>
@@ -633,7 +633,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ComplicationsAfterSurgeryParents");
+                    b.ToTable("ComplicationsAfterSurgeryParents", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DentalExaminationModel", b =>
@@ -669,7 +669,7 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("DentalExaminations");
+                    b.ToTable("DentalExaminations", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DentalHistoryModel", b =>
@@ -732,7 +732,7 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("DentalHistories");
+                    b.ToTable("DentalHistories", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticItemModel", b =>
@@ -749,7 +749,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiagnosticItems");
+                    b.ToTable("DiagnosticItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticNextVisitItemModel", b =>
@@ -771,7 +771,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("DiagnosticItemId");
 
-                    b.ToTable("DiagnosticNextVisitItems");
+                    b.ToTable("DiagnosticNextVisitItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticStatusItemModel", b =>
@@ -793,7 +793,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("DiagnosticItemId");
 
-                    b.ToTable("DiagnosticStatusItems");
+                    b.ToTable("DiagnosticStatusItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticStepModel", b =>
@@ -843,7 +843,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("DiagnosticSteps");
+                    b.ToTable("DiagnosticSteps", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalItemModel", b =>
@@ -860,7 +860,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FinalItems");
+                    b.ToTable("FinalItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalNextVisitItemModel", b =>
@@ -882,7 +882,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("FinalItemId");
 
-                    b.ToTable("FinalNextVisitItems");
+                    b.ToTable("FinalNextVisitItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalStatusItemModel", b =>
@@ -907,7 +907,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("FinalItemId");
 
-                    b.ToTable("FinalStatusItems");
+                    b.ToTable("FinalStatusItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalStepModel", b =>
@@ -984,7 +984,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("FinalSteps");
+                    b.ToTable("FinalSteps", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentDiagnosticModel", b =>
@@ -1006,7 +1006,7 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("ProstheticTreatments");
+                    b.ToTable("ProstheticTreatments", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentFinalFullArch", b =>
@@ -1027,7 +1027,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ProstheticTreatmentFinalFullArchs");
+                    b.ToTable("ProstheticTreatmentFinalFullArchs", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentFinalSingleBridge", b =>
@@ -1048,7 +1048,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("ProstheticTreatmentFinalSingleBridges");
+                    b.ToTable("ProstheticTreatmentFinalSingleBridges", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentModels.FinalProsthesisParentModel", b =>
@@ -1090,7 +1090,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("FinalProsthesisParentsTable");
+                    b.ToTable("FinalProsthesisParentsTable", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("FinalProsthesisParentModel");
 
@@ -1133,7 +1133,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("DiagnosticProsthesisParentsTable");
+                    b.ToTable("DiagnosticProsthesisParentsTable", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("ProstheticTreatmentDiagnosticParentModel");
 
@@ -1381,7 +1381,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("OpenSinusLift_TacsCompanyID");
 
-                    b.ToTable("SurgicalTreatments");
+                    b.ToTable("SurgicalTreatments", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.TryInCheckListModel", b =>
@@ -1473,7 +1473,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("StepId");
 
-                    b.ToTable("TryInCheckLists");
+                    b.ToTable("TryInCheckLists", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.VisitsLog", b =>
@@ -1537,7 +1537,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("VisitsLogs");
+                    b.ToTable("VisitsLogs", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.CIA_Complains", b =>
@@ -1622,7 +1622,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ResolvedById1");
 
-                    b.ToTable("CIA_Complains");
+                    b.ToTable("CIA_Complains", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("CIA_Complains");
 
@@ -1675,7 +1675,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("CandidateDetails");
+                    b.ToTable("CandidateDetails", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.ClinicDoctorClinicPercentageModel", b =>
@@ -1754,7 +1754,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("TMDId");
 
-                    b.ToTable("ClinicDoctorClinicPercentageModels");
+                    b.ToTable("ClinicDoctorClinicPercentageModels", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.ClinicPricesModel", b =>
@@ -1776,7 +1776,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClinicPrices");
+                    b.ToTable("ClinicPrices", (string)null);
 
                     b.HasData(
                         new
@@ -21567,7 +21567,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
@@ -21606,7 +21606,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("LabOptionId");
 
-                    b.ToTable("LabRequestStepItems");
+                    b.ToTable("LabRequestStepItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_CustomerWorkPlace", b =>
@@ -21622,7 +21622,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lab_CustomerWorkPlaces");
+                    b.ToTable("Lab_CustomerWorkPlaces", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_DefaultStep", b =>
@@ -21638,7 +21638,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lab_DefaultSteps");
+                    b.ToTable("Lab_DefaultSteps", (string)null);
 
                     b.HasData(
                         new
@@ -21714,7 +21714,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lab_Files");
+                    b.ToTable("Lab_Files", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_Request", b =>
@@ -21810,7 +21810,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Lab_Requests");
+                    b.ToTable("Lab_Requests", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.LAB.Lab_RequestStep", b =>
@@ -21867,7 +21867,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("TechnicianId1");
 
-                    b.ToTable("Lab_RequestSteps");
+                    b.ToTable("Lab_RequestSteps", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.NotificationModel", b =>
@@ -21906,7 +21906,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.Patient", b =>
@@ -22029,7 +22029,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("RelativePatientID");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -22072,7 +22072,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ReceiptId");
 
-                    b.ToTable("PaymentLogs");
+                    b.ToTable("PaymentLogs", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.Receipt", b =>
@@ -22128,7 +22128,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("RequestId");
 
-                    b.ToTable("Receipts");
+                    b.ToTable("Receipts", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Receipt");
 
@@ -22181,7 +22181,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("RequestChanges");
+                    b.ToTable("RequestChanges", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.StockLog", b =>
@@ -22223,7 +22223,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("OperatorId1");
 
-                    b.ToTable("StockLogs");
+                    b.ToTable("StockLogs", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TodoList", b =>
@@ -22256,7 +22256,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("OperatorId");
 
-                    b.ToTable("ToDoLists");
+                    b.ToTable("ToDoLists", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.MedicalExaminationModel", b =>
@@ -22340,7 +22340,7 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("MedicalExaminations");
+                    b.ToTable("MedicalExaminations", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.NonSurgicalTreatmentModel", b =>
@@ -22386,7 +22386,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("SupervisorId");
 
-                    b.ToTable("NonSurgicalTreatment");
+                    b.ToTable("NonSurgicalTreatment", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.PostSurgeryModel", b =>
@@ -22630,7 +22630,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("OpenSinusLift_TacsCompanyID");
 
-                    b.ToTable("PostSurgeries");
+                    b.ToTable("PostSurgeries", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.TreatmentDetailsModel", b =>
@@ -22719,7 +22719,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("TreatmentItemId");
 
-                    b.ToTable("TreatmentDetails");
+                    b.ToTable("TreatmentDetails", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.TreatmentItemModel", b =>
@@ -22754,7 +22754,7 @@ namespace CIA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TreatmentItems");
+                    b.ToTable("TreatmentItems", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.TreatmentPlanModel", b =>
@@ -22793,7 +22793,7 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId")
                         .IsUnique();
 
-                    b.ToTable("TreatmentPlans");
+                    b.ToTable("TreatmentPlans", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel", b =>
@@ -22817,7 +22817,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("TreatmentPlansSubModels");
+                    b.ToTable("TreatmentPlansSubModels", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -23084,7 +23084,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ImplantLineId");
 
-                    b.ToTable("ClinicTreatmentParent");
+                    b.ToTable("ClinicTreatmentParent", (string)null);
 
                     b.HasDiscriminator().HasValue("ClinicImplant");
                 });
@@ -23093,7 +23093,7 @@ namespace CIA.Migrations
                 {
                     b.HasBaseType("CIA.Models.CIA.TreatmentModels.ClinicTreatmentParent");
 
-                    b.ToTable("ClinicTreatmentParent");
+                    b.ToTable("ClinicTreatmentParent", (string)null);
 
                     b.HasDiscriminator().HasValue("OrthoTreatment");
                 });
@@ -23114,7 +23114,7 @@ namespace CIA.Migrations
                     b.Property<int?>("SecondStepPrice")
                         .HasColumnType("integer");
 
-                    b.ToTable("ClinicTreatmentParent");
+                    b.ToTable("ClinicTreatmentParent", (string)null);
 
                     b.HasDiscriminator().HasValue("Pedo");
                 });
@@ -23141,7 +23141,7 @@ namespace CIA.Migrations
                     b.Property<int?>("TypePrice")
                         .HasColumnType("integer");
 
-                    b.ToTable("ClinicTreatmentParent", t =>
+                    b.ToTable("ClinicTreatmentParent", null, t =>
                         {
                             t.Property("Type")
                                 .HasColumnName("Restoration_Type");
@@ -23163,7 +23163,7 @@ namespace CIA.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.ToTable("ClinicTreatmentParent", t =>
+                    b.ToTable("ClinicTreatmentParent", null, t =>
                         {
                             t.Property("Type")
                                 .HasColumnName("RootCanalTreatment_Type");
@@ -23182,7 +23182,7 @@ namespace CIA.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.ToTable("ClinicTreatmentParent", t =>
+                    b.ToTable("ClinicTreatmentParent", null, t =>
                         {
                             t.Property("Type")
                                 .HasColumnName("Scaling_Type");
@@ -23201,7 +23201,7 @@ namespace CIA.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.ToTable("ClinicTreatmentParent", t =>
+                    b.ToTable("ClinicTreatmentParent", null, t =>
                         {
                             t.Property("StepNumber")
                                 .HasColumnName("TMD_StepNumber");
@@ -23234,7 +23234,7 @@ namespace CIA.Migrations
                     b.HasIndex("ProstheticTreatmentFinalSingleBridgeId")
                         .HasDatabaseName("IX_FinalProsthesisParentsTable_FinalProsthesisDelivery_Prosth~1");
 
-                    b.ToTable("FinalProsthesisParentsTable", t =>
+                    b.ToTable("FinalProsthesisParentsTable", null, t =>
                         {
                             t.Property("ProstheticTreatmentFinalFullArchId")
                                 .HasColumnName("FinalProsthesisDelivery_ProstheticTreatmentFinalFullArchId");
@@ -23267,7 +23267,7 @@ namespace CIA.Migrations
                     b.HasIndex("ProstheticTreatmentFinalSingleBridgeId")
                         .HasDatabaseName("IX_FinalProsthesisParentsTable_FinalProsthesisHealingCollar_P~1");
 
-                    b.ToTable("FinalProsthesisParentsTable", t =>
+                    b.ToTable("FinalProsthesisParentsTable", null, t =>
                         {
                             t.Property("ProstheticTreatmentFinalFullArchId")
                                 .HasColumnName("FinalProsthesisHealingCollar_ProstheticTreatmentFinalFullArchId");
@@ -23299,7 +23299,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ProstheticTreatmentFinalSingleBridgeId");
 
-                    b.ToTable("FinalProsthesisParentsTable");
+                    b.ToTable("FinalProsthesisParentsTable", (string)null);
 
                     b.HasDiscriminator().HasValue("FinalProsthesisImpression");
                 });
@@ -23391,7 +23391,7 @@ namespace CIA.Migrations
                     b.HasIndex("ProstheticTreatmentFinalSingleBridgeId")
                         .HasDatabaseName("IX_FinalProsthesisParentsTable_FinalProsthesisTryIn_Prostheti~1");
 
-                    b.ToTable("FinalProsthesisParentsTable", t =>
+                    b.ToTable("FinalProsthesisParentsTable", null, t =>
                         {
                             t.Property("ProstheticTreatmentFinalFullArchId")
                                 .HasColumnName("FinalProsthesisTryIn_ProstheticTreatmentFinalFullArchId");
@@ -23418,7 +23418,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ProstheticTreatmentDiagnosticModelId");
 
-                    b.ToTable("DiagnosticProsthesisParentsTable", t =>
+                    b.ToTable("DiagnosticProsthesisParentsTable", null, t =>
                         {
                             t.Property("Diagnostic")
                                 .HasColumnName("BiteModel_Diagnostic");
@@ -23448,7 +23448,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ProstheticTreatmentDiagnosticModelId");
 
-                    b.ToTable("DiagnosticProsthesisParentsTable");
+                    b.ToTable("DiagnosticProsthesisParentsTable", (string)null);
 
                     b.HasDiscriminator().HasValue("DiagnosticImpressionModel");
                 });
@@ -23465,7 +23465,7 @@ namespace CIA.Migrations
 
                     b.HasIndex("ProstheticTreatmentDiagnosticModelId");
 
-                    b.ToTable("DiagnosticProsthesisParentsTable", t =>
+                    b.ToTable("DiagnosticProsthesisParentsTable", null, t =>
                         {
                             t.Property("Diagnostic")
                                 .HasColumnName("ScanApplianceModel_Diagnostic");
@@ -23488,14 +23488,14 @@ namespace CIA.Migrations
                 {
                     b.HasBaseType("CIA.Models.Patient");
 
-                    b.ToTable("ClinicPatients");
+                    b.ToTable("ClinicPatients", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.OutSourcePatient", b =>
                 {
                     b.HasBaseType("CIA.Models.Patient");
 
-                    b.ToTable("OutSourcePatients");
+                    b.ToTable("OutSourcePatients", (string)null);
                 });
 
             modelBuilder.Entity("CIA.Models.ClinicReceiptModel", b =>
@@ -23641,7 +23641,7 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("WorkplaceId");
 
-                    b.OwnsMany("CIA.Models.CIA.ConnectionModel", "Connections", b1 =>
+                    b.OwnsMany("CIA.Models.CIA.ApplicationUser.Connections#CIA.Models.CIA.ConnectionModel", "Connections", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("text");
@@ -23661,7 +23661,7 @@ namespace CIA.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("ConnectionModel");
+                            b1.ToTable("ConnectionModel", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
@@ -23870,7 +23870,7 @@ namespace CIA.Migrations
                         .WithOne("DentalExamination")
                         .HasForeignKey("CIA.Models.CIA.TreatmentModels.DentalExaminationModel", "PatientId");
 
-                    b.OwnsMany("CIA.Models.CIA.TreatmentModels.DentalExaminationModel+DentalExamination", "DentalExaminations", b1 =>
+                    b.OwnsMany("CIA.Models.CIA.TreatmentModels.DentalExaminationModel.DentalExaminations#CIA.Models.CIA.TreatmentModels.DentalExaminationModel+DentalExamination", "DentalExaminations", b1 =>
                         {
                             b1.Property<int>("DentalExaminationModelId")
                                 .HasColumnType("integer");
@@ -23925,7 +23925,7 @@ namespace CIA.Migrations
 
                             b1.HasKey("DentalExaminationModelId", "Id");
 
-                            b1.ToTable("DentalExamination");
+                            b1.ToTable("DentalExamination", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("DentalExaminationModelId");
@@ -23946,7 +23946,7 @@ namespace CIA.Migrations
                         .WithOne("DentalHistory")
                         .HasForeignKey("CIA.Models.CIA.TreatmentModels.DentalHistoryModel", "PatientId");
 
-                    b.OwnsMany("CIA.Models.CIA.TreatmentModels.DentalHistoryModel+CBCTModel", "CBCT", b1 =>
+                    b.OwnsMany("CIA.Models.CIA.TreatmentModels.DentalHistoryModel.CBCT#CIA.Models.CIA.TreatmentModels.DentalHistoryModel+CBCTModel", "CBCT", b1 =>
                         {
                             b1.Property<int>("DentalHistoryModelId")
                                 .HasColumnType("integer");
@@ -23965,7 +23965,7 @@ namespace CIA.Migrations
 
                             b1.HasKey("DentalHistoryModelId", "Id");
 
-                            b1.ToTable("CBCTModel");
+                            b1.ToTable("CBCTModel", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("DentalHistoryModelId");
@@ -24384,7 +24384,7 @@ namespace CIA.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsMany("CIA.Models.LAB.LabRequestItem", "Others", b1 =>
+                    b.OwnsMany("CIA.Models.LAB.Lab_Request.Others#CIA.Models.LAB.LabRequestItem", "Others", b1 =>
                         {
                             b1.Property<int>("Lab_RequestId")
                                 .HasColumnType("integer");
@@ -24415,7 +24415,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Lab_Requests_Others");
+                            b1.ToTable("Lab_Requests_Others", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24570,7 +24570,7 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("RequestId");
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "CompositeInlay", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.CompositeInlay#CIA.Models.LAB.LabRequestItem", "CompositeInlay", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24595,7 +24595,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24607,7 +24607,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "EmaxVeneer", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.EmaxVeneer#CIA.Models.LAB.LabRequestItem", "EmaxVeneer", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24632,7 +24632,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24644,7 +24644,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "MilledPMMA", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.MilledPMMA#CIA.Models.LAB.LabRequestItem", "MilledPMMA", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24669,7 +24669,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24681,7 +24681,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "PFM", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.PFM#CIA.Models.LAB.LabRequestItem", "PFM", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24706,7 +24706,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24718,7 +24718,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "PrintedPMMA", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.PrintedPMMA#CIA.Models.LAB.LabRequestItem", "PrintedPMMA", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24743,7 +24743,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24755,7 +24755,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "ThreeDPrinting", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.ThreeDPrinting#CIA.Models.LAB.LabRequestItem", "ThreeDPrinting", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24780,7 +24780,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24792,7 +24792,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "TiAbutment", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.TiAbutment#CIA.Models.LAB.LabRequestItem", "TiAbutment", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24817,7 +24817,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24829,7 +24829,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "TiBar", b1 =>
+                    b.OwnsOne("CIA.Models.Receipt.TiBar#CIA.Models.LAB.LabRequestItem", "TiBar", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24854,7 +24854,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("LabItemId");
 
-                            b1.ToTable("Receipts");
+                            b1.ToTable("Receipts", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
                                 .WithMany()
@@ -24866,81 +24866,7 @@ namespace CIA.Migrations
                             b1.Navigation("LabItem");
                         });
 
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "WaxUp", b1 =>
-                        {
-                            b1.Property<int>("ReceiptId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("ReceiptId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Receipts");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReceiptId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsOne("CIA.Models.LAB.LabRequestItem", "ZirconUnit", b1 =>
-                        {
-                            b1.Property<int>("ReceiptId")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.Property<int?>("LabItemId")
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("Number")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("Price")
-                                .HasColumnType("integer");
-
-                            b1.Property<int?>("TotalPrice")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("ReceiptId");
-
-                            b1.HasIndex("LabItemId");
-
-                            b1.ToTable("Receipts");
-
-                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
-                                .WithMany()
-                                .HasForeignKey("LabItemId");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReceiptId");
-
-                            b1.Navigation("LabItem");
-                        });
-
-                    b.OwnsMany("CIA.Models.ToothReceiptData", "ToothReceiptData", b1 =>
+                    b.OwnsMany("CIA.Models.Receipt.ToothReceiptData#CIA.Models.ToothReceiptData", "ToothReceiptData", b1 =>
                         {
                             b1.Property<int>("ReceiptId")
                                 .HasColumnType("integer");
@@ -24981,10 +24907,84 @@ namespace CIA.Migrations
 
                             b1.HasKey("ReceiptId", "Id");
 
-                            b1.ToTable("ToothReceiptData");
+                            b1.ToTable("ToothReceiptData", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ReceiptId");
+                        });
+
+                    b.OwnsOne("CIA.Models.Receipt.WaxUp#CIA.Models.LAB.LabRequestItem", "WaxUp", b1 =>
+                        {
+                            b1.Property<int>("ReceiptId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int?>("LabItemId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Number")
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("Price")
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("TotalPrice")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("ReceiptId");
+
+                            b1.HasIndex("LabItemId");
+
+                            b1.ToTable("Receipts", (string)null);
+
+                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
+                                .WithMany()
+                                .HasForeignKey("LabItemId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ReceiptId");
+
+                            b1.Navigation("LabItem");
+                        });
+
+                    b.OwnsOne("CIA.Models.Receipt.ZirconUnit#CIA.Models.LAB.LabRequestItem", "ZirconUnit", b1 =>
+                        {
+                            b1.Property<int>("ReceiptId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int?>("LabItemId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Number")
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("Price")
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("TotalPrice")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("ReceiptId");
+
+                            b1.HasIndex("LabItemId");
+
+                            b1.ToTable("Receipts", (string)null);
+
+                            b1.HasOne("CIA.Models.CIA.LabItem", "LabItem")
+                                .WithMany()
+                                .HasForeignKey("LabItemId");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ReceiptId");
+
+                            b1.Navigation("LabItem");
                         });
 
                     b.Navigation("CompositeInlay");
@@ -25071,7 +25071,7 @@ namespace CIA.Migrations
                         .WithOne("MedicalExamination")
                         .HasForeignKey("CIA.Models.TreatmentModels.MedicalExaminationModel", "PatientId");
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.MedicalExaminationModel+BloodPressureModel", "BloodPressure", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.MedicalExaminationModel.BloodPressure#CIA.Models.TreatmentModels.MedicalExaminationModel+BloodPressureModel", "BloodPressure", b1 =>
                         {
                             b1.Property<int>("MedicalExaminationModelId")
                                 .HasColumnType("integer");
@@ -25093,13 +25093,13 @@ namespace CIA.Migrations
 
                             b1.HasKey("MedicalExaminationModelId");
 
-                            b1.ToTable("MedicalExaminations");
+                            b1.ToTable("MedicalExaminations", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MedicalExaminationModelId");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.MedicalExaminationModel+Diabetes", "Diabetic", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.MedicalExaminationModel.Diabetic#CIA.Models.TreatmentModels.MedicalExaminationModel+Diabetes", "Diabetic", b1 =>
                         {
                             b1.Property<int>("MedicalExaminationModelId")
                                 .HasColumnType("integer");
@@ -25121,13 +25121,13 @@ namespace CIA.Migrations
 
                             b1.HasKey("MedicalExaminationModelId");
 
-                            b1.ToTable("MedicalExaminations");
+                            b1.ToTable("MedicalExaminations", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MedicalExaminationModelId");
                         });
 
-                    b.OwnsMany("CIA.Models.TreatmentModels.MedicalExaminationModel+HBA1cModel", "HBA1c", b1 =>
+                    b.OwnsMany("CIA.Models.TreatmentModels.MedicalExaminationModel.HBA1c#CIA.Models.TreatmentModels.MedicalExaminationModel+HBA1cModel", "HBA1c", b1 =>
                         {
                             b1.Property<int>("MedicalExaminationModelId")
                                 .HasColumnType("integer");
@@ -25146,7 +25146,7 @@ namespace CIA.Migrations
 
                             b1.HasKey("MedicalExaminationModelId", "Id");
 
-                            b1.ToTable("HBA1cModel");
+                            b1.ToTable("HBA1cModel", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MedicalExaminationModelId");
@@ -25291,7 +25291,7 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("PatientId");
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ClosedSinusWithImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.ClosedSinusWithImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ClosedSinusWithImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -25367,7 +25367,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -25425,7 +25425,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ClosedSinusWithoutImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.ClosedSinusWithoutImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ClosedSinusWithoutImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -25501,7 +25501,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -25559,7 +25559,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Crown", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.Crown#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Crown", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -25634,7 +25634,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -25688,7 +25688,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ExpansionWithImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.ExpansionWithImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ExpansionWithImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -25764,7 +25764,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -25821,7 +25821,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ExpansionWithoutImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.ExpansionWithoutImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ExpansionWithoutImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -25897,7 +25897,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -25955,7 +25955,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Extraction", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.Extraction#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Extraction", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26030,7 +26030,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26084,7 +26084,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GBRWithImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.GBRWithImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GBRWithImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26159,7 +26159,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26213,7 +26213,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GBRWithoutImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.GBRWithoutImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GBRWithoutImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26288,7 +26288,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26344,7 +26344,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GuidedImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.GuidedImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "GuidedImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26419,7 +26419,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26473,7 +26473,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ImmediateImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.ImmediateImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "ImmediateImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26548,7 +26548,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26604,7 +26604,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "OpenSinusWithImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.OpenSinusWithImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "OpenSinusWithImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26680,7 +26680,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26737,7 +26737,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "OpenSinusWithoutImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.OpenSinusWithoutImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "OpenSinusWithoutImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26813,7 +26813,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -26871,7 +26871,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Pontic", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.Pontic#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Pontic", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -26946,7 +26946,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27000,7 +27000,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Restoration", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.Restoration#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Restoration", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27075,7 +27075,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27129,7 +27129,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "RootCanalTreatment", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.RootCanalTreatment#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "RootCanalTreatment", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27204,7 +27204,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27261,7 +27261,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Scaling", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.Scaling#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "Scaling", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27336,7 +27336,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27390,7 +27390,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SimpleImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.SimpleImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SimpleImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27465,7 +27465,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27519,7 +27519,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SplittingWithImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.SplittingWithImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SplittingWithImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27595,7 +27595,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()
@@ -27652,7 +27652,7 @@ namespace CIA.Migrations
                             b1.Navigation("RequestChangeModel");
                         });
 
-                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SplittingWithoutImplant", b1 =>
+                    b.OwnsOne("CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanSubModel.SplittingWithoutImplant#CIA.Models.TreatmentModels.TreatmentPlanModel+TreatmentPlanFieldsModel", "SplittingWithoutImplant", b1 =>
                         {
                             b1.Property<int>("TreatmentPlanSubModelId")
                                 .HasColumnType("integer");
@@ -27728,7 +27728,7 @@ namespace CIA.Migrations
 
                             b1.HasIndex("RequestChangeId");
 
-                            b1.ToTable("TreatmentPlansSubModels");
+                            b1.ToTable("TreatmentPlansSubModels", (string)null);
 
                             b1.HasOne("CIA.Models.CIA.ApplicationUser", "AssignedTo")
                                 .WithMany()

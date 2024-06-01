@@ -8,7 +8,10 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/ta
 import 'package:cariro_implant_academy/core/features/settings/domain/repositories/settingsRepository.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
@@ -345,69 +348,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemCompanies(int id) async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemComspanies(int id) async {
     try {
       final result = await settingsDatasource.getLabItemCompanies(id);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getLabItemLines(int id) async {
-    try {
-      final result = await settingsDatasource.getLabItemLines(id);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<LabItemEntity>>> getLabItems(int id) async {
-    try {
-      final result = await settingsDatasource.getLabItems(id);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, NoParams>> updateLabItems(int shadeId, List<LabItemEntity> data) async {
-    try {
-      final result = await settingsDatasource.updateLabItems(shadeId, data);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, NoParams>> updateLabItemsCompanies(int parentItemId, List<BasicNameIdObjectEntity> data) async {
-    try {
-      final result = await settingsDatasource.updateLabItemsCompanies(parentItemId, data);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, NoParams>> updateLabItemsShades(int companyId, List<BasicNameIdObjectEntity> data) async {
-    try {
-      final result = await settingsDatasource.updateLabItemsShades(companyId, data);
-      return Right(result);
-    } on Exception catch (e) {
-      return Left(Failure.exceptionToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, NoParams>> updateLabItemsParentsPrice(int parentItemId, int price) async {
-    try {
-      final result = await settingsDatasource.updateLabItemsParentsPrice(parentItemId, price);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -445,9 +388,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type,List<BasicNameIdObjectEntity> data) async {
+  Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data) async {
     try {
-      final result = await settingsDatasource.updateProstheticItems(type,data);
+      final result = await settingsDatasource.updateProstheticItems(type, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -457,7 +400,7 @@ class SettingsRepoImpl implements SettingsRepository {
   @override
   Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
     try {
-      final result = await settingsDatasource.updateProstheticNextVisit(type, itemId,data);
+      final result = await settingsDatasource.updateProstheticNextVisit(type, itemId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -467,7 +410,97 @@ class SettingsRepoImpl implements SettingsRepository {
   @override
   Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
     try {
-      final result = await settingsDatasource.updateProstheticStatus(type, itemId,data);
+      final result = await settingsDatasource.updateProstheticStatus(type, itemId, data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabItemCompanyEntity>>> getLabItemCompanies(int id) async {
+    try {
+      final result = await settingsDatasource.getLabItemCompanies(id);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabItemShadeEntity>>> getLabItemLines(int? parentId, int? companyId) async {
+    try {
+      final result = await settingsDatasource.getLabItemLines(parentId, companyId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabItemEntity>>> getLabItems(int? parentId, int? companyId, int? shadeId) async {
+    try {
+      final result = await settingsDatasource.getLabItems(parentId, companyId, shadeId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItems(List<LabItemEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItems(data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsCompanies(List<LabItemCompanyEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsCompanies(data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsParents(List<LabItemParentEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsParents(data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabItemsShades(List<LabItemShadeEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabItemsShades(data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabOptionEntity>>> getLabOptions(int? parentId) async {
+    try {
+      final result = await settingsDatasource.getLabOptions(parentId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabOptions(List<LabOptionEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabOptions(data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
