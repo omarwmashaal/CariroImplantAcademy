@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class LabItemEntity extends StockEntity {
   int? id;
+  int? price;
   String? code;
   int? consumedCount;
   bool? consumed;
@@ -17,6 +18,7 @@ class LabItemEntity extends StockEntity {
   LabItemEntity({
     this.id,
     this.code,
+    this.price,
     this.consumedCount = 0,
     this.consumed = false,
     this.size,

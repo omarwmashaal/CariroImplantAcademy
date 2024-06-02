@@ -38,6 +38,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
 
   @override
   Widget build(BuildContext context) {
+  
     recalculateTotal();
     return Column(
       children: [
@@ -51,8 +52,9 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
                           child: Row(
                             children: [
                               Expanded(
-                                  child:
-                                      FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}")),
+                                  child: FormTextKeyWidget(
+                                      text:
+                                          "Tooth: ${e.tooth == 0 ? "All" : e.tooth} || ${e.labOption?.name} || ${e.consumedLabItem?.name}")),
                               Expanded(child: FormTextValueWidget(text: "EGP ${e.labPrice}")),
                             ],
                           ),
@@ -66,7 +68,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
                         (e) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CIA_TextFormField(
-                            label: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.labItemFromSettings?.name} || ${e.consumedLabItem?.code}",
+                            label: "Tooth: ${e.tooth == 0 ? "All" : e.tooth} || ${e.labOption?.name} || ${e.consumedLabItem?.name}",
                             controller: TextEditingController(text: e.labPrice!.toString()),
                             isNumber: true,
                             onChange: (value) {
@@ -109,5 +111,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
         )
       ],
     );
+ 
+ 
   }
 }

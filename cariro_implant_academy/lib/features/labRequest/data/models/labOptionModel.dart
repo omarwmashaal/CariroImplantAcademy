@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
+import 'package:cariro_implant_academy/features/labRequest/data/models/labItemParentModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
@@ -16,7 +17,7 @@ class LabOptionModel extends LabOptionEntity {
   factory LabOptionModel.fromJson(Map<String, dynamic> map) {
     return LabOptionModel(
       labItemParentId: map['labItemParentId'],
-      labItemParent: map['labItemParent']==null?null:BasicNameIdObjectModel.fromJson(map['labItemParent']),
+      labItemParent: map['labItemParent']==null?null:LabItemParentModel.fromJson(map['labItemParent']),
       price: map['price'],
       id: map['id'],
       name: map['name'],

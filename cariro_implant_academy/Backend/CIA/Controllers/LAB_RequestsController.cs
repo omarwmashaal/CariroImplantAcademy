@@ -170,7 +170,7 @@ namespace CIA.Controllers
 
 
             request.LabRequestStepItems = await _dbContext.LabRequestStepItems
-                .Include(x => x.LabOption)
+                .Include(x => x.LabOption).ThenInclude(x=>x.LabItemParent)
                 .Include(x => x.ConsumedLabItem)
                 .Where(x => x.LabRequestId == id).ToListAsync();
 

@@ -6,13 +6,8 @@ import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
-import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
@@ -26,12 +21,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
 
-import '../../domain/useCases/addLabItemsUseCase.dart';
 import '../bloc/settingsBloc.dart';
 import '../bloc/settingsBloc_Events.dart';
 import '../bloc/settingsBloc_States.dart';
@@ -93,14 +86,14 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
             children: [
               BlocConsumer<SettingsBloc, SettingsBloc_States>(
                 listener: (context, state) {
-                  if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState ||
+                  if (state is SettingsBloc_UpdatingLabItemsParentsState ||
                       state is SettingsBloc_UpdatingLabItemsCompaniesState ||
                       state is SettingsBloc_UpdatingLabItemsShadesState ||
                       state is SettingsBloc_UpdatingLabItemsState) {
                     CustomLoader.show(context);
                   } else {
                     CustomLoader.hide();
-                    if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState) {
+                    if (state is SettingsBloc_UpdatingLabItemsParentsErrorState) {
                       ShowSnackBar(context, isSuccess: false, message: state.message);
                       bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
                     } else if (state is SettingsBloc_UpdatingLabItemsCompaniesErrorState) {
@@ -109,11 +102,12 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                       ShowSnackBar(context, isSuccess: false, message: state.message);
                     } else if (state is SettingsBloc_UpdatingLabItemsErrorState) {
                       ShowSnackBar(context, isSuccess: false, message: state.message);
-                    } else if (state is SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState ||
+                    } else if (state is SettingsBloc_UpdatedLabItemsParentsSuccessfullyState ||
                         state is SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState ||
                         state is SettingsBloc_UpdatedLabItemsShadesSuccessfullyState ||
                         state is SettingsBloc_UpdatedLabItemsSuccessfullyState) {
                       ShowSnackBar(context, isSuccess: true);
+                      if (state is SettingsBloc_UpdatedLabItemsParentsSuccessfullyState) bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
                     }
                   }
                 },
@@ -149,7 +143,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                         bloc.add(SettingsBloc_UpdateLabItemParentEvent(labItemParents: labItemParetns));
                                       },
                                       context: context,
-                                      title: "Edit",
+                                      title: "Edit: Can't chnage companies, shades, codes and sizes options after creation!",
                                       child: Column(
                                         children: [
                                           CIA_TextFormField(
@@ -157,25 +151,29 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                             controller: TextEditingController(text: e.name?.toString() ?? ""),
                                             onChange: (value) => e.name = value,
                                           ),
+                                          SizedBox(height: 10),
+                                          CIA_TextFormField(
+                                            label: "Threshold",
+                                            isNumber: true,
+                                            controller: TextEditingController(text: e.threshold?.toString() ?? "10"),
+                                            onChange: (value) => e.threshold = int.tryParse(value) ?? 10,
+                                          ),
+                                          SizedBox(height: 10),
                                           CIA_CheckBoxWidget(
                                             text: "Has Companies",
                                             value: e.hasCompanies ?? false,
-                                            onChange: (value) => e.hasCompanies = value,
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Shades",
                                             value: e.hasCompanies ?? false,
-                                            onChange: (value) => e.hasShades = value,
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Sizes",
                                             value: e.hasCompanies ?? false,
-                                            onChange: (value) => e.hasSize = value,
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Codes",
                                             value: e.hasCompanies ?? false,
-                                            onChange: (value) => e.hasCode = value,
                                           ),
                                         ],
                                       ),
@@ -228,7 +226,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                           bloc.add(SettingsBloc_UpdateLabItemParentEvent(labItemParents: labItemParetns));
                                         },
                                         context: context,
-                                        title: "Edit",
+                                        title: "Edit: Can't chnage companies, shades, codes and sizes options after creation!",
                                         child: Column(
                                           children: [
                                             CIA_TextFormField(
@@ -236,6 +234,14 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                               controller: TextEditingController(text: newLabItemParent.name?.toString() ?? ""),
                                               onChange: (value) => newLabItemParent.name = value,
                                             ),
+                                            SizedBox(height: 10),
+                                            CIA_TextFormField(
+                                              label: "Threshold",
+                                              isNumber: true,
+                                              controller: TextEditingController(text: newLabItemParent.threshold?.toString() ?? "10"),
+                                              onChange: (value) => newLabItemParent.threshold = int.tryParse(value) ?? 10,
+                                            ),
+                                            SizedBox(height: 10),
                                             CIA_CheckBoxWidget(
                                               text: "Has Companies",
                                               value: newLabItemParent.hasCompanies ?? false,
@@ -366,7 +372,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                             selectedItem: e.labItemParent,
                                             onSelect: (value) {
                                               e.labItemParentId = value.id;
-                                              e.labItemParent = value;
+                                              e.labItemParent = LabItemParentEntity(name: value.name, id: value.id);
                                             },
                                           ),
                                         ),
@@ -752,6 +758,12 @@ class _LabItemsSettingsWidget extends StatelessWidget {
           return Column(
             children: [
               FormTextKeyWidget(text: "Lab Items"),
+              SizedBox(height: 10),
+              FormTextKeyWidget(
+                text: "Prices will be deducted as Cashflow expenses when adding new items ONLY!",
+                color: Colors.red,
+              ),
+              SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
                   itemCount: labItems.length,
@@ -784,6 +796,18 @@ class _LabItemsSettingsWidget extends StatelessWidget {
                           SizedBox(
                             width: 10,
                           ),
+                          Expanded(
+                            child: CIA_TextFormField(
+                                enabled: labItems[index].id == null,
+                                label: "Price",
+                                suffix: "EGP",
+                                isNumber: true,
+                                controller: TextEditingController(text: labItems[index].price?.toString() ?? "0"),
+                                onChange: (value) => labItems[index].price = int.tryParse(value) ?? 0),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
                           IconButton(
                             onPressed: () {
                               labItems = [
@@ -792,6 +816,7 @@ class _LabItemsSettingsWidget extends StatelessWidget {
                                   labItemShadeId: shadeId,
                                   labItemCompanyId: companyId,
                                   labItemParentId: selectedLabItemParent?.id,
+                                  price: labItems.lastOrNull?.price,
                                 )
                               ];
                               bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));

@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
@@ -7,19 +8,19 @@ class LabStepItemEntity extends Equatable {
   int? id;
   int? labRequestId;
   int? patientId;
-  int? labItemFromSettingsId;
-  LabItemParentEntity? labItemFromSettings;
   int? consumedLabItemId;
   LabItemEntity? consumedLabItem;
   int? labPrice;
+  int? labOptionId;
+  LabOptionEntity? labOption;
   int tooth;
   String? description;
   LabStepItemEntity({
     this.id,
     this.labRequestId,
     this.patientId,
-    this.labItemFromSettingsId,
-    this.labItemFromSettings,
+    this.labOptionId,
+    this.labOption,
     this.consumedLabItemId,
     this.consumedLabItem,
     this.labPrice,
@@ -33,8 +34,6 @@ class LabStepItemEntity extends Equatable {
       id,
       labRequestId,
       patientId,
-      labItemFromSettingsId,
-      labItemFromSettings,
       consumedLabItemId,
       consumedLabItem,
       labPrice,

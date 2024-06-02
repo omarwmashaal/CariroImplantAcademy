@@ -14,6 +14,7 @@ import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/la
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../Widgets/CIA_TextFormField.dart';
@@ -69,7 +70,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
 
   BasicNameIdObjectEntity? line;
 
-  LabStepItemEntity? stepItem;
+  LabStepItemEntity? consumedLabItem;
 
   late LabRequestsBloc bloc;
 
@@ -93,11 +94,12 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                   ShowSnackBar(context, isSuccess: false, message: state.message);
                 else if (state is LabRequestsBloc_ConsumedLabItemSuccessfullyState) {
                   ShowSnackBar(context, isSuccess: true);
-                  bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: stepItem!.id!));
-                } else if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
-                  widget.stepItem!.consumedLabItem = state.data;
-                  setState(() {});
-                }
+                  bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: consumedLabItem!.id!));
+                } 
+                // else if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.consumedLabItemId) {
+                //   widget.stepItem!.consumedLabItem = state.data;
+                //   setState(() {});
+                // }
               }
             },
             child: Padding(
@@ -105,60 +107,90 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormTextKeyWidget(text: "Tooth: ${widget.stepItem.tooth==0?"All":widget.stepItem.tooth} || ${widget.stepItem.labItemFromSettings?.name ?? ""}"),
+                  FormTextKeyWidget(
+                      text: "Tooth: ${widget.stepItem.tooth == 0 ? "All" : widget.stepItem.tooth} || ${widget.stepItem.labOption?.name ?? ""}"),
                   SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          label: "Company",
-                          asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
-                          searchParams: widget.stepItem.labItemFromSettingsId,
-                          selectedItem: company,
-                          onSelect: (value) {
-                            line = null;
-                            stepItem = null;
-                            bloc.emit(LabRequestsBloc_LoadingLabItemErrorState(message: "message"));
-                            setState(() => company = value);
-                          },
+                      Visibility(
+                        visible: widget.stepItem.labOption?.labItemParent?.hasCompanies == true,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CIA_DropDownSearchBasicIdName(
+                              label: "Company",
+                              asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
+                              searchParams: widget.stepItem.labOption?.labItemParent?.id,
+                              selectedItem: company,
+                              onSelect: (value) {
+                                line = null;
+                                consumedLabItem = null;
+                                setState(() => company = value);
+                              },
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          label: "Shade",
-                          asyncUseCase: company == null ? null : sl<GetLabItemsLinesUseCase>(),
-                          searchParams: company?.id,
-                          emptyString: company?.id == null ? "Please Select Company First!" : "Empty",
-                          selectedItem: line,
-                          onSelect: (value) {
-                            stepItem = null;
-                            bloc.emit(LabRequestsBloc_LoadingLabItemErrorState(message: "message"));
-                            setState(() => line = value);
-                          },
+                      Visibility(
+                        visible: widget.stepItem.labOption?.labItemParent?.hasShades == true,
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CIA_DropDownSearchBasicIdName(
+                              label: "Shade",
+                              asyncUseCase: company == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true
+                                  ? null
+                                  : sl<GetLabItemsLinesUseCase>(),
+                              searchParams: GetLabItemsLinesParams(
+                                parentId: widget.stepItem.labOption?.labItemParentId,
+                                companyId: company?.id,
+                              ),
+                              emptyString: company?.id == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true
+                                  ? "Please Select Company First!"
+                                  : "Empty",
+                              selectedItem: line,
+                              onSelect: (value) {
+                                consumedLabItem = null;
+                                setState(() => line = value);
+                              },
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(width: 10),
                       Expanded(
-                        child: CIA_DropDownSearchBasicIdName(
-                          enabled: stepItem?.consumedLabItem?.consumed != true,
-                          label: "Size",
-                          asyncUseCase: line == null ? null : sl<GetLabItemsUseCase>(),
-                          searchParams: line?.id,
-                          emptyString: line?.id == null ? "Please Select Shade First!" : "Empty",
-                          selectedItem: widget.stepItem.consumedLabItem,
-                          onSelect: (value) {
-                            CIA_ShowPopUpYesNo(
-                                context: context,
-                                title: "Consume 1 from ${value.name} block?",
-                                onSave: () {
-                                  bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
-                                    params: ConsumeLabItemParams(id: value.id!, consumeWholeBlock: false, number: 1),
-                                  ));
-                                });
-                            widget.stepItem!.consumedLabItemId = value.id;
-                            setState(() {});
-                          },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CIA_DropDownSearchBasicIdName(
+                            enabled: consumedLabItem?.consumedLabItem?.consumed != true,
+                            label: "Name Code||Size",
+                            asyncUseCase: (line == null && widget.stepItem.labOption?.labItemParent?.hasShades == true) ||
+                                    (company == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true)
+                                ? null
+                                : sl<GetLabItemsUseCase>(),
+                            searchParams: GetLabItemsParams(
+                              companyId: company?.id,
+                              shadeId: line?.id,
+                              parentId: widget.stepItem.labOption?.labItemParentId,
+                            ),
+                            emptyString: line?.id == null && widget.stepItem.labOption?.labItemParent?.hasShades == true
+                                ? "Please Select Shade First!"
+                                : (company?.id == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true)
+                                    ? "Please Select Company First!"
+                                    : "Empty",
+                            selectedItem: widget.stepItem.consumedLabItem,
+                            onSelect: (value) {
+                              CIA_ShowPopUpYesNo(
+                                  context: context,
+                                  title: "Consume 1 from ${value.name} block?",
+                                  onSave: () {
+                                    bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
+                                      params: ConsumeLabItemParams(id: value.id!, consumeWholeBlock: false, number: 1),
+                                    ));
+                                  });
+                              widget.stepItem!.consumedLabItemId = value.id;
+                              setState(() {});
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -168,9 +200,9 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                     buildWhen: (previous, current) =>
                         current is LabRequestsBloc_LoadedLabItemSuccessfullyState || current is LabRequestsBloc_LoadingLabItemErrorState,
                     builder: (context, state) {
-                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
-                        widget.stepItem!.consumedLabItem = state.data;
-                      }
+                      // if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
+                      //   widget.stepItem!.consumedLabItem = state.data;
+                      // }
 
                       if (widget.stepItem.consumedLabItem != null) {
                         return Row(
@@ -179,7 +211,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Item: "),
-                                  FormTextValueWidget(text: stepItem!.consumedLabItem?.name?.toString() ?? ""),
+                                  FormTextValueWidget(text: consumedLabItem!.consumedLabItem?.name?.toString() ?? ""),
                                 ],
                               ),
                             ),
@@ -197,19 +229,19 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Block Consumed: "),
-                                  FormTextValueWidget(text: stepItem!.consumedLabItem!.consumed == true ? "Yes" : "No"),
+                                  FormTextValueWidget(text: consumedLabItem!.consumedLabItem!.consumed == true ? "Yes" : "No"),
                                 ],
                               ),
                             ),
                             Expanded(child: SizedBox()),
                             Visibility(
-                              visible: stepItem!.consumedLabItem!.consumed != true,
+                              visible: consumedLabItem!.consumedLabItem!.consumed != true,
                               child: CIA_SecondaryButton(
                                 label: "Consume The Whole Block?",
                                 onTab: () {
                                   bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
                                     params: ConsumeLabItemParams(
-                                      id: stepItem!.id!,
+                                      id: consumedLabItem!.id!,
                                       consumeWholeBlock: true,
                                     ),
                                   ));

@@ -1,8 +1,9 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
 
 class LabOptionEntity extends BasicNameIdObjectEntity {
   int? labItemParentId;
-  BasicNameIdObjectEntity? labItemParent;
+  LabItemParentEntity? labItemParent;
   int? price;
   LabOptionEntity({
     this.labItemParentId,

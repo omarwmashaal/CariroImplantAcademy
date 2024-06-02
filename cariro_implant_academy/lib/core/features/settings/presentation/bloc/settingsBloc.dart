@@ -494,8 +494,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       final result = await getLabOptionsUseCase(event.parentId);
       result.fold(
         (l) => emit(SettingsBloc_LoadingLabOptionsErrorState(message: l.message ?? "")),
-        (r) => emit(
-            SettingsBloc_LoadedLabOptionsSuccessfullyState(data: r, parentId: event.parentId)),
+        (r) => emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: r, parentId: event.parentId)),
       );
     });
 
@@ -532,11 +531,11 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
       );
     });
     on<SettingsBloc_UpdateLabItemParentEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState());
+      emit(SettingsBloc_UpdatingLabItemsParentsState());
       final result = await updateLabItemsParentsUseCase(event.labItemParents);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState()),
+        (l) => emit(SettingsBloc_UpdatingLabItemsParentsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsParentsSuccessfullyState()),
       );
     });
 

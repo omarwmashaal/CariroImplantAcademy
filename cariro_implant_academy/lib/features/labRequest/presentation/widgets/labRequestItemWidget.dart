@@ -30,7 +30,8 @@ class LabRequestItemWidget extends StatefulWidget {
 class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
   @override
   Widget build(BuildContext context) {
-   // if (widget.item != null) widget.item!.labPrice = widget.free ? 0 : widget.item!.labPrice ?? widget.item?.labItemFromSettings?.unitPrice ?? 0;
+     if (widget.item != null) widget.item!.labPrice = widget.free ? 0 : widget.item!.labPrice ?? widget.item?.labOption?.price ?? 0;
+
     return SizedBox(
       width: 300,
       child: Padding(
@@ -38,7 +39,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FormTextKeyWidget(text: widget.item.labItemFromSettings?.name ?? ""),
+            FormTextKeyWidget(text: widget.item.labOption?.name ?? ""),
             SizedBox(height: 5),
             Row(
               children: [
@@ -61,7 +62,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                 ),
                 SizedBox(width: 10),
                 FormTextValueWidget(
-                  text: "Tooth: ${widget.item.tooth==0?"All":widget.item.tooth}",
+                  text: "Tooth: ${widget.item.tooth == 0 ? "All" : widget.item.tooth}",
                 ),
                 // Expanded(
                 //   child: CIA_TextFormField(
@@ -86,7 +87,7 @@ class _LabRequestItemWidgetState extends State<LabRequestItemWidget> {
                         Expanded(
                           child: Row(
                             children: [
-                              FormTextKeyWidget(text: "Unit Price: "),
+                              FormTextKeyWidget(text: "Price: "),
                               FormTextValueWidget(text: widget.item?.labPrice?.toString()),
                             ],
                           ),

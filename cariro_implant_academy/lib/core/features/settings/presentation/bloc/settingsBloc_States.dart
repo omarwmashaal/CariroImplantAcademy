@@ -860,19 +860,19 @@ class SettingsBloc_UpdatedLabOptionsSuccessfullyState extends SettingsBlocSucces
   List<Object?> get props => [];
 }
 
-class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState extends SettingsBloc_States {
+class SettingsBloc_UpdatingLabItemsParentsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState extends SettingsBlocErrorState {
-  SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState({required super.message});
+class SettingsBloc_UpdatingLabItemsParentsErrorState extends SettingsBlocErrorState {
+  SettingsBloc_UpdatingLabItemsParentsErrorState({required super.message});
 
   @override
   List<Object?> get props => [message];
 }
 
-class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState extends SettingsBlocSuccessState {
+class SettingsBloc_UpdatedLabItemsParentsSuccessfullyState extends SettingsBlocSuccessState {
   @override
   List<Object?> get props => [];
 }

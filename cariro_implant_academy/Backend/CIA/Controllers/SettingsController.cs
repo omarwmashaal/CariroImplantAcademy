@@ -189,10 +189,10 @@ namespace CIA.Controllers
         [HttpGet("GetLabOptions")]
         public async Task<IActionResult> GetLabOptions(int? parentId)
         {
-            if(parentId==null || parentId ==0)
-            _aPI_Response.Result = await _cia_DbContext.LabOptions.OrderBy(x => x.Id).Include(x=>x.LabItemParent).ToListAsync();
-           else
-            _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).Include(x => x.LabItemParent).OrderBy(x => x.Id).ToListAsync();
+            if (parentId == null || parentId == 0)
+                _aPI_Response.Result = await _cia_DbContext.LabOptions.OrderBy(x => x.Id).Include(x => x.LabItemParent).ToListAsync();
+            else
+                _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).Include(x => x.LabItemParent).OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItemCompanies")]
@@ -204,11 +204,11 @@ namespace CIA.Controllers
         [HttpGet("GetLabItemShades")]
         public async Task<IActionResult> GetLabItemShades(int? parentId, int? companyId)
         {
-            if(companyId !=null)
-            _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemCompanyId == companyId).ToListAsync();
-            else if(parentId != null)
-            _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemParentId == parentId).ToListAsync();
-            
+            if (companyId != null)
+                _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemCompanyId == companyId).ToListAsync();
+            else if (parentId != null)
+                _aPI_Response.Result = await _cia_DbContext.LabItemShades.Where(x => x.LabItemParentId == parentId).ToListAsync();
+
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItems")]
@@ -796,9 +796,9 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateLabItemCompanies")]
-        public async Task<IActionResult> UpdateLabItemCompanies( List<LabItemCompany> data)
+        public async Task<IActionResult> UpdateLabItemCompanies(List<LabItemCompany> data)
         {
-            
+
             _cia_DbContext.LabItemCompanies.UpdateRange(data);
             _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
@@ -820,6 +820,7 @@ namespace CIA.Controllers
         [HttpPut("UpdateLabItems")]
         public async Task<IActionResult> UpdateLabItems(List<LabItem> data)
         {
+            var user = await _iUserRepo.GetUser();
             var cat = await _cia_DbContext.StockCategories.FirstOrDefaultAsync(x => x.Name == "Lab Medical Item");
             if (cat == null)
             {
@@ -838,12 +839,31 @@ namespace CIA.Controllers
                 item.Website = EnumWebsite.Lab;
                 item.InventoryWebsite = EnumWebsite.Lab;
                 item.Category = cat;
+                if (item.Id == null)
+                {
+                    item.Date = DateTime.UtcNow;
+                    item.CreatedBy = user;
+                    item.CreatedById = user.IdInt;
+                    _cia_DbContext.StockLogs.Add(new StockLog
+                    {
+                        Count = 1,
+                        Date = DateTime.UtcNow,
+                        InventoryWebsite = EnumWebsite.Lab,
+                        Name = item.Name,
+                        Operator = user,
+                        OperatorId = (int)user.IdInt,
+                        Status = "Added",
+                        Website = EnumWebsite.Lab,
+                    });
+                }
                 if (item.Consumed == false)
                     item.Count = 1;
             }
 
             _cia_DbContext.LabItems.UpdateRange(data);
             _cia_DbContext.SaveChanges();
+
+            
             return Ok(_aPI_Response);
         }
 
