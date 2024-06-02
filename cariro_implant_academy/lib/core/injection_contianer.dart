@@ -198,6 +198,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/stock/data/datasource/stockDatasource.dart';
 import 'package:cariro_implant_academy/features/stock/data/repositories/stockRepoImpl.dart';
 import 'package:cariro_implant_academy/features/stock/domain/repositories/stockRepository.dart';
+import 'package:cariro_implant_academy/features/stock/domain/usecases/getLabStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockByNameUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc.dart';
@@ -420,8 +421,8 @@ initInjection() async {
         updateProstheticItemsUseCase: sl(),
         updateProstheticNextVisitUseCase: sl(),
         updateProstheticStatusUseCase: sl(),
-        getLabOptionsUseCase:  sl(),
-        updateLabOptionsUseCase:  sl(),
+        getLabOptionsUseCase: sl(),
+        updateLabOptionsUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
@@ -905,9 +906,14 @@ initInjection() async {
    * Stock
    */
   //bloc
-  sl.registerFactory(() => StockBloc(getStockLogUseCase: sl(), getStockUseCase: sl()));
+  sl.registerFactory(() => StockBloc(
+        getStockLogUseCase: sl(),
+        getStockUseCase: sl(),
+        getLabStockUseCase: sl(),
+      ));
   //usecases
   sl.registerLazySingleton(() => GetStockUseCase(stockRepository: sl()));
+  sl.registerLazySingleton(() => GetLabStockUseCase(stockRepository: sl()));
   sl.registerLazySingleton(() => GetStockLogUseCase(stockRepository: sl()));
   sl.registerLazySingleton(() => GetStockByNameUseCase(stockRepository: sl()));
   //repo

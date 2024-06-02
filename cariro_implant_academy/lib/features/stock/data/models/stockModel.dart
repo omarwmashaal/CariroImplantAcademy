@@ -35,6 +35,9 @@ class StockModel extends StockEntity {
         }
       }
     }
+    labItemType = json['labItemParent'] == null ? labItemType : BasicNameIdObjectModel.fromJson(json['labItemParent'])?.name;
+    shadeName = json['labItemShade'] == null ? shadeName : BasicNameIdObjectModel.fromJson(json['labItemShade'])?.name;
+    companyName = json['labItemCompany'] == null ? companyName : BasicNameIdObjectModel.fromJson(json['labItemCompany'])?.name;
 
     category = BasicNameIdObjectModel.fromJson(json['category'] ?? Map<String, dynamic>());
   }

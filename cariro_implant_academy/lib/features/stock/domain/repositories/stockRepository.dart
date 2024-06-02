@@ -6,6 +6,7 @@ import '../../../../core/error/failure.dart';
 
 abstract class StockRepository {
   Future<Either<Failure, List<StockEntity>>> getStock(String? search);
+  Future<Either<Failure, List<StockEntity>>> getLabStock(String? search,int? parentId, int? companyId, int? shadeId,bool? consumed);
 
   Future<Either<Failure, StockEntity>> getStockByName(String search);
 

@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/features/stock/data/models/stockModel.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockLogEntity.dart';
+import 'package:cariro_implant_academy/features/stock/domain/usecases/getLabStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_Events.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_States.dart';
@@ -16,20 +17,30 @@ import '../../domain/usecases/getStockUseCase.dart';
 
 class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
   final GetStockUseCase getStockUseCase;
+  final GetLabStockUseCase getLabStockUseCase;
   final GetStockLogUseCase getStockLogUseCase;
 
   StockBloc({
     required this.getStockLogUseCase,
     required this.getStockUseCase,
+    required this.getLabStockUseCase,
   }) : super(StockBloc_LoadingState()) {
     on<StockBloc_GetStockEvent>(
       (event, emit) async {
         emit(StockBloc_LoadingState());
-        final result = await getStockUseCase(event.search);
-        result.fold(
-          (l) => emit(StockBloc_LoadingErrorState(message: l.message ?? "")),
-          (r) => emit(StockBloc_LoadedStockSuccessfullyState(data: r)),
-        );
+        if (siteController.getSite() != Website.Lab) {
+          final result = await getStockUseCase(event.search);
+          result.fold(
+            (l) => emit(StockBloc_LoadingErrorState(message: l.message ?? "")),
+            (r) => emit(StockBloc_LoadedStockSuccessfullyState(data: r)),
+          );
+        } else {
+          final result = await getLabStockUseCase(event.getLabStockParams ?? GetLabStockParams());
+          result.fold(
+            (l) => emit(StockBloc_LoadingErrorState(message: l.message ?? "")),
+            (r) => emit(StockBloc_LoadedStockSuccessfullyState(data: r)),
+          );
+        }
       },
     );
     on<StockBloc_GetStockLogEvent>(
@@ -60,11 +71,11 @@ class StockDataGridSource extends DataGridSource {
       _stockData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
                 DataGridCell<int>(columnName: 'Id', value: e.id),
-                DataGridCell<String>(columnName: 'Type', value: e.labItemType),
-                DataGridCell<String>(columnName: 'Company', value: e.companyName),
-                DataGridCell<String>(columnName: 'Shade', value: e.shadeName),
-                DataGridCell<String>(columnName: 'Code', value: e.code),
-                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                DataGridCell<String>(columnName: 'Type', value: e.labItemType ?? "-"),
+                DataGridCell<String>(columnName: 'Company', value: e.companyName ?? "-"),
+                DataGridCell<String>(columnName: 'Shade', value: e.shadeName ?? "-"),
+                DataGridCell<String>(columnName: 'Code', value: e.code ?? "-"),
+                DataGridCell<String>(columnName: 'Category', value: e.category?.name ?? "-"),
                 DataGridCell<String>(columnName: 'Consumed', value: e.consumed == true ? "Yes" : "No"),
                 DataGridCell<int>(columnName: 'Count', value: e.count),
                 DataGridCell<int>(columnName: 'Consume Count', value: e.consumeCount),
