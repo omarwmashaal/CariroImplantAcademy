@@ -129,7 +129,7 @@ class LabRequestModel extends LabRequestEntity {
     data['deliveryDate'] = this.deliveryDate == null
         ? null
         : DateFormat("yyyy-MM-dd").format(this.deliveryDate!); // CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
-    // data['entryById'] = this.entryById;
+     data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
     // if (this.steps != null && this.steps != []) {
     // this.assignedToId = steps![0].technicianId;

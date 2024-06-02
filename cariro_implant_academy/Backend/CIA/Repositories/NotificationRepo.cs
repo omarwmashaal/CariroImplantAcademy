@@ -520,6 +520,8 @@ namespace CIA.Repositories
             List<ApplicationUser> users = new();
             users.AddRange(await _userManager.GetUsersInRoleAsync("labmoderator"));
             users.AddRange(await _userManager.GetUsersInRoleAsync("secretary"));
+            users.Add(await _dbContext.Users.FirstAsync(x => x.IdInt == request.EntryById));
+            users = users.Distinct().ToList();
             var sender = await _userRepo.GetUser();
             foreach (var user in users)
             {
@@ -531,6 +533,46 @@ namespace CIA.Repositories
                     Date = DateTime.UtcNow,
                     InfoId = requestId,
                     Type = EnumNotificationType.LabRequest,
+                    Read = false,
+                    User = user,
+                    UserId = user.IdInt,
+                };
+                await _dbContext.AddAsync(notification);
+                await _dbContext.SaveChangesAsync();
+                if (user.Connections != null)
+                    foreach (var conn in user.Connections)
+                    {
+                        await _hubContext.Clients.Client(conn.ConnectionId).SendAsync("NewNotification", "");
+
+                    }
+
+            }
+
+
+        }
+
+        public async Task LabItemsLessThanThreshold(int parentId)
+        {
+            var parent = await _dbContext.LabItemParents.AsNoTracking().FirstAsync(x => x.Id == parentId);
+            var items = await _dbContext.LabItems.Where(x => x.LabItemParentId == parentId).ToListAsync();
+            var sum = items.Sum(x => x.Count);
+            List<ApplicationUser> users = new();
+            users.AddRange(await _userManager.GetUsersInRoleAsync("labmoderator"));
+            users.AddRange(await _userManager.GetUsersInRoleAsync("labtechnician"));
+            users.AddRange(await _userManager.GetUsersInRoleAsync("secretary"));
+            users.AddRange(await _userManager.GetUsersInRoleAsync("admin"));
+            users = users.Distinct().ToList();
+            var sender = await _userRepo.GetUser();
+            foreach (var user in users)
+            {
+
+                var notification = new NotificationModel()
+                {
+                    Content = $"Only {sum} {parent.Name} left in stock!",
+                    Title = $"Lab {parent.Name} Low Stock!",
+                    Date = DateTime.UtcNow,
+                    InfoId = null,
+                    Type = null,
                     Read = false,
                     User = user,
                     UserId = user.IdInt,

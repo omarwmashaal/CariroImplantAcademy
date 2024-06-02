@@ -135,7 +135,7 @@ namespace CIA.Controllers
             if (myRequests == true)
             {
                 var user = await _iUserRepo.GetUser();
-                requestsReslult.RemoveAll(x => x.AssignedToId != user.IdInt);
+                requestsReslult.RemoveAll(x => !(x.AssignedToId == user.IdInt || x.DesignerId == user.IdInt));
             }
 
 
@@ -186,7 +186,8 @@ namespace CIA.Controllers
             var requestSteps = await _dbContext.LabRequestStepItems.
                 Where(x => x.LabRequestId == id).
                 Include(x => x.ConsumedLabItem).
-                Include(x => x.LabOption).ToListAsync();
+                Include(x => x.LabOption).ThenInclude(x => x.LabItemParent)
+                .ToListAsync();
 
 
             foreach (var labRequestStep in requestSteps)
@@ -659,6 +660,7 @@ namespace CIA.Controllers
         public async Task<IActionResult> ConsumeLabItem(int id, int? number, bool consumeWholeBlock)
         {
             var item = await _dbContext.LabItems.FirstAsync(x => x.Id == id);
+            var parent = await _dbContext.LabItemParents.FirstAsync(x => x.Id == item.LabItemParentId);
             if ((consumeWholeBlock == false && number == null) || (consumeWholeBlock == true && number != null))
             {
                 _apiResponse.ErrorMessage = "Error Invalid input";
@@ -705,6 +707,13 @@ namespace CIA.Controllers
 
             _dbContext.LabItems.Update(item);
             _dbContext.SaveChanges();
+
+            var allParentItems = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId).ToListAsync();
+            var count = allParentItems.Sum(x => x.Count);
+            if(count<parent.Threshold)
+            {
+                await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id);
+            }
 
             return Ok();
         }

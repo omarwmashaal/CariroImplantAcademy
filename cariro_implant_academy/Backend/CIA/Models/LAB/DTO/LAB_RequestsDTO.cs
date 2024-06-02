@@ -65,7 +65,9 @@ namespace CIA.Models.LAB.DTO
         public DateTime? Date { get; set; }
         public EnumLabRequestSources? Source { get; set; }
         public int? CustomerId { get; set; }
+        public int? DesignerId { get; set; }
         public UserDTO? Customer { get; set; }
+        public UserDTO? Designer { get; set; }
         public int PatientId { get; set; }
         public PatientDTO? Patient { get; set; }
         public bool? Paid { get; set; }

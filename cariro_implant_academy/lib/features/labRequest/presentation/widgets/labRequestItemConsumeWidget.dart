@@ -70,8 +70,6 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
 
   BasicNameIdObjectEntity? line;
 
-  LabStepItemEntity? consumedLabItem;
-
   late LabRequestsBloc bloc;
 
   @override
@@ -94,12 +92,12 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                   ShowSnackBar(context, isSuccess: false, message: state.message);
                 else if (state is LabRequestsBloc_ConsumedLabItemSuccessfullyState) {
                   ShowSnackBar(context, isSuccess: true);
-                  bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: consumedLabItem!.id!));
-                } 
-                // else if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.consumedLabItemId) {
-                //   widget.stepItem!.consumedLabItem = state.data;
-                //   setState(() {});
-                // }
+                  if (widget.stepItem.consumedLabItemId != null)
+                    bloc.add(LabRequestsBloc_GetLabItemDetailsEvent(id: widget.stepItem.consumedLabItemId!));
+                } else if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.consumedLabItemId) {
+                  widget.stepItem!.consumedLabItem = state.data;
+                  setState(() {});
+                }
               }
             },
             child: Padding(
@@ -124,7 +122,8 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               selectedItem: company,
                               onSelect: (value) {
                                 line = null;
-                                consumedLabItem = null;
+                                widget.stepItem.consumedLabItemId = null;
+                                widget.stepItem.consumedLabItem = null;
                                 setState(() => company = value);
                               },
                             ),
@@ -150,7 +149,8 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                                   : "Empty",
                               selectedItem: line,
                               onSelect: (value) {
-                                consumedLabItem = null;
+                                widget.stepItem.consumedLabItem = null;
+                                widget.stepItem.consumedLabItemId = null;
                                 setState(() => line = value);
                               },
                             ),
@@ -161,7 +161,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CIA_DropDownSearchBasicIdName(
-                            enabled: consumedLabItem?.consumedLabItem?.consumed != true,
+                            enabled: widget.stepItem.consumedLabItem?.consumed != true,
                             label: "Name Code||Size",
                             asyncUseCase: (line == null && widget.stepItem.labOption?.labItemParent?.hasShades == true) ||
                                     (company == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true)
@@ -187,6 +187,7 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                                       params: ConsumeLabItemParams(id: value.id!, consumeWholeBlock: false, number: 1),
                                     ));
                                   });
+                              widget.stepItem!.consumedLabItem = LabItemEntity(name: value.name, id: value.id);
                               widget.stepItem!.consumedLabItemId = value.id;
                               setState(() {});
                             },
@@ -200,18 +201,18 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                     buildWhen: (previous, current) =>
                         current is LabRequestsBloc_LoadedLabItemSuccessfullyState || current is LabRequestsBloc_LoadingLabItemErrorState,
                     builder: (context, state) {
-                      // if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.labItemFromSettingsId) {
-                      //   widget.stepItem!.consumedLabItem = state.data;
-                      // }
+                      if (state is LabRequestsBloc_LoadedLabItemSuccessfullyState && state.data.id == widget.stepItem?.consumedLabItemId) {
+                        widget.stepItem!.consumedLabItem = state.data;
+                      }
 
-                      if (widget.stepItem.consumedLabItem != null) {
+                      if (widget.stepItem.consumedLabItem != null && widget.stepItem.consumedLabItemId != null) {
                         return Row(
                           children: [
                             Expanded(
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Item: "),
-                                  FormTextValueWidget(text: consumedLabItem!.consumedLabItem?.name?.toString() ?? ""),
+                                  FormTextValueWidget(text: widget.stepItem.consumedLabItem?.name?.toString() ?? ""),
                                 ],
                               ),
                             ),
@@ -229,19 +230,19 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                               child: Row(
                                 children: [
                                   FormTextKeyWidget(text: "Block Consumed: "),
-                                  FormTextValueWidget(text: consumedLabItem!.consumedLabItem!.consumed == true ? "Yes" : "No"),
+                                  FormTextValueWidget(text: widget.stepItem.consumedLabItem?.consumed == true ? "Yes" : "No"),
                                 ],
                               ),
                             ),
                             Expanded(child: SizedBox()),
                             Visibility(
-                              visible: consumedLabItem!.consumedLabItem!.consumed != true,
+                              visible: widget.stepItem.consumedLabItem?.consumed != true,
                               child: CIA_SecondaryButton(
                                 label: "Consume The Whole Block?",
                                 onTab: () {
                                   bloc.add(LabRequestsBloc_ConsumeLabItemEvent(
                                     params: ConsumeLabItemParams(
-                                      id: consumedLabItem!.id!,
+                                      id: widget.stepItem.consumedLabItemId!,
                                       consumeWholeBlock: true,
                                     ),
                                   ));
