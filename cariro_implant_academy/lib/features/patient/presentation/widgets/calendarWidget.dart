@@ -103,7 +103,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       _getx.showAddButton.value = true;
       if (buttonClicked || element.targetElement == CalendarElement.calendarCell && controller.view != CalendarView.month) {
         newVisit = VisitEntity(
-            title: "(No Subject)",
+            title: "",
             from: element.date,
             to: element.date!.add(Duration(minutes: 15)),
             patientId: patient.id,
@@ -125,7 +125,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 children: [
                   CIA_TextFormField(
                     label: "Title",
-                    controller: TextEditingController(text: "(No Subject)"),
+                    controller: TextEditingController(text: newVisit.title),
                     onChange: (value) {
                       newVisit.title = value;
                     },
@@ -365,19 +365,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   SizedBox(
                     height: 10,
                   ),
-
                   CIA_TextFormField(
                       label: "Date",
                       enabled: false,
-                      onTap: (){
-                        CIA_PopupDialog_DateOnlyPicker(context, "Date", (date)  {
-                          visit.from = visit.from==null?date: DateTime(date.year,date.month,date.day,visit.from!.hour,visit.from!.minute);
-                          visit.reservationTime = visit.reservationTime==null?date: DateTime(date.year,date.month,date.day,visit.reservationTime!.hour,visit.reservationTime!.minute);
-                          visit.to = visit.to==null?date: DateTime(date.year,date.month,date.day,visit.to!.hour,visit.to!.minute);
-                          setState((){});
+                      onTap: () {
+                        CIA_PopupDialog_DateOnlyPicker(context, "Date", (date) {
+                          visit.from = visit.from == null ? date : DateTime(date.year, date.month, date.day, visit.from!.hour, visit.from!.minute);
+                          visit.reservationTime = visit.reservationTime == null
+                              ? date
+                              : DateTime(date.year, date.month, date.day, visit.reservationTime!.hour, visit.reservationTime!.minute);
+                          visit.to = visit.to == null ? date : DateTime(date.year, date.month, date.day, visit.to!.hour, visit.to!.minute);
+                          setState(() {});
                         });
                       },
-
                       controller: TextEditingController(text: CIA_DateConverters.simpleFormatDateOnly(visit.from))),
                   SizedBox(
                     height: 10,
@@ -415,8 +415,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         child: CIA_TextFormField(
                           enabled: false,
                           onTap: () async {
-                            var time =
-                                await showTimePicker(context: context, initialTime: visit.to != null ? TimeOfDay.fromDateTime(visit.to!) : TimeOfDay.now());
+                            var time = await showTimePicker(
+                                context: context, initialTime: visit.to != null ? TimeOfDay.fromDateTime(visit.to!) : TimeOfDay.now());
                             if (time != null) {
                               visit.to = DateTime(
                                 visit.to!.year,
@@ -577,7 +577,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       );
                     },
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   IconButton(
                     onPressed: () {
                       delete = true;
@@ -597,22 +599,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PatientVisitsBloc,PatientVisitsBloc_States>(
+    return BlocListener<PatientVisitsBloc, PatientVisitsBloc_States>(
       listener: (context, state) {
-        if(state is PatientVisitsBloc_VisitProcedureSuccessState)
-          {
-            dialogHelper.dismissSingle(context);
-            if (widget.getAllSchedules) {
-              loadAll = true;
-              bloc.add(CalendarBloc_GetAllSchedules(month: DateTime.now().month));
-            } else
-              bloc.add(CalendarBloc_GetMySchedules(month: DateTime.now().month));
-            bloc.add(CalendarBloc_GetRooms());
-
-          }
-
+        if (state is PatientVisitsBloc_VisitProcedureSuccessState) {
+          dialogHelper.dismissSingle(context);
+          if (widget.getAllSchedules) {
+            loadAll = true;
+            bloc.add(CalendarBloc_GetAllSchedules(month: DateTime.now().month));
+          } else
+            bloc.add(CalendarBloc_GetMySchedules(month: DateTime.now().month));
+          bloc.add(CalendarBloc_GetRooms());
+        }
       },
-      child:BlocConsumer<CalendarBloc, CalendarBloc_States>(
+      child: BlocConsumer<CalendarBloc, CalendarBloc_States>(
         listener: (context, state) {
           if (state is CalendarBloc_LoadedRoomsSuccessfully)
             rooms = state.rooms;
@@ -627,7 +626,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           }
         },
         buildWhen: (previous, current) =>
-        current is CalendarBloc_LoadingSchedules || current is CalendarBloc_LoadingSchedulesError || current is CalendarBloc_LoadedSuccessfully,
+            current is CalendarBloc_LoadingSchedules || current is CalendarBloc_LoadingSchedulesError || current is CalendarBloc_LoadedSuccessfully,
         builder: (context, state) {
           if (state is CalendarBloc_LoadingSchedules)
             return LoadingWidget();
@@ -661,24 +660,24 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           r.add(SizedBox(width: 10));
                           r.addAll(rooms
                               .map((e) => Container(
-                            height: 40,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  color: e.color!,
-                                ),
-                                SizedBox(width: 5),
-                                FormTextValueWidget(
-                                  text: e.name ?? "",
-                                ),
-                                SizedBox(width: 5),
-                                VerticalDivider(),
-                                SizedBox(width: 5),
-                              ],
-                            ),
-                          ))
+                                    height: 40,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 30,
+                                          color: e.color!,
+                                        ),
+                                        SizedBox(width: 5),
+                                        FormTextValueWidget(
+                                          text: e.name ?? "",
+                                        ),
+                                        SizedBox(width: 5),
+                                        VerticalDivider(),
+                                        SizedBox(width: 5),
+                                      ],
+                                    ),
+                                  ))
                               .toList());
                           r.add(Container(
                             height: 40,
@@ -700,13 +699,13 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                             ),
                           ));
                           r.add(Obx(() => Visibility(
-                            visible: _getx.showAddButton.value,
-                            child: CIA_SecondaryButton(
-                                label: "New",
-                                onTab: () {
-                                  if (globalElement != null) onTapFunction(globalElement!, true);
-                                }),
-                          )));
+                                visible: _getx.showAddButton.value,
+                                child: CIA_SecondaryButton(
+                                    label: "New",
+                                    onTab: () {
+                                      if (globalElement != null) onTapFunction(globalElement!, true);
+                                    }),
+                              )));
                           return r;
                         }(),
                       );
@@ -714,7 +713,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 FormTextKeyWidget(text: loadAll ? "All Schedules" : "Your Schedules only"),
                 Expanded(
                   child: SfCalendar(
-
                     key: GlobalKey(),
                     controller: controller,
                     view: CalendarView.month,
@@ -763,8 +761,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           } else
             return Container();
         },
-      ) ,
+      ),
     );
-
   }
 }
