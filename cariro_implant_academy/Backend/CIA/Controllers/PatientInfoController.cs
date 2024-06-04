@@ -216,7 +216,7 @@ namespace CIA.Controllers
         }
 
         [HttpGet("ListPatients")]
-        public async Task<ActionResult> ListPatients(String? search, String? filter, bool? patientOut, bool? myPatients = false, bool? listed=null)
+        public async Task<ActionResult> ListPatients(String? search, String? filter, bool? patientOut, bool? listed, bool? myPatients = false)
         {
             IQueryable<Patient> query = _cia_DbContext.Patients.Where(x => x.Website == _site ).
                     Include(x => x.ReferralPatient).
