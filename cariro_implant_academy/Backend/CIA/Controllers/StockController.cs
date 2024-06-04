@@ -86,6 +86,42 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
 
         }
+        [HttpGet("GetAllStockForLab")]
+        public async Task<IActionResult> GetAllStockForLab(String? search,int? parentId,int? companyId, int? shadeId,bool? consumed)
+        {
+            
+            IQueryable<LabItem> query = _ciaDbContext.LabItems.
+                Include(x => x.Category).
+                Include(x => x.LabItemParent).
+                Include(x => x.LabItemCompany).
+                Include(x => x.LabItemShade).
+                OrderBy(x => x.Id).
+                Where(x => x.InventoryWebsite == _site);
+            if (search != null)
+            {
+                search = search.ToLower();
+                query = query.Where(x =>
+                    x.Name.ToLower().Contains(search) ||
+                    x.Category.Name.ToLower().Contains(search) ||
+                    x.LabItemParent.Name.ToLower().Contains(search) ||
+                    x.LabItemCompany.Name.ToLower().Contains(search) ||
+                    x.LabItemShade.Name.ToLower().Contains(search) ||
+                    x.Id.ToString().ToLower().Contains(search)
+                );
+            }
+
+
+            if (parentId != null) query = query.Where(x => x.LabItemParentId == parentId);
+            if (companyId != null) query = query.Where(x => x.LabItemCompanyId == companyId);
+            if (shadeId != null) query = query.Where(x => x.LabItemShadeId == shadeId);
+            if (consumed != null) query = query.Where(x => x.Consumed == consumed);
+            
+            _apiResponse.Result = await query.ToListAsync();
+           
+            return Ok(_apiResponse);
+
+        }
+       
         [HttpGet("GetStockById")]
         public async Task<IActionResult> GetStockById(int id)
         {

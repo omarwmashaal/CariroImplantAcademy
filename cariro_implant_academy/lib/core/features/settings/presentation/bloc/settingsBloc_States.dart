@@ -1,3 +1,6 @@
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
@@ -677,6 +680,13 @@ class SettingsBloc_LoadingLabItemParentsErrorState extends SettingsBlocErrorStat
   List<Object?> get props => [message];
 }
 
+class SettingsBloc_SelectedParentState extends SettingsBlocSuccessState {
+  final List<LabItemParentEntity> data;
+  SettingsBloc_SelectedParentState({required this.data});
+  @override
+  List<Object?> get props => [data, identityHashCode(this)];
+}
+
 class SettingsBloc_LoadedLabItemParentsSuccessfullyState extends SettingsBlocSuccessState {
   final List<LabItemParentEntity> data;
   SettingsBloc_LoadedLabItemParentsSuccessfullyState({required this.data});
@@ -698,7 +708,43 @@ class SettingsBloc_LoadingLabItemsErrorState extends SettingsBlocErrorState {
 
 class SettingsBloc_LoadedLabItemsSuccessfullyState extends SettingsBlocSuccessState {
   final List<LabItemEntity> data;
-  SettingsBloc_LoadedLabItemsSuccessfullyState({required this.data});
+  final int? parentId;
+  final int? companyId;
+  final int? shadeId;
+  SettingsBloc_LoadedLabItemsSuccessfullyState({
+    required this.data,
+    this.parentId,
+    this.companyId,
+    this.shadeId,
+  });
+
+  @override
+  List<Object?> get props => [data, identityHashCode(this)];
+}
+
+class SettingsBloc_LoadingLabOptionsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingLabOptionsErrorState extends SettingsBlocErrorState {
+  SettingsBloc_LoadingLabOptionsErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_LoadedLabOptionsSuccessfullyState extends SettingsBlocSuccessState {
+  final List<LabOptionEntity> data;
+  final int? parentId;
+  final int? companyId;
+  final int? shadeId;
+  SettingsBloc_LoadedLabOptionsSuccessfullyState({
+    required this.data,
+    this.parentId,
+    this.companyId,
+    this.shadeId,
+  });
 
   @override
   List<Object?> get props => [data, identityHashCode(this)];
@@ -717,8 +763,10 @@ class SettingsBloc_LoadingLabItemsShadesErrorState extends SettingsBlocErrorStat
 }
 
 class SettingsBloc_LoadedLabItemsShadesSuccessfullyState extends SettingsBlocSuccessState {
-  final List<BasicNameIdObjectEntity> data;
-  SettingsBloc_LoadedLabItemsShadesSuccessfullyState({required this.data});
+  final List<LabItemShadeEntity> data;
+  final int? parentId;
+  final int? comapnyId;
+  SettingsBloc_LoadedLabItemsShadesSuccessfullyState({required this.data, this.comapnyId, this.parentId});
 
   @override
   List<Object?> get props => [data, identityHashCode(this)];
@@ -737,7 +785,7 @@ class SettingsBloc_LoadingLabItemsCompaniesErrorState extends SettingsBlocErrorS
 }
 
 class SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState extends SettingsBlocSuccessState {
-  final List<BasicNameIdObjectEntity> data;
+  final List<LabItemCompanyEntity> data;
   SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState({required this.data});
 
   @override
@@ -795,19 +843,36 @@ class SettingsBloc_UpdatedLabItemsSuccessfullyState extends SettingsBlocSuccessS
   List<Object?> get props => [];
 }
 
-class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState extends SettingsBloc_States {
+class SettingsBloc_UpdatingLabOptionsState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
 }
 
-class SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState extends SettingsBlocErrorState {
-  SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState({required super.message});
+class SettingsBloc_UpdatingLabOptionsErrorState extends SettingsBlocErrorState {
+  SettingsBloc_UpdatingLabOptionsErrorState({required super.message});
 
   @override
   List<Object?> get props => [message];
 }
 
-class SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState extends SettingsBlocSuccessState {
+class SettingsBloc_UpdatedLabOptionsSuccessfullyState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingLabItemsParentsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingLabItemsParentsErrorState extends SettingsBlocErrorState {
+  SettingsBloc_UpdatingLabItemsParentsErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_UpdatedLabItemsParentsSuccessfullyState extends SettingsBlocSuccessState {
   @override
   List<Object?> get props => [];
 }

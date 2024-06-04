@@ -20,6 +20,7 @@ class _CIA_CheckBoxWidgetState extends State<CIA_CheckBoxWidget> {
     return Row(
       children: [
         Checkbox(
+          
           value:widget.value,
           onChanged: (value) => setState(() {
             widget.value = value!;

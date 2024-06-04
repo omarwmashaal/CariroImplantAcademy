@@ -80,6 +80,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   bool isNull() =>
       noTreatmentPlan == null &&
+      implantFailed == null &&
       (and_treatmentIds?.isEmpty ?? true) &&
       (or_treatmentIds?.isEmpty ?? true) &&
       clearnaceLower != true &&

@@ -9,6 +9,11 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/enums/enum.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:equatable/equatable.dart';
@@ -21,15 +26,31 @@ import '../../domain/useCases/addImplantsUseCase.dart';
 import '../../domain/useCases/addLabItemShadesUseCase.dart';
 import '../../domain/useCases/addLabItemsUseCase.dart';
 import '../../domain/useCases/addMembranesUseCase.dart';
-import '../../domain/useCases/updateLabItemParentsPriceUseCase.dart';
+import '../../domain/useCases/updateLabItemParentsUseCase.dart';
 
 abstract class SettingsBloc_Events extends Equatable {}
 
 class SettingsBloc_LoadLabItemsEvent extends SettingsBloc_Events {
-  final int shadeId;
-  SettingsBloc_LoadLabItemsEvent({required this.shadeId});
+  final int? shadeId;
+  final int? companyId;
+  final int? parentId;
+  SettingsBloc_LoadLabItemsEvent({
+    this.shadeId,
+    this.companyId,
+    this.parentId,
+  });
   @override
   List<Object?> get props => [shadeId];
+}
+
+class SettingsBloc_LoadLabOptionsEvent extends SettingsBloc_Events {
+
+  final int? parentId;
+  SettingsBloc_LoadLabOptionsEvent({
+    this.parentId,
+  });
+  @override
+  List<Object?> get props => [parentId];
 }
 
 class SettingsBloc_LoadLabItemsCompaniesEvent extends SettingsBloc_Events {
@@ -40,8 +61,9 @@ class SettingsBloc_LoadLabItemsCompaniesEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadLabItemsShadesEvent extends SettingsBloc_Events {
-  final int companyId;
-  SettingsBloc_LoadLabItemsShadesEvent({required this.companyId});
+  final int? companyId;
+  final int? parentId;
+  SettingsBloc_LoadLabItemsShadesEvent({this.companyId, this.parentId});
   @override
   List<Object?> get props => [companyId];
 }
@@ -52,10 +74,10 @@ class SettingsBloc_LoadLabItemsParentsEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadLabItemCompaniesEvent extends SettingsBloc_Events {
-  final int id;
-  SettingsBloc_LoadLabItemCompaniesEvent({required this.id});
+  final int parentId;
+  SettingsBloc_LoadLabItemCompaniesEvent({required this.parentId});
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [parentId];
 }
 
 class SettingsBloc_LoadImplantCompaniesEvent extends SettingsBloc_Events {
@@ -312,31 +334,38 @@ class SettingsBloc_LoadClinicPricesEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_UpdateLabItemCompaniesEvent extends SettingsBloc_Events {
-  final UpdateLabItemsCompaniesParams params;
-  SettingsBloc_UpdateLabItemCompaniesEvent({required this.params});
+  final List<LabItemCompanyEntity> companies;
+  SettingsBloc_UpdateLabItemCompaniesEvent({required this.companies});
   @override
-  List<Object?> get props => [params];
+  List<Object?> get props => [companies];
 }
 
 class SettingsBloc_UpdateLabItemShadesEvent extends SettingsBloc_Events {
-  final UpdateLabItemsShadesParams params;
-  SettingsBloc_UpdateLabItemShadesEvent({required this.params});
+  final List<LabItemShadeEntity> shades;
+  SettingsBloc_UpdateLabItemShadesEvent({required this.shades});
   @override
-  List<Object?> get props => [params];
+  List<Object?> get props => [shades];
 }
 
 class SettingsBloc_UpdateLabItemEvent extends SettingsBloc_Events {
-  final UpdateLabItemsParams params;
-  SettingsBloc_UpdateLabItemEvent({required this.params});
+  final List<LabItemEntity> items;
+  SettingsBloc_UpdateLabItemEvent({required this.items});
   @override
-  List<Object?> get props => [params];
+  List<Object?> get props => [items];
 }
 
-class SettingsBloc_UpdateLabItemParentPriceEvent extends SettingsBloc_Events {
-  final UpdateLabItemsParentsPriceParams params;
-  SettingsBloc_UpdateLabItemParentPriceEvent({required this.params});
+class SettingsBloc_UpdateLabOptionsEvent extends SettingsBloc_Events {
+  final List<LabOptionEntity> options;
+  SettingsBloc_UpdateLabOptionsEvent({required this.options});
   @override
-  List<Object?> get props => [params];
+  List<Object?> get props => [options];
+}
+
+class SettingsBloc_UpdateLabItemParentEvent extends SettingsBloc_Events {
+  final List<LabItemParentEntity> labItemParents;
+  SettingsBloc_UpdateLabItemParentEvent({required this.labItemParents});
+  @override
+  List<Object?> get props => [labItemParents];
 }
 
 class SettingsBloc_GetProstheticItemsEvent extends SettingsBloc_Events {

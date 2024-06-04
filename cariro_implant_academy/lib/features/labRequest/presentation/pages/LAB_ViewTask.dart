@@ -420,26 +420,28 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                   Visibility(
                                       visible: siteController.getUserId() == request.designerId, child: FormTextKeyWidget(text: "Finish Design")),
                                   Visibility(visible: siteController.getUserId() == request.designerId, child: SizedBox(height: 10)),
-                                  Visibility(
-                                    visible: siteController.getUserId() == request.designerId,
-                                    child: RoundCheckBox(
-                                      disabledColor: Colors.green,
-                                      isChecked: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index,
-                                      onTap: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index
-                                          ? null
-                                          : (value) async {
-                                              await CIA_ShowPopUpYesNo(
-                                                context: context,
-                                                title: "Change Request Status To \"Finished Design\"?",
-                                                onCancel: () => setState(() {}),
-                                                onSave: () {
-                                                  request.status = EnumLabRequestStatus.FinishedDesign;
-                                                  bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
-                                                },
-                                              );
-                                            },
-                                    ),
-                                  ),
+                                  siteController.getUserId() != request.designerId
+                                      ? Text(request.status?.name ?? "")
+                                      : Visibility(
+                                          visible: siteController.getUserId() == request.designerId,
+                                          child: RoundCheckBox(
+                                            disabledColor: Colors.green,
+                                            isChecked: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index,
+                                            onTap: (request.status?.index ?? 0) >= EnumLabRequestStatus.FinishedDesign.index
+                                                ? null
+                                                : (value) async {
+                                                    await CIA_ShowPopUpYesNo(
+                                                      context: context,
+                                                      title: "Change Request Status To \"Finished Design\"?",
+                                                      onCancel: () => setState(() {}),
+                                                      onSave: () {
+                                                        request.status = EnumLabRequestStatus.FinishedDesign;
+                                                        bloc.add(LabRequestsBloc_UpdateLabRequestEvent(request: request));
+                                                      },
+                                                    );
+                                                  },
+                                          ),
+                                        ),
                                 ],
                               ),
                             )

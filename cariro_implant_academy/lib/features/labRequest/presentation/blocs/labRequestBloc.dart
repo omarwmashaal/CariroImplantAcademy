@@ -246,7 +246,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         //           },
         //         ));
         // }
-        final result = await createLabRequestUseCase(event.request);       
+        final result = await createLabRequestUseCase(event.request);
         result.fold(
           (l) => emit(LabRequestsBloc_CreatingLabRequestErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_CreatedLabRequestSuccessfullyState()),
@@ -296,8 +296,9 @@ class LabRequestDataGridSource extends DataGridSource {
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name ?? ""),
               DataGridCell<String>(columnName: 'Paid', value: (e.paid ?? false) ? "Paid" : "Not Paid"),
               DataGridCell<String>(columnName: 'Assigned', value: e.assignedToId == siteController.getUserId() ? "You" : e.assignedTo?.name ?? ""),
+              DataGridCell<String>(columnName: 'Designer', value: e.designerId == siteController.getUserId() ? "You" : e.designer?.name ?? ""),
               DataGridCell<String>(columnName: 'Status', value: e.status?.name.split(".").last ?? ""),
-             // DataGridCell<String>(                  columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
+              // DataGridCell<String>(                  columnName: 'Step', value: e.steps == null || (e.steps ?? []).length == 0 ? "" : (e.steps ?? [])?.last?.step?.name ?? ""),
             ]))
         .toList();
   }

@@ -1,11 +1,20 @@
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsLinesUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/stock/domain/usecases/getLabStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_Events.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../Constants/Controllers.dart';
@@ -31,6 +40,7 @@ class StockSearchPage extends StatefulWidget {
         return "CIAStock";
     }
   }
+
   @override
   State<StockSearchPage> createState() => _StockSearchPageState();
 }
@@ -38,13 +48,33 @@ class StockSearchPage extends StatefulWidget {
 class _StockSearchPageState extends State<StockSearchPage> {
   int selectedPage = 0;
   String? search = null;
+  BasicNameIdObjectEntity? parent;
+  BasicNameIdObjectEntity? company;
+  BasicNameIdObjectEntity? shade;
+  String consumedFilter = "All";
   late StockDataGridSource stock_dataSource;
   late StockBloc bloc;
+
+  void performSearch() {
+    bloc.add(StockBloc_GetStockEvent(
+        search: search,
+        getLabStockParams: GetLabStockParams(
+          companyId: company?.id,
+          parentId: parent?.id,
+          shadeId: shade?.id,
+          search: search,
+          consumed: consumedFilter == "All"
+              ? null
+              : consumedFilter == "Consumed"
+                  ? true
+                  : false,
+        )));
+  }
 
   @override
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<StockBloc>(context);
-    bloc.add(StockBloc_GetStockEvent(search: search));
+    performSearch();
     return Column(
       children: [
         Row(
@@ -189,9 +219,90 @@ class _StockSearchPageState extends State<StockSearchPage> {
           icon: Icons.search,
           onChange: (value) {
             search = value;
-            bloc.add(StockBloc_GetStockEvent(search: search));
+            performSearch();
           },
         ),
+        SizedBox(height: 10),
+        Visibility(
+          visible: siteController.getSite() == Website.Lab,
+          child: StatefulBuilder(builder: (context, _setState) {
+            return Row(
+              children: [
+                Expanded(
+                  child: CIA_DropDownSearchBasicIdName(
+                    label: "Type",
+                    asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
+                    selectedItem: parent,
+                    onSelect: (value) {
+                      shade = null;
+                      company = null;
+                      parent = value;
+                      _setState(() => null);
+                      performSearch();
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: CIA_DropDownSearchBasicIdName(
+                    label: "Company",
+                    asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
+                    selectedItem: company,
+                    searchParams: parent?.id ?? 0,
+                    onSelect: (value) {
+                      shade = null;
+                      company = value;
+                      _setState(() => null);
+                      performSearch();
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: CIA_DropDownSearchBasicIdName(
+                    label: "Shade",
+                    asyncUseCase: sl<GetLabItemsLinesUseCase>(),
+                    selectedItem: shade,
+                    searchParams: GetLabItemsLinesParams(
+                      companyId: company?.id,
+                      parentId: parent?.id,
+                    ),
+                    onSelect: (value) {
+                      shade = value;
+                      _setState(() => null);
+                      performSearch();
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+                CIA_MultiSelectChipWidget(
+                  singleSelect: true,
+                  labels: [
+                    CIA_MultiSelectChipWidgeModel(label: "All", isSelected: consumedFilter == "All"),
+                    CIA_MultiSelectChipWidgeModel(label: "Consumed", isSelected: consumedFilter == "Consumed"),
+                    CIA_MultiSelectChipWidgeModel(label: "Not Consumed", isSelected: consumedFilter == "Not Consumed"),
+                  ],
+                  onChange: (item, isSelected) {
+                    consumedFilter = item;
+                    _setState(() => null);
+                    performSearch();
+                  },
+                ),
+                IconButton(
+                    onPressed: () {
+                      parent = null;
+                      company = null;
+                      shade = null;
+                      consumedFilter = "All";
+                      _setState(() => null);
+                      performSearch();
+                    },
+                    icon: Icon(Icons.clear))
+              ],
+            );
+          }),
+        ),
+        SizedBox(height: 10),
         Expanded(
           child: BlocConsumer<StockBloc, StockBloc_States>(
             buildWhen: (previous, current) => current is StockBloc_LoadingErrorState || current is StockBloc_LoadedStockSuccessfullyState,
@@ -204,8 +315,7 @@ class _StockSearchPageState extends State<StockSearchPage> {
                 return TableWidget(dataSource: stock_dataSource);
             },
             listener: (context, state) {
-              if (state is StockBloc_LoadedStockSuccessfullyState)
-                stock_dataSource.updateData(state.data);
+              if (state is StockBloc_LoadedStockSuccessfullyState) stock_dataSource.updateData(state.data);
             },
           ),
         ),

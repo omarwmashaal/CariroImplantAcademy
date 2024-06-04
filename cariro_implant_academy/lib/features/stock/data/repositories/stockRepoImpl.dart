@@ -47,4 +47,14 @@ class StockRepoImpl implements StockRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, List<StockEntity>>> getLabStock(String? search, int? parentId, int? companyId, int? shadeId,bool? consumed) async {
+    try {
+      final result = await stockDatasource.getLabStock(search,parentId,companyId,shadeId,consumed);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

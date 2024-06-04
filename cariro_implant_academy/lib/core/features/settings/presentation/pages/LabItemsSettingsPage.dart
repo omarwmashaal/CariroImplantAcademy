@@ -1,55 +1,34 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
-import 'package:cariro_implant_academy/Widgets/CIA_TeethChart.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
-import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
-import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
-import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneCompanyEnity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addExpensesCategoriesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addStockCategoriesUseCase.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
-import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
-import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_Events.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
-import 'package:cariro_implant_academy/features/patient/domain/entities/roomEntity.dart';
-import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/treatmentWidget.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:sidebarx/sidebarx.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
 
-import '../../../../../Widgets/SlidingTab.dart';
-import '../../../../../features/clinicTreatments/presentation/bloc/clinicTreatmentBloc_States.dart';
 import '../../../../../features/labRequest/domain/entities/labItemParentEntity.dart';
-import '../../../../presentation/widgets/CIA_GestureWidget.dart';
 
-import '../../domain/useCases/addLabItemsUseCase.dart';
-import '../../domain/useCases/addMembranesUseCase.dart';
 import '../bloc/settingsBloc.dart';
 import '../bloc/settingsBloc_Events.dart';
 import '../bloc/settingsBloc_States.dart';
-import '../widgets/clinicPriceSettingsWidget.dart';
-import 'ClinicPriceSettingsPage.dart';
-import 'UserSettingsPage.dart';
+import 'package:collection/collection.dart';
 
 class LabItemSettingsPage extends StatefulWidget {
   const LabItemSettingsPage({Key? key}) : super(key: key);
@@ -61,16 +40,20 @@ class LabItemSettingsPage extends StatefulWidget {
   State<LabItemSettingsPage> createState() => _LabItemSettingsPageState();
 }
 
-class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
+class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerProviderStateMixin {
   PageController _pageController = PageController();
   int currentIndex = 0;
   int currentItemId = 0;
   late SettingsBloc bloc;
   late ClinicTreatmentBloc clinicTreatmentBloc;
   List<ClinicPriceEntity> percentages = [];
-
+  List<LabItemParentEntity> labItemParetns = [];
+  LabItemParentEntity? selectedLabItemParent;
+  late TabController tabController;
   @override
   void initState() {
+    tabController = TabController(length: 2, vsync: this);
+
     bloc = BlocProvider.of<SettingsBloc>(context);
     clinicTreatmentBloc = BlocProvider.of<ClinicTreatmentBloc>(context);
     bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
@@ -79,432 +62,791 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SettingsBloc, SettingsBloc_States>(
-      listener: (context, state) {
-        if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState) {
-          CustomLoader.show(context);
-        } else {
-          CustomLoader.hide();
-          if (state is SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState) {
-            ShowSnackBar(context, isSuccess: false, message: state.message);
-            bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
-          } else if (state is SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState) {
-            ShowSnackBar(context, isSuccess: true);
-            bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
-          }
-        }
-      },
-      buildWhen: (previous, current) =>
-          current is SettingsBloc_LoadingLabItemParentsState ||
-          current is SettingsBloc_LoadingLabItemParentsErrorState ||
-          current is SettingsBloc_LoadedLabItemParentsSuccessfullyState,
-      builder: (context, state) {
-        if (state is SettingsBloc_LoadingLabItemParentsState)
-          return LoadingWidget();
-        else if (state is SettingsBloc_LoadingLabItemParentsErrorState)
-          return BigErrorPageWidget(message: state.message);
-        else if (state is SettingsBloc_LoadedLabItemParentsSuccessfullyState) {
-          List<SidebarXItem> sideBarItem = [];
-          if (state.data.isNotEmpty) {
-            currentItemId = state.data.first.id!;
-            bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: currentItemId));
-          }
-          sideBarItem = state.data
-              .map((e) => SidebarXItem(
-                    label: "${e.name}: ${e.unitPrice} EGP",
-                    iconWidget: IconButton(
-                        onPressed: () {
-                          CIA_ShowPopUp(
-                            onSave: () {
-                              bloc.add(
-                                SettingsBloc_UpdateLabItemParentPriceEvent(
-                                  params: UpdateLabItemsParentsPriceParams(
-                                    price: e.unitPrice ?? 0,
-                                    parentItemId: currentItemId,
-                                  ),
-                                ),
-                              );
-                            },
-                            context: context,
-                            title: "Edit Price",
-                            child: CIA_TextFormField(
-                              label: "Price",
-                              isNumber: true,
-                              suffix: "EGP",
-                              controller: TextEditingController(text: e.unitPrice?.toString() ?? "0"),
-                              onChange: (value) => e.unitPrice = int.tryParse(value) ?? 0,
-                            ),
-                          );
-                        },
-                        icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
-                    onTap: () {
-                      bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: e.id!));
-                      currentIndex = e.id!;
-                      currentItemId = e.id!;
-                    },
-                  ))
-              .toList();
-          return Row(
+    return Column(
+      children: [
+        TabBar(
+          onTap: (value) {
+            if (value == 0) {
+              bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
+            } else {
+              bloc.add(SettingsBloc_LoadLabOptionsEvent());
+            }
+          },
+          labelColor: Colors.black,
+          controller: tabController,
+          tabs: [
+            Tab(text: "Blocks"),
+            Tab(text: "Options visible in requests"),
+          ],
+        ),
+        SizedBox(height: 10),
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
             children: [
-              SidebarX(
-                controller: SidebarXController(selectedIndex: currentIndex, extended: true),
-                showToggleButton: false,
-                extendedTheme: SidebarXTheme(
-                    width: 300,
-                    selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    decoration: BoxDecoration(
-                      border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
-                    )),
-                items: sideBarItem,
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: BlocConsumer<SettingsBloc, SettingsBloc_States>(
-                  listener: (context, state) {
-                    if (state is SettingsBloc_UpdatingLabItemsCompaniesState) {
-                      CustomLoader.show(context);
-                    } else {
-                      CustomLoader.hide();
-                      if (state is SettingsBloc_UpdatingLabItemsCompaniesErrorState) {
-                        ShowSnackBar(context, isSuccess: false, message: state.message);
-                        bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: currentItemId));
-                      } else if (state is SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState) {
-                        ShowSnackBar(context, isSuccess: true);
-                        bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(id: currentItemId));
-                      }
+              BlocConsumer<SettingsBloc, SettingsBloc_States>(
+                listener: (context, state) {
+                  if (state is SettingsBloc_UpdatingLabItemsParentsState ||
+                      state is SettingsBloc_UpdatingLabItemsCompaniesState ||
+                      state is SettingsBloc_UpdatingLabItemsShadesState ||
+                      state is SettingsBloc_UpdatingLabItemsState) {
+                    CustomLoader.show(context);
+                  } else {
+                    CustomLoader.hide();
+                    if (state is SettingsBloc_UpdatingLabItemsParentsErrorState) {
+                      ShowSnackBar(context, isSuccess: false, message: state.message);
+                      bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
+                    } else if (state is SettingsBloc_UpdatingLabItemsCompaniesErrorState) {
+                      ShowSnackBar(context, isSuccess: false, message: state.message);
+                    } else if (state is SettingsBloc_UpdatingLabItemsShadesErrorState) {
+                      ShowSnackBar(context, isSuccess: false, message: state.message);
+                    } else if (state is SettingsBloc_UpdatingLabItemsErrorState) {
+                      ShowSnackBar(context, isSuccess: false, message: state.message);
+                    } else if (state is SettingsBloc_UpdatedLabItemsParentsSuccessfullyState ||
+                        state is SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState ||
+                        state is SettingsBloc_UpdatedLabItemsShadesSuccessfullyState ||
+                        state is SettingsBloc_UpdatedLabItemsSuccessfullyState) {
+                      ShowSnackBar(context, isSuccess: true);
+                      if (state is SettingsBloc_UpdatedLabItemsParentsSuccessfullyState) bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
                     }
-                  },
-                  buildWhen: (previous, current) =>
-                      current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
-                      current is SettingsBloc_LoadingLabItemsCompaniesState ||
-                      current is SettingsBloc_LoadingLabItemsCompaniesErrorState,
-                  builder: (context, state) {
-                    List<BasicNameIdObjectEntity> labItemCompanies = [];
-
-                    int shadeId = 0;
-                    int companyId = 0;
-
-                    if (state is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState) {
-                      labItemCompanies = state.data;
+                  }
+                },
+                buildWhen: (previous, current) =>
+                    current is SettingsBloc_LoadingLabItemParentsState ||
+                    current is SettingsBloc_LoadingLabItemParentsErrorState ||
+                    current is SettingsBloc_LoadedLabItemParentsSuccessfullyState,
+                builder: (context, state) {
+                  if (state is SettingsBloc_LoadingLabItemParentsState)
+                    return LoadingWidget();
+                  else if (state is SettingsBloc_LoadingLabItemParentsErrorState)
+                    return BigErrorPageWidget(message: state.message);
+                  else if (state is SettingsBloc_LoadedLabItemParentsSuccessfullyState) {
+                    List<SidebarXItem> sideBarItem = [];
+                    labItemParetns = state.data;
+                    if (state.data.isNotEmpty) {
+                      currentItemId = state.data.first.id!;
+                      selectedLabItemParent = state.data.firstOrNull;
+                      if (selectedLabItemParent?.hasCompanies == true)
+                        bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(parentId: selectedLabItemParent!.id!));
+                      else if (selectedLabItemParent?.hasShades == true)
+                        bloc.add(SettingsBloc_LoadLabItemsShadesEvent(parentId: selectedLabItemParent!.id));
+                      else
+                        bloc.add(SettingsBloc_LoadLabItemsEvent(parentId: selectedLabItemParent!.id));
                     }
-                    if (labItemCompanies.isNotEmpty) {
-                      companyId = labItemCompanies.first.id!;
-                      bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: labItemCompanies.first.id!));
-                    }
-                    return Row(
-                      children: [
-                        state is SettingsBloc_LoadingLabItemsCompaniesErrorState
-                            ? BigErrorPageWidget(
-                                message: state.message,
-                                fontSize: 10,
-                              )
-                            : state is SettingsBloc_LoadingLabItemsCompaniesState
-                                ? LoadingWidget()
-                                : Column(
-                                    children: [
-                                      FormTextKeyWidget(text: "Companies"),
-                                      Expanded(
-                                        child: SidebarX(
-                                            controller: SidebarXController(selectedIndex: 0, extended: true),
-                                            showToggleButton: false,
-                                            extendedTheme: SidebarXTheme(
-                                                width: 200,
-                                                selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                                decoration: BoxDecoration(
-                                                  border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
-                                                )),
-                                            items: labItemCompanies
-                                                .map((e) => SidebarXItem(
-                                                      label: e.name ?? "",
-                                                      onTap: () {
-                                                        companyId = e.id!;
-                                                        bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: e.id!));
-                                                      },
-                                                      iconWidget: IconButton(
-                                                          onPressed: () {
-                                                            CIA_ShowPopUp(
-                                                              onSave: () {
-                                                                bloc.add(
-                                                                  SettingsBloc_UpdateLabItemCompaniesEvent(
-                                                                    params: UpdateLabItemsCompaniesParams(
-                                                                      data: labItemCompanies,
-                                                                      parentItemId: currentItemId,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                              context: context,
-                                                              title: "Edit Name",
-                                                              child: CIA_TextFormField(
-                                                                label: "Name",
-                                                                controller: TextEditingController(text: e.name ?? ""),
-                                                                onChange: (value) => e.name = value,
-                                                              ),
-                                                            );
-                                                          },
-                                                          icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
-                                                    ))
-                                                .toList()),
+                    sideBarItem = state.data
+                        .mapIndexed((i, e) => SidebarXItem(
+                              label: "${e.name}",
+                              iconWidget: IconButton(
+                                  onPressed: () {
+                                    CIA_ShowPopUp(
+                                      onSave: () {
+                                        bloc.add(SettingsBloc_UpdateLabItemParentEvent(labItemParents: labItemParetns));
+                                      },
+                                      context: context,
+                                      title: "Edit: Can't chnage companies, shades, codes and sizes options after creation!",
+                                      child: Column(
+                                        children: [
+                                          CIA_TextFormField(
+                                            label: "Name",
+                                            controller: TextEditingController(text: e.name?.toString() ?? ""),
+                                            onChange: (value) => e.name = value,
+                                          ),
+                                          SizedBox(height: 10),
+                                          CIA_TextFormField(
+                                            label: "Threshold",
+                                            isNumber: true,
+                                            controller: TextEditingController(text: e.threshold?.toString() ?? "10"),
+                                            onChange: (value) => e.threshold = int.tryParse(value) ?? 10,
+                                          ),
+                                          SizedBox(height: 10),
+                                          CIA_CheckBoxWidget(
+                                            text: "Has Companies",
+                                            value: e.hasCompanies ?? false,
+                                          ),
+                                          CIA_CheckBoxWidget(
+                                            text: "Has Shades",
+                                            value: e.hasCompanies ?? false,
+                                          ),
+                                          CIA_CheckBoxWidget(
+                                            text: "Has Sizes",
+                                            value: e.hasCompanies ?? false,
+                                          ),
+                                          CIA_CheckBoxWidget(
+                                            text: "Has Codes",
+                                            value: e.hasCompanies ?? false,
+                                          ),
+                                        ],
                                       ),
-                                      IconButton(
-                                          onPressed: () {
-                                            String newName = "";
-                                            CIA_ShowPopUp(
-                                              context: context,
-                                              onSave: () {
-                                                newName == ""
-                                                    ? null
-                                                    : labItemCompanies = [
-                                                        ...labItemCompanies,
-                                                        LabItemParentEntity(
-                                                          name: newName,
-                                                          unitPrice: 0,
-                                                        ),
-                                                      ];
-                                                bloc.add(
-                                                  SettingsBloc_UpdateLabItemCompaniesEvent(
-                                                    params: UpdateLabItemsCompaniesParams(
-                                                      data: labItemCompanies,
-                                                      parentItemId: currentItemId,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: CIA_TextFormField(
-                                                label: "Name",
-                                                controller: TextEditingController(text: ""),
-                                                onChange: (value) => newName = value,
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(Icons.add))
-                                    ],
-                                  ),
-                        BlocConsumer<SettingsBloc, SettingsBloc_States>(
-                          listener: (context, state) {
-                            if (state is SettingsBloc_UpdatingLabItemsShadesState) {
-                              CustomLoader.show(context);
-                            } else {
-                              CustomLoader.hide();
-                              if (state is SettingsBloc_UpdatingLabItemsShadesErrorState) {
-                                ShowSnackBar(context, isSuccess: false, message: state.message);
-                                bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: companyId));
-                              } else if (state is SettingsBloc_UpdatedLabItemsShadesSuccessfullyState) {
-                                ShowSnackBar(context, isSuccess: true);
-                                bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: companyId));
-                              }
-                            }
-                          },
-                          buildWhen: (previous, current) =>
-                              current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
-                              current is SettingsBloc_LoadingLabItemsCompaniesState ||
-                              current is SettingsBloc_LoadingLabItemsCompaniesErrorState ||
-                              current is SettingsBloc_LoadedLabItemsShadesSuccessfullyState ||
-                              current is SettingsBloc_LoadingLabItemsShadesErrorState ||
-                              current is SettingsBloc_LoadingLabItemsShadesState,
-                          builder: (context, state) {
-                            List<BasicNameIdObjectEntity> itemShades = [];
-                            if (state is SettingsBloc_LoadedLabItemsShadesSuccessfullyState) itemShades = state.data;
-                            if (itemShades.isNotEmpty) {
-                              shadeId = itemShades.first.id!;
-                              bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: itemShades.first.id!));
-                            }
-                            if (state is SettingsBloc_LoadingLabItemsShadesState)
-                              return LoadingWidget();
-                            else if (state is SettingsBloc_LoadingLabItemsShadesErrorState)
-                              return BigErrorPageWidget(
-                                message: state.message,
-                                fontSize: 10,
-                              );
+                                    );
+                                  },
+                                  icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
+                              onTap: () {
+                                selectedLabItemParent = e;
+                                if (e.hasCompanies == true)
+                                  bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(parentId: e.id!));
+                                else if (e.hasShades == true)
+                                  bloc.add(SettingsBloc_LoadLabItemsShadesEvent(parentId: e.id));
+                                else
+                                  bloc.add(SettingsBloc_LoadLabItemsEvent(parentId: e.id));
 
-                            return Column(
-                              children: [
-                                FormTextKeyWidget(text: "Shades"),
-                                Expanded(
-                                  child: SidebarX(
-                                      controller: SidebarXController(selectedIndex: 0, extended: true),
+                                currentIndex = i;
+                                currentItemId = e.id!;
+                                bloc.emit(SettingsBloc_SelectedParentState(data: state.data));
+                              },
+                            ))
+                        .toList();
+                    return BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                        buildWhen: (previous, current) => current is SettingsBloc_SelectedParentState,
+                        builder: (context, state) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Expanded(
+                                    child: SidebarX(
+                                      controller: SidebarXController(selectedIndex: currentIndex, extended: true),
                                       showToggleButton: false,
                                       extendedTheme: SidebarXTheme(
-                                          width: 200,
+                                          width: 300,
                                           selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                           decoration: BoxDecoration(
                                             border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
                                           )),
-                                      items: itemShades
-                                          .map((e) => SidebarXItem(
-                                              label: e.name ?? "",
-                                              onTap: () {
-                                                shadeId = e.id!;
-                                                bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: e.id!));
-                                              },
-                                              iconWidget: IconButton(
-                                                  onPressed: () {
-                                                    CIA_ShowPopUp(
-                                                      onSave: () {
-                                                        bloc.add(
-                                                          SettingsBloc_UpdateLabItemShadesEvent(
-                                                            params: UpdateLabItemsShadesParams(
-                                                              companyId: companyId,
-                                                              data: itemShades,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      context: context,
-                                                      title: "Edit Name",
-                                                      child: CIA_TextFormField(
-                                                        label: "Name",
-                                                        controller: TextEditingController(text: e.name ?? ""),
-                                                        onChange: (value) => e.name = value,
-                                                      ),
-                                                    );
-                                                  },
-                                                  icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit))))
-                                          .toList()),
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      String newName = "";
+                                      items: sideBarItem,
+                                    ),
+                                  ),
+                                  CIA_PrimaryButton(
+                                    label: "Add new",
+                                    onTab: () {
+                                      LabItemParentEntity newLabItemParent = LabItemParentEntity();
                                       CIA_ShowPopUp(
-                                        context: context,
                                         onSave: () {
-                                          newName == ""
-                                              ? null
-                                              : itemShades = [
-                                                  ...itemShades,
-                                                  BasicNameIdObjectEntity(
-                                                    name: newName,
-                                                  )
-                                                ];
-
-                                          bloc.add(
-                                            SettingsBloc_UpdateLabItemShadesEvent(
-                                              params: UpdateLabItemsShadesParams(
-                                                companyId: companyId,
-                                                data: itemShades,
-                                              ),
-                                            ),
-                                          );
+                                          labItemParetns = [...labItemParetns, newLabItemParent];
+                                          bloc.add(SettingsBloc_UpdateLabItemParentEvent(labItemParents: labItemParetns));
                                         },
-                                        child: CIA_TextFormField(
-                                          label: "Name",
-                                          controller: TextEditingController(text: ""),
-                                          onChange: (value) => newName = value,
+                                        context: context,
+                                        title: "Edit: Can't chnage companies, shades, codes and sizes options after creation!",
+                                        child: Column(
+                                          children: [
+                                            CIA_TextFormField(
+                                              label: "Name",
+                                              controller: TextEditingController(text: newLabItemParent.name?.toString() ?? ""),
+                                              onChange: (value) => newLabItemParent.name = value,
+                                            ),
+                                            SizedBox(height: 10),
+                                            CIA_TextFormField(
+                                              label: "Threshold",
+                                              isNumber: true,
+                                              controller: TextEditingController(text: newLabItemParent.threshold?.toString() ?? "10"),
+                                              onChange: (value) => newLabItemParent.threshold = int.tryParse(value) ?? 10,
+                                            ),
+                                            SizedBox(height: 10),
+                                            CIA_CheckBoxWidget(
+                                              text: "Has Companies",
+                                              value: newLabItemParent.hasCompanies ?? false,
+                                              onChange: (value) => newLabItemParent.hasCompanies = value,
+                                            ),
+                                            CIA_CheckBoxWidget(
+                                              text: "Has Shades",
+                                              value: newLabItemParent.hasCompanies ?? false,
+                                              onChange: (value) => newLabItemParent.hasShades = value,
+                                            ),
+                                            CIA_CheckBoxWidget(
+                                              text: "Has Sizes",
+                                              value: newLabItemParent.hasCompanies ?? false,
+                                              onChange: (value) => newLabItemParent.hasSize = value,
+                                            ),
+                                            CIA_CheckBoxWidget(
+                                              text: "Has Codes",
+                                              value: newLabItemParent.hasCompanies ?? false,
+                                              onChange: (value) => newLabItemParent.hasCode = value,
+                                            ),
+                                          ],
                                         ),
                                       );
                                     },
-                                    icon: Icon(Icons.add))
-                              ],
-                            );
-                          },
-                        ),
-                        BlocConsumer<SettingsBloc, SettingsBloc_States>(
-                          listener: (context, state) {
-                            if (state is SettingsBloc_UpdatingLabItemsState) {
-                              CustomLoader.show(context);
-                            } else {
-                              CustomLoader.hide();
-                              if (state is SettingsBloc_UpdatingLabItemsErrorState) {
-                                ShowSnackBar(context, isSuccess: false, message: state.message);
-                                bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: shadeId));
-                              } else if (state is SettingsBloc_UpdatedLabItemsSuccessfullyState) {
-                                ShowSnackBar(context, isSuccess: true);
-                                bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: shadeId));
-                              }
-                            }
-                          },
-                          builder: (context, state) {
-                            List<LabItemEntity> labItems = [];
-                            if (state is SettingsBloc_LoadedLabItemsSuccessfullyState) {
-                              labItems = state.data;
-                              if (labItems.isEmpty) labItems = [LabItemEntity(labItemShadeId: shadeId)];
-                            }
-
-                            if (state is SettingsBloc_LoadingLabItemsState)
-                              return LoadingWidget();
-                            else if (state is SettingsBloc_LoadingLabItemsErrorState)
-                              return BigErrorPageWidget(
-                                message: state.message,
-                                fontSize: 10,
-                              );
-                            return Expanded(
-                              child: Column(
-                                children: [
-                                  FormTextKeyWidget(text: "Lab Items"),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: labItems.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(bottom: 10.0),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: CIA_TextFormField(
-                                                    label: "Code",
-                                                    controller: TextEditingController(text: labItems[index].code),
-                                                    onChange: (value) => labItems[index].code = value),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                child: CIA_TextFormField(
-                                                    label: "Size",
-                                                    controller: TextEditingController(text: labItems[index].size),
-                                                    onChange: (value) => labItems[index].size = value),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    labItems = [...labItems, LabItemEntity(labItemShadeId: shadeId)];
-                                                    bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));
-                                                  },
-                                                  icon: Icon(Icons.add)),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  FormTextKeyWidget(text: "Items with empty fields will be deleted!", color: Colors.red),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  CIA_PrimaryButton(
-                                      label: "Save",
-                                      onTab: () {
-                                        bloc.add(SettingsBloc_UpdateLabItemEvent(
-                                            params: UpdateLabItemsParams(
-                                          data: labItems,
-                                          shadeId: shadeId,
-                                        )));
-                                      })
+                                  )
                                 ],
                               ),
-                            );
-                          },
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: selectedLabItemParent?.hasCompanies == true
+                                    ? _LabCompaniesSettingsWidget(
+                                        bloc: bloc,
+                                        currentItemId: currentItemId,
+                                        selectedLabItemParent: selectedLabItemParent,
+                                      )
+                                    : selectedLabItemParent?.hasShades == true
+                                        ? _LabShadesSettingsWidget(
+                                            bloc: bloc,
+                                            selectedLabItemParent: selectedLabItemParent,
+                                          )
+                                        : _LabItemsSettingsWidget(
+                                            bloc: bloc,
+                                            selectedLabItemParent: selectedLabItemParent,
+                                          ),
+                              )
+                            ],
+                          );
+                        });
+                  }
+
+                  return Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.red,
+                  );
+                },
+              ),
+              BlocConsumer<SettingsBloc, SettingsBloc_States>(
+                listener: (context, state) {
+                  if (state is SettingsBloc_UpdatingLabOptionsState)
+                    CustomLoader.show(context);
+                  else {
+                    CustomLoader.hide();
+                    if (state is SettingsBloc_UpdatingLabOptionsErrorState)
+                      ShowSnackBar(context, isSuccess: false, message: state.message);
+                    else if (state is SettingsBloc_UpdatedLabOptionsSuccessfullyState) {
+                      ShowSnackBar(context, isSuccess: true);
+                      bloc.add(SettingsBloc_LoadLabOptionsEvent());
+                    }
+                  }
+                },
+                buildWhen: (previous, current) =>
+                    current is SettingsBloc_LoadingLabOptionsErrorState ||
+                    current is SettingsBloc_LoadedLabOptionsSuccessfullyState ||
+                    current is SettingsBloc_LoadingLabOptionsState,
+                builder: (context, state) {
+                  List<LabOptionEntity> options = [];
+                  if (state is SettingsBloc_LoadingLabOptionsState)
+                    return LoadingWidget();
+                  else if (state is SettingsBloc_LoadingLabOptionsErrorState)
+                    return BigErrorPageWidget(message: state.message);
+                  else if (state is SettingsBloc_LoadedLabOptionsSuccessfullyState) {
+                    options = state.data;
+                    if (options.isEmpty)
+                      options = [
+                        ...options,
+                        LabOptionEntity(
+                          price: 0,
+                        )
+                      ];
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                          "These options that will be visible in any request. The options will be linked in:\n 1- DropDown lists for choosing the corresponding companies, shades, blocks \n 2- Consuming the corresponding blocks. \n 3- Linkning the right price for each step in the request."),
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: ListView(
+                          children: options
+                              .mapIndexed((i, e) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text("${i + 1}. "),
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "Option Name",
+                                            controller: TextEditingController(text: e.name),
+                                            onChange: (value) => e.name = value,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: CIA_TextFormField(
+                                            label: "Price",
+                                            isNumber: true,
+                                            controller: TextEditingController(text: e.price?.toString() ?? "0"),
+                                            onChange: (value) => e.price = int.tryParse(value) ?? 0,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: CIA_DropDownSearchBasicIdName(
+                                            asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
+                                            label: "Linked Parent",
+                                            selectedItem: e.labItemParent,
+                                            onSelect: (value) {
+                                              e.labItemParentId = value.id;
+                                              e.labItemParent = LabItemParentEntity(name: value.name, id: value.id);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        IconButton(
+                                          onPressed: () {
+                                            options = [
+                                              ...options,
+                                              LabOptionEntity(
+                                                price: 0,
+                                              )
+                                            ];
+                                            bloc.emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: options));
+                                          },
+                                          icon: Icon(Icons.add),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
                         ),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                      SizedBox(height: 10),
+                      CIA_PrimaryButton(
+                          label: "Save",
+                          onTab: () {
+                            bloc.add(SettingsBloc_UpdateLabOptionsEvent(options: options));
+                          })
+                    ],
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LabCompaniesSettingsWidget extends StatelessWidget {
+  _LabCompaniesSettingsWidget({
+    super.key,
+    required this.currentItemId,
+    required this.bloc,
+    this.selectedLabItemParent,
+  });
+  int currentItemId;
+  SettingsBloc bloc;
+  LabItemParentEntity? selectedLabItemParent;
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SettingsBloc, SettingsBloc_States>(
+      listener: (context, state) {
+        if (state is SettingsBloc_UpdatingLabItemsCompaniesState) {
+          CustomLoader.show(context);
+        } else {
+          CustomLoader.hide();
+          if (state is SettingsBloc_UpdatingLabItemsCompaniesErrorState) {
+            ShowSnackBar(context, isSuccess: false, message: state.message);
+            bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(parentId: currentItemId));
+          } else if (state is SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState) {
+            ShowSnackBar(context, isSuccess: true);
+            bloc.add(SettingsBloc_LoadLabItemCompaniesEvent(parentId: currentItemId));
+          }
+        }
+      },
+      buildWhen: (previous, current) =>
+          current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
+          current is SettingsBloc_LoadingLabItemsCompaniesState ||
+          current is SettingsBloc_LoadingLabItemsCompaniesErrorState,
+      builder: (context, state) {
+        List<LabItemCompanyEntity> labItemCompanies = [];
+        int shadeId = 0;
+        int companyId = 0;
+        if (state is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState) {
+          labItemCompanies = state.data;
+        }
+        if (labItemCompanies.isNotEmpty) {
+          companyId = labItemCompanies.first.id!;
+          if (selectedLabItemParent?.hasShades == true)
+            bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: labItemCompanies.first.id!));
+          else
+            bloc.add(SettingsBloc_LoadLabItemsEvent(companyId: labItemCompanies.first.id!));
+        }
+        return Row(
+          children: [
+            state is SettingsBloc_LoadingLabItemsCompaniesErrorState
+                ? BigErrorPageWidget(
+                    message: state.message,
+                    fontSize: 10,
+                  )
+                : state is SettingsBloc_LoadingLabItemsCompaniesState
+                    ? LoadingWidget()
+                    : Column(
+                        children: [
+                          FormTextKeyWidget(text: "Companies"),
+                          Expanded(
+                            child: SidebarX(
+                                controller: SidebarXController(selectedIndex: 0, extended: true),
+                                showToggleButton: false,
+                                extendedTheme: SidebarXTheme(
+                                    width: 200,
+                                    selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                    decoration: BoxDecoration(
+                                      border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
+                                    )),
+                                items: labItemCompanies
+                                    .map((e) => SidebarXItem(
+                                          label: e.name ?? "",
+                                          onTap: () {
+                                            companyId = e.id!;
+                                            if (selectedLabItemParent?.hasShades == true)
+                                              bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: companyId));
+                                            else
+                                              bloc.add(SettingsBloc_LoadLabItemsEvent(companyId: companyId));
+                                          },
+                                          iconWidget: IconButton(
+                                              onPressed: () {
+                                                CIA_ShowPopUp(
+                                                  onSave: () {
+                                                    bloc.add(
+                                                      SettingsBloc_UpdateLabItemCompaniesEvent(
+                                                        companies: labItemCompanies,
+                                                      ),
+                                                    );
+                                                  },
+                                                  context: context,
+                                                  title: "Edit Name",
+                                                  child: CIA_TextFormField(
+                                                    label: "Name",
+                                                    controller: TextEditingController(text: e.name ?? ""),
+                                                    onChange: (value) => e.name = value,
+                                                  ),
+                                                );
+                                              },
+                                              icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit)),
+                                        ))
+                                    .toList()),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                String newName = "";
+                                CIA_ShowPopUp(
+                                  context: context,
+                                  onSave: () {
+                                    newName == ""
+                                        ? null
+                                        : labItemCompanies = [
+                                            ...labItemCompanies,
+                                            LabItemCompanyEntity(
+                                              name: newName,
+                                              labItemParentId: selectedLabItemParent!.id!,
+                                            ),
+                                          ];
+                                    bloc.add(
+                                      SettingsBloc_UpdateLabItemCompaniesEvent(companies: labItemCompanies),
+                                    );
+                                  },
+                                  child: CIA_TextFormField(
+                                    label: "Name",
+                                    controller: TextEditingController(text: ""),
+                                    onChange: (value) => newName = value,
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.add))
+                        ],
+                      ),
+            selectedLabItemParent?.hasShades == true
+                ? _LabShadesSettingsWidget(
+                    bloc: bloc,
+                    companyId: companyId,
+                    selectedLabItemParent: selectedLabItemParent,
+                  )
+                : _LabItemsSettingsWidget(
+                    bloc: bloc,
+                    companyId: companyId,
+                    selectedLabItemParent: selectedLabItemParent,
+                  ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _LabShadesSettingsWidget extends StatelessWidget {
+  _LabShadesSettingsWidget({
+    super.key,
+    this.companyId,
+    required this.bloc,
+    this.selectedLabItemParent,
+  });
+  int? companyId;
+  SettingsBloc bloc;
+  LabItemParentEntity? selectedLabItemParent;
+  int? shadeId;
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: BlocConsumer<SettingsBloc, SettingsBloc_States>(
+        listener: (context, state) {
+          if (state is SettingsBloc_UpdatingLabItemsShadesState) {
+            CustomLoader.show(context);
+          } else {
+            CustomLoader.hide();
+            if (state is SettingsBloc_UpdatingLabItemsShadesErrorState) {
+              ShowSnackBar(context, isSuccess: false, message: state.message);
+              bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: companyId, parentId: selectedLabItemParent!.id!));
+            } else if (state is SettingsBloc_UpdatedLabItemsShadesSuccessfullyState) {
+              ShowSnackBar(context, isSuccess: true);
+              bloc.add(SettingsBloc_LoadLabItemsShadesEvent(companyId: companyId, parentId: selectedLabItemParent!.id!));
+            }
+          }
+        },
+        buildWhen: (previous, current) =>
+            current is SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState ||
+            current is SettingsBloc_LoadingLabItemsCompaniesState ||
+            current is SettingsBloc_LoadingLabItemsCompaniesErrorState ||
+            current is SettingsBloc_LoadedLabItemsShadesSuccessfullyState ||
+            current is SettingsBloc_LoadingLabItemsShadesErrorState ||
+            current is SettingsBloc_LoadingLabItemsShadesState,
+        builder: (context, state) {
+          List<LabItemShadeEntity> itemShades = [];
+          if (state is SettingsBloc_LoadedLabItemsShadesSuccessfullyState) {
+            itemShades = state.data;
+            companyId = state.comapnyId;
+          }
+          if (itemShades.isNotEmpty) {
+            shadeId = itemShades.first.id!;
+            bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: itemShades.first.id!));
+          }
+          if (state is SettingsBloc_LoadingLabItemsShadesState)
+            return LoadingWidget();
+          else if (state is SettingsBloc_LoadingLabItemsShadesErrorState)
+            return BigErrorPageWidget(
+              message: state.message,
+              fontSize: 10,
+            );
+
+          return Row(
+            children: [
+              state is SettingsBloc_LoadingLabItemsShadesErrorState
+                  ? BigErrorPageWidget(
+                      message: state.message,
+                      fontSize: 10,
+                    )
+                  : state is SettingsBloc_LoadingLabItemsShadesState
+                      ? LoadingWidget()
+                      : Column(
+                          children: [
+                            FormTextKeyWidget(text: "Shades"),
+                            Expanded(
+                              child: SidebarX(
+                                  controller: SidebarXController(selectedIndex: 0, extended: true),
+                                  showToggleButton: false,
+                                  extendedTheme: SidebarXTheme(
+                                      width: 200,
+                                      selectedTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                      decoration: BoxDecoration(
+                                        border: Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
+                                      )),
+                                  items: itemShades
+                                      .map((e) => SidebarXItem(
+                                          label: e.name ?? "",
+                                          onTap: () {
+                                            shadeId = e.id!;
+                                            bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: e.id!));
+                                          },
+                                          iconWidget: IconButton(
+                                              onPressed: () {
+                                                CIA_ShowPopUp(
+                                                  onSave: () {
+                                                    bloc.add(
+                                                      SettingsBloc_UpdateLabItemShadesEvent(shades: itemShades),
+                                                    );
+                                                  },
+                                                  context: context,
+                                                  title: "Edit Name",
+                                                  child: CIA_TextFormField(
+                                                    label: "Name",
+                                                    controller: TextEditingController(text: e.name ?? ""),
+                                                    onChange: (value) => e.name = value,
+                                                  ),
+                                                );
+                                              },
+                                              icon: !siteController.getRole()!.contains("admin") ? Container() : Icon(Icons.edit))))
+                                      .toList()),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  String newName = "";
+                                  CIA_ShowPopUp(
+                                    context: context,
+                                    onSave: () {
+                                      newName == ""
+                                          ? null
+                                          : itemShades = [
+                                              ...itemShades,
+                                              LabItemShadeEntity(
+                                                  name: newName, labItemCompanyId: companyId, labItemParentId: selectedLabItemParent!.id!)
+                                            ];
+
+                                      bloc.add(
+                                        SettingsBloc_UpdateLabItemShadesEvent(
+                                          shades: itemShades,
+                                        ),
+                                      );
+                                    },
+                                    child: CIA_TextFormField(
+                                      label: "Name",
+                                      controller: TextEditingController(text: ""),
+                                      onChange: (value) => newName = value,
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.add))
+                          ],
+                        ),
+              _LabItemsSettingsWidget(
+                bloc: bloc,
+                companyId: companyId,
+                shadeId: shadeId,
+                selectedLabItemParent: selectedLabItemParent,
               )
             ],
           );
-        }
+        },
+      ),
+    );
+  }
+}
 
-        return Container(
-          height: 100,
-          width: 100,
-          color: Colors.red,
-        );
-      },
+class _LabItemsSettingsWidget extends StatelessWidget {
+  _LabItemsSettingsWidget({
+    super.key,
+    this.companyId,
+    required this.bloc,
+    this.selectedLabItemParent,
+    this.shadeId,
+  });
+  int? companyId;
+  SettingsBloc bloc;
+  LabItemParentEntity? selectedLabItemParent;
+  int? shadeId;
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: BlocConsumer<SettingsBloc, SettingsBloc_States>(
+        listener: (context, state) {
+          if (state is SettingsBloc_UpdatingLabItemsState) {
+            CustomLoader.show(context);
+          } else {
+            CustomLoader.hide();
+            if (state is SettingsBloc_UpdatingLabItemsErrorState) {
+              ShowSnackBar(context, isSuccess: false, message: state.message);
+              bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: shadeId, companyId: companyId, parentId: selectedLabItemParent!.id));
+            } else if (state is SettingsBloc_UpdatedLabItemsSuccessfullyState) {
+              ShowSnackBar(context, isSuccess: true);
+              bloc.add(SettingsBloc_LoadLabItemsEvent(shadeId: shadeId, companyId: companyId, parentId: selectedLabItemParent!.id));
+            }
+          }
+        },
+        builder: (context, state) {
+          List<LabItemEntity> labItems = [];
+          if (state is SettingsBloc_LoadedLabItemsSuccessfullyState) {
+            labItems = state.data;
+            shadeId = state.shadeId;
+            companyId = state.companyId;
+
+            if (labItems.isEmpty)
+              labItems = [LabItemEntity(labItemShadeId: shadeId, labItemCompanyId: companyId, labItemParentId: selectedLabItemParent?.id)];
+          }
+
+          if (state is SettingsBloc_LoadingLabItemsState)
+            return LoadingWidget();
+          else if (state is SettingsBloc_LoadingLabItemsErrorState)
+            return BigErrorPageWidget(
+              message: state.message,
+              fontSize: 10,
+            );
+          return Column(
+            children: [
+              FormTextKeyWidget(text: "Lab Items"),
+              SizedBox(height: 10),
+              FormTextKeyWidget(
+                text: "Prices will be deducted as Cashflow expenses when adding new items ONLY!",
+                color: Colors.red,
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: labItems.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Row(
+                        children: [
+                          Visibility(
+                            visible: selectedLabItemParent?.hasCode == true,
+                            child: Expanded(
+                              child: CIA_TextFormField(
+                                  label: "Code",
+                                  controller: TextEditingController(text: labItems[index].code),
+                                  onChange: (value) => labItems[index].code = value),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Visibility(
+                            visible: selectedLabItemParent?.hasSize == true,
+                            child: Expanded(
+                              child: CIA_TextFormField(
+                                  label: "Size",
+                                  controller: TextEditingController(text: labItems[index].size),
+                                  onChange: (value) => labItems[index].size = value),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: CIA_TextFormField(
+                                enabled: labItems[index].id == null,
+                                label: "Price",
+                                suffix: "EGP",
+                                isNumber: true,
+                                controller: TextEditingController(text: labItems[index].price?.toString() ?? "0"),
+                                onChange: (value) => labItems[index].price = int.tryParse(value) ?? 0),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              labItems = [
+                                ...labItems,
+                                LabItemEntity(
+                                  labItemShadeId: shadeId,
+                                  labItemCompanyId: companyId,
+                                  labItemParentId: selectedLabItemParent?.id,
+                                  price: labItems.lastOrNull?.price,
+                                )
+                              ];
+                              bloc.emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: labItems));
+                            },
+                            icon: Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              FormTextKeyWidget(text: "Items with empty fields will be deleted!", color: Colors.red),
+              SizedBox(
+                height: 10,
+              ),
+              CIA_PrimaryButton(
+                  label: "Save",
+                  onTab: () {
+                    bloc.add(SettingsBloc_UpdateLabItemEvent(
+                      items: labItems,
+                    ));
+                  })
+            ],
+          );
+        },
+      ),
     );
   }
 }

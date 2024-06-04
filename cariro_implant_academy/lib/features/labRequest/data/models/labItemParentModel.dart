@@ -2,32 +2,51 @@ import 'package:cariro_implant_academy/features/labRequest/domain/entities/labIt
 
 class LabItemParentModel extends LabItemParentEntity {
   LabItemParentModel({
+    super.hasCode = true,
+    super.hasCompanies = true,
+    super.hasShades = true,
+    super.hasSize = true,
+    super.isStock = true,
+    super.threshold = 0,
     super.id,
     super.name,
-    super.unitPrice,
   });
 
   factory LabItemParentModel.fromJson(Map<String, dynamic> map) {
     return LabItemParentModel(
-      name: map['name'],
+      hasCode: map['hasCode'],
+      hasCompanies: map['hasCompanies'],
+      hasShades: map['hasShades'],
+      hasSize: map['hasSize'],
+      isStock: map['isStock'],
+      threshold: map['threshold'],
       id: map['id'],
-      unitPrice: map['unitPrice'],
+      name: map['name'],
     );
   }
   factory LabItemParentModel.fromEntity(LabItemParentEntity entity) {
     return LabItemParentModel(
-      name:entity.name,
-      id:entity.id,
-      unitPrice:entity.id,
+      hasCode: entity.hasCode,
+      hasCompanies: entity.hasCompanies,
+      hasShades: entity.hasShades,
+      hasSize: entity.hasSize,
+      isStock: entity.isStock,
+      threshold: entity.threshold,
+      id: entity.id,
+      name: entity.name,
     );
   }
 
-  Map<String,dynamic> toJson()
-  {
-    Map<String,dynamic> data = Map<String,dynamic>();
-    data['name'] = this.name;
-    data['unitPrice'] = this.unitPrice;
-    data['id'] = this.id;
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = Map<String, dynamic>();
+    data['hasCode'] = hasCode;
+    data['hasCompanies'] = hasCompanies;
+    data['hasShades'] = hasShades;
+    data['hasSize'] = hasSize;
+    data['isStock'] = isStock;
+    data['threshold'] = threshold;
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }

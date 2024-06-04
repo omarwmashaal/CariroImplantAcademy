@@ -135,7 +135,7 @@ namespace CIA.Controllers
             if (myRequests == true)
             {
                 var user = await _iUserRepo.GetUser();
-                requestsReslult.RemoveAll(x => x.AssignedToId != user.IdInt);
+                requestsReslult.RemoveAll(x => !(x.AssignedToId == user.IdInt || x.DesignerId == user.IdInt));
             }
 
 
@@ -170,7 +170,7 @@ namespace CIA.Controllers
 
 
             request.LabRequestStepItems = await _dbContext.LabRequestStepItems
-                .Include(x => x.LabItemFromSettings)
+                .Include(x => x.LabOption).ThenInclude(x=>x.LabItemParent)
                 .Include(x => x.ConsumedLabItem)
                 .Where(x => x.LabRequestId == id).ToListAsync();
 
@@ -186,12 +186,13 @@ namespace CIA.Controllers
             var requestSteps = await _dbContext.LabRequestStepItems.
                 Where(x => x.LabRequestId == id).
                 Include(x => x.ConsumedLabItem).
-                Include(x => x.LabItemFromSettings).ToListAsync();
+                Include(x => x.LabOption).ThenInclude(x => x.LabItemParent)
+                .ToListAsync();
 
 
             foreach (var labRequestStep in requestSteps)
             {
-                labRequestStep.LabPrice = labRequestStep.LabPrice ?? labRequestStep.LabItemFromSettings.UnitPrice;
+                labRequestStep.LabPrice = labRequestStep.LabPrice ?? labRequestStep.LabOption.Price;
             }
 
             _apiResponse.Result = requestSteps;
@@ -576,7 +577,7 @@ namespace CIA.Controllers
             labRequestSteps = await _dbContext.LabRequestStepItems
                 .Where(x => x.LabRequestId == request.Id)
                 .Include(x => x.ConsumedLabItem)
-                .Include(x => x.LabItemFromSettings)
+                .Include(x => x.LabOption)
                 .ToListAsync();
             bool sendNotification = false;
 
@@ -604,12 +605,12 @@ namespace CIA.Controllers
 
                 foreach (var step in labRequestSteps)
                 {
-                    receipt.Total += step.LabPrice ?? step.LabItemFromSettings.UnitPrice;
+                    receipt.Total += step.LabPrice ?? step.LabOption.Price;
                     receipt.ToothReceiptData.Add(new ToothReceiptData
                     {
                         Tooth = (int)step.Tooth,
-                        Name = $"{step.LabItemFromSettings?.Name ?? ""} || {step.ConsumedLabItem?.Name ?? ""}",
-                        Price = step.LabPrice ?? step.LabItemFromSettings.UnitPrice,
+                        Name = $"{step.LabOption?.Name ?? ""} || {step.ConsumedLabItem?.Name ?? ""}",
+                        Price = step.LabPrice ?? step.LabOption.Price,
                     });
 
                 }
@@ -659,6 +660,7 @@ namespace CIA.Controllers
         public async Task<IActionResult> ConsumeLabItem(int id, int? number, bool consumeWholeBlock)
         {
             var item = await _dbContext.LabItems.FirstAsync(x => x.Id == id);
+            var parent = await _dbContext.LabItemParents.FirstAsync(x => x.Id == item.LabItemParentId);
             if ((consumeWholeBlock == false && number == null) || (consumeWholeBlock == true && number != null))
             {
                 _apiResponse.ErrorMessage = "Error Invalid input";
@@ -705,6 +707,13 @@ namespace CIA.Controllers
 
             _dbContext.LabItems.Update(item);
             _dbContext.SaveChanges();
+
+            var allParentItems = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId).ToListAsync();
+            var count = allParentItems.Sum(x => x.Count);
+            if(count<parent.Threshold)
+            {
+                await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id);
+            }
 
             return Ok();
         }

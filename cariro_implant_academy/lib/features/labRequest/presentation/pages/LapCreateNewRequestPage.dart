@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labstepItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/searchLabPatientsByTypeUseCase.dart';
@@ -94,14 +95,14 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
       // ],
       );
   List<int> teeth = [];
-  List<LabItemParentEntity> labItemsFromSettings = [];
+  List<LabOptionEntity> labOptionsFromSettings = [];
   @override
   void initState() {
     bloc = BlocProvider.of<LabRequestsBloc>(context);
     usersBloc = BlocProvider.of<UsersBloc>(context);
     settingsBloc = BlocProvider.of<SettingsBloc>(context);
     patientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
-    settingsBloc.add(SettingsBloc_LoadLabItemsParentsEvent());
+    settingsBloc.add(SettingsBloc_LoadLabOptionsEvent());
     if (widget.isDoctor) {
       labRequest.customer = UserEntity(
         name: siteController.getUserName(),
@@ -749,11 +750,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                           ),
                           BlocBuilder<SettingsBloc, SettingsBloc_States>(
                             builder: (context, state) {
-                              if (state is SettingsBloc_LoadedLabItemParentsSuccessfullyState) {
-                                labItemsFromSettings = state.data;
+                              if (state is SettingsBloc_LoadedLabOptionsSuccessfullyState) {
+                                labOptionsFromSettings = state.data;
                               }
                               return Wrap(
-                                children: labItemsFromSettings
+                                children: labOptionsFromSettings
                                     .map(
                                       (e) => Padding(
                                         padding: const EdgeInsets.all(5.0),
@@ -766,9 +767,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                             }
                                             for (var tooth in teeth) {
                                               labRequest.labRequestStepItems!.add(LabStepItemEntity(
-                                                labItemFromSettingsId: e.id,
-                                                labItemFromSettings: e,
-                                                labPrice: e.unitPrice,
+                                                labOptionId: e.id,
+                                                labOption: e,
+                                                labPrice: e.price ?? 0,
                                                 tooth: tooth,
                                               ));
                                             }

@@ -1,15 +1,17 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
-import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsPriceUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
@@ -93,10 +95,12 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetLabItemsCompaniesUseCase getLabItemsCompaniesUseCase;
   final GetLabItemsLinesUseCase getLabItemsLinesUseCase;
   final GetLabItemsUseCase getLabItemsUseCase;
+  final GetLabOptionsUseCase getLabOptionsUseCase;
   final UpdateLabItemsCompaniesUseCase updateLabItemsCompaniesUseCase;
   final UpdateLabItemsShadesUseCase updateLabItemsShadesUseCase;
   final UpdateLabItemsUseCase updateLabItemsUseCase;
-  final UpdateLabItemsParentsPriceUseCase updateLabItemsParentsPriceUseCase;
+  final UpdateLabOptionsUseCase updateLabOptionsUseCase;
+  final UpdateLabItemsParentsUseCase updateLabItemsParentsUseCase;
   final UpdateProstheticItemsUseCase updateProstheticItemsUseCase;
   final UpdateProstheticStatusUseCase updateProstheticStatusUseCase;
   final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
@@ -145,10 +149,12 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabItemsUseCase,
     required this.updateLabItemsCompaniesUseCase,
     required this.updateLabItemsShadesUseCase,
-    required this.updateLabItemsParentsPriceUseCase,
+    required this.updateLabItemsParentsUseCase,
     required this.updateProstheticItemsUseCase,
     required this.updateProstheticNextVisitUseCase,
     required this.updateProstheticStatusUseCase,
+    required this.updateLabOptionsUseCase,
+    required this.getLabOptionsUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
@@ -453,7 +459,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadLabItemCompaniesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingLabItemsCompaniesState());
-      final result = await getLabItemsCompaniesUseCase(event.id);
+      final result = await getLabItemsCompaniesUseCase(event.parentId);
       result.fold(
         (l) => emit(SettingsBloc_LoadingLabItemsCompaniesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_LoadedLabItemsCompaniesSuccessfullyState(data: r)),
@@ -461,24 +467,40 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadLabItemsShadesEvent>((event, emit) async {
       emit(SettingsBloc_LoadingLabItemsShadesState());
-      final result = await getLabItemsLinesUseCase(event.companyId);
+      final result = await getLabItemsLinesUseCase(GetLabItemsLinesParams(
+        companyId: event.companyId,
+        parentId: event.parentId,
+      ));
       result.fold(
         (l) => emit(SettingsBloc_LoadingLabItemsShadesErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedLabItemsShadesSuccessfullyState(data: r)),
+        (r) => emit(SettingsBloc_LoadedLabItemsShadesSuccessfullyState(data: r, comapnyId: event.companyId, parentId: event.parentId)),
       );
     });
     on<SettingsBloc_LoadLabItemsEvent>((event, emit) async {
       emit(SettingsBloc_LoadingLabItemsState());
-      final result = await getLabItemsUseCase(event.shadeId);
+      final result = await getLabItemsUseCase(GetLabItemsParams(
+        companyId: event.companyId,
+        parentId: event.parentId,
+        shadeId: event.shadeId,
+      ));
       result.fold(
         (l) => emit(SettingsBloc_LoadingLabItemsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: r)),
+        (r) =>
+            emit(SettingsBloc_LoadedLabItemsSuccessfullyState(data: r, parentId: event.parentId, companyId: event.companyId, shadeId: event.shadeId)),
+      );
+    });
+    on<SettingsBloc_LoadLabOptionsEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabOptionsState());
+      final result = await getLabOptionsUseCase(event.parentId);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabOptionsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: r, parentId: event.parentId)),
       );
     });
 
     on<SettingsBloc_UpdateLabItemCompaniesEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingLabItemsCompaniesState());
-      final result = await updateLabItemsCompaniesUseCase(event.params);
+      final result = await updateLabItemsCompaniesUseCase(event.companies);
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabItemsCompaniesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabItemsCompaniesSuccessfullyState()),
@@ -486,7 +508,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_UpdateLabItemShadesEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingLabItemsShadesState());
-      final result = await updateLabItemsShadesUseCase(event.params);
+      final result = await updateLabItemsShadesUseCase(event.shades);
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabItemsShadesErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabItemsShadesSuccessfullyState()),
@@ -494,18 +516,26 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_UpdateLabItemEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingLabItemsState());
-      final result = await updateLabItemsUseCase(event.params);
+      final result = await updateLabItemsUseCase(event.items);
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabItemsErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabItemsSuccessfullyState()),
       );
     });
-    on<SettingsBloc_UpdateLabItemParentPriceEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceParentsPriceState());
-      final result = await updateLabItemsParentsPriceUseCase(event.params);
+    on<SettingsBloc_UpdateLabOptionsEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabOptionsState());
+      final result = await updateLabOptionsUseCase(event.options);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingLabItemsParentsPriceParentsPriceErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedLabItemsParentsPriceParentsPriceSuccessfullyState()),
+        (l) => emit(SettingsBloc_UpdatingLabOptionsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabOptionsSuccessfullyState()),
+      );
+    });
+    on<SettingsBloc_UpdateLabItemParentEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabItemsParentsState());
+      final result = await updateLabItemsParentsUseCase(event.labItemParents);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabItemsParentsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabItemsParentsSuccessfullyState()),
       );
     });
 

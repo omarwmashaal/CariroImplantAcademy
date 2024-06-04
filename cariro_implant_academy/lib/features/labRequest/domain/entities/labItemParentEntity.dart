@@ -1,14 +1,23 @@
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 
 class LabItemParentEntity extends BasicNameIdObjectEntity {
-  int? unitPrice;
-
+  bool? hasCompanies;
+  bool? hasShades;
+  bool? hasSize;
+  bool? hasCode;
+  bool? isStock;
+  int? threshold;
   LabItemParentEntity({
-    this.unitPrice = 0,
+    this.hasCode = true,
+    this.hasCompanies = true,
+    this.hasShades = true,
+    this.hasSize = true,
+    this.isStock = true,
+    this.threshold = 0,
     super.id,
     super.name,
   });
 
   @override
-  List<Object?> get props => super.props..add(this.unitPrice);
+  List<Object?> get props => [];
 }
