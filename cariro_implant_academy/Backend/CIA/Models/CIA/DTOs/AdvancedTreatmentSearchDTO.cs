@@ -7,6 +7,8 @@ namespace CIA.Models.CIA.DTOs
     {
         public int? Id { get; set; }
         public List<int>? Ids { get; set; }
+        public int? CandidateId { get; set; }
+        public int? CandidateBatchId { get; set; }
         public String? PatientName { get; set; }
         public bool? Done { get; set; } = false;
         public bool? NoTreatmentPlan { get; set; } = false;

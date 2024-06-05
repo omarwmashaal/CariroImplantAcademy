@@ -406,6 +406,7 @@ namespace CIA.Models
         GBRFailure,
         Infection,
         Inflamation,
+        ImplantFailed,
     }
     public class EnumMethods
     {

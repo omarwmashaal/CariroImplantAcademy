@@ -280,9 +280,14 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
               if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
-              if (query.clearnaceLower == true) r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower==true? "Yes":"No"));
-              if (query.clearnaceUpper == true) r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper==true? "Yes":"No"));
-
+              if (query.clearnaceLower == true)
+                r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower == true ? "Yes" : "No"));
+              if (query.clearnaceUpper == true)
+                r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper == true ? "Yes" : "No"));
+              if (query.candidate != null || query.candidateBatch != null) {
+                r.add(DataGridCell<String>(columnName: "Canidate", value: e.candidate?.name));
+                r.add(DataGridCell<String>(columnName: "Batch", value: e.candidateBatch?.name));
+              }
               for (var column in columns) {
                 r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }
@@ -388,9 +393,9 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
               }
 
               if (request?.screwRetained == true) {
-                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained==true?'Yes':'No'));
+                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained == true ? 'Yes' : 'No'));
               } else if (request?.cementRetained == true) {
-                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained==true?'Yes':'No'));
+                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained == true ? 'Yes' : 'No'));
               }
               cells.add(DataGridCell<String>(columnName: "Step", value: e.step?.item?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Status", value: e.step?.status?.name ?? ""));

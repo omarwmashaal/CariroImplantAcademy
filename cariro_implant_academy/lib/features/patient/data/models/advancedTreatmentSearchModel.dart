@@ -1,4 +1,6 @@
 import 'package:cariro_implant_academy/Models/MedicalModels/DentalExaminationModel.dart';
+import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/data/models/complicationsAfterProsthesisModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/data/models/complicationsAfterSurgeryModel.dart';
@@ -27,6 +29,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     super.treatmentId,
     super.clearnaceLower,
     super.clearnaceUpper,
+    super.candidateBatch,
+    super.candidate,
   });
 
   factory AdvancedTreatmentSearchModel.fromEntity(AdvancedTreatmentSearchEntity entity) {
@@ -45,6 +49,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
       or_treatmentIds: entity.or_treatmentIds,
       clearnaceLower: entity.clearnaceLower,
       clearnaceUpper: entity.clearnaceUpper,
+      candidate: entity.candidate,
+      candidateBatch: entity.candidateBatch,
     );
   }
 
@@ -61,11 +67,15 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     clearnaceUpper = json['clearanceUpper'];
     clearnaceLower = json['clearanceLower'];
     str_complicationsAfterSurgery = json['str_ComplicationsAfterSurgery'];
+    candidate = json['candidate'] == null ? null : BasicNameIdObjectModel.fromJson(json['candidate']);
+    candidateBatch = json['candidateBatch'] == null ? null : BasicNameIdObjectModel.fromJson(json['candidateBatch']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['candidateBatchId'] = this.candidateBatch?.id;
+    data['candidateId'] = this.candidate?.id;
     data['ids'] = this.ids?.map((e) => e as int).toList();
     data['secondaryId'] = this.secondaryId;
     data['patientName'] = this.patientName;

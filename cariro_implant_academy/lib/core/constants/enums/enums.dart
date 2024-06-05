@@ -39,7 +39,6 @@ enum LabStepStatus {
   NotYet,
 }
 
-
 enum EnumLabRequestStatus { InQueue, InProgress, FinishedDesign, Finished }
 
 enum EnumLabRequestStatus2 {
@@ -280,6 +279,7 @@ enum EunumComplicationsAfterSurgery {
   GBRFailure,
   Infection,
   Inflamation,
+  ImplantFailed,
 }
 
 enum EunumComplicationsAfterProsthesis {

@@ -458,7 +458,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   CIA_TextFormField(
-                                    label: "Search Patients",
+                                    label: "Search Patients by name or id",
                                     controller: TextEditingController(),
                                     onChange: (value) async {
                                       patientBloc.add(SearchPatientsEvent(query: value));

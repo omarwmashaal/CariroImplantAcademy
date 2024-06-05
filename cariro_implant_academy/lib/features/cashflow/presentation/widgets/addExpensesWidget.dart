@@ -110,16 +110,7 @@ void ShowAddExpenesesPopUpWidget({
             children: [
               _CategorySelection(
                   expCategory: expCategory,
-                  onChange: (
-                    expensesCat,
-                    website,
-                    _category,
-                    _categoryId,
-                    _supplier,
-                    _supplierId,
-                    _paymentMethod,
-                    _paymentMethodId,
-                  ) {
+                  onChange: (expensesCat, website, _category, _categoryId, _supplier, _supplierId, _paymentMethod, _paymentMethodId, dontsetstate) {
                     expCategory = expensesCat;
                     inventoryWebsite = website;
                     category = _category;
@@ -128,8 +119,7 @@ void ShowAddExpenesesPopUpWidget({
                     supplierId = _supplierId;
                     paymentMethod = _paymentMethod;
                     paymentMethodId = _paymentMethodId;
-
-                    _setState(() => null);
+                    if (!dontsetstate) _setState(() => null);
                   }),
               SizedBox(height: 10),
               Expanded(
@@ -192,6 +182,7 @@ class _CategorySelection extends StatefulWidget {
     int? supplierId,
     BasicNameIdObjectEntity? paymentMethod,
     int? paymentMethodId,
+    bool dontsetstate,
   ) onChange;
 
   @override
@@ -234,8 +225,8 @@ class _CategorySelectionState extends State<_CategorySelection> {
                     CIA_MultiSelectChipWidgeModel(label: "Paid for service?", isSelected: widget.expCategory == EnumExpenseseCategoriesType.Service),
                     CIA_MultiSelectChipWidgeModel(
                         label: "Paid for buying items?",
-                        isSelected:
-                            widget.expCategory == EnumExpenseseCategoriesType.BoughtItem || widget.expCategory == EnumExpenseseCategoriesType.BoughtMedical),
+                        isSelected: widget.expCategory == EnumExpenseseCategoriesType.BoughtItem ||
+                            widget.expCategory == EnumExpenseseCategoriesType.BoughtMedical),
                   ],
                   onChange: (item, isSelected) {
                     if (item == "Paid for service?")
@@ -252,6 +243,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                       supplierId,
                       paymentMethod,
                       paymentMethodId,
+                      false,
                     );
 
                     setState(() {});
@@ -291,6 +283,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                               supplierId,
                               paymentMethod,
                               paymentMethodId,
+                              false,
                             );
                             setState(() {});
                           },
@@ -307,12 +300,14 @@ class _CategorySelectionState extends State<_CategorySelection> {
               Expanded(
                 flex: 2,
                 child: Visibility(
-                  visible: (widget.expCategory == EnumExpenseseCategoriesType.BoughtItem || widget.expCategory == EnumExpenseseCategoriesType.BoughtMedical),
+                  visible: (widget.expCategory == EnumExpenseseCategoriesType.BoughtItem ||
+                      widget.expCategory == EnumExpenseseCategoriesType.BoughtMedical),
                   child: CIA_MultiSelectChipWidget(
                     key: GlobalKey(),
                     singleSelect: true,
                     labels: [
-                      CIA_MultiSelectChipWidgeModel(label: "Bought nonMedical Item?", isSelected: widget.expCategory == EnumExpenseseCategoriesType.BoughtItem),
+                      CIA_MultiSelectChipWidgeModel(
+                          label: "Bought nonMedical Item?", isSelected: widget.expCategory == EnumExpenseseCategoriesType.BoughtItem),
                       CIA_MultiSelectChipWidgeModel(
                           label: "Bought ${siteController.getSite() == Website.Lab ? "Lab" : "Medical"} Item?",
                           isSelected: widget.expCategory == EnumExpenseseCategoriesType.BoughtMedical),
@@ -332,6 +327,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                         supplierId,
                         paymentMethod,
                         paymentMethodId,
+                        false,
                       );
                       setState(() {});
                     },
@@ -364,6 +360,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                           supplierId,
                           paymentMethod,
                           paymentMethodId,
+                          false,
                         );
                         setState(() => newPaymentMethod = isSelected);
                       },
@@ -389,6 +386,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                   supplierId,
                                   paymentMethod,
                                   paymentMethodId,
+                                  true,
                                 );
                               },
                               controller: TextEditingController(text: paymentMethod?.name ?? ""),
@@ -408,6 +406,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                   supplierId,
                                   paymentMethod,
                                   paymentMethodId,
+                                  false,
                                 );
                               },
                               selectedItem: paymentMethod,
@@ -437,6 +436,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                           supplierId,
                           paymentMethod,
                           paymentMethodId,
+                          false,
                         );
                         setState(() => newSupplier = isSelected);
                       },
@@ -462,6 +462,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                   supplierId,
                                   paymentMethod,
                                   paymentMethodId,
+                                  true,
                                 );
                               },
                               controller: TextEditingController(text: supplier?.name ?? ""),
@@ -485,6 +486,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                   supplierId,
                                   paymentMethod,
                                   paymentMethodId,
+                                  false,
                                 );
                               },
                               selectedItem: supplier,
@@ -516,6 +518,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                 supplierId,
                                 paymentMethod,
                                 paymentMethodId,
+                                false,
                               );
                               setState(() => newCategory = isSelected);
                             },
@@ -543,6 +546,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                       supplierId,
                                       paymentMethod,
                                       paymentMethodId,
+                                      true,
                                     );
                                   },
                                   controller: TextEditingController(text: category?.name ?? ""),
@@ -567,6 +571,7 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                       supplierId,
                                       paymentMethod,
                                       paymentMethodId,
+                                      false,
                                     );
                                   },
                                   selectedItem: category,
@@ -645,7 +650,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
                     e.labItemShade = value;
                     widget.onChange(data
                         .where((element) =>
-                            element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                            element.price != null &&
+                            element.labItemShadeId != null &&
+                            !(element.size?.isEmpty ?? true) &&
+                            !(element.code?.isEmpty ?? true))
                         .toList());
                   }),
                   selectedItem: e.labItemShade,
@@ -663,7 +671,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
                       e.code = v;
                       widget.onChange(data
                           .where((element) =>
-                              element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                              element.price != null &&
+                              element.labItemShadeId != null &&
+                              !(element.size?.isEmpty ?? true) &&
+                              !(element.code?.isEmpty ?? true))
                           .toList());
                     },
                   ),
@@ -681,7 +692,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
                       e.size = v;
                       widget.onChange(data
                           .where((element) =>
-                              element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                              element.price != null &&
+                              element.labItemShadeId != null &&
+                              !(element.size?.isEmpty ?? true) &&
+                              !(element.code?.isEmpty ?? true))
                           .toList());
                     },
                   ),
@@ -701,7 +715,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
                       e.price = int.tryParse(v) ?? 0;
                       widget.onChange(data
                           .where((element) =>
-                              element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                              element.price != null &&
+                              element.labItemShadeId != null &&
+                              !(element.size?.isEmpty ?? true) &&
+                              !(element.code?.isEmpty ?? true))
                           .toList());
                     },
                   ),
@@ -721,7 +738,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
 
                     widget.onChange(data
                         .where((element) =>
-                            element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                            element.price != null &&
+                            element.labItemShadeId != null &&
+                            !(element.size?.isEmpty ?? true) &&
+                            !(element.code?.isEmpty ?? true))
                         .toList());
                     setState(() {});
                   }),
@@ -732,7 +752,10 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
                     data.remove(e);
                     widget.onChange(data
                         .where((element) =>
-                            element.price != null && element.labItemShadeId != null && !(element.size?.isEmpty ?? true) && !(element.code?.isEmpty ?? true))
+                            element.price != null &&
+                            element.labItemShadeId != null &&
+                            !(element.size?.isEmpty ?? true) &&
+                            !(element.code?.isEmpty ?? true))
                         .toList());
                     setState(() {});
                   }),
@@ -776,8 +799,8 @@ class _NormalItemsExpensesWidgetState extends State<_NormalItemsExpensesWidget> 
                       child: CIA_TextFormField(
                           onChange: (value) {
                             model.name = value;
-                            widget
-                                .onChange(data.where((element) => element.price != null && element.count != null && !(element.name?.isEmpty ?? true)).toList());
+                            widget.onChange(
+                                data.where((element) => element.price != null && element.count != null && !(element.name?.isEmpty ?? true)).toList());
                           },
                           label: "Name",
                           controller: TextEditingController(text: model.name ?? "")),
@@ -1101,7 +1124,6 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                                 label: "Screws Count",
                                 controller: TextEditingController(),
                                 onChange: (value) {
-
                                   model.count = int.tryParse(value) ?? 0;
                                   widget.onChanged(data);
                                 },

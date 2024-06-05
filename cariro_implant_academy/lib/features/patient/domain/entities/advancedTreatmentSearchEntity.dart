@@ -1,3 +1,5 @@
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,6 +11,8 @@ import '../../../patientsMedical/complications/domain/entities/complicationsAfte
 class AdvancedTreatmentSearchEntity extends Equatable {
   List<int>? ids;
   int? id;
+  BasicNameIdObjectEntity? candidate;
+  BasicNameIdObjectEntity? candidateBatch;
   int? tooth;
   String? secondaryId;
   String? patientName;
@@ -33,6 +37,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   AdvancedTreatmentSearchEntity({
     this.id,
     this.ids,
+    this.candidate,
+    this.candidateBatch,
     this.secondaryId,
     this.tooth,
     this.complicationsAfterSurgeryOr,
@@ -80,6 +86,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   bool isNull() =>
       noTreatmentPlan == null &&
+      candidate == null &&
+      candidateBatch == null &&
       implantFailed == null &&
       (and_treatmentIds?.isEmpty ?? true) &&
       (or_treatmentIds?.isEmpty ?? true) &&

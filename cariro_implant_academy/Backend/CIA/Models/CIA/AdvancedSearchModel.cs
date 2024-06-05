@@ -59,6 +59,8 @@ namespace CIA.Models.CIA
         public DentalExaminationModel.DentalExamination? ImplantFailed { get; set; }
         public String? Str_ComplicationsAfterSurgery { get; set; }
         public String? Str_ComplicationsAfterProsthesis { get; set; }
+        public DropDowns? Candidate { get; set; }
+        public DropDowns? CandidateBatch { get; set; }
     }
 
     

@@ -218,13 +218,13 @@ namespace CIA.Controllers
         [HttpGet("ListPatients")]
         public async Task<ActionResult> ListPatients(String? search, String? filter, bool? patientOut, bool? listed, bool? myPatients = false)
         {
-            IQueryable<Patient> query = _cia_DbContext.Patients.Where(x => x.Website == _site ).
+            IQueryable<Patient> query = _cia_DbContext.Patients.Where(x => x.Website == _site).
                     Include(x => x.ReferralPatient).
                     Include(x => x.RelativePatient).
                     Include(x => x.Doctor)
                     ;
 
-            if(listed!=null)
+            if (listed != null)
             {
                 query = query.Where(x => x.Listed == listed);
             }
@@ -237,7 +237,7 @@ namespace CIA.Controllers
             if (search != null && search != "null")
             {
                 if (filter != "null" && filter.ToLower() == "name")
-                    query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()));
+                    query = query.Where(x => x.Name.ToLower().Contains(search.ToLower()) || x.SecondaryId.ToLower().Contains(search.ToLower()));
 
                 else if (filter != "null" && filter.ToLower() == "phone")
                     query = query.Where(x => x.Phone.ToLower().Contains(search.ToLower()));
@@ -1124,7 +1124,7 @@ namespace CIA.Controllers
         [HttpPost("AdvancedSearchPatient")]
         public async Task<IActionResult> AdvancedSearchPatient([FromBody] AdvancedPatientSearchDTO model)
         {
-            IQueryable<Patient> query = _cia_DbContext.Patients.Where(x=>x.Listed==true).Include(x => x.MedicalExamination).Include(x => x.DentalExamination).Include(x => x.DentalHistory);
+            IQueryable<Patient> query = _cia_DbContext.Patients.Where(x => x.Listed == true).Include(x => x.MedicalExamination).Include(x => x.DentalExamination).Include(x => x.DentalHistory);
             List<IQueryable> selectables;
 
             if (!model.Ids.IsNullOrEmpty())
@@ -1288,10 +1288,19 @@ namespace CIA.Controllers
             IQueryable<TreatmentDetailsModel> query = _cia_DbContext.TreatmentDetails.Include(x => x.Patient).Include(x => x.TreatmentItem).Where(x => x.Website == _site);
             IQueryable<ComplicationsAfterSurgeryParentModel> complicationsSurgeryParentsQuery = _cia_DbContext.ComplicationsAfterSurgeryParents.Include(x => x.Complications);
             List<ComplicationsAfterSurgeryParentModel> complicationSurgeryParents = new List<ComplicationsAfterSurgeryParentModel>();
-
-
             List<DentalExaminationModel> faildImplantsDentalExaminations = new List<DentalExaminationModel>();
             List<TreatmentPlanModel> treatmentPlans = new();
+
+            if (model.CandidateBatchId != null || model.CandidateId != null)
+            {
+                query = query.Include(x => x.DoneByCandidate).Include(x => x.DoneByCandidateBatch);
+                if (model.CandidateBatchId != null)
+                    query = query.Where(x => x.DoneByCandidateBatchID == model.CandidateBatchId);
+                if (model.CandidateId != null)
+                    query = query.Where(x => x.DoneByCandidateID == model.CandidateId);
+            }
+
+
             if (model.ClearanceUpper == true)
                 model.Ids = await _cia_DbContext.TreatmentPlans
                     .Where(x => model.Ids.Contains((int)x.PatientId) && x.ClearanceUpper == true)
@@ -1481,6 +1490,8 @@ namespace CIA.Controllers
                 Tooth = x.Tooth,
                 TreatmentName = x.TreatmentItem.Name,
                 TreatmentId = (int)x.TreatmentItemId,
+                Candidate = new DropDowns { Name = x.DoneByCandidate == null ? null : x.DoneByCandidate!.Name, Id = x.DoneByCandidateID },
+                CandidateBatch = new DropDowns { Name = x.DoneByCandidateBatch == null ? null : x.DoneByCandidateBatch!.Name, Id = x.DoneByCandidateBatchID },
                 TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}"
             }).ToListAsync();
             if (model.ClearanceLower == true || model.ClearanceUpper == true)
@@ -1718,7 +1729,7 @@ namespace CIA.Controllers
             {
                 diagnosticStepsResult = await diagnosticStepsQuery.ToListAsync();
                 ids = diagnosticStepsResult.Select(x => x.PatientId).Distinct().ToList();
-                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id) && x.Listed==true).ToListAsync();
+                patients = await _cia_DbContext.Patients.Where(x => ids.Contains(x.Id) && x.Listed == true).ToListAsync();
 
             }
             else

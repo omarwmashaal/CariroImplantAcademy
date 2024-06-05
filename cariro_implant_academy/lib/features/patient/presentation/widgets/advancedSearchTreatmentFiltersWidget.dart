@@ -3,6 +3,10 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterSurgeryEntity.dart';
@@ -35,6 +39,32 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
       child: ExpansionTile(
         title: Text("Treatment Filter"),
         children: [
+          AdvancedSearchFilterChildWidget(
+            title: "Candidate",
+            child: Column(
+              children: [
+                CIA_DropDownSearchBasicIdName(
+                  label: "Candidate Batch",
+                  asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
+                  selectedItem: widget.searchTreatmentsDTO.candidateBatch,
+                  onSelect: (value) {
+                    widget.searchTreatmentsDTO.candidateBatch = value;
+                    setState(() {});
+                  },
+                ),
+                CIA_DropDownSearchBasicIdName(
+                  label: "Candidate",
+                  asyncUseCase: widget.searchTreatmentsDTO.candidateBatch?.id == null ? null : sl<LoadCandidatesByBatchId>(),
+                  searchParams: widget.searchTreatmentsDTO.candidateBatch?.id ?? 0,
+                  selectedItem: widget.searchTreatmentsDTO.candidate,
+                  onSelect: (value) {
+                    widget.searchTreatmentsDTO.candidate = value;
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ),
           AdvancedSearchFilterChildWidget(
             title: "No Treatment Plans Assigned",
             child: Row(

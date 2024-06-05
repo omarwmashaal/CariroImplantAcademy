@@ -628,7 +628,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                               crossAxisAlignment: CrossAxisAlignment.stretch,
                                               children: [
                                                 CIA_TextFormField(
-                                                  label: "Search",
+                                                  label: "Search by name or id",
                                                   controller: TextEditingController(),
                                                   onChange: (value) async {
                                                     createOrViewPatientBloc.add(SearchPatientsEvent(query: value));
