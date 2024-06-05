@@ -81,7 +81,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
     if ((!siteController.getRole()!.contains("secretary"))) {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<String>(columnName: 'ID', value: e.secondaryId ?? "-"),
+                DataGridCell<int>(columnName: 'ID', value: int.tryParse(e.secondaryId ?? "0")),
                 DataGridCell<String>(columnName: 'Name', value: e.name),
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),
@@ -116,7 +116,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
     } else {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<String>(columnName: 'ID', value: e.secondaryId ?? "-"),
+                DataGridCell<int>(columnName: 'ID', value: int.tryParse(e.secondaryId ?? "0")),
                 DataGridCell<String>(columnName: 'Name', value: e.name),
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),

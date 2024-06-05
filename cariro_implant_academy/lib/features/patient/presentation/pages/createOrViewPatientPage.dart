@@ -310,6 +310,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                                   patient.secondaryId = state.message ?? "0";
                                                 }
                                                 return CIA_TextFormField(
+                                                  isNumber: true,
                                                   onChange: (value) async {
                                                     patient.secondaryId = value;
                                                     createOrViewPatientBloc.add(CheckAvailableIdEvent(value));
