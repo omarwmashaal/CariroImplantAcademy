@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/receiptTableWidget.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/setPatientOutUseCase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/medicalExamination/presentation/pages/medicalInfo_MedicalHistoryPage.dart';
@@ -173,7 +174,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 onTab: () => patient.out
                                     ? createOrViewPatientBloc.add(SetPatientOutEvent(SetPatientOutParams(
                                         id: patientID,
-                                        outReason:  "",
+                                        outReason: "",
                                       )))
                                     : CIA_ShowPopUp(
                                         height: 400,
@@ -224,6 +225,39 @@ class CreateOrViewPatientPage extends StatelessWidget {
                       },
                     ),
                   ],
+                ),
+                StatefulBuilder(
+                  builder: (context, setState) {
+                    return BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                      builder: (context, state) {
+                        return Visibility(
+                          visible: patient.listed != true &&
+                              !(createOrViewPatientBloc.pageState == PageState.addNew || createOrViewPatientBloc.pageState == PageState.edit),
+                          child: Row(
+                            children: EnumPatientCallHistory.values
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: patient.callHistoryStatus == e
+                                          ? CIA_PrimaryButton(
+                                              label: AddSpacesToSentence(e.name),
+                                              onTab: () => null,
+                                              isLong: true,
+                                              icon: getDefaulCallHistoryIcon(e),
+                                            )
+                                          : CIA_SecondaryButton(
+                                              label: AddSpacesToSentence(e.name),
+                                              icon: getDefaulCallHistoryIcon(e),
+                                              onTab: () {
+                                                patient.callHistoryStatus = e;
+                                                createOrViewPatientBloc.add(UpdatePatientDataEvent(patient: patient));
+                                              }),
+                                    ))
+                                .toList(),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
                 Expanded(
                   flex: 4,

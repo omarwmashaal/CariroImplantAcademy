@@ -28,6 +28,7 @@ namespace CIA.Models
         public String? NationalID { get; set; }
         public String? NationalIDDirectory_front { get; set; }
         public String? NationalIDDirectory_back { get; set; }
+        public EnumPatientCallHistory? CallHistoryStatus { get; set; }
         //public EnumPatientType? PatientType { get; set; } = EnumPatientType.CIA;
 
         [ForeignKey("Lab_Request")]

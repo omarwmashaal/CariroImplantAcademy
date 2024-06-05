@@ -408,6 +408,14 @@ namespace CIA.Models
         Inflamation,
         ImplantFailed,
     }
+    public enum EnumPatientCallHistory
+    {
+        CalledAndNoAnswer,
+        CalledAndNoVisit,
+        NoCalls,
+        WrongNumber,
+        NotInterested,
+    }
     public class EnumMethods
     {
         public static bool CompareEnums(object one, object two)

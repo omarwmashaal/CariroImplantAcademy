@@ -39,6 +39,7 @@ class PatientInfoModel extends PatientInfoEntity {
           idFrontImage: patientEntity.idFrontImage,
           idBackImage: patientEntity.idBackImage,
           website: patientEntity.website,
+          callHistoryStatus: patientEntity.callHistoryStatus,
         );
 
   PatientInfoModel({
@@ -69,6 +70,7 @@ class PatientInfoModel extends PatientInfoEntity {
     profileImage,
     idFrontImage,
     idBackImage,
+    callHistoryStatus,
     website,
   }) : super(
           phone: phone,
@@ -78,6 +80,7 @@ class PatientInfoModel extends PatientInfoEntity {
           listed: listed,
           gender: gender,
           age: age,
+          callHistoryStatus: callHistoryStatus,
           maritalStatus: maritalStatus,
           doctor: doctor,
           outReason: outReason,
@@ -106,6 +109,7 @@ class PatientInfoModel extends PatientInfoEntity {
       name: map['name'] as String?,
       listed: map['listed'] as bool?,
       website: Website.values[map['website'] ?? 0],
+      callHistoryStatus: map['callHistoryStatus'] ==null?null:EnumPatientCallHistory.values[map['callHistoryStatus'] ],
       id: map['id'] as int?,
       secondaryId: map['secondaryId'] as String?,
       gender: EnumGender.values[map['gender']],
@@ -148,6 +152,7 @@ class PatientInfoModel extends PatientInfoEntity {
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
+      'callHistoryStatus': this.callHistoryStatus?.index,
       'listed': this.listed,
       'out': this.out,
       'id': this.id,

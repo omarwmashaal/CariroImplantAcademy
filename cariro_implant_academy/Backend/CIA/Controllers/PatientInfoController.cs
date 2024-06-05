@@ -80,6 +80,10 @@ namespace CIA.Controllers
 
             }
             patient_.Id = lastId == 0 ? 1 : lastId;
+            if(patient_.Listed!=true)
+            {
+                patient_.SecondaryId = patient_.Id.ToString();
+            }
             await _cia_DbContext.Patients.AddAsync(patient_);
             try
             {
@@ -209,6 +213,7 @@ namespace CIA.Controllers
             p.NationalID = patient.NationalID;
             p.RelativePatientID = patient.RelativePatientID;
             p.Listed = patient.Listed;
+            p.CallHistoryStatus = patient.CallHistoryStatus;
             _cia_DbContext.Patients.Update(p);
             await _cia_DbContext.SaveChangesAsync();
             _aPI_Response.Result = p;
@@ -216,7 +221,7 @@ namespace CIA.Controllers
         }
 
         [HttpGet("ListPatients")]
-        public async Task<ActionResult> ListPatients(String? search, String? filter, bool? patientOut, bool? listed, bool? myPatients = false)
+        public async Task<ActionResult> ListPatients(String? search, String? filter, bool? patientOut, bool? listed, EnumPatientCallHistory? callHistory,bool? myPatients = false)
         {
             IQueryable<Patient> query = _cia_DbContext.Patients.Where(x => x.Website == _site).
                     Include(x => x.ReferralPatient).
@@ -227,6 +232,12 @@ namespace CIA.Controllers
             if (listed != null)
             {
                 query = query.Where(x => x.Listed == listed);
+            }
+                        
+
+            if (callHistory != null)
+            {
+                query = query.Where(x => x.CallHistoryStatus == callHistory);
             }
 
             if (myPatients == true)
@@ -276,6 +287,7 @@ namespace CIA.Controllers
                     x.DoctorID,
                     x.Out,
                     x.Listed,
+                    x.CallHistoryStatus,
                     Doctor = x.Doctor == null ? null : x.Doctor.Name,
                 }).OrderBy(x => x.Id).ToListAsync();
             return Ok(_aPI_Response);

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum DiabetesEnum {
@@ -290,4 +292,29 @@ enum EunumComplicationsAfterProsthesis {
   FoodImpaction,
   Pain,
   ImplantFracture,
+}
+
+enum EnumPatientCallHistory {
+  CalledAndNoAnswer,
+  CalledAndNoVisit,
+  NoCalls,
+  WrongNumber,
+  NotInterested,
+}
+
+class EnumPatientCallHistoryModel {
+  EnumPatientCallHistory value;
+  Icon icon;
+  EnumPatientCallHistoryModel({required this.value, required this.icon});
+}
+
+List<EnumPatientCallHistoryModel> _defualtPatientCallHistryIcons = [
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.CalledAndNoAnswer, icon: Icon(Icons.call_missed_outgoing)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.CalledAndNoVisit, icon: Icon(Icons.schedule)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.NoCalls, icon: Icon(Icons.call_end_outlined)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.WrongNumber, icon: Icon(Icons.highlight_remove_sharp)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.NotInterested, icon: Icon(Icons.not_interested_sharp)),
+];
+Icon getDefaulCallHistoryIcon(EnumPatientCallHistory value) {
+  return _defualtPatientCallHistryIcons.firstWhere((element) => element.value == value).icon;
 }
