@@ -143,7 +143,6 @@ class VisitsTableWidget extends StatelessWidget {
                                                   patientId: patientId!,
                                                   doctorId: doctorId!,
                                                   roomId: roomId!,
-
                                                 ),
                                               ));
                                             }
@@ -163,30 +162,29 @@ class VisitsTableWidget extends StatelessWidget {
                                                   },
                                                 ),
                                               ),
-                                              SizedBox(height: 10,),
-                                              Builder(
-                                                builder: (context) {
-                                                  var b = BlocProvider.of<CalendarBloc>(context);
-                                                  b.add(CalendarBloc_GetRooms());
-                                                  return BlocBuilder<CalendarBloc,CalendarBloc_States>(
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Builder(builder: (context) {
+                                                var b = BlocProvider.of<CalendarBloc>(context);
+                                                b.add(CalendarBloc_GetRooms());
+                                                return BlocBuilder<CalendarBloc, CalendarBloc_States>(
                                                     buildWhen: (previous, current) => current is CalendarBloc_LoadedRoomsSuccessfully,
-                                                    builder: (context,state) {
-                                                      List<BasicNameIdObjectEntity> rooms =[];
-                                                      if(state is CalendarBloc_LoadedRoomsSuccessfully)
-                                                        rooms  = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name,id: e.id)).toList();
+                                                    builder: (context, state) {
+                                                      List<BasicNameIdObjectEntity> rooms = [];
+                                                      if (state is CalendarBloc_LoadedRoomsSuccessfully)
+                                                        rooms = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name, id: e.id)).toList();
                                                       return Flexible(
                                                         child: CIA_DropDownSearchBasicIdName(
                                                           label: "Room",
                                                           items: rooms,
-                                                         onSelect: (value) {
-                                                           roomId = value.id;
+                                                          onSelect: (value) {
+                                                            roomId = value.id;
                                                           },
                                                         ),
                                                       );
-                                                    }
-                                                  );
-                                                }
-                                              ),
+                                                    });
+                                              }),
                                             ],
                                           ),
                                         );
@@ -197,7 +195,6 @@ class VisitsTableWidget extends StatelessWidget {
                                         label: "Patient Leaves",
                                         onTab: () async {
                                           bloc.add(PatientVisitsBloc_PatientLeavesClinicEvent(id: patientId!));
-
                                         }),
                                   ],
                                 )),
@@ -284,15 +281,13 @@ class VisitsTableWidget extends StatelessWidget {
                     patientId: patientId,
                   ),
                 ));
-              }
-              else if (state is PatientVisitsBloc_LeftSuccessState) {
+              } else if (state is PatientVisitsBloc_LeftSuccessState) {
                 PaymentWidget(
                     patientId: patientId!,
                     context: context,
                     onFailure: (message) {
                       ShowSnackBar(context, isSuccess: false, message: message);
                     })();
-
               }
               if (state is PatientVisitsBloc_LoadingVisitsState)
                 CustomLoader.show(context);
@@ -315,7 +310,7 @@ class VisitsTableWidget extends StatelessWidget {
                   dataSource: dataSource,
                   onCellClick: (index) {
                     context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(),
-                        pathParameters: {'id':  dataSource.models.firstWhere((element) => element.secondaryId==index).id.toString()});
+                        pathParameters: {'id': dataSource.models.firstWhere((element) => element.secondaryId == index).patientId.toString()});
                   },
                 ),
               );

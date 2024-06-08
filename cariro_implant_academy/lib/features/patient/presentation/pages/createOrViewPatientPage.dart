@@ -215,7 +215,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                             onChanged: (value) {
                               patient.listed = value;
                               if (value == false) {
-                                patient.secondaryId = null;
+                                patient.secondaryId = patient.id?.toString();
                                 patient.nationalId = null;
                               }
                               createOrViewPatientBloc.emit(ChangePageState("", patient.listed!));

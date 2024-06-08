@@ -144,7 +144,7 @@ class VisitDataSource extends DataGridSource {
       ];
       _visitData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<int>(columnName: 'id', value: e.patientId),
+                DataGridCell<String>(columnName: 'id', value: e.secondaryId),
                 DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                 // DataGridCell<String>(columnName: 'Status', value: e.status??""),
                 DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
@@ -153,12 +153,12 @@ class VisitDataSource extends DataGridSource {
                 DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                 DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                 DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-        DataGridCell<Widget>(
-            columnName: 'Treatment',
-            value: CIA_GestureWidget(
-              child: Text(e.treatment ?? ""),
-              onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
-            )),
+                DataGridCell<Widget>(
+                    columnName: 'Treatment',
+                    value: CIA_GestureWidget(
+                      child: Text(e.treatment ?? ""),
+                      onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+                    )),
               ]))
           .toList();
     } else {
@@ -177,7 +177,7 @@ class VisitDataSource extends DataGridSource {
       if (siteController.getRole()!.contains("admin"))
         _visitData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
-                  // DataGridCell<int>(columnName: 'id', value: e.patientId),
+                  DataGridCell<String>(columnName: 'id', value: e.secondaryId),
                   DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
                   DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
                   DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
@@ -186,7 +186,6 @@ class VisitDataSource extends DataGridSource {
                   DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                   DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                   DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-
                   DataGridCell<Widget>(
                       columnName: 'Edit',
                       value: IconButton(
@@ -368,12 +367,12 @@ class VisitDataSource extends DataGridSource {
                   DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
                   DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
                   DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-          DataGridCell<Widget>(
-              columnName: 'Treatment',
-              value: CIA_GestureWidget(
-                child: Text(e.treatment ?? ""),
-                onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
-              )),
+                  DataGridCell<Widget>(
+                      columnName: 'Treatment',
+                      value: CIA_GestureWidget(
+                        child: Text(e.treatment ?? ""),
+                        onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+                      )),
                 ]))
             .toList();
     }

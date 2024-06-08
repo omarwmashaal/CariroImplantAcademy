@@ -308,7 +308,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                         return TableWidget(
                           dataSource: dataSource,
                           onCellClick: (value) {
-                            var p = dataSource.models.firstWhere((element) => element.secondaryId == value);
+                            var p = dataSource.models.firstWhere((element) => element.secondaryId == value?.toString());
                             //    setState(() {
                             //     selectedPatientID = dataSource.models[value - 1].id!;
                             //    });
