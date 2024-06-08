@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemById.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getLabStockUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +20,14 @@ class StockBloc_GetStockEvent extends StockBloc_Events {
 class StockBloc_GetStockLogEvent extends StockBloc_Events {
   final GetStockLogParams params;
   StockBloc_GetStockLogEvent({required this.params});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [params];
+}
+
+class StockBloc_ConsumeItemevent extends StockBloc_Events {
+  final ConsumeItemByIdParams params;
+  StockBloc_ConsumeItemevent({required this.params});
   @override
   // TODO: implement props
   List<Object?> get props => [params];

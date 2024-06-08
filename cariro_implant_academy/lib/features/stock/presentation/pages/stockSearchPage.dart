@@ -73,7 +73,6 @@ class _StockSearchPageState extends State<StockSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    bloc = BlocProvider.of<StockBloc>(context);
     performSearch();
     return Column(
       children: [
@@ -390,7 +389,9 @@ class _StockSearchPageState extends State<StockSearchPage> {
 
   @override
   void initState() {
-    stock_dataSource = StockDataGridSource(context: context);
+    bloc = BlocProvider.of<StockBloc>(context);
+
+    stock_dataSource = StockDataGridSource(context: context, bloc: bloc);
     //todo:fix this
     //siteController.setAppBarWidget(tabs: ["Stock", "Logs"]);
   }

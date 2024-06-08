@@ -23,6 +23,26 @@ class StockBloc_LoadedStockSuccessfullyState extends StockBloc_States{
   // TODO: implement props
   List<Object?> get props => [data];
 }
+
+class StockBloc_ConsumingItemsState extends StockBloc_States{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class StockBloc_ConsumedItemSuccssefullyState extends StockBloc_States{
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+class StockBloc_ConsumingItemsErrorState extends StockBloc_States{
+  final String message;
+  StockBloc_ConsumingItemsErrorState({required this.message});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
+}
+
 class StockBloc_LoadedStockLogSuccessfullyState extends StockBloc_States{
   final List<StockLogEntity> data;
   StockBloc_LoadedStockLogSuccessfullyState({required this.data});

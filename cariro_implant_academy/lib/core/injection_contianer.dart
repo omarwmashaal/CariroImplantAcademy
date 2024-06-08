@@ -910,6 +910,7 @@ initInjection() async {
         getStockLogUseCase: sl(),
         getStockUseCase: sl(),
         getLabStockUseCase: sl(),
+        consumeItemByIdUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetStockUseCase(stockRepository: sl()));
