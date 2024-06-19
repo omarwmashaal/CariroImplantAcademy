@@ -174,207 +174,207 @@ class VisitDataSource extends DataGridSource {
         "Doctor Name",
         "Treatment",
       ];
-      if (siteController.getRole()!.contains("admin"))
-        _visitData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-                  DataGridCell<String>(columnName: 'id', value: e.secondaryId),
-                  DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
-                  DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
-                  DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
-                  DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
-                  DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-                  DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
-                  DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
-                  DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-                  DataGridCell<Widget>(
-                      columnName: 'Edit',
-                      value: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          CIA_ShowPopUp(
-                              context: context,
-                              title: "Edite Visit Entry",
-                              onSave: () {
-                                bloc.add(PatientVisitsBloc_UpdateVisitsEvent(
-                                    params: UpdateVisitParams(
-                                  visitEntity: e,
-                                )));
-                              },
-                              child: StatefulBuilder(builder: (context, setState) {
-                                return Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_DateTimeTextFormField(
-                                            label: "Reservation Time",
-                                            controller: TextEditingController(
-                                              text: e.reservationTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.reservationTime!),
-                                            ),
-                                            onChange: (value) => setState(() => e.reservationTime = value),
+      // if (siteController.getRole()!.contains("admin"))
+      _visitData = models
+          .map<DataGridRow>((e) => DataGridRow(cells: [
+                DataGridCell<String>(columnName: 'id', value: e.secondaryId),
+                DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
+                DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
+                DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
+                DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
+                DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
+                DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
+                DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
+                DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
+                DataGridCell<Widget>(
+                    columnName: 'Edit',
+                    value: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        CIA_ShowPopUp(
+                            context: context,
+                            title: "Edite Visit Entry",
+                            onSave: () {
+                              bloc.add(PatientVisitsBloc_UpdateVisitsEvent(
+                                  params: UpdateVisitParams(
+                                visitEntity: e,
+                              )));
+                            },
+                            child: StatefulBuilder(builder: (context, setState) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_DateTimeTextFormField(
+                                          label: "Reservation Time",
+                                          controller: TextEditingController(
+                                            text: e.reservationTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.reservationTime!),
                                           ),
+                                          onChange: (value) => setState(() => e.reservationTime = value),
                                         ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: TimePickerTextField(
-                                            initialTime: e.reservationTime ?? DateTime.now(),
-                                            onChanged: (newTime) {
-                                              setState(() => e.reservationTime = newTime);
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_DateTimeTextFormField(
-                                            label: "Real Visit Time",
-                                            controller: TextEditingController(
-                                              text: e.realVisitTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.realVisitTime!),
-                                            ),
-                                            onChange: (value) {
-                                              e.realVisitTime = value;
-                                              e.from = e.realVisitTime;
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: TimePickerTextField(
-                                            initialTime: e.realVisitTime ?? DateTime.now(),
-                                            onChanged: (newTime) => setState(() => e.realVisitTime = newTime),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_DateTimeTextFormField(
-                                            label: "Enters Clinic Time",
-                                            controller: TextEditingController(
-                                              text: e.entersClinicTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.entersClinicTime!),
-                                            ),
-                                            onChange: (value) => setState(() {
-                                              e.entersClinicTime = value;
-                                              if (e.leaveTime != null && e.entersClinicTime != null)
-                                                e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
-                                            }),
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: TimePickerTextField(
-                                            initialTime: e.entersClinicTime ?? DateTime.now(),
-                                            onChanged: (newTime) {
-                                              e.entersClinicTime = newTime;
-                                              if (e.leaveTime != null && e.entersClinicTime != null) {
-                                                e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
-                                              }
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: CIA_DateTimeTextFormField(
-                                            label: "Leave Time",
-                                            controller: TextEditingController(
-                                              text: e.leaveTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.leaveTime!),
-                                            ),
-                                            onChange: (value) {
-                                              e.leaveTime = value;
-                                              e.to = e.leaveTime;
-                                              if (e.leaveTime != null && e.entersClinicTime != null) {
-                                                e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
-
-                                                setState(() {});
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: TimePickerTextField(
-                                            initialTime: e.leaveTime ?? DateTime.now(),
-                                            onChanged: (newTime) => setState(() {
-                                              e.leaveTime = newTime;
-                                              if (e.leaveTime != null && e.entersClinicTime != null)
-                                                e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
-                                            }),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-
-                                    CIA_TextFormField(
-                                      enabled: false,
-                                      label: "Duration",
-                                      controller: TextEditingController(
-                                        text: e.duration ?? "",
                                       ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TimePickerTextField(
+                                          initialTime: e.reservationTime ?? DateTime.now(),
+                                          onChanged: (newTime) {
+                                            setState(() => e.reservationTime = newTime);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_DateTimeTextFormField(
+                                          label: "Real Visit Time",
+                                          controller: TextEditingController(
+                                            text: e.realVisitTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.realVisitTime!),
+                                          ),
+                                          onChange: (value) {
+                                            e.realVisitTime = value;
+                                            e.from = e.realVisitTime;
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TimePickerTextField(
+                                          initialTime: e.realVisitTime ?? DateTime.now(),
+                                          onChanged: (newTime) => setState(() => e.realVisitTime = newTime),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_DateTimeTextFormField(
+                                          label: "Enters Clinic Time",
+                                          controller: TextEditingController(
+                                            text: e.entersClinicTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.entersClinicTime!),
+                                          ),
+                                          onChange: (value) => setState(() {
+                                            e.entersClinicTime = value;
+                                            if (e.leaveTime != null && e.entersClinicTime != null)
+                                              e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
+                                          }),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TimePickerTextField(
+                                          initialTime: e.entersClinicTime ?? DateTime.now(),
+                                          onChanged: (newTime) {
+                                            e.entersClinicTime = newTime;
+                                            if (e.leaveTime != null && e.entersClinicTime != null) {
+                                              e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
+                                            }
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CIA_DateTimeTextFormField(
+                                          label: "Leave Time",
+                                          controller: TextEditingController(
+                                            text: e.leaveTime == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.leaveTime!),
+                                          ),
+                                          onChange: (value) {
+                                            e.leaveTime = value;
+                                            e.to = e.leaveTime;
+                                            if (e.leaveTime != null && e.entersClinicTime != null) {
+                                              e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
+
+                                              setState(() {});
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: TimePickerTextField(
+                                          initialTime: e.leaveTime ?? DateTime.now(),
+                                          onChanged: (newTime) => setState(() {
+                                            e.leaveTime = newTime;
+                                            if (e.leaveTime != null && e.entersClinicTime != null)
+                                              e.duration = e.leaveTime!.difference(e.entersClinicTime!).toString();
+                                          }),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+
+                                  CIA_TextFormField(
+                                    enabled: false,
+                                    label: "Duration",
+                                    controller: TextEditingController(
+                                      text: e.duration ?? "",
                                     ),
-                                    SizedBox(height: 10),
-                                    CIA_PrimaryButton(
-                                      label: "Delete",
-                                      onTab: () {
-                                        CIA_ShowPopUpYesNo(
-                                            context: context,
-                                            onSave: () {
-                                              bloc.add(PatientVisitsBloc_UpdateVisitsEvent(params: UpdateVisitParams(visitEntity: e, delete: true)));
-                                              dialogHelper.dismissAll(context);
-                                            },
-                                            title: "Are you sure you want to delete this entry?");
-                                      },
-                                      color: Colors.red,
-                                      icon: Icon(Icons.delete),
-                                    )
-                                    // Add more fields as needed...
-                                  ],
-                                );
-                              }));
-                        },
-                      )),
-                  DataGridCell<Widget>(
-                      columnName: 'Treatment',
-                      value: CIA_GestureWidget(
-                        child: Text(e.treatment ?? ""),
-                        onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
-                      )),
-                ]))
-            .toList();
-      else
-        _visitData = models
-            .map<DataGridRow>((e) => DataGridRow(cells: [
-                  DataGridCell<int>(columnName: 'id', value: e.id),
-                  DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
-                  DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
-                  DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
-                  DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
-                  DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
-                  DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
-                  DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
-                  DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
-                  DataGridCell<Widget>(
-                      columnName: 'Treatment',
-                      value: CIA_GestureWidget(
-                        child: Text(e.treatment ?? ""),
-                        onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
-                      )),
-                ]))
-            .toList();
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_PrimaryButton(
+                                    label: "Delete",
+                                    onTab: () {
+                                      CIA_ShowPopUpYesNo(
+                                          context: context,
+                                          onSave: () {
+                                            bloc.add(PatientVisitsBloc_UpdateVisitsEvent(params: UpdateVisitParams(visitEntity: e, delete: true)));
+                                            dialogHelper.dismissAll(context);
+                                          },
+                                          title: "Are you sure you want to delete this entry?");
+                                    },
+                                    color: Colors.red,
+                                    icon: Icon(Icons.delete),
+                                  )
+                                  // Add more fields as needed...
+                                ],
+                              );
+                            }));
+                      },
+                    )),
+                DataGridCell<Widget>(
+                    columnName: 'Treatment',
+                    value: CIA_GestureWidget(
+                      child: Text(e.treatment ?? ""),
+                      onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+                    )),
+              ]))
+          .toList();
+      // else
+      //   _visitData = models
+      //       .map<DataGridRow>((e) => DataGridRow(cells: [
+      //             DataGridCell<int>(columnName: 'id', value: e.id),
+      //             DataGridCell<String>(columnName: 'Patient', value: e.patientName ?? ""),
+      //             DataGridCell<String>(columnName: 'Status', value: e.status ?? ""),
+      //             DataGridCell<DateTime>(columnName: 'Reservation Time', value: e.reservationTime),
+      //             DataGridCell<DateTime>(columnName: 'Real Visit Time', value: e.realVisitTime),
+      //             DataGridCell<DateTime>(columnName: 'Enters Clinic Time', value: e.entersClinicTime),
+      //             DataGridCell<DateTime>(columnName: 'Leave Time', value: e.leaveTime),
+      //             DataGridCell<String>(columnName: 'Duration', value: e.duration ?? ""),
+      //             DataGridCell<String>(columnName: 'Doctor Name', value: e.doctorName ?? ""),
+      //             DataGridCell<Widget>(
+      //                 columnName: 'Treatment',
+      //                 value: CIA_GestureWidget(
+      //                   child: Text(e.treatment ?? ""),
+      //                   onTap: () => CIA_ShowPopUp(context: context, title: "Treatment", child: Text(e.treatment ?? "")),
+      //                 )),
+      //           ]))
+      //       .toList();
     }
   }
 

@@ -280,7 +280,7 @@ namespace CIA.Controllers
         public async Task<ActionResult> GetComplicationsAfterSurgery(int id)
         {
 
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x=>x.DefaultSurgicalComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
             return Ok(_aPI_Response);
         }

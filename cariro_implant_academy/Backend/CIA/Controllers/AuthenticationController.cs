@@ -386,6 +386,29 @@ namespace CIA.Controllers
             _ciaDbContext.SaveChanges();
             return Ok();
         }
+        [AllowAnonymous]
+        [HttpGet("MigrateToNewComplicationsSystem")]
+        public async Task<IActionResult> MigrateToNewComplicationsSystem()
+        {
+            var defautlCOm = _ciaDbContext.DefaultSurgicalComplications.ToList();
+            var coms = _ciaDbContext.ComplicationsAfterSurgery.ToList();
+            foreach (var com in coms)
+            {
+                try
+                {
+                    com.DefaultSurgicalComplicationsId = defautlCOm.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("");
+                }
+            }
+            _ciaDbContext.ComplicationsAfterSurgery.UpdateRange(coms);
+            _ciaDbContext.SaveChanges();
+
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpGet("MigrateToNewProstheticSystem")]
@@ -3367,7 +3390,7 @@ namespace CIA.Controllers
                 {
                     comps.Add(new ComplicationsAfterSurgeryModel()
                     {
-                        Name = Enum.GetName(typeof(EunumComplicationsAfterSurgery), rnd.Next(0, 7)),
+                        //Name = Enum.GetName(typeof(EunumComplicationsAfterSurgery), rnd.Next(0, 7)),
                         Date = DateTime.UtcNow,
                         Tooth = rnd.Next(1, 40),
                         PatientId = id,

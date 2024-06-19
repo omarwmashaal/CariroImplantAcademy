@@ -17,8 +17,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     super.done,
     super.str_implantFailed,
     super.implantFailed,
-    super.complicationsAfterSurgery,
-    super.complicationsAfterSurgeryOr,
+    super.complicationsAfterSurgeryIds,
+    super.complicationsAfterSurgeryIdsOr,
     super.noTreatmentPlan,
     super.str_complicationsAfterSurgery,
     super.teethClassification,
@@ -38,12 +38,12 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
       id: entity.id,
       ids: entity.ids,
       secondaryId: entity.secondaryId,
-      complicationsAfterSurgeryOr: entity.complicationsAfterSurgeryOr,
+      complicationsAfterSurgeryIdsOr: entity.complicationsAfterSurgeryIdsOr,
       patientName: entity.patientName,
       done: entity.done,
       noTreatmentPlan: entity.noTreatmentPlan,
       implantFailed: entity.implantFailed,
-      complicationsAfterSurgery: entity.complicationsAfterSurgery,
+      complicationsAfterSurgeryIds: entity.complicationsAfterSurgeryIds,
       teethClassification: entity.teethClassification,
       and_treatmentIds: entity.and_treatmentIds,
       or_treatmentIds: entity.or_treatmentIds,
@@ -86,11 +86,9 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     data['teethClassification'] = this.teethClassification == null ? null : this.teethClassification!.index;
 
     data['implantFailed'] = this.implantFailed;
-    data['complicationsAfterSurgery'] =
-        this.complicationsAfterSurgery == null ? null : ComplicationsAfterSurgeryModel.fromEntity(this.complicationsAfterSurgery!).toJson();
-    data['complicationsAfterSurgeryOr'] =
-        this.complicationsAfterSurgeryOr == null ? null : ComplicationsAfterSurgeryModel.fromEntity(this.complicationsAfterSurgeryOr!).toJson();
-
+    data['complicationsAfterSurgeryIds'] = this.complicationsAfterSurgeryIds?.map((e) => e as int).toList();
+    data['complicationsAfterSurgeryIdsOr'] = this.complicationsAfterSurgeryIdsOr?.map((e) => e as int).toList();
+    
     data['and_treatmentIds'] = (and_treatmentIds ?? []).map((e) => e as int).toList();
     data['or_treatmentIds'] = (or_treatmentIds ?? []).map((e) => e as int).toList();
     return data;

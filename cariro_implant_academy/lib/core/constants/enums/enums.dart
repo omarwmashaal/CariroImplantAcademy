@@ -270,20 +270,6 @@ enum EnumDortorsPercentageEnum {
   OperatorAndMain,
 }
 
-enum EunumComplicationsAfterSurgery {
-  Swelling,
-  OpenWound,
-  Numbness,
-  OroantralCommunication,
-  PusInImplantSite,
-  PusInDonorSite,
-  SinusElevationFailure,
-  GBRFailure,
-  Infection,
-  Inflamation,
-  ImplantFailed,
-}
-
 enum EunumComplicationsAfterProsthesis {
   ScrewLoosness,
   CrownFall,

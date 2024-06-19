@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
@@ -11,6 +12,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
@@ -55,6 +57,8 @@ import '../../domain/useCases/getSuppliersUseCase.dart';
 import '../../domain/useCases/getTacsUseCase.dart';
 
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
+  final GetDefaultSurgicalComplicationsUseCase getDefaultSurgicalComplicationsUseCase;
+  final UpdateDefaultSurgicalComplicationsUseCase updateDefaultSurgicalComplicationsUseCase;
   final GetProstheticItemsUseCase getProstheticItemsUseCase;
   final GetProstheticStatusUseCase getProstheticStatusUseCase;
   final GetProstheticNextVisitUseCase getProstheticNextVisitUseCase;
@@ -106,6 +110,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
 
   SettingsBloc({
+    required this.updateDefaultSurgicalComplicationsUseCase,
+    required this.getDefaultSurgicalComplicationsUseCase,
     required this.getProstheticStatusUseCase,
     required this.getProstheticNextVisitUseCase,
     required this.getProstheticItemsUseCase,
@@ -156,6 +162,26 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabOptionsUseCase,
     required this.getLabOptionsUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
+    on<SettingsBloc_LoadDefaultSurgicalComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_LoadingDefaultSurgicalComplicationsState());
+        final result = await getDefaultSurgicalComplicationsUseCase(NoParams());
+        result.fold(
+          (l) => emit(SettingsBloc_LoadingDefaultSurgicalComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<SettingsBloc_UpdateDefaultSurgicalComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_UpdatingDefaultSurgicalComplicationsState());
+        final result = await updateDefaultSurgicalComplicationsUseCase(event.params);
+        result.fold(
+          (l) => emit(SettingsBloc_UpdatingDefaultSurgicalComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_UpdatedDefaultSurgicalComplicationsSuccessfullyState()),
+        );
+      },
+    );
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
         emit(SettingsBloc_LoadingImplantCompaniesState());

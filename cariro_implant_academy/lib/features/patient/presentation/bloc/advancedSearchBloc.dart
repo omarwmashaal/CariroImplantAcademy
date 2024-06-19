@@ -277,7 +277,7 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
                   )));
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
-              if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
+              if ((!(query.complicationsAfterSurgeryIds == null) || !(query.complicationsAfterSurgeryIdsOr == null))) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
               if (query.clearnaceLower == true)

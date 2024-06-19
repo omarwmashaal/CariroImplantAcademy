@@ -506,4 +506,24 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getDefaultSurgicalComplications() async {
+    try {
+      final result = await settingsDatasource.getDefaultSurgicalComplications();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, NoParams>> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value)async {
+    try {
+      final result = await settingsDatasource.updateDefaultSurgicalComplications(value);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

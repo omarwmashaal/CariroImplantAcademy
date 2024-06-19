@@ -23,8 +23,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   List<int>? and_treatmentIds;
   List<int>? or_treatmentIds;
   bool? implantFailed;
-  ComplicationsAfterSurgeryEntity? complicationsAfterSurgery;
-  ComplicationsAfterSurgeryEntity? complicationsAfterSurgeryOr;
+  List<int>? complicationsAfterSurgeryIds;
+  List<int>? complicationsAfterSurgeryIdsOr;
   String? str_complicationsAfterSurgery;
   String? str_complicationsAfterProsthesis;
 
@@ -41,11 +41,11 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.candidateBatch,
     this.secondaryId,
     this.tooth,
-    this.complicationsAfterSurgeryOr,
+    this.complicationsAfterSurgeryIdsOr,
     this.patientName,
     this.done,
     this.implantFailed,
-    this.complicationsAfterSurgery,
+    this.complicationsAfterSurgeryIds,
     this.noTreatmentPlan,
     this.clearnaceLower = false,
     this.clearnaceUpper = false,
@@ -67,10 +67,10 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   List<Object?> get props => [
         this.id,
         this.tooth,
-        this.complicationsAfterSurgeryOr,
+        this.complicationsAfterSurgeryIdsOr,
         this.secondaryId,
         this.implantFailed,
-        this.complicationsAfterSurgery,
+        this.complicationsAfterSurgeryIds,
         this.patientName,
         this.done,
         this.ids,
@@ -89,6 +89,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
       candidate == null &&
       candidateBatch == null &&
       implantFailed == null &&
+      complicationsAfterSurgeryIds == null &&
+      complicationsAfterSurgeryIdsOr == null &&
       (and_treatmentIds?.isEmpty ?? true) &&
       (or_treatmentIds?.isEmpty ?? true) &&
       clearnaceLower != true &&

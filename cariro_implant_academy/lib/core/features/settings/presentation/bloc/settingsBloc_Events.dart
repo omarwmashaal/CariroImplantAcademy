@@ -44,7 +44,6 @@ class SettingsBloc_LoadLabItemsEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadLabOptionsEvent extends SettingsBloc_Events {
-
   final int? parentId;
   SettingsBloc_LoadLabOptionsEvent({
     this.parentId,
@@ -410,4 +409,16 @@ class SettingsBloc_UpdateProstheticNextEventEvent extends SettingsBloc_Events {
   SettingsBloc_UpdateProstheticNextEventEvent({required this.params});
   @override
   List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateDefaultSurgicalComplicationsEvent extends SettingsBloc_Events {
+  final List<BasicNameIdObjectEntity> params;
+  SettingsBloc_UpdateDefaultSurgicalComplicationsEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_LoadDefaultSurgicalComplicationsEvent extends SettingsBloc_Events {
+  @override
+  List<Object?> get props => [];
 }

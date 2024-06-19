@@ -28,6 +28,7 @@ abstract class SettingsRepository {
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getImplantCompanies();
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getImplantLines(int id);
   Future<Either<Failure, List<ImplantEntity>>> getImplants(int id);
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getDefaultSurgicalComplications();
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getIncomeCategories();
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getExpensesCategories(Website website);
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getPaymentMethods();
@@ -40,6 +41,7 @@ abstract class SettingsRepository {
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticNextVisit(EnumProstheticType type, int itemId);
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticStatus(EnumProstheticType type, int itemId);
   //Update Methods
+  Future<Either<Failure, NoParams>> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value);
   Future<Either<Failure, NoParams>> changeImplantCompanyName(BasicNameIdObjectEntity value);
   Future<Either<Failure, NoParams>> changeImplantLineName(BasicNameIdObjectEntity value);
   Future<Either<Failure, NoParams>> addImplants(UpdateImplantsParams value);

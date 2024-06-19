@@ -39,6 +39,7 @@ abstract class SettingsDatasource {
   Future<List<MembraneModel>> getMembranes(int id);
 
   Future<List<BasicNameIdObjectModel>> getImplantCompanies();
+  Future<List<BasicNameIdObjectModel>> getDefaultSurgicalComplications();
 
   Future<List<BasicNameIdObjectModel>> getImplantLines(int id);
 
@@ -61,6 +62,7 @@ abstract class SettingsDatasource {
   Future<List<BasicNameIdObjectModel>> getSuppliers(Website website, bool medical);
 
   Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
+  Future<NoParams> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value);
 
   Future<NoParams> changeImplantLineName(BasicNameIdObjectEntity value);
 
@@ -833,6 +835,39 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/UpdateLabOptions",
         body: data.map((e) => LabOptionModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+  
+  @override
+  Future<List<BasicNameIdObjectModel>> getDefaultSurgicalComplications() async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetSurgicalComplications",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+  
+  @override
+  Future<NoParams> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateSurgicalComplications",
+        body: value.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

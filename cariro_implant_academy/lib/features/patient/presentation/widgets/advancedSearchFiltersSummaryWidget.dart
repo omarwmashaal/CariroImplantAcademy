@@ -128,28 +128,28 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
 
   List<String> getTreatmentOrFilterTags() {
     List<String> filters = [];
-    if (!(searchTreatmentsDTO.complicationsAfterSurgeryOr?.isNull() ?? true)) {
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.swelling == true) {
-        filters.add("Surgery Complications: Swelling");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.openWound == true) {
-        filters.add("Surgery Complications: OpenWound");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.numbness == true) {
-        filters.add("Surgery Complications: Numbness");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.oroantralCommunication == true)
-        filters.add("Surgery Complications: Oroantral Communication");
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInImplantSite == true) filters.add("Surgery Complications: Pus In Implant Site");
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInDonorSite == true) {
-        filters.add("Surgery Complications: Pus In Donor Site");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.sinusElevationFailure == true)
-        filters.add("Surgery Complications: Sinus Elevation Failure");
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr!.gbrFailure == true) {
-        filters.add("Surgery Complications: GBR Failure");
-      }
-    }
+    // if (!(searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.isNull() ?? true)) {
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.swelling == true) {
+    //     filters.add("Surgery Complications: Swelling");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.openWound == true) {
+    //     filters.add("Surgery Complications: OpenWound");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.numbness == true) {
+    //     filters.add("Surgery Complications: Numbness");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.oroantralCommunication == true)
+    //     filters.add("Surgery Complications: Oroantral Communication");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.pusInImplantSite == true) filters.add("Surgery Complications: Pus In Implant Site");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.pusInDonorSite == true) {
+    //     filters.add("Surgery Complications: Pus In Donor Site");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.sinusElevationFailure == true)
+    //     filters.add("Surgery Complications: Sinus Elevation Failure");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.gbrFailure == true) {
+    //     filters.add("Surgery Complications: GBR Failure");
+    //   }
+    // }
     if (!(searchProstheticDTO.complicationsOr?.isNull() ?? true)) {
       if (searchProstheticDTO.complicationsOr!.screwLoosness == true) {
         filters.add("Prosthetic Complications: Screw Loosness");
@@ -175,27 +175,28 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
 
   List<String> getTreatmentAndFilterTags() {
     List<String> filters = [];
-    if (!(searchTreatmentsDTO.complicationsAfterSurgery?.isNull() ?? true)) {
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.swelling == true) {
-        filters.add("Surgery Complications: Swelling");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.openWound == true) {
-        filters.add("Surgery Complications: OpenWound");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.numbness == true) {
-        filters.add("Surgery Complications: Numbness");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.oroantralCommunication == true)
-        filters.add("Surgery Complications: Oroantral Communication");
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.pusInImplantSite == true) filters.add("Surgery Complications: Pus In Implant Site");
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.pusInDonorSite == true) {
-        filters.add("Surgery Complications: Pus In Donor Site");
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.sinusElevationFailure == true) filters.add("Surgery Complications: Sinus Elevation Failure");
-      if (searchTreatmentsDTO.complicationsAfterSurgery!.gbrFailure == true) {
-        filters.add("Surgery Complications: GBR Failure");
-      }
-    }
+    // if (!(searchTreatmentsDTO.complicationsAfterSurgeryIds?.isNull() ?? true)) {
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.swelling == true) {
+    //     filters.add("Surgery Complications: Swelling");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.openWound == true) {
+    //     filters.add("Surgery Complications: OpenWound");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.numbness == true) {
+    //     filters.add("Surgery Complications: Numbness");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.oroantralCommunication == true)
+    //     filters.add("Surgery Complications: Oroantral Communication");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.pusInImplantSite == true) filters.add("Surgery Complications: Pus In Implant Site");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.pusInDonorSite == true) {
+    //     filters.add("Surgery Complications: Pus In Donor Site");
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.sinusElevationFailure == true)
+    //     filters.add("Surgery Complications: Sinus Elevation Failure");
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds!.gbrFailure == true) {
+    //     filters.add("Surgery Complications: GBR Failure");
+    //   }
+    // }
 
     // if (searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic != null) {
     //   filters.add(
@@ -314,46 +315,48 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
   }
 
   void removeFilterTags(String filter) {
-    if (filter.contains("Surgery Complications")) {
-      if (filter.contains("Surgery Complications: Swelling")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.swelling = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.swelling = null;
-      }
-      if (filter.contains("Surgery Complications: OpenWound")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.openWound = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.openWound = null;
-      }
-      if (filter.contains("Surgery Complications: Numbness")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.numbness = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.numbness = null;
-      }
-      if (filter.contains("Surgery Complications: Oroantral Communication")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.oroantralCommunication = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.oroantralCommunication = null;
-      }
-      if (filter.contains("Surgery Complications: Pus In Implant Site")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.pusInImplantSite = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInImplantSite = null;
-      }
-      if (filter.contains("Surgery Complications: Pus In Donor Site")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.pusInDonorSite = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInDonorSite = null;
-      }
-      if (filter.contains("Surgery Complications: Sinus Elevation Failure")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.sinusElevationFailure = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.sinusElevationFailure = null;
-      }
-      if (filter.contains("Surgery Complications: GBR Failure")) {
-        if (searchTreatmentsDTO.complicationsAfterSurgery != null) searchTreatmentsDTO.complicationsAfterSurgery!.gbrFailure = null;
-        if (searchTreatmentsDTO.complicationsAfterSurgeryOr != null) searchTreatmentsDTO.complicationsAfterSurgeryOr!.gbrFailure = null;
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgery?.isNull() ?? true) {
-        searchTreatmentsDTO.complicationsAfterSurgery = null;
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr?.isNull() ?? true) {
-        searchTreatmentsDTO.complicationsAfterSurgeryOr = null;
-      }
-    }
+    // if (filter.contains("Surgery Complications")) {
+    //   if (filter.contains("Surgery Complications: Swelling")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.swelling = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.swelling = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: OpenWound")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.openWound = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.openWound = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: Numbness")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.numbness = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.numbness = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: Oroantral Communication")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.oroantralCommunication = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null)
+    //       searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.oroantralCommunication = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: Pus In Implant Site")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.pusInImplantSite = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.pusInImplantSite = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: Pus In Donor Site")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.pusInDonorSite = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.pusInDonorSite = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: Sinus Elevation Failure")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.sinusElevationFailure = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null)
+    //       searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.sinusElevationFailure = null;
+    //   }
+    //   if (filter.contains("Surgery Complications: GBR Failure")) {
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIds != null) searchTreatmentsDTO.complicationsAfterSurgeryIds!.gbrFailure = null;
+    //     if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr != null) searchTreatmentsDTO.complicationsAfterSurgeryIdsOr!.gbrFailure = null;
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIds?.isNull() ?? true) {
+    //     searchTreatmentsDTO.complicationsAfterSurgeryIds = null;
+    //   }
+    //   if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.isNull() ?? true) {
+    //     searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
+    //   }
+    // }
     if (filter.contains("Prosthetic Complications")) {
       if (filter.contains("Prosthetic Complications: Screw Loosness")) {
         if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.screwLoosness = null;
@@ -380,12 +383,12 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
         if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.pain = null;
       }
 
-      if (searchTreatmentsDTO.complicationsAfterSurgery?.isNull() ?? true) {
-        searchTreatmentsDTO.complicationsAfterSurgery = null;
-      }
-      if (searchTreatmentsDTO.complicationsAfterSurgeryOr?.isNull() ?? true) {
-        searchTreatmentsDTO.complicationsAfterSurgeryOr = null;
-      }
+      // if (searchTreatmentsDTO.complicationsAfterSurgeryIds?.isNull() ?? true) {
+      //   searchTreatmentsDTO.complicationsAfterSurgeryIds = null;
+      // }
+      // if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.isNull() ?? true) {
+      //   searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
+      // }
 
       if (searchProstheticDTO.complicationsAnd?.isNull() ?? true) {
         searchProstheticDTO.complicationsAnd = null;
@@ -394,7 +397,7 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
         searchProstheticDTO.complicationsOr = null;
       }
     }
-    
+
     // if (filter.contains("Diagnostic Impression Diagnosis")) {
     //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic = null;
     // }

@@ -17,7 +17,7 @@ namespace CIA.Controllers
         {
 
             DateTime dateTime = DateTime.Now;
-            if (dateTime.Date > new DateTime(2024,6,17))
+            if (dateTime.Date > new DateTime(2024,7,17))
                 throw new Exception();
 
             //var t = Encrypt("OmarWael", dateTime.AddMilliseconds(-400).Ticks.ToString());

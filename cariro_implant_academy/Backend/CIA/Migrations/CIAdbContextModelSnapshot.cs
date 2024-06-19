@@ -586,6 +586,9 @@ namespace CIA.Migrations
                     b.Property<DateTime?>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("DefaultSurgicalComplicationsId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -605,6 +608,8 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultSurgicalComplicationsId");
 
                     b.HasIndex("OperatorId");
 
@@ -634,6 +639,80 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("ComplicationsAfterSurgeryParents");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DefaultSurgicalComplications", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DefaultSurgicalComplications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Swelling"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Open Wound"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Numbness"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Oroantral Communication"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Pus In Implant Site"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Pus In Donor Site"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Sinus Elevation Failure"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "GBR Failure"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Implant Failed"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Infection"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Inflamation"
+                        });
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DentalExaminationModel", b =>
@@ -23833,6 +23912,10 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ComplicationsAfterSurgeryModel", b =>
                 {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DefaultSurgicalComplications", "DefaultSurgicalComplication")
+                        .WithMany()
+                        .HasForeignKey("DefaultSurgicalComplicationsId");
+
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Operator")
                         .WithMany()
                         .HasForeignKey("OperatorId")
@@ -23846,6 +23929,8 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId");
+
+                    b.Navigation("DefaultSurgicalComplication");
 
                     b.Navigation("Operator");
 

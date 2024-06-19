@@ -56,8 +56,8 @@ namespace CIA.Models.CIA.DTOs
         public bool? ClearanceUpper { get; set; }
         public bool? ClearanceLower { get; set; }
 
-        public ComplicationsAfterSurgeryModel? complicationsAfterSurgery { get; set; }
-        public ComplicationsAfterSurgeryModel? complicationsAfterSurgeryOr { get; set; }
+        public List<int>? complicationsAfterSurgeryIds { get; set; }
+        public List<int>? complicationsAfterSurgeryIdsOr { get; set; }
         public bool? ImplantFailed { get; set; }
      
 

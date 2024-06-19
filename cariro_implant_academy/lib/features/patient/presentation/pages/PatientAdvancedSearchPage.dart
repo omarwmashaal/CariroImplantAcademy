@@ -111,6 +111,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
   }
 
   List<TreatmentItemEntity> treatmentItems = [];
+  List<BasicNameIdObjectEntity> complicationsItems = [];
   List<BasicNameIdObjectEntity> prostheticItems = [];
 
   @override

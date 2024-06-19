@@ -6,6 +6,9 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedPatientSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
@@ -13,6 +16,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/complications/do
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/domain/entities/BasicNameIdObjectEntity.dart';
@@ -33,383 +37,314 @@ class AdvancedSearchTreatmentFilterWidget extends StatefulWidget {
 }
 
 class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTreatmentFilterWidget> {
+  List<BasicNameIdObjectEntity> complicationsItems = [];
+
+  late SettingsBloc settingsBloc;
+
+  @override
+  void initState() {
+    settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    settingsBloc.add(SettingsBloc_LoadDefaultSurgicalComplicationsEvent());
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: ExpansionTile(
-        title: Text("Treatment Filter"),
-        children: [
-          AdvancedSearchFilterChildWidget(
-            title: "Candidate",
-            child: Column(
-              children: [
-                CIA_DropDownSearchBasicIdName(
-                  label: "Candidate Batch",
-                  asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
-                  selectedItem: widget.searchTreatmentsDTO.candidateBatch,
-                  onSelect: (value) {
-                    widget.searchTreatmentsDTO.candidateBatch = value;
-                    setState(() {});
-                  },
-                ),
-                CIA_DropDownSearchBasicIdName(
-                  label: "Candidate",
-                  asyncUseCase: widget.searchTreatmentsDTO.candidateBatch?.id == null ? null : sl<LoadCandidatesByBatchId>(),
-                  searchParams: widget.searchTreatmentsDTO.candidateBatch?.id ?? 0,
-                  selectedItem: widget.searchTreatmentsDTO.candidate,
-                  onSelect: (value) {
-                    widget.searchTreatmentsDTO.candidate = value;
-                    setState(() {});
-                  },
-                ),
-              ],
-            ),
-          ),
-          AdvancedSearchFilterChildWidget(
-            title: "No Treatment Plans Assigned",
-            child: Row(
-              children: [
-                CIA_CheckBoxWidget(
-                    text: "Yes",
-                    onChange: (value) {
-                      if (value == true) {
-                        widget.searchTreatmentsDTO.and_treatmentIds!.clear();
-                        widget.searchTreatmentsDTO.or_treatmentIds!.clear();
-                        widget.searchTreatmentsDTO.done = null;
-                      } else {
-                        widget.searchTreatmentsDTO.done = false;
-                      }
-                      setState(() => widget.searchTreatmentsDTO.noTreatmentPlan = value == true ? true : null);
+      child: BlocListener<SettingsBloc, SettingsBloc_States>(
+        bloc: settingsBloc,
+        listener: (context, state) {
+          if (state is SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState) {
+            complicationsItems = state.data;
+            setState(() {});
+          }
+        },
+        child: ExpansionTile(
+          title: Text("Treatment Filter"),
+          children: [
+            AdvancedSearchFilterChildWidget(
+              title: "Candidate",
+              child: Column(
+                children: [
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Candidate Batch",
+                    asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
+                    selectedItem: widget.searchTreatmentsDTO.candidateBatch,
+                    onSelect: (value) {
+                      widget.searchTreatmentsDTO.candidateBatch = value;
+                      setState(() {});
                     },
-                    value: widget.searchTreatmentsDTO.noTreatmentPlan == true),
-              ],
+                  ),
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Candidate",
+                    asyncUseCase: widget.searchTreatmentsDTO.candidateBatch?.id == null ? null : sl<LoadCandidatesByBatchId>(),
+                    searchParams: widget.searchTreatmentsDTO.candidateBatch?.id ?? 0,
+                    selectedItem: widget.searchTreatmentsDTO.candidate,
+                    onSelect: (value) {
+                      widget.searchTreatmentsDTO.candidate = value;
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-              title: "Plan Or Surgery",
+            AdvancedSearchFilterChildWidget(
+              title: "No Treatment Plans Assigned",
               child: Row(
                 children: [
                   CIA_CheckBoxWidget(
-                      text: "Plan",
-                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.done = false),
-                      value: widget.searchTreatmentsDTO.done == false),
+                      text: "Yes",
+                      onChange: (value) {
+                        if (value == true) {
+                          widget.searchTreatmentsDTO.and_treatmentIds!.clear();
+                          widget.searchTreatmentsDTO.or_treatmentIds!.clear();
+                          widget.searchTreatmentsDTO.done = null;
+                        } else {
+                          widget.searchTreatmentsDTO.done = false;
+                        }
+                        setState(() => widget.searchTreatmentsDTO.noTreatmentPlan = value == true ? true : null);
+                      },
+                      value: widget.searchTreatmentsDTO.noTreatmentPlan == true),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                title: "Plan Or Surgery",
+                child: Row(
+                  children: [
+                    CIA_CheckBoxWidget(
+                        text: "Plan",
+                        onChange: (value) => setState(() => widget.searchTreatmentsDTO.done = false),
+                        value: widget.searchTreatmentsDTO.done == false),
+                    SizedBox(width: 10),
+                    CIA_CheckBoxWidget(
+                        text: "Surgery",
+                        onChange: (value) => setState(() => widget.searchTreatmentsDTO.done = true),
+                        value: widget.searchTreatmentsDTO.done == true)
+                  ],
+                ),
+              ),
+            ),
+            AdvancedSearchFilterChildWidget(
+              title: "Implant Failed",
+              child: Row(
+                children: [
+                  CIA_CheckBoxWidget(
+                      text: "All",
+                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = null),
+                      value: widget.searchTreatmentsDTO.implantFailed == null),
                   SizedBox(width: 10),
                   CIA_CheckBoxWidget(
-                      text: "Surgery",
-                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.done = true),
-                      value: widget.searchTreatmentsDTO.done == true)
+                      text: "Yes",
+                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = true),
+                      value: widget.searchTreatmentsDTO.implantFailed == true),
+                  SizedBox(width: 10),
+                  CIA_CheckBoxWidget(
+                      text: "No",
+                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = false),
+                      value: widget.searchTreatmentsDTO.implantFailed == false)
                 ],
               ),
             ),
-          ),
-          AdvancedSearchFilterChildWidget(
-            title: "Implant Failed",
-            child: Row(
-              children: [
-                CIA_CheckBoxWidget(
-                    text: "All",
-                    onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = null),
-                    value: widget.searchTreatmentsDTO.implantFailed == null),
-                SizedBox(width: 10),
-                CIA_CheckBoxWidget(
-                    text: "Yes",
-                    onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = true),
-                    value: widget.searchTreatmentsDTO.implantFailed == true),
-                SizedBox(width: 10),
-                CIA_CheckBoxWidget(
-                    text: "No",
-                    onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = false),
-                    value: widget.searchTreatmentsDTO.implantFailed == false)
-              ],
-            ),
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-              title: "Teeth",
-              child: CIA_DropDownSearchBasicIdName(
-                items: [
-                  BasicNameIdObjectEntity(
-                    name: "All",
-                  ),
-                  BasicNameIdObjectEntity(name: "Upper Anterior", id: 0),
-                  BasicNameIdObjectEntity(name: "Lower Anterior", id: 1),
-                  BasicNameIdObjectEntity(name: "Upper Posterior", id: 2),
-                  BasicNameIdObjectEntity(name: "Lower Posterior", id: 3),
-                ],
-                selectedItem: BasicNameIdObjectEntity(
-                    name: widget.searchTreatmentsDTO.teethClassification?.name ?? "All", id: widget.searchTreatmentsDTO.teethClassification?.index),
-                onSelect: (value) {
-                  widget.searchTreatmentsDTO.teethClassification =
-                      EnumTeethClassification.values.firstWhereOrNull((element) => element.index == value.id);
-                },
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                title: "Teeth",
+                child: CIA_DropDownSearchBasicIdName(
+                  items: [
+                    BasicNameIdObjectEntity(
+                      name: "All",
+                    ),
+                    BasicNameIdObjectEntity(name: "Upper Anterior", id: 0),
+                    BasicNameIdObjectEntity(name: "Lower Anterior", id: 1),
+                    BasicNameIdObjectEntity(name: "Upper Posterior", id: 2),
+                    BasicNameIdObjectEntity(name: "Lower Posterior", id: 3),
+                  ],
+                  selectedItem: BasicNameIdObjectEntity(
+                      name: widget.searchTreatmentsDTO.teethClassification?.name ?? "All", id: widget.searchTreatmentsDTO.teethClassification?.index),
+                  onSelect: (value) {
+                    widget.searchTreatmentsDTO.teethClassification =
+                        EnumTeethClassification.values.firstWhereOrNull((element) => element.index == value.id);
+                  },
+                ),
               ),
             ),
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-                title: "Post Surgery Complications (One of the following)",
-                child: Column(
-                  children: [
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Post Surgery Complications (One of the following)",
+                  child: Column(
+                    children: [
+                      CIA_CheckBoxWidget(
+                        text: "All",
+                        value: widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr == null,
+                        onChange: (value) {
+                          setState(() {
+                            widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
+                          });
+                        },
+                      ),
+                      ...(complicationsItems
+                          .map(
+                            (e) => CIA_CheckBoxWidget(
+                              text: e.name ?? "",
+                              value: widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.contains(e.id!) ?? false,
+                              onChange: (value) {
+                                if (value == true) {
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr ??= [];
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.add(e.id!);
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.remove(e.id!);
+                                } else {
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.remove(e.id!);
+                                }
+
+                                widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr =
+                                    widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.toSet().toList();
+                                widget.searchTreatmentsDTO.complicationsAfterSurgeryIds =
+                                    widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.toSet().toList();
+
+                                setState(() {});
+                              },
+                            ),
+                          )
+                          .toList()),
+                    ],
+                  )),
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Post Surgery Complications (All of the following)",
+                  child: Column(
+                    children: [
+                      CIA_CheckBoxWidget(
+                        text: "All",
+                        value: widget.searchTreatmentsDTO.complicationsAfterSurgeryIds == null,
+                        onChange: (value) {
+                          setState(() {
+                            widget.searchTreatmentsDTO.complicationsAfterSurgeryIds = null;
+                          });
+                        },
+                      ),
+                      ...(complicationsItems
+                          .map(
+                            (e) => CIA_CheckBoxWidget(
+                              text: e.name ?? "",
+                              value: widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.contains(e.id!) ?? false,
+                              onChange: (value) {
+                                if (value == true) {
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIds ??= [];
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.add(e.id!);
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.remove(e.id!);
+                                } else {
+                                  widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.remove(e.id!);
+                                }
+
+                                widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr =
+                                    widget.searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.toSet().toList();
+                                widget.searchTreatmentsDTO.complicationsAfterSurgeryIds =
+                                    widget.searchTreatmentsDTO.complicationsAfterSurgeryIds?.toSet().toList();
+
+                                setState(() {});
+                              },
+                            ),
+                          )
+                          .toList()),
+                    ],
+                  )),
+            ),
+            CIA_CheckBoxWidget(
+              text: "Clearance Upper",
+              value: widget.searchTreatmentsDTO.clearnaceUpper == true,
+              onChange: (value) {
+                widget.searchTreatmentsDTO.clearnaceUpper = value;
+              },
+            ),
+            SizedBox(height: 10),
+            CIA_CheckBoxWidget(
+              text: "Clearance Lower",
+              value: widget.searchTreatmentsDTO.clearnaceLower == true,
+              onChange: (value) {
+                widget.searchTreatmentsDTO.clearnaceLower = value;
+              },
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Treatment Type (One of the following)",
+                  child: Column(
+                    children: [
+                      CIA_CheckBoxWidget(
+                        text: "All",
+                        value: widget.searchTreatmentsDTO.or_treatmentIds == null,
+                        onChange: (value) {
+                          setState(() {
+                            widget.searchTreatmentsDTO.or_treatmentIds = null;
+                          });
+                        },
+                      ),
+                      ...widget.treatmentItems
+                          .map(
+                            (e) => CIA_CheckBoxWidget(
+                              text: e.name!,
+                              value: widget.searchTreatmentsDTO.or_treatmentIds!.contains(e.id),
+                              onChange: (value) {
+                                if (value) {
+                                  widget.searchTreatmentsDTO.or_treatmentIds!.add(e.id!);
+                                  widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
+                                } else
+                                  widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
+
+                                widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
+                                widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
+                                setState(() => null);
+                              },
+                            ),
+                          )
+                          .toList()
+                    ],
+                  )),
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Treatment Type (All of the following)",
+                  child: Column(children: [
                     CIA_CheckBoxWidget(
                       text: "All",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.isNull() ?? true,
+                      value: widget.searchTreatmentsDTO.and_treatmentIds == null,
                       onChange: (value) {
                         setState(() {
-                          widget.searchTreatmentsDTO.complicationsAfterSurgeryOr = null;
+                          widget.searchTreatmentsDTO.and_treatmentIds = null;
                         });
                       },
                     ),
-                    CIA_CheckBoxWidget(
-                      text: "Swelling",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.swelling == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.swelling = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.swelling = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Wound",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.openWound == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.openWound = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.openWound = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Numbness",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.numbness == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.numbness = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.numbness = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Oroantral Communication",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.oroantralCommunication == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.oroantralCommunication = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.oroantralCommunication = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pus In Implant Site",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.pusInImplantSite == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInImplantSite = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.pusInImplantSite = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pus In Donor Site",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.pusInDonorSite == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.pusInDonorSite = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.pusInDonorSite = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Sinus Elevation Failure",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.sinusElevationFailure == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.sinusElevationFailure = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.sinusElevationFailure = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR Failure",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.gbrFailure == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgeryOr!.gbrFailure = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgery?.gbrFailure = null;
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                )),
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-                title: "Post Surgery Complications (All of the following)",
-                child: Column(
-                  children: [
-                    CIA_CheckBoxWidget(
-                      text: "All",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.isNull() ?? true,
-                      onChange: (value) {
-                        setState(() {
-                          widget.searchTreatmentsDTO.complicationsAfterSurgery = null;
-                        });
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Swelling",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.swelling == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.swelling = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.swelling = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Open Wound",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.openWound == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.openWound = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.openWound = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Numbness",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.numbness == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.numbness = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.numbness = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Oroantral Communication",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.oroantralCommunication == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.oroantralCommunication = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.oroantralCommunication = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pus In Implant Site",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.pusInImplantSite == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.pusInImplantSite = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.pusInImplantSite = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Pus In Donor Site",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.pusInDonorSite == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.pusInDonorSite = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.pusInDonorSite = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "Sinus Elevation Failure",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.sinusElevationFailure == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.sinusElevationFailure = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.sinusElevationFailure = null;
-                        setState(() {});
-                      },
-                    ),
-                    CIA_CheckBoxWidget(
-                      text: "GBR Failure",
-                      value: widget.searchTreatmentsDTO.complicationsAfterSurgery?.gbrFailure == true,
-                      onChange: (value) {
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery ??= ComplicationsAfterSurgeryEntity();
-                        widget.searchTreatmentsDTO.complicationsAfterSurgery!.gbrFailure = value;
-                        if (value == true) widget.searchTreatmentsDTO.complicationsAfterSurgeryOr?.gbrFailure = null;
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                )),
-          ),
-          CIA_CheckBoxWidget(
-            text: "Clearance Upper",
-            value: widget.searchTreatmentsDTO.clearnaceUpper == true,
-            onChange: (value) {
-              widget.searchTreatmentsDTO.clearnaceUpper = value;
-            },
-          ),
-          SizedBox(height: 10),
-          CIA_CheckBoxWidget(
-            text: "Clearance Lower",
-            value: widget.searchTreatmentsDTO.clearnaceLower == true,
-            onChange: (value) {
-              widget.searchTreatmentsDTO.clearnaceLower = value;
-            },
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-                title: "Treatment Type (One of the following)",
-                child: Column(
-                  children: widget.treatmentItems
-                      .map(
-                        (e) => CIA_CheckBoxWidget(
-                          text: e.name!,
-                          value: widget.searchTreatmentsDTO.or_treatmentIds!.contains(e.id),
-                          onChange: (value) {
-                            if (value) {
-                              widget.searchTreatmentsDTO.or_treatmentIds!.add(e.id!);
-                              widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
-                            } else
-                              widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
+                    ...widget.treatmentItems
+                        .map(
+                          (e) => CIA_CheckBoxWidget(
+                            text: e.name!,
+                            value: widget.searchTreatmentsDTO.and_treatmentIds!.contains(e.id),
+                            onChange: (value) {
+                              if (value) {
+                                widget.searchTreatmentsDTO.and_treatmentIds!.add(e.id!);
+                                widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
+                              } else
+                                widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
 
-                            widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
-                            widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
-                          },
-                        ),
-                      )
-                      .toList(),
-                )),
-          ),
-          Visibility(
-            visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-            child: AdvancedSearchFilterChildWidget(
-                title: "Treatment Type (All of the following)",
-                child: Column(
-                  children: widget.treatmentItems
-                      .map(
-                        (e) => CIA_CheckBoxWidget(
-                          text: e.name!,
-                          value: widget.searchTreatmentsDTO.and_treatmentIds!.contains(e.id),
-                          onChange: (value) {
-                            if (value) {
-                              widget.searchTreatmentsDTO.and_treatmentIds!.add(e.id!);
-                              widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
-                            } else
-                              widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
-
-                            widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
-                            widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
-                          },
-                        ),
-                      )
-                      .toList(),
-                )),
-          ),
-        ],
+                              widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
+                              widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
+                              setState(() => null);
+                            },
+                          ),
+                        )
+                        .toList(),
+                  ])),
+            ),
+          ],
+        ),
       ),
     );
   }
