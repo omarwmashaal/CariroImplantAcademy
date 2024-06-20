@@ -13,7 +13,7 @@ namespace CIA.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("")
+            migrationBuilder.Sql("Delete from \"ComplicationsAfterProsthesis\" where \"Name\" Is Null");
             migrationBuilder.AddColumn<int>(
                 name: "DefaultProstheticComplicationsId",
                 table: "ComplicationsAfterProsthesis",
