@@ -4,7 +4,14 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/bloc/complainBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/widgets/calendarWidget.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterSurgeryEntity.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc_Events.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/bloc/complicationsBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterSurgeryPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationBaseEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/dentalExamination/domain/entities/dentalExaminationEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/nonSurgicalTreatment/domain/entities/nonSurgialTreatmentEntity.dart';
@@ -59,12 +66,12 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
   String date = "";
 
   bool edit = false;
-
   late NonSurgicalTreatmentBloc bloc;
   late MedicalInfoShellBloc medicalShellBloc;
   late NonSurgicalTreatmentEntity nonSurgicalTreatment;
   late DentalExaminationBaseEntity dentalExaminationEntity;
   List<TreatmentItemEntity> treatmentItems = [];
+  List<int>? teeth;
 
   @override
   void initState() {
@@ -79,6 +86,13 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
         dentalExaminationEntity: dentalExaminationEntity,
       ));
     };
+  }
+
+  void checkComplications(String treatmentNotes) {
+    if (treatmentNotes.toLowerCase().contains("complication")) {
+      bloc.emit(NonSurgicalTreatmentBloc_ShowComplications(show: true));
+    } else
+      bloc.emit(NonSurgicalTreatmentBloc_ShowComplications(show: false));
   }
 
   @override
@@ -105,6 +119,7 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           CustomLoader.hide();
         if (state is NonSurgicalTreatmentBloc_DentalExaminationDataLoadedSuccessfully) {
           dentalExaminationEntity = state.dentalExaminationEntity;
+
           //  bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: nonSurgicalTreatment.treatment??""));
         } else if (state is NonSurgicalTreatmentBloc_CheckingTeethStatusError)
           ShowSnackBar(context, isSuccess: false, message: state.message);
@@ -122,7 +137,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
           if (state.data == null) return;
           List<TreatmentDetailsEntity> model = state.data!;
           if (state.action == "Missed") {
-            var extractionModel = TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="extraction").id!, tooth: state.tooth);
+            var extractionModel = TreatmentDetailsEntity.getTreatment(
+                data: model,
+                treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "extraction").id!,
+                tooth: state.tooth);
             if (extractionModel != null) {
               CIA_ShowPopUpYesNo(
                 context: context,
@@ -165,12 +183,16 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               },
               child: Column(
                 children: [
-                  TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="crown").id!, tooth: state.tooth) != null
+                  TreatmentDetailsEntity.getTreatment(
+                              data: model,
+                              treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "crown").id!,
+                              tooth: state.tooth) !=
+                          null
                       ? Row(
                           children: [
                             FormTextKeyWidget(
                                 text:
-                                    "Crown at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="crown").id!, tooth: state.tooth)!.planPrice!.toString()}"),
+                                    "Crown at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "crown").id!, tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               onChange: (item, isSelected) => crown = item == "Yes" && isSelected,
@@ -183,12 +205,16 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                           ],
                         )
                       : SizedBox(),
-                  TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="restoration").id!, tooth: state.tooth) != null
+                  TreatmentDetailsEntity.getTreatment(
+                              data: model,
+                              treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "restoration").id!,
+                              tooth: state.tooth) !=
+                          null
                       ? Row(
                           children: [
                             FormTextKeyWidget(
                                 text:
-                                    "Restoration at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="restoration").id!, tooth: state.tooth)!.planPrice!.toString()}"),
+                                    "Restoration at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "restoration").id!, tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               singleSelect: true,
@@ -201,12 +227,16 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                           ],
                         )
                       : SizedBox(),
-                  TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="root canal treatment").id!, tooth: state.tooth) != null
+                  TreatmentDetailsEntity.getTreatment(
+                              data: model,
+                              treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "root canal treatment").id!,
+                              tooth: state.tooth) !=
+                          null
                       ? Row(
                           children: [
                             FormTextKeyWidget(
                                 text:
-                                    "Root Canal Treatment at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="root canal treatment").id!, tooth: state.tooth)!.planPrice!.toString()}"),
+                                    "Root Canal Treatment at price ${TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "root canal treatment").id!, tooth: state.tooth)!.planPrice!.toString()}"),
                             SizedBox(width: 10),
                             CIA_MultiSelectChipWidget(
                               singleSelect: true,
@@ -239,7 +269,12 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                 suffix: "EGP",
                 onChange: (value) => price = int.parse(value),
                 controller: TextEditingController(
-                    text: TreatmentDetailsEntity.getTreatment(data: model, treatmentItemId:  treatmentItems.firstWhere((element) => element.name?.toLowerCase()=="scaling").id!, tooth: state.tooth)?.planPrice?.toString() ??
+                    text: TreatmentDetailsEntity.getTreatment(
+                                data: model,
+                                treatmentItemId: treatmentItems.firstWhere((element) => element.name?.toLowerCase() == "scaling").id!,
+                                tooth: state.tooth)
+                            ?.planPrice
+                            ?.toString() ??
                         "0"),
               ),
             );
@@ -295,11 +330,12 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                         textInputAction: TextInputAction.newline,
                         onChange: (value) {
                           nonSurgicalTreatment.treatment = value;
+                          checkComplications(value);
                           bloc.add(NonSurgicalTreatmentBloc_CheckTeethStatusEvent(treatment: value));
                         },
                         label: "Treatment",
                         controller: controller,
-                        maxLines: 10,
+                        maxLines: 5,
                       );
                     }),
                   );
@@ -424,9 +460,10 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                           buildWhen: (previous, current) => current is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully,
                           builder: (context, state) {
                             List<int> containedTeeth = [];
-
                             if (state is NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully) {
                               containedTeeth = state.status;
+                              checkComplications(nonSurgicalTreatment.treatment ?? "");
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -442,7 +479,25 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
                                           ));
                                         }),
                                   ),
-                                  _buildTeethSuggestion(containedTeeth)
+                                  Expanded(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        BlocBuilder<NonSurgicalTreatmentBloc, NonSurgicalTreatmentBloc_States>(
+                                          buildWhen: (previous, current) => current is NonSurgicalTreatmentBloc_ShowComplications,
+                                          builder: (context, state) {
+                                            if (state is NonSurgicalTreatmentBloc_ShowComplications && state.show == true)
+                                              return Expanded(
+                                                child: ComplicationsAfterSurgeryPage(patientId: widget.patientId, enable: true),
+                                              );
+                                            else
+                                              return Container();
+                                          },
+                                        ),
+                                        _buildTeethSuggestion(containedTeeth)
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               );
                             }

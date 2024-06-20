@@ -34,7 +34,16 @@ import '../../../../../presentation/patientsMedical/bloc/medicalInfoShellBloc_St
 import 'package:collection/collection.dart';
 
 class ComplicationsAfterSurgeryPage extends StatefulWidget {
-  ComplicationsAfterSurgeryPage({Key? key, required this.patientId}) : super(key: key);
+  ComplicationsAfterSurgeryPage({
+    Key? key,
+    required this.patientId,
+    this.complicationsAfterSurgeryEntity,
+    this.teeth,
+    this.enable,
+  }) : super(key: key);
+  List<ComplicationsAfterSurgeryEntity>? complicationsAfterSurgeryEntity;
+  List<int>? teeth;
+  bool? enable;
 
   static String routePath = ":id/SurgicalComplications";
 
@@ -82,7 +91,13 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
     settingsBloc = BlocProvider.of<SettingsBloc>(context);
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
     settingsBloc.add(SettingsBloc_LoadDefaultSurgicalComplicationsEvent());
-    bloc.add(ComplicationsBloc_GetComplicationsAfterSurgeryEvent(id: widget.patientId));
+    if (widget.complicationsAfterSurgeryEntity != null) {
+      bloc.emit(ComplicationsBloc_LoadedComplicationsAfterSurgerySuccessfullyState(
+        data: widget.complicationsAfterSurgeryEntity!,
+        teeth: widget.teeth ?? [],
+      ));
+    } else
+      bloc.add(ComplicationsBloc_GetComplicationsAfterSurgeryEvent(id: widget.patientId));
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Complications After Surgery"));
     medicalShellBloc.saveChanges = () {
       bloc.add(ComplicationsBloc_UpdateComplicationsAfterSurgeryEvent(
@@ -102,6 +117,7 @@ class _ComplicationsAfterSurgeryPageState extends State<ComplicationsAfterSurger
       builder: (context, stateShell) {
         return AbsorbPointer(
           absorbing: () {
+            if (widget.enable ?? false) return false;
             if (stateShell is MedicalInfoBlocChangeViewEditState) {
               //   edit = stateShell.edit;
               return !stateShell.edit;

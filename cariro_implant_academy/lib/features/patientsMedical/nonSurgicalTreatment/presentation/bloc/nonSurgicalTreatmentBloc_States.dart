@@ -22,7 +22,7 @@ class NonSurgicalTreatmentBloc_DataLoadedSuccessfully extends NonSurgicalTreatme
   final NonSurgicalTreatmentEntity nonSurgicalTreatmentEntity;
   final List<TreatmentItemEntity> treatmentItems;
 
-  NonSurgicalTreatmentBloc_DataLoadedSuccessfully({required this.nonSurgicalTreatmentEntity,required this.treatmentItems});
+  NonSurgicalTreatmentBloc_DataLoadedSuccessfully({required this.nonSurgicalTreatmentEntity, required this.treatmentItems});
 
   @override
   List<Object?> get props => [nonSurgicalTreatmentEntity];
@@ -94,7 +94,7 @@ class NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully extends NonSurgical
   NonSurgicalTreatmentBloc_TeethStatusLoadedSuccessfully({required this.status});
 
   @override
-  List<Object?> get props => [status,identityHashCode(this)];
+  List<Object?> get props => [status, identityHashCode(this)];
 }
 
 class NonSurgicalTreatmentBloc_CheckingTeethStatusError extends NonSurgicalTreatmentBloc_States {
@@ -144,7 +144,7 @@ class NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully extends NonSu
   final String action;
   final int tooth;
 
-  NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully({required this.data, required this.action,required this.tooth});
+  NonSurgicalTreatmentBloc_LoadedTreatmentPlanItemSuccessfully({required this.data, required this.action, required this.tooth});
 
   @override
   List<Object?> get props => [data];
@@ -169,3 +169,9 @@ class NonSurgicalTreatmentBloc_AddedPatientReceiptSuccessfully extends NonSurgic
   List<Object?> get props => [];
 }
 
+class NonSurgicalTreatmentBloc_ShowComplications extends NonSurgicalTreatmentBloc_States {
+  final bool show;
+  NonSurgicalTreatmentBloc_ShowComplications({required this.show});
+  @override
+  List<Object?> get props => [show];
+}
