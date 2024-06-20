@@ -96,7 +96,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
           }(),
           child: BlocConsumer<DentalExaminationBloc, DentalExaminationBloc_States>(
             buildWhen: (previous, current) =>
-            current is DentalExaminationBloc_LoadingDataState ||
+                current is DentalExaminationBloc_LoadingDataState ||
                 current is DentalExaminationBloc_LoadedSuccessfullyState ||
                 current is DentalExaminationBloc_ErrorState,
             builder: (context, state) {
@@ -112,7 +112,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                   children: [
                     FocusTraversalGroup(
                       policy: OrderedTraversalPolicy(),
-                      child:Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           BlocBuilder<DentalExaminationBloc, DentalExaminationBloc_States>(
@@ -133,7 +133,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                   onChange: (value, isSelected) {
                                     if (dentalExaminationEntity.dentalExaminations == null) dentalExaminationEntity.dentalExaminations = [];
                                     for (var tooth in selectedTeeth) {
-                                      var t = dentalExaminationEntity.dentalExaminations!.firstWhereOrNull((element) => element.tooth.toString() == tooth);
+                                      var t = dentalExaminationEntity.dentalExaminations!
+                                          .firstWhereOrNull((element) => element.tooth.toString() == tooth);
                                       if (t == null) {
                                         dentalExaminationEntity.dentalExaminations!.add(DentalExaminationEntity(tooth: tooth));
                                       }
@@ -198,15 +199,21 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       if (isSelected) {
                                         if (value == "I")
                                           selectedTeeth.forEach((element) {
-                                            dentalExaminationEntity.dentalExaminations!.firstWhere((x) => x.tooth == element).updateToothStatus("Mobility I");
+                                            dentalExaminationEntity.dentalExaminations!
+                                                .firstWhere((x) => x.tooth == element)
+                                                .updateToothStatus("Mobility I");
                                           });
                                         else if (value == "II")
                                           selectedTeeth.forEach((element) {
-                                            dentalExaminationEntity.dentalExaminations!.firstWhere((x) => x.tooth == element).updateToothStatus("Mobility II");
+                                            dentalExaminationEntity.dentalExaminations!
+                                                .firstWhere((x) => x.tooth == element)
+                                                .updateToothStatus("Mobility II");
                                           });
                                         else if (value == "III")
                                           selectedTeeth.forEach((element) {
-                                            dentalExaminationEntity.dentalExaminations!.firstWhere((x) => x.tooth == element).updateToothStatus("Mobility III");
+                                            dentalExaminationEntity.dentalExaminations!
+                                                .firstWhere((x) => x.tooth == element)
+                                                .updateToothStatus("Mobility III");
                                           });
                                         selectedTeeth.clear();
 
@@ -238,15 +245,18 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "carious") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "carious".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "carious")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "carious".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).carious = false;
+                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).carious =
+                                        false;
                                     setState(() {});
                                   },
                                 );
@@ -263,15 +273,18 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "filled") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "filled".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "filled")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "filled".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).filled = false;
+                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).filled =
+                                        false;
                                     setState(() {});
                                   },
                                 );
@@ -280,7 +293,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               buildWhen: (previous, current) => current is DentalExaminationBloc_TeethStatusChanged,
                               builder: (context, state) {
                                 return Visibility(
-                                  visible: (dentalExaminationEntity.dentalExaminations ?? []).firstWhereOrNull((element) => element.missed == true) != null,
+                                  visible: (dentalExaminationEntity.dentalExaminations ?? []).firstWhereOrNull((element) => element.missed == true) !=
+                                      null,
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -293,17 +307,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                               .toList()
                                               .map((e) => e.tooth.toString())
                                               .toList(),
-                                          strikeValues:
-                                          dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "missed") != null
+                                          strikeValues: dentalExaminationEntity.dentalExaminations!
+                                                      .where((element) => element.previousState?.toLowerCase() == "missed".toLowerCase()) !=
+                                                  null
                                               ? dentalExaminationEntity.dentalExaminations!
-                                              .where((element) => element.previousState == "missed")
-                                              .toList()
-                                              .map((e) => e.tooth.toString())
-                                              .toList()
+                                                  .where((element) => element.previousState?.toLowerCase() == "missed".toLowerCase())
+                                                  .toList()
+                                                  .map((e) => e.tooth.toString())
+                                                  .toList()
                                               : null,
                                           onDelete: (value) {
-                                            dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).missed =
-                                            false;
+                                            dentalExaminationEntity.dentalExaminations!
+                                                .firstWhere((element) => element.tooth.toString() == value)
+                                                .missed = false;
                                             setState(() {});
                                           },
                                         ),
@@ -312,8 +328,9 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       CIA_SecondaryButton(
                                           label: "Intra Arch Spaces",
                                           onTab: () {
-                                            var missedTeeth =
-                                            (dentalExaminationEntity.dentalExaminations ?? []).where((element) => element.missed == true).toList();
+                                            var missedTeeth = (dentalExaminationEntity.dentalExaminations ?? [])
+                                                .where((element) => element.missed == true)
+                                                .toList();
                                             CIA_ShowPopUp(
                                                 title: "Intra Arch Spaces",
                                                 context: context,
@@ -322,47 +339,47 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                                   children: missedTeeth
                                                       .map(
                                                         (e) => Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Row(
-                                                        children: [
-                                                          FormTextValueWidget(text: e.tooth!.toString()),
-                                                          SizedBox(width:10),
-                                                          Expanded(
-                                                            key: GlobalKey(),
-                                                            child: CIA_TextFormField(
-                                                              suffix: "mm",
-                                                              isNumber: true,
-                                                              label: "Inter arch space RT",
-                                                              onChange: (value) {
-                                                                e.interarchSpaceRT = int.tryParse(value) ?? 0;
-                                                              },
-                                                              controller: TextEditingController(
-                                                                text: (e.interarchSpaceRT ?? 0).toString(),
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Row(
+                                                            children: [
+                                                              FormTextValueWidget(text: e.tooth!.toString()),
+                                                              SizedBox(width: 10),
+                                                              Expanded(
+                                                                key: GlobalKey(),
+                                                                child: CIA_TextFormField(
+                                                                  suffix: "mm",
+                                                                  isNumber: true,
+                                                                  label: "Inter arch space RT",
+                                                                  onChange: (value) {
+                                                                    e.interarchSpaceRT = int.tryParse(value) ?? 0;
+                                                                  },
+                                                                  controller: TextEditingController(
+                                                                    text: (e.interarchSpaceRT ?? 0).toString(),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              SizedBox(width: 10),
+                                                              Expanded(
+                                                                key: GlobalKey(),
+                                                                child: CIA_TextFormField(
+                                                                    suffix: "mm",
+                                                                    isNumber: true,
+                                                                    label: "Inter arch space LT",
+                                                                    onChange: (value) {
+                                                                      try {
+                                                                        e.interarchSpaceLT = int.tryParse(value) ?? 0;
+                                                                      } catch (e, s) {
+                                                                        print(s);
+                                                                      }
+                                                                    },
+                                                                    controller: TextEditingController(
+                                                                      text: (e.interarchSpaceLT ?? 0).toString(),
+                                                                    )),
+                                                              ),
+                                                            ],
                                                           ),
-                                                          SizedBox(width: 10),
-                                                          Expanded(
-                                                            key: GlobalKey(),
-                                                            child: CIA_TextFormField(
-                                                                suffix: "mm",
-                                                                isNumber: true,
-                                                                label: "Inter arch space LT",
-                                                                onChange: (value) {
-                                                                  try {
-                                                                    e.interarchSpaceLT = int.tryParse(value) ?? 0;
-                                                                  } catch (e, s) {
-                                                                    print(s);
-                                                                  }
-                                                                },
-                                                                controller: TextEditingController(
-                                                                  text: (e.interarchSpaceLT ?? 0).toString(),
-                                                                )),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
+                                                        ),
+                                                      )
                                                       .toList(),
                                                 ));
                                           }),
@@ -382,15 +399,18 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "notSure") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "notSure".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "notSure")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "notSure".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).notSure = false;
+                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).notSure =
+                                        false;
                                     setState(() {});
                                   },
                                 );
@@ -411,17 +431,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .toList()
                                             .map((e) => e.tooth.toString())
                                             .toList(),
-                                        strikeValues:
-                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityI") != null
+                                        strikeValues: dentalExaminationEntity.dentalExaminations!
+                                                    .where((element) => element.previousState?.toLowerCase() == "mobilityI".toLowerCase()) !=
+                                                null
                                             ? dentalExaminationEntity.dentalExaminations!
-                                            .where((element) => element.previousState == "mobilityI")
-                                            .toList()
-                                            .map((e) => e.tooth.toString())
-                                            .toList()
+                                                .where((element) => element.previousState?.toLowerCase() == "mobilityI".toLowerCase())
+                                                .toList()
+                                                .map((e) => e.tooth.toString())
+                                                .toList()
                                             : null,
                                         onDelete: (value) {
-                                          dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityI =
-                                          false;
+                                          dentalExaminationEntity.dentalExaminations!
+                                              .firstWhere((element) => element.tooth.toString() == value)
+                                              .mobilityI = false;
                                           setState(() {});
                                         },
                                       );
@@ -429,7 +451,7 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               ),
                               SizedBox(
                                 width: dentalExaminationEntity.dentalExaminations != null &&
-                                    dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty
+                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty
                                     ? 10
                                     : 0,
                               ),
@@ -446,17 +468,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .toList()
                                             .map((e) => e.tooth.toString())
                                             .toList(),
-                                        strikeValues:
-                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityII") != null
+                                        strikeValues: dentalExaminationEntity.dentalExaminations!
+                                                    .where((element) => element.previousState?.toLowerCase() == "mobilityII".toLowerCase()) !=
+                                                null
                                             ? dentalExaminationEntity.dentalExaminations!
-                                            .where((element) => element.previousState == "mobilityII")
-                                            .toList()
-                                            .map((e) => e.tooth.toString())
-                                            .toList()
+                                                .where((element) => element.previousState?.toLowerCase() == "mobilityII".toLowerCase())
+                                                .toList()
+                                                .map((e) => e.tooth.toString())
+                                                .toList()
                                             : null,
                                         onDelete: (value) {
-                                          dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityII =
-                                          false;
+                                          dentalExaminationEntity.dentalExaminations!
+                                              .firstWhere((element) => element.tooth.toString() == value)
+                                              .mobilityII = false;
                                           setState(() {});
                                         },
                                       );
@@ -464,8 +488,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               ),
                               SizedBox(
                                 width: dentalExaminationEntity.dentalExaminations != null &&
-                                    (dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityII == true).isNotEmpty ||
-                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty)
+                                        (dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityII == true).isNotEmpty ||
+                                            dentalExaminationEntity.dentalExaminations!.where((element) => element.mobilityI == true).isNotEmpty)
                                     ? 10
                                     : 0,
                               ),
@@ -483,17 +507,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                             .toList()
                                             .map((e) => e.tooth.toString())
                                             .toList(),
-                                        strikeValues:
-                                        dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "mobilityIII") != null
+                                        strikeValues: dentalExaminationEntity.dentalExaminations!
+                                                    .where((element) => element.previousState?.toLowerCase() == "mobilityIII".toLowerCase()) !=
+                                                null
                                             ? dentalExaminationEntity.dentalExaminations!
-                                            .where((element) => element.previousState == "mobilityIII")
-                                            .toList()
-                                            .map((e) => e.tooth.toString())
-                                            .toList()
+                                                .where((element) => element.previousState?.toLowerCase() == "mobilityIII".toLowerCase())
+                                                .toList()
+                                                .map((e) => e.tooth.toString())
+                                                .toList()
                                             : null,
                                         onDelete: (value) {
-                                          dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).mobilityIII =
-                                          false;
+                                          dentalExaminationEntity.dentalExaminations!
+                                              .firstWhere((element) => element.tooth.toString() == value)
+                                              .mobilityIII = false;
                                         },
                                       );
                                     }),
@@ -512,16 +538,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "hopelessteeth") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "hopelessteeth".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "hopelessteeth")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "hopelessteeth".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).hopelessTeeth =
-                                    false;
+                                    dentalExaminationEntity.dentalExaminations!
+                                        .firstWhere((element) => element.tooth.toString() == value)
+                                        .hopelessTeeth = false;
                                     setState(() {});
                                   },
                                 );
@@ -538,16 +567,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "implantPlaced") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "implantPlaced".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "implantPlaced")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "implantPlaced".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).implantPlaced =
-                                    false;
+                                    dentalExaminationEntity.dentalExaminations!
+                                        .firstWhere((element) => element.tooth.toString() == value)
+                                        .implantPlaced = false;
                                     setState(() {});
                                   },
                                 );
@@ -564,16 +596,19 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                                       .toList()
                                       .map((e) => e.tooth.toString())
                                       .toList(),
-                                  strikeValues: dentalExaminationEntity.dentalExaminations!.where((element) => element.previousState == "implantFailed") != null
+                                  strikeValues: dentalExaminationEntity.dentalExaminations!
+                                              .where((element) => element.previousState?.toLowerCase() == "implantFailed".toLowerCase()) !=
+                                          null
                                       ? dentalExaminationEntity.dentalExaminations!
-                                      .where((element) => element.previousState == "implantFailed")
-                                      .toList()
-                                      .map((e) => e.tooth.toString())
-                                      .toList()
+                                          .where((element) => element.previousState?.toLowerCase() == "implantFailed".toLowerCase())
+                                          .toList()
+                                          .map((e) => e.tooth.toString())
+                                          .toList()
                                       : null,
                                   onDelete: (value) {
-                                    dentalExaminationEntity.dentalExaminations!.firstWhere((element) => element.tooth.toString() == value).implantFailed =
-                                    false;
+                                    dentalExaminationEntity.dentalExaminations!
+                                        .firstWhere((element) => element.tooth.toString() == value)
+                                        .implantFailed = false;
                                     setState(() {});
                                   },
                                 );
@@ -608,7 +643,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               CIA_MultiSelectChipWidgeModel(
                                   label: "Good", isSelected: dentalExaminationEntity.oralHygieneRating == EnumOralHygieneRating.GoodHygiene),
                               CIA_MultiSelectChipWidgeModel(
-                                  label: "Excellent", isSelected: dentalExaminationEntity.oralHygieneRating == EnumOralHygieneRating.ExcellentHygiene),
+                                  label: "Excellent",
+                                  isSelected: dentalExaminationEntity.oralHygieneRating == EnumOralHygieneRating.ExcellentHygiene),
                             ],
                           ),
                           SizedBox(
@@ -628,12 +664,12 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                     ),
                   ],
                 );
-              }
-              else if (state is DentalExaminationBloc_ErrorState) return BigErrorPageWidget(message: state.message);
+              } else if (state is DentalExaminationBloc_ErrorState) return BigErrorPageWidget(message: state.message);
               return Container();
             },
             listener: (context, state) {
-              if (state is DentalExaminationBloc_SavedDataSuccessfullyState) bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
+              if (state is DentalExaminationBloc_SavedDataSuccessfullyState)
+                bloc.add(DentalExaminationBloc_GetDataEvent(patientId: widget.patientId));
 
               // if(state is DentalHistoryBloc_SavingDataState)
               //   context.l
@@ -642,6 +678,5 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
         );
       },
     );
-
   }
 }

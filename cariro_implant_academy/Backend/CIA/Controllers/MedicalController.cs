@@ -280,7 +280,7 @@ namespace CIA.Controllers
         public async Task<ActionResult> GetComplicationsAfterSurgery(int id)
         {
 
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x=>x.DefaultSurgicalComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x => x.DefaultSurgicalComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
             return Ok(_aPI_Response);
         }
@@ -947,30 +947,6 @@ namespace CIA.Controllers
 
             _cia_DbContext.ComplicationsAfterProsthesis.RemoveRange(missings);
             await _cia_DbContext.SaveChangesAsync();
-
-            //List<int> teeth = data.Select(x => (int)x.Tooth).Distinct().ToList();
-            //foreach (var tooth in teeth)
-            //{
-            //    var parent = await _cia_DbContext.ComplicationsAfterProsthesisParents.FirstOrDefaultAsync(x => x.PatientId == id && tooth == x.Tooth);
-            //    if (parent == null)
-            //    {
-            //        parent = new ComplicationsAfterProsthesisParentModel
-            //        {
-            //            PatientId = id,
-            //            Tooth = tooth,
-            //        };
-
-
-            //    parent.Complications = data.Where(x => x.Tooth == tooth).ToList();
-            //    _cia_DbContext.ComplicationsAfterProsthesisParents.Update(parent);
-            //    _cia_DbContext.SaveChanges();
-
-
-
-            //var parents = await _cia_DbContext.ComplicationsAfterProsthesisParents.Where(x => x.PatientId == id && !teeth.Contains((int)x.Tooth)).ToListAsync();
-
-            //_cia_DbContext.ComplicationsAfterProsthesisParents.RemoveRange(parents);
-            //_cia_DbContext.SaveChanges();
             return Ok();
         }
 
@@ -1009,6 +985,59 @@ namespace CIA.Controllers
 
             _cia_DbContext.ComplicationsAfterSurgeryParents.RemoveRange(parents);
             _cia_DbContext.SaveChanges();
+
+
+            var todaysImplantFailedComplication = data.Where(x => x.Date.Value.Date == DateTime.Now.Date && x.DefaultSurgicalComplicationsId == 9).ToList();
+
+            if (!todaysImplantFailedComplication.IsNullOrEmpty())
+            {
+                var dentalExamination = await _cia_DbContext.DentalExaminations
+                                                .FirstAsync(x => x.PatientId == id)
+                                                ;
+
+                foreach (var com in todaysImplantFailedComplication)
+                {
+                    var toothExamination = dentalExamination.DentalExaminations.FirstOrDefault(x => x.Tooth == com.Tooth);
+                    if (toothExamination == null)
+                    {
+                        toothExamination = new DentalExamination
+                        {
+                            Tooth = com.Tooth,
+                            ImplantFailed = true,
+                            Missed = true,
+                        };
+                        dentalExamination.DentalExaminations.Add(toothExamination);
+                    }
+                    else if(toothExamination.ImplantFailed!=true)
+                    {
+                        toothExamination.ImplantFailed = true;
+                        toothExamination.Missed = true;
+                        toothExamination.PreviousState =
+                            (toothExamination.ImplantPlaced ?? false) ? "ImplantPlaced" :
+                            (toothExamination.Carious ?? false) ? "Carious" :
+                            (toothExamination.Filled ?? false) ? "Filled" :
+                            (toothExamination.NotSure ?? false) ? "NotSure" :
+                            (toothExamination.MobilityI ?? false) ? "MobilityI" :
+                            (toothExamination.MobilityII ?? false) ? "MobilityII" :
+                            (toothExamination.MobilityIII ?? false) ? "MobilityIII" :
+                            (toothExamination.Hopelessteeth ?? false) ? "Hopelessteeth" : "";
+
+                        toothExamination.ImplantPlaced = false;
+                        toothExamination.Carious = false;
+                        toothExamination.Filled = false;
+                        toothExamination.NotSure = false;
+                        toothExamination.MobilityI = false;
+                        toothExamination.MobilityII = false;
+                        toothExamination.MobilityIII = false;
+                        toothExamination.Hopelessteeth = false;
+                    }
+
+
+                }
+
+                _cia_DbContext.DentalExaminations.Update(dentalExamination);
+                _cia_DbContext.SaveChanges();
+            }
             return Ok();
         }
         //[HttpPut("UpdatePatientProstheticTreatmentFinalProthesisFullArch")]

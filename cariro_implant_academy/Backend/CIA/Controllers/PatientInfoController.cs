@@ -1363,12 +1363,8 @@ namespace CIA.Controllers
                 var dentalExaminations = await _cia_DbContext.DentalExaminations.ToListAsync();
                 foreach (var dent in dentalExaminations)
                 {
-                    foreach (var dd in dent.DentalExaminations)
-                        if (dd.ImplantFailed == true)
-                        {
-                            faildImplantsDentalExaminations.Add(dent);
-                            break;
-                        }
+                    if(dent.DentalExaminations.Any(x=>x.ImplantFailed==true))
+                        faildImplantsDentalExaminations.Add(dent);                   
 
 
                 }
