@@ -84,6 +84,7 @@ namespace CIA.DataBases
         public DbSet<ComplicationsAfterProsthesisModel> ComplicationsAfterProsthesis { get; set; }
         public DbSet<ComplicationsAfterProsthesisParentModel> ComplicationsAfterProsthesisParents { get; set; }
         public DbSet<DefaultSurgicalComplications> DefaultSurgicalComplications { get; set; }
+        public DbSet<DefaultProstheticComplications> DefaultProstheticComplications { get; set; }
         public DbSet<ComplicationsAfterSurgeryModel> ComplicationsAfterSurgery { get; set; }
         public DbSet<ComplicationsAfterSurgeryParentModel> ComplicationsAfterSurgeryParents { get; set; }
         public DbSet<Clinic_Complains> Clinic_Complains { get; set; }
@@ -547,8 +548,50 @@ namespace CIA.DataBases
                 },
 
             };
+           
+            List<DefaultProstheticComplications> defaultProstheticComplications = new()
+            {
+                new DefaultProstheticComplications
+                {
+                    Id=1,
+                    Name="Screw Loosness",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=2,
+                    Name="Crown Fall",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=3,
+                    Name="Fractured Zirconia",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=4,
+                    Name="Fractured Printed PMMA",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=5,
+                    Name="Food Impaction",
+                },
+
+                new DefaultProstheticComplications
+                {
+                    Id=6,
+                    Name="Pain",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=7,
+                    Name="Implant Fracture",
+                },
+
+            };
 
             modelBuilder.Entity<DefaultSurgicalComplications>().HasData(defaultSurgicalComplications);
+            modelBuilder.Entity<DefaultProstheticComplications>().HasData(defaultProstheticComplications);
 
 
 

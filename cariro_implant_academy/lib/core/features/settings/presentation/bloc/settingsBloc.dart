@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultProstheticComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
@@ -12,6 +13,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultProstheticComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
@@ -59,6 +61,8 @@ import '../../domain/useCases/getTacsUseCase.dart';
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetDefaultSurgicalComplicationsUseCase getDefaultSurgicalComplicationsUseCase;
   final UpdateDefaultSurgicalComplicationsUseCase updateDefaultSurgicalComplicationsUseCase;
+  final GetDefaultProstheticComplicationsUseCase getDefaultProstheticComplicationsUseCase;
+  final UpdateDefaultProstheticComplicationsUseCase updateDefaultProstheticComplicationsUseCase;
   final GetProstheticItemsUseCase getProstheticItemsUseCase;
   final GetProstheticStatusUseCase getProstheticStatusUseCase;
   final GetProstheticNextVisitUseCase getProstheticNextVisitUseCase;
@@ -112,6 +116,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   SettingsBloc({
     required this.updateDefaultSurgicalComplicationsUseCase,
     required this.getDefaultSurgicalComplicationsUseCase,
+    required this.updateDefaultProstheticComplicationsUseCase,
+    required this.getDefaultProstheticComplicationsUseCase,
     required this.getProstheticStatusUseCase,
     required this.getProstheticNextVisitUseCase,
     required this.getProstheticItemsUseCase,
@@ -179,6 +185,26 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         result.fold(
           (l) => emit(SettingsBloc_UpdatingDefaultSurgicalComplicationsErrorState(message: l.message ?? "")),
           (r) => emit(SettingsBloc_UpdatedDefaultSurgicalComplicationsSuccessfullyState()),
+        );
+      },
+    );
+    on<SettingsBloc_LoadDefaultProstheticComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_LoadingDefaultProstheticComplicationsState());
+        final result = await getDefaultProstheticComplicationsUseCase(NoParams());
+        result.fold(
+          (l) => emit(SettingsBloc_LoadingDefaultProstheticComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<SettingsBloc_UpdateDefaultProstheticComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_UpdatingDefaultProstheticComplicationsState());
+        final result = await updateDefaultProstheticComplicationsUseCase(event.params);
+        result.fold(
+          (l) => emit(SettingsBloc_UpdatingDefaultProstheticComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_UpdatedDefaultProstheticComplicationsSuccessfullyState()),
         );
       },
     );

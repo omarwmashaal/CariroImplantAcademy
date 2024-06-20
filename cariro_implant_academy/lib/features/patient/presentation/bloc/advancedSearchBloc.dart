@@ -388,7 +388,7 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
 
               cells.add(DataGridCell<String>(columnName: "Type", value: request?.type.name));
 
-              if (!(request?.complicationsAnd?.isNull() ?? true) || !(request?.complicationsOr?.isNull() ?? true)) {
+              if ((!(request?.complicationsAfterProstheticIds == null) || !(request?.complicationsAfterProstheticIdsOr == null))) {
                 cells.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterProsthesis));
               }
 

@@ -299,7 +299,7 @@ namespace CIA.Controllers
         [HttpGet("GetComplicationsAfterProsthesis")]
         public async Task<ActionResult> GetComplicationsAfterProsthesis(int id)
         {
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x=>x.DefaultProstheticComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
 
             return Ok(_aPI_Response);

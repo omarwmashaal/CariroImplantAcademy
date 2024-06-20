@@ -525,6 +525,9 @@ namespace CIA.Migrations
                     b.Property<DateTime?>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("DefaultProstheticComplicationsId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -544,6 +547,8 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultProstheticComplicationsId");
 
                     b.HasIndex("OperatorId");
 
@@ -639,6 +644,60 @@ namespace CIA.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("ComplicationsAfterSurgeryParents");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DefaultProstheticComplications", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DefaultProstheticComplications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Screw Loosness"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Crown Fall"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Fractured Zirconia"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Fractured Printed PMMA"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Food Impaction"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Pain"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "ImplantFracture"
+                        });
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DefaultSurgicalComplications", b =>
@@ -23892,6 +23951,10 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ComplicationsAfterProsthesisModel", b =>
                 {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DefaultProstheticComplications", "DefaultProstheticComplication")
+                        .WithMany()
+                        .HasForeignKey("DefaultProstheticComplicationsId");
+
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Operator")
                         .WithMany()
                         .HasForeignKey("OperatorId")
@@ -23905,6 +23968,8 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId");
+
+                    b.Navigation("DefaultProstheticComplication");
 
                     b.Navigation("Operator");
 

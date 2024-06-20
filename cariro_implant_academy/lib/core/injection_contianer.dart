@@ -52,6 +52,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultProstheticComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getIncomeCategoriesUseCase.dart';
@@ -69,6 +70,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultProstheticComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
@@ -378,6 +380,8 @@ initInjection() async {
   sl.registerFactory(() => SettingsBloc(
         updateDefaultSurgicalComplicationsUseCase: sl(),
         getDefaultSurgicalComplicationsUseCase: sl(),
+        getDefaultProstheticComplicationsUseCase: sl(),
+        updateDefaultProstheticComplicationsUseCase: sl(),
         getProstheticItemsUseCase: sl(),
         getProstheticNextVisitUseCase: sl(),
         getProstheticStatusUseCase: sl(),
@@ -430,7 +434,9 @@ initInjection() async {
       ));
   //usecases
   sl.registerLazySingleton(() => GetDefaultSurgicalComplicationsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetDefaultProstheticComplicationsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateDefaultSurgicalComplicationsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateDefaultProstheticComplicationsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticNextVisitUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticStatusUseCase(settingsRepository: sl()));

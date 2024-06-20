@@ -813,6 +813,15 @@ namespace CIA.Controllers
                 query = query.Where(x => x.PatientID == id);
             else
             {
+                var user = await _userRepo.GetUser();
+                if (!user.Roles.Contains("admin"))
+                {
+                    query = query.Where(x =>
+                    x.LastDoctorId == user.IdInt ||
+                    x.MentionedDoctorId == user.IdInt ||
+                    x.LastSupervisorId == user.IdInt
+                    );
+                }
             }
             var y = await query.Select(x => new
             {
@@ -1590,69 +1599,32 @@ namespace CIA.Controllers
                 complicationsProsthesisQuery = complicationsProsthesisQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
             }
 
-            if (model.complicationsAnd != null)
+            List<ComplicationsAfterProsthesisModel> complications = new();
+            if (model.complicationsAnd != null || model.complicationsOr != null)
             {
-                IQueryable<ComplicationsAfterProsthesisModel> complicationsQuery = _cia_DbContext.ComplicationsAfterProsthesis;
+                // Step 1: Fetch the complications for the given patient IDs and complication IDs in one go
+                var complicationsQuery = _cia_DbContext.ComplicationsAfterProsthesis
+                    .Include(x => x.DefaultProstheticComplication)
+                    .Where(c => model.Ids.Contains((int)c.PatientId));
 
-                if (model.complicationsAnd!.ScrewLoosness == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "ScrewLoosness");
-                if (model.complicationsAnd!.CrownFall == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "CrownFall");
-                if (model.complicationsAnd!.FracturedZirconia == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedZirconia");
-                if (model.complicationsAnd!.FracturedPrintedPMMA == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedPrintedPMMA");
-                if (model.complicationsAnd!.FoodImpaction == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FoodImpaction");
-                if (model.complicationsAnd!.Pain == true)
-                    complicationsProsthesisQuery = complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "Pain");
+                // We do not filter by complication IDs in the initial query since we'll handle it in memory
 
+                complications = await complicationsQuery.ToListAsync();
 
+                // Step 2: Group complications by PatientId
+                var complicationsGroupedByPatient = complications
+                                   .GroupBy(c => c.PatientId)
+                                   .ToDictionary(g => g.Key, g => g.Select(c => c.DefaultProstheticComplicationsId)
+                                   .ToHashSet());
 
-                List<int> compliactionsPatientIds = await complicationsProsthesisQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
-
-                finalStepsQuery = finalStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                diagnosticStepsQuery = diagnosticStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                model.Ids = compliactionsPatientIds;
+                model.Ids = model.Ids
+                            .Where(pId => complicationsGroupedByPatient.ContainsKey(pId) &&
+                                          (model.complicationsAnd == null || model.complicationsAnd.All(cid => complicationsGroupedByPatient[pId].Contains(cid))) &&
+                                          (model.complicationsOr == null || model.complicationsOr.Any(cid => complicationsGroupedByPatient[pId].Contains(cid))))
+                            .ToList();
+                complications.RemoveAll(x => !model.Ids.Contains((int)x.PatientId));
             }
-            if (model.complicationsOr != null)
-            {
 
-                List<IQueryable<ComplicationsAfterProsthesisModel>> complicationsQueries = new List<IQueryable<ComplicationsAfterProsthesisModel>>();
-
-                if (model.complicationsOr!.ScrewLoosness == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "ScrewLoosness"));
-                if (model.complicationsOr!.CrownFall == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "CrownFall"));
-                if (model.complicationsOr!.FracturedZirconia == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedZirconia"));
-                if (model.complicationsOr!.FracturedPrintedPMMA == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FracturedPrintedPMMA"));
-                if (model.complicationsOr!.FoodImpaction == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "FoodImpaction"));
-                if (model.complicationsOr!.Pain == true)
-                    complicationsQueries.Add(complicationsProsthesisQuery.Where(x => x.Name.Replace(" ", "") == "Pain"));
-
-                if (complicationsQueries.Count != 0)
-                {
-                    IQueryable<ComplicationsAfterProsthesisModel> finalComplicationsQuery = complicationsQueries.First();
-                    foreach (var q in complicationsQueries)
-                    {
-                        finalComplicationsQuery = finalComplicationsQuery.Union(q);
-                    }
-                    complicationsProsthesisQuery = finalComplicationsQuery;
-
-                    List<int> compliactionsPatientIds = await complicationsProsthesisQuery.Select(x => (int)x.PatientId).Distinct().ToListAsync();
-
-                    finalStepsQuery = finalStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                    diagnosticStepsQuery = diagnosticStepsQuery.Where(x => compliactionsPatientIds.Contains((int)x.PatientId));
-                    model.Ids = compliactionsPatientIds;
-
-
-
-                }
-
-            }
 
 
             if (model.Type == EnumProstheticType.Diagnostic)
@@ -1740,7 +1712,6 @@ namespace CIA.Controllers
 
 
 
-            List<ComplicationsAfterProsthesisModel> complications = await _cia_DbContext.ComplicationsAfterProsthesis.Where(x => ids.Contains(x.PatientId)).ToListAsync();
 
 
 
@@ -1753,7 +1724,7 @@ namespace CIA.Controllers
                     {
                         com = complications
                             .Where(x => x.PatientId == step.PatientId)?
-                            .Select(x => x.Name).ToList();
+                            .Select(x => x.DefaultProstheticComplication?.Name??"").ToList();
 
                     }
                     result.Add(new AdvancedProstheticSearchResponseDTO

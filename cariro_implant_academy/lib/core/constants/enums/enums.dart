@@ -270,16 +270,6 @@ enum EnumDortorsPercentageEnum {
   OperatorAndMain,
 }
 
-enum EunumComplicationsAfterProsthesis {
-  ScrewLoosness,
-  CrownFall,
-  FracturedZirconia,
-  FracturedPrintedPMMA,
-  FoodImpaction,
-  Pain,
-  ImplantFracture,
-}
-
 enum EnumPatientCallHistory {
   CalledAndNoAnswer,
   CalledAndNoVisit,

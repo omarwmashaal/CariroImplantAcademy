@@ -17,6 +17,7 @@ class ComplicationsAfterProsthesisEntity extends Equatable {
   String? name;
   String? notes;
   int? operatorId;
+  int? defaultId;
   BasicNameIdObjectEntity? operator;
 
   ComplicationsAfterProsthesisEntity({
@@ -31,6 +32,7 @@ class ComplicationsAfterProsthesisEntity extends Equatable {
     this.pain,
     this.date,
     this.name,
+    this.defaultId,
     this.notes,
     this.operator,
     this.operatorId,

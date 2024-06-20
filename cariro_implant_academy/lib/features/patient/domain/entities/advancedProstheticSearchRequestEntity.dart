@@ -14,8 +14,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
   bool? fullArch;
   bool? screwRetained;
   bool? cementRetained;
-  ComplicationsAfterProsthesisEntity? complicationsAnd;
-  ComplicationsAfterProsthesisEntity? complicationsOr;
+  List<int>? complicationsAfterProstheticIds;
+  List<int>? complicationsAfterProstheticIdsOr;
 
   AdvancedProstheticSearchRequestEntity({
     this.ids,
@@ -23,8 +23,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     this.statusId,
     this.nextId,
     this.fullArch = false,
-    this.complicationsAnd,
-    this.complicationsOr,
+    this.complicationsAfterProstheticIds,
+    this.complicationsAfterProstheticIdsOr,
     this.screwRetained = false,
     this.cementRetained = false,
     this.type = EnumProstheticType.Diagnostic,
@@ -46,8 +46,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
       this.itemId == null &&
       this.statusId == null &&
       this.nextId == null &&
-      complicationsAnd == null &&
-      complicationsOr == null &&
+      complicationsAfterProstheticIdsOr == null &&
+      complicationsAfterProstheticIds == null &&
       screwRetained != true &&
       cementRetained != true;
 
@@ -55,8 +55,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     itemId = null;
     statusId = null;
     nextId = null;
-    complicationsAnd = null;
-    complicationsOr = null;
+    complicationsAfterProstheticIdsOr = null;
+    complicationsAfterProstheticIds = null;
     fullArch = false;
     screwRetained = false;
     cementRetained = false;

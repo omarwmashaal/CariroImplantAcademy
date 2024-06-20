@@ -422,3 +422,15 @@ class SettingsBloc_LoadDefaultSurgicalComplicationsEvent extends SettingsBloc_Ev
   @override
   List<Object?> get props => [];
 }
+
+class SettingsBloc_UpdateDefaultProstheticComplicationsEvent extends SettingsBloc_Events {
+  final List<BasicNameIdObjectEntity> params;
+  SettingsBloc_UpdateDefaultProstheticComplicationsEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_LoadDefaultProstheticComplicationsEvent extends SettingsBloc_Events {
+  @override
+  List<Object?> get props => [];
+}

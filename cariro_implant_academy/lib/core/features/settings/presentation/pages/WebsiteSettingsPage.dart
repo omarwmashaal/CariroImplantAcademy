@@ -207,6 +207,14 @@ class _SettingsPageState extends State<SettingsPage> {
               currentIndex = 11;
             },
             iconWidget: Container()),
+        SidebarXItem(
+            label: "Prosthetic Complications",
+            onTap: () {
+              bloc.add(SettingsBloc_LoadDefaultProstheticComplicationsEvent());
+
+              currentIndex = 12;
+            },
+            iconWidget: Container()),
       ]);
     }
 
@@ -215,6 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (state is SettingsBloc_EditingTreatmentPricesState ||
             state is SettingsBloc_UpdatingProstheticItemsState ||
             state is SettingsBloc_UpdatingDefaultSurgicalComplicationsState ||
+            state is SettingsBloc_UpdatingDefaultProstheticComplicationsState ||
             state is SettingsBloc_UpdatingProstheticStatusState ||
             state is SettingsBloc_UpdatingProstheticNextVisitState)
           CustomLoader.show(context);
@@ -243,6 +252,10 @@ class _SettingsPageState extends State<SettingsPage> {
         else if (state is SettingsBloc_UpdatedDefaultSurgicalComplicationsSuccessfullyState)
           bloc.add(SettingsBloc_LoadDefaultSurgicalComplicationsEvent());
         else if (state is SettingsBloc_UpdatingDefaultSurgicalComplicationsErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is SettingsBloc_UpdatedDefaultProstheticComplicationsSuccessfullyState)
+          bloc.add(SettingsBloc_LoadDefaultProstheticComplicationsEvent());
+        else if (state is SettingsBloc_UpdatingDefaultProstheticComplicationsErrorState)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is SettingsBloc_AddedSuppliersSuccessfullyState)
           bloc.add(SettingsBloc_LoadSuppliersEvent(
@@ -320,7 +333,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   current is SettingsBloc_LoadedProstheticItemsSuccessfullyState ||
                   current is SettingsBloc_LoadingDefaultSurgicalComplicationsState ||
                   current is SettingsBloc_LoadingDefaultSurgicalComplicationsErrorState ||
-                  current is SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState,
+                  current is SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState ||
+                  current is SettingsBloc_LoadingDefaultProstheticComplicationsState ||
+                  current is SettingsBloc_LoadingDefaultProstheticComplicationsErrorState ||
+                  current is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState,
               builder: (context, state) {
                 if (state is SettingsBloc_LoadedImplantCompaniesSuccessfullyState ||
                     state is SettingsBloc_LoadingImplantCompaniesState ||
@@ -1702,6 +1718,68 @@ class _SettingsPageState extends State<SettingsPage> {
                                         onSave: () {
                                           defaultComplications = [...defaultComplications, comp];
                                           bloc.add(SettingsBloc_UpdateDefaultSurgicalComplicationsEvent(params: defaultComplications));
+                                        },
+                                        child: CIA_TextFormField(label: "Name", controller: TextEditingController(), onChange: (v) => comp.name = v));
+                                  })
+                            ],
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                } else if (state is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState ||
+                    state is SettingsBloc_LoadingDefaultProstheticComplicationsErrorState ||
+                    state is SettingsBloc_LoadingDefaultProstheticComplicationsState) {
+                  if (state is SettingsBloc_LoadingDefaultProstheticComplicationsErrorState)
+                    return BigErrorPageWidget(message: state.message);
+                  else if (state is SettingsBloc_LoadingDefaultProstheticComplicationsState)
+                    return LoadingWidget();
+                  else if (state is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState) {
+                    var defaultComplications = state.data;
+                    return Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView(
+                                children: defaultComplications
+                                    .map(
+                                      (e) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: CIA_TextFormField(
+                                                  label: "Name",
+                                                  controller: TextEditingController(text: e.name?.toString() ?? ""),
+                                                  onChange: (value) {
+                                                    e.name = value;
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    .toList()),
+                          ),
+                          Row(
+                            children: [
+                              CIA_PrimaryButton(
+                                  isLong: true,
+                                  label: "Save",
+                                  onTab: () => bloc.add(SettingsBloc_UpdateDefaultProstheticComplicationsEvent(params: defaultComplications))),
+                              CIA_SecondaryButton(
+                                  label: "Add New",
+                                  onTab: () {
+                                    var comp = BasicNameIdObjectEntity();
+                                    CIA_ShowPopUp(
+                                        context: context,
+                                        onSave: () {
+                                          defaultComplications = [...defaultComplications, comp];
+                                          bloc.add(SettingsBloc_UpdateDefaultProstheticComplicationsEvent(params: defaultComplications));
                                         },
                                         child: CIA_TextFormField(label: "Name", controller: TextEditingController(), onChange: (v) => comp.name = v));
                                   })

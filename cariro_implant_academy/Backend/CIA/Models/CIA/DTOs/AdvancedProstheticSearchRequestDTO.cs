@@ -13,8 +13,8 @@ namespace CIA.Models.CIA.DTOs
         public bool FullArch { get; set; } = false;
         public bool ScrewRetained { get; set; } = false;
         public bool CementRetained { get; set; } = false;
-        public ComplicationsAfterProsthesisModel? complicationsAnd { get; set; }
-        public ComplicationsAfterProsthesisModel? complicationsOr { get; set; }
+        public List<int>? complicationsAnd { get; set; }
+        public List<int>? complicationsOr { get; set; }
 
     }
 

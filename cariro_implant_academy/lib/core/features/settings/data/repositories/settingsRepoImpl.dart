@@ -506,7 +506,7 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-  
+
   @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getDefaultSurgicalComplications() async {
     try {
@@ -516,11 +516,31 @@ class SettingsRepoImpl implements SettingsRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-  
+
   @override
-  Future<Either<Failure, NoParams>> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value)async {
+  Future<Either<Failure, NoParams>> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value) async {
     try {
       final result = await settingsDatasource.updateDefaultSurgicalComplications(value);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getDefaultProstheticComplications() async {
+    try {
+      final result = await settingsDatasource.getDefaultProstheticComplications();
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateDefaultProstheticComplications(List<BasicNameIdObjectEntity> value) async {
+    try {
+      final result = await settingsDatasource.updateDefaultProstheticComplications(value);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

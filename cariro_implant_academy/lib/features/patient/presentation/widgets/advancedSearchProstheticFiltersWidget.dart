@@ -44,326 +44,267 @@ class AdvancedSearchProstheticFilterWidget extends StatefulWidget {
 
 class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchProstheticFilterWidget> {
   late SettingsBloc settingsBloc;
+  List<BasicNameIdObjectEntity> complicationsItems = [];
+
   List<BasicNameIdObjectEntity> prostheticItems = [];
   @override
   void initState() {
     settingsBloc = BlocProvider.of<SettingsBloc>(context);
     settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+    settingsBloc.add(SettingsBloc_LoadDefaultProstheticComplicationsEvent());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ExpansionTile(
-        title: Text("Prosthetic Filter"),
-        children: [
-          AdvancedSearchFilterChildWidget(
-            title: "Prostheic Type",
-            child: BlocBuilder<SettingsBloc, SettingsBloc_States>(
-                buildWhen: (previous, current) =>
-                    current is SettingsBloc_LoadingProstheticItemsErrorState ||
-                    current is SettingsBloc_LoadingProstheticItemsState ||
-                    current is SettingsBloc_LoadedProstheticItemsSuccessfullyState,
-                builder: (context, state) {
-                  if (state is SettingsBloc_LoadingProstheticItemsErrorState)
-                    return BigErrorPageWidget(message: state.message);
-                  else if (state is SettingsBloc_LoadingProstheticItemsState)
-                    return LoadingWidget();
-                  else if (state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) {
-                    prostheticItems = state.data;
-                  }
-                  return Column(
-                    children: [
-                      Column(
-                        children: [
-                          CIA_CheckBoxWidget(
-                            text: "Diagnostic",
-                            value: widget.searchProstheticDTO.type == EnumProstheticType.Diagnostic,
-                            onChange: (value) {
-                              if (value == true) {
-                                widget.searchProstheticDTO.type = EnumProstheticType.Diagnostic;
-                                widget.searchProstheticDTO.cementRetained = false;
-                                widget.searchProstheticDTO.screwRetained = false;
-                                widget.searchProstheticDTO.fullArch = null;
-                                widget.searchProstheticDTO.itemId = null;
-                                widget.searchProstheticDTO.statusId = null;
-                                widget.searchProstheticDTO.nextId = null;
-                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
-                              }
-                            },
-                          ),
-                          CIA_CheckBoxWidget(
-                            text: "Sinlge And Bridge",
-                            value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch != true,
-                            onChange: (value) {
-                              if (value == true) {
-                                widget.searchProstheticDTO.type = EnumProstheticType.Final;
-                                widget.searchProstheticDTO.cementRetained = false;
-                                widget.searchProstheticDTO.screwRetained = false;
-                                widget.searchProstheticDTO.fullArch = null;
-                                widget.searchProstheticDTO.itemId = null;
-                                widget.searchProstheticDTO.statusId = null;
-                                widget.searchProstheticDTO.nextId = null;
-                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
-                              }
-                            },
-                          ),
-                          CIA_CheckBoxWidget(
-                            text: "Full Arch",
-                            value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
-                            onChange: (value) {
-                              if (value == true) {
-                                widget.searchProstheticDTO.type = EnumProstheticType.Final;
-                                widget.searchProstheticDTO.cementRetained = false;
-                                widget.searchProstheticDTO.screwRetained = false;
-                                widget.searchProstheticDTO.fullArch = true;
-                                widget.searchProstheticDTO.itemId = null;
-                                widget.searchProstheticDTO.statusId = null;
-                                widget.searchProstheticDTO.nextId = null;
-                                settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
-                              }
-                            },
-                          ),
-                          Visibility(
-                            visible: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
-                            child: Row(
-                              children: [
-                                CIA_CheckBoxWidget(
-                                  text: "Screw Retained",
-                                  value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
-                                      widget.searchProstheticDTO.fullArch == true &&
-                                      widget.searchProstheticDTO.screwRetained == true,
-                                  onChange: (value) {
-                                    widget.searchProstheticDTO.screwRetained = value;
-                                    setState(() {});
-                                  },
-                                ),
-                                CIA_CheckBoxWidget(
-                                  text: "Cement Retained",
-                                  value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
-                                      widget.searchProstheticDTO.fullArch == true &&
-                                      widget.searchProstheticDTO.cementRetained == true,
-                                  onChange: (value) {
-                                    widget.searchProstheticDTO.cementRetained = value;
-                                    setState(() {});
-                                  },
-                                ),
-                              ],
+    return BlocListener<SettingsBloc, SettingsBloc_States>(
+      bloc: settingsBloc,
+      listener: (context, state) {
+        if (state is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState) {
+          complicationsItems = state.data;
+          setState(() {});
+        }
+      },
+      child: SingleChildScrollView(
+        child: ExpansionTile(
+          title: Text("Prosthetic Filter"),
+          children: [
+            AdvancedSearchFilterChildWidget(
+              title: "Prostheic Type",
+              child: BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                  buildWhen: (previous, current) =>
+                      current is SettingsBloc_LoadingProstheticItemsErrorState ||
+                      current is SettingsBloc_LoadingProstheticItemsState ||
+                      current is SettingsBloc_LoadedProstheticItemsSuccessfullyState,
+                  builder: (context, state) {
+                    if (state is SettingsBloc_LoadingProstheticItemsErrorState)
+                      return BigErrorPageWidget(message: state.message);
+                    else if (state is SettingsBloc_LoadingProstheticItemsState)
+                      return LoadingWidget();
+                    else if (state is SettingsBloc_LoadedProstheticItemsSuccessfullyState) {
+                      prostheticItems = state.data;
+                    }
+                    return Column(
+                      children: [
+                        Column(
+                          children: [
+                            CIA_CheckBoxWidget(
+                              text: "Diagnostic",
+                              value: widget.searchProstheticDTO.type == EnumProstheticType.Diagnostic,
+                              onChange: (value) {
+                                if (value == true) {
+                                  widget.searchProstheticDTO.type = EnumProstheticType.Diagnostic;
+                                  widget.searchProstheticDTO.cementRetained = false;
+                                  widget.searchProstheticDTO.screwRetained = false;
+                                  widget.searchProstheticDTO.fullArch = null;
+                                  widget.searchProstheticDTO.itemId = null;
+                                  widget.searchProstheticDTO.statusId = null;
+                                  widget.searchProstheticDTO.nextId = null;
+                                  settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                                }
+                              },
                             ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            "${widget.searchProstheticDTO.type.name} Items",
-                          ),
-                          ...prostheticItems
-                              .map(
-                                (e) => CIA_CheckBoxWidget(
-                                  text: AddSpacesToSentence(e.name ?? ""),
-                                  value: widget.searchProstheticDTO.itemId == e.id,
-                                  onChange: (value) {
-                                    widget.searchProstheticDTO.itemId = e.id;
-                                    widget.searchProstheticDTO.statusId = null;
-                                    widget.searchProstheticDTO.nextId = null;
-                                    settingsBloc.emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(
-                                      data: prostheticItems,
-                                      type: widget.searchProstheticDTO.type,
-                                    ));
-                                  },
-                                ),
+                            CIA_CheckBoxWidget(
+                              text: "Sinlge And Bridge",
+                              value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch != true,
+                              onChange: (value) {
+                                if (value == true) {
+                                  widget.searchProstheticDTO.type = EnumProstheticType.Final;
+                                  widget.searchProstheticDTO.cementRetained = false;
+                                  widget.searchProstheticDTO.screwRetained = false;
+                                  widget.searchProstheticDTO.fullArch = null;
+                                  widget.searchProstheticDTO.itemId = null;
+                                  widget.searchProstheticDTO.statusId = null;
+                                  widget.searchProstheticDTO.nextId = null;
+                                  settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                                }
+                              },
+                            ),
+                            CIA_CheckBoxWidget(
+                              text: "Full Arch",
+                              value: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
+                              onChange: (value) {
+                                if (value == true) {
+                                  widget.searchProstheticDTO.type = EnumProstheticType.Final;
+                                  widget.searchProstheticDTO.cementRetained = false;
+                                  widget.searchProstheticDTO.screwRetained = false;
+                                  widget.searchProstheticDTO.fullArch = true;
+                                  widget.searchProstheticDTO.itemId = null;
+                                  widget.searchProstheticDTO.statusId = null;
+                                  widget.searchProstheticDTO.nextId = null;
+                                  settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
+                                }
+                              },
+                            ),
+                            Visibility(
+                              visible: widget.searchProstheticDTO.type == EnumProstheticType.Final && widget.searchProstheticDTO.fullArch == true,
+                              child: Row(
+                                children: [
+                                  CIA_CheckBoxWidget(
+                                    text: "Screw Retained",
+                                    value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
+                                        widget.searchProstheticDTO.fullArch == true &&
+                                        widget.searchProstheticDTO.screwRetained == true,
+                                    onChange: (value) {
+                                      widget.searchProstheticDTO.screwRetained = value;
+                                      setState(() {});
+                                    },
+                                  ),
+                                  CIA_CheckBoxWidget(
+                                    text: "Cement Retained",
+                                    value: widget.searchProstheticDTO.type == EnumProstheticType.Final &&
+                                        widget.searchProstheticDTO.fullArch == true &&
+                                        widget.searchProstheticDTO.cementRetained == true,
+                                    onChange: (value) {
+                                      widget.searchProstheticDTO.cementRetained = value;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "${widget.searchProstheticDTO.type.name} Items",
+                            ),
+                            ...prostheticItems
+                                .map(
+                                  (e) => CIA_CheckBoxWidget(
+                                    text: AddSpacesToSentence(e.name ?? ""),
+                                    value: widget.searchProstheticDTO.itemId == e.id,
+                                    onChange: (value) {
+                                      widget.searchProstheticDTO.itemId = e.id;
+                                      widget.searchProstheticDTO.statusId = null;
+                                      widget.searchProstheticDTO.nextId = null;
+                                      settingsBloc.emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(
+                                        data: prostheticItems,
+                                        type: widget.searchProstheticDTO.type,
+                                      ));
+                                    },
+                                  ),
+                                )
+                                .toList()
+                          ],
+                        ),
+                        widget.searchProstheticDTO.itemId == null
+                            ? Container()
+                            : Column(
+                                children: [
+                                  CIA_DropDownSearchBasicIdName(
+                                    label:
+                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Procedure",
+                                    asyncUseCase: sl<GetProstheticStatusUseCase>(),
+                                    selectedItem: widget.searchProstheticDTO.status,
+                                    searchParams:
+                                        GetProstheticStatusParams(itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                    onSelect: (value) {
+                                      widget.searchProstheticDTO.statusId = value.id;
+                                      widget.searchProstheticDTO.status = value;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName(
+                                    label:
+                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Step",
+                                    asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
+                                    searchParams: GetProstheticNextVisitParams(
+                                        itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                    selectedItem: widget.searchProstheticDTO.nextVisit,
+                                    onSelect: (value) {
+                                      widget.searchProstheticDTO.nextId = value.id;
+                                      widget.searchProstheticDTO.nextVisit = value;
+                                    },
+                                  ),
+                                ],
                               )
-                              .toList()
-                        ],
-                      ),
-                      widget.searchProstheticDTO.itemId == null
-                          ? Container()
-                          : Column(
-                              children: [
-                                CIA_DropDownSearchBasicIdName(
-                                  label:
-                                      "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Procedure",
-                                  asyncUseCase: sl<GetProstheticStatusUseCase>(),
-                                  selectedItem: widget.searchProstheticDTO.status,
-                                  searchParams:
-                                      GetProstheticStatusParams(itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
-                                  onSelect: (value) {
-                                    widget.searchProstheticDTO.statusId = value.id;
-                                    widget.searchProstheticDTO.status = value;
-                                  },
-                                ),
-                                SizedBox(height: 10),
-                                CIA_DropDownSearchBasicIdName(
-                                  label:
-                                      "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Step",
-                                  asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
-                                  searchParams:
-                                      GetProstheticNextVisitParams(itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
-                                  selectedItem: widget.searchProstheticDTO.nextVisit,
-                                  onSelect: (value) {
-                                    widget.searchProstheticDTO.nextId = value.id;
-                                    widget.searchProstheticDTO.nextVisit = value;
-                                  },
-                                ),
-                              ],
-                            )
-                    ],
-                  );
-                }),
-          ),
-          AdvancedSearchFilterChildWidget(
-              title: "Post Prosthesis Complications (One of the following)",
-              child: Column(
-                children: [
-                  CIA_CheckBoxWidget(
-                    text: "All",
-                    value: widget.searchProstheticDTO.complicationsOr?.isNull() ?? true,
-                    onChange: (value) {
-                      setState(() {
-                        widget.searchProstheticDTO.complicationsOr = null;
-                      });
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Screw Loosness",
-                    value: widget.searchProstheticDTO.complicationsOr?.screwLoosness == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.screwLoosness = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.screwLoosness = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Crown Fall",
-                    value: widget.searchProstheticDTO.complicationsOr?.crownFall == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.crownFall = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.crownFall = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Fractured Zirconia",
-                    value: widget.searchProstheticDTO.complicationsOr?.fracturedZirconia == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.fracturedZirconia = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.fracturedZirconia = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Fractured Printed PMMA",
-                    value: widget.searchProstheticDTO.complicationsOr?.fracturedPrintedPMMA == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.fracturedPrintedPMMA = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.fracturedPrintedPMMA = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Food Impaction",
-                    value: widget.searchProstheticDTO.complicationsOr?.foodImpaction == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.foodImpaction = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.foodImpaction = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Pain",
-                    value: widget.searchProstheticDTO.complicationsOr?.pain == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsOr ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsOr!.pain = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.pain = null;
-                      setState(() {});
-                    },
-                  ),
-                ],
-              )),
-          AdvancedSearchFilterChildWidget(
-              title: "Post Prosthesis Complications (All of the following)",
-              child: Column(
-                children: [
-                  CIA_CheckBoxWidget(
-                    text: "All",
-                    value: widget.searchProstheticDTO.complicationsAnd?.isNull() ?? true,
-                    onChange: (value) {
-                      setState(() {
-                        widget.searchProstheticDTO.complicationsAnd = null;
-                      });
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Screw Loosness",
-                    value: widget.searchProstheticDTO.complicationsAnd?.screwLoosness == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.screwLoosness = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsAnd?.screwLoosness = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Crown Fall",
-                    value: widget.searchProstheticDTO.complicationsAnd?.crownFall == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.crownFall = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsOr?.crownFall = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Fractured Zirconia",
-                    value: widget.searchProstheticDTO.complicationsAnd?.fracturedZirconia == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.fracturedZirconia = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsOr?.fracturedZirconia = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Fractured Printed PMMA",
-                    value: widget.searchProstheticDTO.complicationsAnd?.fracturedPrintedPMMA == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.fracturedPrintedPMMA = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsOr?.fracturedPrintedPMMA = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Food Impaction",
-                    value: widget.searchProstheticDTO.complicationsAnd?.foodImpaction == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.foodImpaction = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsOr?.foodImpaction = null;
-                      setState(() {});
-                    },
-                  ),
-                  CIA_CheckBoxWidget(
-                    text: "Pain",
-                    value: widget.searchProstheticDTO.complicationsAnd?.pain == true,
-                    onChange: (value) {
-                      widget.searchProstheticDTO.complicationsAnd ??= ComplicationsAfterProsthesisEntity();
-                      widget.searchProstheticDTO.complicationsAnd!.pain = value;
-                      if (value == true) widget.searchProstheticDTO.complicationsOr?.pain = null;
-                      setState(() {});
-                    },
-                  ),
-                ],
-              )),
-        ],
+                      ],
+                    );
+                  }),
+            ),
+            AdvancedSearchFilterChildWidget(
+                title: "Post Prosthesis Complications (One of the following)",
+                child: Column(
+                  children: [
+                    CIA_CheckBoxWidget(
+                      text: "All",
+                      value: widget.searchProstheticDTO.complicationsAfterProstheticIdsOr == null,
+                      onChange: (value) {
+                        setState(() {
+                          widget.searchProstheticDTO.complicationsAfterProstheticIdsOr = null;
+                        });
+                      },
+                    ),
+                    ...(complicationsItems
+                        .map(
+                          (e) => CIA_CheckBoxWidget(
+                            text: e.name ?? "",
+                            value: widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.contains(e.id!) ?? false,
+                            onChange: (value) {
+                              if (value == true) {
+                                widget.searchProstheticDTO.complicationsAfterProstheticIdsOr ??= [];
+                                widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.add(e.id!);
+                                widget.searchProstheticDTO.complicationsAfterProstheticIds?.remove(e.id!);
+                              } else {
+                                widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.remove(e.id!);
+                              }
+
+                              widget.searchProstheticDTO.complicationsAfterProstheticIdsOr =
+                                  widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.toSet().toList();
+                              widget.searchProstheticDTO.complicationsAfterProstheticIds =
+                                  widget.searchProstheticDTO.complicationsAfterProstheticIds?.toSet().toList();
+
+                              setState(() {});
+                            },
+                          ),
+                        )
+                        .toList()),
+                  ],
+                )),
+            AdvancedSearchFilterChildWidget(
+                title: "Post Prosthesis Complications (All of the following)",
+                child: Column(
+                  children: [
+                    CIA_CheckBoxWidget(
+                      text: "All",
+                      value: widget.searchProstheticDTO.complicationsAfterProstheticIds == null,
+                      onChange: (value) {
+                        setState(() {
+                          widget.searchProstheticDTO.complicationsAfterProstheticIds = null;
+                        });
+                      },
+                    ),
+                    ...(complicationsItems
+                        .map(
+                          (e) => CIA_CheckBoxWidget(
+                            text: e.name ?? "",
+                            value: widget.searchProstheticDTO.complicationsAfterProstheticIds?.contains(e.id!) ?? false,
+                            onChange: (value) {
+                              if (value == true) {
+                                widget.searchProstheticDTO.complicationsAfterProstheticIds ??= [];
+                                widget.searchProstheticDTO.complicationsAfterProstheticIds?.add(e.id!);
+                                widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.remove(e.id!);
+                              } else {
+                                widget.searchProstheticDTO.complicationsAfterProstheticIds?.remove(e.id!);
+                              }
+
+                              widget.searchProstheticDTO.complicationsAfterProstheticIdsOr =
+                                  widget.searchProstheticDTO.complicationsAfterProstheticIdsOr?.toSet().toList();
+                              widget.searchProstheticDTO.complicationsAfterProstheticIds =
+                                  widget.searchProstheticDTO.complicationsAfterProstheticIds?.toSet().toList();
+
+                              setState(() {});
+                            },
+                          ),
+                        )
+                        .toList()),
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }

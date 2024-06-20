@@ -150,22 +150,22 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     //     filters.add("Surgery Complications: GBR Failure");
     //   }
     // }
-    if (!(searchProstheticDTO.complicationsOr?.isNull() ?? true)) {
-      if (searchProstheticDTO.complicationsOr!.screwLoosness == true) {
-        filters.add("Prosthetic Complications: Screw Loosness");
-      }
-      if (searchProstheticDTO.complicationsOr!.crownFall == true) {
-        filters.add("Prosthetic Complications: Crown Fall");
-      }
-      if (searchProstheticDTO.complicationsOr!.fracturedZirconia == true) {
-        filters.add("Prosthetic Complications: Fractured Zirconia");
-      }
-      if (searchProstheticDTO.complicationsOr!.fracturedPrintedPMMA == true) filters.add("Prosthetic Complications: Fractrured Printed PMMA");
-      if (searchProstheticDTO.complicationsOr!.foodImpaction == true) filters.add("Prosthetic Complications: Food Impaction");
-      if (searchProstheticDTO.complicationsOr!.pain == true) {
-        filters.add("Prosthetic Complications: Pain");
-      }
-    }
+    // if (!(searchProstheticDTO.complicationsOr?.isNull() ?? true)) {
+    //   if (searchProstheticDTO.complicationsOr!.screwLoosness == true) {
+    //     filters.add("Prosthetic Complications: Screw Loosness");
+    //   }
+    //   if (searchProstheticDTO.complicationsOr!.crownFall == true) {
+    //     filters.add("Prosthetic Complications: Crown Fall");
+    //   }
+    //   if (searchProstheticDTO.complicationsOr!.fracturedZirconia == true) {
+    //     filters.add("Prosthetic Complications: Fractured Zirconia");
+    //   }
+    //   if (searchProstheticDTO.complicationsOr!.fracturedPrintedPMMA == true) filters.add("Prosthetic Complications: Fractrured Printed PMMA");
+    //   if (searchProstheticDTO.complicationsOr!.foodImpaction == true) filters.add("Prosthetic Complications: Food Impaction");
+    //   if (searchProstheticDTO.complicationsOr!.pain == true) {
+    //     filters.add("Prosthetic Complications: Pain");
+    //   }
+    // }
     for (var queryItem in searchTreatmentsDTO.or_treatmentIds ?? []) {
       filters.add(treatmentItems.firstWhere((element) => element.id == queryItem).name ?? "");
     }
@@ -288,22 +288,22 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     //   filters.add("Full Arch Delivery Next Visit ${searchProstheticDTO?.fullArchAnd?.delivery?.firstOrNull?.finalProthesisDeliveryNextVisit?.name}");
     // }
 
-    if (!(searchProstheticDTO.complicationsAnd?.isNull() ?? true)) {
-      if (searchProstheticDTO.complicationsAnd!.screwLoosness == true) {
-        filters.add("Prosthetic Complications: Screw Loosness");
-      }
-      if (searchProstheticDTO.complicationsAnd!.crownFall == true) {
-        filters.add("Prosthetic Complications: Crown Fall");
-      }
-      if (searchProstheticDTO.complicationsAnd!.fracturedZirconia == true) {
-        filters.add("Prosthetic Complications: Fractured Zirconia");
-      }
-      if (searchProstheticDTO.complicationsAnd!.fracturedPrintedPMMA == true) filters.add("Prosthetic Complications: Fractrured Printed PMMA");
-      if (searchProstheticDTO.complicationsAnd!.foodImpaction == true) filters.add("Prosthetic Complications: Food Impaction");
-      if (searchProstheticDTO.complicationsAnd!.pain == true) {
-        filters.add("Prosthetic Complications: Pain");
-      }
-    }
+    // if (!(searchProstheticDTO.complicationsAnd?.isNull() ?? true)) {
+    //   if (searchProstheticDTO.complicationsAnd!.screwLoosness == true) {
+    //     filters.add("Prosthetic Complications: Screw Loosness");
+    //   }
+    //   if (searchProstheticDTO.complicationsAnd!.crownFall == true) {
+    //     filters.add("Prosthetic Complications: Crown Fall");
+    //   }
+    //   if (searchProstheticDTO.complicationsAnd!.fracturedZirconia == true) {
+    //     filters.add("Prosthetic Complications: Fractured Zirconia");
+    //   }
+    //   if (searchProstheticDTO.complicationsAnd!.fracturedPrintedPMMA == true) filters.add("Prosthetic Complications: Fractrured Printed PMMA");
+    //   if (searchProstheticDTO.complicationsAnd!.foodImpaction == true) filters.add("Prosthetic Complications: Food Impaction");
+    //   if (searchProstheticDTO.complicationsAnd!.pain == true) {
+    //     filters.add("Prosthetic Complications: Pain");
+    //   }
+    // }
     if (searchTreatmentsDTO.implantFailed == true) {
       filters.add("Implant Failed");
     }
@@ -357,46 +357,46 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     //     searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
     //   }
     // }
-    if (filter.contains("Prosthetic Complications")) {
-      if (filter.contains("Prosthetic Complications: Screw Loosness")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.screwLoosness = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.screwLoosness = null;
-      }
-      if (filter.contains("Prosthetic Complications: Crown Fall")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.crownFall = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.crownFall = null;
-      }
-      if (filter.contains("Prosthetic Complications: Fractured Zirconia")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.fracturedZirconia = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.fracturedZirconia = null;
-      }
-      if (filter.contains("Prosthetic Complications: Fractrured Printed PMMA")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.fracturedPrintedPMMA = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.fracturedPrintedPMMA = null;
-      }
-      if (filter.contains("Prosthetic Complications: Food Impaction")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.foodImpaction = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.foodImpaction = null;
-      }
-      if (filter.contains("Prosthetic Complications: Pain")) {
-        if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.pain = null;
-        if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.pain = null;
-      }
+    // if (filter.contains("Prosthetic Complications")) {
+    //   if (filter.contains("Prosthetic Complications: Screw Loosness")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.screwLoosness = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.screwLoosness = null;
+    //   }
+    //   if (filter.contains("Prosthetic Complications: Crown Fall")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.crownFall = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.crownFall = null;
+    //   }
+    //   if (filter.contains("Prosthetic Complications: Fractured Zirconia")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.fracturedZirconia = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.fracturedZirconia = null;
+    //   }
+    //   if (filter.contains("Prosthetic Complications: Fractrured Printed PMMA")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.fracturedPrintedPMMA = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.fracturedPrintedPMMA = null;
+    //   }
+    //   if (filter.contains("Prosthetic Complications: Food Impaction")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.foodImpaction = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.foodImpaction = null;
+    //   }
+    //   if (filter.contains("Prosthetic Complications: Pain")) {
+    //     if (searchProstheticDTO.complicationsAnd != null) searchProstheticDTO.complicationsAnd!.pain = null;
+    //     if (searchProstheticDTO.complicationsOr != null) searchProstheticDTO.complicationsOr!.pain = null;
+    //   }
 
-      // if (searchTreatmentsDTO.complicationsAfterSurgeryIds?.isNull() ?? true) {
-      //   searchTreatmentsDTO.complicationsAfterSurgeryIds = null;
-      // }
-      // if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.isNull() ?? true) {
-      //   searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
-      // }
+    //   // if (searchTreatmentsDTO.complicationsAfterSurgeryIds?.isNull() ?? true) {
+    //   //   searchTreatmentsDTO.complicationsAfterSurgeryIds = null;
+    //   // }
+    //   // if (searchTreatmentsDTO.complicationsAfterSurgeryIdsOr?.isNull() ?? true) {
+    //   //   searchTreatmentsDTO.complicationsAfterSurgeryIdsOr = null;
+    //   // }
 
-      if (searchProstheticDTO.complicationsAnd?.isNull() ?? true) {
-        searchProstheticDTO.complicationsAnd = null;
-      }
-      if (searchProstheticDTO.complicationsOr?.isNull() ?? true) {
-        searchProstheticDTO.complicationsOr = null;
-      }
-    }
+    //   if (searchProstheticDTO.complicationsAnd?.isNull() ?? true) {
+    //     searchProstheticDTO.complicationsAnd = null;
+    //   }
+    //   if (searchProstheticDTO.complicationsOr?.isNull() ?? true) {
+    //     searchProstheticDTO.complicationsOr = null;
+    //   }
+    // }
 
     // if (filter.contains("Diagnostic Impression Diagnosis")) {
     //   searchProstheticDTO?.diagnosticAnd?.prostheticDiagnostic_DiagnosticImpression?.firstOrNull?.diagnostic = null;

@@ -989,6 +989,21 @@ namespace CIA.Controllers
             
             return Ok();
         }
+        [HttpGet("GetProstheticComplications")]
+        public async Task<IActionResult> GetProstheticComplications()
+        {
+            _aPI_Response.Result = await _cia_DbContext.DefaultProstheticComplications.ToListAsync();
+            
+            return Ok(_aPI_Response);
+        }
+        [HttpPut("UpdateProstheticComplications")]
+        public async Task<IActionResult> UpdateProstheticComplications(List<DefaultProstheticComplications> model)
+        {
+            _cia_DbContext.DefaultProstheticComplications.UpdateRange(model);
+            _cia_DbContext.SaveChanges();
+            
+            return Ok();
+        }
 
 
     }

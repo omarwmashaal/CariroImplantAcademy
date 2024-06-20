@@ -1037,3 +1037,39 @@ class SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState extends S
   @override
   List<Object?> get props => [identityHashCode(this)];
 }
+
+class SettingsBloc_UpdatingDefaultProstheticComplicationsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingDefaultProstheticComplicationsErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_UpdatingDefaultProstheticComplicationsErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatedDefaultProstheticComplicationsSuccessfullyState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_LoadingDefaultProstheticComplicationsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingDefaultProstheticComplicationsErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_LoadingDefaultProstheticComplicationsErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState extends SettingsBloc_States {
+  final List<BasicNameIdObjectEntity> data;
+  SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

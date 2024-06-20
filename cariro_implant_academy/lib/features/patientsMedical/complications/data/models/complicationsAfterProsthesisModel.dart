@@ -20,12 +20,14 @@ class ComplicationsAfterProsthesisModel extends ComplicationsAfterProsthesisEnti
     super.notes,
     super.operator,
     super.operatorId,
+    super.defaultId,
   });
 
   factory ComplicationsAfterProsthesisModel.fromEntity(ComplicationsAfterProsthesisEntity entity) {
     return ComplicationsAfterProsthesisModel(
       id: entity.id,
       patientId: entity.patientId,
+      defaultId: entity.defaultId,
       screwLoosness: entity.screwLoosness,
       crownFall: entity.crownFall,
       fracturedZirconia: entity.fracturedZirconia,
@@ -53,9 +55,10 @@ class ComplicationsAfterProsthesisModel extends ComplicationsAfterProsthesisEnti
       pain: json['pain'],
       date: DateTime.tryParse(json['date'] ?? "")?.toLocal(),
       tooth: json['tooth'],
-      name: json['name'],
       notes: json['notes'],
       operatorId: json['operatorId'],
+      name: json['defaultProstheticComplication']?['name'],
+      defaultId: json['defaultProstheticComplicationsId'],
       operator: json['operator'] == null ? null : BasicNameIdObjectModel.fromJson(json['operator']),
     );
   }
@@ -64,6 +67,7 @@ class ComplicationsAfterProsthesisModel extends ComplicationsAfterProsthesisEnti
     return {
       'id': id,
       'patientId': patientId,
+      'defaultProstheticComplicationsId': defaultId,
       'screwLoosness': screwLoosness ?? false,
       'crownFall': crownFall ?? false,
       'fracturedZirconia': fracturedZirconia ?? false,
@@ -71,7 +75,6 @@ class ComplicationsAfterProsthesisModel extends ComplicationsAfterProsthesisEnti
       'foodImpaction': foodImpaction ?? false,
       'pain': pain ?? false,
       'tooth': tooth,
-      'name': name,
       'notes': notes,
       'operatorId': operatorId,
       'date': date?.toUtc().toIso8601String(),

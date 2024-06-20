@@ -390,13 +390,13 @@ namespace CIA.Controllers
         [HttpGet("MigrateToNewComplicationsSystem")]
         public async Task<IActionResult> MigrateToNewComplicationsSystem()
         {
-            var defautlCOm = _ciaDbContext.DefaultSurgicalComplications.ToList();
-            var coms = _ciaDbContext.ComplicationsAfterSurgery.ToList();
-            foreach (var com in coms)
+            var defautlCOmSurgical = _ciaDbContext.DefaultSurgicalComplications.ToList();
+            var comsSurgical = _ciaDbContext.ComplicationsAfterSurgery.ToList();
+            foreach (var com in comsSurgical)
             {
                 try
                 {
-                    com.DefaultSurgicalComplicationsId = defautlCOm.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
+                    com.DefaultSurgicalComplicationsId = defautlCOmSurgical.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
 
                 }
                 catch (Exception e)
@@ -404,10 +404,27 @@ namespace CIA.Controllers
                     Console.WriteLine("");
                 }
             }
-            _ciaDbContext.ComplicationsAfterSurgery.UpdateRange(coms);
+            _ciaDbContext.ComplicationsAfterSurgery.UpdateRange(comsSurgical);
             _ciaDbContext.SaveChanges();
 
-            return Ok();
+            var defautlCOmProsth = _ciaDbContext.DefaultProstheticComplications.ToList();
+            var comsProsthetci = _ciaDbContext.ComplicationsAfterProsthesis.ToList();
+            foreach (var com in comsProsthetci)
+            {
+                try
+                {
+                    com.DefaultProstheticComplicationsId = defautlCOmProsth.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("");
+                }
+            }
+            _ciaDbContext.ComplicationsAfterProsthesis.UpdateRange(comsProsthetci);
+            _ciaDbContext.SaveChanges();
+
+            return Ok(await _ciaDbContext.ComplicationsAfterProsthesis.Include(x=>x.DefaultProstheticComplication).ToListAsync());
         }
 
         [AllowAnonymous]
