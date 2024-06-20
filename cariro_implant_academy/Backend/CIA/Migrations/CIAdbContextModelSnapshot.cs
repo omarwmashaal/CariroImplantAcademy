@@ -643,11 +643,11 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DefaultSurgicalComplications", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -22529,6 +22529,18 @@ namespace CIA.Migrations
 
                     b.Property<int?>("GuidedBoneRegeneration_CutBy_ScrewsNumber")
                         .HasColumnType("integer");
+
+                    b.Property<string>("NotesGBR")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotesOSL")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotesSTG")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotesSuture")
+                        .HasColumnType("text");
 
                     b.Property<bool?>("OpenSinusLift")
                         .HasColumnType("boolean");

@@ -174,6 +174,10 @@ namespace CIA.Models.TreatmentModels
 
         [ForeignKey("Patient")]
         public int? PatientId { get; set; }
+        public string? NotesSuture { get; set; }
+        public string? NotesGBR { get; set; }
+        public string? NotesOSL { get; set; }
+        public string? NotesSTG { get; set; }
         public List<RequestChangeModel>? RequestChanges { get; set; }
         public bool? GuidedBoneRegeneration { get; set; }
         public bool? GuidedBoneRegeneration_BlockGraft { get; set; }

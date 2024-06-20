@@ -811,6 +811,9 @@ namespace CIA.Controllers
 
             if (id != null)
                 query = query.Where(x => x.PatientID == id);
+            else
+            {
+            }
             var y = await query.Select(x => new
             {
                 x.Id,

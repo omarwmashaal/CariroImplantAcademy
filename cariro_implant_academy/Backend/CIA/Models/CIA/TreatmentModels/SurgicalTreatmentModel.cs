@@ -66,6 +66,7 @@ namespace CIA.Models.CIA.TreatmentModels
         public string? SoftTissueGraft_Exposure_CustomizedHealingCollarTeethNumber { get; set; }
         public bool? SoftTissueGraft_DonorSite { get; set; }
         public string? SoftTissueGraft_DonorSite_Notes { get; set; }
+        
         public bool? SoftTissueGraft_Suture { get; set; }
         public string? SoftTissueGraft_Suture_Material { get; set; }
         public string? SoftTissueGraft_Suture_Technique { get; set; }
