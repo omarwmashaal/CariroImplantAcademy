@@ -40,6 +40,7 @@ import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.d
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -319,137 +320,140 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 }
                                               }(),
                                               SizedBox(width: 10),
-                                              CIA_SecondaryButton(
-                                                  label: "Sessions Duration",
-                                                  onTab: () async {
-                                                    DateTime? from;
-                                                    DateTime? to;
-                                                    VisitDataSource dataSource = VisitDataSource(
-                                                        sessions: true, context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
-                                                    bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                        params: GetSessionsDurationParams(
-                                                      id: widget.userId,
-                                                      from: from,
-                                                      to: to,
-                                                    )));
-                                                    CIA_ShowPopUp(
-                                                        width: 1000,
-                                                        height: 900,
-                                                        context: context,
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Expanded(
-                                                                  child: CIA_DateTimeTextFormField(
-                                                                    label: "From",
-                                                                    controller: TextEditingController(
-                                                                        text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
-                                                                    onChange: (v) {
-                                                                      from = v;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
+                                              Visibility(
+                                                visible: siteController.getRole()?.contains("admin") ?? false,
+                                                child: CIA_SecondaryButton(
+                                                    label: "Sessions Duration",
+                                                    onTab: () async {
+                                                      DateTime? from;
+                                                      DateTime? to;
+                                                      VisitDataSource dataSource = VisitDataSource(
+                                                          sessions: true, context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
+                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                          params: GetSessionsDurationParams(
+                                                        id: widget.userId,
+                                                        from: from,
+                                                        to: to,
+                                                      )));
+                                                      CIA_ShowPopUp(
+                                                          width: 1000,
+                                                          height: 900,
+                                                          context: context,
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: CIA_DateTimeTextFormField(
+                                                                      label: "From",
+                                                                      controller: TextEditingController(
+                                                                          text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
+                                                                      onChange: (v) {
+                                                                        from = v;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                IconButton(
-                                                                    onPressed: () {
-                                                                      from = null;
+                                                                  IconButton(
+                                                                      onPressed: () {
+                                                                        from = null;
 
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
-                                                                    icon: Icon(Icons.remove)),
-                                                                SizedBox(width: 10),
-                                                                Expanded(
-                                                                  child: CIA_DateTimeTextFormField(
-                                                                    label: "To",
-                                                                    controller: TextEditingController(
-                                                                        text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
-                                                                    onChange: (v) {
-                                                                      to = v;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                      icon: Icon(Icons.remove)),
+                                                                  SizedBox(width: 10),
+                                                                  Expanded(
+                                                                    child: CIA_DateTimeTextFormField(
+                                                                      label: "To",
+                                                                      controller: TextEditingController(
+                                                                          text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
+                                                                      onChange: (v) {
+                                                                        to = v;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                IconButton(
-                                                                    onPressed: () {
-                                                                      to = null;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
-                                                                    icon: Icon(Icons.remove)),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height: 10),
-                                                            SizedBox(height: 10),
-                                                            Expanded(
-                                                              child: BlocConsumer<UsersBloc, UsersBloc_States>(
-                                                                listener: (context, state) {
-                                                                  if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
-                                                                    dataSource.updateData(newData: state.sessions);
-                                                                  }
-                                                                },
-                                                                buildWhen: (previous, current) =>
-                                                                    current is UsersBloc_LoadingSessionsState ||
-                                                                    current is UsersBloc_LoadingSessionsErrorState ||
-                                                                    current is UsersBloc_LoadedSessionsSuccessfullyState,
-                                                                builder: (context, state) {
-                                                                  if (state is UsersBloc_LoadingSessionsState) {
-                                                                    return LoadingWidget();
-                                                                  } else if (state is UsersBloc_LoadingSessionsErrorState)
-                                                                    return BigErrorPageWidget(message: state.message);
-                                                                  else if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
-                                                                    Duration duration = Duration(seconds: 0);
-
-                                                                    state.sessions.forEach((element) {
-                                                                      if (element.duration != null) {
-                                                                        var du = element.duration!.split(":");
-                                                                        duration += Duration(
-                                                                            hours: int.parse(du[0]),
-                                                                            minutes: int.parse(du[1]),
-                                                                            seconds: int.parse(du[2]));
-                                                                      }
-                                                                    });
-                                                                    return Column(
-                                                                      children: [
-                                                                        Container(
-                                                                            width: double.infinity,
-                                                                            child: Center(child: FormTextKeyWidget(text: "Duration: $duration"))),
-                                                                        Expanded(
-                                                                          child: TableWidget(
-                                                                            dataSource: dataSource,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  }
-                                                                  return LoadingWidget();
-                                                                },
+                                                                  IconButton(
+                                                                      onPressed: () {
+                                                                        to = null;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                      icon: Icon(Icons.remove)),
+                                                                ],
                                                               ),
-                                                            )
-                                                          ],
-                                                        ));
-                                                  }),
+                                                              SizedBox(height: 10),
+                                                              SizedBox(height: 10),
+                                                              Expanded(
+                                                                child: BlocConsumer<UsersBloc, UsersBloc_States>(
+                                                                  listener: (context, state) {
+                                                                    if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
+                                                                      dataSource.updateData(newData: state.sessions);
+                                                                    }
+                                                                  },
+                                                                  buildWhen: (previous, current) =>
+                                                                      current is UsersBloc_LoadingSessionsState ||
+                                                                      current is UsersBloc_LoadingSessionsErrorState ||
+                                                                      current is UsersBloc_LoadedSessionsSuccessfullyState,
+                                                                  builder: (context, state) {
+                                                                    if (state is UsersBloc_LoadingSessionsState) {
+                                                                      return LoadingWidget();
+                                                                    } else if (state is UsersBloc_LoadingSessionsErrorState)
+                                                                      return BigErrorPageWidget(message: state.message);
+                                                                    else if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
+                                                                      Duration duration = Duration(seconds: 0);
+
+                                                                      state.sessions.forEach((element) {
+                                                                        if (element.duration != null) {
+                                                                          var du = element.duration!.split(":");
+                                                                          duration += Duration(
+                                                                              hours: int.parse(du[0]),
+                                                                              minutes: int.parse(du[1]),
+                                                                              seconds: int.parse(du[2]));
+                                                                        }
+                                                                      });
+                                                                      return Column(
+                                                                        children: [
+                                                                          Container(
+                                                                              width: double.infinity,
+                                                                              child: Center(child: FormTextKeyWidget(text: "Duration: $duration"))),
+                                                                          Expanded(
+                                                                            child: TableWidget(
+                                                                              dataSource: dataSource,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                    return LoadingWidget();
+                                                                  },
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ));
+                                                    }),
+                                              ),
                                               SizedBox(width: 10),
                                               Visibility(
                                                   visible: (user.roles?.contains("candidate") ?? false) &&
