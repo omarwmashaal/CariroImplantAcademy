@@ -17,6 +17,8 @@ namespace CIA.Models
         public int? Id { get; set; }
         public DateTime Date { get; set; }
         public int? OperatorId { get; set; }
+        public int? CanidateId { get; set; }
+        public UserDTO? Candidate { get; set; }
         public UserDTO? Operator { get; set; }
         public int Total { get; set; } = 0;
         public int Paid { get; set; } = 0;

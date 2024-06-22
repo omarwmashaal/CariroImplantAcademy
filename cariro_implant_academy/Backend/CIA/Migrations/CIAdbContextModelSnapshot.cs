@@ -177,6 +177,9 @@ namespace CIA.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
+                    b.Property<int?>("CandidateId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
@@ -224,6 +227,8 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
 
                     b.HasIndex("CategoryId");
 
@@ -696,7 +701,7 @@ namespace CIA.Migrations
                         new
                         {
                             Id = 7,
-                            Name = "ImplantFracture"
+                            Name = "Implant Fracture"
                         });
                 });
 
@@ -21708,6 +21713,50 @@ namespace CIA.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("CIA.Models.InstallmentPlanModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("InstallmentInterval")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfPayments")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PaidAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ReceiptId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiptId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("InstallmentPlans");
+                });
+
             modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
                 {
                     b.Property<int?>("Id")
@@ -22196,7 +22245,7 @@ namespace CIA.Migrations
                     b.Property<int>("PaidAmount")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PatientId")
+                    b.Property<int?>("PatientId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReceiptId")
@@ -22223,6 +22272,9 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("CandidateId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -22262,6 +22314,8 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
 
                     b.HasIndex("OperatorId1");
 
@@ -23833,6 +23887,12 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.CIA.CashFlowModel", b =>
                 {
+                    b.HasOne("CIA.Models.CIA.ApplicationUser", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .HasPrincipalKey("IdInt")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("CIA.Models.CIA.DropDowns", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
@@ -23860,6 +23920,8 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.CIA.SuppliersModel", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId");
+
+                    b.Navigation("Candidate");
 
                     b.Navigation("Category");
 
@@ -24494,6 +24556,62 @@ namespace CIA.Migrations
                     b.Navigation("TMD");
                 });
 
+            modelBuilder.Entity("CIA.Models.InstallmentPlanModel", b =>
+                {
+                    b.HasOne("CIA.Models.Receipt", "ReceiptData")
+                        .WithMany()
+                        .HasForeignKey("ReceiptId");
+
+                    b.HasOne("CIA.Models.CIA.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasPrincipalKey("IdInt")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsMany("CIA.Models.InstallmentItem", "Installments", b1 =>
+                        {
+                            b1.Property<int>("InstallmentPlanModelId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("Amount")
+                                .HasColumnType("integer");
+
+                            b1.Property<DateTime>("DueDate")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer");
+
+                            b1.Property<DateTime?>("LastDateOfPayment")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<bool>("Paid")
+                                .HasColumnType("boolean");
+
+                            b1.Property<int>("PaidAmount")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("InstallmentPlanModelId", "Id");
+
+                            b1.ToTable("InstallmentItem");
+
+                            b1.WithOwner()
+                                .HasForeignKey("InstallmentPlanModelId");
+                        });
+
+                    b.Navigation("Installments");
+
+                    b.Navigation("ReceiptData");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
                 {
                     b.HasOne("CIA.Models.CIA.LabItem", "ConsumedLabItem")
@@ -24704,9 +24822,7 @@ namespace CIA.Migrations
 
                     b.HasOne("CIA.Models.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PatientId");
 
                     b.HasOne("CIA.Models.Receipt", "Receipt")
                         .WithMany()
@@ -24723,6 +24839,12 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.Receipt", b =>
                 {
+                    b.HasOne("CIA.Models.CIA.ApplicationUser", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .HasPrincipalKey("IdInt")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Operator")
                         .WithMany()
                         .HasForeignKey("OperatorId1");
@@ -25151,6 +25273,8 @@ namespace CIA.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ReceiptId");
                         });
+
+                    b.Navigation("Candidate");
 
                     b.Navigation("CompositeInlay");
 

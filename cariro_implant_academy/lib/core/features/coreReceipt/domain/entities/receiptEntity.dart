@@ -13,7 +13,9 @@ class ReceiptEntity extends Equatable {
   int? id;
   DateTime? date;
   int? patientId;
+  int? candidateId;
   BasicNameIdObjectEntity? patient;
+  BasicNameIdObjectEntity? candidate;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
   List<ToothReceiptEntity>? toothReceiptData;
@@ -27,6 +29,8 @@ class ReceiptEntity extends Equatable {
     this.date,
     this.patientId,
     this.patient,
+    this.candidate,
+    this.candidateId,
     this.operatorId,
     this.operator,
     this.toothReceiptData,

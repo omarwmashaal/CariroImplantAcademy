@@ -34,6 +34,9 @@ namespace CIA.Models.CIA
         [ForeignKey("Patient")]
         public int? PatientId { get; set; }
         public Patient? Patient { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public int? CandidateId { get; set; }
+        public ApplicationUser? Candidate { get; set; }
         [ForeignKey("PaymentLog")]
         public int? PaymentLogId { get; set; }
         public PaymentLog? PaymentLog { get; set; }

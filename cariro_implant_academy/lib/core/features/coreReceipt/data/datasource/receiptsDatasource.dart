@@ -17,15 +17,14 @@ abstract class ReceiptsDatasource {
 
   Future<List<PaymentLogModel>> getAllPaymentLogs({required int patientId});
 
-  Future<List<PaymentLogModel>> getPaymentLogsforAReceipt({required int patientId, required int receiptId});
+  Future<List<PaymentLogModel>> getPaymentLogsforAReceipt({required int receiptId});
 
   Future<NoParams> addPayment({required int patientId, required int receiptId, required int paidAmount});
 
   Future<NoParams> removePayment({required int paymentId});
 
   Future<int> getTotalDebt({required int patientId});
-  Future<NoParams> addPatientReceipt( int patientId, int tooth, String action, int? price);
-
+  Future<NoParams> addPatientReceipt(int patientId, int tooth, String action, int? price);
 }
 
 class ReceiptsDatasourceImpl implements ReceiptsDatasource {
@@ -43,7 +42,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     return NoParams();
   }
 
@@ -57,7 +56,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -75,7 +74,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -85,16 +84,16 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
   }
 
   @override
-  Future<List<PaymentLogModel>> getPaymentLogsforAReceipt({required int patientId, required int receiptId}) async {
+  Future<List<PaymentLogModel>> getPaymentLogsforAReceipt({required int receiptId}) async {
     late StandardHttpResponse result;
     try {
       result = await httpRepo.get(
-        host: "$serverHost/$patientInfoController/GetPaymentLogsForAReceipt?id=$patientId&receiptId=$receiptId",
+        host: "$serverHost/$patientInfoController/GetPaymentLogsForAReceipt?receiptId=$receiptId",
       );
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => PaymentLogModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -112,7 +111,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -131,7 +130,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       return ((result.body ?? []) as List<dynamic>).map((e) => ReceiptModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -149,7 +148,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       if (result.body == null) return ReceiptModel();
       return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
@@ -168,7 +167,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     try {
       return (result.body ?? 0) as int;
     } catch (e) {
@@ -186,7 +185,7 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     return NoParams();
   }
 
@@ -195,12 +194,12 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     late StandardHttpResponse result;
     try {
       result = await httpRepo.put(
-        host: "$serverHost/$medicalController/AddPatientReceipt?id=$patientId&tooth=$tooth&action=$action${price!=null?"&price=$price":""}",
+        host: "$serverHost/$medicalController/AddPatientReceipt?id=$patientId&tooth=$tooth&action=$action${price != null ? "&price=$price" : ""}",
       );
     } catch (e) {
       throw mapException(e);
     }
-    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode,message: result.errorMessage);
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     return NoParams();
   }
 }

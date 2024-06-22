@@ -6,16 +6,15 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/domain/reposito
 import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:dartz/dartz.dart';
 
-class ReceiptRepositoryImpl implements ReceiptRepository{
+class ReceiptRepositoryImpl implements ReceiptRepository {
   final ReceiptsDatasource receiptDataSource;
   ReceiptRepositoryImpl({required this.receiptDataSource});
   @override
-  Future<Either<Failure, NoParams>> addPayment({required int patientId, required int receiptId, required int paidAmount})async {
+  Future<Either<Failure, NoParams>> addPayment({required int patientId, required int receiptId, required int paidAmount}) async {
     try {
-      final result = await receiptDataSource.addPayment(patientId:patientId,paidAmount: paidAmount,receiptId: receiptId);
+      final result = await receiptDataSource.addPayment(patientId: patientId, paidAmount: paidAmount, receiptId: receiptId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -23,32 +22,29 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
   @override
   Future<Either<Failure, List<PaymentLogEntity>>> getAllPaymentLogs({required int patientId}) async {
     try {
-      final result = await receiptDataSource.getAllPaymentLogs(patientId:patientId);
+      final result = await receiptDataSource.getAllPaymentLogs(patientId: patientId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
 
   @override
-  Future<Either<Failure, ReceiptEntity>> getLastReceipt({required int patientId})  async {
+  Future<Either<Failure, ReceiptEntity>> getLastReceipt({required int patientId}) async {
     try {
-      final result = await receiptDataSource.getLastReceipt(patientId:patientId);
+      final result = await receiptDataSource.getLastReceipt(patientId: patientId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
 
   @override
-  Future<Either<Failure, List<PaymentLogEntity>>> getPaymentLogsforAReceipt({required int patientId, required int receiptId}) async {
+  Future<Either<Failure, List<PaymentLogEntity>>> getPaymentLogsforAReceipt({required int receiptId}) async {
     try {
-      final result = await receiptDataSource.getPaymentLogsforAReceipt(patientId:patientId,receiptId: receiptId);
+      final result = await receiptDataSource.getPaymentLogsforAReceipt(receiptId: receiptId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -58,19 +54,17 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
     try {
       final result = await receiptDataSource.getReceiptById(receiptId: receiptId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
 
   @override
-  Future<Either<Failure, List<ReceiptEntity>>> getReceipts({required int patientId})async {
+  Future<Either<Failure, List<ReceiptEntity>>> getReceipts({required int patientId}) async {
     try {
       final result = await receiptDataSource.getReceipts(patientId: patientId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -80,8 +74,7 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
     try {
       final result = await receiptDataSource.getTodaysReceipt(patientId: patientId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -91,8 +84,7 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
     try {
       final result = await receiptDataSource.getTotalDebt(patientId: patientId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -102,8 +94,7 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
     try {
       final result = await receiptDataSource.removePayment(paymentId: paymentId);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
@@ -111,12 +102,10 @@ class ReceiptRepositoryImpl implements ReceiptRepository{
   @override
   Future<Either<Failure, NoParams>> addPatientReceipt({required int patientId, required int tooth, required String action, int? price}) async {
     try {
-      final result = await receiptDataSource.addPatientReceipt(patientId,tooth,action, price);
+      final result = await receiptDataSource.addPatientReceipt(patientId, tooth, action, price);
       return Right(result);
-    } on Exception catch(e)
-    {
+    } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
     }
   }
-
 }

@@ -160,7 +160,7 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                         PaymentLogTableWidget(
                           receiptId: selected.receiptID!,
                           context: context,
-                          patientId: selected.patientId!,
+                          patientId: selected.patientId,
                         )();
                       }
                     });

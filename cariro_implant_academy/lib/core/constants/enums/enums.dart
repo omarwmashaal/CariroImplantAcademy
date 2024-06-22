@@ -294,3 +294,14 @@ List<EnumPatientCallHistoryModel> _defualtPatientCallHistryIcons = [
 Icon getDefaulCallHistoryIcon(EnumPatientCallHistory value) {
   return _defualtPatientCallHistryIcons.firstWhere((element) => element.value == value).icon;
 }
+
+enum EnumInstallmentInterval {
+  monthly,
+  yearly,
+}
+
+enum EnumInstallmentStatus {
+  onTime,
+  overDue,
+  finished,
+}

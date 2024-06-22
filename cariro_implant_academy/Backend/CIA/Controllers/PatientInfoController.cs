@@ -1023,6 +1023,7 @@ namespace CIA.Controllers
                 .Where(x => x.Website == _site)
                 .Include(x => x.Patient)
                 .Include(x => x.Operator)
+                .Include(x => x.Candidate)
                 .OrderByDescending(x => x.Date).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -1043,9 +1044,9 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetPaymentLogsForAReceipt")]
-        public async Task<IActionResult> GetPaymentLogsForAReceipt(int id, int receiptId)
+        public async Task<IActionResult> GetPaymentLogsForAReceipt( int receiptId)
         {
-            var logs = await _cia_DbContext.PaymentLogs.Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.PatientId == id && x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
+            var logs = await _cia_DbContext.PaymentLogs.Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
             _aPI_Response.Result = logs;
             return Ok(_aPI_Response);
         }

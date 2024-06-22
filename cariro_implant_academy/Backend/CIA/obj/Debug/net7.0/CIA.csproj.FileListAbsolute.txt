@@ -187,3 +187,4 @@ D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_imp
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Debug\net7.0\Hangfire.SQLite.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Debug\net7.0\Microsoft.Data.Sqlite.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Debug\net7.0\SQLitePCLRaw.core.dll
+D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Debug\net7.0\Exceptionless.DateTimeExtensions.dll

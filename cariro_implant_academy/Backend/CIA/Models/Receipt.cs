@@ -17,6 +17,9 @@ namespace CIA.Models
         [ForeignKey("Operator.IdInt")]
         public int? OperatorId { get; set; }
         public ApplicationUser? Operator { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public int? CandidateId { get; set; }
+        public ApplicationUser? Candidate { get; set; }
         public int Total { get; set; } = 0;
         public int Paid { get; set; } = 0;
         public int Unpaid { get; set; } = 0; 

@@ -21,7 +21,7 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     required this.getPaymentLogsForAReceipt,
     required this.removePaymentUseCase,
     required this.addPaymentUseCase,
-}) : super(ReceiptBloc_InitiState());
+  }) : super(ReceiptBloc_InitiState());
 
   void getPatientReceipts(int patientId) async {
     emit(ReceiptBloc_LoadingReceiptsState());
@@ -32,7 +32,7 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
   }
 
-  void loadPaymentLogTableData({required int patientId, required int receiptId}) async {
+  void loadPaymentLogTableData({required int receiptId}) async {
     emit(ReceiptBloc_LoadingPaymentLogsState());
     final result = await getReceiptByIdUseCase(receiptId);
     late ReceiptEntity receiptEntity;
@@ -45,7 +45,6 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
     if (result.isRight()) {
       await getPaymentLogsForAReceipt(GetPaymentLogForAReceiptParams(
-        patientId: patientId,
         receiptId: receiptId,
       )).then((value) => value.fold(
             (l) => emit(ReceiptBloc_LoadingPaymentLogsErrorState(message: l.message ?? "")),

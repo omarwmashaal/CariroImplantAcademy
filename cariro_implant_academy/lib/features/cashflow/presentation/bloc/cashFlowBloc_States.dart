@@ -1,5 +1,7 @@
-import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
 import 'package:equatable/equatable.dart';
+
+import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/entities/installmentPlanEntity.dart';
 
 import '../../domain/entities/cashFlowSummaryEntity.dart';
 
@@ -77,4 +79,73 @@ class CashFlowBloC_UpdateSummaryNetProfitState extends CashFlowBloc_States {
         incomeTotal,
         expensesTotal,
       ];
+}
+
+class CashFlowBloC_LoadedInstallmentSuccessfullyState extends CashFlowBloc_States {
+  final InstallmentPlanEntity? data;
+  final bool? calculationsOnly;
+  CashFlowBloC_LoadedInstallmentSuccessfullyState({
+    required this.data,
+    required this.calculationsOnly,
+  });
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_LoadingInstallmentState extends CashFlowBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_LoadingInstallmentErrorState extends CashFlowBloc_States {
+  final String message;
+  CashFlowBloC_LoadingInstallmentErrorState({
+    required this.message,
+  });
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_PayedInstallmentSuccessfullyState extends CashFlowBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_PayingInstallmentState extends CashFlowBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_PayingInstallmentErrorState extends CashFlowBloc_States {
+  final String message;
+  CashFlowBloC_PayingInstallmentErrorState({
+    required this.message,
+  });
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_CreatedInstallmentSuccessfullyState extends CashFlowBloc_States {
+  final InstallmentPlanEntity data;
+  final bool calculationsOnly;
+  CashFlowBloC_CreatedInstallmentSuccessfullyState({
+    required this.data,
+    required this.calculationsOnly,
+  });
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_CreatingInstallmentState extends CashFlowBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class CashFlowBloC_CreatingInstallmentErrorState extends CashFlowBloc_States {
+  final String message;
+  CashFlowBloC_CreatingInstallmentErrorState({
+    required this.message,
+  });
+  @override
+  List<Object?> get props => [];
 }

@@ -10,8 +10,8 @@ namespace CIA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [ForeignKey("Patient")]
-        public int PatientId { get; set; }
-        public Patient Patient { get; set; }
+        public int? PatientId { get; set; }
+        public Patient? Patient { get; set; }
         [ForeignKey("Operator.IdInt")]
         public int OperatorId { get; set; }
         public ApplicationUser Operator { get; set; }

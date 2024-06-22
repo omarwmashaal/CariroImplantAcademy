@@ -12,15 +12,14 @@ class GetPaymentLogsForAReceiptUseCase extends UseCases<List<PaymentLogEntity>, 
 
   @override
   Future<Either<Failure, List<PaymentLogEntity>>> call(GetPaymentLogForAReceiptParams params) async {
-    return await receiptRepository.getPaymentLogsforAReceipt(patientId: params.patientId,receiptId: params.receiptId).then((value) => value.fold(
+    return await receiptRepository.getPaymentLogsforAReceipt(receiptId: params.receiptId).then((value) => value.fold(
           (l) => Left(l..message = "Get Payment Logs For A Receipt: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
   }
 }
-class GetPaymentLogForAReceiptParams{
-  final int patientId;
-  final int receiptId;
-  GetPaymentLogForAReceiptParams({required this.patientId,required this.receiptId});
 
+class GetPaymentLogForAReceiptParams {
+  final int receiptId;
+  GetPaymentLogForAReceiptParams({required this.receiptId});
 }

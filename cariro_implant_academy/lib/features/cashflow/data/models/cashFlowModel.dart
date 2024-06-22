@@ -8,6 +8,8 @@ class CashFlowModel extends CashFlowEntity {
     super.code,
     super.receiptID,
     super.receipt,
+    super.candidate,
+    super.candidateId,
     super.size,
     super.date,
     super.name,
@@ -37,6 +39,8 @@ class CashFlowModel extends CashFlowEntity {
       id: entity.id,
       size: entity.size,
       code: entity.code,
+      candidate: entity.candidate,
+      candidateId: entity.candidateId,
       labItemShadeId: entity.labItemShadeId,
       receiptID: entity.receiptID,
       receipt: entity.receipt,
@@ -68,6 +72,7 @@ class CashFlowModel extends CashFlowEntity {
     code = json['code'];
     labItemShadeId = json['labItemShadeId'];
     receiptID = json['receiptID'];
+    candidateId = json['candidateId'];
     size = json['size'];
     labRequestId = json['labRequestId'];
     date = DateTime.tryParse(json['date'] ?? "")?.toLocal();
@@ -75,7 +80,8 @@ class CashFlowModel extends CashFlowEntity {
     categoryId = json['categoryId'];
     category = json['category'] != null ? new BasicNameIdObjectModel.fromJson(json['category']) : BasicNameIdObjectModel();
     patientId = json['patientId'];
-    patient = json['patient'] != null ? new BasicNameIdObjectModel.fromJson(json['patient']) : BasicNameIdObjectModel();
+    patient = json['patient'] != null ? new BasicNameIdObjectModel.fromJson(json['patient']) : null;
+    candidate = json['candidate'] != null ? new BasicNameIdObjectModel.fromJson(json['candidate']) : null;
     supplierId = json['supplierId'];
     supplier = json['supplier'] != null ? new BasicNameIdObjectModel.fromJson(json['supplier']) : BasicNameIdObjectModel();
     createdById = json['createdById'];
@@ -89,7 +95,7 @@ class CashFlowModel extends CashFlowEntity {
     notes = json['notes'];
     type = json['type'];
     receiptID = json['receiptID'];
-      receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
+    receipt = ReceiptModel.fromJson(json['receipt'] ?? Map<String, dynamic>());
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +105,7 @@ class CashFlowModel extends CashFlowEntity {
     data['code'] = this.code;
     data['labItemShadeId'] = this.labItemShadeId;
     data['receiptID'] = this.receiptID;
+    data['candidateId'] = this.candidateId;
     data['receipt'] = this.receipt;
     data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();
     data['name'] = this.name;

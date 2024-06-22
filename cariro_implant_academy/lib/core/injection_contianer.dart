@@ -89,10 +89,13 @@ import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cas
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addIncomeUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addSettlementUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/createInstallmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getIncomeByCategoryUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getInstallmentPlanForUserUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getSummaryUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/payInstallmentUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/datasources/clinicTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/repositories/clinicTreatmentRepoImpl.dart';
@@ -947,9 +950,15 @@ initInjection() async {
         addSettlementUseCase: sl(),
         addExpensesUseCase: sl(),
         addIncomeUseCase: sl(),
+        createInstallmentPlanUseCase: sl(),
+        getInstallmentPlanForUserUseCase: sl(),
+        payInstallmentUseCase: sl(),
       ));
 
   //use cases
+  sl.registerLazySingleton(() => CreateInstallmentPlanUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => GetInstallmentPlanForUserUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => PayInstallmentUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => ListIncomeUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => ListExpensesUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => GetSummaryUseCase(cashFlowRepository: sl()));

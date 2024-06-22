@@ -1,4 +1,6 @@
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/createInstallmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/payInstallmentUseCase.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/constants/enums/enums.dart';
@@ -114,4 +116,29 @@ class CashFlowBloc_GetExpenesesCategoryByNameEvent extends CashFlowBloc_Events {
   List<Object?> get props => [name];
 }
 
+class CashFlowBloc_GetInstallmentForUserEvent extends CashFlowBloc_Events {
+  final int id;
 
+  CashFlowBloc_GetInstallmentForUserEvent({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
+class CashFlowBloc_CreateInstallmentForUserEvent extends CashFlowBloc_Events {
+  final CreateInstallmentPlanParams params;
+
+  CashFlowBloc_CreateInstallmentForUserEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
+}
+
+class CashFlowBloc_PayInstallmentEvent extends CashFlowBloc_Events {
+  final PayInstallmentParams params;
+
+  CashFlowBloc_PayInstallmentEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
+}

@@ -115,6 +115,7 @@ namespace CIA.DataBases
         public DbSet<LabItem> LabItems { get; set; }
         public DbSet<LabItemParent> LabItemParents { get; set; }
         public DbSet<LabOptions> LabOptions { get; set; }
+        public DbSet<InstallmentPlanModel> InstallmentPlans { get; set; }
 
 
 
@@ -308,6 +309,23 @@ namespace CIA.DataBases
 
             };
             modelBuilder.Entity<Lab_DefaultStep>().HasData(Lab_DefaultSteps);
+
+            modelBuilder.Entity<Receipt>()
+                .HasOne<ApplicationUser>(x => x.Candidate)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<CashFlowModel>()
+                .HasOne<ApplicationUser>(x => x.Candidate)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InstallmentPlanModel>()
+                .HasOne<ApplicationUser>(x => x.User)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ClinicDoctorClinicPercentageModel>()
                 .HasOne<ApplicationUser>(x => x.Doctor)
@@ -548,7 +566,7 @@ namespace CIA.DataBases
                 },
 
             };
-           
+
             List<DefaultProstheticComplications> defaultProstheticComplications = new()
             {
                 new DefaultProstheticComplications
