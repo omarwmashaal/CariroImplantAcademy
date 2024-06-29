@@ -3,7 +3,9 @@ using CIA.Models;
 using CIA.Models.CIA;
 using CIA.Models.TreatmentModels;
 using CIA.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security.Claims;
 using static CIA.Models.TreatmentModels.TreatmentPlanModel;
 
@@ -13,10 +15,13 @@ namespace CIA.Repositories
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CIA_dbContext _ciaDbContext;
-        public UserRepo(IHttpContextAccessor httpContextAccessor, CIA_dbContext cIA_Db)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public UserRepo(IHttpContextAccessor httpContextAccessor, CIA_dbContext cIA_Db, UserManager<ApplicationUser> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _ciaDbContext = cIA_Db;
+            _userManager = userManager;
         }
 
         public async Task<int> GetCandidateTotalImplantData(int id)
@@ -66,6 +71,8 @@ namespace CIA.Repositories
         {
             var id = _httpContextAccessor.HttpContext.User.FindFirstValue("Id");
             var user = await _ciaDbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user != null)
+                user.Roles = (await _userManager.GetRolesAsync(user))?.ToList() ?? new();
             return user;
         }
 

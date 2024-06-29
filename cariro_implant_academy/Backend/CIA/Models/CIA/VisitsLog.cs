@@ -10,7 +10,13 @@ namespace CIA.Models.CIA
         public int? Id { get; set; }
 
         [ForeignKey("Patient")]
-        public int PatientID { get; set; }
+        public int? PatientID { get; set; }
+
+        [ForeignKey("VisitsLog")]
+        public int? VisitsLogIdUpdateRequestId { get; set; }
+        [NotMapped]
+        public VisitsLog? ChangeRequest { get; set; }
+
         public Patient? Patient { get; set; }
         public VisitsStatus? Status { get; set; }
         public DateTime? ReservationTime { get; set; }
@@ -28,6 +34,9 @@ namespace CIA.Models.CIA
         [ForeignKey("Doctor.IdInt")]
         public int? DoctorID { get; set; }
         public ApplicationUser? Doctor { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public int? EntryById { get; set; }
+        public ApplicationUser? EntryBy { get; set; }
         //[NotMapped]
         public String? Treatment { get; set; }
 

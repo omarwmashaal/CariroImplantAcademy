@@ -228,7 +228,7 @@ namespace CIA.Models
         LowerPosterior
     }
     public enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-    public enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment }
+    public enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment, PatientVisit }
     public enum EnumComplainStatus { InQueue, Untouched, Resolved }
 
     public enum EnumSummaryFilter { ThisWeek, LastMonth, ThisMonth, ThisYear }

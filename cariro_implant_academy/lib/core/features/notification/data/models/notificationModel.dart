@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/features/notification/domain/entities/notificationEntity.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/createOrViewPatientPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/patientProfileComplainsPage.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/pages/visitsPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/pages/surgicalTreatmentPage.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,21 +30,23 @@ class NotificationModel extends NotificationEntity {
       title: json['title'] ?? "",
       content: json['content'] ?? "",
       read: json['read'] ?? false,
-      date: DateTime.tryParse(json['date']??"")?.toLocal(),
+      date: DateTime.tryParse(json['date'] ?? "")?.toLocal(),
       infoId: json['infoId'],
       type: json['type'] == null ? null : EnumNotificationType.values[json['type']],
       onClickAction: (context) {
         var type = mapToEnum<EnumNotificationType>(EnumNotificationType.values, json['type']);
         if (type == EnumNotificationType.Patient)
-          GoRouter.of(context).goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
+          GoRouter.of(context).goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(), pathParameters: {'id': json['infoId']?.toString() ?? ""});
         else if (type == EnumNotificationType.TreatmentPlan)
-          GoRouter.of( context).goNamed(TreatmentPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
+          GoRouter.of(context).goNamed(TreatmentPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString() ?? ""});
         else if (type == EnumNotificationType.Complains)
-        GoRouter.of( context).goNamed(PatientProfileComplainsPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
+          GoRouter.of(context).goNamed(PatientProfileComplainsPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString() ?? ""});
         else if (type == EnumNotificationType.LabRequest)
-        GoRouter.of( context).goNamed(CIA_Router.routeConst_LabView, pathParameters: {'id': json['infoId']?.toString()??""});
-       else if (type == EnumNotificationType.SurgicalTreatment)
-        GoRouter.of( context).goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString()??""});
+          GoRouter.of(context).goNamed(CIA_Router.routeConst_LabView, pathParameters: {'id': json['infoId']?.toString() ?? ""});
+        else if (type == EnumNotificationType.SurgicalTreatment)
+          GoRouter.of(context).goNamed(SurgicalTreatmentPage.getRouteName(), pathParameters: {'id': json['infoId']?.toString() ?? ""});
+        else if (type == EnumNotificationType.PatientVisit)
+          GoRouter.of(context).goNamed(VisitsPage.getProfileRouteName(), pathParameters: {'id': json['infoId']?.toString() ?? ""});
       },
     );
   }

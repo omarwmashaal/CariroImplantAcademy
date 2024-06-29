@@ -309,9 +309,15 @@ namespace CIA.Controllers
                     _cia_DbContext.VisitsLogs.Update(visit);
                     _cia_DbContext.SaveChanges();
                 }
+                if (v.VisitsLogIdUpdateRequestId != null)
+                {
+                    v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
+
+                }
             }
 
             _cia_DbContext.SaveChanges();
+
             _aPI_Response.Result = visitsLog;
             return Ok(_aPI_Response);
         }
@@ -341,6 +347,12 @@ namespace CIA.Controllers
                     visit.Status = VisitsStatus.Passed;
                     _cia_DbContext.VisitsLogs.Update(visit);
                     _cia_DbContext.SaveChanges();
+                }
+
+                if (v.VisitsLogIdUpdateRequestId != null)
+                {
+                    v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
+
                 }
             }
 
@@ -384,6 +396,10 @@ namespace CIA.Controllers
                     x.Room,
                     x.RoomId,
                     x.Duration,
+                    x.VisitsLogIdUpdateRequestId,
+                    ChangeRequest = (VisitsLog?)(x.VisitsLogIdUpdateRequestId == null ? null : (_cia_DbContext.VisitsLogs.FirstOrDefault(s => s.Id == x.VisitsLogIdUpdateRequestId))),
+                    ChangeRequestId = x.VisitsLogIdUpdateRequestId,
+
                     Title = $"Patient: {x.Patient.Name} || {x.Title} || Dr: {x.Doctor.Name}"
 
 
@@ -527,8 +543,8 @@ namespace CIA.Controllers
                     x.Treatment,
 
                 }).OrderByDescending(x => x.Id).ToList();
-            if (visit.DoctorID != null && visit.From != null)
-                await _notificationRepo.VisitScheduled(visit.PatientID, (int)visit.DoctorID!, (DateTime)visit.From);
+            if (visit.DoctorID != null && visit.From != null && visit.PatientID != null)
+                await _notificationRepo.VisitScheduled((int)visit.PatientID, (int)visit.DoctorID!, (DateTime)visit.From);
             return Ok(_aPI_Response);
         }
 
@@ -536,6 +552,7 @@ namespace CIA.Controllers
         [HttpPut("PatientVisits")]
         public async Task<ActionResult> PatientVisits([FromQuery] int id)
         {
+            var user = await _userRepo.GetUser();
             var visit = _cia_DbContext.VisitsLogs.Where(x =>
             x.PatientID == id && x.RealVisitTime != null
             && (
@@ -556,6 +573,8 @@ namespace CIA.Controllers
                     RealVisitTime = DateTime.UtcNow,
                     ReservationTime = null,
                     Website = _site,
+                    EntryBy = user,
+                    EntryById = user.IdInt,
 
 
                 };
@@ -565,6 +584,8 @@ namespace CIA.Controllers
             {
                 visit.RealVisitTime = DateTime.UtcNow;
                 visit.Status = VisitsStatus.Visited;
+                visit.EntryBy = user;
+                visit.EntryById = user.IdInt;
                 _cia_DbContext.VisitsLogs.Update(visit);
             }
             await _cia_DbContext.SaveChangesAsync();
@@ -580,10 +601,16 @@ namespace CIA.Controllers
                     x.LeaveTime,
                     doctorName = x.Doctor.Name,
                     x.Treatment,
-                    x.Duration
-
+                    x.Duration,
+                    x.VisitsLogIdUpdateRequestId,
+                    ChangeRequest = (VisitsLog?)(x.VisitsLogIdUpdateRequestId == null ? null : (_cia_DbContext.VisitsLogs.FirstOrDefault(s => s.Id == x.VisitsLogIdUpdateRequestId))),
+                    ChangeRequestId = x.VisitsLogIdUpdateRequestId,
 
                 }).OrderByDescending(x => x.Id).ToList();
+
+
+
+
             return Ok(_aPI_Response);
         }
         [HttpPut("PatientEntersClinic")]
@@ -609,6 +636,7 @@ namespace CIA.Controllers
 
             }
             await _cia_DbContext.SaveChangesAsync();
+
             _aPI_Response.Result = _cia_DbContext.VisitsLogs.Include(x => x.Doctor).Where(x => x.PatientID == id)
                 .Select(x => new
                 {
@@ -621,7 +649,11 @@ namespace CIA.Controllers
                     x.LeaveTime,
                     doctorName = x.Doctor.Name,
                     x.Treatment,
-                    x.Duration
+                    x.Duration,
+                    x.VisitsLogIdUpdateRequestId,
+                    ChangeRequest = (VisitsLog?)(x.VisitsLogIdUpdateRequestId == null ? null : (_cia_DbContext.VisitsLogs.FirstOrDefault(s => s.Id == x.VisitsLogIdUpdateRequestId))),
+                    ChangeRequestId = x.VisitsLogIdUpdateRequestId,
+
 
                 }).OrderByDescending(x => x.Id).ToList();
 
@@ -663,38 +695,85 @@ namespace CIA.Controllers
                     x.EntersClinicTime,
                     x.LeaveTime,
                     doctorName = x.Doctor.Name,
-                    x.Duration,
                     x.Treatment,
+                    x.Duration,
+                    x.VisitsLogIdUpdateRequestId,
+                    ChangeRequest = (VisitsLog?)(x.VisitsLogIdUpdateRequestId == null ? null : (_cia_DbContext.VisitsLogs.FirstOrDefault(s => s.Id == x.VisitsLogIdUpdateRequestId))),
+                    ChangeRequestId = x.VisitsLogIdUpdateRequestId,
 
-
-
-                }).OrderByDescending(x => x.Id)
-                .ToList();
+                }).OrderByDescending(x => x.Id).ToList();
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateVisit")]
         public async Task<IActionResult> UpdateVisit([FromBody] VisitDTO visit, bool delete)
         {
-            var v = await _cia_DbContext.VisitsLogs.FirstOrDefaultAsync(x => x.Id == visit.Id);
+            var user = await _userRepo.GetUser();
+            var visitFromDataBase = await _cia_DbContext.VisitsLogs.FirstOrDefaultAsync(x => x.Id == visit.Id);
             if (delete == true)
             {
-                _cia_DbContext.VisitsLogs.Remove(v);
+                if (!(user.Roles?.Contains("admin") ?? false))
+                {
+                    _aPI_Response.ErrorMessage = "Only admin can delete entry!";
+                    return BadRequest(_aPI_Response);
+
+                }
+                _cia_DbContext.VisitsLogs.Remove(visitFromDataBase);
                 _cia_DbContext.SaveChanges();
                 return Ok(_aPI_Response);
             }
-            v.RealVisitTime = visit.RealVisitTime;
-            v.ReservationTime = visit.ReservationTime;
-            v.EntersClinicTime = visit.EntersClinicTime;
-            v.LeaveTime = visit.LeaveTime;
-            v.From = visit.From;
-            v.To = visit.To;
-            v.Title = visit.Title;
-            v.RoomId = visit.RoomId ?? v.RoomId;
-            if (v.LeaveTime != null && v.EntersClinicTime != null)
-                v.Duration = v.LeaveTime - v.EntersClinicTime;
 
-            _cia_DbContext.VisitsLogs.Update(v);
-            _cia_DbContext.SaveChanges();
+
+            if (user.Roles.Contains("admin"))
+            {
+
+                visitFromDataBase.RealVisitTime = visit.RealVisitTime;
+                visitFromDataBase.ReservationTime = visit.ReservationTime;
+                visitFromDataBase.EntersClinicTime = visit.EntersClinicTime;
+                visitFromDataBase.LeaveTime = visit.LeaveTime;
+                visitFromDataBase.From = visit.From;
+                visitFromDataBase.To = visit.To;
+                visitFromDataBase.Title = visit.Title;
+                visitFromDataBase.RoomId = visit.RoomId ?? visitFromDataBase.RoomId;
+                if (visitFromDataBase.LeaveTime != null && visitFromDataBase.EntersClinicTime != null)
+                    visitFromDataBase.Duration = visitFromDataBase.LeaveTime - visitFromDataBase.EntersClinicTime;
+
+
+                if (visitFromDataBase.VisitsLogIdUpdateRequestId != null)
+                {
+                    _cia_DbContext.VisitsLogs.Remove(_cia_DbContext.VisitsLogs.First(x => x.Id == visitFromDataBase.VisitsLogIdUpdateRequestId));
+                    _cia_DbContext.SaveChanges();
+                    visitFromDataBase.VisitsLogIdUpdateRequestId = null;
+                }
+                _cia_DbContext.VisitsLogs.Update(visitFromDataBase);
+                _cia_DbContext.SaveChanges();
+            }
+            else
+            {
+                var changeRequestFromDatabase = await _cia_DbContext.VisitsLogs.FirstOrDefaultAsync(x => x.Id == visitFromDataBase.VisitsLogIdUpdateRequestId);
+
+                if (changeRequestFromDatabase == null)
+                    changeRequestFromDatabase = new VisitsLog();
+
+
+                changeRequestFromDatabase.Patient = null;
+                changeRequestFromDatabase.PatientID = null;
+                changeRequestFromDatabase.EntryBy = user;
+                changeRequestFromDatabase.EntryById = user.IdInt;
+                changeRequestFromDatabase.RealVisitTime = visit.ChangeRequest?.RealVisitTime;
+                changeRequestFromDatabase.ReservationTime = visit.ChangeRequest?.ReservationTime;
+                changeRequestFromDatabase.EntersClinicTime = visit.ChangeRequest?.EntersClinicTime;
+                changeRequestFromDatabase.LeaveTime = visit.ChangeRequest?.LeaveTime;
+                changeRequestFromDatabase.From = visit.ChangeRequest?.From;
+                changeRequestFromDatabase.To = visit.ChangeRequest?.To;
+                changeRequestFromDatabase.Title = visit.ChangeRequest?.Title;
+                _cia_DbContext.VisitsLogs.Update(changeRequestFromDatabase);
+                _cia_DbContext.SaveChanges();
+                visitFromDataBase.VisitsLogIdUpdateRequestId = changeRequestFromDatabase.Id;
+                _cia_DbContext.VisitsLogs.Update(visitFromDataBase);
+                _cia_DbContext.SaveChanges();
+                await _notificationRepo.VisitInfoUpdate((int)visit.PatientID);
+
+            }
             return Ok(_aPI_Response);
 
 
@@ -1044,7 +1123,7 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetPaymentLogsForAReceipt")]
-        public async Task<IActionResult> GetPaymentLogsForAReceipt( int receiptId)
+        public async Task<IActionResult> GetPaymentLogsForAReceipt(int receiptId)
         {
             var logs = await _cia_DbContext.PaymentLogs.Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
             _aPI_Response.Result = logs;
@@ -1315,7 +1394,7 @@ namespace CIA.Controllers
             List<ComplicationsAfterSurgeryParentModel> complicationSurgeryParents = new List<ComplicationsAfterSurgeryParentModel>();
             List<DentalExaminationModel> faildImplantsDentalExaminations = new List<DentalExaminationModel>();
             List<TreatmentPlanModel> treatmentPlans = new();
-            
+
             if (model.CandidateBatchId != null || model.CandidateId != null)
             {
                 query = query.Include(x => x.DoneByCandidate).Include(x => x.DoneByCandidateBatch);
@@ -1342,7 +1421,7 @@ namespace CIA.Controllers
             {
                 // Step 1: Fetch the complications for the given patient IDs and complication IDs in one go
                 var complicationsQuery = _cia_DbContext.ComplicationsAfterSurgery
-                    .Include(x=>x.DefaultSurgicalComplication)
+                    .Include(x => x.DefaultSurgicalComplication)
                     .Where(c => model.Ids.Contains((int)c.PatientId));
 
                 // We do not filter by complication IDs in the initial query since we'll handle it in memory
@@ -1355,7 +1434,7 @@ namespace CIA.Controllers
                                    .ToDictionary(g => g.Key, g => g.Select(c => c.DefaultSurgicalComplicationsId)
                                    .ToHashSet());
 
-                model.Ids  = model.Ids
+                model.Ids = model.Ids
                             .Where(pId => complicationsGroupedByPatient.ContainsKey(pId) &&
                                           (model.complicationsAfterSurgeryIds == null || model.complicationsAfterSurgeryIds.All(cid => complicationsGroupedByPatient[pId].Contains(cid))) &&
                                           (model.complicationsAfterSurgeryIdsOr == null || model.complicationsAfterSurgeryIdsOr.Any(cid => complicationsGroupedByPatient[pId].Contains(cid))))
@@ -1376,8 +1455,8 @@ namespace CIA.Controllers
                 var dentalExaminations = await _cia_DbContext.DentalExaminations.ToListAsync();
                 foreach (var dent in dentalExaminations)
                 {
-                    if(dent.DentalExaminations.Any(x=>x.ImplantFailed==true))
-                        faildImplantsDentalExaminations.Add(dent);                   
+                    if (dent.DentalExaminations.Any(x => x.ImplantFailed == true))
+                        faildImplantsDentalExaminations.Add(dent);
 
 
                 }
@@ -1440,7 +1519,7 @@ namespace CIA.Controllers
                     }
                 }
 
-                treatments = await  query.Where(x=>model.Ids.IsNullOrEmpty()|| model.Ids.Contains((int)x.PatientId)).ToListAsync();
+                treatments = await query.Where(x => model.Ids.IsNullOrEmpty() || model.Ids.Contains((int)x.PatientId)).ToListAsync();
                 var treatmentsGroupedByPatients = treatments
                     .GroupBy(t => t.PatientId)
                     .ToDictionary(g => g.Key, g => g.ToHashSet());
@@ -1448,7 +1527,7 @@ namespace CIA.Controllers
                 model.Ids = model.Ids
                     .Where(pId => treatmentsGroupedByPatients.ContainsKey(pId) &&
                                 (
-                                    (model.And_TreatmentIds.IsNullOrEmpty() || model.And_TreatmentIds.All(tId => treatmentsGroupedByPatients[pId].Any(x=>x.TreatmentItemId==tId && x.Status==model.Done))) &&
+                                    (model.And_TreatmentIds.IsNullOrEmpty() || model.And_TreatmentIds.All(tId => treatmentsGroupedByPatients[pId].Any(x => x.TreatmentItemId == tId && x.Status == model.Done))) &&
                                     (model.Or_TreatmentIds.IsNullOrEmpty() || model.Or_TreatmentIds.Any(tId => treatmentsGroupedByPatients[pId].Any(x => x.TreatmentItemId == tId && x.Status == model.Done)))
 
                                 )
@@ -1457,14 +1536,14 @@ namespace CIA.Controllers
                     ).ToList();
 
                 treatments.RemoveAll(x => !model.Ids.Contains((int)x.PatientId));
-                if(!model.And_TreatmentIds.IsNullOrEmpty())
+                if (!model.And_TreatmentIds.IsNullOrEmpty())
                 {
-                    treatments.RemoveAll(x => !model.And_TreatmentIds.Contains(x.TreatmentItemId??0));
+                    treatments.RemoveAll(x => !model.And_TreatmentIds.Contains(x.TreatmentItemId ?? 0));
 
-                } 
-                if(!model.Or_TreatmentIds.IsNullOrEmpty())
+                }
+                if (!model.Or_TreatmentIds.IsNullOrEmpty())
                 {
-                    treatments.RemoveAll(x => !model.Or_TreatmentIds.Contains(x.TreatmentItemId??0));
+                    treatments.RemoveAll(x => !model.Or_TreatmentIds.Contains(x.TreatmentItemId ?? 0));
                 }
 
                 //foreach (var and_treatmentId in model.And_TreatmentIds)
@@ -1490,7 +1569,7 @@ namespace CIA.Controllers
             }
 
 
-            var finalResult =  treatments.Select(x => new AdvancedSearchTreatmentResponseModel
+            var finalResult = treatments.Select(x => new AdvancedSearchTreatmentResponseModel
             {
                 Id = x.PatientId,
                 SecondaryId = x.Patient.SecondaryId,
@@ -1540,7 +1619,7 @@ namespace CIA.Controllers
 
             if (model.complicationsAfterSurgeryIds != null || model.complicationsAfterSurgeryIdsOr != null)
             {
-                
+
                 foreach (var result in finalResult)
                 {
                     var com = complications.Where(x => x.PatientId == result.Id && x.Tooth == result.Tooth)?.Select(x => x.DefaultSurgicalComplication.Name).ToList();
@@ -1725,7 +1804,7 @@ namespace CIA.Controllers
                     {
                         com = complications
                             .Where(x => x.PatientId == step.PatientId)?
-                            .Select(x => x.DefaultProstheticComplication?.Name??"").ToList();
+                            .Select(x => x.DefaultProstheticComplication?.Name ?? "").ToList();
 
                     }
                     result.Add(new AdvancedProstheticSearchResponseDTO

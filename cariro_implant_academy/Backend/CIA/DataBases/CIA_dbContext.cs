@@ -310,6 +310,11 @@ namespace CIA.DataBases
             };
             modelBuilder.Entity<Lab_DefaultStep>().HasData(Lab_DefaultSteps);
 
+            modelBuilder.Entity<VisitsLog>()
+                .HasOne<ApplicationUser>(x => x.EntryBy)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Receipt>()
                 .HasOne<ApplicationUser>(x => x.Candidate)
                 .WithMany()

@@ -73,7 +73,7 @@ enum EnumTeethClassification { UpperAnterior, LowerAnterior, UpperPosterior, Low
 
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
 
-enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment }
+enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment, PatientVisit }
 
 T? mapToEnum<T extends Enum>(List<T> values, dynamic? value) {
   if (value is String) return values.firstWhereOrNull((element) => (element as Enum).name.toLowerCase() == value.toLowerCase());

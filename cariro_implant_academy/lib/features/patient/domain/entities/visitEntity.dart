@@ -23,10 +23,12 @@ class VisitEntity extends Equatable {
   int? roomId;
   String? doctorName;
   int? doctorId;
+  int? changeRequestId;
   String? treatment;
   int? patientId;
   String? patientName;
   String? duration;
+  VisitEntity? changeRequest;
 
   VisitEntity({
     this.id,
@@ -35,6 +37,7 @@ class VisitEntity extends Equatable {
     this.title,
     this.to,
     this.roomId,
+    this.changeRequestId,
     this.status,
     this.reservationTime,
     this.realVisitTime,
@@ -45,6 +48,7 @@ class VisitEntity extends Equatable {
     this.patientId,
     this.room,
     this.patientName,
+    this.changeRequest,
   });
 
   @override

@@ -7,7 +7,7 @@ namespace CIA.Models.DTOs
     public class VisitDTO
     {
         public int? Id { get; set; }       
-        public int PatientID { get; set; }
+        public int? PatientID { get; set; }
         public String? SecondaryId { get; set; }
 
         public String? PatientName { get; set; }
@@ -23,7 +23,11 @@ namespace CIA.Models.DTOs
         public RoomModel? Room { get; set; }
         public DateTime? LeaveTime { get; set; }
         public int? DoctorID { get; set; }
+        public int? EntryById { get; set; }
         public String? DoctorName { get; set; }     
         public String? Treatment { get; set; }
+        public VisitDTO? ChangeRequest { get; set; }
+        public int? VisitsLogIdUpdateRequestId { get; set; }
+
     }
 }

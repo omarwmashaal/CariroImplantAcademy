@@ -4,6 +4,7 @@ namespace CIA.Repositories.Interfaces
 {
     public interface INotificationRepo
     {
+        public Task VisitInfoUpdate(int patientId);
         public Task PatientEntersClinic(int patientId,int doctorId, int? roomId);
         public Task VisitScheduled(int patientId,int doctorId,DateTime date);
         public Task TreatmentAssigned(int patientId, int assignedUserId, int treatmentItemId);

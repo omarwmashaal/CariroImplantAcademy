@@ -1639,13 +1639,16 @@ namespace CIA.Migrations
                     b.Property<DateTime?>("EntersClinicTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("EntryById")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("From")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("LeaveTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("PatientID")
+                    b.Property<int?>("PatientID")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("RealVisitTime")
@@ -1669,12 +1672,17 @@ namespace CIA.Migrations
                     b.Property<string>("Treatment")
                         .HasColumnType("text");
 
+                    b.Property<int?>("VisitsLogIdUpdateRequestId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Website")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
+
+                    b.HasIndex("EntryById");
 
                     b.HasIndex("PatientID");
 
@@ -24414,17 +24422,23 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("DoctorId");
 
+                    b.HasOne("CIA.Models.CIA.ApplicationUser", "EntryBy")
+                        .WithMany()
+                        .HasForeignKey("EntryById")
+                        .HasPrincipalKey("IdInt")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("CIA.Models.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PatientID");
 
                     b.HasOne("CIA.Models.CIA.RoomModel", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId");
 
                     b.Navigation("Doctor");
+
+                    b.Navigation("EntryBy");
 
                     b.Navigation("Patient");
 
