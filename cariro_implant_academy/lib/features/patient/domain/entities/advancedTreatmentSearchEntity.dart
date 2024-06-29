@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:equatable/equatable.dart';
@@ -33,6 +34,11 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   String? treatmentValue;
   String? treatmentName;
   int? treatmentId;
+  BasicNameIdObjectEntity? implantLineId;
+  BasicNameIdObjectEntity? implantCompanyId;
+  BasicNameIdObjectEntity? implantId;
+  String? implantLine;
+  String? implant;
 
   AdvancedTreatmentSearchEntity({
     this.id,
@@ -58,6 +64,10 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.treatmentName,
     this.treatmentValue,
     this.treatmentId,
+    this.implantLineId,
+    this.implantId,
+    this.implantLine,
+    this.implant,
   }) {
     and_treatmentIds = and_treatmentIds ?? [];
     or_treatmentIds = or_treatmentIds ?? [];
@@ -86,6 +96,8 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   bool isNull() =>
       noTreatmentPlan == null &&
+      implantId == null &&
+      implantLineId == null &&
       candidate == null &&
       candidateBatch == null &&
       implantFailed == null &&

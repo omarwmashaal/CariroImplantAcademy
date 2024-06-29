@@ -6,6 +6,9 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateBatchesUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadCandidateByBatchIdUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantLinesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
@@ -146,6 +149,50 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                       text: "No",
                       onChange: (value) => setState(() => widget.searchTreatmentsDTO.implantFailed = false),
                       value: widget.searchTreatmentsDTO.implantFailed == false)
+                ],
+              ),
+            ),
+            AdvancedSearchFilterChildWidget(
+              title: "Used Implant",
+              child: Column(
+                children: [
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Company",
+                    asyncUseCase: sl<GetImplantCompaniesUseCase>(),
+                    selectedItem: widget.searchTreatmentsDTO.implantCompanyId,
+                    onSelect: (value) {
+                      widget.searchTreatmentsDTO.implantCompanyId = value;
+                      widget.searchTreatmentsDTO.implantLineId = null;
+                      widget.searchTreatmentsDTO.implantId = null;
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Line",
+                    emptyString: widget.searchTreatmentsDTO.implantCompanyId == null ? "Please select company first" : "",
+                    asyncUseCase: widget.searchTreatmentsDTO.implantCompanyId == null ? null : sl<GetImplantLinesUseCase>(),
+                    selectedItem: widget.searchTreatmentsDTO.implantLineId,
+                    searchParams: widget.searchTreatmentsDTO.implantCompanyId?.id,
+                    onSelect: (value) {
+                      widget.searchTreatmentsDTO.implantLineId = value;
+                      widget.searchTreatmentsDTO.implantId = null;
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  CIA_DropDownSearchBasicIdName(
+                    label: "Implant",
+                    emptyString: widget.searchTreatmentsDTO.implantLineId == null ? "Please select line first" : "",
+                    asyncUseCase: widget.searchTreatmentsDTO.implantLineId == null ? null : sl<GetImplantSizesUseCase>(),
+                    selectedItem: widget.searchTreatmentsDTO.implantId,
+                    searchParams: widget.searchTreatmentsDTO.implantLineId?.id,
+                    onSelect: (value) {
+                      widget.searchTreatmentsDTO.implantId = value;
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),

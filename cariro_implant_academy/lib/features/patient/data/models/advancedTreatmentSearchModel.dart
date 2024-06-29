@@ -31,6 +31,10 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     super.clearnaceUpper,
     super.candidateBatch,
     super.candidate,
+    super.implantLineId,
+    super.implantId,
+    super.implantLine,
+    super.implant,
   });
 
   factory AdvancedTreatmentSearchModel.fromEntity(AdvancedTreatmentSearchEntity entity) {
@@ -51,6 +55,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
       clearnaceUpper: entity.clearnaceUpper,
       candidate: entity.candidate,
       candidateBatch: entity.candidateBatch,
+      implantLineId: entity.implantLineId,
+      implantId: entity.implantId,
     );
   }
 
@@ -69,6 +75,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     str_complicationsAfterSurgery = json['str_ComplicationsAfterSurgery'];
     candidate = json['candidate'] == null ? null : BasicNameIdObjectModel.fromJson(json['candidate']);
     candidateBatch = json['candidateBatch'] == null ? null : BasicNameIdObjectModel.fromJson(json['candidateBatch']);
+    implantLine = json['implantLine'];
+    implant = json['implant'];
   }
 
   Map<String, dynamic> toJson() {
@@ -88,9 +96,11 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     data['implantFailed'] = this.implantFailed;
     data['complicationsAfterSurgeryIds'] = this.complicationsAfterSurgeryIds?.map((e) => e as int).toList();
     data['complicationsAfterSurgeryIdsOr'] = this.complicationsAfterSurgeryIdsOr?.map((e) => e as int).toList();
-    
+
     data['and_treatmentIds'] = (and_treatmentIds ?? []).map((e) => e as int).toList();
     data['or_treatmentIds'] = (or_treatmentIds ?? []).map((e) => e as int).toList();
+    data['implantLineId'] = this.implantLineId?.id;
+    data['implantId'] = this.implantId?.id;
     return data;
   }
 }

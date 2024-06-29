@@ -64,6 +64,19 @@
           }
         }
       },
+      "Exceptionless.DateTimeExtensions/3.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "FluentValidation/11.0.1": {
         "type": "package",
         "compile": {
@@ -3195,6 +3208,19 @@
         "runtime": {
           "lib/net5.0/Dapper.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "Exceptionless.DateTimeExtensions/3.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -6476,6 +6502,22 @@
         "lib/net5.0/Dapper.xml",
         "lib/netstandard2.0/Dapper.dll",
         "lib/netstandard2.0/Dapper.xml"
+      ]
+    },
+    "Exceptionless.DateTimeExtensions/3.4.3": {
+      "sha512": "qmTnJMrMAZGL6yGWPHDpeTw8Xbdgyj4LbUdy4dyWhKhegH1Mnzvdf+umVnJF2HsV219/GxjgLaAV7NBPu2JfjQ==",
+      "type": "package",
+      "path": "exceptionless.datetimeextensions/3.4.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "exceptionless-icon.png",
+        "exceptionless.datetimeextensions.3.4.3.nupkg.sha512",
+        "exceptionless.datetimeextensions.nuspec",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.pdb",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.xml"
       ]
     },
     "FluentValidation/11.0.1": {
@@ -12866,6 +12908,7 @@
       "AutoMapper >= 12.0.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.0",
       "Carter >= 7.2.0",
+      "Exceptionless.DateTimeExtensions >= 3.4.3",
       "Hangfire >= 1.8.12",
       "Hangfire.AspNetCore >= 1.8.12",
       "Hangfire.PostgreSql >= 1.20.8",
@@ -12944,6 +12987,10 @@
           "Carter": {
             "target": "Package",
             "version": "[7.2.0, )"
+          },
+          "Exceptionless.DateTimeExtensions": {
+            "target": "Package",
+            "version": "[3.4.3, )"
           },
           "Hangfire": {
             "target": "Package",

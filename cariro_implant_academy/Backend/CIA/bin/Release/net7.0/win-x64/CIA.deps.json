@@ -12,6 +12,7 @@
           "AutoMapper": "12.0.1",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.0",
           "Carter": "7.2.0",
+          "Exceptionless.DateTimeExtensions": "3.4.3",
           "Hangfire": "1.8.12",
           "Hangfire.AspNetCore": "1.8.12",
           "Hangfire.PostgreSql": "1.20.8",
@@ -83,6 +84,14 @@
           "lib/net5.0/Dapper.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.0.123.33578"
+          }
+        }
+      },
+      "Exceptionless.DateTimeExtensions/3.4.3": {
+        "runtime": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.4.3.0"
           }
         }
       },
@@ -1843,6 +1852,13 @@
       "sha512": "sha512-RDFF4rBLLmbpi6pwkY7q/M6UXHRJEOerplDGE5jwEkP/JGJnBauAClYavNKJPW1yOTWRPIyfj4is3EaJxQXILQ==",
       "path": "dapper/2.0.123",
       "hashPath": "dapper.2.0.123.nupkg.sha512"
+    },
+    "Exceptionless.DateTimeExtensions/3.4.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qmTnJMrMAZGL6yGWPHDpeTw8Xbdgyj4LbUdy4dyWhKhegH1Mnzvdf+umVnJF2HsV219/GxjgLaAV7NBPu2JfjQ==",
+      "path": "exceptionless.datetimeextensions/3.4.3",
+      "hashPath": "exceptionless.datetimeextensions.3.4.3.nupkg.sha512"
     },
     "FluentValidation/11.0.1": {
       "type": "package",

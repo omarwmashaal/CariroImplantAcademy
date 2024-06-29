@@ -9,9 +9,9 @@ import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
 const _host = "http://localhost:5000/";
+//const _host = "http://18.233.224.72/api/";
 
 var t = File("host.txt").readAsStringSync();
-//const _host = "http://18.233.224.72/api/";
 final serverHost = "${_host}api";
 final signalRHost = "${_host}notificationhub";
 Website _site = Website.CIA;

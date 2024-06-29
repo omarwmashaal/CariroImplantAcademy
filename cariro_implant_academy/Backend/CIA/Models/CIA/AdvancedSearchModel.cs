@@ -61,6 +61,8 @@ namespace CIA.Models.CIA
         public String? Str_ComplicationsAfterProsthesis { get; set; }
         public DropDowns? Candidate { get; set; }
         public DropDowns? CandidateBatch { get; set; }
+        public String? Implant { get; set; }
+        public String? ImplantLine { get; set; }
     }
 
     

@@ -59,6 +59,8 @@ namespace CIA.Models.CIA.DTOs
         public List<int>? complicationsAfterSurgeryIds { get; set; }
         public List<int>? complicationsAfterSurgeryIdsOr { get; set; }
         public bool? ImplantFailed { get; set; }
+        public int? ImplantLineId { get; set; }
+        public int? ImplantId { get; set; }
      
 
 

@@ -1519,6 +1519,10 @@ namespace CIA.Controllers
                     }
                 }
 
+                if(model.ImplantLineId!=null || model.ImplantId!=null)
+                {
+                    query = query.Include(x => x.Implant).ThenInclude(x=>x.ImplantLine);
+                }
                 treatments = await query.Where(x => model.Ids.IsNullOrEmpty() || model.Ids.Contains((int)x.PatientId)).ToListAsync();
                 var treatmentsGroupedByPatients = treatments
                     .GroupBy(t => t.PatientId)
@@ -1535,6 +1539,7 @@ namespace CIA.Controllers
 
                     ).ToList();
 
+
                 treatments.RemoveAll(x => !model.Ids.Contains((int)x.PatientId));
                 if (!model.And_TreatmentIds.IsNullOrEmpty())
                 {
@@ -1544,6 +1549,14 @@ namespace CIA.Controllers
                 if (!model.Or_TreatmentIds.IsNullOrEmpty())
                 {
                     treatments.RemoveAll(x => !model.Or_TreatmentIds.Contains(x.TreatmentItemId ?? 0));
+                }
+                if(model.ImplantId!= null)
+                {
+                    treatments.RemoveAll(x => x.ImplantID != model.ImplantId);
+                }
+                if(model.ImplantLineId!= null)
+                {
+                    treatments.RemoveAll(x => x.Implant?.ImplantLineId != model.ImplantLineId);
                 }
 
                 //foreach (var and_treatmentId in model.And_TreatmentIds)
@@ -1579,7 +1592,9 @@ namespace CIA.Controllers
                 TreatmentId = (int)x.TreatmentItemId,
                 Candidate = new DropDowns { Name = x.DoneByCandidate == null ? null : x.DoneByCandidate!.Name, Id = x.DoneByCandidateID },
                 CandidateBatch = new DropDowns { Name = x.DoneByCandidateBatch == null ? null : x.DoneByCandidateBatch!.Name, Id = x.DoneByCandidateBatchID },
-                TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}"
+                TreatmentValue = x.Status == true ? $"Done tooth: {x.Tooth}" : $"Planned tooth: {x.Tooth}",
+                Implant = x.Implant?.Name,
+                ImplantLine = x.Implant?.ImplantLine?.Name
             }).ToList();
             if (model.ClearanceLower == true || model.ClearanceUpper == true)
                 treatmentPlans = await _cia_DbContext.TreatmentPlans.Where(x => finalResult.Select(x => x.Id).Contains((int)x.PatientId)).ToListAsync();
