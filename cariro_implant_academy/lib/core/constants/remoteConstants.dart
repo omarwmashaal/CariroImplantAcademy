@@ -8,8 +8,8 @@ import '../../Controllers/SiteController.dart';
 import 'enums/enums.dart';
 import '../injection_contianer.dart';
 
-const _host = "http://localhost:5000/";
-//const _host = "http://18.233.224.72/api/";
+//const _host = "http://localhost:5000/";
+const _host = "http://18.233.224.72/api/";
 
 var t = File("host.txt").readAsStringSync();
 final serverHost = "${_host}api";

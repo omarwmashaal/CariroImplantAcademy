@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-
 class VisitEntity extends Equatable {
   int? id;
   String? secondaryId;
@@ -28,6 +27,7 @@ class VisitEntity extends Equatable {
   int? patientId;
   String? patientName;
   String? duration;
+  String? notes;
   VisitEntity? changeRequest;
 
   VisitEntity({
@@ -48,6 +48,7 @@ class VisitEntity extends Equatable {
     this.patientId,
     this.room,
     this.patientName,
+    this.notes = "",
     this.changeRequest,
   });
 
@@ -55,7 +56,7 @@ class VisitEntity extends Equatable {
   // TODO: implement props
   List<Object?> get props => [
         id,
-    secondaryId,
+        secondaryId,
         from,
         title,
         to,
