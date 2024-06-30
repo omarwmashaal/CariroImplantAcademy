@@ -36,6 +36,8 @@ namespace CIA.Models.CIA.DTOs
         public int? ProfileImageId { get; set; }
         public int? IdBackImageId { get; set; }
         public int? IdFrontImageId { get; set; }
+        public List<int>? MissingTeeth { get; set; }
+        public List<DiseasesEnum>? Diseases { get; set; }
 
     }
 }

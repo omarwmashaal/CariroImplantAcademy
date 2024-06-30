@@ -162,7 +162,7 @@ namespace CIA.Controllers
         [HttpGet("CheckDuplicateId")]
         public async Task<ActionResult> CheckDuplicateId(String id)
         {
-            _aPI_Response.Result = await _cia_DbContext.Patients.FirstOrDefaultAsync(x => x.SecondaryId == id && x.Website == _site);
+            _aPI_Response.Result = await _cia_DbContext.Patients.FirstOrDefaultAsync(x => x.SecondaryId == id && x.Website == _site && x.Listed==true);
 
             return Ok(_aPI_Response);
         }
