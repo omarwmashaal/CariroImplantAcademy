@@ -35,9 +35,13 @@ class PatientInfoEntity extends Equatable {
   Website website;
   bool out;
   String? outReason;
+  List<int>? missingTeeth;
+  List<DiseasesEnum>? diseases;
 
   PatientInfoEntity({
     this.name,
+    this.missingTeeth,
+    this.diseases,
     this.callHistoryStatus,
     this.id,
     this.gender,

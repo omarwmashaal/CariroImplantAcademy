@@ -20,6 +20,7 @@ class _CIA_TeethChartState extends State<CIA_TeethChart> {
   @override
   void initState() {
     if (widget.selectedTeeth == null) widget.selectedTeeth = [];
+    selectedTeeth = widget.selectedTeeth ?? [];
   }
 
   @override

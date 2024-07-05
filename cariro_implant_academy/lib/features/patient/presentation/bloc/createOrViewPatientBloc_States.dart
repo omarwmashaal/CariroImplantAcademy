@@ -21,7 +21,7 @@ class LoadedPatientInfoState extends CreateOrViewPatientBloc_State {
   LoadedPatientInfoState({required this.patient});
   @override
   // TODO: implement props
-  List<Object?> get props => [patient];
+  List<Object?> get props => [patient, identityHashCode(this)];
 }
 
 class LoadingId extends CreateOrViewPatientBloc_State {
@@ -110,7 +110,7 @@ class ChangePageState extends CreateOrViewPatientBloc_State {
   ChangePageState(this.message, this.listed);
   @override
   // TODO: implement props
-  List<Object?> get props => [message, identityHashCode(this),this.listed];
+  List<Object?> get props => [message, identityHashCode(this), this.listed];
 }
 
 class UpdatingPatientState extends CreateOrViewPatientBloc_State {

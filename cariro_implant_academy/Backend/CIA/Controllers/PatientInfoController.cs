@@ -55,15 +55,15 @@ namespace CIA.Controllers
                 _site = (EnumWebsite)int.Parse(site);
         }
         [HttpPost("CreatePatient")]
-        public async Task<ActionResult> CreatePatient([FromBody] AddPatientDTO patient)
+        public async Task<ActionResult> CreatePatient([FromBody] AddPatientDTO patientFromRequest)
         {
 
             var user = await _userRepo.GetUser();
-            patient.Website = _site;
-            var patient_ = _mapper.Map<Patient>(patient);
-            patient_.RegisteredById = user.IdInt;
-            patient_.RegisteredBy = user;
-            patient_.RegisterationDate = DateTime.UtcNow;
+            patientFromRequest.Website = _site;
+            var patientFromDatabase = _mapper.Map<Patient>(patientFromRequest);
+            patientFromDatabase.RegisteredById = user.IdInt;
+            patientFromDatabase.RegisteredBy = user;
+            patientFromDatabase.RegisterationDate = DateTime.UtcNow;
 
             var ids = await _cia_DbContext.Patients.OrderBy(x => x.Id).Select(x => x.Id).ToListAsync();
 
@@ -79,12 +79,13 @@ namespace CIA.Controllers
                 }
 
             }
-            patient_.Id = lastId == 0 ? 1 : lastId;
-            if (patient_.Listed != true)
+            patientFromDatabase.Id = lastId == 0 ? 1 : lastId;
+            if (patientFromDatabase.Listed != true)
             {
-                patient_.SecondaryId = patient_.Id.ToString();
+                patientFromDatabase.SecondaryId = patientFromDatabase.Id.ToString();
+
             }
-            await _cia_DbContext.Patients.AddAsync(patient_);
+            await _cia_DbContext.Patients.AddAsync(patientFromDatabase);
             try
             {
 
@@ -96,10 +97,62 @@ namespace CIA.Controllers
                 await _cia_DbContext.SaveChangesAsync();
             }
 
-            if (patient_.RelativePatientID != null)
-                patient_.RelativePatient = await _cia_DbContext.Patients.FirstAsync(x => x.Id == patient_.RelativePatientID);
-            patient = _mapper.Map<AddPatientDTO>(patient_);
-            _aPI_Response.Result = _mapper.Map<AddPatientDTO>(patient);
+            if (patientFromDatabase.RelativePatientID != null)
+                patientFromDatabase.RelativePatient = await _cia_DbContext.Patients.FirstAsync(x => x.Id == patientFromDatabase.RelativePatientID);
+
+
+            var missingTeeth = patientFromRequest.MissingTeeth;
+            var diseases = patientFromRequest.Diseases;
+            if (missingTeeth != null)
+            {
+                var dentalExamination = await _cia_DbContext.DentalExaminations.Include(x => x.DentalExaminations).FirstOrDefaultAsync(X => X.PatientId == patientFromRequest.Id);
+                if (dentalExamination == null)
+                {
+                    dentalExamination = new DentalExaminationModel
+                    {
+                        Date = DateTime.UtcNow,
+                        DentalExaminations = new(),
+                        PatientId = patientFromRequest.Id
+                    };
+
+                }
+                dentalExamination.DentalExaminations = new();
+                foreach (var m in patientFromRequest.MissingTeeth)
+                {
+                    dentalExamination.DentalExaminations.Add(new DentalExamination
+                    {
+                        Tooth = m,
+                        Missed = true,
+                    });
+                }
+                _cia_DbContext.DentalExaminations.Update(dentalExamination);
+                _cia_DbContext.SaveChanges();
+            }
+            if (diseases != null)
+            {
+                var medicalExamination = await _cia_DbContext.MedicalExaminations.FirstOrDefaultAsync(X => X.PatientId == patientFromRequest.Id);
+                if (medicalExamination == null)
+                {
+                    medicalExamination = new MedicalExaminationModel
+                    {
+                        Date = DateTime.UtcNow,
+                        Diseases = diseases,
+                        PatientId = patientFromRequest.Id
+                    };
+
+                }
+                else
+                    medicalExamination.Diseases = diseases;
+
+                _cia_DbContext.MedicalExaminations.Update(medicalExamination);
+                _cia_DbContext.SaveChanges();
+            }
+
+            patientFromRequest = _mapper.Map<AddPatientDTO>(patientFromDatabase);
+            patientFromRequest.MissingTeeth = missingTeeth;
+            patientFromRequest.Diseases = diseases;
+
+            _aPI_Response.Result = _mapper.Map<AddPatientDTO>(patientFromRequest);
             return Ok(_aPI_Response);
         }
         [HttpPut("AddToDoList")]
@@ -162,7 +215,7 @@ namespace CIA.Controllers
         [HttpGet("CheckDuplicateId")]
         public async Task<ActionResult> CheckDuplicateId(String id)
         {
-            _aPI_Response.Result = await _cia_DbContext.Patients.FirstOrDefaultAsync(x => x.SecondaryId == id && x.Website == _site && x.Listed==true);
+            _aPI_Response.Result = await _cia_DbContext.Patients.FirstOrDefaultAsync(x => x.SecondaryId == id && x.Website == _site && x.Listed == true);
 
             return Ok(_aPI_Response);
         }
@@ -192,31 +245,102 @@ namespace CIA.Controllers
             }
             //var pat = _mapper.Map<AddPatientDTO>(patient);
 
+            if(patient.Listed!=true)
+            {
+                var dentalExamination = await _cia_DbContext.DentalExaminations.Include(x=>x.DentalExaminations).FirstOrDefaultAsync(x => x.PatientId == id);
+                if(dentalExamination!=null)
+                {
+                    patient.MissingTeeth = dentalExamination.DentalExaminations.Where(x => x.Missed == true).Select(x => (int)x.Tooth).Distinct().ToList();
+                }
+                var medicalExamination = await _cia_DbContext.MedicalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
+                if(medicalExamination!=null)
+                {
+                    patient.Diseases = medicalExamination.Diseases;
+                }
+            }
             _aPI_Response.Result = patient;
             return Ok(_aPI_Response);
 
         }
         [HttpPut("UpdatePatientsInfo")]
-        public async Task<ActionResult> UpdatePatientsInfo([FromBody] AddPatientDTO patient)
+        public async Task<ActionResult> UpdatePatientsInfo([FromBody] AddPatientDTO patientFromRequest)
         {
-            patient.Website = _site;
-            var p = _cia_DbContext.Patients.FirstOrDefault(x => x.Id == patient.Id);
-            p.Name = patient.Name;
-            p.MaritalStatus = patient.MaritalStatus;
-            p.Gender = patient.Gender;
-            p.City = patient.City;
-            p.DateOfBirth = patient.DateOfBirth;
-            p.Address = patient.Address;
-            p.Phone = patient.Phone;
-            p.Phone2 = patient.Phone2;
-            p.SecondaryId = patient.SecondaryId;
-            p.NationalID = patient.NationalID;
-            p.RelativePatientID = patient.RelativePatientID;
-            p.Listed = patient.Listed;
-            p.CallHistoryStatus = patient.CallHistoryStatus;
-            _cia_DbContext.Patients.Update(p);
+            patientFromRequest.Website = _site;
+            var patientFromDatabase = _cia_DbContext.Patients.FirstOrDefault(x => x.Id == patientFromRequest.Id);
+            patientFromDatabase.Name = patientFromRequest.Name;
+            patientFromDatabase.MaritalStatus = patientFromRequest.MaritalStatus;
+            patientFromDatabase.Gender = patientFromRequest.Gender;
+            patientFromDatabase.City = patientFromRequest.City;
+            patientFromDatabase.DateOfBirth = patientFromRequest.DateOfBirth;
+            patientFromDatabase.Address = patientFromRequest.Address;
+            patientFromDatabase.Phone = patientFromRequest.Phone;
+            patientFromDatabase.Phone2 = patientFromRequest.Phone2;
+            patientFromDatabase.SecondaryId = patientFromRequest.SecondaryId;
+            patientFromDatabase.NationalID = patientFromRequest.NationalID;
+            patientFromDatabase.RelativePatientID = patientFromRequest.RelativePatientID;
+            patientFromDatabase.Listed = patientFromRequest.Listed;
+            patientFromDatabase.CallHistoryStatus = patientFromRequest.CallHistoryStatus;
+            _cia_DbContext.Patients.Update(patientFromDatabase);
             await _cia_DbContext.SaveChangesAsync();
-            _aPI_Response.Result = p;
+
+
+     
+            if(patientFromRequest.Listed!=true)
+            {
+                var missingTeeth = patientFromRequest.MissingTeeth;
+                var diseases = patientFromRequest.Diseases;
+                if (missingTeeth != null)
+                {
+                    var dentalExamination = await _cia_DbContext.DentalExaminations.Include(x => x.DentalExaminations).FirstOrDefaultAsync(X => X.PatientId == patientFromRequest.Id);
+                    if (dentalExamination == null)
+                    {
+                        dentalExamination = new DentalExaminationModel
+                        {
+                            Date = DateTime.UtcNow,
+                            DentalExaminations = new(),
+                            PatientId = patientFromRequest.Id
+                        };
+
+                    }
+                    dentalExamination.DentalExaminations = new();
+                    foreach (var m in patientFromRequest.MissingTeeth)
+                    {
+                        dentalExamination.DentalExaminations.Add(new DentalExamination
+                        {
+                            Tooth = m,
+                            Missed = true,
+                        });
+                    }
+                    _cia_DbContext.DentalExaminations.Update(dentalExamination);
+                    _cia_DbContext.SaveChanges();
+                }
+                if (diseases != null)
+                {
+                    var medicalExamination = await _cia_DbContext.MedicalExaminations.FirstOrDefaultAsync(X => X.PatientId == patientFromRequest.Id);
+                    if (medicalExamination == null)
+                    {
+                        medicalExamination = new MedicalExaminationModel
+                        {
+                            Date = DateTime.UtcNow,
+                            Diseases = diseases,
+                            PatientId = patientFromRequest.Id
+                        };
+
+                    }
+                    else
+                        medicalExamination.Diseases = diseases;
+
+                    _cia_DbContext.MedicalExaminations.Update(medicalExamination);
+                    _cia_DbContext.SaveChanges();
+                }
+
+                patientFromDatabase.MissingTeeth = missingTeeth;
+                patientFromDatabase.Diseases = diseases;
+            }
+
+            
+
+            _aPI_Response.Result = patientFromDatabase;
             return Ok(_aPI_Response);
         }
 
@@ -1519,9 +1643,9 @@ namespace CIA.Controllers
                     }
                 }
 
-                if(model.ImplantLineId!=null || model.ImplantId!=null)
+                if (model.ImplantLineId != null || model.ImplantId != null)
                 {
-                    query = query.Include(x => x.Implant).ThenInclude(x=>x.ImplantLine);
+                    query = query.Include(x => x.Implant).ThenInclude(x => x.ImplantLine);
                 }
                 treatments = await query.Where(x => model.Ids.IsNullOrEmpty() || model.Ids.Contains((int)x.PatientId)).ToListAsync();
                 var treatmentsGroupedByPatients = treatments
@@ -1550,11 +1674,11 @@ namespace CIA.Controllers
                 {
                     treatments.RemoveAll(x => !model.Or_TreatmentIds.Contains(x.TreatmentItemId ?? 0));
                 }
-                if(model.ImplantId!= null)
+                if (model.ImplantId != null)
                 {
                     treatments.RemoveAll(x => x.ImplantID != model.ImplantId);
                 }
-                if(model.ImplantLineId!= null)
+                if (model.ImplantLineId != null)
                 {
                     treatments.RemoveAll(x => x.Implant?.ImplantLineId != model.ImplantLineId);
                 }

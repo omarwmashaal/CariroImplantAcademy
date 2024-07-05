@@ -14,6 +14,8 @@ class PatientInfoModel extends PatientInfoEntity {
           phone: patientEntity.phone,
           name: patientEntity.name,
           id: patientEntity.id,
+          missingTeeth: patientEntity.missingTeeth,
+          diseases: patientEntity.diseases,
           listed: patientEntity.listed,
           outReason: patientEntity.outReason,
           secondaryId: patientEntity.secondaryId,
@@ -62,6 +64,8 @@ class PatientInfoModel extends PatientInfoEntity {
     idFrontImageId,
     registeredBy,
     nationalId,
+    diseases,
+    missingTeeth,
     outReason,
     address,
     phone2,
@@ -74,6 +78,8 @@ class PatientInfoModel extends PatientInfoEntity {
     website,
   }) : super(
           phone: phone,
+          diseases: diseases,
+          missingTeeth: missingTeeth,
           secondaryId: secondaryId,
           name: name,
           id: id,
@@ -107,9 +113,11 @@ class PatientInfoModel extends PatientInfoEntity {
   factory PatientInfoModel.fromMap(Map<String, dynamic> map) {
     return PatientInfoModel(
       name: map['name'] as String?,
+      diseases: ((map['diseases'] ?? []) as List<dynamic>).map((e) => DiseasesEnum.values[(e as int)]).toList(),
+      missingTeeth: ((map['missingTeeth'] ?? []) as List<dynamic>).map((e) => e as int).toList(),
       listed: map['listed'] as bool?,
       website: Website.values[map['website'] ?? 0],
-      callHistoryStatus: map['callHistoryStatus'] ==null?null:EnumPatientCallHistory.values[map['callHistoryStatus'] ],
+      callHistoryStatus: map['callHistoryStatus'] == null ? null : EnumPatientCallHistory.values[map['callHistoryStatus']],
       id: map['id'] as int?,
       secondaryId: map['secondaryId'] as String?,
       gender: EnumGender.values[map['gender']],
@@ -152,6 +160,8 @@ class PatientInfoModel extends PatientInfoEntity {
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
+      'missingTeeth': this.missingTeeth,
+      'diseases': this.diseases?.map((e) => e.index).toList(),
       'callHistoryStatus': this.callHistoryStatus?.index,
       'listed': this.listed,
       'out': this.out,

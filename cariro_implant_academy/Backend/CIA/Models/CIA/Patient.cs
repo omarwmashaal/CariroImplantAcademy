@@ -83,6 +83,10 @@ namespace CIA.Models
         public int? IdFrontImageId { get; set; }
         public Image? IdFrontImage { get; set; } = new Image();
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
+        [NotMapped]
+        public List<int>? MissingTeeth { get; set; }
+        [NotMapped]
+        public List<DiseasesEnum>? Diseases { get; set; }
 
     }
 }
