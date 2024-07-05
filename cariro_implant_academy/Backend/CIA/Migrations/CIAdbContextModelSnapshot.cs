@@ -23114,6 +23114,12 @@ namespace CIA.Migrations
                             Id = "4999dc08-005d-4e4d-a99d-3150b0e75f1d",
                             Name = "labdesigner",
                             NormalizedName = "LABDESIGNER"
+                        },
+                        new
+                        {
+                            Id = "fe4ad0b1-bdff-4daa-8e2b-47c10500844a",
+                            Name = "stockmanager",
+                            NormalizedName = "STOCKMANAGER"
                         });
                 });
 

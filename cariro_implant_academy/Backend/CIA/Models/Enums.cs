@@ -13,6 +13,7 @@ namespace CIA.Models
         Candidate,
         LabModerator,
         LabDesigner,
+        StockManager,
     }
     public enum SmokingStatus
     {

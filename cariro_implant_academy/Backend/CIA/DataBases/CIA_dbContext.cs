@@ -146,6 +146,7 @@ namespace CIA.DataBases
                 new IdentityRole{Id = "e1a6928d-ced0-44af-9f25-b844d244ebf3", Name = "candidate",NormalizedName="CANDIDATE"},
                 new IdentityRole{Id = "c83449cd-1979-4ea0-b293-227e271fc612", Name = "labmoderator",NormalizedName="LABMODERATOR"},
                 new IdentityRole{Id= "4999dc08-005d-4e4d-a99d-3150b0e75f1d", Name = "labdesigner",NormalizedName="LABDESIGNER"},
+                new IdentityRole{Id= "fe4ad0b1-bdff-4daa-8e2b-47c10500844a", Name = "stockmanager",NormalizedName="STOCKMANAGER"},
 
             };
             modelBuilder.Entity<IdentityRole>().HasData(roles);
