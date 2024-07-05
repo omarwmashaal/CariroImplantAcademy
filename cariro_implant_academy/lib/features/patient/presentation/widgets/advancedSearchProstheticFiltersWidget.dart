@@ -195,6 +195,10 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                             : Column(
                                 children: [
                                   CIA_DropDownSearchBasicIdName(
+                                    onClear: () {
+                                      widget.searchProstheticDTO.statusId = null;
+                                      widget.searchProstheticDTO.status = null;
+                                    },
                                     label:
                                         "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Procedure",
                                     asyncUseCase: sl<GetProstheticStatusUseCase>(),
@@ -208,6 +212,10 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                   ),
                                   SizedBox(height: 10),
                                   CIA_DropDownSearchBasicIdName(
+                                    onClear: () {
+                                      widget.searchProstheticDTO.nextId = null;
+                                      widget.searchProstheticDTO.nextVisit = null;
+                                    },
                                     label:
                                         "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Step",
                                     asyncUseCase: sl<GetProstheticNextVisitUseCase>(),

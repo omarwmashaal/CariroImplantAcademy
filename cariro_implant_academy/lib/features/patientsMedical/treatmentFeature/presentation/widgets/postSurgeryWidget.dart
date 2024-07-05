@@ -584,6 +584,11 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                           children: [
                                             Expanded(
                                               child: CIA_DropDownSearchBasicIdName(
+                                                onClear: () {
+                                                  postSurgeryData.openSinusLift_Membrane_CompanyID = null;
+                                                  postSurgeryData.openSinusLift_Membrane_Company = null;
+                                                  setState(() {});
+                                                },
                                                 asyncUseCase: companies.isNotEmpty ? null : sl<GetMembraneCompaniesUseCase>(),
                                                 label: "Membrane Company",
                                                 selectedItem: postSurgeryData.openSinusLift_Membrane_Company != null
@@ -600,6 +605,12 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                             SizedBox(width: 10),
                                             Expanded(
                                               child: CIA_DropDownSearchBasicIdName<int>(
+                                                onClear: () {
+                                                  postSurgeryData.openSinusLift_MembraneID = null;
+                                                  membraneId = null;
+                                                  postSurgeryData.openSinusLift_Membrane = null; // MembraneEntity(id: value.id, size: value.name);
+                                                  setState(() {});
+                                                },
                                                 asyncUseCase:
                                                     postSurgeryData.openSinusLift_Membrane_CompanyID == null ? null : sl<GetMembranesUseCase>(),
                                                 searchParams: postSurgeryData.openSinusLift_Membrane_CompanyID,
@@ -647,6 +658,13 @@ class _PostSurgeryWidgetState extends State<PostSurgeryWidget> {
                                               List<TacCompanyEntity> tacs = [];
                                               if (state is TreatmentBloc_LoadedTacsState) tacs = state.tacs;
                                               return CIA_DropDownSearchBasicIdName(
+                                                onClear: () {
+                                                  postSurgeryData.openSinusLiftTacsNumber = 0;
+                                                  postSurgeryData.openSinusLift_TacsCompanyID = null;
+                                                  tacCompanyId = postSurgeryData.openSinusLift_TacsCompanyID;
+                                                  postSurgeryData.openSinusLift_TacsCompany = null;
+                                                  bloc.emit(TreatmentBloc_UpdateAvailableTacsState(count: 0));
+                                                },
                                                 asyncUseCase: sl<GetTacsUseCase>(),
                                                 label: "Tacs Company",
                                                 selectedItem: postSurgeryData.openSinusLift_TacsCompany != null

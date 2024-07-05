@@ -345,6 +345,9 @@ class _NonSurgicalTreatmentPageState extends State<NonSurgicalTreatmentPage> {
               children: [
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    onClear: () {
+                      nonSurgicalTreatment.supervisorID = null;
+                    },
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     searchParams: LoadUsersEnum.supervisors,
                     onSelect: (value) {

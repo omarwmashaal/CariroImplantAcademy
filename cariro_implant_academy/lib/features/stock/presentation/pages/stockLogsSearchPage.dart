@@ -34,6 +34,7 @@ class StockLogsSearchPage extends StatefulWidget {
         return "CIAStockLogs";
     }
   }
+
   @override
   State<StockLogsSearchPage> createState() => _StockLogsSearchPageState();
 }
@@ -111,6 +112,10 @@ class _StockLogsSearchPageState extends State<StockLogsSearchPage> {
             SizedBox(width: 10),
             Expanded(
               child: CIA_DropDownSearchBasicIdName(
+                onClear: () {
+                  status = null;
+                  reload();
+                },
                 label: "Status",
                 onSelect: (value) {
                   if (value.name == "All")

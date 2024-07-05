@@ -291,6 +291,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                                   },
                                                                                 )
                                                                               : CIA_DropDownSearchBasicIdName(
+                                                                                  onClear: () {
+                                                                                    newCustomer.workPlace = null;
+                                                                                    newCustomer.workPlaceId = null;
+                                                                                  },
                                                                                   asyncUseCase: sl<LoadWorkPlacesCase>(),
                                                                                   onSelect: (value) {
                                                                                     newCustomer.workPlace = value;
@@ -639,6 +643,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                       labRequest.patientId = state.patient.id;
                                     }
                                     return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                      onClear: () {
+                                        labRequest.designer = null;
+                                        labRequest.designerId = null;
+                                      },
                                       asyncUseCase: sl<LoadUsersUseCase>(),
                                       searchParams: LoadUsersEnum.labDesigner,
                                       label: "Assign to Lab Designer",

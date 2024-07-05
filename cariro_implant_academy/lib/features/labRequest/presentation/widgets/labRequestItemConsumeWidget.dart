@@ -116,6 +116,12 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CIA_DropDownSearchBasicIdName(
+                              onClear: () {
+                                line = null;
+                                widget.stepItem.consumedLabItemId = null;
+                                widget.stepItem.consumedLabItem = null;
+                                setState(() => company = null);
+                              },
                               label: "Company",
                               asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
                               searchParams: widget.stepItem.labOption?.labItemParent?.id,
@@ -136,6 +142,11 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CIA_DropDownSearchBasicIdName(
+                              onClear: () {
+                                widget.stepItem.consumedLabItem = null;
+                                widget.stepItem.consumedLabItemId = null;
+                                setState(() => line = null);
+                              },
                               label: "Shade",
                               asyncUseCase: company == null && widget.stepItem.labOption?.labItemParent?.hasCompanies == true
                                   ? null
@@ -161,6 +172,11 @@ class __LabRequestItemConsumeWidgetState extends State<__LabRequestItemConsumeWi
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CIA_DropDownSearchBasicIdName(
+                            onClear: () {
+                              widget.stepItem!.consumedLabItem = null;
+                              widget.stepItem!.consumedLabItemId = null;
+                              setState(() {});
+                            },
                             enabled: widget.stepItem.consumedLabItem?.consumed != true,
                             label: "Name Code||Size",
                             asyncUseCase: (line == null && widget.stepItem.labOption?.labItemParent?.hasShades == true) ||

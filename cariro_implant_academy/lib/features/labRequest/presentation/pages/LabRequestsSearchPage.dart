@@ -96,7 +96,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               builder: (context, state) {
                 int number = 0;
                 if (state is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState)
-                  number = state.requests.where((element) => element.status==EnumLabRequestStatus.InQueue).length;
+                  number = state.requests.where((element) => element.status == EnumLabRequestStatus.InQueue).length;
                 return Text(
                   number.toString(),
                   style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
@@ -119,13 +119,17 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   reload();
                 },
               ),
-              SizedBox(height:10),
+              SizedBox(height: 10),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: CIA_DropDownSearchBasicIdName(
+                        onClear: () {
+                          sourceEnum = null;
+                          reload();
+                        },
                         onSelect: (v) {
                           if (v.name == "CIA")
                             sourceEnum = EnumLabRequestSources.CIA;
@@ -151,6 +155,10 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                     ),
                     Expanded(
                       child: CIA_DropDownSearchBasicIdName(
+                        onClear: () {
+                          paid = null;
+                          reload();
+                        },
                         onSelect: (v) {
                           if (v.name == "Unpaid")
                             paid = false;
@@ -173,13 +181,17 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                     ),
                     Expanded(
                       child: CIA_DropDownSearchBasicIdName(
+                        onClear: () {
+                          statusEnum = null;
+                          reload();
+                        },
                         onSelect: (v) {
                           if (v.name == "In Queue")
                             statusEnum = EnumLabRequestStatus.InQueue;
                           else if (v.name == "In Progress")
                             statusEnum = EnumLabRequestStatus.InProgress;
                           else if (v.name == "Finished")
-                            statusEnum =EnumLabRequestStatus.Finished;
+                            statusEnum = EnumLabRequestStatus.Finished;
                           else if (v.name == "None") statusEnum = null;
                           reload();
                         },
@@ -197,7 +209,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                   ],
                 ),
               ),
-              SizedBox(height:10),
+              SizedBox(height: 10),
             ],
           ),
         ),
@@ -233,7 +245,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
       getAllRequestsParams: GetAllRequestsParams(
         search: search,
         from: widget.all ? from : DateTime.now(),
-          to: widget.all ? to : DateTime.now(),
+        to: widget.all ? to : DateTime.now(),
         source: sourceEnum,
         status: statusEnum,
         paid: paid,

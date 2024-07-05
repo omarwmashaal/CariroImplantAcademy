@@ -367,6 +367,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     height: 10,
                                   ),
                                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    onClear: () {},
                                     searchParams: LoadUsersEnum.labDesigner,
                                     asyncUseCase: sl<LoadUsersUseCase>(),
                                     label: "Assign Designer",
@@ -382,6 +383,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                                     height: 10,
                                   ),
                                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    onClear: () {},
                                     searchParams: LoadUsersEnum.technicians,
                                     asyncUseCase: sl<LoadUsersUseCase>(),
                                     label: "Assign next step to technician",

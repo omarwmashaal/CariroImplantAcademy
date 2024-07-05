@@ -292,6 +292,10 @@ class _UsersSettingsPageState extends State<UsersSettingsPage> with TickerProvid
                                                 : Padding(
                                                     padding: const EdgeInsets.all(5.0),
                                                     child: CIA_DropDownSearchBasicIdName(
+                                                      onClear: () {
+                                                        newUser.batchId = null;
+                                                        newUser.batch = null;
+                                                      },
                                                       asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
                                                       label: "Batch",
                                                       onSelect: (value) {

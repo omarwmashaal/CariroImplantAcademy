@@ -96,6 +96,9 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName<Website>(
+                      onClear: () {
+                        catId = null;
+                      },
                       label: "Category",
                       asyncUseCase: sl<GetIncomeCategoriesUseCase>(),
                       searchParams: siteController.getSite(),
@@ -106,6 +109,9 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName(
+                      onClear: () {
+                        paymentMethodId = null;
+                      },
                       label: "Payment Methods",
                       asyncUseCase: sl<GetPaymentMethodsUseCase>(),
                       onSelect: (value) => paymentMethodId = value.id,

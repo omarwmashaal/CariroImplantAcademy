@@ -229,6 +229,13 @@ class _StockSearchPageState extends State<StockSearchPage> {
               children: [
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      company = null;
+                      parent = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Type",
                     asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
                     selectedItem: parent,
@@ -244,6 +251,12 @@ class _StockSearchPageState extends State<StockSearchPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      company = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Company",
                     asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
                     selectedItem: company,
@@ -259,6 +272,11 @@ class _StockSearchPageState extends State<StockSearchPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Shade",
                     asyncUseCase: sl<GetLabItemsLinesUseCase>(),
                     selectedItem: shade,

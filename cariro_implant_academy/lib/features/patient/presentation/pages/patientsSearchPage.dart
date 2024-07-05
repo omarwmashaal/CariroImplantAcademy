@@ -273,6 +273,11 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                                             visible: listed != true,
                                             child: Expanded(
                                               child: CIA_DropDownSearchBasicIdName(
+                                                onClear: () {
+                                                  callHistory = null;
+                                                  dispatchChangeFilter(context, filter, out, listed, callHistory);
+                                                  dispatchSearch(context, search);
+                                                },
                                                 label: "Call Status",
                                                 items: EnumPatientCallHistory.values
                                                     .map((e) => BasicNameIdObjectEntity(

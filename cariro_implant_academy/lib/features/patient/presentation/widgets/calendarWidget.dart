@@ -280,6 +280,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         }
 
                         return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            newVisit.doctorId = null;
+                          },
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           selectedItem: selected,
@@ -522,6 +525,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         }
 
                         return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            visit.doctorId = null;
+                          },
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           selectedItem: selected,

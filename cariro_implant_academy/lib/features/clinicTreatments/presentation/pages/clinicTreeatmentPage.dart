@@ -107,11 +107,10 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<ClinicTreatmentBloc, ClinicTreatmentBloc_States>(
         listener: (context, state) {
-          if(state is ClinicTreatmentBloc_UpdatedClinicReceiptSuccessfullyState)
-            ShowSnackBar(context, isSuccess: true,message: "Update Receipt");
-          else if(state is ClinicTreatmentBloc_UpdatingClinicReceiptErrorState)
-            ShowSnackBar(context, isSuccess: false,message: "Failed to Update Receipt");
-
+          if (state is ClinicTreatmentBloc_UpdatedClinicReceiptSuccessfullyState)
+            ShowSnackBar(context, isSuccess: true, message: "Update Receipt");
+          else if (state is ClinicTreatmentBloc_UpdatingClinicReceiptErrorState)
+            ShowSnackBar(context, isSuccess: false, message: "Failed to Update Receipt");
         },
         buildWhen: (previous, current) => current is ClinicTreatmentBloc_ShowPricesState || current is ClinicTreatmentBloc_ShowTreatmentstate,
         builder: (context, state) {
@@ -461,7 +460,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth}"),
+                                                FormTextKeyWidget(text: "Tooth: ${e.tooth == 0 ? "All" : e.tooth}"),
                                                 SizedBox(
                                                   height: 10,
                                                 ),
@@ -482,8 +481,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                     e.doctor = null;
                                                                     e.doctorId = null;
                                                                     e.date = null;
-                                                                    bloc.emit(
-                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                        data: clinicTreatmentEntity));
                                                                   } else
                                                                     CIA_ShowPopUp(
                                                                       context: context,
@@ -494,12 +493,17 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                         e.assistant = BasicNameIdObjectEntity(
                                                                             name: siteController.getUserName(), id: siteController.getUserId());
                                                                         bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                            params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
+                                                                            params: UpdateClinicReceiptParams(
+                                                                                patientId: widget.patientId, treatmentId: e.id!)));
 
-                                                                        bloc.emit(
-                                                                            ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                        bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                            data: clinicTreatmentEntity));
                                                                       },
                                                                       child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                        onClear: () {
+                                                                          e.doctorId = null;
+                                                                          e.doctor = null;
+                                                                        },
                                                                         asyncUseCase: sl<LoadUsersUseCase>(),
                                                                         searchParams: LoadUsersEnum.supervisors,
                                                                         onSelect: (value) {
@@ -514,7 +518,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                           IconButton(
                                                               onPressed: () {
                                                                 clinicTreatmentEntity.restorations!.remove(e);
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(
                                                                 Icons.delete,
@@ -523,15 +528,20 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                           SizedBox(width: 10),
                                                           Expanded(
                                                             child: CIA_DropDownSearchBasicIdName(
+                                                              onClear: () {
+                                                                e.status = null;
+                                                              },
                                                               label: "Status",
                                                               selectedItem: () {
                                                                 var t = e.status == null ? null : BasicNameIdObjectEntity(name: e.status!.name);
                                                                 return t;
                                                               }(),
-                                                              items:
-                                                                  EnumClinicRestorationStatus.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
+                                                              items: EnumClinicRestorationStatus.values
+                                                                  .map((e) => BasicNameIdObjectEntity(name: e.name))
+                                                                  .toList(),
                                                               onSelect: (v) {
-                                                                e.status = EnumClinicRestorationStatus.values.firstWhere((element) => element.name == v.name);
+                                                                e.status = EnumClinicRestorationStatus.values
+                                                                    .firstWhere((element) => element.name == v.name);
                                                               },
                                                             ),
                                                           ),
@@ -544,7 +554,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               selectedItem: e.type == null ? null : DropDownDTO(name: e.type!.name),
                                                               items: EnumClinicRestorationType.values.map((e) => DropDownDTO(name: e.name)).toList(),
                                                               onSelect: (v) {
-                                                                e.type = EnumClinicRestorationType.values.firstWhere((element) => element.name == v.name);
+                                                                e.type =
+                                                                    EnumClinicRestorationType.values.firstWhere((element) => element.name == v.name);
                                                               },
                                                             ),
                                                           ),
@@ -554,7 +565,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                           Expanded(
                                                             child: CIA_DropDownSearch(
                                                               label: "Class",
-                                                              selectedItem: e.restorationClass == null ? null : DropDownDTO(name: e.restorationClass!.name),
+                                                              selectedItem:
+                                                                  e.restorationClass == null ? null : DropDownDTO(name: e.restorationClass!.name),
                                                               items: EnumClinicRestorationClass.values.map((e) => DropDownDTO(name: e.name)).toList(),
                                                               onSelect: (v) {
                                                                 e.restorationClass =
@@ -627,7 +639,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    FormTextKeyWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth} || ${e.type!.name} Implant"),
+                                                    FormTextKeyWidget(text: "Tooth: ${e.tooth == 0 ? "All" : e.tooth} || ${e.type!.name} Implant"),
                                                     SizedBox(
                                                       height: 10,
                                                     ),
@@ -649,8 +661,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                         e.doctor = null;
                                                                         e.doctorId = null;
                                                                         e.date = null;
-                                                                        bloc.emit(
-                                                                            ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                        bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                            data: clinicTreatmentEntity));
                                                                       } else
                                                                         CIA_ShowPopUp(
                                                                           context: context,
@@ -661,12 +673,17 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                             e.assistant = BasicNameIdObjectEntity(
                                                                                 name: siteController.getUserName(), id: siteController.getUserId());
                                                                             bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                                params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
+                                                                                params: UpdateClinicReceiptParams(
+                                                                                    patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                             bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
                                                                                 data: clinicTreatmentEntity));
                                                                           },
                                                                           child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                            onClear: () {
+                                                                              e.doctorId = null;
+                                                                              e.doctor = null;
+                                                                            },
                                                                             asyncUseCase: sl<LoadUsersUseCase>(),
                                                                             searchParams: LoadUsersEnum.supervisors,
                                                                             onSelect: (value) {
@@ -682,8 +699,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 IconButton(
                                                                     onPressed: () {
                                                                       clinicTreatmentEntity.clinicImplants!.remove(e);
-                                                                      bloc.emit(
-                                                                          ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                          data: clinicTreatmentEntity));
                                                                     },
                                                                     icon: Icon(
                                                                       Icons.delete,
@@ -702,6 +719,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 ),
                                                                 Expanded(
                                                                   child: CIA_DropDownSearchBasicIdName(
+                                                                    onClear: () {
+                                                                      e.implantCompany_ = null;
+                                                                      e.implantCompanyId = null;
+                                                                      _setState(() {});
+                                                                    },
                                                                     asyncUseCase: sl<GetImplantCompaniesUseCase>(),
                                                                     label: "Implant Companies",
                                                                     selectedItem: e.implantCompany_,
@@ -717,6 +739,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 ),
                                                                 Expanded(
                                                                   child: CIA_DropDownSearchBasicIdName<int>(
+                                                                    onClear: () {
+                                                                      e.implantLine_ = null;
+                                                                      e.implantLineId = null;
+                                                                      _setState(() {});
+                                                                    },
                                                                     asyncUseCase: e.implantCompanyId == null ? null : sl<GetImplantLinesUseCase>(),
                                                                     searchParams: e.implantCompanyId,
                                                                     emptyString: "Please choose Implant Company First",
@@ -734,6 +761,10 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 ),
                                                                 Expanded(
                                                                   child: CIA_DropDownSearchBasicIdName<int>(
+                                                                    onClear: () {
+                                                                      e.implant_ = null;
+                                                                      e.implantId = null;
+                                                                    },
                                                                     asyncUseCase: e.implantLineId == null ? null : sl<GetImplantSizesUseCase>(),
                                                                     searchParams: e.implantLineId,
                                                                     emptyString: "Please choose Implant Line First",
@@ -762,7 +793,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                   text: "Assistant: ",
                                                                   secondaryInfo: true,
                                                                 )),
-                                                                Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                                Expanded(
+                                                                    child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
                                                                 Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
                                                                 Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
                                                                 Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
@@ -820,7 +852,7 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        FormTextValueWidget(text: "Tooth: ${e.tooth==0?"All":e.tooth ?? ""}"),
+                                                        FormTextValueWidget(text: "Tooth: ${e.tooth == 0 ? "All" : e.tooth ?? ""}"),
                                                         SizedBox(width: 10),
                                                         AbsorbPointer(
                                                           absorbing: widget.plan,
@@ -834,7 +866,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 e.doctor = null;
                                                                 e.doctorId = null;
                                                                 e.date = null;
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               } else
                                                                 CIA_ShowPopUp(
                                                                   context: context,
@@ -845,12 +878,17 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                     e.assistant = BasicNameIdObjectEntity(
                                                                         name: siteController.getUserName(), id: siteController.getUserId());
                                                                     bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                        params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
+                                                                        params: UpdateClinicReceiptParams(
+                                                                            patientId: widget.patientId, treatmentId: e.id!)));
 
-                                                                    bloc.emit(
-                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                        data: clinicTreatmentEntity));
                                                                   },
                                                                   child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                    onClear: () {
+                                                                      e.doctorId = null;
+                                                                      e.doctor = null;
+                                                                    },
                                                                     asyncUseCase: sl<LoadUsersUseCase>(),
                                                                     searchParams: LoadUsersEnum.supervisors,
                                                                     onSelect: (value) {
@@ -866,7 +904,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                         IconButton(
                                                             onPressed: () {
                                                               clinicTreatmentEntity.orthoTreatments!.remove(e);
-                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(
+                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -927,7 +966,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                   List<int> teeth = clinicTreatmentEntity.tmds!.map((e) => e.tooth!).toSet().toList();
                                   teeth.sort();
                                   for (var tooth in teeth) {
-                                    var steps = clinicTreatmentEntity.tmds!.where((element) => element.tooth == tooth && element.type != null).toList();
+                                    var steps =
+                                        clinicTreatmentEntity.tmds!.where((element) => element.tooth == tooth && element.type != null).toList();
                                     steps.sort((a, b) => a.stepNumber!.compareTo(b.stepNumber!));
                                     List<Widget> internalSteps = [];
                                     for (var step in steps) {
@@ -950,7 +990,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             step.doctor = null;
                                                             step.doctorId = null;
                                                             step.date = null;
-                                                            bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                            bloc.emit(
+                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                           } else
                                                             CIA_ShowPopUp(
                                                               context: context,
@@ -958,14 +999,20 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.date = DateTime.now();
                                                                 step.done = value;
                                                                 step.assistantId = siteController.getUserId();
-                                                                step.assistant =
-                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
+                                                                step.assistant = BasicNameIdObjectEntity(
+                                                                    name: siteController.getUserName(), id: siteController.getUserId());
                                                                 bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: step.id!)));
+                                                                    params: UpdateClinicReceiptParams(
+                                                                        patientId: widget.patientId, treatmentId: step.id!)));
 
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                onClear: () {
+                                                                  step.doctorId = null;
+                                                                  step.doctor = null;
+                                                                },
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
                                                                 searchParams: LoadUsersEnum.supervisors,
                                                                 onSelect: (value) {
@@ -985,8 +1032,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               onPressed: () {
                                                                 step.stepNumber = step.stepNumber! - 1;
                                                                 (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! + 1;
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber))
+                                                                            .stepNumber! +
+                                                                        1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -997,8 +1047,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 onPressed: () {
                                                                   step.stepNumber = step.stepNumber! + 1;
                                                                   (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! - 1;
-                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber))
+                                                                              .stepNumber! -
+                                                                          1;
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                      data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -1006,11 +1059,12 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int stepNumber = step.stepNumber!;
                                                               clinicTreatmentEntity.tmds!.remove(step);
-                                                              for (var s
-                                                                  in steps.where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
+                                                              for (var s in steps
+                                                                  .where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
                                                                 s.stepNumber = (s.stepNumber!) - 1;
                                                               }
-                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(
+                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1053,7 +1107,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                               Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!), secondaryInfo: true)),
+                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!),
+                                                      secondaryInfo: true)),
                                             ],
                                           )
                                         ],
@@ -1097,7 +1152,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                         onTab: () {
                                                                           if (clinicTreatmentEntity.tmds!
                                                                               .where((element) =>
-                                                                                  element.tooth == tooth && element.type == EnumClinicTMDtypes.Diagnosis)
+                                                                                  element.tooth == tooth &&
+                                                                                  element.type == EnumClinicTMDtypes.Diagnosis)
                                                                               .isNotEmpty) {
                                                                             dialogHelper.dismissSingle(context);
                                                                             ShowSnackBar(context,
@@ -1324,8 +1380,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                       e.doctor = null;
                                                                       e.doctorId = null;
                                                                       e.date = null;
-                                                                      bloc.emit(
-                                                                          ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                          data: clinicTreatmentEntity));
                                                                     } else
                                                                       CIA_ShowPopUp(
                                                                         context: context,
@@ -1336,12 +1392,17 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                           e.assistant = BasicNameIdObjectEntity(
                                                                               name: siteController.getUserName(), id: siteController.getUserId());
                                                                           bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                              params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: e.id!)));
+                                                                              params: UpdateClinicReceiptParams(
+                                                                                  patientId: widget.patientId, treatmentId: e.id!)));
 
                                                                           bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
                                                                               data: clinicTreatmentEntity));
                                                                         },
                                                                         child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                          onClear: () {
+                                                                            e.doctorId = null;
+                                                                            e.doctor = null;
+                                                                          },
                                                                           asyncUseCase: sl<LoadUsersUseCase>(),
                                                                           searchParams: LoadUsersEnum.supervisors,
                                                                           onSelect: (value) {
@@ -1357,8 +1418,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               IconButton(
                                                                   onPressed: () {
                                                                     clinicTreatmentEntity.pedos!.remove(e);
-                                                                    bloc.emit(
-                                                                        ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                        data: clinicTreatmentEntity));
                                                                   },
                                                                   icon: Icon(
                                                                     Icons.delete,
@@ -1367,17 +1428,22 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               SizedBox(width: 10),
                                                               Expanded(
                                                                 child: CIA_DropDownSearchBasicIdName(
+                                                                  onClear: () {
+                                                                    e.firstStep = null;
+                                                                  },
                                                                   label: "First Step",
-                                                                  selectedItem: e.firstStep == null ? null : BasicNameIdObjectEntity(name: e.firstStep!.name),
-                                                                  items:
-                                                                      EnumClinicPedoFirstStep.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
+                                                                  selectedItem:
+                                                                      e.firstStep == null ? null : BasicNameIdObjectEntity(name: e.firstStep!.name),
+                                                                  items: EnumClinicPedoFirstStep.values
+                                                                      .map((e) => BasicNameIdObjectEntity(name: e.name))
+                                                                      .toList(),
                                                                   onSelect: (v) {
                                                                     if (v?.name == "NotSelected") {
                                                                       e.firstStep = null;
                                                                       return;
                                                                     }
-                                                                    e.firstStep =
-                                                                        EnumClinicPedoFirstStep.values.firstWhere((element) => element.name == v.name);
+                                                                    e.firstStep = EnumClinicPedoFirstStep.values
+                                                                        .firstWhere((element) => element.name == v.name);
                                                                   },
                                                                 ),
                                                               ),
@@ -1386,8 +1452,12 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               ),
                                                               Expanded(
                                                                 child: CIA_DropDownSearchBasicIdName(
+                                                                  onClear: () {
+                                                                    e.secondStep = null;
+                                                                  },
                                                                   label: "Second Step",
-                                                                  selectedItem: e.secondStep == null ? null : BasicNameIdObjectEntity(name: e.secondStep!.name),
+                                                                  selectedItem:
+                                                                      e.secondStep == null ? null : BasicNameIdObjectEntity(name: e.secondStep!.name),
                                                                   items: EnumClinicPedoSecondStep.values
                                                                       .map((e) => BasicNameIdObjectEntity(name: e.name))
                                                                       .toList(),
@@ -1396,8 +1466,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                       e.secondStep = null;
                                                                       return;
                                                                     }
-                                                                    e.secondStep =
-                                                                        EnumClinicPedoSecondStep.values.firstWhere((element) => element.name == v.name);
+                                                                    e.secondStep = EnumClinicPedoSecondStep.values
+                                                                        .firstWhere((element) => element.name == v.name);
                                                                   },
                                                                 ),
                                                               ),
@@ -1410,7 +1480,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 text: "Assistant: ",
                                                                 secondaryInfo: true,
                                                               )),
-                                                              Expanded(child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
+                                                              Expanded(
+                                                                  child: FormTextValueWidget(text: e.assistant?.name ?? "", secondaryInfo: true)),
                                                               Expanded(child: FormTextKeyWidget(text: "Doctor: ", secondaryInfo: true)),
                                                               Expanded(child: FormTextValueWidget(text: e.doctor?.name ?? "", secondaryInfo: true)),
                                                               Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
@@ -1473,7 +1544,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             canal.doctor = null;
                                                             canal.doctorId = null;
                                                             canal.date = null;
-                                                            bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                            bloc.emit(
+                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                           } else
                                                             CIA_ShowPopUp(
                                                               context: context,
@@ -1481,13 +1553,19 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 canal.date = DateTime.now();
                                                                 canal.done = value;
                                                                 canal.assistantId = siteController.getUserId();
-                                                                canal.assistant =
-                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
+                                                                canal.assistant = BasicNameIdObjectEntity(
+                                                                    name: siteController.getUserName(), id: siteController.getUserId());
                                                                 bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: canal.id!)));
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    params: UpdateClinicReceiptParams(
+                                                                        patientId: widget.patientId, treatmentId: canal.id!)));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                onClear: () {
+                                                                  canal.doctorId = null;
+                                                                  canal.doctor = null;
+                                                                },
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
                                                                 searchParams: LoadUsersEnum.supervisors,
                                                                 onSelect: (value) {
@@ -1506,9 +1584,13 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                           child: IconButton(
                                                               onPressed: () {
                                                                 canal.canalNumber = canal.canalNumber! - 1;
-                                                                (canals.firstWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber =
-                                                                    (canals.firstWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber! + 1;
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                (canals.firstWhere((element) => element.canalNumber == canal.canalNumber))
+                                                                        .canalNumber =
+                                                                    (canals.firstWhere((element) => element.canalNumber == canal.canalNumber))
+                                                                            .canalNumber! +
+                                                                        1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -1518,10 +1600,13 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             child: IconButton(
                                                                 onPressed: () {
                                                                   canal.canalNumber = canal.canalNumber! + 1;
-                                                                  (canals.lastWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber =
-                                                                      (canals.lastWhere((element) => element.canalNumber == canal.canalNumber)).canalNumber! -
+                                                                  (canals.lastWhere((element) => element.canalNumber == canal.canalNumber))
+                                                                          .canalNumber =
+                                                                      (canals.lastWhere((element) => element.canalNumber == canal.canalNumber))
+                                                                              .canalNumber! -
                                                                           1;
-                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                      data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -1529,11 +1614,12 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int canalNumber = canal.canalNumber!;
                                                               clinicTreatmentEntity.rootCanalTreatments!.remove(canal);
-                                                              for (var s
-                                                                  in canals.where((element) => element.type != null && (element.canalNumber!) > canalNumber)) {
+                                                              for (var s in canals
+                                                                  .where((element) => element.type != null && (element.canalNumber!) > canalNumber)) {
                                                                 s.canalNumber = (s.canalNumber!) - 1;
                                                               }
-                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(
+                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1648,14 +1734,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               }
                                                           }
                                                           for (var allowed in allowedEnum) {
-                                                            r.add(CIA_MultiSelectChipWidgeModel(label: allowed.name, isSelected: canal.type == allowed));
+                                                            r.add(CIA_MultiSelectChipWidgeModel(
+                                                                label: allowed.name, isSelected: canal.type == allowed));
                                                           }
                                                           return r;
                                                         }(),
                                                         singleSelect: true,
                                                         onChange: (item, isSelected) {
                                                           if (isSelected)
-                                                            canal.type = EnumClinicRootCanalTreatmentType.values.firstWhere((element) => element.name == item);
+                                                            canal.type =
+                                                                EnumClinicRootCanalTreatmentType.values.firstWhere((element) => element.name == item);
                                                           else
                                                             canal.type = null;
                                                         },
@@ -1744,7 +1832,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                           .last +
                                                                       1)
                                                             ];
-                                                            bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                            bloc.emit(
+                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                           },
                                                           icon: Icon(Icons.add),
                                                         ),
@@ -1803,7 +1892,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             step.doctor = null;
                                                             step.doctorId = null;
                                                             step.date = null;
-                                                            bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                            bloc.emit(
+                                                                ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                           } else
                                                             CIA_ShowPopUp(
                                                               context: context,
@@ -1811,14 +1901,20 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 step.date = DateTime.now();
                                                                 step.done = value;
                                                                 step.assistantId = siteController.getUserId();
-                                                                step.assistant =
-                                                                    BasicNameIdObjectEntity(name: siteController.getUserName(), id: siteController.getUserId());
+                                                                step.assistant = BasicNameIdObjectEntity(
+                                                                    name: siteController.getUserName(), id: siteController.getUserId());
                                                                 bloc.add(ClinicTreatmentBloc_UpdateClinicReceiptEvent(
-                                                                    params: UpdateClinicReceiptParams(patientId: widget.patientId, treatmentId: step.id!)));
+                                                                    params: UpdateClinicReceiptParams(
+                                                                        patientId: widget.patientId, treatmentId: step.id!)));
 
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                                onClear: () {
+                                                                  step.doctorId = null;
+                                                                  step.doctor = null;
+                                                                },
                                                                 asyncUseCase: sl<LoadUsersUseCase>(),
                                                                 searchParams: LoadUsersEnum.supervisors,
                                                                 onSelect: (value) {
@@ -1838,8 +1934,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                               onPressed: () {
                                                                 step.stepNumber = step.stepNumber! - 1;
                                                                 (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! + 1;
-                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                    (steps.firstWhere((element) => element.stepNumber == step.stepNumber))
+                                                                            .stepNumber! +
+                                                                        1;
+                                                                bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                    data: clinicTreatmentEntity));
                                                               },
                                                               icon: Icon(Icons.arrow_upward_rounded))),
                                                     ),
@@ -1850,8 +1949,11 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                 onPressed: () {
                                                                   step.stepNumber = step.stepNumber! + 1;
                                                                   (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber =
-                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber)).stepNumber! - 1;
-                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                                      (steps.lastWhere((element) => element.stepNumber == step.stepNumber))
+                                                                              .stepNumber! -
+                                                                          1;
+                                                                  bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(
+                                                                      data: clinicTreatmentEntity));
                                                                 },
                                                                 icon: Icon(Icons.arrow_downward_rounded)))),
                                                     Expanded(
@@ -1859,11 +1961,12 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                             onPressed: () {
                                                               int stepNumber = step.stepNumber!;
                                                               clinicTreatmentEntity.scalings!.remove(step);
-                                                              for (var s
-                                                                  in steps.where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
+                                                              for (var s in steps
+                                                                  .where((element) => element.type != null && (element.stepNumber!) > stepNumber)) {
                                                                 s.stepNumber = (s.stepNumber!) - 1;
                                                               }
-                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(
+                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             },
                                                             icon: Icon(
                                                               Icons.delete,
@@ -1879,11 +1982,16 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                     children: [
                                                       Expanded(
                                                         child: CIA_DropDownSearchBasicIdName(
+                                                          onClear: () {
+                                                            step.type = null;
+                                                          },
                                                           selectedItem: step.type == null ? null : BasicNameIdObjectEntity(name: step.type?.name),
-                                                          items: EnumClinicScalingType.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
+                                                          items:
+                                                              EnumClinicScalingType.values.map((e) => BasicNameIdObjectEntity(name: e.name)).toList(),
                                                           label: "Type",
                                                           onSelect: (value) {
-                                                            step.type = EnumClinicScalingType.values.firstWhere((element) => element.name == value.name);
+                                                            step.type =
+                                                                EnumClinicScalingType.values.firstWhere((element) => element.name == value.name);
                                                           },
                                                         ),
                                                       ),
@@ -1912,7 +2020,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                               Expanded(child: FormTextKeyWidget(text: "Date: ", secondaryInfo: true)),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!), secondaryInfo: true)),
+                                                      text: step.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(step.date!),
+                                                      secondaryInfo: true)),
                                             ],
                                           )
                                         ],
@@ -1963,7 +2072,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                                                             .last +
                                                                         1)
                                                               ];
-                                                              bloc.emit(ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
+                                                              bloc.emit(
+                                                                  ClinicTreatmentBloc_LoadedTreatmentsSuccessfullyState(data: clinicTreatmentEntity));
                                                             }
                                                           },
                                                           icon: Icon(Icons.add),

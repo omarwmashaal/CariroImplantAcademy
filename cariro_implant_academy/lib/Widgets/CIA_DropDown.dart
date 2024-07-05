@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:cariro_implant_academy/Models/API_Response.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
@@ -198,13 +201,14 @@ class CIA_DropDownSearchClean extends StatelessWidget {
   }
 }
 
-class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
+class CIA_DropDownSearchBasicIdName<T> extends StatefulWidget {
   CIA_DropDownSearchBasicIdName(
       {Key? key,
       this.items,
       this.asyncUseCase,
       this.asyncUseCaseDynamic,
       this.label,
+      required this.onClear,
       this.disableSearch = false,
       this.selectedItem,
       this.enabled = true,
@@ -225,63 +229,92 @@ class CIA_DropDownSearchBasicIdName<T> extends StatelessWidget {
   bool disableSearch;
   Function(List<BasicNameIdObjectEntity> values)? onLoad;
   Function(BasicNameIdObjectEntity value)? onSelect;
+  Function() onClear;
+
+  @override
+  State<CIA_DropDownSearchBasicIdName<T>> createState() => _CIA_DropDownSearchBasicIdNameState<T>();
+}
+
+class _CIA_DropDownSearchBasicIdNameState<T> extends State<CIA_DropDownSearchBasicIdName<T>> {
   //BasicNameIdObjectEntity emptyItem = BasicNameIdObjectEntity(name: "Clear Selection");
+  late DropDownSearchBloc bloc;
+  late BasicNameIdObjectEntity? _selectedItem;
+  void clearSelection() {
+    setState(() {
+      _selectedItem = null;
+    });
+  }
+
+  @override
+  void initState() {
+    bloc = context.read<DropDownSearchBloc>();
+    _selectedItem = widget.selectedItem;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<DropDownSearchBloc>(),
-      child: Builder(builder: (context) {
-        DropDownSearchBloc bloc = context.read<DropDownSearchBloc>();
-        return DropdownSearch<BasicNameIdObjectEntity>(
-          enabled: enabled,
-          popupProps: PopupProps.menu(
-            showSearchBox: !disableSearch,
-            emptyBuilder: (context, searchEntry) {
-              return Text(emptyString);
+    return DropdownSearch<BasicNameIdObjectEntity>(
+      enabled: widget.enabled,
+      clearButtonProps: ClearButtonProps(
+          icon: Icon(Icons.clear),
+          isVisible: true,
+          onPressed: () {
+            widget.onClear();
+            clearSelection();
+          }),
+      popupProps: PopupProps.menu(
+        showSearchBox: !widget.disableSearch,
+        emptyBuilder: (context, searchEntry) {
+          return Text(widget.emptyString);
+        },
+      ),
+      dropdownBuilder: _selectedItem == null
+          ? null
+          : (context, selectedItem) {
+              return Text(_selectedItem?.name ?? "");
             },
-          ),
-          selectedItem: selectedItem,
-          asyncItems: (c) async {
-            if (asyncUseCase == null && asyncUseCaseDynamic == null) return [];
-            List<BasicNameIdObjectEntity> res = [];
+      selectedItem: _selectedItem,
+      asyncItems: (c) async {
+        if (widget.asyncUseCase == null && widget.asyncUseCaseDynamic == null) return [];
+        List<BasicNameIdObjectEntity> res = [];
 
-            res = await bloc.searchString(
-              searchParams ?? NoParams(),
-              (asyncUseCase ?? asyncUseCaseDynamic)!,
-            );
-            if (onLoad != null) {
-              onLoad!(res);
-            }
-            return res;
-          },
-          filterFn: (item, filter) => item.name?.toLowerCase().contains(filter.toLowerCase()) ?? false,
-          itemAsString: (BasicNameIdObjectEntity u) => AddSpacesToSentence(u.name ?? ""),
-          items: items ?? [],
-          onChanged: (v) {
-            if (onSelect != null) {
-              onSelect!(v!);
-            }
-          },
-          dropdownDecoratorProps: DropDownDecoratorProps(
-              textAlign: TextAlign.start,
-              dropdownSearchDecoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color_TextFieldBorder, width: 0.0),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color_Accent),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                floatingLabelStyle: TextStyle(color: Color_Accent, fontWeight: FontWeight.bold),
-                filled: true,
-                labelText: label ?? "",
-                fillColor: Color_Background,
-                isDense: true,
-              )),
+        res = await bloc.searchString(
+          widget.searchParams ?? NoParams(),
+          (widget.asyncUseCase ?? widget.asyncUseCaseDynamic)!,
         );
-      }),
+        if (widget.onLoad != null) {
+          widget.onLoad!(res);
+        }
+        return res;
+      },
+      filterFn: (item, filter) => item.name?.toLowerCase().contains(filter.toLowerCase()) ?? false,
+      itemAsString: (BasicNameIdObjectEntity u) => AddSpacesToSentence(u.name ?? ""),
+      items: widget.items ?? [],
+      onChanged: (v) {
+        _selectedItem = v;
+        if (widget.onSelect != null) {
+          widget.onSelect!(v!);
+        }
+        setState(() {});
+      },
+      dropdownDecoratorProps: DropDownDecoratorProps(
+          textAlign: TextAlign.start,
+          dropdownSearchDecoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color_TextFieldBorder, width: 0.0),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color_Accent),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            floatingLabelStyle: TextStyle(color: Color_Accent, fontWeight: FontWeight.bold),
+            filled: true,
+            labelText: widget.label ?? "",
+            fillColor: Color_Background,
+            isDense: true,
+          )),
     );
   }
 }

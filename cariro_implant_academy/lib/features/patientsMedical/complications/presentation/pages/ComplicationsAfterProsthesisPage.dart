@@ -210,6 +210,10 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
                                               height: 100,
                                               onSave: () => setState(() => null),
                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                onClear: () {
+                                                  e.operatorId = null;
+                                                  e.operator = null;
+                                                },
                                                 asyncUseCase: sl<LoadUsersUseCase>(),
                                                 searchParams: LoadUsersEnum.instructorsAndAssistants,
                                                 onSelect: (value) {

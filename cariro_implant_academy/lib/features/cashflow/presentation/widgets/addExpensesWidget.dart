@@ -392,6 +392,21 @@ class _CategorySelectionState extends State<_CategorySelection> {
                               controller: TextEditingController(text: paymentMethod?.name ?? ""),
                             )
                           : CIA_DropDownSearchBasicIdName(
+                              onClear: () {
+                                paymentMethod = null;
+                                paymentMethodId = null;
+                                widget.onChange(
+                                  widget.expCategory,
+                                  inventoryWebsite,
+                                  category,
+                                  categoryId,
+                                  supplier,
+                                  supplierId,
+                                  paymentMethod,
+                                  paymentMethodId,
+                                  false,
+                                );
+                              },
                               label: "Payment Method",
                               asyncUseCase: sl<GetPaymentMethodsUseCase>(),
                               onSelect: (value) {
@@ -468,6 +483,21 @@ class _CategorySelectionState extends State<_CategorySelection> {
                               controller: TextEditingController(text: supplier?.name ?? ""),
                             )
                           : CIA_DropDownSearchBasicIdName<GetSuppliersParams>(
+                              onClear: () {
+                                supplier = null;
+                                supplierId = null;
+                                widget.onChange(
+                                  widget.expCategory,
+                                  inventoryWebsite,
+                                  category,
+                                  categoryId,
+                                  supplier,
+                                  supplierId,
+                                  paymentMethod,
+                                  paymentMethodId,
+                                  false,
+                                );
+                              },
                               label: "Supplier",
                               asyncUseCase: sl<GetSuppliersUseCase>(),
                               searchParams: GetSuppliersParams(
@@ -552,6 +582,21 @@ class _CategorySelectionState extends State<_CategorySelection> {
                                   controller: TextEditingController(text: category?.name ?? ""),
                                 )
                               : CIA_DropDownSearchBasicIdName<Website>(
+                                  onClear: () {
+                                    category = null;
+                                    categoryId = null;
+                                    widget.onChange(
+                                      widget.expCategory,
+                                      inventoryWebsite,
+                                      category,
+                                      categoryId,
+                                      supplier,
+                                      supplierId,
+                                      paymentMethod,
+                                      paymentMethodId,
+                                      false,
+                                    );
+                                  },
                                   label: "Category",
                                   asyncUseCase: widget.expCategory == EnumExpenseseCategoriesType.Service
                                       ? sl<GetNonMedicalNonStockExpensesCategoriesUseCase>()
@@ -614,6 +659,12 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
               FormTextValueWidget(text: "${index.toString()}. "),
               Expanded(
                 child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    e.labItemShade = null;
+                    e.labItemShadeId = null;
+                    e.labItemCompany = null;
+                    setState(() => e.labItemParent = null);
+                  },
                   label: "Item Type",
                   asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
                   onSelect: (value) {
@@ -628,6 +679,11 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
               SizedBox(width: 10),
               Expanded(
                 child: CIA_DropDownSearchBasicIdName<int>(
+                  onClear: () {
+                    e.labItemShade = null;
+                    e.labItemShadeId = null;
+                    setState(() => e.labItemCompany = null);
+                  },
                   label: "Company",
                   asyncUseCaseDynamic: e.labItemParent == null ? null : sl<GetLabItemsCompaniesUseCase>(),
                   searchParams: e.labItemParent?.id,
@@ -642,6 +698,17 @@ class _LabItemsExpensesWidgetState extends State<_LabItemsExpensesWidget> {
               SizedBox(width: 10),
               Expanded(
                 child: CIA_DropDownSearchBasicIdName<int>(
+                  onClear: () {
+                    e.labItemShadeId = null;
+                    e.labItemShade = null;
+                    widget.onChange(data
+                        .where((element) =>
+                            element.price != null &&
+                            element.labItemShadeId != null &&
+                            !(element.size?.isEmpty ?? true) &&
+                            !(element.code?.isEmpty ?? true))
+                        .toList());
+                  },
                   label: "Shade",
                   asyncUseCaseDynamic: e.labItemCompany == null ? null : sl<GetLabItemsLinesUseCase>(),
                   searchParams: e.labItemCompany?.id,
@@ -917,6 +984,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                           return [
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.tac = null;
+                                  model.id = null;
+                                },
                                 label: "Tacs Company",
                                 asyncUseCase: sl<GetTacsUseCase>(),
                                 onSelect: (value) {
@@ -970,6 +1041,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                           return [
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.membraneCompany = null;
+                                  setState(() {});
+                                },
                                 label: "Membrane Company",
                                 asyncUseCase: sl<GetMembraneCompaniesUseCase>(),
                                 onSelect: (value) {
@@ -982,6 +1057,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                             SizedBox(width: 10),
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.membrane = null;
+                                  model.id = null;
+                                },
                                 label: "Membrane",
                                 asyncUseCase: model.membraneCompany == null ? null : sl<GetMembranesUseCase>(),
                                 searchParams: model.membraneCompany == null ? null : model.membraneCompany?.id,
@@ -1035,6 +1114,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                           return [
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.implantCompany = null;
+                                  setState(() {});
+                                },
                                 label: "Implant Company",
                                 asyncUseCase: sl<GetImplantCompaniesUseCase>(),
                                 onSelect: (value) {
@@ -1047,6 +1130,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                             SizedBox(width: 10),
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.implantLine = null;
+                                  setState(() {});
+                                },
                                 label: "Implant Line",
                                 asyncUseCase: model.implantCompany == null ? null : sl<GetImplantLinesUseCase>(),
                                 searchParams: model.implantCompany == null ? null : model.implantCompany?.id,
@@ -1060,6 +1147,10 @@ class _MedicalExpenesesWidgetState extends State<_MedicalExpenesesWidget> {
                             SizedBox(width: 10),
                             Expanded(
                               child: CIA_DropDownSearchBasicIdName(
+                                onClear: () {
+                                  model.id = null;
+                                  model.implant = null;
+                                },
                                 label: "Implant",
                                 asyncUseCase: model.implantLine == null ? null : sl<GetImplantSizesUseCase>(),
                                 searchParams: model.implantLine == null ? null : model.implantLine?.id,

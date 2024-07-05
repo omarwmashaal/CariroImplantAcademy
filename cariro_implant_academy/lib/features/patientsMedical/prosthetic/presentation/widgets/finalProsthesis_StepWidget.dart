@@ -97,6 +97,15 @@ class _FinalProsthesis_StepWidgetState extends State<FinalProsthesis_StepWidget>
                   children: [
                     Expanded(
                       child: CIA_DropDownSearchBasicIdName(
+                        onClear: () {
+                          widget.data.status = null;
+                          widget.data.statusId = null;
+                          widget.data.operatorId = siteController.getUserId();
+                          setState(() {
+                            widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                            widget.data.date = widget.data.date ?? DateTime.now();
+                          });
+                        },
                         label: "Procedure",
                         asyncUseCase: sl<GetProstheticStatusUseCase>(),
                         searchParams: GetProstheticStatusParams(itemId: widget.data.itemId!, type: EnumProstheticType.Final),
@@ -123,6 +132,15 @@ class _FinalProsthesis_StepWidgetState extends State<FinalProsthesis_StepWidget>
                     SizedBox(width: 10),
                     Expanded(
                       child: CIA_DropDownSearchBasicIdName(
+                        onClear: () {
+                          widget.data.nextVisit = null;
+                          widget.data.nextVisitId = null;
+                          widget.data.operatorId = siteController.getUserId();
+                          setState(() {
+                            widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                            widget.data.date = widget.data.date ?? DateTime.now();
+                          });
+                        },
                         label: "Next Step",
                         asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
                         searchParams: GetProstheticNextVisitParams(itemId: widget.data.itemId!, type: EnumProstheticType.Final),
@@ -523,6 +541,10 @@ class _FinalProsthesis_StepWidgetState extends State<FinalProsthesis_StepWidget>
                         height: 100,
                         onSave: () => setState(() => null),
                         child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            widget.data.operatorId = null;
+                            widget.data.operator = null;
+                          },
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           onSelect: (value) {

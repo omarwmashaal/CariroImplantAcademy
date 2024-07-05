@@ -151,6 +151,9 @@ class VisitsTableWidget extends StatelessWidget {
                                             children: [
                                               Flexible(
                                                 child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                  onClear: () {
+                                                    doctorId = null;
+                                                  },
                                                   label: "Doctor",
                                                   asyncUseCase: sl<LoadUsersUseCase>(),
                                                   searchParams: LoadUsersEnum.instructorsAndAssistants,
@@ -176,6 +179,9 @@ class VisitsTableWidget extends StatelessWidget {
                                                         rooms = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name, id: e.id)).toList();
                                                       return Flexible(
                                                         child: CIA_DropDownSearchBasicIdName(
+                                                          onClear: () {
+                                                            roomId = null;
+                                                          },
                                                           label: "Room",
                                                           items: rooms,
                                                           onSelect: (value) {

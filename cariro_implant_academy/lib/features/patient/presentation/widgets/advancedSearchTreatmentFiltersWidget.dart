@@ -71,6 +71,10 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               child: Column(
                 children: [
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.searchTreatmentsDTO.candidateBatch = null;
+                      setState(() {});
+                    },
                     label: "Candidate Batch",
                     asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
                     selectedItem: widget.searchTreatmentsDTO.candidateBatch,
@@ -80,6 +84,10 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                     },
                   ),
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.searchTreatmentsDTO.candidate = null;
+                      setState(() {});
+                    },
                     label: "Candidate",
                     asyncUseCase: widget.searchTreatmentsDTO.candidateBatch?.id == null ? null : sl<LoadCandidatesByBatchId>(),
                     searchParams: widget.searchTreatmentsDTO.candidateBatch?.id ?? 0,
@@ -157,6 +165,12 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               child: Column(
                 children: [
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.searchTreatmentsDTO.implantCompanyId = null;
+                      widget.searchTreatmentsDTO.implantLineId = null;
+                      widget.searchTreatmentsDTO.implantId = null;
+                      setState(() {});
+                    },
                     label: "Company",
                     asyncUseCase: sl<GetImplantCompaniesUseCase>(),
                     selectedItem: widget.searchTreatmentsDTO.implantCompanyId,
@@ -169,6 +183,11 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                   ),
                   SizedBox(height: 10),
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.searchTreatmentsDTO.implantLineId = null;
+                      widget.searchTreatmentsDTO.implantId = null;
+                      setState(() {});
+                    },
                     label: "Line",
                     emptyString: widget.searchTreatmentsDTO.implantCompanyId == null ? "Please select company first" : "",
                     asyncUseCase: widget.searchTreatmentsDTO.implantCompanyId == null ? null : sl<GetImplantLinesUseCase>(),
@@ -182,6 +201,10 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                   ),
                   SizedBox(height: 10),
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.searchTreatmentsDTO.implantId = null;
+                      setState(() {});
+                    },
                     label: "Implant",
                     emptyString: widget.searchTreatmentsDTO.implantLineId == null ? "Please select line first" : "",
                     asyncUseCase: widget.searchTreatmentsDTO.implantLineId == null ? null : sl<GetImplantSizesUseCase>(),
@@ -201,6 +224,9 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               child: AdvancedSearchFilterChildWidget(
                 title: "Teeth",
                 child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    widget.searchTreatmentsDTO.teethClassification = null;
+                  },
                   items: [
                     BasicNameIdObjectEntity(
                       name: "All",

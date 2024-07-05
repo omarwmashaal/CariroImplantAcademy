@@ -367,6 +367,10 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                         SizedBox(width: 10),
                                         Expanded(
                                           child: CIA_DropDownSearchBasicIdName(
+                                            onClear: () {
+                                              e.labItemParent = null;
+                                              e.labItemParentId = null;
+                                            },
                                             asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
                                             label: "Linked Parent",
                                             selectedItem: e.labItemParent,
