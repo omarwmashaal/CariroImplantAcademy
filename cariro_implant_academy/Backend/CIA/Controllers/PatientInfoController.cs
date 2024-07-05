@@ -711,12 +711,12 @@ namespace CIA.Controllers
             var visitFromDataBase = await _cia_DbContext.VisitsLogs.FirstOrDefaultAsync(x => x.Id == visit.Id);
             if (delete == true)
             {
-                if (!(user.Roles?.Contains("admin") ?? false))
-                {
-                    _aPI_Response.ErrorMessage = "Only admin can delete entry!";
-                    return BadRequest(_aPI_Response);
+                //if (!(user.Roles?.Contains("admin") ?? false))
+                //{
+                //    _aPI_Response.ErrorMessage = "Only admin can delete entry!";
+                //    return BadRequest(_aPI_Response);
 
-                }
+                //}
                 _cia_DbContext.VisitsLogs.Remove(visitFromDataBase);
                 _cia_DbContext.SaveChanges();
                 return Ok(_aPI_Response);
