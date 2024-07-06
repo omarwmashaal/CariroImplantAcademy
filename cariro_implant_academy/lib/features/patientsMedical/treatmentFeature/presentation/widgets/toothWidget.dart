@@ -68,6 +68,10 @@ class ToothWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 FormTextValueWidget(text: toothID == 0 ? "All" : toothID.toString()),
+                FormTextKeyWidget(
+                  text: currentToothData.any((element) => element.failedImplant == true) ? "Implant Failed" : "",
+                  color: Colors.red,
+                ),
                 Expanded(child: Divider()),
               ],
             ),

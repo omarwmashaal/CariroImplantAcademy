@@ -22876,6 +22876,9 @@ namespace CIA.Migrations
                     b.Property<int?>("DoneBySupervisorID")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("FailedImplant")
+                        .HasColumnType("boolean");
+
                     b.Property<int?>("ImplantID")
                         .HasColumnType("integer");
 

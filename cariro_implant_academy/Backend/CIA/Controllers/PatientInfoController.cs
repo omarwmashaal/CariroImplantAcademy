@@ -1783,10 +1783,10 @@ namespace CIA.Controllers
                 foreach (var result in finalResult)
                 {
                     var failedDental = faildImplantsDentalExaminations.FirstOrDefault(x => x.PatientId == result.Id);
-                    result.ImplantFailed = failedDental.DentalExaminations.FirstOrDefault(x => x.Tooth == result.Tooth && x.ImplantFailed == true);
-                    if (result.ImplantFailed != null && result.TreatmentName.ToLower().Contains("implant") && !result.TreatmentName.ToLower().Contains("without"))
+                    var failedImplant = failedDental.DentalExaminations.FirstOrDefault(x => x.Tooth == result.Tooth && x.ImplantFailed == true);
+                    if (failedImplant != null && result.TreatmentName.ToLower().Contains("implant") && !result.TreatmentName.ToLower().Contains("without"))
                     {
-                        result.TreatmentValue = result.TreatmentValue.Replace("Done", "Failed").Replace("Planned", "Failed");
+                        result.ImplantFailed = true;
                     }
                 }
                 finalResult.RemoveAll(x => x.ImplantFailed == null);

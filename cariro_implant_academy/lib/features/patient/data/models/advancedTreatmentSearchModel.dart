@@ -65,6 +65,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     tooth = json['tooth'];
     secondaryId = json['secondaryId'];
     patientName = json['patientName'];
+    implantFailed = json['implantFailed'];
     done = json['done'];
     noTreatmentPlan = json['noTreatmentPlan'];
     treatmentValue = json['treatmentValue'];

@@ -133,6 +133,7 @@ namespace CIA.Models.TreatmentModels
         public RequestChangeModel? RequestChangeModel { get; set; }
         public String Value { get; set; } = "";
         public bool Status { get; set; }
+        public bool FailedImplant { get; set; } = false;
 
         [ForeignKey("AssignedTo.IdInt")]
         public int? AssignedToID { get; set; }

@@ -18,6 +18,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     super.date,
     super.doneByAssistantID,
     super.doneByAssistant,
+    super.failedImplant,
     super.doneBySupervisorID,
     super.doneBySupervisor,
     super.doneByCandidateID,
@@ -63,6 +64,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
       implantIDRequest: entity.implantIDRequest,
       requestChangeModel: entity.requestChangeModel,
       requestChangeId: entity.requestChangeId,
+      failedImplant: entity.failedImplant,
     );
   }
   TreatmentDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -73,6 +75,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     postSurgeryModelId = json['postSurgeryModelId'];
     patient = json['patient'] != null ? BasicNameIdObjectModel.fromJson(json['patient']) : null;
     tooth = json['tooth'];
+    failedImplant = json['failedImplant'];
     value = json['value'] ?? "";
     status = json['status'] ?? false;
     assignedToID = json['assignedToID'];
@@ -99,6 +102,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
+    data['failedImplant'] = this.failedImplant ?? false;
     data['postSurgeryModelId'] = this.postSurgeryModelId;
     data['patientId'] = this.patientId;
     data['tooth'] = this.tooth;

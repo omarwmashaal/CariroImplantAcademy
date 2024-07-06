@@ -237,6 +237,31 @@ namespace CIA.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("MigrateToImplantFailed")]
+        public async Task<IActionResult> MigrateToImplantFailed()
+        {
+            var patientIds = await _ciaDbContext.Patients.Select(X=>X.Id).ToListAsync();
+            foreach (var id in patientIds)
+            {
+                var dentalEx = await _ciaDbContext.DentalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
+                var failedTeeth = dentalEx.DentalExaminations.Where(x => x.ImplantFailed == true).Select(x => x.Tooth).ToList();
+                var treatmentDetails = await _ciaDbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
+                foreach (var item in treatmentDetails)
+                {
+                    if (failedTeeth.Contains(item.Tooth))
+                    {
+                        item.FailedImplant = true;
+                    }
+                    else item.FailedImplant = false;
+                }
+                _ciaDbContext.TreatmentDetails.UpdateRange(treatmentDetails);
+            }
+            _ciaDbContext.SaveChanges();
+            return Ok();
+
+
+        }
+        [AllowAnonymous]
         [HttpGet("MigrateToNewReceiptSystem")]
         public async Task<IActionResult> MigrateToNewReceiptSystem()
         {
@@ -424,7 +449,7 @@ namespace CIA.Controllers
             _ciaDbContext.ComplicationsAfterProsthesis.UpdateRange(comsProsthetci);
             _ciaDbContext.SaveChanges();
 
-            return Ok(await _ciaDbContext.ComplicationsAfterProsthesis.Include(x=>x.DefaultProstheticComplication).ToListAsync());
+            return Ok(await _ciaDbContext.ComplicationsAfterProsthesis.Include(x => x.DefaultProstheticComplication).ToListAsync());
         }
 
         [AllowAnonymous]
@@ -635,12 +660,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
                 var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -672,12 +697,12 @@ namespace CIA.Controllers
                     };
                     var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
                     var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
-                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                     }
-                    else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                    else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -711,12 +736,12 @@ namespace CIA.Controllers
 
                     };
                     var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
-                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                     }
-                    
+
                     else
                     {
                         Console.WriteLine($"{statusOld} {statusNew} ");
@@ -751,12 +776,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -794,12 +819,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -867,12 +892,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -909,12 +934,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -960,7 +985,7 @@ namespace CIA.Controllers
             var result = await _ciaDbContext.FinalSteps.ToListAsync();
             var diresult = await _ciaDbContext.DiagnosticSteps.ToListAsync();
             _ciaDbContext.FinalSteps.RemoveRange(result);
-           _ciaDbContext.DiagnosticSteps.RemoveRange(diresult);
+            _ciaDbContext.DiagnosticSteps.RemoveRange(diresult);
             _ciaDbContext.SaveChanges();
             return Ok();
         }

@@ -277,6 +277,10 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
                   )));
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
+              if (query.implantFailed != null) {
+                r.add(DataGridCell<String>(columnName: "Failed", value: (e.implantFailed ?? false) ? "Implant Failed" : ""));
+                r.add(DataGridCell<String>(columnName: "Treatment", value: (e.treatmentName)));
+              }
               if (query.implantId != null) {
                 r.add(DataGridCell<String>(columnName: "Implant", value: e.implant));
               }
