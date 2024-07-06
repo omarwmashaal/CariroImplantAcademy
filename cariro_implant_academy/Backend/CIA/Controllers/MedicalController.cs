@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Routing.Matching;
 using System.Linq;
 using System;
+using CIA.Migrations;
 
 namespace CIA.Controllers
 {
@@ -299,7 +300,7 @@ namespace CIA.Controllers
         [HttpGet("GetComplicationsAfterProsthesis")]
         public async Task<ActionResult> GetComplicationsAfterProsthesis(int id)
         {
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x=>x.DefaultProstheticComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x => x.DefaultProstheticComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
 
             return Ok(_aPI_Response);
@@ -313,8 +314,52 @@ namespace CIA.Controllers
         {
 
             var patient = await _cia_DbContext.Patients.Include(x => x.MedicalExamination).ThenInclude(x => x.Operator).FirstOrDefaultAsync(x => x.Id == id);
-
             var user = await _iUserRepo.GetUser();
+            var todoList = await _cia_DbContext.ToDoLists.FirstOrDefaultAsync(x => x.PatientId == id && (x.Data ?? "").StartsWith("HBA1C is "));
+            if(todoList != null)
+            {
+                todoList.DueDate = todoList.CreateDate.Value.AddMonths(3);
+                _cia_DbContext.Update(todoList);
+            }
+            if (!patient.MedicalExamination.HBA1c.IsNullOrEmpty() && !model.HBA1c.IsNullOrEmpty() && patient.MedicalExamination.HBA1c.Last()?.Reading != model.HBA1c.Last()?.Reading)
+            {
+                if ((model.HBA1c.Last().Reading ?? 0) >= 7.5)
+                {
+                    if (todoList == null)
+                    {
+                        todoList = new TodoList
+                        {
+                            CreateDate = DateTime.UtcNow,
+                            Data = $"HBA1C is {model.HBA1c.Last().Reading}",
+                            Done = false,
+                            DueDate = DateTime.UtcNow.AddMonths(3),
+                            OperatorId = user.IdInt,
+                            Operator = user,
+                            PatientId = id,
+                        };
+                        _cia_DbContext.ToDoLists.Add(todoList);
+                    }
+                    else
+                    {
+                        todoList.CreateDate = DateTime.UtcNow;
+                        todoList.Data = $"HBA1C is {model.HBA1c.Last().Reading}";
+                        todoList.Done = false;
+                        todoList.DueDate = DateTime.UtcNow.AddMonths(3);
+                        todoList.OperatorId = user.IdInt;
+                        todoList.Operator = user;
+                        todoList.PatientId = id;                           
+                        _cia_DbContext.ToDoLists.Update(todoList);
+                    }
+
+                }
+                else
+                {
+                    if (todoList != null)
+                    {
+                        _cia_DbContext.ToDoLists.Remove(todoList);
+                    }
+                }
+            }
             if (patient.MedicalExamination.Operator == null)
             {
                 patient.MedicalExamination.Operator = user;
@@ -344,11 +389,13 @@ namespace CIA.Controllers
             patient.MedicalExamination.IllegalDrugs = model.IllegalDrugs;
             patient.MedicalExamination.OperatorComments = model.OperatorComments;
             patient.MedicalExamination.DrugsTaken = model.DrugsTaken;
-            patient.MedicalExamination.Notification_Hba1c = model.Notification_Hba1c;
+
 
 
             _cia_DbContext.Patients.Update(patient);
             await _cia_DbContext.SaveChangesAsync();
+
+
             return Ok(_aPI_Response);
         }
 
@@ -1008,7 +1055,7 @@ namespace CIA.Controllers
                         };
                         dentalExamination.DentalExaminations.Add(toothExamination);
                     }
-                    else if(toothExamination.ImplantFailed!=true)
+                    else if (toothExamination.ImplantFailed != true)
                     {
                         toothExamination.ImplantFailed = true;
                         toothExamination.Missed = true;

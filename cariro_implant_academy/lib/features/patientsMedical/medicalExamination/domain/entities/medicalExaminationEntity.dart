@@ -31,8 +31,8 @@ class MedicalExaminationEntity extends Equatable {
   List<String>? drugsTaken;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
-  DateTime? date;  DateTime? notification_Hba1c;
-
+  DateTime? date;
+  DateTime? notification_Hba1c;
 
   @override
   // TODO: implement props
