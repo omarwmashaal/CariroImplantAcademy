@@ -827,7 +827,7 @@ namespace CIA.Controllers
                 {
                     CreateDate = DateTime.UtcNow,
                     DueDate = DateTime.UtcNow.AddMonths(3),
-                    Data = $"Patient {item.Patient.Name} tooth {item.Tooth} needs exposure",
+                    Data = $"Patient {item.Patient.Name} tooth {item.Tooth} waiting exposure",
                     Done = false,
                     Operator = user,
                     OperatorId = user.IdInt,

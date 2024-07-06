@@ -22459,6 +22459,8 @@ namespace CIA.Migrations
 
                     b.HasIndex("OperatorId");
 
+                    b.HasIndex("PatientId");
+
                     b.ToTable("ToDoLists");
                 });
 
@@ -25367,7 +25369,13 @@ namespace CIA.Migrations
                         .HasPrincipalKey("IdInt")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("CIA.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
                     b.Navigation("Operator");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("CIA.Models.TreatmentModels.MedicalExaminationModel", b =>

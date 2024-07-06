@@ -148,6 +148,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/patientV
 import 'package:cariro_implant_academy/features/patient/domain/usecases/removeFromMyPatientsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveComplaiUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/searchToDoListUseCase%20.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateToDoListItemUseCase.dart';
@@ -652,10 +653,12 @@ initInjection() async {
   // bloc
   sl.registerFactory(() => ToDoListBloc(
         getToDoListUseCase: sl(),
+        searchToDoListUseCase: sl(),
         updateToDoListItemUseCase: sl(),
         addToDoListItemUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => SearchToDoListUseCase(sl()));
   sl.registerLazySingleton(() => AddToDoListItemUseCase(sl()));
   sl.registerLazySingleton(() => UpdateToDoListItemUseCase(sl()));
   sl.registerLazySingleton(() => GetToDoListUseCase(sl()));

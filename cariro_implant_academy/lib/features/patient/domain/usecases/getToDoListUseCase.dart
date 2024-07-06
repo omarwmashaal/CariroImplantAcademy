@@ -4,8 +4,7 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/todoList
 import 'package:cariro_implant_academy/features/patient/domain/repositories/toDoListRepo.dart';
 import 'package:dartz/dartz.dart';
 
-
-class GetToDoListUseCase extends UseCases<List<ToDoListEntity>, int> {
+class GetToDoListUseCase extends UseCases<List<ToDoListEntity>, int?> {
   ToDoListRepo toDoListRepo;
 
   GetToDoListUseCase(this.toDoListRepo);

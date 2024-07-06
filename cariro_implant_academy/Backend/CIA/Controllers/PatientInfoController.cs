@@ -168,10 +168,47 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetToDoLists")]
-        public async Task<ActionResult> GetToDoLists(int patientId)
+        public async Task<ActionResult> GetToDoLists(int? patientId)
         {
+            if (patientId == null)
+                _aPI_Response.Result = await _cia_DbContext.ToDoLists.Include(X => X.Operator)
+                .Include(X => X.Patient).OrderBy(x => x.CreateDate).ToListAsync();
+            else
+                _aPI_Response.Result = await _cia_DbContext.ToDoLists.Where(x => x.PatientId == patientId).Include(X => X.Operator)
+                .Include(X => X.Patient).OrderBy(x => x.CreateDate).ToListAsync();
 
-            _aPI_Response.Result = await _cia_DbContext.ToDoLists.Where(x => x.PatientId == patientId).Include(X => X.Operator).OrderBy(x => x.CreateDate).ToListAsync();
+            return Ok(_aPI_Response);
+        }
+        [HttpGet("SearchToDoLists")]
+        public async Task<ActionResult> SearchToDoLists(string? search, bool? done, bool? overDue)
+        {
+            IQueryable<TodoList> query = _cia_DbContext.ToDoLists
+                .Include(X => X.Operator)
+                .Include(X => X.Patient)
+                .OrderBy(x => x.CreateDate);
+            if (overDue != null)
+            {
+                if(overDue==true)
+                query = query.Where(x => x.DueDate.Value <= DateTime.UtcNow);
+                else
+                query = query.Where(x => x.DueDate.Value > DateTime.UtcNow);
+            }
+            if (done != null)
+            {
+                query = query.Where(x => x.Done == done);
+            }
+            if (search != null)
+            {
+                search = search.ToLower();
+                query = query.Where(x =>
+                                        x.Data.ToLower().Contains(search) ||
+                                        x.Operator.Name.ToLower().Contains(search) ||
+                                        x.Patient.Name.ToLower().Contains(search)
+                                    );
+            }
+
+
+            _aPI_Response.Result = await query.ToListAsync();
 
             return Ok(_aPI_Response);
         }
@@ -245,15 +282,15 @@ namespace CIA.Controllers
             }
             //var pat = _mapper.Map<AddPatientDTO>(patient);
 
-            if(patient.Listed!=true)
+            if (patient.Listed != true)
             {
-                var dentalExamination = await _cia_DbContext.DentalExaminations.Include(x=>x.DentalExaminations).FirstOrDefaultAsync(x => x.PatientId == id);
-                if(dentalExamination!=null)
+                var dentalExamination = await _cia_DbContext.DentalExaminations.Include(x => x.DentalExaminations).FirstOrDefaultAsync(x => x.PatientId == id);
+                if (dentalExamination != null)
                 {
                     patient.MissingTeeth = dentalExamination.DentalExaminations.Where(x => x.Missed == true).Select(x => (int)x.Tooth).Distinct().ToList();
                 }
                 var medicalExamination = await _cia_DbContext.MedicalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
-                if(medicalExamination!=null)
+                if (medicalExamination != null)
                 {
                     patient.Diseases = medicalExamination.Diseases;
                 }
@@ -284,8 +321,8 @@ namespace CIA.Controllers
             await _cia_DbContext.SaveChangesAsync();
 
 
-     
-            if(patientFromRequest.Listed!=true)
+
+            if (patientFromRequest.Listed != true)
             {
                 var missingTeeth = patientFromRequest.MissingTeeth;
                 var diseases = patientFromRequest.Diseases;
@@ -338,7 +375,7 @@ namespace CIA.Controllers
                 patientFromDatabase.Diseases = diseases;
             }
 
-            
+
 
             _aPI_Response.Result = patientFromDatabase;
             return Ok(_aPI_Response);
