@@ -809,10 +809,36 @@ namespace CIA.Controllers
                 candidate.ImplantCount = await _iUserRepo.GetCandidateTotalImplantData((int)candidate.IdInt);
             }
             _cia_DbContext.Users.UpdateRange(candidates);
-
-
-
             _cia_DbContext.SaveChanges();
+
+
+            var doneInThisSaveFromDatabase = await _cia_DbContext.TreatmentDetails
+                .Include(x => x.TreatmentItem)
+                .Include(x => x.Patient)
+                .Where(x => x.PatientId == id)
+                .Where(x => donePlansInThisSave.Select(y => y.Id).Contains((int)x.Id))
+                .Where(x => x.TreatmentItem.Name.ToLower().Contains("implant") && !x.TreatmentItem.Name.ToLower().Contains("without"))
+                .ToListAsync();
+            List<TodoList> todolists = new List<TodoList>();
+
+            foreach (var item in doneInThisSaveFromDatabase)
+            {
+                todolists.Add(new TodoList
+                {
+                    CreateDate = DateTime.UtcNow,
+                    DueDate = DateTime.UtcNow.AddMonths(3),
+                    Data = $"Patient {item.Patient.Name} tooth {item.Tooth} needs exposure",
+                    Done = false,
+                    Operator = user,
+                    OperatorId = user.IdInt,
+                    PatientId = item.PatientId,
+                                       
+                });
+            }
+            _cia_DbContext.ToDoLists.AddRange(todolists);
+            _cia_DbContext.SaveChanges();
+
+
 
             return Ok(_aPI_Response);
         }
