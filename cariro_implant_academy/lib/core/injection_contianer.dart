@@ -26,6 +26,7 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/data/repositori
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/repositories/receiptReposiotry.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPatientReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPaymentUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getAllPaymentLogsUsecase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getLastReceiptUsecase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getPaymentLogsForAReceiptUsecase.dart';
@@ -536,12 +537,14 @@ initInjection() async {
   //bloc
   sl.registerFactory(() => ReceiptBloc(
         getReceiptsUsecase: sl(),
+        addReceiptUseCase: sl(),
         getReceiptByIdUseCase: sl(),
         getPaymentLogsForAReceipt: sl(),
         removePaymentUseCase: sl(),
         addPaymentUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => AddReceiptUseCase(receiptRepository: sl()));
   sl.registerLazySingleton(() => AddPaymentUseCase(receiptRepository: sl()));
   sl.registerLazySingleton(() => GetAllPaymentLogsUsecase(receiptRepository: sl()));
   sl.registerLazySingleton(() => GetLastReceiptUsecase(receiptRepository: sl()));

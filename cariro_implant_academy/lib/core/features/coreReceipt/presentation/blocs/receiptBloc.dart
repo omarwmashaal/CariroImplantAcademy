@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,9 +15,11 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
   final GetPaymentLogsForAReceiptUseCase getPaymentLogsForAReceipt;
   final RemovePaymentUseCase removePaymentUseCase;
   final AddPaymentUseCase addPaymentUseCase;
+  final AddReceiptUseCase addReceiptUseCase;
 
   ReceiptBloc({
     required this.getReceiptsUsecase,
+    required this.addReceiptUseCase,
     required this.getReceiptByIdUseCase,
     required this.getPaymentLogsForAReceipt,
     required this.removePaymentUseCase,
@@ -29,6 +32,15 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     result.fold(
       (l) => emit(ReceiptBloc_LoadingReceiptsErrorState(message: l.message ?? "")),
       (r) => emit(ReceiptBloc_LoadedReceiptsSuccessfullyState(data: r)),
+    );
+  }
+
+  void addReceipt(ReceiptEntity receipt) async {
+    emit(ReceiptBloc_AddingReceiptsState());
+    final result = await addReceiptUseCase(receipt);
+    result.fold(
+      (l) => emit(ReceiptBloc_AddingReceiptsErrorState(message: l.message ?? "")),
+      (r) => emit(ReceiptBloc_AddedReceiptsSuccessfullyState(data: r)),
     );
   }
 

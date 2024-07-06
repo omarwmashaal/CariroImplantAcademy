@@ -188,10 +188,10 @@ namespace CIA.Controllers
                 .OrderBy(x => x.CreateDate);
             if (overDue != null)
             {
-                if(overDue==true)
-                query = query.Where(x => x.DueDate.Value <= DateTime.UtcNow);
+                if (overDue == true)
+                    query = query.Where(x => x.DueDate.Value <= DateTime.UtcNow);
                 else
-                query = query.Where(x => x.DueDate.Value > DateTime.UtcNow);
+                    query = query.Where(x => x.DueDate.Value > DateTime.UtcNow);
             }
             if (done != null)
             {

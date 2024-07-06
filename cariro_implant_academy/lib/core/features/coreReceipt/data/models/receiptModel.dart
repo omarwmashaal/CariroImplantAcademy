@@ -59,6 +59,7 @@ class ReceiptModel extends ReceiptEntity {
     data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();
     data['patientId'] = this.patientId;
     data['candidateId'] = this.candidateId;
+    data['toothReceiptData'] = this.toothReceiptData?.map((e) => ToothReceiptModel.fromEntity(e).toJson()).toList();
     //data['patient'] = this.patient == null ? null : BasicNameIdObjectModel.fromEntity(this.patient!).t();
     data['operatorId'] = this.operatorId;
     //   data['operator'] = this.operator == null ? null : this.operator!.toJson();

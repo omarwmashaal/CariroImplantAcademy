@@ -7,6 +7,7 @@ import '../entities/receiptEntity.dart';
 
 abstract class ReceiptRepository {
   Future<Either<Failure, NoParams>> addPatientReceipt({required int patientId, required int tooth, required String action, int? price});
+  Future<Either<Failure, ReceiptEntity>> addReceipt(ReceiptEntity params);
   Future<Either<Failure, ReceiptEntity>> getTodaysReceipt({required int patientId});
   Future<Either<Failure, ReceiptEntity>> getLastReceipt({required int patientId});
   Future<Either<Failure, List<ReceiptEntity>>> getReceipts({required int patientId});

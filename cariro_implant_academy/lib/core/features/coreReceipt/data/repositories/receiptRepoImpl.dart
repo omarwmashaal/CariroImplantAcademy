@@ -108,4 +108,14 @@ class ReceiptRepositoryImpl implements ReceiptRepository {
       return Left(Failure.exceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, ReceiptEntity>> addReceipt(ReceiptEntity params) async {
+    try {
+      final result = await receiptDataSource.addReceipt(params);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
 }

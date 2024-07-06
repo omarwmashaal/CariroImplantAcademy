@@ -43,6 +43,17 @@ namespace CIA.Controllers
             _apiResponse.Result = await _cia_DbContext.ExpensesCategories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
             return Ok(_apiResponse);
         }
+        [HttpPost("AddReceipt")]
+        public async Task<IActionResult> AddReceipt([FromBody] Receipt model)
+        {
+            model.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == model.OperatorId);
+            _cia_DbContext.Receipts.Add(model);
+            _cia_DbContext.SaveChanges();
+            model = await _cia_DbContext.Receipts.FirstOrDefaultAsync(x => x.Id == model.Id);
+            _apiResponse.Result = model;
+            return Ok(_apiResponse);
+
+        }
 
         [HttpPost("AddIncome")]
         public async Task<IActionResult> AddIncome([FromBody] IncomeModel model)

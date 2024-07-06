@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 
 import '../../../../constants/remoteConstants.dart';
 import '../../../../error/exception.dart';
@@ -8,7 +9,7 @@ import '../models/receiptModel.dart';
 
 abstract class ReceiptsDatasource {
   Future<ReceiptModel> getTodaysReceipt({required int patientId});
-
+  Future<ReceiptModel> addReceipt(ReceiptEntity params);
   Future<ReceiptModel> getLastReceipt({required int patientId});
 
   Future<List<ReceiptModel>> getReceipts({required int patientId});
@@ -201,5 +202,25 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
     }
     if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
     return NoParams();
+  }
+
+  @override
+  Future<ReceiptModel> addReceipt(ReceiptEntity params) async {
+    late StandardHttpResponse result;
+    try {
+      result = await httpRepo.post(
+        host: "$serverHost/$cashFlowController/AddReceipt",
+        body: ReceiptModel.fromEntity(params).toJson(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (result.statusCode != 200) throw getHttpException(statusCode: result.statusCode, message: result.errorMessage);
+    try {
+      if (result.body == null) return ReceiptModel();
+      return ReceiptModel.fromJson(result.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException();
+    }
   }
 }

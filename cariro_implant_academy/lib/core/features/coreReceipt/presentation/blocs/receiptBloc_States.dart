@@ -30,7 +30,29 @@ class ReceiptBloc_LoadedReceiptsSuccessfullyState extends ReceiptBloc_States {
   ReceiptBloc_LoadedReceiptsSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data,identityHashCode(this)];
+  List<Object?> get props => [data, identityHashCode(this)];
+}
+
+class ReceiptBloc_AddingReceiptsState extends ReceiptBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class ReceiptBloc_AddingReceiptsErrorState extends ReceiptBloc_States {
+  final String message;
+
+  ReceiptBloc_AddingReceiptsErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class ReceiptBloc_AddedReceiptsSuccessfullyState extends ReceiptBloc_States {
+  final ReceiptEntity data;
+
+  ReceiptBloc_AddedReceiptsSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ReceiptBloc_LoadingPaymentLogsState extends ReceiptBloc_States {
@@ -78,6 +100,7 @@ class ReceiptBloc_RemovedPaymentSuccessfullyState extends ReceiptBloc_States {
   @override
   List<Object?> get props => [];
 }
+
 class ReceiptBloc_AddingPaymentState extends ReceiptBloc_States {
   @override
   List<Object?> get props => [];
