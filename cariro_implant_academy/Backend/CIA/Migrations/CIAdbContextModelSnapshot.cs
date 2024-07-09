@@ -895,6 +895,28 @@ namespace CIA.Migrations
                     b.ToTable("DiagnosticItems");
                 });
 
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticMaterialItemModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("DiagnosticItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiagnosticItemId");
+
+                    b.ToTable("DiagnosticMaterialItems");
+                });
+
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticNextVisitItemModel", b =>
                 {
                     b.Property<int?>("Id")
@@ -953,10 +975,16 @@ namespace CIA.Migrations
                     b.Property<int?>("DiagnosticItemId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("DiagnosticMaterialItemId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("DiagnosticNextVisitItemId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("DiagnosticStatusItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DiagnosticTechniqueItemId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("Index")
@@ -978,15 +1006,41 @@ namespace CIA.Migrations
 
                     b.HasIndex("DiagnosticItemId");
 
+                    b.HasIndex("DiagnosticMaterialItemId");
+
                     b.HasIndex("DiagnosticNextVisitItemId");
 
                     b.HasIndex("DiagnosticStatusItemId");
+
+                    b.HasIndex("DiagnosticTechniqueItemId");
 
                     b.HasIndex("OperatorId");
 
                     b.HasIndex("PatientId");
 
                     b.ToTable("DiagnosticSteps");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticTechniqueItemModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("DiagnosticItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiagnosticItemId");
+
+                    b.ToTable("DiagnosticTechniqueItems");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalItemModel", b =>
@@ -1004,6 +1058,28 @@ namespace CIA.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FinalItems");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalMaterialItemModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("FinalItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinalItemId");
+
+                    b.ToTable("FinalMaterialItems");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalNextVisitItemModel", b =>
@@ -1073,10 +1149,16 @@ namespace CIA.Migrations
                     b.Property<int?>("FinalItemId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("FinalMaterialItemId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("FinalNextVisitItemId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("FinalStatusItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("FinalTechniqueItemId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("FullArchLower")
@@ -1119,15 +1201,41 @@ namespace CIA.Migrations
 
                     b.HasIndex("FinalItemId");
 
+                    b.HasIndex("FinalMaterialItemId");
+
                     b.HasIndex("FinalNextVisitItemId");
 
                     b.HasIndex("FinalStatusItemId");
+
+                    b.HasIndex("FinalTechniqueItemId");
 
                     b.HasIndex("OperatorId");
 
                     b.HasIndex("PatientId");
 
                     b.ToTable("FinalSteps");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalTechniqueItemModel", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("FinalItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinalItemId");
+
+                    b.ToTable("FinalTechniqueItems");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentDiagnosticModel", b =>
@@ -24222,6 +24330,17 @@ namespace CIA.Migrations
                     b.Navigation("Operator");
                 });
 
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticMaterialItemModel", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticItemModel", "DiagnosticItem")
+                        .WithMany()
+                        .HasForeignKey("DiagnosticItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiagnosticItem");
+                });
+
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticNextVisitItemModel", b =>
                 {
                     b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticItemModel", "DiagnosticItem")
@@ -24250,6 +24369,10 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("DiagnosticItemId");
 
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticMaterialItemModel", "DiagnosticMaterialItem")
+                        .WithMany()
+                        .HasForeignKey("DiagnosticMaterialItemId");
+
                     b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticNextVisitItemModel", "DiagnosticNextVisitItem")
                         .WithMany()
                         .HasForeignKey("DiagnosticNextVisitItemId");
@@ -24257,6 +24380,10 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticStatusItemModel", "DiagnosticStatusItem")
                         .WithMany()
                         .HasForeignKey("DiagnosticStatusItemId");
+
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticTechniqueItemModel", "DiagnosticTechniqueItem")
+                        .WithMany()
+                        .HasForeignKey("DiagnosticTechniqueItemId");
 
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Operator")
                         .WithMany()
@@ -24270,13 +24397,39 @@ namespace CIA.Migrations
 
                     b.Navigation("DiagnosticItem");
 
+                    b.Navigation("DiagnosticMaterialItem");
+
                     b.Navigation("DiagnosticNextVisitItem");
 
                     b.Navigation("DiagnosticStatusItem");
 
+                    b.Navigation("DiagnosticTechniqueItem");
+
                     b.Navigation("Operator");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.DiagnosticTechniqueItemModel", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.DiagnosticItemModel", "DiagnosticItem")
+                        .WithMany()
+                        .HasForeignKey("DiagnosticItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiagnosticItem");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalMaterialItemModel", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.FinalItemModel", "FinalItem")
+                        .WithMany()
+                        .HasForeignKey("FinalItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FinalItem");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalNextVisitItemModel", b =>
@@ -24305,6 +24458,10 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("FinalItemId");
 
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.FinalMaterialItemModel", "FinalMaterialItem")
+                        .WithMany()
+                        .HasForeignKey("FinalMaterialItemId");
+
                     b.HasOne("CIA.Models.CIA.TreatmentModels.FinalNextVisitItemModel", "FinalNextVisitItem")
                         .WithMany()
                         .HasForeignKey("FinalNextVisitItemId");
@@ -24312,6 +24469,10 @@ namespace CIA.Migrations
                     b.HasOne("CIA.Models.CIA.TreatmentModels.FinalStatusItemModel", "FinalStatusItem")
                         .WithMany()
                         .HasForeignKey("FinalStatusItemId");
+
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.FinalTechniqueItemModel", "FinalTechniqueItem")
+                        .WithMany()
+                        .HasForeignKey("FinalTechniqueItemId");
 
                     b.HasOne("CIA.Models.CIA.ApplicationUser", "Operator")
                         .WithMany()
@@ -24325,13 +24486,28 @@ namespace CIA.Migrations
 
                     b.Navigation("FinalItem");
 
+                    b.Navigation("FinalMaterialItem");
+
                     b.Navigation("FinalNextVisitItem");
 
                     b.Navigation("FinalStatusItem");
 
+                    b.Navigation("FinalTechniqueItem");
+
                     b.Navigation("Operator");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.FinalTechniqueItemModel", b =>
+                {
+                    b.HasOne("CIA.Models.CIA.TreatmentModels.FinalItemModel", "FinalItem")
+                        .WithMany()
+                        .HasForeignKey("FinalItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FinalItem");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.TreatmentModels.ProstheticTreatmentDiagnosticModel", b =>

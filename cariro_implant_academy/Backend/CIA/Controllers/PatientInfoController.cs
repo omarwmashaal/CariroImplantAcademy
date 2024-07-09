@@ -1835,12 +1835,16 @@ namespace CIA.Controllers
                 .Include(x => x.FinalItem)
                 .Include(x => x.FinalStatusItem)
                 .Include(x => x.FinalNextVisitItem)
+                .Include(x => x.FinalMaterialItem)
+                .Include(x => x.FinalTechniqueItem)
                 ;
             IQueryable<DiagnosticStepModel> diagnosticStepsQuery = _cia_DbContext
                 .DiagnosticSteps
                 .Include(x => x.DiagnosticItem)
                 .Include(x => x.DiagnosticStatusItem)
                 .Include(x => x.DiagnosticNextVisitItem)
+                .Include(x => x.DiagnosticMaterialItem)
+                .Include(x => x.DiagnosticTechniqueItem)
                 ;
             List<DiagnosticStepModel> diagnosticStepsResult = new();
             List<FinalStepModel> finalStepsResult = new();
@@ -1851,7 +1855,7 @@ namespace CIA.Controllers
             if (!model.Ids.IsNullOrEmpty())
             {
                 finalStepsQuery = finalStepsQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
-                diagnosticStepsQuery = diagnosticStepsQuery.AsNoTracking().Include(x => x.DiagnosticNextVisitItem).Where(x => model.Ids!.Contains(x.PatientId ?? 0));
+                diagnosticStepsQuery = diagnosticStepsQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
                 complicationsProsthesisQuery = complicationsProsthesisQuery.AsNoTracking().Where(x => model.Ids!.Contains(x.PatientId ?? 0));
             }
 
@@ -1897,6 +1901,10 @@ namespace CIA.Controllers
                     tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticStatusItemId == model.StatusId);
                 if (model.NextId != null)
                     tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticNextVisitItemId == model.NextId);
+                if (model.MaterialId != null)
+                    tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticMaterialItemId == model.MaterialId);
+                if (model.TechniqueId != null)
+                    tempdiagnosticStepsQuery = tempdiagnosticStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().DiagnosticTechniqueItemId == model.TechniqueId);
 
                 diagnosticStepsQuery = tempdiagnosticStepsQuery.Select(x => x.OrderBy(x => x.Date).Last());
             }
@@ -1923,6 +1931,10 @@ namespace CIA.Controllers
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalStatusItemId == model.StatusId);
                 if (model.NextId != null)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalNextVisitItemId == model.NextId);
+               if (model.MaterialId != null)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalMaterialItemId == model.MaterialId);
+               if (model.TechniqueId != null)
+                    tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalTechniqueItemId == model.TechniqueId);
                 if (model.ScrewRetained == true)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().ScrewRetained == true);
                 else if (model.CementRetained == true)

@@ -26,6 +26,10 @@ class ProstheticStepModel extends ProstheticStepEntity {
     super.fullArchLower = false,
     super.cementRetained,
     super.screwRetained,
+    super.material,
+    super.materialId,
+    super.technique,
+    super.techniqueId,
   });
   ProstheticStepModel.fromEntity(ProstheticStepEntity entity) {
     id = entity.id;
@@ -51,6 +55,10 @@ class ProstheticStepModel extends ProstheticStepEntity {
     tryInCheckListId = entity.tryInCheckListId;
     cementRetained = entity.cementRetained;
     screwRetained = entity.screwRetained;
+    material = entity.material;
+    materialId = entity.materialId;
+    technique = entity.technique;
+    techniqueId = entity.techniqueId;
   }
 
   ProstheticStepModel.fromJson(Map<String, dynamic> data) {
@@ -59,13 +67,13 @@ class ProstheticStepModel extends ProstheticStepEntity {
     patient = data['patient'] == null ? null : BasicNameIdObjectModel.fromJson(data['patient']);
     operatorId = data['operatorId'];
     operator = data['operator'] == null ? null : BasicNameIdObjectModel.fromJson(data['operator']);
-    needsRemake = data['needsRemake']??false;
-    scanned = data['scanned']??false;
+    needsRemake = data['needsRemake'] ?? false;
+    scanned = data['scanned'] ?? false;
     date = DateTime.tryParse(data['date'] ?? "")?.toLocal();
     index = data['index'];
     teeth = ((data['teeth'] ?? []) as List<dynamic>).map((e) => e as int).toList();
-    single = data['single']??false;
-    bridge = data['bridge']??false;
+    single = data['single'] ?? false;
+    bridge = data['bridge'] ?? false;
     fullArchUpper = data['fullArchUpper'] ?? false;
     fullArchLower = data['fullArchLower'] ?? false;
     tryInCheckListId = data['tryInCheckListId'];
@@ -88,6 +96,30 @@ class ProstheticStepModel extends ProstheticStepEntity {
       nextVisitId = data['diagnosticNextVisitItemId'];
     } else if (data['finalNextVisitItemId'] != null) {
       nextVisitId = data['finalNextVisitItemId'];
+    }
+
+    if (data['diagnosticMaterialItemId'] != null) {
+      materialId = data['diagnosticMaterialItemId'];
+    } else if (data['finalMaterialItemId'] != null) {
+      materialId = data['finalMaterialItemId'];
+    }
+
+    if (data['diagnosticTechniqueItemId'] != null) {
+      techniqueId = data['diagnosticTechniqueItemId'];
+    } else if (data['finalTechniqueItemId'] != null) {
+      techniqueId = data['finalTechniqueItemId'];
+    }
+
+    if (data['diagnosticMaterialItem'] != null) {
+      material = data['diagnosticMaterialItem'] == null ? null : BasicNameIdObjectModel.fromJson(data['diagnosticMaterialItem']);
+    } else if (data['finalMaterialItem'] != null) {
+      material = data['finalMaterialItem'] == null ? null : BasicNameIdObjectModel.fromJson(data['finalMaterialItem']);
+    }
+
+    if (data['diagnosticTechniqueItem'] != null) {
+      technique = data['diagnosticTechniqueItem'] == null ? null : BasicNameIdObjectModel.fromJson(data['diagnosticTechniqueItem']);
+    } else if (data['finalTechniqueItem'] != null) {
+      technique = data['finalTechniqueItem'] == null ? null : BasicNameIdObjectModel.fromJson(data['finalTechniqueItem']);
     }
 
     if (data['diagnosticItem'] != null) {
@@ -125,6 +157,10 @@ class ProstheticStepModel extends ProstheticStepEntity {
     data['finalItemId'] = itemId;
     data['diagnosticStatusItemId'] = statusId;
     data['finalStatusItemId'] = statusId;
+    data['diagnosticTechniqueItemId'] = techniqueId;
+    data['finalTechniqueItemId'] = techniqueId;
+    data['finalMaterialItemId'] = materialId;
+    data['diagnosticMaterialItemId'] = materialId;
     data['diagnosticNextVisitItemId'] = nextVisitId;
     data['finalNextVisitItemId'] = nextVisitId;
     data['tryInCheckListId'] = tryInCheckListId;

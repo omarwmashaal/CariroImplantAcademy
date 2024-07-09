@@ -20,11 +20,15 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
@@ -225,14 +229,18 @@ class _SettingsPageState extends State<SettingsPage> {
             state is SettingsBloc_UpdatingDefaultSurgicalComplicationsState ||
             state is SettingsBloc_UpdatingDefaultProstheticComplicationsState ||
             state is SettingsBloc_UpdatingProstheticStatusState ||
-            state is SettingsBloc_UpdatingProstheticNextVisitState)
+            state is SettingsBloc_UpdatingProstheticNextVisitState ||
+            state is SettingsBloc_UpdatingProstheticTechniqueState ||
+            state is SettingsBloc_UpdatingProstheticMaterialState)
           CustomLoader.show(context);
         else
           CustomLoader.hide();
         if (state is SettingsBlocSuccessState ||
             state is SettingsBloc_UpdatedProstheticItemsSuccessfullyState ||
             state is SettingsBloc_UpdatedProstheticStatusSuccessfullyState ||
-            state is SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState)
+            state is SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState ||
+            state is SettingsBloc_UpdatedProstheticTechniqueSuccessfullyState ||
+            state is SettingsBloc_UpdatedProstheticMaterialSuccessfullyState)
           ShowSnackBar(context, isSuccess: true);
         else if (state is SettingsBlocErrorState)
           ShowSnackBar(context, isSuccess: false);
@@ -275,7 +283,15 @@ class _SettingsPageState extends State<SettingsPage> {
           bloc.add(SettingsBloc_GetProstheticStatusEvent(params: GetProstheticStatusParams(itemId: state.itemId, type: state.type)));
         else if (state is SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState)
           bloc.add(SettingsBloc_GetProstheticNextVisitEvent(params: GetProstheticNextVisitParams(itemId: state.itemId, type: state.type)));
+        else if (state is SettingsBloc_UpdatedProstheticTechniqueSuccessfullyState)
+          bloc.add(SettingsBloc_GetProstheticTechniqueEvent(params: GetProstheticTechniqueParams(itemId: state.itemId, type: state.type)));
+        else if (state is SettingsBloc_UpdatedProstheticMaterialSuccessfullyState)
+          bloc.add(SettingsBloc_GetProstheticMaterialEvent(params: GetProstheticMaterialParams(itemId: state.itemId, type: state.type)));
         else if (state is SettingsBloc_UpdatingProstheticNextVisitErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is SettingsBloc_UpdatingProstheticTechniqueErrorState)
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        else if (state is SettingsBloc_UpdatingProstheticMaterialErrorState)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is SettingsBloc_UpdatingProstheticStatusErrorState)
           ShowSnackBar(context, isSuccess: false, message: state.message);
@@ -1441,6 +1457,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     var type = state.type;
                     var expansionControllersstatus = prosItems.map((e) => ExpansionTileController()).toList();
                     var expansionControllersNext = prosItems.map((e) => ExpansionTileController()).toList();
+                    var expansionControllersMaterial = prosItems.map((e) => ExpansionTileController()).toList();
+                    var expansionControllersTechnique = prosItems.map((e) => ExpansionTileController()).toList();
                     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                       Row(
                         children: [
@@ -1494,6 +1512,12 @@ class _SettingsPageState extends State<SettingsPage> {
                                                 }
                                                 for (int j = 0; j < expansionControllersNext.length; j++) {
                                                   if (j != i) expansionControllersNext[j].collapse();
+                                                }
+                                                for (int j = 0; j < expansionControllersMaterial.length; j++) {
+                                                  if (j != i) expansionControllersMaterial[j].collapse();
+                                                }
+                                                for (int j = 0; j < expansionControllersTechnique.length; j++) {
+                                                  if (j != i) expansionControllersTechnique[j].collapse();
                                                 }
                                               },
                                               children: [
@@ -1618,6 +1642,164 @@ class _SettingsPageState extends State<SettingsPage> {
                                                               SettingsBloc_UpdateProstheticNextEventEvent(
                                                                 params: UpdateProstheticNextVisitParams(
                                                                   data: nextVisit,
+                                                                  itemId: item.id!,
+                                                                  type: type,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ])
+                                                      ]);
+                                                    }
+                                                    return Container();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: ExpansionTile(
+                                              title: Title(
+                                                title: "Expan",
+                                                color: Colors.red,
+                                                child: Text("Material"),
+                                              ),
+                                              controller: expansionControllersMaterial[i],
+                                              onExpansionChanged: (value) {
+                                                if (value == true)
+                                                  bloc.add(SettingsBloc_GetProstheticMaterialEvent(
+                                                      params: GetProstheticMaterialParams(
+                                                    itemId: item.id!,
+                                                    type: type,
+                                                  )));
+                                                for (int j = 0; j < expansionControllersstatus.length; j++) {
+                                                  if (j != i) expansionControllersstatus[j].collapse();
+                                                }
+                                                for (int j = 0; j < expansionControllersMaterial.length; j++) {
+                                                  if (j != i) expansionControllersMaterial[j].collapse();
+                                                }
+                                              },
+                                              children: [
+                                                BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                                  buildWhen: (previous, current) =>
+                                                      current is SettingsBloc_LoadingProstheticMaterialErrorState ||
+                                                      current is SettingsBloc_LoadingProstheticMaterialState ||
+                                                      current is SettingsBloc_LoadedProstheticMaterialSuccessfullyState,
+                                                  builder: (context, state) {
+                                                    if (state is SettingsBloc_LoadingProstheticMaterialErrorState)
+                                                      return BigErrorPageWidget(message: state.message);
+                                                    if (state is SettingsBloc_LoadingProstheticMaterialState) return LoadingWidget();
+                                                    if (state is SettingsBloc_LoadedProstheticMaterialSuccessfullyState) {
+                                                      var material = state.data;
+                                                      return Column(children: [
+                                                        ...material
+                                                            .map((e) => Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: CIA_TextFormField(
+                                                                    label: "Name",
+                                                                    controller: TextEditingController(text: e.name),
+                                                                    onChange: (value) => e.name = value,
+                                                                  ),
+                                                                ))
+                                                            .toList(),
+                                                        Row(children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              material = [
+                                                                ...material,
+                                                                BasicNameIdObjectEntity(),
+                                                              ];
+                                                              bloc.emit(SettingsBloc_LoadedProstheticMaterialSuccessfullyState(data: material));
+                                                            },
+                                                            icon: Icon(Icons.add),
+                                                          ),
+                                                          CIA_PrimaryButton(
+                                                            isLong: true,
+                                                            label: "Save",
+                                                            onTab: () => bloc.add(
+                                                              SettingsBloc_UpdateProstheticMaterialEventEvent(
+                                                                params: UpdateProstheticMaterialParams(
+                                                                  data: material,
+                                                                  itemId: item.id!,
+                                                                  type: type,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ])
+                                                      ]);
+                                                    }
+                                                    return Container();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: ExpansionTile(
+                                              title: Title(
+                                                title: "Expan",
+                                                color: Colors.red,
+                                                child: Text("Technique"),
+                                              ),
+                                              controller: expansionControllersTechnique[i],
+                                              onExpansionChanged: (value) {
+                                                if (value == true)
+                                                  bloc.add(SettingsBloc_GetProstheticTechniqueEvent(
+                                                      params: GetProstheticTechniqueParams(
+                                                    itemId: item.id!,
+                                                    type: type,
+                                                  )));
+                                                for (int j = 0; j < expansionControllersstatus.length; j++) {
+                                                  if (j != i) expansionControllersstatus[j].collapse();
+                                                }
+                                                for (int j = 0; j < expansionControllersTechnique.length; j++) {
+                                                  if (j != i) expansionControllersTechnique[j].collapse();
+                                                }
+                                              },
+                                              children: [
+                                                BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                                  buildWhen: (previous, current) =>
+                                                      current is SettingsBloc_LoadingProstheticTechniqueErrorState ||
+                                                      current is SettingsBloc_LoadingProstheticTechniqueState ||
+                                                      current is SettingsBloc_LoadedProstheticTechniqueSuccessfullyState,
+                                                  builder: (context, state) {
+                                                    if (state is SettingsBloc_LoadingProstheticTechniqueErrorState)
+                                                      return BigErrorPageWidget(message: state.message);
+                                                    if (state is SettingsBloc_LoadingProstheticTechniqueState) return LoadingWidget();
+                                                    if (state is SettingsBloc_LoadedProstheticTechniqueSuccessfullyState) {
+                                                      var technique = state.data;
+                                                      return Column(children: [
+                                                        ...technique
+                                                            .map((e) => Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: CIA_TextFormField(
+                                                                    label: "Name",
+                                                                    controller: TextEditingController(text: e.name),
+                                                                    onChange: (value) => e.name = value,
+                                                                  ),
+                                                                ))
+                                                            .toList(),
+                                                        Row(children: [
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              technique = [
+                                                                ...technique,
+                                                                BasicNameIdObjectEntity(),
+                                                              ];
+                                                              bloc.emit(SettingsBloc_LoadedProstheticTechniqueSuccessfullyState(data: technique));
+                                                            },
+                                                            icon: Icon(Icons.add),
+                                                          ),
+                                                          CIA_PrimaryButton(
+                                                            isLong: true,
+                                                            label: "Save",
+                                                            onTab: () => bloc.add(
+                                                              SettingsBloc_UpdateProstheticTechniqueEventEvent(
+                                                                params: UpdateProstheticTechniqueParams(
+                                                                  data: technique,
                                                                   itemId: item.id!,
                                                                   type: type,
                                                                 ),

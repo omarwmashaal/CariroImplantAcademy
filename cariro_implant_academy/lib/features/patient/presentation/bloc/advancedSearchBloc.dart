@@ -361,25 +361,6 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {
-  List<String> columns = [
-    "Single & Bridge Teeth",
-    "Single & Bridge Healing Collar Customization",
-    "Single & Bridge Impression Procedure",
-    "Single & Bridge Impression Next Visit",
-    "Single & Bridge Try In Procedure",
-    "Single & Bridge Try In Next Visit",
-    "Single & Bridge Delivery Procedure",
-    "Single & Bridge Delivery Next Visit",
-    "Full Arch Teeth",
-    "Full Arch Healing Collar Customization",
-    "Full Arch Impression Procedure",
-    "Full Arch Impression Next Visit",
-    "Full Arch Try In Procedure",
-    "Full Arch Try In Next Visit",
-    "Full Arch Delivery Procedure",
-    "Full Arch Delivery Next Visit",
-  ];
-
   List<AdvancedProstheticSearchResponseEntity> models = <AdvancedProstheticSearchResponseEntity>[];
 
   /// Creates the income data source class with required details.
@@ -410,6 +391,8 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
               cells.add(DataGridCell<String>(columnName: "Step", value: e.step?.item?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Status", value: e.step?.status?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Next Visit", value: e.step?.nextVisit?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Technique", value: e.step?.technique?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Material", value: e.step?.material?.name ?? ""));
               if (request?.type == EnumProstheticType.Final && request?.fullArch != true) {
                 cells.add(DataGridCell<String>(columnName: "Teeth", value: e.step?.teeth?.toString() ?? ""));
               }
@@ -439,6 +422,6 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
     init(request: request);
     notifyListeners();
 
-    return columns;
+    return [];
   }
 }

@@ -10,6 +10,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
@@ -18,6 +20,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/up
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
@@ -66,6 +70,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetProstheticItemsUseCase getProstheticItemsUseCase;
   final GetProstheticStatusUseCase getProstheticStatusUseCase;
   final GetProstheticNextVisitUseCase getProstheticNextVisitUseCase;
+  final GetProstheticMaterialUseCase getProstheticMaterialUseCase;
+  final GetProstheticTechniqueUseCase getProstheticTechniqueUseCase;
   final GetImplantCompaniesUseCase getImplantCompaniesUseCase;
   final GetImplantLinesUseCase getImplantLinesUseCase;
   final GetImplantSizesUseCase getImplantSizesUseCase;
@@ -112,6 +118,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateProstheticItemsUseCase updateProstheticItemsUseCase;
   final UpdateProstheticStatusUseCase updateProstheticStatusUseCase;
   final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
+  final UpdateProstheticTechniqueUseCase updateProstheticTechniqueUseCase;
+  final UpdateProstheticMaterialUseCase updateProstheticMaterialUseCase;
 
   SettingsBloc({
     required this.updateDefaultSurgicalComplicationsUseCase,
@@ -120,6 +128,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.getDefaultProstheticComplicationsUseCase,
     required this.getProstheticStatusUseCase,
     required this.getProstheticNextVisitUseCase,
+    required this.getProstheticMaterialUseCase,
+    required this.getProstheticTechniqueUseCase,
     required this.getProstheticItemsUseCase,
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
@@ -164,6 +174,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabItemsParentsUseCase,
     required this.updateProstheticItemsUseCase,
     required this.updateProstheticNextVisitUseCase,
+    required this.updateProstheticMaterialUseCase,
+    required this.updateProstheticTechniqueUseCase,
     required this.updateProstheticStatusUseCase,
     required this.updateLabOptionsUseCase,
     required this.getLabOptionsUseCase,
@@ -617,6 +629,22 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         (r) => emit(SettingsBloc_LoadedProstheticNextVisitSuccessfullyState(data: r)),
       );
     });
+    on<SettingsBloc_GetProstheticTechniqueEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticTechniqueState());
+      final result = await getProstheticTechniqueUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticTechniqueErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticTechniqueSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_GetProstheticMaterialEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticMaterialState());
+      final result = await getProstheticMaterialUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticMaterialErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticMaterialSuccessfullyState(data: r)),
+      );
+    });
 
     on<SettingsBloc_UpdateProstheticItemsEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingProstheticItemsState());
@@ -638,13 +666,35 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         )),
       );
     });
+    on<SettingsBloc_UpdateProstheticMaterialEventEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticMaterialState());
+      final result = await updateProstheticMaterialUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticMaterialErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticMaterialSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
+      );
+    });
+    on<SettingsBloc_UpdateProstheticTechniqueEventEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticTechniqueState());
+      final result = await updateProstheticTechniqueUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticTechniqueErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticTechniqueSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
+      );
+    });
 
     on<SettingsBloc_UpdateProstheticStatusEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingProstheticNextVisitState());
+      emit(SettingsBloc_UpdatingProstheticStatusState());
       final result = await updateProstheticStatusUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingProstheticNextVisitErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState(
+        (l) => emit(SettingsBloc_UpdatingProstheticStatusErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticStatusSuccessfullyState(
           type: event.params.type,
           itemId: event.params.itemId,
         )),

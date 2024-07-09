@@ -66,6 +66,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
@@ -75,6 +77,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/up
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
@@ -389,6 +393,8 @@ initInjection() async {
         updateDefaultProstheticComplicationsUseCase: sl(),
         getProstheticItemsUseCase: sl(),
         getProstheticNextVisitUseCase: sl(),
+        getProstheticMaterialUseCase: sl(),
+        getProstheticTechniqueUseCase: sl(),
         getProstheticStatusUseCase: sl(),
         getImplantCompaniesUseCase: sl(),
         getImplantLinesUseCase: sl(),
@@ -433,6 +439,8 @@ initInjection() async {
         updateLabItemsParentsUseCase: sl(),
         updateProstheticItemsUseCase: sl(),
         updateProstheticNextVisitUseCase: sl(),
+        updateProstheticTechniqueUseCase: sl(),
+        updateProstheticMaterialUseCase: sl(),
         updateProstheticStatusUseCase: sl(),
         getLabOptionsUseCase: sl(),
         updateLabOptionsUseCase: sl(),
@@ -444,10 +452,14 @@ initInjection() async {
   sl.registerLazySingleton(() => UpdateDefaultProstheticComplicationsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticNextVisitUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticTechniqueUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticMaterialUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticNextVisitUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticTechniqueUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticMaterialUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateTeethClinicPricesUseCase(settingsRepository: sl()));

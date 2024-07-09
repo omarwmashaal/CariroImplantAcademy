@@ -896,6 +896,24 @@ namespace CIA.Controllers
                 _aPI_Response.Result = await _cia_DbContext.FinalNextVisitItems.Where(x => x.FinalItemId == itemId).ToListAsync();
             return Ok(_aPI_Response);
         }
+        [HttpGet("GetProstheticMaterial")]
+        public async Task<IActionResult> GetProstheticMaterial(EnumProstheticType type, int itemId)
+        {
+            if (type == EnumProstheticType.Diagnostic)
+                _aPI_Response.Result = await _cia_DbContext.DiagnosticMaterialItems.Where(x => x.DiagnosticItemId == itemId).ToListAsync();
+            else
+                _aPI_Response.Result = await _cia_DbContext.FinalMaterialItems.Where(x => x.FinalItemId == itemId).ToListAsync();
+            return Ok(_aPI_Response);
+        }
+        [HttpGet("GetProstheticTechnique")]
+        public async Task<IActionResult> GetProstheticTechnique(EnumProstheticType type, int itemId)
+        {
+            if (type == EnumProstheticType.Diagnostic)
+                _aPI_Response.Result = await _cia_DbContext.DiagnosticTechniqueItems.Where(x => x.DiagnosticItemId == itemId).ToListAsync();
+            else
+                _aPI_Response.Result = await _cia_DbContext.FinalTechniqueItems.Where(x => x.FinalItemId == itemId).ToListAsync();
+            return Ok(_aPI_Response);
+        }
         [HttpPost("UpdateProstheticItems")]
         public async Task<IActionResult> UpdateProstheticItems(EnumProstheticType type, [FromBody] List<DropDowns> data)
         {
@@ -974,6 +992,62 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok();
         }
+        
+        [HttpPost("UpdateProstheticMaterial")]
+        public async Task<IActionResult> UpdateProstheticMaterial(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
+        {
+            if (type == EnumProstheticType.Diagnostic)
+            {
+                var models = data.Select(x => new DiagnosticMaterialItemModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    DiagnosticItemId = itemId,
+                }).ToList();
+                _cia_DbContext.DiagnosticMaterialItems.UpdateRange(models);
+            }
+            else
+            {
+                var models = data.Select(x => new FinalMaterialItemModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    FinalItemId = itemId,
+                }).ToList();
+                _cia_DbContext.FinalMaterialItems.UpdateRange(models);
+            }
+            _cia_DbContext.SaveChanges();
+            return Ok();
+        }
+        
+        [HttpPost("UpdateProstheticTechnique")]
+        public async Task<IActionResult> UpdateProstheticTechnique(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
+        {
+            if (type == EnumProstheticType.Diagnostic)
+            {
+                var models = data.Select(x => new DiagnosticTechniqueItemModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    DiagnosticItemId = itemId,
+                }).ToList();
+                _cia_DbContext.DiagnosticTechniqueItems.UpdateRange(models);
+            }
+            else
+            {
+                var models = data.Select(x => new FinalTechniqueItemModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    FinalItemId = itemId,
+                }).ToList();
+                _cia_DbContext.FinalTechniqueItems.UpdateRange(models);
+            }
+            _cia_DbContext.SaveChanges();
+            return Ok();
+        }
+        
+        
         [HttpGet("GetSurgicalComplications")]
         public async Task<IActionResult> GetSurgicalComplications()
         {

@@ -55,10 +55,14 @@ namespace CIA.DataBases
         public DbSet<DiagnosticItemModel> DiagnosticItems { get; set; }
         public DbSet<DiagnosticStatusItemModel> DiagnosticStatusItems { get; set; }
         public DbSet<DiagnosticNextVisitItemModel> DiagnosticNextVisitItems { get; set; }
+        public DbSet<DiagnosticTechniqueItemModel> DiagnosticTechniqueItems { get; set; }
+        public DbSet<DiagnosticMaterialItemModel> DiagnosticMaterialItems { get; set; }
         public DbSet<FinalStepModel> FinalSteps { get; set; }
         public DbSet<FinalItemModel> FinalItems { get; set; }
         public DbSet<FinalStatusItemModel> FinalStatusItems { get; set; }
         public DbSet<FinalNextVisitItemModel> FinalNextVisitItems { get; set; }
+        public DbSet<FinalTechniqueItemModel> FinalTechniqueItems { get; set; }
+        public DbSet<FinalMaterialItemModel> FinalMaterialItems { get; set; }
         public DbSet<StockItem> Stock { get; set; }
         public DbSet<StockLog> StockLogs { get; set; }
         public DbSet<CashFlowModel> CashFlow { get; set; }

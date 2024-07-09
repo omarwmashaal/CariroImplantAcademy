@@ -8,6 +8,8 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
     super.fullArch,
     super.itemId,
     super.nextId,
+    super.materialId,
+    super.techniqueId,
     super.statusId,
     super.type,
     super.complicationsAfterProstheticIdsOr,
@@ -21,6 +23,8 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
     data['fullArch'] = this.fullArch ?? false;
     data['itemId'] = this.itemId;
     data['nextId'] = this.nextId;
+    data['materialId'] = this.materialId;
+    data['techniqueId'] = this.techniqueId;
     data['statusId'] = this.statusId;
     data['cementRetained'] = this.cementRetained ?? false;
     data['screwRetained'] = this.screwRetained ?? false;
@@ -36,6 +40,8 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
       itemId: entity.itemId,
       nextId: entity.nextId,
       statusId: entity.statusId,
+      techniqueId: entity.techniqueId,
+      materialId: entity.materialId,
       type: entity.type,
       ids: entity.ids,
       complicationsAfterProstheticIdsOr: entity.complicationsAfterProstheticIdsOr,

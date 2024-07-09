@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
@@ -101,6 +103,8 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                   widget.searchProstheticDTO.itemId = null;
                                   widget.searchProstheticDTO.statusId = null;
                                   widget.searchProstheticDTO.nextId = null;
+                                  widget.searchProstheticDTO.materialId = null;
+                                  widget.searchProstheticDTO.techniqueId = null;
                                   settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
                                 }
                               },
@@ -117,6 +121,8 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                   widget.searchProstheticDTO.itemId = null;
                                   widget.searchProstheticDTO.statusId = null;
                                   widget.searchProstheticDTO.nextId = null;
+                                  widget.searchProstheticDTO.materialId = null;
+                                  widget.searchProstheticDTO.techniqueId = null;
                                   settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
                                 }
                               },
@@ -133,6 +139,8 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                   widget.searchProstheticDTO.itemId = null;
                                   widget.searchProstheticDTO.statusId = null;
                                   widget.searchProstheticDTO.nextId = null;
+                                  widget.searchProstheticDTO.materialId = null;
+                                  widget.searchProstheticDTO.techniqueId = null;
                                   settingsBloc.add(SettingsBloc_GetProstheticItemsEvent(type: widget.searchProstheticDTO.type));
                                 }
                               },
@@ -180,6 +188,8 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                       widget.searchProstheticDTO.itemId = e.id;
                                       widget.searchProstheticDTO.statusId = null;
                                       widget.searchProstheticDTO.nextId = null;
+                                      widget.searchProstheticDTO.materialId = null;
+                                      widget.searchProstheticDTO.techniqueId = null;
                                       settingsBloc.emit(SettingsBloc_LoadedProstheticItemsSuccessfullyState(
                                         data: prostheticItems,
                                         type: widget.searchProstheticDTO.type,
@@ -217,7 +227,7 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                       widget.searchProstheticDTO.nextVisit = null;
                                     },
                                     label:
-                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Step",
+                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Next Visit",
                                     asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
                                     searchParams: GetProstheticNextVisitParams(
                                         itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
@@ -225,6 +235,40 @@ class _AdvancedSearchProstheticFilterWidgetState extends State<AdvancedSearchPro
                                     onSelect: (value) {
                                       widget.searchProstheticDTO.nextId = value.id;
                                       widget.searchProstheticDTO.nextVisit = value;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName(
+                                    onClear: () {
+                                      widget.searchProstheticDTO.materialId = null;
+                                      widget.searchProstheticDTO.material = null;
+                                    },
+                                    label:
+                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Material",
+                                    asyncUseCase: sl<GetProstheticMaterialUseCase>(),
+                                    searchParams: GetProstheticMaterialParams(
+                                        itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                    selectedItem: widget.searchProstheticDTO.material,
+                                    onSelect: (value) {
+                                      widget.searchProstheticDTO.materialId = value.id;
+                                      widget.searchProstheticDTO.material = value;
+                                    },
+                                  ),
+                                  SizedBox(height: 10),
+                                  CIA_DropDownSearchBasicIdName(
+                                    onClear: () {
+                                      widget.searchProstheticDTO.techniqueId = null;
+                                      widget.searchProstheticDTO.technique = null;
+                                    },
+                                    label:
+                                        "${prostheticItems.firstWhere((element) => element.id == widget.searchProstheticDTO.itemId).name ?? ""} Technique",
+                                    asyncUseCase: sl<GetProstheticTechniqueUseCase>(),
+                                    searchParams: GetProstheticTechniqueParams(
+                                        itemId: widget.searchProstheticDTO.itemId!, type: widget.searchProstheticDTO.type),
+                                    selectedItem: widget.searchProstheticDTO.technique,
+                                    onSelect: (value) {
+                                      widget.searchProstheticDTO.techniqueId = value.id;
+                                      widget.searchProstheticDTO.technique = value;
                                     },
                                   ),
                                 ],

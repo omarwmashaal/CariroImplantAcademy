@@ -240,6 +240,8 @@ namespace CIA.Controllers
                .Include(x => x.DiagnosticItem)
                .Include(x => x.DiagnosticStatusItem)
                .Include(x => x.DiagnosticNextVisitItem)
+               .Include(x => x.DiagnosticMaterialItem)
+               .Include(x => x.DiagnosticTechniqueItem)
                .Include(x => x.Operator)
                .ToListAsync();
             return Ok(_aPI_Response);
@@ -258,6 +260,8 @@ namespace CIA.Controllers
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.FinalMaterialItem)
+                    .Include(x => x.FinalTechniqueItem)
                     .Include(x => x.Operator)
                     .ToListAsync();
             else
@@ -269,6 +273,8 @@ namespace CIA.Controllers
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.FinalMaterialItem)
+                    .Include(x => x.FinalTechniqueItem)
                     .Include(x => x.Operator)
                     .ToListAsync();
             return Ok(_aPI_Response);
@@ -923,11 +929,13 @@ namespace CIA.Controllers
                 .Include(x => x.DiagnosticItem)
                 .Include(x => x.DiagnosticStatusItem)
                 .Include(x => x.DiagnosticNextVisitItem)
+                .Include(x => x.DiagnosticMaterialItem)
+                .Include(x => x.DiagnosticTechniqueItem)
                 .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
 
             foreach (var step in steps)
             {
-                var tempNote = $"{step?.DiagnosticItem?.Name ?? ""}: {step?.DiagnosticStatusItem?.Name ?? ""} || {step?.DiagnosticNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                var tempNote = $"{step?.DiagnosticItem?.Name ?? ""}: {step?.DiagnosticStatusItem?.Name ?? ""} || {step?.DiagnosticNextVisitItem?.Name ?? ""} || {step?.DiagnosticMaterialItem?.Name ?? ""} || {step?.DiagnosticTechniqueItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
                 tempNote.Replace("  ", " ");
                 tempNote.Replace("|| ||", "||");
                 tempNote.Replace("||\n", "\n");
@@ -998,6 +1006,8 @@ namespace CIA.Controllers
                 .Include(x => x.FinalItem)
                 .Include(x => x.FinalStatusItem)
                 .Include(x => x.FinalNextVisitItem)
+                .Include(x => x.FinalMaterialItem)
+                .Include(x => x.FinalTechniqueItem)
                 .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
 
             foreach (var step in steps)
@@ -1018,7 +1028,7 @@ namespace CIA.Controllers
                 else if (step.ScrewRetained == true)
                     tempNote += "Screw Retained ";
 
-                tempNote += $"{step?.FinalStatusItem?.Name ?? ""} || {step?.FinalNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                tempNote += $"{step?.FinalStatusItem?.Name ?? ""} || {step?.FinalNextVisitItem?.Name ?? ""} || {step?.FinalMaterialItem?.Name ?? ""} || {step?.FinalTechniqueItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
                 tempNote.Replace("  ", " ");
                 tempNote.Replace("|| ||", "||");
                 tempNote.Replace("||\n", "\n");

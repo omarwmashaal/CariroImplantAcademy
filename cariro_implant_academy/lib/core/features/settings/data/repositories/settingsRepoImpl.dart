@@ -378,6 +378,26 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticTechnique(EnumProstheticType type, int itemId) async {
+    try {
+      final result = await settingsDatasource.getProsthticTechnique(type, itemId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticMaterial(EnumProstheticType type, int itemId) async {
+    try {
+      final result = await settingsDatasource.getProsthticMaterial(type, itemId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticStatus(EnumProstheticType type, int itemId) async {
     try {
       final result = await settingsDatasource.getProsthticStatus(type, itemId);
@@ -401,6 +421,26 @@ class SettingsRepoImpl implements SettingsRepository {
   Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
     try {
       final result = await settingsDatasource.updateProstheticNextVisit(type, itemId, data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateProstheticTechnique(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateProstheticTechnique(type, itemId, data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateProstheticMaterial(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateProstheticMaterial(type, itemId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -40,6 +40,8 @@ abstract class SettingsRepository {
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getSuppliers(Website website, bool medical);
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticItems(EnumProstheticType type);
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticNextVisit(EnumProstheticType type, int itemId);
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticTechnique(EnumProstheticType type, int itemId);
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticMaterial(EnumProstheticType type, int itemId);
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> getProsthticStatus(EnumProstheticType type, int itemId);
   //Update Methods
   Future<Either<Failure, NoParams>> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value);
@@ -73,5 +75,7 @@ abstract class SettingsRepository {
   Future<Either<Failure, NoParams>> updateLabOptions(List<LabOptionEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, NoParams>> updateProstheticTechnique(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, NoParams>> updateProstheticMaterial(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }

@@ -9,7 +9,11 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
   int? statusId;
   BasicNameIdObjectEntity? status;
   BasicNameIdObjectEntity? nextVisit;
+  BasicNameIdObjectEntity? technique;
+  BasicNameIdObjectEntity? material;
   int? nextId;
+  int? materialId;
+  int? techniqueId;
   EnumProstheticType type;
   bool? fullArch;
   bool? screwRetained;
@@ -22,6 +26,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     this.itemId,
     this.statusId,
     this.nextId,
+    this.materialId,
+    this.techniqueId,
     this.fullArch = false,
     this.complicationsAfterProstheticIds,
     this.complicationsAfterProstheticIdsOr,
@@ -37,6 +43,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
         this.itemId,
         this.statusId,
         this.nextId,
+        this.materialId,
+        this.techniqueId,
         this.fullArch,
         screwRetained,
         cementRetained,
@@ -46,6 +54,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
       this.itemId == null &&
       this.statusId == null &&
       this.nextId == null &&
+      this.materialId == null &&
+      this.techniqueId == null &&
       complicationsAfterProstheticIdsOr == null &&
       complicationsAfterProstheticIds == null &&
       screwRetained != true &&
@@ -55,6 +65,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     itemId = null;
     statusId = null;
     nextId = null;
+    materialId = null;
+    techniqueId = null;
     complicationsAfterProstheticIdsOr = null;
     complicationsAfterProstheticIds = null;
     fullArch = false;
