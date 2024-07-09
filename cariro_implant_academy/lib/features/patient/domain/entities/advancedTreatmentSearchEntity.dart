@@ -18,6 +18,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   String? secondaryId;
   String? patientName;
   bool? noTreatmentPlan;
+  bool? sameTooth;
   bool? clearnaceUpper;
   bool? clearnaceLower;
   bool? done;
@@ -44,6 +45,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.id,
     this.ids,
     this.candidate,
+    this.sameTooth,
     this.candidateBatch,
     this.secondaryId,
     this.tooth,
@@ -98,6 +100,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
       noTreatmentPlan == null &&
       implantId == null &&
       implantLineId == null &&
+      implantLineId == sameTooth &&
       candidate == null &&
       candidateBatch == null &&
       implantFailed == null &&

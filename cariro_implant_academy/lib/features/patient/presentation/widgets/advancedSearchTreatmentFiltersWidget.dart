@@ -19,6 +19,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/complications/do
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
@@ -108,8 +109,8 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
                       text: "Yes",
                       onChange: (value) {
                         if (value == true) {
-                          widget.searchTreatmentsDTO.and_treatmentIds!.clear();
-                          widget.searchTreatmentsDTO.or_treatmentIds!.clear();
+                          widget.searchTreatmentsDTO.and_treatmentIds?.clear();
+                          widget.searchTreatmentsDTO.or_treatmentIds?.clear();
                           widget.searchTreatmentsDTO.done = null;
                         } else {
                           widget.searchTreatmentsDTO.done = false;
@@ -246,6 +247,95 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               ),
             ),
             Visibility(
+              visible: (widget.searchTreatmentsDTO.and_treatmentIds ?? []).isNotEmpty,
+              child: AdvancedSearchFilterChildWidget(
+                title: "Same Tooth \"used with all treatments only!\"",
+                child: CIA_CheckBoxWidget(
+                  text: "Same Tooth",
+                  value: widget.searchTreatmentsDTO.sameTooth == true,
+                  onChange: (value) {
+                    setState(() {
+                      widget.searchTreatmentsDTO.sameTooth = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Treatment Type (All of the following)",
+                  child: Column(children: [
+                    CIA_CheckBoxWidget(
+                      text: "All",
+                      value: widget.searchTreatmentsDTO.and_treatmentIds == null,
+                      onChange: (value) {
+                        setState(() {
+                          widget.searchTreatmentsDTO.and_treatmentIds = null;
+                        });
+                      },
+                    ),
+                    ...widget.treatmentItems
+                        .map(
+                          (e) => CIA_CheckBoxWidget(
+                            text: e.name!,
+                            value: widget.searchTreatmentsDTO.and_treatmentIds?.contains(e.id) ?? false,
+                            onChange: (value) {
+                              widget.searchTreatmentsDTO.and_treatmentIds ??= [];
+                              if (value) {
+                                widget.searchTreatmentsDTO.and_treatmentIds?.add(e.id!);
+                                widget.searchTreatmentsDTO.or_treatmentIds?.remove(e.id!);
+                              } else
+                                widget.searchTreatmentsDTO.and_treatmentIds?.remove(e.id!);
+
+                              widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds?.toSet().toList();
+                              widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds?.toSet().toList();
+                              setState(() => null);
+                            },
+                          ),
+                        )
+                        .toList(),
+                  ])),
+            ),
+            Visibility(
+              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
+              child: AdvancedSearchFilterChildWidget(
+                  title: "Treatment Type (One of the following)",
+                  child: Column(
+                    children: [
+                      CIA_CheckBoxWidget(
+                        text: "All",
+                        value: widget.searchTreatmentsDTO.or_treatmentIds == null,
+                        onChange: (value) {
+                          setState(() {
+                            widget.searchTreatmentsDTO.or_treatmentIds = null;
+                          });
+                        },
+                      ),
+                      ...widget.treatmentItems
+                          .map(
+                            (e) => CIA_CheckBoxWidget(
+                              text: e.name!,
+                              value: widget.searchTreatmentsDTO.or_treatmentIds?.contains(e.id) ?? false,
+                              onChange: (value) {
+                                widget.searchTreatmentsDTO.or_treatmentIds ??= [];
+                                if (value) {
+                                  widget.searchTreatmentsDTO.or_treatmentIds?.add(e.id!);
+                                  widget.searchTreatmentsDTO.and_treatmentIds?.remove(e.id!);
+                                } else
+                                  widget.searchTreatmentsDTO.or_treatmentIds?.remove(e.id!);
+
+                                widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds?.toSet().toList();
+                                widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds?.toSet().toList();
+                                setState(() => null);
+                              },
+                            ),
+                          )
+                          .toList()
+                    ],
+                  )),
+            ),
+            Visibility(
               visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
               child: AdvancedSearchFilterChildWidget(
                   title: "Post Surgery Complications (One of the following)",
@@ -343,78 +433,6 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               onChange: (value) {
                 widget.searchTreatmentsDTO.clearnaceLower = value;
               },
-            ),
-            Visibility(
-              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-              child: AdvancedSearchFilterChildWidget(
-                  title: "Treatment Type (One of the following)",
-                  child: Column(
-                    children: [
-                      CIA_CheckBoxWidget(
-                        text: "All",
-                        value: widget.searchTreatmentsDTO.or_treatmentIds == null,
-                        onChange: (value) {
-                          setState(() {
-                            widget.searchTreatmentsDTO.or_treatmentIds = null;
-                          });
-                        },
-                      ),
-                      ...widget.treatmentItems
-                          .map(
-                            (e) => CIA_CheckBoxWidget(
-                              text: e.name!,
-                              value: widget.searchTreatmentsDTO.or_treatmentIds!.contains(e.id),
-                              onChange: (value) {
-                                if (value) {
-                                  widget.searchTreatmentsDTO.or_treatmentIds!.add(e.id!);
-                                  widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
-                                } else
-                                  widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
-
-                                widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
-                                widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
-                                setState(() => null);
-                              },
-                            ),
-                          )
-                          .toList()
-                    ],
-                  )),
-            ),
-            Visibility(
-              visible: widget.searchTreatmentsDTO.noTreatmentPlan != true,
-              child: AdvancedSearchFilterChildWidget(
-                  title: "Treatment Type (All of the following)",
-                  child: Column(children: [
-                    CIA_CheckBoxWidget(
-                      text: "All",
-                      value: widget.searchTreatmentsDTO.and_treatmentIds == null,
-                      onChange: (value) {
-                        setState(() {
-                          widget.searchTreatmentsDTO.and_treatmentIds = null;
-                        });
-                      },
-                    ),
-                    ...widget.treatmentItems
-                        .map(
-                          (e) => CIA_CheckBoxWidget(
-                            text: e.name!,
-                            value: widget.searchTreatmentsDTO.and_treatmentIds!.contains(e.id),
-                            onChange: (value) {
-                              if (value) {
-                                widget.searchTreatmentsDTO.and_treatmentIds!.add(e.id!);
-                                widget.searchTreatmentsDTO.or_treatmentIds!.remove(e.id!);
-                              } else
-                                widget.searchTreatmentsDTO.and_treatmentIds!.remove(e.id!);
-
-                              widget.searchTreatmentsDTO.or_treatmentIds = widget.searchTreatmentsDTO.or_treatmentIds!.toSet().toList();
-                              widget.searchTreatmentsDTO.and_treatmentIds = widget.searchTreatmentsDTO.and_treatmentIds!.toSet().toList();
-                              setState(() => null);
-                            },
-                          ),
-                        )
-                        .toList(),
-                  ])),
             ),
           ],
         ),

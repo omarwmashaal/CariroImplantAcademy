@@ -55,6 +55,7 @@ namespace CIA.Models.CIA.DTOs
         public bool? And_closedSinusWithoutImplant { get; set; }
         public bool? ClearanceUpper { get; set; }
         public bool? ClearanceLower { get; set; }
+        public bool? SameTooth { get; set; }
 
         public List<int>? complicationsAfterSurgeryIds { get; set; }
         public List<int>? complicationsAfterSurgeryIdsOr { get; set; }

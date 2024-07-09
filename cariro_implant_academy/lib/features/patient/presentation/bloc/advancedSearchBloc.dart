@@ -12,6 +12,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -299,12 +300,38 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
                 r.add(DataGridCell<String>(columnName: "Batch", value: e.candidateBatch?.name));
               }
               for (var column in columns) {
-                r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
+                if (query.sameTooth == true)
+                  r.add(
+                    DataGridCell<Widget>(
+                      columnName: column.name ?? "",
+                      value: Icon(
+                        Icons.check,
+                        color: query.done == true ? Colors.green : Colors.orange,
+                      ),
+                    ),
+                  );
+                else
+                  r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }
 
               return r;
             }()))
         .toList();
+
+    if (query.sameTooth == true) {
+      List<BasicNameIdObjectEntity> unique = [];
+      List<DataGridRow> _dataGridRow = [];
+      bool toAdd = false;
+      for (var r in _data) {
+        var patientId = int.tryParse(r.getCells().firstWhere((element) => element.columnName == "Id").value) ?? 0;
+        var tooth = int.tryParse(r.getCells().firstWhere((element) => element.columnName == "Tooth").value) ?? 0;
+        if (!unique.any((element) => element.id == patientId && element.name == tooth.toString())) {
+          unique.add(BasicNameIdObjectEntity(id: patientId, name: tooth.toString()));
+          _dataGridRow.add(r);
+        }
+      }
+      _data = _dataGridRow;
+    }
   }
 
   List<DataGridRow> _data = [];

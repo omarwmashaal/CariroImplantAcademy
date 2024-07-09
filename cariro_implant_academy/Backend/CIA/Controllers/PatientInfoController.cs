@@ -1757,6 +1757,7 @@ namespace CIA.Controllers
                 Implant = x.Implant?.Name,
                 ImplantLine = x.Implant?.ImplantLine?.Name
             }).ToList();
+            
             if (model.ClearanceLower == true || model.ClearanceUpper == true)
                 treatmentPlans = await _cia_DbContext.TreatmentPlans.Where(x => finalResult.Select(x => x.Id).Contains((int)x.PatientId)).ToListAsync();
 
@@ -1817,6 +1818,16 @@ namespace CIA.Controllers
                     r.ClearanceUpper = t?.ClearanceUpper;
                     r.ClearanceLower = t?.ClearanceLower;
                 }
+            }
+
+            if(model.SameTooth==true && !model.And_TreatmentIds.IsNullOrEmpty())
+            {
+                finalResult = finalResult
+                    .GroupBy(x => new { x.Id, x.Tooth })
+                    .Where(g => model.And_TreatmentIds.All(id => g.Any(t => t.TreatmentId == id)))
+                    .SelectMany(x => x)
+                    .ToList();               
+
             }
 
             _aPI_Response.Result = finalResult;
