@@ -88,12 +88,9 @@ builder.Services.AddCors(o => o.AddPolicy(
 
        policy =>
        {
+           policy.AllowAnyOrigin();
            policy.AllowAnyHeader();
            policy.AllowAnyMethod();
-           policy.AllowAnyOrigin();
-
-
-
 
 
        }
@@ -122,6 +119,7 @@ builder.Services.AddScoped<IEnumRepo, EnumRepo>();
 builder.Services.AddScoped<INotificationRepo, NotificationRepo>();
 builder.Services.AddScoped<IClinicRepos, ClinicRepo>();
 builder.Services.AddScoped<IHardwareInfo, HardwareInfo>();
+builder.Services.AddSingleton<IAuthenticator, Authenticator>();
 builder.Services.AddTransient<IScheduledTasks, ScheduledTasks>();
 builder.Services.AddSignalR();
 builder.Services.AddAuthentication(x =>

@@ -460,21 +460,28 @@ namespace CIA.Controllers
         {
             var query = _cia_DbContext.VisitsLogs.Where(x => x.PatientID == id).OrderByDescending(x => x.Id);
             var visitsLog = await _mapper.ProjectTo<VisitDTO>(query, null).ToListAsync();
-            foreach (var v in visitsLog)
+            try
             {
-                if (v.Status.ToLower() == "scheduled" && v.ReservationTime != null && v.ReservationTime < DateTime.Now)
+                foreach (var v in visitsLog)
                 {
-                    v.Status = "Passed";
-                    var visit = await _cia_DbContext.VisitsLogs.FirstAsync(x => x.Id == v.Id);
-                    visit.Status = VisitsStatus.Passed;
-                    _cia_DbContext.VisitsLogs.Update(visit);
-                    _cia_DbContext.SaveChanges();
-                }
-                if (v.VisitsLogIdUpdateRequestId != null)
-                {
-                    v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
+                    if (v.Status.ToLower() == "scheduled" && v.ReservationTime != null && v.ReservationTime < DateTime.Now)
+                    {
+                        v.Status = "Passed";
+                        var visit = await _cia_DbContext.VisitsLogs.FirstAsync(x => x.Id == v.Id);
+                        visit.Status = VisitsStatus.Passed;
+                        _cia_DbContext.VisitsLogs.Update(visit);
+                        _cia_DbContext.SaveChanges();
+                    }
+                    if (v.VisitsLogIdUpdateRequestId != null)
+                    {
+                        v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
 
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+
             }
 
             _cia_DbContext.SaveChanges();
@@ -498,34 +505,41 @@ namespace CIA.Controllers
             // }
             // var visitsLog = _mapper.Map<List< VisitDTO >> (allVists);
             var visitsLog = await _mapper.ProjectTo<VisitDTO>(query, null).ToListAsync();
-
-            foreach (var v in visitsLog)
+            try
             {
-                if (v.Status.ToLower() == "scheduled" && v.ReservationTime != null && v.ReservationTime > DateTime.Now)
+
+                foreach (var v in visitsLog)
                 {
-                    v.Status = "Passed";
-                    var visit = await _cia_DbContext.VisitsLogs.FirstAsync(x => x.Id == v.Id);
-                    visit.Status = VisitsStatus.Passed;
-                    _cia_DbContext.VisitsLogs.Update(visit);
-                    _cia_DbContext.SaveChanges();
+                    if (v.Status.ToLower() == "scheduled" && v.ReservationTime != null && v.ReservationTime > DateTime.Now)
+                    {
+                        v.Status = "Passed";
+                        var visit = await _cia_DbContext.VisitsLogs.FirstAsync(x => x.Id == v.Id);
+                        visit.Status = VisitsStatus.Passed;
+                        _cia_DbContext.VisitsLogs.Update(visit);
+                        _cia_DbContext.SaveChanges();
+                    }
+
+                    if (v.VisitsLogIdUpdateRequestId != null)
+                    {
+                        v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
+
+                    }
                 }
 
-                if (v.VisitsLogIdUpdateRequestId != null)
+                _cia_DbContext.SaveChanges();
+                if (search != null)
                 {
-                    v.ChangeRequest = await _mapper.ProjectTo<VisitDTO>(_cia_DbContext.VisitsLogs, null).FirstOrDefaultAsync(x => x.Id == v.VisitsLogIdUpdateRequestId);
+                    visitsLog = visitsLog.Where(x =>
+                    x.PatientName.ToLower().Contains(search.ToLower())
+                    || x.Status.ToLower().Contains(search.ToLower())
+                    || x.DoctorName.ToLower().Contains(search.ToLower())
 
+                    ).ToList();
                 }
             }
-
-            _cia_DbContext.SaveChanges();
-            if (search != null)
+            catch(Exception e)
             {
-                visitsLog = visitsLog.Where(x =>
-                x.PatientName.ToLower().Contains(search.ToLower())
-                || x.Status.ToLower().Contains(search.ToLower())
-                || x.DoctorName.ToLower().Contains(search.ToLower())
 
-                ).ToList();
             }
 
             _aPI_Response.Result = visitsLog;
@@ -543,15 +557,15 @@ namespace CIA.Controllers
                 .Select(x => new
                 {
                     x.Id,
-                    patientName = x.Patient.Name,
-                    patientId = x.Patient.Id,
-                    status = x.Status.ToString(),
+                    patientName = x.Patient==null?null:x.Patient.Name,
+                    patientId =(int?) (x.Patient == null ? null : x.Patient.Id),
+                    status = x.Status == null ? null : x.Status.ToString(),
                     x.ReservationTime,
                     x.RealVisitTime,
                     x.EntersClinicTime,
                     x.LeaveTime,
-                    doctorName = x.Doctor.Name,
-                    doctorId = x.Doctor.IdInt,
+                    doctorName = x.Doctor == null ? null : x.Doctor.Name,
+                    doctorId = (int?)(x.Doctor == null ? null : x.Doctor.IdInt),
                     x.From,
                     x.To,
                     x.Room,

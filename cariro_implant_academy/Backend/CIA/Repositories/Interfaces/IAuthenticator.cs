@@ -2,6 +2,6 @@
 {
     public interface IAuthenticator
     {
-        public String getFingerPrint();
+        public String GetFingerPrint();
     }
 }

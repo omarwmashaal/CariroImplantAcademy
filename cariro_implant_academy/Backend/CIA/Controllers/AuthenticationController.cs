@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Portable.Licensing;
+using Portable.Licensing.Validation;
 using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -39,13 +41,14 @@ namespace CIA.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly API_response _apiResponse;
+        private readonly IAuthenticator _iAuthenticator;
         private readonly String secretKey;
         private readonly IMapper _mapper;
         private readonly CIA_dbContext _ciaDbContext;
         private readonly IUserRepo _userRepo;
         private readonly EnumWebsite _site;
 
-        public AuthenticationController(IUserRepo userRepo, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<ApplicationUser> userManager, IMapper mapper, CIA_dbContext cIA_DbContext, RoleManager<IdentityRole> roleManager)
+        public AuthenticationController(IUserRepo userRepo, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<ApplicationUser> userManager, IMapper mapper, CIA_dbContext cIA_DbContext, RoleManager<IdentityRole> roleManager, IAuthenticator iAuthenticator)
         {
 
             _userManager = userManager;
@@ -60,6 +63,7 @@ namespace CIA.Controllers
             else
                 _site = (EnumWebsite)int.Parse(site);
             _userRepo = userRepo;
+            _iAuthenticator = iAuthenticator;
         }
 
 
@@ -236,11 +240,13 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
         }
 
+        
+
         [AllowAnonymous]
         [HttpGet("MigrateToImplantFailed")]
         public async Task<IActionResult> MigrateToImplantFailed()
         {
-            var patientIds = await _ciaDbContext.Patients.Select(X=>X.Id).ToListAsync();
+            var patientIds = await _ciaDbContext.Patients.Select(X => X.Id).ToListAsync();
             foreach (var id in patientIds)
             {
                 var dentalEx = await _ciaDbContext.DentalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
@@ -3396,7 +3402,7 @@ namespace CIA.Controllers
 
             return Ok();
         }
-
+        [AllowAnonymous]
         [HttpGet("Test")]
         public async Task<IActionResult> Test()
         {

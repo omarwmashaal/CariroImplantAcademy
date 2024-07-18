@@ -149,7 +149,7 @@ class PatientInfoModel extends PatientInfoEntity {
       profileImageId: map['profileImageId'] as int?,
       idFrontImageId: map['idFrontImageId'] as int?,
       idBackImageId: map['idBackImageId'] as int?,
-      registrationDate: map['registrationDate'] as String?,
+      registrationDate: DateTime.tryParse(map['registerationDate']??"")?.toLocal(),
       registeredBy: map['registeredBy'] as String?,
       // profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
       // idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),

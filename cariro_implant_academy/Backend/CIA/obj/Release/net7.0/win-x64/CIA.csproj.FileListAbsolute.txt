@@ -178,3 +178,4 @@ D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_imp
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\win-x64\zh\Hangfire.Core.resources.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\win-x64\sni.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\win-x64\Exceptionless.DateTimeExtensions.dll
+D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\win-x64\Portable.Licensing.dll

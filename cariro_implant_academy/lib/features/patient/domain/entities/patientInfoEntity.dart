@@ -30,7 +30,7 @@ class PatientInfoEntity extends Equatable {
   Uint8List? profileImage;
   Uint8List? idFrontImage;
   Uint8List? idBackImage;
-  String? registrationDate;
+  DateTime? registrationDate;
   String? registeredBy;
   Website website;
   bool out;

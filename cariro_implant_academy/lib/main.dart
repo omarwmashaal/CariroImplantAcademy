@@ -42,8 +42,11 @@ import 'Helpers/Router.dart';
 import 'core/features/settings/presentation/bloc/settingsBloc.dart';
 
 import 'core/injection_contianer.dart';
+import 'dart:convert';
+import 'core/constants/remoteConstants.dart';
 
 void main() async {
+  await setHosts();
   /*html.window.onUnload.listen((event) async {
   });*/
   //Get.put(NavigationController());

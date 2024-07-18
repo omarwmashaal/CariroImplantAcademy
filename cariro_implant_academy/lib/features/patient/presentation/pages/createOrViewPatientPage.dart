@@ -854,19 +854,29 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: FormTextKeyWidget(
-                                    text: "", // "Registration: ${addNew ? siteController.getUser().name! : patient.registeredBy!.name!}",
-                                    secondaryInfo: true,
-                                  )),
-                                  Expanded(
-                                      child: FormTextValueWidget(
-                                    text: "", // addNew ? DateTime.now().toLocal().toString() : patient.registerationDate ?? "",
-                                    secondaryInfo: true,
-                                  ))
-                                ],
+                              BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                                buildWhen: (previous, current) => current is ChangePageState,
+                                builder: (context, state) {
+                                  return Row(
+                                    children: [
+                                      Expanded(
+                                          child: FormTextKeyWidget(
+                                        text:
+                                            "Registration: ${bloc.pageState == PageState.addNew ? siteController.getUserName() ?? "" : patient.registeredBy}",
+                                        secondaryInfo: true,
+                                      )),
+                                      Expanded(
+                                          child: FormTextValueWidget(
+                                        text: bloc.pageState == PageState.addNew
+                                            ? DateTime.now().toLocal().toString()
+                                            : patient.registrationDate == null
+                                                ? ""
+                                                : DateFormat("dd/MM/yyyy hh:mm a").format(patient.registrationDate!),
+                                        secondaryInfo: true,
+                                      ))
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),

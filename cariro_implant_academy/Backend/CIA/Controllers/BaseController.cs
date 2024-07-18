@@ -16,9 +16,7 @@ namespace CIA.Controllers
         public override async void OnActionExecuting(ActionExecutingContext filterContext)
         {
 
-            DateTime dateTime = DateTime.Now;
-            if (dateTime.Date > new DateTime(2024,7,17))
-                throw new Exception();
+           
 
             //var t = Encrypt("OmarWael", dateTime.AddMilliseconds(-400).Ticks.ToString());
             //var d = Decrypt(t, dateTime.AddMilliseconds(-400).Ticks.ToString());

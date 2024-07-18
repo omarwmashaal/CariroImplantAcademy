@@ -55,6 +55,7 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
 
   @override
   Widget build(BuildContext context) {
+    if ((widget.searchTreatmentsDTO.and_treatmentIds ?? []).isEmpty) widget.searchTreatmentsDTO.sameTooth = false;
     return SingleChildScrollView(
       child: BlocListener<SettingsBloc, SettingsBloc_States>(
         bloc: settingsBloc,

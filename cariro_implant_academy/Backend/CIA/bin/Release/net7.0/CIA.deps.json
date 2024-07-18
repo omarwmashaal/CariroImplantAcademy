@@ -35,6 +35,7 @@
           "Microsoft.IdentityModel.Tokens": "6.26.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+          "Portable.Licensing": "1.1.0",
           "Swashbuckle.AspNetCore": "6.2.3",
           "System.Data.SqlClient": "4.8.6",
           "System.IdentityModel.Tokens.Jwt": "6.26.0"
@@ -875,6 +876,14 @@
         "runtime": {
           "lib/netstandard1.3/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll": {
             "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
+      "Portable.Licensing/1.1.0": {
+        "runtime": {
+          "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll": {
+            "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.1.0.0"
           }
         }
@@ -2336,6 +2345,13 @@
       "sha512": "sha512-+taA6t8sRI0JTbyCZH0GobEtJYvU4aAGBf5/2/CutWHiYpO2nLfJ8SQSyWYMKakrwn1/NDM9VV85mGEAzBZ7LQ==",
       "path": "npgsql.entityframeworkcore.postgresql.design/1.1.0",
       "hashPath": "npgsql.entityframeworkcore.postgresql.design.1.1.0.nupkg.sha512"
+    },
+    "Portable.Licensing/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0DVAPvsfRzFluAQqij90UTcYXigoMR4oYEfX4cARzf3SBOIpdlFdooWKcFsNRskRb/R0Gkxp1Vzk2eKE2Oc6cw==",
+      "path": "portable.licensing/1.1.0",
+      "hashPath": "portable.licensing.1.1.0.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",

@@ -9,7 +9,6 @@ namespace CIA.Models.DTOs
         public int? Id { get; set; }       
         public int? PatientID { get; set; }
         public String? SecondaryId { get; set; }
-
         public String? PatientName { get; set; }
         public String? Status { get; set; }
         public DateTime? ReservationTime { get; set; }
