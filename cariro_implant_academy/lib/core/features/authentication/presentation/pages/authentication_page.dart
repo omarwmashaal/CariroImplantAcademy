@@ -67,7 +67,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
       )
     );*/
-
     authenticationBloc = context.read<AuthenticationBloc>();
     if (siteController.getSite() == null) siteController.setSite(Website.CIA);
     return MultiBlocListener(

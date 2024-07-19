@@ -90,6 +90,8 @@ dependencies:
   url_launcher: ^6.2.2
   open_file: ^3.3.2
   open_dir: ^0.0.1+5
+  syncfusion_flutter_xlsio: ^24.2.7
+
 
 
 
