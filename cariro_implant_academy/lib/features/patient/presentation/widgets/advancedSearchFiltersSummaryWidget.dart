@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TagsInputWidget.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
@@ -6,7 +7,11 @@ import 'package:cariro_implant_academy/features/patient/domain/entities/advanced
 import 'package:cariro_implant_academy/features/patient/domain/entities/advancedTreatmentSearchEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as syncFusionExcel;
+import 'dart:convert';
+import 'dart:html';
 
 class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
   AdvancedSearchFiltersSummaryWidget({
@@ -16,12 +21,14 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
     required this.searchTreatmentsDTO,
     required this.onRemove,
     required this.treatmentItems,
+    required this.exportToExcel,
   });
 
   AdvancedPatientSearchEntity searchDTO;
   AdvancedTreatmentSearchEntity searchTreatmentsDTO;
   List<TreatmentItemEntity> treatmentItems;
   AdvancedProstheticSearchRequestEntity searchProstheticDTO;
+  Function() exportToExcel;
   Function(
     AdvancedPatientSearchEntity onRemoveSearchDTO,
     AdvancedTreatmentSearchEntity onRemoveSearchTreatmentsDTO,
@@ -62,10 +69,23 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
           ),
         ),
         Visibility(
-            visible: searchTreatmentsDTO.noTreatmentPlan == true,
-            child: FormTextKeyWidget(
-              text: "No Treatment Plans or Surgeries",
-            )),
+          visible: searchTreatmentsDTO.noTreatmentPlan == true,
+          child: FormTextKeyWidget(
+            text: "No Treatment Plans or Surgeries",
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CIA_SecondaryButton(
+              label: "Export Excel",
+              icon: Icon(Icons.table_chart_rounded),
+              onTab: () {
+                exportToExcel();
+              },
+            ),
+          ],
+        )
       ],
     );
   }
