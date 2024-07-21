@@ -509,54 +509,79 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
         if (patientInfo) dataSources.add(dataSource_patients);
         if (treatmentInfo) dataSources.add(dataSource_treatments);
         if (prostheticInfo) dataSources.add(dataSource_prosthetic);
-        for (int dataSourceIndex = 0; dataSourceIndex < dataSources.length; dataSourceIndex++) {
-          int lastRow = 1;
-          int lastColumn = 1;
-          var dataSource = dataSources[dataSourceIndex];
-          //Accessing worksheet via index.
-          syncFusionExcel.Worksheet sheet;
-          try {
-            sheet = workbook.worksheets[dataSourceIndex];
-          } catch (e) {
-            workbook.worksheets.add();
-            sheet = workbook.worksheets[dataSourceIndex];
-          }
-          sheet.name = dataSource is AdvancedPatientSearchDataGridSource
-              ? "Patients Info"
-              : dataSource is AdvancedTreatmentSearchDataGridSource
-                  ? "Treatments Info"
-                  : "Prosthetic Info";
-          List<String> columnNames = dataSource.rows?.first.getCells().map((e) => e.columnName).toList() ?? [];
-          lastColumn = columnNames.length;
-          for (int i = 0; i < columnNames.length; i++) {
-            sheet.getRangeByIndex(1, i + 1).setText(columnNames[i]);
-            //sheet.getRangeByIndex(1, i + 1).builtInStyle = syncFusionExcel.BuiltInStyles.linkedCell;
-          }
-
-          for (int rowIndex = 0; rowIndex < dataSource.rows.length; rowIndex++) {
-            var cells = dataSource.rows[rowIndex].getCells();
-            lastRow++;
-            for (int columnIndex = 0; columnIndex < cells.length; columnIndex++) {
-              var value = cells[columnIndex].value;
-              if (value is Widget) continue;
-              if (value is int) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setNumber(cells[columnIndex].value as double);
-              if (value is String) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setText(cells[columnIndex].value);
-              if (value is DateTime) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setDateTime(cells[columnIndex].value as DateTime);
+        try {
+          for (int dataSourceIndex = 0; dataSourceIndex < dataSources.length; dataSourceIndex++) {
+            if (dataSourceIndex > 0) {
+              print("adding worksheet $dataSourceIndex");
+              workbook.worksheets.add();
             }
+            int lastRow = 1;
+            int lastColumn = 1;
+            print("Choosing datasource $dataSourceIndex");
+
+            var dataSource = dataSources[dataSourceIndex];
+            print("selected $dataSourceIndex");
+
+            //Accessing worksheet via index.
+            syncFusionExcel.Worksheet sheet;
+            try {
+              print("accesing worksheet $dataSourceIndex");
+
+              sheet = workbook.worksheets[dataSourceIndex];
+            } catch (e) {
+              print("error accessing worksheet $dataSourceIndex");
+              sheet = workbook.worksheets[dataSourceIndex];
+            }
+            print("renaming worksheet $dataSourceIndex");
+
+            sheet.name = dataSource is AdvancedPatientSearchDataGridSource
+                ? "Patients Info"
+                : dataSource is AdvancedTreatmentSearchDataGridSource
+                    ? "Treatments Info"
+                    : "Prosthetic Info";
+            print("setting column names in worksheet $dataSourceIndex");
+
+            List<String> columnNames = dataSource.rows?.first.getCells().map((e) => e.columnName).toList() ?? [];
+            lastColumn = columnNames.length;
+            for (int i = 0; i < columnNames.length; i++) {
+              sheet.getRangeByIndex(1, i + 1).setText(columnNames[i]);
+              //sheet.getRangeByIndex(1, i + 1).builtInStyle = syncFusionExcel.BuiltInStyles.linkedCell;
+            }
+
+            print("setting rows in worksheet $dataSourceIndex");
+
+            for (int rowIndex = 0; rowIndex < dataSource.rows.length; rowIndex++) {
+              var cells = dataSource.rows[rowIndex].getCells();
+              lastRow++;
+              for (int columnIndex = 0; columnIndex < cells.length; columnIndex++) {
+                var value = cells[columnIndex].value;
+                if (value is Widget) continue;
+                if (value is int) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setNumber(cells[columnIndex].value as double);
+                if (value is String) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setText(cells[columnIndex].value);
+                if (value is DateTime) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setDateTime(cells[columnIndex].value as DateTime);
+              }
+            }
+
+            try {
+              print("autofit and table creation in worksheet $dataSourceIndex");
+
+              syncFusionExcel.Range range = sheet.getRangeByIndex(sheet.getFirstRow(), sheet.getFirstColumn(), lastRow, lastColumn);
+              range.autoFitColumns();
+              sheet.tableCollection.create(sheet.name.replaceAll(" ", ""), range);
+            } catch (e) {
+              print("autofit and table creation in worksheet $dataSourceIndex Error!");
+            }
+
+            // for (int columnIndex = 0; columnIndex < sheet.columns.count; columnIndex++) {
+            //   sheet.autoFitColumn(columnIndex + 1);
+            // }
+            // if (sheet.getLastRow() != 0 && sheet.getLastColumn() != 0)
+            //   sheet.tableCollection.create(sheet.name, sheet.getRangeByIndex(1, 1, sheet.getLastRow(), sheet.getLastColumn()));
           }
-
-          try {
-            syncFusionExcel.Range range = sheet.getRangeByIndex(sheet.getFirstRow(), sheet.getFirstColumn(), lastRow, lastColumn);
-            range.autoFitColumns();
-            sheet.tableCollection.create(sheet.name.replaceAll(" ", ""), range);
-          } catch (e) {}
-
-          // for (int columnIndex = 0; columnIndex < sheet.columns.count; columnIndex++) {
-          //   sheet.autoFitColumn(columnIndex + 1);
-          // }
-          // if (sheet.getLastRow() != 0 && sheet.getLastColumn() != 0)
-          //   sheet.tableCollection.create(sheet.name, sheet.getRangeByIndex(1, 1, sheet.getLastRow(), sheet.getLastColumn()));
+        } catch (e) {
+          print("Error is ${e.toString()}");
         }
+        print("Saving workbook");
 
         // Save the document.
         final List<int> bytes = workbook.saveAsStream();

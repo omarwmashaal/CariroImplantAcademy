@@ -3408,6 +3408,19 @@ namespace CIA.Controllers
         {
             return Ok("Connected");
         }
+        [AllowAnonymous]
+        [HttpGet("MigrateToTreatmentBridge")]
+        public async Task<IActionResult> MigrateToTreatmentBridge()
+        {
+            var details = await _ciaDbContext.TreatmentDetails.ToListAsync();
+            foreach(var d in details)
+            {
+                d.Bridge = false;
+            }
+            _ciaDbContext.TreatmentDetails.UpdateRange(details);
+            _ciaDbContext.SaveChanges();
+            return Ok();
+        }
 
 
 

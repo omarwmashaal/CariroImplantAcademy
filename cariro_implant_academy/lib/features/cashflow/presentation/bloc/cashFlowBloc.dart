@@ -227,6 +227,7 @@ class CashFlowDataGridSource extends DataGridSource {
                   DataGridCell<String>(columnName: 'Name', value: e.patient?.name ?? e.candidate?.name ?? ""),
                   DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
                   DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
+                  DataGridCell<String>(columnName: 'Payment Method', value: e.paymentMethod?.name ?? "-"),
                 ]))
             .toList();
       } else

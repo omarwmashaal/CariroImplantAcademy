@@ -90,12 +90,18 @@ class AdvancedSearchBloc extends Bloc<AdvancedSearchBloc_Events, AdvancedSearchB
         switch (event.type) {
           case AdvancedSearchEnum.Treatments:
             emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
+            emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
+            emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
             break;
           case AdvancedSearchEnum.Prosthetic:
             emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
+            emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
+            emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
             break;
           default:
             emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
+            emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
+            emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
         }
       },
     );

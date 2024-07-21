@@ -14,7 +14,7 @@ abstract class ReceiptRepository {
   Future<Either<Failure, ReceiptEntity>> getReceiptById({required int receiptId});
   Future<Either<Failure, List<PaymentLogEntity>>> getAllPaymentLogs({required int patientId});
   Future<Either<Failure, List<PaymentLogEntity>>> getPaymentLogsforAReceipt({required int receiptId});
-  Future<Either<Failure, NoParams>> addPayment({required int patientId, required int receiptId, required int paidAmount});
+  Future<Either<Failure, NoParams>> addPayment({required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId});
   Future<Either<Failure, NoParams>> removePayment({required int paymentId});
   Future<Either<Failure, int>> getTotalDebt({required int patientId});
 }

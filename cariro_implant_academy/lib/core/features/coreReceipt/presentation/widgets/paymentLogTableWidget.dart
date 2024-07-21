@@ -1,8 +1,12 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/paymentLogEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
@@ -37,7 +41,7 @@ class PaymentLogTableWidget {
     PaymentLogsTableDataSource dataSource = PaymentLogsTableDataSource(bloc: bloc);
     bloc.loadPaymentLogTableData(receiptId: receiptId);
     CIA_ShowPopUp(
-      width: 1000,
+      width: double.maxFinite,
       context: context,
       onSave: () {
         if (patientId != null) bloc.getPatientReceipts(patientId!);
@@ -165,6 +169,7 @@ class PaymentLogTableWidget {
                               label: "Add payment",
                               onTab: () async {
                                 int newPrice = 0;
+                                BasicNameIdObjectEntity? paymentMethod;
                                 CIA_ShowPopUp(
                                   height: 200,
                                   context: context,
@@ -172,16 +177,33 @@ class PaymentLogTableWidget {
                                     patientId: patientId!,
                                     receiptId: receiptId,
                                     paidAmount: newPrice,
+                                    paymentMethodId: paymentMethod?.id,
                                   ),
-                                  child: CIA_TextFormField(
-                                    label: "New payment",
-                                    isNumber: true,
-                                    controller: TextEditingController(),
-                                    onChange: (v) => newPrice = int.parse(v),
-                                    validator: (value) {
-                                      if (int.parse(value) >= receipt.unpaid!) value = receipt.unpaid!.toString();
-                                      return value;
-                                    },
+                                  child: Column(
+                                    children: [
+                                      CIA_TextFormField(
+                                        label: "New payment",
+                                        isNumber: true,
+                                        controller: TextEditingController(),
+                                        onChange: (v) => newPrice = int.parse(v),
+                                        validator: (value) {
+                                          if (int.parse(value) >= receipt.unpaid!) value = receipt.unpaid!.toString();
+                                          return value;
+                                        },
+                                      ),
+                                      SizedBox(height: 10),
+                                      CIA_DropDownSearchBasicIdName(
+                                        onClear: () {
+                                          paymentMethod = null;
+                                        },
+                                        label: "Payment Method",
+                                        asyncUseCase: sl<GetPaymentMethodsUseCase>(),
+                                        onSelect: (value) {
+                                          paymentMethod = value;
+                                        },
+                                        selectedItem: paymentMethod,
+                                      ),
+                                    ],
                                   ),
                                 );
                               })
@@ -255,6 +277,7 @@ class PaymentLogsTableDataSource extends DataGridSource {
               DataGridCell<int>(columnName: 'Patient Id', value: e.patientId),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
               DataGridCell<int>(columnName: 'Paid', value: e.paidAmount),
+              DataGridCell<String>(columnName: 'Payment Method', value: e.paymentMethod?.name ?? "-"),
               DataGridCell<Widget>(
                   columnName: 'Remove Payment',
                   value: IconButton(

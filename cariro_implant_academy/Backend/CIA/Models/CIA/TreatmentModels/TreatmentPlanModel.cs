@@ -161,6 +161,7 @@ namespace CIA.Models.TreatmentModels
         [ForeignKey("ImplantRequest")]
         public int? ImplantIDRequest { get; set; }
         public Implant? ImplantRequest { get; set; }
+        public bool? Bridge { get; set; }
 
     }
 

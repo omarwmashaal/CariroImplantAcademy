@@ -16,6 +16,7 @@ class PaymentLogEntity extends Equatable{
   BasicNameIdObjectEntity? patient;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
+  BasicNameIdObjectEntity? paymentMethod;
   DateTime? date;
   int? receiptId;
   ReceiptModelsss? receipt;
@@ -25,6 +26,7 @@ class PaymentLogEntity extends Equatable{
       {this.id,
         this.patientId,
         this.patient,
+        this.paymentMethod,
         this.operatorId,
         this.operator,
         this.date,
@@ -37,6 +39,7 @@ class PaymentLogEntity extends Equatable{
     this.patientId,
     this.patient,
     this.operatorId,
+    this.paymentMethod,
     this.operator,
     this.date,
     this.receiptId,

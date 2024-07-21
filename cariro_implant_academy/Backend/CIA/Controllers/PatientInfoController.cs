@@ -1300,13 +1300,13 @@ namespace CIA.Controllers
         [HttpGet("GetPaymentLogsForAReceipt")]
         public async Task<IActionResult> GetPaymentLogsForAReceipt(int receiptId)
         {
-            var logs = await _cia_DbContext.PaymentLogs.Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
+            var logs = await _cia_DbContext.PaymentLogs.Include(x=>x.PaymentMethod).Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
             _aPI_Response.Result = logs;
             return Ok(_aPI_Response);
         }
 
         [HttpPost("AddPayment")]
-        public async Task<IActionResult> AddPayment(int id, int receiptId, int paidAmount)
+        public async Task<IActionResult> AddPayment(int id, int receiptId, int paidAmount,int? paymentMethodId)
         {
             var cat = await _cia_DbContext.IncomeCategories.Where(x => x.Website == EnumWebsite.CIA).FirstOrDefaultAsync(x => x.Name == "Patients");
             if (cat == null)
@@ -1331,7 +1331,8 @@ namespace CIA.Controllers
                 PatientId = id,
                 Receipt = receipt,
                 ReceiptId = receiptId,
-                Website = _site
+                Website = _site,
+                PaymentMethodId = paymentMethodId,
             };
             await _cia_DbContext.PaymentLogs.AddAsync(paymentLog);
             await _cia_DbContext.SaveChangesAsync();
@@ -1353,7 +1354,8 @@ namespace CIA.Controllers
                 PatientId = id,
                 PaymentLog = paymentLog,
                 PaymentLogId = paymentLog.Id,
-                Website = _site
+                Website = _site,
+                PaymentMethodId = paymentMethodId,
 
             };
             _cia_DbContext.Income.Add(income);

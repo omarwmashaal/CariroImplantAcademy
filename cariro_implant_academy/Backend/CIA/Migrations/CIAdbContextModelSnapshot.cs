@@ -22364,6 +22364,9 @@ namespace CIA.Migrations
                     b.Property<int?>("PatientId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("PaymentMethodId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ReceiptId")
                         .HasColumnType("integer");
 
@@ -22375,6 +22378,8 @@ namespace CIA.Migrations
                     b.HasIndex("OperatorId1");
 
                     b.HasIndex("PatientId");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("ReceiptId");
 
@@ -22968,6 +22973,9 @@ namespace CIA.Migrations
 
                     b.Property<int?>("AssignedToID")
                         .HasColumnType("integer");
+
+                    b.Property<bool?>("Bridge")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -25025,6 +25033,10 @@ namespace CIA.Migrations
                         .WithMany()
                         .HasForeignKey("PatientId");
 
+                    b.HasOne("CIA.Models.CIA.PaymentMethodsModel", "PaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId");
+
                     b.HasOne("CIA.Models.Receipt", "Receipt")
                         .WithMany()
                         .HasForeignKey("ReceiptId")
@@ -25034,6 +25046,8 @@ namespace CIA.Migrations
                     b.Navigation("Operator");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("PaymentMethod");
 
                     b.Navigation("Receipt");
                 });

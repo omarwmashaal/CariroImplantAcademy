@@ -20,7 +20,7 @@ abstract class ReceiptsDatasource {
 
   Future<List<PaymentLogModel>> getPaymentLogsforAReceipt({required int receiptId});
 
-  Future<NoParams> addPayment({required int patientId, required int receiptId, required int paidAmount});
+  Future<NoParams> addPayment({required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId});
 
   Future<NoParams> removePayment({required int paymentId});
 
@@ -34,11 +34,12 @@ class ReceiptsDatasourceImpl implements ReceiptsDatasource {
   ReceiptsDatasourceImpl({required this.httpRepo});
 
   @override
-  Future<NoParams> addPayment({required int patientId, required int receiptId, required int paidAmount}) async {
+  Future<NoParams> addPayment({required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId}) async {
     late StandardHttpResponse result;
     try {
       result = await httpRepo.post(
-        host: "$serverHost/$patientInfoController/AddPayment?id=$patientId&receiptId=$receiptId&paidAmount=$paidAmount",
+        host:
+            "$serverHost/$patientInfoController/AddPayment?id=$patientId&receiptId=$receiptId&paidAmount=$paidAmount${paymentMethodId == null ? "" : "&paymentMethodId=$paymentMethodId"}",
       );
     } catch (e) {
       throw mapException(e);

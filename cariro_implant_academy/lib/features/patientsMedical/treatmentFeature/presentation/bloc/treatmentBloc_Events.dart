@@ -116,6 +116,7 @@ class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
   final List<int> selectedTreatmentItemId;
   final int patientId;
   final bool isSurgical;
+  final bool bridge;
   final BasicNameIdObjectEntity? patientsDoctor;
 
   TreatmentBloc_UpdateTeethStatusEvent({
@@ -125,6 +126,7 @@ class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
     required this.patientId,
     required this.isSurgical,
     required this.patientsDoctor,
+    required this.bridge,
   });
 
   @override
@@ -135,5 +137,6 @@ class TreatmentBloc_UpdateTeethStatusEvent extends TreatmentBloc_Events {
         patientId,
         isSurgical,
         patientsDoctor,
+        bridge,
       ];
 }

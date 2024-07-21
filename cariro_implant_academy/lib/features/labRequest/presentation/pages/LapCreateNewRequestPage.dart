@@ -748,6 +748,8 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                             height: 10,
                           ),
                           CIA_TeethChart(
+                            showSingleBridgeSelection: false,
+                            onSingleBridgeChange: (bridge) => null,
                             onChange: (selectedTeethList) {
                               teeth = selectedTeethList;
                             },

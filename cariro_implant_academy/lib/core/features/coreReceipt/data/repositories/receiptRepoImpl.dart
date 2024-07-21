@@ -10,9 +10,11 @@ class ReceiptRepositoryImpl implements ReceiptRepository {
   final ReceiptsDatasource receiptDataSource;
   ReceiptRepositoryImpl({required this.receiptDataSource});
   @override
-  Future<Either<Failure, NoParams>> addPayment({required int patientId, required int receiptId, required int paidAmount}) async {
+  Future<Either<Failure, NoParams>> addPayment(
+      {required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId}) async {
     try {
-      final result = await receiptDataSource.addPayment(patientId: patientId, paidAmount: paidAmount, receiptId: receiptId);
+      final result =
+          await receiptDataSource.addPayment(patientId: patientId, paidAmount: paidAmount, receiptId: receiptId, paymentMethodId: paymentMethodId);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

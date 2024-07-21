@@ -1,6 +1,7 @@
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +32,29 @@ class ToothWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: _buildWidgets());
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          Container(
+            width: 10,
+            color: teethData
+                    .where(
+                      (element) => element.tooth == toothID,
+                    )
+                    .any(
+                      (element) => element.bridge == true,
+                    )
+                ? Colors.orange
+                : Colors.transparent,
+          ),
+          Expanded(
+            child: Column(
+              children: _buildWidgets(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   List<Widget> _buildWidgets() {
@@ -71,6 +94,9 @@ class ToothWidget extends StatelessWidget {
                 FormTextKeyWidget(
                   text: currentToothData.any((element) => element.failedImplant == true) ? "Implant Failed" : "",
                   color: Colors.red,
+                ),
+                FormTextValueWidget(
+                  text: currentToothData.any((element) => element.bridge == true) ? "Bridge" : "Single",
                 ),
                 Expanded(child: Divider()),
               ],

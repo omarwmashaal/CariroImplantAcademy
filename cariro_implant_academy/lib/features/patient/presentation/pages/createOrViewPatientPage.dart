@@ -714,6 +714,8 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                                   return Column(
                                                     children: [
                                                       CIA_TeethChart(
+                                                        showSingleBridgeSelection: false,
+                                                        onSingleBridgeChange: (bridge) => null,
                                                         selectedTeeth: patient.missingTeeth ?? [],
                                                         onChange: (selectedTeethList) {
                                                           patient.missingTeeth ??= [];

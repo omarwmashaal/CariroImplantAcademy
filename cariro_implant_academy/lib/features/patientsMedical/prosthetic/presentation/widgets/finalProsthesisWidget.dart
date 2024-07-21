@@ -56,6 +56,7 @@ class FinalProsthesisStepWidget extends StatelessWidget {
   bool screwRetained = false;
 
   bool cementRetained = false;
+  bool bridge = false;
 
   late ProstheticBloc bloc;
 
@@ -112,6 +113,10 @@ class FinalProsthesisStepWidget extends StatelessWidget {
                     ],
                   )
                 : CIA_TeethChart(
+                    showSingleBridgeSelection: true,
+                    onSingleBridgeChange: (_bridge) {
+                      bridge = _bridge;
+                    },
                     onChange: (selectedTeethList) {
                       selectedTeeth = selectedTeethList;
                     },
@@ -188,8 +193,8 @@ class FinalProsthesisStepWidget extends StatelessWidget {
                                                     id: siteController.getUserId(),
                                                   ),
                                                   operatorId: siteController.getUserId(),
-                                                  single: selectedTeeth.map((e) => e).toList().length == 1,
-                                                  bridge: selectedTeeth.map((e) => e).toList().length > 1,
+                                                  single: !bridge,
+                                                  bridge: bridge,
                                                   teeth: selectedTeeth.map((e) => e).toList(),
                                                 ),
                                               ],

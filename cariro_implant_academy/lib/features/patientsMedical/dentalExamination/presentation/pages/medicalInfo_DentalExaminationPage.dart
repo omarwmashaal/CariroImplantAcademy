@@ -119,6 +119,8 @@ class _PatientDentalExaminationState extends State<DentalExaminationPage> {
                               buildWhen: (previous, current) => current is DentalExaminationBloc_TeethStatusChanged,
                               builder: (context, state) {
                                 return CIA_TeethChart(
+                                  showSingleBridgeSelection: false,
+                                  onSingleBridgeChange: (bridge) => null,
                                   onChange: (selectedTeethList) => selectedTeeth = selectedTeethList,
                                 );
                               }),

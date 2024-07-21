@@ -35,10 +35,12 @@ class TreatmentDetailsEntity extends Equatable {
   String? title;
   int? treatmentItemId;
   TreatmentItemEntity? treatmentItem;
+  bool? bridge;
 
   TreatmentDetailsEntity({
     this.id,
     this.patientId,
+    this.bridge,
     this.postSurgeryModelId,
     this.patient,
     this.failedImplant,

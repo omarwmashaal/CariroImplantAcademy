@@ -20,6 +20,10 @@ namespace CIA.Models
         public int ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
         public int PaidAmount { get; set; } = 0;
+
+        [ForeignKey("PaymentMethodsModel")]
+        public int? PaymentMethodId { get; set; } 
+        public PaymentMethodsModel? PaymentMethod { get; set; } 
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
     }
 }

@@ -257,6 +257,8 @@ class _ClinicTreatmentPageState extends State<ClinicTreatmentPage> {
                                     : Padding(
                                         padding: const EdgeInsets.only(bottom: 10),
                                         child: CIA_TeethChart(
+                                          showSingleBridgeSelection: false,
+                                          onSingleBridgeChange: (bridge) => null,
                                           onChange: (selectedTeethList) {
                                             selectedTeeth.removeWhere((element) => element < 50);
                                             selectedTeeth.addAll(selectedTeethList);

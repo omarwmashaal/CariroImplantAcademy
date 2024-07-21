@@ -34,8 +34,7 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
   void initState() {
     bloc = BlocProvider.of<SettingsBloc>(context);
     bloc.add(SettingsBloc_LoadImplantCompaniesEvent());
-    if(widget.type.toLowerCase().contains("ortho"))
-      categories = [EnumClinicPrices.Ortho];
+    if (widget.type.toLowerCase().contains("ortho")) categories = [EnumClinicPrices.Ortho];
     super.initState();
   }
 
@@ -58,14 +57,17 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
       child: SingleChildScrollView(
         child: Column(
           children: [
-            CIA_TeethChart(onChange: (selectedTeethList) {
-              teeth.removeWhere((element) => element<50);
-              if (widget.type.toLowerCase().contains("pedo")) {
-                teeth!.addAll(selectedTeethList);
-                teeth = teeth.toSet().toList();
-              } else
-                teeth = selectedTeethList.map((e) => e).toList();
-            }),
+            CIA_TeethChart(
+                onSingleBridgeChange: (bridge) => null,
+                showSingleBridgeSelection: false,
+                onChange: (selectedTeethList) {
+                  teeth.removeWhere((element) => element < 50);
+                  if (widget.type.toLowerCase().contains("pedo")) {
+                    teeth!.addAll(selectedTeethList);
+                    teeth = teeth.toSet().toList();
+                  } else
+                    teeth = selectedTeethList.map((e) => e).toList();
+                }),
             SizedBox(height: 10),
             Visibility(
               visible: widget.type.toLowerCase().contains("pedo"),
@@ -73,7 +75,7 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
                 padding: const EdgeInsets.only(bottom: 10),
                 child: CIA_TeethPedoChart(
                   onChange: (selectedTeethList) {
-                    teeth.removeWhere((element) => element>50);
+                    teeth.removeWhere((element) => element > 50);
                     teeth!.addAll(selectedTeethList.map((e) => e.value));
                     teeth = teeth.toSet().toList();
                   },
@@ -83,20 +85,23 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
             Visibility(
               visible: !widget.type.toLowerCase().contains("ortho"),
               child: CIA_MultiSelectChipWidget(
-                onChangeList: (list) {
-                  categories = [];
-                  if (list.contains("All")) {
-                    categories = EnumClinicPrices.values.where((element) => element.name.toLowerCase().startsWith(widget.type.toLowerCase())).toList();
-                  } else {
-                    list = list.map((e) => "${widget.type}${e.removeAllWhitespace}").toList();
-                    categories = list.map((e) => EnumClinicPrices.values.firstWhere((element) => element.name.toLowerCase() == e.toLowerCase())).toList();
-                  }
-                },
-                labels: EnumClinicPrices.values
-                    .where((element) => element.name.toLowerCase().startsWith(widget.type.toLowerCase()))
-                    .toList()
-                    .map((e) => CIA_MultiSelectChipWidgeModel(label: AddSpacesToSentence("${e.name}").replaceAll(widget.type, "")))
-                    .toList()),),
+                  onChangeList: (list) {
+                    categories = [];
+                    if (list.contains("All")) {
+                      categories =
+                          EnumClinicPrices.values.where((element) => element.name.toLowerCase().startsWith(widget.type.toLowerCase())).toList();
+                    } else {
+                      list = list.map((e) => "${widget.type}${e.removeAllWhitespace}").toList();
+                      categories =
+                          list.map((e) => EnumClinicPrices.values.firstWhere((element) => element.name.toLowerCase() == e.toLowerCase())).toList();
+                    }
+                  },
+                  labels: EnumClinicPrices.values
+                      .where((element) => element.name.toLowerCase().startsWith(widget.type.toLowerCase()))
+                      .toList()
+                      .map((e) => CIA_MultiSelectChipWidgeModel(label: AddSpacesToSentence("${e.name}").replaceAll(widget.type, "")))
+                      .toList()),
+            ),
             CIA_PrimaryButton(
                 label: "Get Prices",
                 onTab: () {
@@ -148,11 +153,13 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
                                     Expanded(
                                       child: CIA_TextFormField(
                                         isNumber: true,
-                                        label: widget.type=="Ortho"?"Ortho Price": AddSpacesToSentence(e?.category?.name ?? ""),
+                                        label: widget.type == "Ortho" ? "Ortho Price" : AddSpacesToSentence(e?.category?.name ?? ""),
                                         controller: TextEditingController(text: e.price?.toString() ?? "0"),
                                         onChange: (value) {
                                           if (value == "" || value == null) value = "0";
-                                          var o = prices.where((element) => element.category == e.category && e.teethList!.contains(element.tooth)).toList();
+                                          var o = prices
+                                              .where((element) => element.category == e.category && e.teethList!.contains(element.tooth))
+                                              .toList();
                                           for (var p in o) {
                                             p.price = int.parse(value);
                                           }
@@ -161,17 +168,19 @@ class _ClinicPricesSettingsWidgetState extends State<ClinicPricesSettingsWidget>
                                     ),
                                     Expanded(
                                       child: FormTextValueWidget(
-                                        text: (){
-                                         var list = (e.teethList!..sort((a, b) => a.compareTo(b),));
-                                         var stringList = <String>[];
-                                         list.forEach((element) {
-                                           if(element>50)
-                                             {
-                                               stringList.add(EnumClinicPedoTooth.values.firstWhere((e) => e.value==element).name);
-                                             }
-                                           else stringList.add(element.toString());
-                                         });
-                                         return stringList.toString();
+                                        text: () {
+                                          var list = (e.teethList!
+                                            ..sort(
+                                              (a, b) => a.compareTo(b),
+                                            ));
+                                          var stringList = <String>[];
+                                          list.forEach((element) {
+                                            if (element > 50) {
+                                              stringList.add(EnumClinicPedoTooth.values.firstWhere((e) => e.value == element).name);
+                                            } else
+                                              stringList.add(element.toString());
+                                          });
+                                          return stringList.toString();
                                         }(),
                                       ),
                                     ),

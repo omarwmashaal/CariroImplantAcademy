@@ -77,12 +77,13 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
   }
 
-  void addPayment({required int patientId, required int receiptId, required int paidAmount}) async {
+  void addPayment({required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId}) async {
     emit(ReceiptBloc_AddingPaymentState());
     final result = await addPaymentUseCase(AddPaymentParams(
       patientId: patientId,
       receiptId: receiptId,
       paidAmount: paidAmount,
+      paymentMethodId: paymentMethodId,
     ));
     result.fold(
       (l) => emit(ReceiptBloc_AddingPaymentErrorState(message: l.message ?? "")),

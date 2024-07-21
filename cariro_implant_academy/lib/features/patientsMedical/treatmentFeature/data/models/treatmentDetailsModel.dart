@@ -8,6 +8,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     super.id,
     super.treatmentItem,
     super.treatmentItemId,
+    super.bridge,
     super.patientId,
     super.postSurgeryModelId,
     super.patient,
@@ -39,6 +40,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
     return TreatmentDetailsModel(
       id: entity.id,
       treatmentItem: entity.treatmentItem,
+      bridge: entity.bridge,
       treatmentItemId: entity.treatmentItemId,
       postSurgeryModelId: entity.postSurgeryModelId,
       patientId: entity.patientId,
@@ -69,6 +71,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   }
   TreatmentDetailsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    bridge = json['bridge'];
     treatmentItem = json['treatmentItem'] == null ? null : TreatmentItemModel.fromJson(json['treatmentItem']);
     treatmentItemId = json['treatmentItemId'];
     patientId = json['patientId'];
@@ -102,6 +105,7 @@ class TreatmentDetailsModel extends TreatmentDetailsEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
+    data['bridge'] = this.bridge;
     data['failedImplant'] = this.failedImplant ?? false;
     data['postSurgeryModelId'] = this.postSurgeryModelId;
     data['patientId'] = this.patientId;

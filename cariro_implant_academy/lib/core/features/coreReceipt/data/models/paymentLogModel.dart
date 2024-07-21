@@ -8,6 +8,7 @@ class PaymentLogModel extends PaymentLogEntity {
     super.patient,
     super.operatorId,
     super.operator,
+    super.paymentMethod,
     super.date,
     super.receiptId,
     super.receipt,
@@ -18,6 +19,7 @@ class PaymentLogModel extends PaymentLogEntity {
     return PaymentLogModel(
       id: entity.id,
       patientId: entity.patientId,
+      paymentMethod: entity.paymentMethod,
       patient: entity.patient,
       operatorId: entity.operatorId,
       operator: entity.operator,
@@ -32,6 +34,7 @@ class PaymentLogModel extends PaymentLogEntity {
     id = json['id'];
     patientId = json['patientId'];
     patient = BasicNameIdObjectModel.fromJson(json['patient'] ?? Map<String, dynamic>());
+    paymentMethod = BasicNameIdObjectModel.fromJson(json['paymentMethod'] ?? Map<String, dynamic>());
     operatorId = json['operatorId'];
     operator = BasicNameIdObjectModel.fromJson(json['operator'] ?? Map<String, dynamic>());
     date = DateTime.tryParse(json['date']??"")?.toLocal();

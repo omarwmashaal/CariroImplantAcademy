@@ -655,6 +655,24 @@ namespace CIA.Controllers
         public async Task<ActionResult> UpdatePatientTreatmentDetails([FromQuery] int id, [FromBody] List<TreatmentDetailsModel> model)
         {
 
+            foreach (var tooth in model.Select(x => x.Tooth))
+            {
+                if (model.Where(x => x.Tooth == tooth).Any(x => x.Bridge == true))
+                {
+                    model.Where(x => x.Tooth == tooth).ToList().ForEach(x =>
+                    {
+                        x.Bridge = true;
+                    });
+                }
+                else
+                {
+                    model.Where(x => x.Tooth == tooth).ToList().ForEach(x =>
+                    {
+                        x.Bridge = false;
+                    });
+                }
+            }
+
             // Get User and Treatment From Database
             var user = await _iUserRepo.GetUser();
             var treatmentDetails = await _cia_DbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
@@ -806,17 +824,25 @@ namespace CIA.Controllers
             foreach (var item in model)
             {
                 //Update Request Changes
-                if (item.RequestChangeModel != null)
+                try
                 {
-                    item.RequestChangeModel.User = user;
-                    await _cia_DbContext.RequestChanges.AddAsync(item.RequestChangeModel);
-                    await _notificationRepo.AddChangeRequest(item.RequestChangeModel);
+                    if (item.RequestChangeModel != null && item.RequestChangeId==null)
+                    {
+                        item.RequestChangeModel.User = user;
+                        await _cia_DbContext.RequestChanges.AddAsync(item.RequestChangeModel);
+                        await _notificationRepo.AddChangeRequest(item.RequestChangeModel);
+
+                    }
+
+                    if (item.DoneByCandidateID != null)
+                        candidatesIds.Add((int)item.DoneByCandidateID);
+                }
+                catch (Exception e)
+                {
 
                 }
-
-                if (item.DoneByCandidateID != null)
-                    candidatesIds.Add((int)item.DoneByCandidateID);
             }
+
 
             //update candidates implant count
             candidatesIds = candidatesIds.Distinct().ToList();
