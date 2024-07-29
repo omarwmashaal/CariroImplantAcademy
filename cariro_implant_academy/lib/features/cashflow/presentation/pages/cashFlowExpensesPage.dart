@@ -62,6 +62,7 @@ class CashFlowExpensesPage extends StatefulWidget {
         return "CashFlowExpensesCIA";
     }
   }
+
   @override
   State<CashFlowExpensesPage> createState() => _CashFlowExpensesPageState();
 }
@@ -145,6 +146,9 @@ class _CashFlowExpensesPageState extends State<CashFlowExpensesPage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName<Website>(
+                      onClear: () {
+                        catId = null;
+                      },
                       label: "Category",
                       asyncUseCase: sl<GetExpensesCategoriesUseCase>(),
                       searchParams: siteController.getSite(),
@@ -155,6 +159,9 @@ class _CashFlowExpensesPageState extends State<CashFlowExpensesPage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName(
+                      onClear: () {
+                        paymentMethodId = null;
+                      },
                       asyncUseCase: sl<GetPaymentMethodsUseCase>(),
                       label: "Payment Methods",
                       onSelect: (value) => paymentMethodId = value.id,

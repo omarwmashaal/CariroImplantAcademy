@@ -56,9 +56,13 @@ namespace CIA.Models.CIA
         public int TreatmentId { get; set; }
         public bool? ClearanceUpper { get; set; }
         public bool? ClearanceLower { get; set; }
-        public DentalExaminationModel.DentalExamination? ImplantFailed { get; set; }
+        public bool? ImplantFailed { get; set; }
         public String? Str_ComplicationsAfterSurgery { get; set; }
         public String? Str_ComplicationsAfterProsthesis { get; set; }
+        public DropDowns? Candidate { get; set; }
+        public DropDowns? CandidateBatch { get; set; }
+        public String? Implant { get; set; }
+        public String? ImplantLine { get; set; }
     }
 
     

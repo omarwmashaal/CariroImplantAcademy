@@ -50,6 +50,7 @@ class PatientSearchDataSourceImpl implements PatientSearchDataSource {
   Future<List<PatientInfoEntity>> searchPatients(PatientSearchParams params) async {
     late StandardHttpResponse result;
     String _query = "myPatients=${params.myPatients}";
+    if (params.callHistory != null) _query += "&callHistory=${params.callHistory?.index}";
     if (params.query != null) {
       _query += "&search=${params.query}";
       if (params.filter != null) _query += "&filter=${params.filter}";

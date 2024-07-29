@@ -10,6 +10,10 @@ class PostSurgicalTreatmentEntity extends Equatable {
   List<RequestChangeEntity>? requestChanges;
   int? patientId;
   BasicNameIdObjectEntity? doctor;
+  String? notesSuture;
+  String? notesGBR;
+  String? notesOSL;
+  String? notesSTG;
   bool? guidedBoneRegeneration;
   bool? guidedBoneRegenerationBlockGraft;
   bool? guidedBoneRegenerationBlockGraftChin;
@@ -90,6 +94,10 @@ class PostSurgicalTreatmentEntity extends Equatable {
 
   PostSurgicalTreatmentEntity({
     this.id,
+    this.notesSuture,
+    this.notesGBR,
+    this.notesOSL,
+    this.notesSTG,
     this.patientId,
     this.treatmentDetailsModelId,
     this.requestChanges,

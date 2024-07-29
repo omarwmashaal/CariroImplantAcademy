@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Routing.Matching;
 using System.Linq;
 using System;
+using CIA.Migrations;
 
 namespace CIA.Controllers
 {
@@ -239,6 +240,8 @@ namespace CIA.Controllers
                .Include(x => x.DiagnosticItem)
                .Include(x => x.DiagnosticStatusItem)
                .Include(x => x.DiagnosticNextVisitItem)
+               .Include(x => x.DiagnosticMaterialItem)
+               .Include(x => x.DiagnosticTechniqueItem)
                .Include(x => x.Operator)
                .ToListAsync();
             return Ok(_aPI_Response);
@@ -257,6 +260,8 @@ namespace CIA.Controllers
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.FinalMaterialItem)
+                    .Include(x => x.FinalTechniqueItem)
                     .Include(x => x.Operator)
                     .ToListAsync();
             else
@@ -268,6 +273,8 @@ namespace CIA.Controllers
                     .Include(x => x.FinalItem)
                     .Include(x => x.FinalStatusItem)
                     .Include(x => x.FinalNextVisitItem)
+                    .Include(x => x.FinalMaterialItem)
+                    .Include(x => x.FinalTechniqueItem)
                     .Include(x => x.Operator)
                     .ToListAsync();
             return Ok(_aPI_Response);
@@ -280,7 +287,7 @@ namespace CIA.Controllers
         public async Task<ActionResult> GetComplicationsAfterSurgery(int id)
         {
 
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterSurgery.Include(x => x.DefaultSurgicalComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
             return Ok(_aPI_Response);
         }
@@ -299,7 +306,7 @@ namespace CIA.Controllers
         [HttpGet("GetComplicationsAfterProsthesis")]
         public async Task<ActionResult> GetComplicationsAfterProsthesis(int id)
         {
-            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
+            _aPI_Response.Result = await _cia_DbContext.ComplicationsAfterProsthesis.Include(x => x.DefaultProstheticComplication).Include(x => x.Operator).Where(x => x.PatientId == id).ToListAsync();
 
 
             return Ok(_aPI_Response);
@@ -313,8 +320,52 @@ namespace CIA.Controllers
         {
 
             var patient = await _cia_DbContext.Patients.Include(x => x.MedicalExamination).ThenInclude(x => x.Operator).FirstOrDefaultAsync(x => x.Id == id);
-
             var user = await _iUserRepo.GetUser();
+            var todoList = await _cia_DbContext.ToDoLists.FirstOrDefaultAsync(x => x.PatientId == id && (x.Data ?? "").StartsWith("HBA1C is "));
+            if (todoList != null)
+            {
+                todoList.DueDate = todoList.CreateDate.Value.AddMonths(3);
+                _cia_DbContext.Update(todoList);
+            }
+            if (!patient.MedicalExamination.HBA1c.IsNullOrEmpty() && !model.HBA1c.IsNullOrEmpty() && patient.MedicalExamination.HBA1c.Last()?.Reading != model.HBA1c.Last()?.Reading)
+            {
+                if ((model.HBA1c.Last().Reading ?? 0) >= 7.5)
+                {
+                    if (todoList == null)
+                    {
+                        todoList = new TodoList
+                        {
+                            CreateDate = DateTime.UtcNow,
+                            Data = $"HBA1C is {model.HBA1c.Last().Reading}",
+                            Done = false,
+                            DueDate = DateTime.UtcNow.AddMonths(3),
+                            OperatorId = user.IdInt,
+                            Operator = user,
+                            PatientId = id,
+                        };
+                        _cia_DbContext.ToDoLists.Add(todoList);
+                    }
+                    else
+                    {
+                        todoList.CreateDate = DateTime.UtcNow;
+                        todoList.Data = $"HBA1C is {model.HBA1c.Last().Reading}";
+                        todoList.Done = false;
+                        todoList.DueDate = DateTime.UtcNow.AddMonths(3);
+                        todoList.OperatorId = user.IdInt;
+                        todoList.Operator = user;
+                        todoList.PatientId = id;
+                        _cia_DbContext.ToDoLists.Update(todoList);
+                    }
+
+                }
+                else
+                {
+                    if (todoList != null)
+                    {
+                        _cia_DbContext.ToDoLists.Remove(todoList);
+                    }
+                }
+            }
             if (patient.MedicalExamination.Operator == null)
             {
                 patient.MedicalExamination.Operator = user;
@@ -344,11 +395,13 @@ namespace CIA.Controllers
             patient.MedicalExamination.IllegalDrugs = model.IllegalDrugs;
             patient.MedicalExamination.OperatorComments = model.OperatorComments;
             patient.MedicalExamination.DrugsTaken = model.DrugsTaken;
-            patient.MedicalExamination.Notification_Hba1c = model.Notification_Hba1c;
+
 
 
             _cia_DbContext.Patients.Update(patient);
             await _cia_DbContext.SaveChangesAsync();
+
+
             return Ok(_aPI_Response);
         }
 
@@ -373,15 +426,28 @@ namespace CIA.Controllers
                 patient.DentalExamination.Operator = patient.MedicalExamination.Operator;
             }
 
+
             patient.DentalExamination.DentalExaminations = model.DentalExaminations;
             patient.DentalExamination.Date = model.Date;
             patient.DentalExamination.OperatorImplantNotes = model.OperatorImplantNotes;
             patient.DentalExamination.Date = model.Date ?? DateTime.UtcNow;
             patient.DentalExamination.Operator = user;
             patient.DentalExamination.OralHygieneRating = model.OralHygieneRating;
-
             _cia_DbContext.Patients.Update(patient);
             await _cia_DbContext.SaveChangesAsync();
+
+            var failedTeeth = patient.DentalExamination.DentalExaminations.Where(x => x.ImplantFailed == true).Select(x => x.Tooth).ToList();
+            var treatmentDetails = await _cia_DbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
+            foreach (var item in treatmentDetails)
+            {
+                if (failedTeeth.Contains(item.Tooth))
+                {
+                    item.FailedImplant = true;
+                }
+                else item.FailedImplant = false;
+            }
+            _cia_DbContext.TreatmentDetails.UpdateRange(treatmentDetails);
+            _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
 
@@ -589,6 +655,24 @@ namespace CIA.Controllers
         public async Task<ActionResult> UpdatePatientTreatmentDetails([FromQuery] int id, [FromBody] List<TreatmentDetailsModel> model)
         {
 
+            foreach (var tooth in model.Select(x => x.Tooth))
+            {
+                if (model.Where(x => x.Tooth == tooth).Any(x => x.Bridge == true))
+                {
+                    model.Where(x => x.Tooth == tooth).ToList().ForEach(x =>
+                    {
+                        x.Bridge = true;
+                    });
+                }
+                else
+                {
+                    model.Where(x => x.Tooth == tooth).ToList().ForEach(x =>
+                    {
+                        x.Bridge = false;
+                    });
+                }
+            }
+
             // Get User and Treatment From Database
             var user = await _iUserRepo.GetUser();
             var treatmentDetails = await _cia_DbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
@@ -740,17 +824,25 @@ namespace CIA.Controllers
             foreach (var item in model)
             {
                 //Update Request Changes
-                if (item.RequestChangeModel != null)
+                try
                 {
-                    item.RequestChangeModel.User = user;
-                    await _cia_DbContext.RequestChanges.AddAsync(item.RequestChangeModel);
-                    await _notificationRepo.AddChangeRequest(item.RequestChangeModel);
+                    if (item.RequestChangeModel != null && item.RequestChangeId==null)
+                    {
+                        item.RequestChangeModel.User = user;
+                        await _cia_DbContext.RequestChanges.AddAsync(item.RequestChangeModel);
+                        await _notificationRepo.AddChangeRequest(item.RequestChangeModel);
+
+                    }
+
+                    if (item.DoneByCandidateID != null)
+                        candidatesIds.Add((int)item.DoneByCandidateID);
+                }
+                catch (Exception e)
+                {
 
                 }
-
-                if (item.DoneByCandidateID != null)
-                    candidatesIds.Add((int)item.DoneByCandidateID);
             }
+
 
             //update candidates implant count
             candidatesIds = candidatesIds.Distinct().ToList();
@@ -762,9 +854,47 @@ namespace CIA.Controllers
                 candidate.ImplantCount = await _iUserRepo.GetCandidateTotalImplantData((int)candidate.IdInt);
             }
             _cia_DbContext.Users.UpdateRange(candidates);
+            _cia_DbContext.SaveChanges();
 
 
+            var doneInThisSaveFromDatabase = await _cia_DbContext.TreatmentDetails
+                .Include(x => x.TreatmentItem)
+                .Include(x => x.Patient)
+                .Where(x => x.PatientId == id)
+                .Where(x => donePlansInThisSave.Select(y => y.Id).Contains((int)x.Id))
+                .Where(x => x.TreatmentItem.Name.ToLower().Contains("implant") && !x.TreatmentItem.Name.ToLower().Contains("without"))
+                .ToListAsync();
+            List<TodoList> todolists = new List<TodoList>();
 
+            foreach (var item in doneInThisSaveFromDatabase)
+            {
+                todolists.Add(new TodoList
+                {
+                    CreateDate = DateTime.UtcNow,
+                    DueDate = DateTime.UtcNow.AddMonths(3),
+                    Data = $"Patient {item.Patient.Name} tooth {item.Tooth} waiting exposure",
+                    Done = false,
+                    Operator = user,
+                    OperatorId = user.IdInt,
+                    PatientId = item.PatientId,
+
+                });
+            }
+            _cia_DbContext.ToDoLists.AddRange(todolists);
+            _cia_DbContext.SaveChanges();
+
+            var dentalEx = await _cia_DbContext.DentalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
+            var failedTeeth = dentalEx.DentalExaminations.Where(x => x.ImplantFailed == true).Select(x => x.Tooth).ToList();
+            treatmentDetails = await _cia_DbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
+            foreach (var item in treatmentDetails)
+            {
+                if (failedTeeth.Contains(item.Tooth))
+                {
+                    item.FailedImplant = true;
+                }
+                else item.FailedImplant = false;
+            }
+            _cia_DbContext.TreatmentDetails.UpdateRange(treatmentDetails);
             _cia_DbContext.SaveChanges();
 
             return Ok(_aPI_Response);
@@ -777,6 +907,8 @@ namespace CIA.Controllers
 
             _cia_DbContext.PostSurgeries.Update(model);
             _cia_DbContext.SaveChanges();
+
+
             return Ok(_aPI_Response);
 
         }
@@ -823,11 +955,13 @@ namespace CIA.Controllers
                 .Include(x => x.DiagnosticItem)
                 .Include(x => x.DiagnosticStatusItem)
                 .Include(x => x.DiagnosticNextVisitItem)
+                .Include(x => x.DiagnosticMaterialItem)
+                .Include(x => x.DiagnosticTechniqueItem)
                 .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
 
             foreach (var step in steps)
             {
-                var tempNote = $"{step?.DiagnosticItem?.Name ?? ""}: {step?.DiagnosticStatusItem?.Name ?? ""} || {step?.DiagnosticNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                var tempNote = $"{step?.DiagnosticItem?.Name ?? ""}: {step?.DiagnosticStatusItem?.Name ?? ""} || {step?.DiagnosticNextVisitItem?.Name ?? ""} || {step?.DiagnosticMaterialItem?.Name ?? ""} || {step?.DiagnosticTechniqueItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
                 tempNote.Replace("  ", " ");
                 tempNote.Replace("|| ||", "||");
                 tempNote.Replace("||\n", "\n");
@@ -898,6 +1032,8 @@ namespace CIA.Controllers
                 .Include(x => x.FinalItem)
                 .Include(x => x.FinalStatusItem)
                 .Include(x => x.FinalNextVisitItem)
+                .Include(x => x.FinalMaterialItem)
+                .Include(x => x.FinalTechniqueItem)
                 .Where(x => x.PatientId == id && x.Date.Value.Date == DateTime.UtcNow.Date).ToListAsync();
 
             foreach (var step in steps)
@@ -918,7 +1054,7 @@ namespace CIA.Controllers
                 else if (step.ScrewRetained == true)
                     tempNote += "Screw Retained ";
 
-                tempNote += $"{step?.FinalStatusItem?.Name ?? ""} || {step?.FinalNextVisitItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
+                tempNote += $"{step?.FinalStatusItem?.Name ?? ""} || {step?.FinalNextVisitItem?.Name ?? ""} || {step?.FinalMaterialItem?.Name ?? ""} || {step?.FinalTechniqueItem?.Name ?? ""} || {(step.Scanned == true ? "Scanned" : "")} {(step.NeedsRemake == true ? "Needs Remake" : "")}";
                 tempNote.Replace("  ", " ");
                 tempNote.Replace("|| ||", "||");
                 tempNote.Replace("||\n", "\n");
@@ -947,30 +1083,6 @@ namespace CIA.Controllers
 
             _cia_DbContext.ComplicationsAfterProsthesis.RemoveRange(missings);
             await _cia_DbContext.SaveChangesAsync();
-
-            //List<int> teeth = data.Select(x => (int)x.Tooth).Distinct().ToList();
-            //foreach (var tooth in teeth)
-            //{
-            //    var parent = await _cia_DbContext.ComplicationsAfterProsthesisParents.FirstOrDefaultAsync(x => x.PatientId == id && tooth == x.Tooth);
-            //    if (parent == null)
-            //    {
-            //        parent = new ComplicationsAfterProsthesisParentModel
-            //        {
-            //            PatientId = id,
-            //            Tooth = tooth,
-            //        };
-
-
-            //    parent.Complications = data.Where(x => x.Tooth == tooth).ToList();
-            //    _cia_DbContext.ComplicationsAfterProsthesisParents.Update(parent);
-            //    _cia_DbContext.SaveChanges();
-
-
-
-            //var parents = await _cia_DbContext.ComplicationsAfterProsthesisParents.Where(x => x.PatientId == id && !teeth.Contains((int)x.Tooth)).ToListAsync();
-
-            //_cia_DbContext.ComplicationsAfterProsthesisParents.RemoveRange(parents);
-            //_cia_DbContext.SaveChanges();
             return Ok();
         }
 
@@ -1008,6 +1120,72 @@ namespace CIA.Controllers
             var parents = await _cia_DbContext.ComplicationsAfterSurgeryParents.Where(x => x.PatientId == id && !teeth.Contains((int)x.Tooth)).ToListAsync();
 
             _cia_DbContext.ComplicationsAfterSurgeryParents.RemoveRange(parents);
+            _cia_DbContext.SaveChanges();
+
+
+            var todaysImplantFailedComplication = data.Where(x => x.Date.Value.Date == DateTime.Now.Date && x.DefaultSurgicalComplicationsId == 9).ToList();
+
+            if (!todaysImplantFailedComplication.IsNullOrEmpty())
+            {
+                var dentalExamination = await _cia_DbContext.DentalExaminations
+                                                .FirstAsync(x => x.PatientId == id)
+                                                ;
+
+                foreach (var com in todaysImplantFailedComplication)
+                {
+                    var toothExamination = dentalExamination.DentalExaminations.FirstOrDefault(x => x.Tooth == com.Tooth);
+                    if (toothExamination == null)
+                    {
+                        toothExamination = new DentalExamination
+                        {
+                            Tooth = com.Tooth,
+                            ImplantFailed = true,
+                            Missed = true,
+                        };
+                        dentalExamination.DentalExaminations.Add(toothExamination);
+                    }
+                    else if (toothExamination.ImplantFailed != true)
+                    {
+                        toothExamination.ImplantFailed = true;
+                        toothExamination.Missed = true;
+                        toothExamination.PreviousState =
+                            (toothExamination.ImplantPlaced ?? false) ? "ImplantPlaced" :
+                            (toothExamination.Carious ?? false) ? "Carious" :
+                            (toothExamination.Filled ?? false) ? "Filled" :
+                            (toothExamination.NotSure ?? false) ? "NotSure" :
+                            (toothExamination.MobilityI ?? false) ? "MobilityI" :
+                            (toothExamination.MobilityII ?? false) ? "MobilityII" :
+                            (toothExamination.MobilityIII ?? false) ? "MobilityIII" :
+                            (toothExamination.Hopelessteeth ?? false) ? "Hopelessteeth" : "";
+
+                        toothExamination.ImplantPlaced = false;
+                        toothExamination.Carious = false;
+                        toothExamination.Filled = false;
+                        toothExamination.NotSure = false;
+                        toothExamination.MobilityI = false;
+                        toothExamination.MobilityII = false;
+                        toothExamination.MobilityIII = false;
+                        toothExamination.Hopelessteeth = false;
+                    }
+
+
+                }
+
+                _cia_DbContext.DentalExaminations.Update(dentalExamination);
+                _cia_DbContext.SaveChanges();
+            }
+            var dentalEx = await _cia_DbContext.DentalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
+            var failedTeeth = dentalEx.DentalExaminations.Where(x => x.ImplantFailed == true).Select(x => x.Tooth).ToList();
+            var treatmentDetails = await _cia_DbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
+            foreach (var item in treatmentDetails)
+            {
+                if (failedTeeth.Contains(item.Tooth))
+                {
+                    item.FailedImplant = true;
+                }
+                else item.FailedImplant = false;
+            }
+            _cia_DbContext.TreatmentDetails.UpdateRange(treatmentDetails);
             _cia_DbContext.SaveChanges();
             return Ok();
         }

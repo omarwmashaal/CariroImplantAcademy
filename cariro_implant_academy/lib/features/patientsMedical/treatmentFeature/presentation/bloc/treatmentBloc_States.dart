@@ -54,7 +54,7 @@ class TreatmentBloc_LoadedTreatmentItemsSuccessfullyState extends TreatmentBloc_
   TreatmentBloc_LoadedTreatmentItemsSuccessfullyState({required this.data});
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [data,identityHashCode(this)];
 }
 
 class TreatmentBloc_LoadingTreatmentItemsErrorState extends TreatmentBloc_States {

@@ -21,6 +21,7 @@ namespace CIA.Models.CIA.TreatmentModels
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? Id { get; set; }
+        public String? Name { get; set; }
         
         [ForeignKey("ComplicationsAfterSurgeryParentModel")]
         public int? ParentId { get; set; }
@@ -32,7 +33,9 @@ namespace CIA.Models.CIA.TreatmentModels
         [ForeignKey("ApplicationUser")]
         public int? OperatorId { get; set; }
         public ApplicationUser? Operator { get; set; }
-        public String? Name { get; set; }
+        [ForeignKey("DefaultSurgicalComplications")]
+        public int? DefaultSurgicalComplicationsId { get; set; }
+        public DefaultSurgicalComplications? DefaultSurgicalComplication { get; set; }
         public String? Notes { get; set; }
         public DateTime? Date { get; set; }
         public int? Tooth { get; set; }
@@ -52,7 +55,17 @@ namespace CIA.Models.CIA.TreatmentModels
         public bool SinusElevationFailure { get; set; } = false;
         [NotMapped]
         public bool GBRFailure { get; set; } = false;
+        [NotMapped]
+        public bool ImplantFailed { get; set; } = false;
         
+    }
+
+    public class DefaultSurgicalComplications
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        public String Name { get; set; }
     }
 
 }

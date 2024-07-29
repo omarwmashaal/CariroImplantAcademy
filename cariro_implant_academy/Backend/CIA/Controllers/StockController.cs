@@ -33,7 +33,7 @@ namespace CIA.Controllers
             _iUserRepo = iUserRepo;
             var site = httpContextAccessor.HttpContext.Request.Headers["Site"].ToString();
             if (site == "")
-                _site = _site = EnumWebsite.Lab; 
+                _site = _site = EnumWebsite.Lab;
             else
                 _site = (EnumWebsite)int.Parse(site);
 
@@ -42,7 +42,7 @@ namespace CIA.Controllers
         [HttpGet("GetAllStock")]
         public async Task<IActionResult> GetAllStock(String? search)
         {
-            
+
             IQueryable<StockItem> query = _ciaDbContext.Stock.
                 Include(x => x.Category).
                 OrderBy(x => x.Id).
@@ -57,12 +57,12 @@ namespace CIA.Controllers
                 );
             }
             var result = await query.ToListAsync();
-           
-            if(_site==EnumWebsite.Lab)
+
+            if (_site == EnumWebsite.Lab)
             {
-                foreach(var item in result)
+                foreach (var item in result)
                 {
-                    if(item.GetType()==typeof(LabItem))
+                    if (item.GetType() == typeof(LabItem))
                     {
                         ((LabItem)item).LabItemShade = await _ciaDbContext.LabItemShades.Include(x => x.LabItemCompany).ThenInclude(x => x.LabItemParent).FirstOrDefaultAsync(x => x.Id == ((LabItem)item).LabItemShadeId);
                     }
@@ -81,15 +81,15 @@ namespace CIA.Controllers
             //    }
             //}
             myResult.AddRange(result);
-            
+
             _apiResponse.Result = myResult;
             return Ok(_apiResponse);
 
         }
         [HttpGet("GetAllStockForLab")]
-        public async Task<IActionResult> GetAllStockForLab(String? search,int? parentId,int? companyId, int? shadeId,bool? consumed)
+        public async Task<IActionResult> GetAllStockForLab(String? search, int? parentId, int? companyId, int? shadeId, bool? consumed)
         {
-            
+
             IQueryable<LabItem> query = _ciaDbContext.LabItems.
                 Include(x => x.Category).
                 Include(x => x.LabItemParent).
@@ -115,13 +115,13 @@ namespace CIA.Controllers
             if (companyId != null) query = query.Where(x => x.LabItemCompanyId == companyId);
             if (shadeId != null) query = query.Where(x => x.LabItemShadeId == shadeId);
             if (consumed != null) query = query.Where(x => x.Consumed == consumed);
-            
+
             _apiResponse.Result = await query.ToListAsync();
-           
+
             return Ok(_apiResponse);
 
         }
-       
+
         [HttpGet("GetStockById")]
         public async Task<IActionResult> GetStockById(int id)
         {
@@ -142,7 +142,7 @@ namespace CIA.Controllers
 
         }
         [HttpGet("GetStockLogs")]
-        public async Task<IActionResult> GetStockLogs(String? search,DateTime? from,DateTime? to,int? categoryId, int? operatorId,String? status)
+        public async Task<IActionResult> GetStockLogs(String? search, DateTime? from, DateTime? to, int? categoryId, int? operatorId, String? status)
         {
 
             IQueryable<StockLog> query = _ciaDbContext.StockLogs.Where(x => x.InventoryWebsite == _site).Include(x => x.Operator).OrderByDescending(x => x.Date);
@@ -156,15 +156,15 @@ namespace CIA.Controllers
                     x.Status.ToLower().Contains(search)
                 );
             }
-            if(from!=null)
+            if (from != null)
             {
                 query = query.Where(x => x.Date >= from);
             }
-            if(to!=null)
+            if (to != null)
             {
                 query = query.Where(x => x.Date <= to);
             }
-            if(status !=null)
+            if (status != null)
             {
                 query = query.Where(x => x.Status.ToLower().Contains(status));
             }
@@ -204,7 +204,7 @@ namespace CIA.Controllers
                 _ciaDbContext.Stock.Add(new StockItem
                 {
                     Website = _site,
-                   // InventoryWebsite = _site,
+                    // InventoryWebsite = _site,
                     Count = model.Count,
                     CategoryId = (int)category.Id,
                     Name = model.Name,
@@ -232,6 +232,11 @@ namespace CIA.Controllers
         {
             //if (count == 0) return Ok();
             var user = await _iUserRepo.GetUser();
+            if (!(user.Roles.Contains("admin") || user.Roles.Contains("stockmanager")))
+            {
+                _apiResponse.ErrorMessage = "Only Stock Managers can consume!";
+                return BadRequest(_apiResponse);
+            }
             var item = await _ciaDbContext.Stock.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id && x.InventoryWebsite == _site);
 
 
@@ -253,7 +258,7 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
 
         }
-        
+
         [HttpPost("ConsumeItemByName")]
         public async Task<IActionResult> ConsumeItemByName(String name, int count)
         {
@@ -261,7 +266,11 @@ namespace CIA.Controllers
 
             //if (count == 0) return Ok();
             var user = await _iUserRepo.GetUser();
-            
+            if (!(user.Roles.Contains("admin") || user.Roles.Contains("stockmanager")))
+            {
+                _apiResponse.ErrorMessage = "Only Stock Managers can consume!";
+                return BadRequest(_apiResponse);
+            }
 
 
             item.Count -= count;
@@ -289,7 +298,11 @@ namespace CIA.Controllers
         {
             var user = await _iUserRepo.GetUser();
             var item = await _ciaDbContext.Stock.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id && x.InventoryWebsite == _site);
-
+            if (!(user.Roles.Contains("admin") || user.Roles.Contains("stockmanager")))
+            {
+                _apiResponse.ErrorMessage = "Only Stock Managers can consume!";
+                return BadRequest(_apiResponse);
+            }
             _ciaDbContext.Stock.Remove(item);
 
             _ciaDbContext.StockLogs.Add(new StockLog
@@ -309,13 +322,13 @@ namespace CIA.Controllers
 
 
 
-        
+
         [HttpDelete("GetLabItemDetails")]
         public async Task<IActionResult> GetLabItemDetails(int id)
         {
 
-         
-            var item = await _ciaDbContext.LabItems.Include(x=>x.LabItemShade).ThenInclude(x=>x.LabItemCompany).ThenInclude(x=>x.LabItemParent).FirstOrDefaultAsync(x => x.Id == id);
+
+            var item = await _ciaDbContext.LabItems.Include(x => x.LabItemShade).ThenInclude(x => x.LabItemCompany).ThenInclude(x => x.LabItemParent).FirstOrDefaultAsync(x => x.Id == id);
 
             _apiResponse.Result = new
             {

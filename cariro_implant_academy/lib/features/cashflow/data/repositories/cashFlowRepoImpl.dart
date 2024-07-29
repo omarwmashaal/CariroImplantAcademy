@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/datasources/cashFlowDatasources.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowSummaryEntity.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/entities/installmentPlanEntity.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cashFlowRepository.dart';
 import 'package:dartz/dartz.dart';
 
@@ -16,9 +17,10 @@ class CashFlowRepoImpl implements CashFlowRepository {
   CashFlowRepoImpl({required this.cashFlowDatasource});
 
   @override
-  Future<Either<Failure, NoParams>> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type ,Website inventoryWebsite) async {
+  Future<Either<Failure, NoParams>> addExpense(
+      List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type, Website inventoryWebsite) async {
     try {
-      final result = await cashFlowDatasource.addExpense(models, isStockItem, type,inventoryWebsite);
+      final result = await cashFlowDatasource.addExpense(models, isStockItem, type, inventoryWebsite);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -109,6 +111,44 @@ class CashFlowRepoImpl implements CashFlowRepository {
         paymentMethodId: paymentMethodId,
         catId: catId,
       );
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, InstallmentPlanEntity>> createInstallmentPlan(
+      int? id, int total, DateTime startDate, int numberOfPayments, EnumInstallmentInterval interval) async {
+    try {
+      final result = await cashFlowDatasource.createInstallmentPlan(
+        id,
+        total,
+        startDate,
+        numberOfPayments,
+        interval,
+      );
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, InstallmentPlanEntity?>> getInstallmentsOfUser(int id) async {
+    try {
+      final result = await cashFlowDatasource.getInstallmentsOfUser(id);
+      result?.installments?.sort((a, b) => (a.index ?? 0).compareTo(b.index ?? 0));
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> payInstallment(int installmentPlanId, int value) async {
+    try {
+      final result = await cashFlowDatasource.payInstallment(installmentPlanId, value);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

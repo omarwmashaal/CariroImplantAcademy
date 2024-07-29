@@ -12,6 +12,7 @@ import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domai
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -89,12 +90,18 @@ class AdvancedSearchBloc extends Bloc<AdvancedSearchBloc_Events, AdvancedSearchB
         switch (event.type) {
           case AdvancedSearchEnum.Treatments:
             emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
+            emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
+            emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
             break;
           case AdvancedSearchEnum.Prosthetic:
             emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
+            emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
+            emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
             break;
           default:
             emit(AdvancedSearchBloc_LoadedPatientsSuccessfullyState(data: patients));
+            emit(AdvancedSearchBloc_LoadedTreatmentsSuccessfullyState(data: treatments));
+            emit(AdvancedSearchBloc_LoadedProstheticSuccessfullyState(data: pros));
         }
       },
     );
@@ -277,19 +284,60 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
                   )));
               r.add(DataGridCell<String>(columnName: "Patient Name", value: e.patientName));
               if (e.tooth != null) r.add(DataGridCell<String>(columnName: "Tooth", value: e.tooth?.toString() ?? ""));
-              if (!(query.complicationsAfterSurgery?.isNull() ?? true) || !(query.complicationsAfterSurgeryOr?.isNull() ?? true)) {
+              if (query.implantFailed != null) {
+                r.add(DataGridCell<String>(columnName: "Failed", value: (e.implantFailed ?? false) ? "Implant Failed" : ""));
+                r.add(DataGridCell<String>(columnName: "Treatment", value: (e.treatmentName)));
+              }
+              if (query.implantId != null) {
+                r.add(DataGridCell<String>(columnName: "Implant", value: e.implant));
+              }
+              if (query.implantLineId != null) {
+                r.add(DataGridCell<String>(columnName: "Implant Line", value: e.implantLine));
+              }
+              if ((!(query.complicationsAfterSurgeryIds == null) || !(query.complicationsAfterSurgeryIdsOr == null))) {
                 r.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterSurgery));
               }
-              if (query.clearnaceLower == true) r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower==true? "Yes":"No"));
-              if (query.clearnaceUpper == true) r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper==true? "Yes":"No"));
-
+              if (query.clearnaceLower == true)
+                r.add(DataGridCell<String>(columnName: "Clearance Lower", value: e.clearnaceLower == true ? "Yes" : "No"));
+              if (query.clearnaceUpper == true)
+                r.add(DataGridCell<String>(columnName: "Clearance Upper", value: e.clearnaceUpper == true ? "Yes" : "No"));
+              if (query.candidate != null || query.candidateBatch != null) {
+                r.add(DataGridCell<String>(columnName: "Canidate", value: e.candidate?.name));
+                r.add(DataGridCell<String>(columnName: "Batch", value: e.candidateBatch?.name));
+              }
               for (var column in columns) {
-                r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
+                if (query.sameTooth == true)
+                  r.add(
+                    DataGridCell<Widget>(
+                      columnName: column.name ?? "",
+                      value: Icon(
+                        Icons.check,
+                        color: query.done == true ? Colors.green : Colors.orange,
+                      ),
+                    ),
+                  );
+                else
+                  r.add(DataGridCell<String>(columnName: column.name ?? "", value: e.treatmentId == column.id ? e.treatmentValue : "-"));
               }
 
               return r;
             }()))
         .toList();
+
+    if (query.sameTooth == true) {
+      List<BasicNameIdObjectEntity> unique = [];
+      List<DataGridRow> _dataGridRow = [];
+      bool toAdd = false;
+      for (var r in _data) {
+        var patientId = int.tryParse(r.getCells().firstWhere((element) => element.columnName == "Id").value) ?? 0;
+        var tooth = int.tryParse(r.getCells().firstWhere((element) => element.columnName == "Tooth").value) ?? 0;
+        if (!unique.any((element) => element.id == patientId && element.name == tooth.toString())) {
+          unique.add(BasicNameIdObjectEntity(id: patientId, name: tooth.toString()));
+          _dataGridRow.add(r);
+        }
+      }
+      _data = _dataGridRow;
+    }
   }
 
   List<DataGridRow> _data = [];
@@ -346,25 +394,6 @@ class AdvancedTreatmentSearchDataGridSource extends DataGridSource {
 }
 
 class AdvancedProstheticSearchDataGridSource extends DataGridSource {
-  List<String> columns = [
-    "Single & Bridge Teeth",
-    "Single & Bridge Healing Collar Customization",
-    "Single & Bridge Impression Procedure",
-    "Single & Bridge Impression Next Visit",
-    "Single & Bridge Try In Procedure",
-    "Single & Bridge Try In Next Visit",
-    "Single & Bridge Delivery Procedure",
-    "Single & Bridge Delivery Next Visit",
-    "Full Arch Teeth",
-    "Full Arch Healing Collar Customization",
-    "Full Arch Impression Procedure",
-    "Full Arch Impression Next Visit",
-    "Full Arch Try In Procedure",
-    "Full Arch Try In Next Visit",
-    "Full Arch Delivery Procedure",
-    "Full Arch Delivery Next Visit",
-  ];
-
   List<AdvancedProstheticSearchResponseEntity> models = <AdvancedProstheticSearchResponseEntity>[];
 
   /// Creates the income data source class with required details.
@@ -383,18 +412,20 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
 
               cells.add(DataGridCell<String>(columnName: "Type", value: request?.type.name));
 
-              if (!(request?.complicationsAnd?.isNull() ?? true) || !(request?.complicationsOr?.isNull() ?? true)) {
+              if ((!(request?.complicationsAfterProstheticIds == null) || !(request?.complicationsAfterProstheticIdsOr == null))) {
                 cells.add(DataGridCell<String>(columnName: "Complications", value: e.str_complicationsAfterProsthesis));
               }
 
               if (request?.screwRetained == true) {
-                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained==true?'Yes':'No'));
+                cells.add(DataGridCell<String>(columnName: "Screw Retained", value: e.step?.screwRetained == true ? 'Yes' : 'No'));
               } else if (request?.cementRetained == true) {
-                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained==true?'Yes':'No'));
+                cells.add(DataGridCell<String>(columnName: "Cement Retained", value: e.step?.cementRetained == true ? 'Yes' : 'No'));
               }
               cells.add(DataGridCell<String>(columnName: "Step", value: e.step?.item?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Status", value: e.step?.status?.name ?? ""));
               cells.add(DataGridCell<String>(columnName: "Next Visit", value: e.step?.nextVisit?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Technique", value: e.step?.technique?.name ?? ""));
+              cells.add(DataGridCell<String>(columnName: "Material", value: e.step?.material?.name ?? ""));
               if (request?.type == EnumProstheticType.Final && request?.fullArch != true) {
                 cells.add(DataGridCell<String>(columnName: "Teeth", value: e.step?.teeth?.toString() ?? ""));
               }
@@ -424,6 +455,6 @@ class AdvancedProstheticSearchDataGridSource extends DataGridSource {
     init(request: request);
     notifyListeners();
 
-    return columns;
+    return [];
   }
 }

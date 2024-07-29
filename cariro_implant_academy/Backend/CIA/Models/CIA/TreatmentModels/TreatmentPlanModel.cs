@@ -133,6 +133,7 @@ namespace CIA.Models.TreatmentModels
         public RequestChangeModel? RequestChangeModel { get; set; }
         public String Value { get; set; } = "";
         public bool Status { get; set; }
+        public bool FailedImplant { get; set; } = false;
 
         [ForeignKey("AssignedTo.IdInt")]
         public int? AssignedToID { get; set; }
@@ -160,6 +161,7 @@ namespace CIA.Models.TreatmentModels
         [ForeignKey("ImplantRequest")]
         public int? ImplantIDRequest { get; set; }
         public Implant? ImplantRequest { get; set; }
+        public bool? Bridge { get; set; }
 
     }
 
@@ -174,6 +176,10 @@ namespace CIA.Models.TreatmentModels
 
         [ForeignKey("Patient")]
         public int? PatientId { get; set; }
+        public string? NotesSuture { get; set; }
+        public string? NotesGBR { get; set; }
+        public string? NotesOSL { get; set; }
+        public string? NotesSTG { get; set; }
         public List<RequestChangeModel>? RequestChanges { get; set; }
         public bool? GuidedBoneRegeneration { get; set; }
         public bool? GuidedBoneRegeneration_BlockGraft { get; set; }

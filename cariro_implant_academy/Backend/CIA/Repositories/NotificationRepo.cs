@@ -590,5 +590,43 @@ namespace CIA.Repositories
 
 
         }
+
+        public async Task VisitInfoUpdate(int patientId)
+        {
+            var patient = await _dbContext.Patients.FirstAsync(x => x.Id == patientId);
+            var admins = await _userManager.GetUsersInRoleAsync("admin");
+
+            foreach (var admin in admins)
+            {
+                var notification = new NotificationModel()
+                {
+                    Content = $"Visit Change Request",
+                    Title = $"Patient {patient.Name} Visits has new change request!",
+                    Date = DateTime.UtcNow,
+                    InfoId = patient.Id,
+                    Type = EnumNotificationType.PatientVisit,
+                    Read = false,
+                    UserId = (int)admin.IdInt,
+                    User = admin,
+
+                };
+                await _dbContext.AddAsync(notification);
+                await _dbContext.SaveChangesAsync();
+                
+                if (admin.Connections != null)
+                    foreach (var conn in admin.Connections)
+                    {
+                        await _hubContext.Clients.Client(conn.ConnectionId).SendAsync("NewNotification", "");
+
+                    }
+            }
+
+
+          
+        
+
+           
+
+        }
     }
 }

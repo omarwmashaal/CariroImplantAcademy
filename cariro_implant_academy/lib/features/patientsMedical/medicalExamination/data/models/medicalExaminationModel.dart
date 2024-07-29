@@ -107,7 +107,7 @@ class MedicalExaminationModel extends MedicalExaminationEntity {
       hbA1c = <HBA1CModel>[];
       json['hbA1c'].forEach((v) {
         hbA1c!.add(new HBA1CModel.fromJson(v));
-      }); 
+      });
     } else {
       hbA1c = null;
     }
@@ -123,15 +123,15 @@ class MedicalExaminationModel extends MedicalExaminationEntity {
     drugsTaken = json['drugsTaken'] != null ? (json['drugsTaken'] as List<dynamic>).map((e) => e as String).toList() : null;
     operatorId = json['operatorId'];
     operator = json['operator'] != null ? new BasicNameIdObjectModel.fromJson(json['operator']) : null;
-    date = DateTime.tryParse(json["date"]??"")?.toLocal();
-    notification_Hba1c = DateTime.tryParse(json["notification_Hba1c"]??"")?.toLocal();
+    date = DateTime.tryParse(json["date"] ?? "")?.toLocal();
+    // notification_Hba1c = DateTime.tryParse(json["notification_Hba1c"]??"")?.toLocal();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['date'] = this.date==null?null:this.date!.toUtc().toIso8601String()  ;
-    data['notification_Hba1c'] = this.notification_Hba1c==null?null:this.notification_Hba1c!.toUtc().toIso8601String()  ;
+    data['date'] = this.date == null ? null : this.date!.toUtc().toIso8601String();
+    // data['notification_Hba1c'] = this.notification_Hba1c==null?null:this.notification_Hba1c!.toUtc().toIso8601String()  ;
     data['patientId'] = this.patientId;
     data['generalHealth'] = this.generalHealth == null ? null : this.generalHealth!.index;
     data['pregnancyStatus'] = this.pregnancyStatus == null ? null : this.pregnancyStatus!.index;

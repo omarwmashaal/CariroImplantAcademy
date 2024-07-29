@@ -1,10 +1,12 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +63,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
   String filter = "Id";
   String search = "";
   bool listed = true;
+  EnumPatientCallHistory? callHistory;
 
   @override
   void initState() {
@@ -72,7 +75,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
     listed = true;
     search = "";
     filter = "Id";
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients));
+    dispatchChangeFilter(context, filter, out, listed, callHistory);
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(myPatients: widget.myPatients, query: ""));
     var dataSource = PatientSearchDataSourceTable(context);
     return MultiBlocListener(
       listeners: [
@@ -213,7 +217,8 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                                     names: ["Id", "Name", "Phone", "All"],
                                     onChange: (value) {
                                       filter = value;
-                                      dispatchChangeFilter(context, filter, out, listed);
+
+                                      dispatchChangeFilter(context, filter, out, listed, callHistory);
                                     }
                                     // _getXController.searchFilter.value = value;
                                     ,
@@ -237,7 +242,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                                         out = false;
                                       else if (item == "Out") out = true;
 
-                                      dispatchChangeFilter(context, filter, out, listed);
+                                      dispatchChangeFilter(context, filter, out, listed, callHistory);
                                       dispatchSearch(context, search);
                                     },
                                   ),
@@ -257,10 +262,36 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                                           Switch(
                                             value: listed,
                                             onChanged: (value) {
+                                              if (value != true) callHistory = null;
                                               setState(() => listed = value);
-                                              dispatchChangeFilter(context, filter, out, listed);
+                                              dispatchChangeFilter(context, filter, out, listed, callHistory);
                                               dispatchSearch(context, search);
                                             },
+                                          ),
+                                          SizedBox(width: 10),
+                                          Visibility(
+                                            visible: listed != true,
+                                            child: Expanded(
+                                              child: CIA_DropDownSearchBasicIdName(
+                                                onClear: () {
+                                                  callHistory = null;
+                                                  dispatchChangeFilter(context, filter, out, listed, callHistory);
+                                                  dispatchSearch(context, search);
+                                                },
+                                                label: "Call Status",
+                                                items: EnumPatientCallHistory.values
+                                                    .map((e) => BasicNameIdObjectEntity(
+                                                          name: e.name,
+                                                          id: e.index,
+                                                        ))
+                                                    .toList(),
+                                                onSelect: (value) {
+                                                  callHistory = EnumPatientCallHistory.values[value.id!];
+                                                  dispatchChangeFilter(context, filter, out, listed, callHistory);
+                                                  dispatchSearch(context, search);
+                                                },
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       );
@@ -282,7 +313,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
                         return TableWidget(
                           dataSource: dataSource,
                           onCellClick: (value) {
-                            var p = dataSource.models.firstWhere((element) => element.secondaryId == value);
+                            var p = dataSource.models.firstWhere((element) => element.secondaryId == value?.toString());
                             //    setState(() {
                             //     selectedPatientID = dataSource.models[value - 1].id!;
                             //    });
@@ -305,7 +336,7 @@ class _PatientsSearchPageState extends State<PatientsSearchPage> {
     BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchEvent(query: query, myPatients: widget.myPatients));
   }
 
-  void dispatchChangeFilter(BuildContext context, String filter, bool? out, bool? listed) {
-    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter, out, listed));
+  void dispatchChangeFilter(BuildContext context, String filter, bool? out, bool? listed, EnumPatientCallHistory? callHistory) {
+    BlocProvider.of<PatientSearchBloc>(context).add(PatientSearchFilterChangedEvent(filter, out, listed, callHistory));
   }
 }

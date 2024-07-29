@@ -55,6 +55,7 @@ namespace CIA.Models.CIA
         public String? FacebookLink { get; set; }
         public int? ImplantCount { get; set; }
 
+       
     }
 
     public static class UserConversion

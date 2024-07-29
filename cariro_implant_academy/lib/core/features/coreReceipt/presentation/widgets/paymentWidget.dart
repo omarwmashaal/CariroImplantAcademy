@@ -118,7 +118,7 @@ class PaymentWidget {
                                                     padding: const EdgeInsets.only(bottom: 10),
                                                     child: Row(
                                                       children: [
-                                                        Expanded(child: FormTextKeyWidget(text: "Tooth ${e.tooth==0?"All":e.tooth} ${e.name}")),
+                                                        Expanded(child: FormTextKeyWidget(text: "Tooth ${e.tooth == 0 ? "All" : e.tooth} ${e.name}")),
                                                         Expanded(child: FormTextValueWidget(text: (e.price ?? 0).toString())),
                                                       ],
                                                     ),
@@ -199,6 +199,7 @@ class PaymentWidget {
                           context: context,
                           title: "Receipt",
                           onSave: () async {
+                            //TODO: add paymentMethod
                             if (newPayment != 0) {
                               await sl<AddPaymentUseCase>()(AddPaymentParams(
                                 patientId: patientId,

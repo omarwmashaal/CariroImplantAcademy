@@ -1,5 +1,3 @@
-
-
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:equatable/equatable.dart';
@@ -17,7 +15,9 @@ class CashFlowEntity extends Equatable {
   int? createdById;
   BasicNameIdObjectEntity? createdBy;
   int? patientId;
+  int? candidateId;
   BasicNameIdObjectEntity? patient;
+  BasicNameIdObjectEntity? candidate;
   int? price;
   int? count;
   int? paymentMethodId;
@@ -54,9 +54,11 @@ class CashFlowEntity extends Equatable {
     this.category,
     this.supplierId,
     this.supplier,
+    this.candidate,
+    this.candidateId,
     this.createdById,
     this.createdBy,
-    this.price =0,
+    this.price = 0,
     this.count,
     this.paymentMethodId,
     this.paymentMethod,
@@ -76,34 +78,34 @@ class CashFlowEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => [this.id,
-    this.receiptID,
-    this.receipt,
-    this.labItemShadeId,
-    this.date,
-    this.name,
-    this.categoryId,
-    this.category,
-    this.supplierId,
-    this.supplier,
-    this.createdById,
-    this.createdBy,
-    this.price,
-    this.size,
-    this.count,
-    this.paymentMethodId,
-    this.paymentMethod,
-    this.code,
-    this.notes,
-    this.type,
-    this.membraneCompany,
-    this.membrane,
-    this.tac,
-    this.implantCompany,
-    this.implantLine,
-    this.implant,];
-
-
+  List<Object?> get props => [
+        this.id,
+        this.receiptID,
+        this.receipt,
+        this.labItemShadeId,
+        this.date,
+        this.name,
+        this.categoryId,
+        this.category,
+        this.supplierId,
+        this.supplier,
+        this.createdById,
+        this.createdBy,
+        this.price,
+        this.size,
+        this.count,
+        this.paymentMethodId,
+        this.paymentMethod,
+        this.code,
+        this.notes,
+        this.type,
+        this.membraneCompany,
+        this.membrane,
+        this.tac,
+        this.implantCompany,
+        this.implantLine,
+        this.implant,
+      ];
 }
 /*
 class CashFlowDataSource extends DataGridSource {

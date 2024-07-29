@@ -15,6 +15,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Carter" Version="7.2.0" />
+    <PackageReference Include="Exceptionless.DateTimeExtensions" Version="3.4.3" />
     <PackageReference Include="Hangfire" Version="1.8.12" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.20.8" />
@@ -44,6 +45,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
+    <PackageReference Include="Portable.Licensing" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />

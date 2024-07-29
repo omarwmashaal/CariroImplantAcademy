@@ -217,6 +217,9 @@ class NonSurgicalTreatmentDataGridSource extends DataGridSource {
                                   ),
                                   SizedBox(height: 10),
                                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    onClear: () {
+                                      e.supervisorID = null;
+                                    },
                                     asyncUseCase: sl<LoadUsersUseCase>(),
                                     searchParams: LoadUsersEnum.supervisors,
                                     onSelect: (value) {
@@ -228,6 +231,9 @@ class NonSurgicalTreatmentDataGridSource extends DataGridSource {
                                   ),
                                   SizedBox(height: 10),
                                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                    onClear: () {
+                                      e.operatorID = null;
+                                    },
                                     asyncUseCase: sl<LoadUsersUseCase>(),
                                     searchParams: LoadUsersEnum.instructorsAndAssistants,
                                     onSelect: (value) {

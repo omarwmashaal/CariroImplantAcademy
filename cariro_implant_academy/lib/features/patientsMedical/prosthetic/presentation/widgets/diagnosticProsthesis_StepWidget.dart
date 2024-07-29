@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/prosthetic/domain/entities/prostheticStepEntity.dart';
@@ -47,6 +49,15 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
             children: [
               Expanded(
                 child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    widget.data.status = null;
+                    widget.data.statusId = null;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
                   label: "Diagnostic",
                   asyncUseCase: sl<GetProstheticStatusUseCase>(),
                   searchParams: GetProstheticStatusParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
@@ -73,6 +84,15 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
               SizedBox(width: 10),
               Expanded(
                 child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    widget.data.nextVisit = null;
+                    widget.data.nextVisitId = null;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
                   label: "Next Step",
                   asyncUseCase: sl<GetProstheticNextVisitUseCase>(),
                   searchParams: GetProstheticNextVisitParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
@@ -88,6 +108,76 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
                   onSelect: (value) {
                     widget.data.nextVisit = value;
                     widget.data.nextVisitId = value.id;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    widget.data.material = null;
+                    widget.data.materialId = null;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
+                  label: "Material",
+                  asyncUseCase: sl<GetProstheticMaterialUseCase>(),
+                  searchParams: GetProstheticMaterialParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
+                  selectedItem: () {
+                    if (widget.data.material != null) {
+                      return BasicNameIdObjectEntity(
+                        name: widget.data.material!.name,
+                        id: widget.data.materialId,
+                      );
+                    }
+                    return null;
+                  }(),
+                  onSelect: (value) {
+                    widget.data.material = value;
+                    widget.data.materialId = value.id;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: CIA_DropDownSearchBasicIdName(
+                  onClear: () {
+                    widget.data.technique = null;
+                    widget.data.techniqueId = null;
+                    widget.data.operatorId = siteController.getUserId();
+                    setState(() {
+                      widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
+                      widget.data.date = widget.data.date ?? DateTime.now();
+                    });
+                  },
+                  label: "Technique",
+                  asyncUseCase: sl<GetProstheticTechniqueUseCase>(),
+                  searchParams: GetProstheticTechniqueParams(itemId: widget.data.itemId!, type: EnumProstheticType.Diagnostic),
+                  selectedItem: () {
+                    if (widget.data.technique != null) {
+                      return BasicNameIdObjectEntity(
+                        name: widget.data.technique!.name,
+                        id: widget.data.techniqueId,
+                      );
+                    }
+                    return null;
+                  }(),
+                  onSelect: (value) {
+                    widget.data.technique = value;
+                    widget.data.techniqueId = value.id;
                     widget.data.operatorId = siteController.getUserId();
                     setState(() {
                       widget.data.operator = BasicNameIdObjectEntity(name: siteController.getUserName());
@@ -130,6 +220,10 @@ class _DiagnosticProsthesis_StepWidgetState extends State<DiagnosticProsthesis_S
                         height: 100,
                         onSave: () => setState(() => null),
                         child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            widget.data.operatorId = null;
+                            widget.data.operator = null;
+                          },
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           onSelect: (value) {

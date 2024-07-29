@@ -10,11 +10,13 @@ namespace CIA.Models.CIA.DTOs
         public int? ItemId { get; set; }
         public int? StatusId { get; set; }
         public int? NextId { get; set; }
+        public int? MaterialId { get; set; }
+        public int? TechniqueId { get; set; }
         public bool FullArch { get; set; } = false;
         public bool ScrewRetained { get; set; } = false;
         public bool CementRetained { get; set; } = false;
-        public ComplicationsAfterProsthesisModel? complicationsAnd { get; set; }
-        public ComplicationsAfterProsthesisModel? complicationsOr { get; set; }
+        public List<int>? complicationsAnd { get; set; }
+        public List<int>? complicationsOr { get; set; }
 
     }
 

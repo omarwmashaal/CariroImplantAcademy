@@ -35,6 +35,9 @@ namespace CIA.Models.CIA.TreatmentModels
         [ForeignKey("ApplicationUser")]
         public int? OperatorId { get; set; }
         public ApplicationUser? Operator { get; set; }
+        [ForeignKey("DefaultProstheticComplications")]
+        public int? DefaultProstheticComplicationsId { get; set; }
+        public DefaultProstheticComplications? DefaultProstheticComplication { get; set; }
         public String? Name { get; set; }
         public String? Notes { get; set; }
         public DateTime? Date { get; set; }
@@ -52,6 +55,13 @@ namespace CIA.Models.CIA.TreatmentModels
         [NotMapped]
         public bool Pain { get; set; } = false;
 
+    }
+    public class DefaultProstheticComplications
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        public String Name { get; set; }
     }
 
 }

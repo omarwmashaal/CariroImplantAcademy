@@ -9,6 +9,7 @@ using CIA.Models.CIA;
 using CIA.Models;
 using CIA.Models.CIA.DTOs;
 using Newtonsoft.Json;
+using System.Xml.Schema;
 
 namespace CIA.Controllers
 {
@@ -41,6 +42,17 @@ namespace CIA.Controllers
         {
             _apiResponse.Result = await _cia_DbContext.ExpensesCategories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
             return Ok(_apiResponse);
+        }
+        [HttpPost("AddReceipt")]
+        public async Task<IActionResult> AddReceipt([FromBody] Receipt model)
+        {
+            model.Operator = await _cia_DbContext.Users.FirstOrDefaultAsync(x => x.IdInt == model.OperatorId);
+            _cia_DbContext.Receipts.Add(model);
+            _cia_DbContext.SaveChanges();
+            model = await _cia_DbContext.Receipts.FirstOrDefaultAsync(x => x.Id == model.Id);
+            _apiResponse.Result = model;
+            return Ok(_apiResponse);
+
         }
 
         [HttpPost("AddIncome")]
@@ -105,7 +117,7 @@ namespace CIA.Controllers
                     supplier = await _cia_DbContext.NonMedicalSuppliers.FirstOrDefaultAsync(x => x.Id == model[0].SupplierId && x.Website == inventoryWebsite);
                 if (supplier == null && model[0].Supplier != null)
                 {
-                    
+
                     supplier = type == EnumExpenseseCategoriesType.BoughtMedical ? new MedicalSuppliersModel() : new NonMedicalSuppliersModel();
                     supplier.Name = model[0].Supplier.Name;
                     supplier.Website = inventoryWebsite;
@@ -335,8 +347,8 @@ namespace CIA.Controllers
                         _cia_DbContext.Expenses.Add(_mapper.Map<ExpensesModel>(itemFromQuery));
                     }
 
-                   
-                    
+
+
 
 
 
@@ -458,7 +470,7 @@ namespace CIA.Controllers
 
                 };
 
-              
+
                 await _cia_DbContext.Receipts.AddAsync(reciept);
 
 
@@ -557,7 +569,8 @@ namespace CIA.Controllers
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Category)
                 .Include(x => x.Patient)
-                .Include(x => x.Receipt);
+                .Include(x => x.Candidate)
+                ;
             if (from != null)
 
                 query = query.Where(x => x.Date.Value.Date >= from.Value.ToDateTime(TimeOnly.Parse("12:00 AM")).Date.ToUniversalTime());
@@ -909,7 +922,136 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
         }
 
+        [HttpGet("getInstallmentsOfUser")]
+        public async Task<IActionResult> getInstallmentsOfUser(int id)
+        {
+            var installments = await _cia_DbContext
+                .InstallmentPlans
+                .FirstOrDefaultAsync(x => x.UserId == id);
 
+            if(installments!=null)
+            {
+                installments.Installments.OrderBy(x => x.DueDate);
+            }
+            _apiResponse.Result = installments;
+            return Ok(_apiResponse);
+        }
+
+        [HttpPost("createInstallmentPlan")]
+        public async Task<IActionResult> createInstallmentPlan(int? id, int total, DateTime startDate, int numberOfPayments, EnumInstallmentInterval interval)
+        {
+
+            var installmentPlan = InstallmentPlanModel.CreateInstallmentPlan(
+                total,
+                startDate,
+                numberOfPayments,
+                interval);
+            if (id == null)
+                _apiResponse.Result = installmentPlan;
+            else
+            {
+                var user = await _iUserRepo.GetUser();
+                installmentPlan.UserId = id;
+                Receipt receipt = new Receipt()
+                {
+                    Total = installmentPlan.Total,
+                    IsPaid = false,
+                    Date = DateTime.UtcNow,
+                    Operator = user,
+                    OperatorId = user.IdInt,
+                    Unpaid = installmentPlan.Total,
+                    Website = _site,
+                    Paid = 0,
+                    Candidate = _cia_DbContext.Users.FirstOrDefault(x=>x.IdInt==id)
+
+                };
+                _cia_DbContext.Receipts.Add(receipt);
+                _cia_DbContext.SaveChanges();
+                installmentPlan.ReceiptId = receipt.Id;
+                _cia_DbContext.InstallmentPlans.Add(installmentPlan);
+                _cia_DbContext.SaveChanges();
+
+                _apiResponse.Result = await _cia_DbContext.InstallmentPlans.Include(x => x.User).FirstOrDefaultAsync(x => x.UserId == id);
+
+            }
+            return Ok(_apiResponse);
+        }
+
+        [HttpPut("payInstallment")]
+        public async Task<IActionResult> payInstallment(int installmentPlanId, int value)
+        {
+            var installmentPlan = await _cia_DbContext.InstallmentPlans.Include(x => x.User).Include(x => x.ReceiptData).FirstOrDefaultAsync(x => x.Id == installmentPlanId);
+            try
+            {
+                installmentPlan.PayInstallment(value);
+
+                var user = await _iUserRepo.GetUser();
+
+                var paymentLog = new PaymentLog
+                {
+                    Date = DateTime.UtcNow,
+                    Operator = user,
+                    OperatorId = (int)user.IdInt,
+                    PaidAmount = value,
+                    ReceiptId = (int)installmentPlan.ReceiptId,
+                    Website = _site,
+                };
+                _cia_DbContext.PaymentLogs.Add(paymentLog);
+
+                installmentPlan.ReceiptData.Paid += value;
+                installmentPlan.ReceiptData.Unpaid = installmentPlan.Total - installmentPlan.PaidAmount;
+                installmentPlan.ReceiptData.IsPaid = installmentPlan.Status == EnumInstallmentStatus.Finished;
+
+
+                _cia_DbContext.InstallmentPlans.Update(installmentPlan);
+                _cia_DbContext.SaveChanges();
+
+                var cat = await _cia_DbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == "Candidates Installment" && x.Website == _site);
+                if (cat == null)
+                {
+                    cat = new IncomeCategoriesModel
+                    {
+                        Website = _site,
+                        Name = "Candidates Installment",
+
+                    };
+
+
+                    _cia_DbContext.IncomeCategories.Update(cat);
+                    _cia_DbContext.SaveChanges();
+                }
+                var income = new IncomeModel
+                {
+                    Date = DateTime.UtcNow,
+                    CreatedById = (int)user.IdInt,
+                    CreatedBy = user,
+                    InventoryWebsite = _site,
+                    Name = $"{installmentPlan.User.Name}",
+                    PaymentLogId = paymentLog.Id,
+                    Price = value,
+                    Website = _site,
+                    ReceiptID = installmentPlan.ReceiptId,
+                    Category = cat,
+                    CategoryId = cat.Id, 
+                    Candidate = installmentPlan.User,
+                    CandidateId = installmentPlan.UserId,
+
+
+                };
+                _cia_DbContext.Income.Add(income);
+
+                _cia_DbContext.SaveChanges();
+
+
+            }
+            catch (Exception e)
+            {
+                _apiResponse.ErrorMessage = e.Message;
+                return BadRequest(_apiResponse);
+            }
+
+            return Ok(_apiResponse);
+        }
 
     }
 }

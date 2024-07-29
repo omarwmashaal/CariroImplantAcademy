@@ -64,6 +64,19 @@
           }
         }
       },
+      "Exceptionless.DateTimeExtensions/3.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "FluentValidation/11.0.1": {
         "type": "package",
         "compile": {
@@ -1506,6 +1519,19 @@
         },
         "runtime": {
           "lib/netstandard1.3/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll": {}
+        }
+      },
+      "Portable.Licensing/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll": {
+            "related": ".XML"
+          }
+        },
+        "runtime": {
+          "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll": {
+            "related": ".XML"
+          }
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -3198,6 +3224,19 @@
           }
         }
       },
+      "Exceptionless.DateTimeExtensions/3.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "FluentValidation/11.0.1": {
         "type": "package",
         "compile": {
@@ -4635,6 +4674,19 @@
         },
         "runtime": {
           "lib/netstandard1.3/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll": {}
+        }
+      },
+      "Portable.Licensing/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll": {
+            "related": ".XML"
+          }
+        },
+        "runtime": {
+          "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll": {
+            "related": ".XML"
+          }
         }
       },
       "runtime.any.System.Collections/4.3.0": {
@@ -6478,6 +6530,22 @@
         "lib/netstandard2.0/Dapper.xml"
       ]
     },
+    "Exceptionless.DateTimeExtensions/3.4.3": {
+      "sha512": "qmTnJMrMAZGL6yGWPHDpeTw8Xbdgyj4LbUdy4dyWhKhegH1Mnzvdf+umVnJF2HsV219/GxjgLaAV7NBPu2JfjQ==",
+      "type": "package",
+      "path": "exceptionless.datetimeextensions/3.4.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "exceptionless-icon.png",
+        "exceptionless.datetimeextensions.3.4.3.nupkg.sha512",
+        "exceptionless.datetimeextensions.nuspec",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.dll",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.pdb",
+        "lib/netstandard2.0/Exceptionless.DateTimeExtensions.xml"
+      ]
+    },
     "FluentValidation/11.0.1": {
       "sha512": "fcL5zF/glDwskUtpL0IfBupVWTChxOOvVs+dAA7Gme5NjIeJBiFKWq3eZV1O+AigucnBTr8SWG7wRRn+PgFnTw==",
       "type": "package",
@@ -8158,6 +8226,21 @@
         "lib/netstandard1.3/Npgsql.EntityFrameworkCore.PostgreSQL.Design.dll",
         "npgsql.entityframeworkcore.postgresql.design.1.1.0.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.design.nuspec"
+      ]
+    },
+    "Portable.Licensing/1.1.0": {
+      "sha512": "0DVAPvsfRzFluAQqij90UTcYXigoMR4oYEfX4cARzf3SBOIpdlFdooWKcFsNRskRb/R0Gkxp1Vzk2eKE2Oc6cw==",
+      "type": "package",
+      "path": "portable.licensing/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.txt",
+        "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.XML",
+        "lib/portable-net40+sl4+wp7+win8/Portable.Licensing.dll",
+        "portable.licensing.1.1.0.nupkg.sha512",
+        "portable.licensing.nuspec"
       ]
     },
     "runtime.any.System.Collections/4.3.0": {
@@ -12866,6 +12949,7 @@
       "AutoMapper >= 12.0.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.0",
       "Carter >= 7.2.0",
+      "Exceptionless.DateTimeExtensions >= 3.4.3",
       "Hangfire >= 1.8.12",
       "Hangfire.AspNetCore >= 1.8.12",
       "Hangfire.PostgreSql >= 1.20.8",
@@ -12889,6 +12973,7 @@
       "Microsoft.IdentityModel.Tokens >= 6.26.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.1",
       "Npgsql.EntityFrameworkCore.PostgreSQL.Design >= 1.1.0",
+      "Portable.Licensing >= 1.1.0",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "System.Data.SqlClient >= 4.8.6",
       "System.IdentityModel.Tokens.Jwt >= 6.26.0"
@@ -12944,6 +13029,10 @@
           "Carter": {
             "target": "Package",
             "version": "[7.2.0, )"
+          },
+          "Exceptionless.DateTimeExtensions": {
+            "target": "Package",
+            "version": "[3.4.3, )"
           },
           "Hangfire": {
             "target": "Package",
@@ -13041,6 +13130,10 @@
             "target": "Package",
             "version": "[1.1.0, )"
           },
+          "Portable.Licensing": {
+            "target": "Package",
+            "version": "[1.1.0, )"
+          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.2.3, )"
@@ -13081,5 +13174,17 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Portable.Licensing 1.1.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Portable.Licensing",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

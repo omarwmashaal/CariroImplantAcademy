@@ -39,6 +39,8 @@ abstract class SettingsDatasource {
   Future<List<MembraneModel>> getMembranes(int id);
 
   Future<List<BasicNameIdObjectModel>> getImplantCompanies();
+  Future<List<BasicNameIdObjectModel>> getDefaultSurgicalComplications();
+  Future<List<BasicNameIdObjectModel>> getDefaultProstheticComplications();
 
   Future<List<BasicNameIdObjectModel>> getImplantLines(int id);
 
@@ -61,6 +63,8 @@ abstract class SettingsDatasource {
   Future<List<BasicNameIdObjectModel>> getSuppliers(Website website, bool medical);
 
   Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
+  Future<NoParams> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value);
+  Future<NoParams> updateDefaultProstheticComplications(List<BasicNameIdObjectEntity> value);
 
   Future<NoParams> changeImplantLineName(BasicNameIdObjectEntity value);
 
@@ -107,9 +111,13 @@ abstract class SettingsDatasource {
 
   Future<List<BasicNameIdObjectEntity>> getProsthticItems(EnumProstheticType type);
   Future<List<BasicNameIdObjectEntity>> getProsthticNextVisit(EnumProstheticType type, int itemId);
+  Future<List<BasicNameIdObjectEntity>> getProsthticTechnique(EnumProstheticType type, int itemId);
+  Future<List<BasicNameIdObjectEntity>> getProsthticMaterial(EnumProstheticType type, int itemId);
   Future<List<BasicNameIdObjectEntity>> getProsthticStatus(EnumProstheticType type, int itemId);
   Future<NoParams> updateProstheticItems(EnumProstheticType type, List<BasicNameIdObjectEntity> data);
   Future<NoParams> updateProstheticNextVisit(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateProstheticTechnique(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<NoParams> updateProstheticMaterial(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<NoParams> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
 }
 
@@ -640,6 +648,34 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
+  Future<List<BasicNameIdObjectEntity>> getProsthticMaterial(EnumProstheticType type, int itemId) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticMaterial?type=${type.index}&itemId=$itemId",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectEntity>> getProsthticTechnique(EnumProstheticType type, int itemId) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticTechnique?type=${type.index}&itemId=$itemId",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  @override
   Future<List<BasicNameIdObjectEntity>> getProsthticStatus(EnumProstheticType type, int itemId) async {
     late StandardHttpResponse response;
     try {
@@ -674,6 +710,36 @@ class SettingsDatasourceImpl implements SettingsDatasource {
     try {
       response = await httpRepo.post(
         host: "$serverHost/$settingsController/UpdateProstheticNextVisit?itemId=$itemId&type=${type.index}",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateProstheticTechnique(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$settingsController/UpdateProstheticTechnique?itemId=$itemId&type=${type.index}",
+        body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateProstheticMaterial(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host: "$serverHost/$settingsController/UpdateProstheticMaterial?itemId=$itemId&type=${type.index}",
         body: data.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
@@ -814,7 +880,7 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   Future<List<LabOptionModel>> getLabOptions(int? parentId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabOptions?${parentId==null?"":"parentId=$parentId"}");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabOptions?${parentId == null ? "" : "parentId=$parentId"}");
     } catch (e) {
       throw mapException(e);
     }
@@ -833,6 +899,72 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/UpdateLabOptions",
         body: data.map((e) => LabOptionModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getDefaultSurgicalComplications() async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetSurgicalComplications",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<NoParams> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateSurgicalComplications",
+        body: value.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<List<BasicNameIdObjectModel>> getDefaultProstheticComplications() async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(
+        host: "$serverHost/$settingsController/GetProstheticComplications",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return ((response.body ?? []) as List<dynamic>).map((e) => BasicNameIdObjectModel.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<NoParams> updateDefaultProstheticComplications(List<BasicNameIdObjectEntity> value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateProstheticComplications",
+        body: value.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

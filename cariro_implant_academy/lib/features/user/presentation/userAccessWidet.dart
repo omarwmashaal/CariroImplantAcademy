@@ -167,6 +167,18 @@ class UserAccessWidget extends StatelessWidget {
                             },
                             value: roles?.contains("technician") ?? false,
                           ),
+                          CIA_CheckBoxWidget(
+                            text: "Stock Manager",
+                            onChange: (value) {
+                              if (value == false && (roles?.length ?? 0) < 2) {
+                                ShowSnackBar(context, isSuccess: false, message: "User must have at least one role!");
+                                return;
+                              }
+                              roles!.removeWhere((element) => element == "stockmanager");
+                              if (value) roles!.add("stockmanager");
+                            },
+                            value: roles?.contains("stockmanager") ?? false,
+                          ),
                         ],
                       ),
                       SizedBox(height: 10),

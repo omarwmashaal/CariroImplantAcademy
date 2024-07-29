@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
+import 'package:cariro_implant_academy/core/helpers/spaceToString.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/addOrRemoveMyPatientsBloc.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSeachBlocEvents.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientSeachBlocStates.dart';
@@ -22,13 +23,15 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
   final PatientSearchUseCase searchUseCase;
   String _filter = "Id";
   bool? _out;
-  bool? _listed ;
+  bool? _listed = true;
+  EnumPatientCallHistory? _callHistory;
 
   PatientSearchBloc({required this.searchUseCase}) : super(LoadingPatientSearchState()) {
     on<PatientSearchEvent>(
       (event, emit) async {
         emit(LoadingPatientSearchState());
-        final result = await searchUseCase(PatientSearchParams(filter: this._filter, query: event.query, myPatients: event.myPatients, out: _out, listed: _listed));
+        final result = await searchUseCase(PatientSearchParams(
+            filter: this._filter, query: event.query, myPatients: event.myPatients, out: _out, listed: _listed, callHistory: _callHistory));
         result.fold(
           (l) {
             if (l is HttpInternalServerErrorFailure)
@@ -46,6 +49,7 @@ class PatientSearchBloc extends Bloc<PatientSearchBloc_Events, PatientSearchBloc
         this._filter = event.filter;
         this._out = event.out;
         this._listed = event.listed;
+        this._callHistory = event.callHistory;
       },
     );
   }
@@ -73,10 +77,11 @@ class PatientSearchDataSourceTable extends DataGridSource {
 
   init(List<PatientInfoEntity> _models) {
     models = _models;
+    bool showCallStatus = models.any((element) => element.listed != true);
     if ((!siteController.getRole()!.contains("secretary"))) {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<String>(columnName: 'ID', value: e.secondaryId),
+                DataGridCell<int>(columnName: 'ID', value: int.tryParse(e.secondaryId ?? "0")),
                 DataGridCell<String>(columnName: 'Name', value: e.name),
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),
@@ -103,20 +108,24 @@ class PatientSearchDataSourceTable extends DataGridSource {
                             : Text(e.doctor ?? ""),
                   ),
                 ),
-                DataGridCell<int>(columnName: 'Out', value: e.out?1:0),
+                showCallStatus
+                    ? DataGridCell<String>(columnName: 'Call History', value: AddSpacesToSentence(e.callHistoryStatus?.name ?? ""))
+                    : DataGridCell<int>(columnName: 'Out', value: e.out ? 1 : 0),
               ]))
           .toList();
     } else {
       _patientData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<String>(columnName: 'ID', value: e.secondaryId),
+                DataGridCell<int>(columnName: 'ID', value: int.tryParse(e.secondaryId ?? "0")),
                 DataGridCell<String>(columnName: 'Name', value: e.name),
                 DataGridCell<String>(columnName: 'Phone', value: e.phone),
                 DataGridCell<String>(columnName: 'Gender', value: getEnumName(e.gender)),
                 DataGridCell<int>(columnName: 'Age', value: e.age),
                 DataGridCell<String>(columnName: 'Marital Status', value: getEnumName(e.maritalStatus)),
                 DataGridCell<String>(columnName: 'Relative', value: e.relative),
-                DataGridCell<int>(columnName: 'Out', value: e.out?1:0),
+                showCallStatus
+                    ? DataGridCell<String>(columnName: 'Call History', value: AddSpacesToSentence(e.callHistoryStatus?.name ?? ""))
+                    : DataGridCell<int>(columnName: 'Out', value: e.out ? 1 : 0),
               ]))
           .toList();
     }
@@ -138,7 +147,7 @@ class PatientSearchDataSourceTable extends DataGridSource {
             ? Center(
                 child: Icon(
                   Icons.circle,
-                  color: e.value==1 ? Colors.red : Colors.green,
+                  color: e.value == 1 ? Colors.red : Colors.green,
                 ),
               )
             : Text(e.value.toString()),

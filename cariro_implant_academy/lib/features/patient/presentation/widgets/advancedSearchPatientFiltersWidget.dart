@@ -67,7 +67,8 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
             title: "Gender",
             child: Row(
               children: [
-                CIA_CheckBoxWidget(text: "All", onChange: (value) => setState(() => widget.searchDTO.gender = null), value: widget.searchDTO.gender == null),
+                CIA_CheckBoxWidget(
+                    text: "All", onChange: (value) => setState(() => widget.searchDTO.gender = null), value: widget.searchDTO.gender == null),
                 SizedBox(width: 10),
                 CIA_CheckBoxWidget(
                     text: "Male",
@@ -86,13 +87,19 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
             child: Row(
               children: [
                 CIA_CheckBoxWidget(
-                    text: "All", onChange: (value) => setState(() => widget.searchDTO.anyDiseases = null), value: widget.searchDTO.anyDiseases == null),
+                    text: "All",
+                    onChange: (value) => setState(() => widget.searchDTO.anyDiseases = null),
+                    value: widget.searchDTO.anyDiseases == null),
                 SizedBox(width: 10),
                 CIA_CheckBoxWidget(
-                    text: "Yes", onChange: (value) => setState(() => widget.searchDTO.anyDiseases = true), value: widget.searchDTO.anyDiseases == true),
+                    text: "Yes",
+                    onChange: (value) => setState(() => widget.searchDTO.anyDiseases = true),
+                    value: widget.searchDTO.anyDiseases == true),
                 SizedBox(width: 10),
                 CIA_CheckBoxWidget(
-                    text: "No", onChange: (value) => setState(() => widget.searchDTO.anyDiseases = false), value: widget.searchDTO.anyDiseases == false),
+                    text: "No",
+                    onChange: (value) => setState(() => widget.searchDTO.anyDiseases = false),
+                    value: widget.searchDTO.anyDiseases == false),
               ],
             ),
           ),
@@ -107,7 +114,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories = null;
                       });
                     },
-                    value: (widget.searchDTO.bloodPressureCategories??[]).isEmpty),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).isEmpty),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Normal",
@@ -119,7 +126,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories!.remove(BloodPressureEnum.Normal);
                       setState(() {});
                     },
-                    value: (widget.searchDTO.bloodPressureCategories??[]).contains(BloodPressureEnum.Normal)),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).contains(BloodPressureEnum.Normal)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypertensive Controlled",
@@ -131,7 +138,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories!.remove(BloodPressureEnum.HypertensiveControlled);
                       setState(() {});
                     },
-                    value: (widget.searchDTO.bloodPressureCategories??[]).contains(BloodPressureEnum.HypertensiveControlled)),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).contains(BloodPressureEnum.HypertensiveControlled)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypertensive Uncontrolled",
@@ -143,7 +150,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories!.remove(BloodPressureEnum.HypertensiveUncontrolled);
                       setState(() {});
                     },
-                    value:  (widget.searchDTO.bloodPressureCategories??[]).contains(BloodPressureEnum.HypertensiveUncontrolled)),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).contains(BloodPressureEnum.HypertensiveUncontrolled)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypotensive Controlled",
@@ -155,7 +162,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories!.remove(BloodPressureEnum.HypotensiveControlled);
                       setState(() {});
                     },
-                    value:  (widget.searchDTO.bloodPressureCategories??[]).contains(BloodPressureEnum.HypotensiveControlled)),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).contains(BloodPressureEnum.HypotensiveControlled)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypotensive Uncontrolled",
@@ -167,10 +174,9 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.bloodPressureCategories!.remove(BloodPressureEnum.HypotensiveUncontrolled);
                       setState(() {});
                     },
-                    value:  (widget.searchDTO.bloodPressureCategories??[]).contains(BloodPressureEnum.HypotensiveUncontrolled)),
+                    value: (widget.searchDTO.bloodPressureCategories ?? []).contains(BloodPressureEnum.HypotensiveUncontrolled)),
               ],
             ),
-
           ),
           AdvancedSearchFilterChildWidget(
             title: "Diabetes",
@@ -183,7 +189,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.diabetesCategories = null;
                       });
                     },
-                    value: (widget.searchDTO.diabetesCategories??[]).isEmpty),
+                    value: (widget.searchDTO.diabetesCategories ?? []).isEmpty),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Non Diabetic",
@@ -195,7 +201,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.diabetesCategories!.remove(DiabetesEnum.Normal);
                       setState(() {});
                     },
-                    value: (widget.searchDTO.diabetesCategories??[]).contains(DiabetesEnum.Normal)),
+                    value: (widget.searchDTO.diabetesCategories ?? []).contains(DiabetesEnum.Normal)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypertensive Controlled",
@@ -207,7 +213,7 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.diabetesCategories!.remove(DiabetesEnum.DiabeticControlled);
                       setState(() {});
                     },
-                    value: (widget.searchDTO.diabetesCategories??[]).contains(DiabetesEnum.DiabeticControlled)),
+                    value: (widget.searchDTO.diabetesCategories ?? []).contains(DiabetesEnum.DiabeticControlled)),
                 SizedBox(height: 10),
                 CIA_CheckBoxWidget(
                     text: "Hypertensive Uncontrolled",
@@ -219,11 +225,9 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                         widget.searchDTO.diabetesCategories!.remove(DiabetesEnum.DiabeticUncontrolled);
                       setState(() {});
                     },
-                    value:  (widget.searchDTO.diabetesCategories??[]).contains(DiabetesEnum.DiabeticUncontrolled)),
-
+                    value: (widget.searchDTO.diabetesCategories ?? []).contains(DiabetesEnum.DiabeticUncontrolled)),
               ],
             ),
-
           ),
           AdvancedSearchFilterChildWidget(
             title: "Last HAB1C",
@@ -264,19 +268,28 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
             child: Row(
               children: [
                 CIA_CheckBoxWidget(
-                    text: "All", onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = null), value: widget.searchDTO.illegalDrugs == null),
+                    text: "All",
+                    onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = null),
+                    value: widget.searchDTO.illegalDrugs == null),
                 SizedBox(width: 10),
                 CIA_CheckBoxWidget(
-                    text: "Yes", onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = true), value: widget.searchDTO.illegalDrugs == true),
+                    text: "Yes",
+                    onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = true),
+                    value: widget.searchDTO.illegalDrugs == true),
                 SizedBox(width: 10),
                 CIA_CheckBoxWidget(
-                    text: "No", onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = false), value: widget.searchDTO.illegalDrugs == false),
+                    text: "No",
+                    onChange: (value) => setState(() => widget.searchDTO.illegalDrugs = false),
+                    value: widget.searchDTO.illegalDrugs == false),
               ],
             ),
           ),
           AdvancedSearchFilterChildWidget(
             title: "Pregnancy",
             child: CIA_DropDownSearchBasicIdName(
+              onClear: () {
+                widget.searchDTO.pregnancy = null;
+              },
               items: [
                 BasicNameIdObjectEntity(name: "All"),
                 BasicNameIdObjectEntity(name: "None", id: 0),
@@ -293,17 +306,23 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
             title: "Chewing Sensitivity",
             child: Row(
               children: [
-                CIA_CheckBoxWidget(text: "All", onChange: (value) => setState(() => widget.searchDTO.chewing = null), value: widget.searchDTO.chewing == null),
+                CIA_CheckBoxWidget(
+                    text: "All", onChange: (value) => setState(() => widget.searchDTO.chewing = null), value: widget.searchDTO.chewing == null),
                 SizedBox(width: 10),
-                CIA_CheckBoxWidget(text: "Yes", onChange: (value) => setState(() => widget.searchDTO.chewing = true), value: widget.searchDTO.chewing == true),
+                CIA_CheckBoxWidget(
+                    text: "Yes", onChange: (value) => setState(() => widget.searchDTO.chewing = true), value: widget.searchDTO.chewing == true),
                 SizedBox(width: 10),
-                CIA_CheckBoxWidget(text: "No", onChange: (value) => setState(() => widget.searchDTO.chewing = false), value: widget.searchDTO.chewing == false),
+                CIA_CheckBoxWidget(
+                    text: "No", onChange: (value) => setState(() => widget.searchDTO.chewing = false), value: widget.searchDTO.chewing == false),
               ],
             ),
           ),
           AdvancedSearchFilterChildWidget(
             title: "Smoking",
             child: CIA_DropDownSearchBasicIdName(
+              onClear: () {
+                widget.searchDTO.smokingStatus = null;
+              },
               items: [
                 BasicNameIdObjectEntity(name: "All"),
                 BasicNameIdObjectEntity(name: "None", id: 0),
@@ -320,6 +339,9 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
           AdvancedSearchFilterChildWidget(
             title: "Cooperation Level",
             child: CIA_DropDownSearchBasicIdName(
+              onClear: () {
+                widget.searchDTO.cooperationScore = null;
+              },
               items: [
                 BasicNameIdObjectEntity(name: "All"),
                 BasicNameIdObjectEntity(name: "Bad Cooperation", id: 0),
@@ -327,7 +349,8 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                 BasicNameIdObjectEntity(name: "Good Cooperation", id: 2),
                 BasicNameIdObjectEntity(name: "Excellent Cooperation", id: 3),
               ],
-              selectedItem: BasicNameIdObjectEntity(name: widget.searchDTO.cooperationScore?.name ?? "All", id: widget.searchDTO.cooperationScore?.index),
+              selectedItem:
+                  BasicNameIdObjectEntity(name: widget.searchDTO.cooperationScore?.name ?? "All", id: widget.searchDTO.cooperationScore?.index),
               onSelect: (value) {
                 widget.searchDTO.cooperationScore = EnumCooperationScore.values.firstWhereOrNull((element) => element.index == value.id);
               },
@@ -336,6 +359,9 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
           AdvancedSearchFilterChildWidget(
             title: "Oral Hygiene",
             child: CIA_DropDownSearchBasicIdName(
+              onClear: () {
+                widget.searchDTO.oralHygieneRating = null;
+              },
               items: [
                 BasicNameIdObjectEntity(name: "All"),
                 BasicNameIdObjectEntity(name: "Bad", id: 0),
@@ -343,7 +369,8 @@ class _AdvancedSearchPatientFilterWidgetState extends State<AdvancedSearchPatien
                 BasicNameIdObjectEntity(name: "Good", id: 2),
                 BasicNameIdObjectEntity(name: "Excellent", id: 3),
               ],
-              selectedItem: BasicNameIdObjectEntity(name: widget.searchDTO.oralHygieneRating?.name ?? "All", id: widget.searchDTO.oralHygieneRating?.index),
+              selectedItem:
+                  BasicNameIdObjectEntity(name: widget.searchDTO.oralHygieneRating?.name ?? "All", id: widget.searchDTO.oralHygieneRating?.index),
               onSelect: (value) {
                 widget.searchDTO.oralHygieneRating = EnumOralHygieneRating.values.firstWhereOrNull((element) => element.index == value.id);
               },

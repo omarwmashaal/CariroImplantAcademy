@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/data/models/cashFlowSummaryModel.dart';
+import 'package:cariro_implant_academy/features/cashflow/data/models/installmentPlanModel.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/entities/cashFlowEntity.dart';
 
 import '../../../../core/constants/enums/enums.dart';
@@ -24,11 +25,14 @@ abstract class CashFlowDatasource {
 
   Future<NoParams> addIncome(CashFlowEntity model);
 
-  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type,Website inventoryWebsite);
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type, Website inventoryWebsite);
 
   Future<NoParams> addSettlement(String filter, int value);
 
   Future<BasicNameIdObjectModel> getExpenesesCategoryByName(String name);
+  Future<InstallmentPlanModel?> getInstallmentsOfUser(int id);
+  Future<NoParams> payInstallment(int installmentPlanId, int value);
+  Future<InstallmentPlanModel> createInstallmentPlan(int? id, int total, DateTime startDate, int numberOfPayments, EnumInstallmentInterval interval);
 }
 
 class CashFlowDataSourceImpl implements CashFlowDatasource {
@@ -37,11 +41,12 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
   CashFlowDataSourceImpl({required this.httpRepo});
 
   @override
-  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type,Website inventoryWebsite) async {
+  Future<NoParams> addExpense(List<CashFlowEntity> models, bool isStockItem, EnumExpenseseCategoriesType type, Website inventoryWebsite) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.post(
-        host: "$serverHost/$cashFlowController/${(siteController.getSite()==Website.Lab || inventoryWebsite==Website.Lab)&& type==EnumExpenseseCategoriesType.BoughtMedical?"AddLabExpense":"addExpense"}?type=${type.index}&inventoryWebsite=${inventoryWebsite.index}",
+        host:
+            "$serverHost/$cashFlowController/${(siteController.getSite() == Website.Lab || inventoryWebsite == Website.Lab) && type == EnumExpenseseCategoriesType.BoughtMedical ? "AddLabExpense" : "addExpense"}?type=${type.index}&inventoryWebsite=${inventoryWebsite.index}",
         body: models.map((e) => CashFlowModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
@@ -127,7 +132,7 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
   }
 
   @override
-  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter)async {
+  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$cashFlowController/getSummary?filter=${filter.index}");
@@ -147,10 +152,10 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
     late StandardHttpResponse response;
     try {
       var query = "";
-      if(from!=null) query+= "${query==""?"":"&"}from=$from";
-      if(to!=null) query+= "${query==""?"":"&"}to=$to";
-      if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
-      if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+      if (from != null) query += "${query == "" ? "" : "&"}from=$from";
+      if (to != null) query += "${query == "" ? "" : "&"}to=$to";
+      if (catId != null) query += "${query == "" ? "" : "&"}catId=$catId";
+      if (paymentMethodId != null) query += "${query == "" ? "" : "&"}paymentMethodId=$paymentMethodId";
 
       response = await httpRepo.get(host: "$serverHost/$cashFlowController/listExpenses?$query");
     } catch (e) {
@@ -158,7 +163,7 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      return ((response.body??[]) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String,dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
@@ -169,10 +174,10 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
     late StandardHttpResponse response;
     try {
       var query = "";
-      if(from!=null) query+= "${query==""?"":"&"}from=$from";
-      if(to!=null) query+= "${query==""?"":"&"}to=$to";
-      if(catId!=null) query+= "${query==""?"":"&"}catId=$catId";
-      if(paymentMethodId!=null) query+= "${query==""?"":"&"}paymentMethodId=$paymentMethodId";
+      if (from != null) query += "${query == "" ? "" : "&"}from=$from";
+      if (to != null) query += "${query == "" ? "" : "&"}to=$to";
+      if (catId != null) query += "${query == "" ? "" : "&"}catId=$catId";
+      if (paymentMethodId != null) query += "${query == "" ? "" : "&"}paymentMethodId=$paymentMethodId";
 
       response = await httpRepo.get(host: "$serverHost/$cashFlowController/listIncome?$query");
     } catch (e) {
@@ -180,9 +185,65 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      return ((response.body??[]) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String,dynamic>)).toList();
+      return ((response.body ?? []) as List<dynamic>).map((e) => CashFlowModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
+  }
+
+  @override
+  Future<InstallmentPlanModel> createInstallmentPlan(
+    int? id,
+    int total,
+    DateTime startDate,
+    int numberOfPayments,
+    EnumInstallmentInterval interval,
+  ) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.post(
+        host:
+            "$serverHost/$cashFlowController/createInstallmentPlan?total=$total&startDate=${startDate.toIso8601String()}&numberOfPayments=$numberOfPayments&interval=${interval.index}${id == null ? "" : "&id=$id"}",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      return InstallmentPlanModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<InstallmentPlanModel?> getInstallmentsOfUser(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getInstallmentsOfUser?id=$id");
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    try {
+      if (response.body == null) return null;
+      return InstallmentPlanModel.fromJson(response.body! as Map<String, dynamic>);
+    } catch (e) {
+      throw DataConversionException(message: "Couldn't convert data");
+    }
+  }
+
+  @override
+  Future<NoParams> payInstallment(int installmentPlanId, int value) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$cashFlowController/payInstallment?installmentPlanId=$installmentPlanId&value=$value",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 }

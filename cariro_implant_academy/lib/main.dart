@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Controllers/PagesController.dart';
 import 'package:cariro_implant_academy/Controllers/SiteController.dart';
+import 'package:cariro_implant_academy/core/presentation/bloc/dropdownSearchBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
 import 'package:cariro_implant_academy/Widgets/AppBarBloc.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/bloc/authentication_bloc.dart';
@@ -41,8 +42,11 @@ import 'Helpers/Router.dart';
 import 'core/features/settings/presentation/bloc/settingsBloc.dart';
 
 import 'core/injection_contianer.dart';
+import 'dart:convert';
+import 'core/constants/remoteConstants.dart';
 
 void main() async {
+  await setHosts();
   /*html.window.onUnload.listen((event) async {
   });*/
   //Get.put(NavigationController());
@@ -95,6 +99,7 @@ class MyApp extends StatelessWidget {
     Future(() async => {});
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => sl<DropDownSearchBloc>()),
         BlocProvider(create: (context) => sl<PatientSearchBloc>()),
         BlocProvider(create: (context) => sl<AddToMyPatientsRangeBloc>()),
         BlocProvider(create: (context) => sl<CreateOrViewPatientBloc>()),

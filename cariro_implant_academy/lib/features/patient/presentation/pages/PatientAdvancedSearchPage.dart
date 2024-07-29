@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:html';
+
+import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TagsInputWidget.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
@@ -24,9 +30,13 @@ import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc_States.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as syncFusionExcel;
 
 import '../../../../Widgets/CIA_SecondaryButton.dart';
 import '../../../../Widgets/Title.dart';
@@ -111,6 +121,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
   }
 
   List<TreatmentItemEntity> treatmentItems = [];
+  List<BasicNameIdObjectEntity> complicationsItems = [];
   List<BasicNameIdObjectEntity> prostheticItems = [];
 
   @override
@@ -285,9 +296,19 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                 const SizedBox(
                   width: 10,
                 ),
-                IconButton(
-                  onPressed: () => _key.currentState!.openEndDrawer(),
-                  icon: const Icon(Icons.filter_alt),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => _key.currentState!.openEndDrawer(),
+                      icon: const Icon(Icons.filter_alt),
+                      tooltip: "Filter",
+                    ),
+                    // IconButton(
+                    //   onPressed: () => _key.currentState!.openEndDrawer(),
+                    //   icon: const Icon(Icons.view_column_outlined),
+                    //   tooltip: "Edit Columns",
+                    // ),
+                  ],
                 ),
               ],
             ),
@@ -319,6 +340,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         AdvancedSearchFiltersSummaryWidget(
+                          exportToExcel: () => createExcel(),
                           treatmentItems: treatmentItems,
                           searchDTO: searchDTO,
                           searchProstheticDTO: searchProstheticDTO,
@@ -365,6 +387,10 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                               const Expanded(child: SizedBox()),
                               FormTextKeyWidget(text: "Total Patients: "),
                               FormTextValueWidget(text: dataSource_treatments.models.map((e) => e.id).toSet().length.toString()),
+                              SizedBox(width: 10),
+                              FormTextKeyWidget(text: "Total Operations: "),
+                              FormTextValueWidget(text: dataSource_treatments.models.length.toString()),
+                              SizedBox(width: 10),
                             ],
                           ),
                         ),
@@ -375,6 +401,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         AdvancedSearchFiltersSummaryWidget(
+                          exportToExcel: () => createExcel(),
                           treatmentItems: treatmentItems,
                           searchDTO: searchDTO,
                           searchProstheticDTO: searchProstheticDTO,
@@ -423,6 +450,7 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
                     return Column(
                       children: [
                         AdvancedSearchFiltersSummaryWidget(
+                          exportToExcel: () => createExcel(),
                           treatmentItems: treatmentItems,
                           searchDTO: searchDTO,
                           searchProstheticDTO: searchProstheticDTO,
@@ -462,6 +490,148 @@ class _PatientsSearchPageState extends State<PatientAdvancedSearchPage> with Tic
               return Container();
             }),
           ),
+        ],
+      ),
+    );
+  }
+
+  createExcel() {
+    String name = DateFormat("HHmmddMMyyyy_CIA_report").format(DateTime.now());
+    bool patientInfo = (dataSource_patients.models ?? []).isNotEmpty;
+    bool treatmentInfo = (dataSource_treatments.models ?? []).isNotEmpty;
+    bool prostheticInfo = (dataSource_prosthetic.models ?? []).isNotEmpty;
+    CIA_ShowPopUp(
+      context: context,
+      onSave: () {
+        // Create a new Excel document.
+        final syncFusionExcel.Workbook workbook = new syncFusionExcel.Workbook();
+        List<DataGridSource> dataSources = [];
+        if (patientInfo) dataSources.add(dataSource_patients);
+        if (treatmentInfo) dataSources.add(dataSource_treatments);
+        if (prostheticInfo) dataSources.add(dataSource_prosthetic);
+        try {
+          for (int dataSourceIndex = 0; dataSourceIndex < dataSources.length; dataSourceIndex++) {
+            if (dataSourceIndex > 0) {
+              print("adding worksheet $dataSourceIndex");
+              workbook.worksheets.add();
+            }
+            int lastRow = 1;
+            int lastColumn = 1;
+            print("Choosing datasource $dataSourceIndex");
+
+            var dataSource = dataSources[dataSourceIndex];
+            print("selected $dataSourceIndex");
+
+            //Accessing worksheet via index.
+            syncFusionExcel.Worksheet sheet;
+            try {
+              print("accesing worksheet $dataSourceIndex");
+
+              sheet = workbook.worksheets[dataSourceIndex];
+            } catch (e) {
+              print("error accessing worksheet $dataSourceIndex");
+              sheet = workbook.worksheets[dataSourceIndex];
+            }
+            print("renaming worksheet $dataSourceIndex");
+
+            sheet.name = dataSource is AdvancedPatientSearchDataGridSource
+                ? "Patients Info"
+                : dataSource is AdvancedTreatmentSearchDataGridSource
+                    ? "Treatments Info"
+                    : "Prosthetic Info";
+            print("setting column names in worksheet $dataSourceIndex");
+
+            List<String> columnNames = dataSource.rows?.first.getCells().map((e) => e.columnName).toList() ?? [];
+            lastColumn = columnNames.length;
+            for (int i = 0; i < columnNames.length; i++) {
+              sheet.getRangeByIndex(1, i + 1).setText(columnNames[i]);
+              //sheet.getRangeByIndex(1, i + 1).builtInStyle = syncFusionExcel.BuiltInStyles.linkedCell;
+            }
+
+            print("setting rows in worksheet $dataSourceIndex");
+
+            for (int rowIndex = 0; rowIndex < dataSource.rows.length; rowIndex++) {
+              var cells = dataSource.rows[rowIndex].getCells();
+              lastRow++;
+              for (int columnIndex = 0; columnIndex < cells.length; columnIndex++) {
+                var value = cells[columnIndex].value;
+                if (value is Widget) continue;
+                if (value is int) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setNumber(cells[columnIndex].value as double);
+                if (value is String) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setText(cells[columnIndex].value);
+                if (value is DateTime) sheet.getRangeByIndex(rowIndex + 2, columnIndex + 1).setDateTime(cells[columnIndex].value as DateTime);
+              }
+            }
+
+            try {
+              print("autofit and table creation in worksheet $dataSourceIndex");
+
+              syncFusionExcel.Range range = sheet.getRangeByIndex(sheet.getFirstRow(), sheet.getFirstColumn(), lastRow, lastColumn);
+              range.autoFitColumns();
+              sheet.tableCollection.create(sheet.name.replaceAll(" ", ""), range);
+            } catch (e) {
+              print("autofit and table creation in worksheet $dataSourceIndex Error!");
+            }
+
+            // for (int columnIndex = 0; columnIndex < sheet.columns.count; columnIndex++) {
+            //   sheet.autoFitColumn(columnIndex + 1);
+            // }
+            // if (sheet.getLastRow() != 0 && sheet.getLastColumn() != 0)
+            //   sheet.tableCollection.create(sheet.name, sheet.getRangeByIndex(1, 1, sheet.getLastRow(), sheet.getLastColumn()));
+          }
+        } catch (e) {
+          print("Error is ${e.toString()}");
+        }
+        print("Saving workbook");
+
+        // Save the document.
+        final List<int> bytes = workbook.saveAsStream();
+        //Dispose the workbook.
+        AnchorElement(href: "data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}")
+          ..setAttribute("download", "$name.xlsx")
+          ..click();
+        workbook.dispose();
+      },
+      child: Column(
+        children: [
+          CIA_TextFormField(
+            controller: TextEditingController(text: name),
+            label: "File Name",
+            suffix: ".xlsx",
+            onChange: (v) => name = v,
+          ),
+          SizedBox(height: 10),
+          FormTextKeyWidget(text: "Worksheets"),
+          SizedBox(height: 10),
+          StatefulBuilder(builder: (context, _setState) {
+            return Row(
+              children: [
+                Visibility(
+                  visible: (dataSource_patients.models ?? []).isNotEmpty,
+                  child: CIA_CheckBoxWidget(
+                    text: "Patient Info",
+                    value: patientInfo,
+                    onChange: (v) => _setState(() => patientInfo = v),
+                  ),
+                ),
+                Visibility(
+                  visible: (dataSource_treatments.models ?? []).isNotEmpty,
+                  child: CIA_CheckBoxWidget(
+                    text: "Treatment Info",
+                    value: treatmentInfo,
+                    onChange: (v) => _setState(() => treatmentInfo = v),
+                  ),
+                ),
+                Visibility(
+                  visible: (dataSource_prosthetic.models ?? []).isNotEmpty,
+                  child: CIA_CheckBoxWidget(
+                    text: "Prosthetic Info",
+                    value: prostheticInfo,
+                    onChange: (v) => _setState(() => prostheticInfo = v),
+                  ),
+                ),
+              ],
+            );
+          })
         ],
       ),
     );

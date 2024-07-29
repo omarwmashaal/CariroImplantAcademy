@@ -10,8 +10,8 @@ namespace CIA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [ForeignKey("Patient")]
-        public int PatientId { get; set; }
-        public Patient Patient { get; set; }
+        public int? PatientId { get; set; }
+        public Patient? Patient { get; set; }
         [ForeignKey("Operator.IdInt")]
         public int OperatorId { get; set; }
         public ApplicationUser Operator { get; set; }
@@ -20,6 +20,10 @@ namespace CIA.Models
         public int ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
         public int PaidAmount { get; set; } = 0;
+
+        [ForeignKey("PaymentMethodsModel")]
+        public int? PaymentMethodId { get; set; } 
+        public PaymentMethodsModel? PaymentMethod { get; set; } 
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
     }
 }

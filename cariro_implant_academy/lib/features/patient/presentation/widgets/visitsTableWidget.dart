@@ -1,10 +1,21 @@
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Models/ReceiptModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/data/models/receiptModel.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/toothReceiptEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentLogTableWidget.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/paymentWidget.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/widgets/receiptTableWidget.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/patientInfoEntity.dart';
@@ -16,6 +27,7 @@ import 'package:cariro_implant_academy/features/patient/presentation/bloc/calend
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/calendarBloc_States.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/bloc/patientVisitsBloc_States.dart';
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +48,7 @@ import '../bloc/calendarBloc_Events.dart';
 import '../bloc/patientVisitsBloc.dart';
 import '../pages/createOrViewPatientPage.dart';
 import 'calendarWidget.dart';
+import 'package:collection/collection.dart';
 
 class VisitsTableWidget extends StatelessWidget {
   VisitsTableWidget({
@@ -44,11 +57,21 @@ class VisitsTableWidget extends StatelessWidget {
   }) : super(key: key);
   int? patientId;
   late PatientVisitsBloc bloc;
+  late ReceiptBloc receiptBloc;
+  late Function(int) showReceipts;
 
   String? search;
 
   @override
   Widget build(BuildContext context) {
+    showReceipts = (int receiptId) {
+      PaymentLogTableWidget(
+        context: context,
+        receiptId: receiptId,
+        patientId: patientId,
+      )();
+    };
+    receiptBloc = BlocProvider.of<ReceiptBloc>(context);
     bloc = BlocProvider.of<PatientVisitsBloc>(context);
     bloc.add(PatientVisitsBloc_GetVisitsEvent(params: GetVisitsParams(patientId: patientId)));
     VisitDataSource dataSource = VisitDataSource(context: context, bloc: bloc);
@@ -143,7 +166,6 @@ class VisitsTableWidget extends StatelessWidget {
                                                   patientId: patientId!,
                                                   doctorId: doctorId!,
                                                   roomId: roomId!,
-
                                                 ),
                                               ));
                                             }
@@ -152,6 +174,9 @@ class VisitsTableWidget extends StatelessWidget {
                                             children: [
                                               Flexible(
                                                 child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                  onClear: () {
+                                                    doctorId = null;
+                                                  },
                                                   label: "Doctor",
                                                   asyncUseCase: sl<LoadUsersUseCase>(),
                                                   searchParams: LoadUsersEnum.instructorsAndAssistants,
@@ -163,30 +188,32 @@ class VisitsTableWidget extends StatelessWidget {
                                                   },
                                                 ),
                                               ),
-                                              SizedBox(height: 10,),
-                                              Builder(
-                                                builder: (context) {
-                                                  var b = BlocProvider.of<CalendarBloc>(context);
-                                                  b.add(CalendarBloc_GetRooms());
-                                                  return BlocBuilder<CalendarBloc,CalendarBloc_States>(
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Builder(builder: (context) {
+                                                var b = BlocProvider.of<CalendarBloc>(context);
+                                                b.add(CalendarBloc_GetRooms());
+                                                return BlocBuilder<CalendarBloc, CalendarBloc_States>(
                                                     buildWhen: (previous, current) => current is CalendarBloc_LoadedRoomsSuccessfully,
-                                                    builder: (context,state) {
-                                                      List<BasicNameIdObjectEntity> rooms =[];
-                                                      if(state is CalendarBloc_LoadedRoomsSuccessfully)
-                                                        rooms  = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name,id: e.id)).toList();
+                                                    builder: (context, state) {
+                                                      List<BasicNameIdObjectEntity> rooms = [];
+                                                      if (state is CalendarBloc_LoadedRoomsSuccessfully)
+                                                        rooms = state.rooms.map((e) => BasicNameIdObjectEntity(name: e.name, id: e.id)).toList();
                                                       return Flexible(
                                                         child: CIA_DropDownSearchBasicIdName(
+                                                          onClear: () {
+                                                            roomId = null;
+                                                          },
                                                           label: "Room",
                                                           items: rooms,
-                                                         onSelect: (value) {
-                                                           roomId = value.id;
+                                                          onSelect: (value) {
+                                                            roomId = value.id;
                                                           },
                                                         ),
                                                       );
-                                                    }
-                                                  );
-                                                }
-                                              ),
+                                                    });
+                                              }),
                                             ],
                                           ),
                                         );
@@ -197,7 +224,147 @@ class VisitsTableWidget extends StatelessWidget {
                                         label: "Patient Leaves",
                                         onTab: () async {
                                           bloc.add(PatientVisitsBloc_PatientLeavesClinicEvent(id: patientId!));
+                                        }),
+                                    CIA_SecondaryButton(
+                                        width: 150,
+                                        label: "Add Manual Receipt",
+                                        icon: Icon(Icons.attach_money_outlined),
+                                        onTab: () async {
+                                          SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
+                                          settingsBloc.add(SettingsBloc_LoadTreatmentPricesEvent());
+                                          List<TreatmentItemEntity> treatments = [];
+                                          List<ToothReceiptEntity> receiptData = [];
+                                          CIA_ShowPopUp(
+                                              title: "Add New Receipt to ${patientData?.name ?? ""}",
+                                              width: double.maxFinite,
+                                              height: 500,
+                                              context: context,
+                                              onSave: () {
+                                                receiptBloc.addReceipt(
+                                                  ReceiptEntity(
+                                                    date: DateTime.now(),
+                                                    isPaid: false,
+                                                    operatorId: siteController.getUserId(),
+                                                    paid: 0,
+                                                    patientId: patientId,
+                                                    toothReceiptData: receiptData,
+                                                    total: (receiptData.map((e) => (e.price ?? 0) as int).toList()).fold(0, (a, b) => (a ?? 0) + b),
+                                                    unpaid: (receiptData.map((e) => (e.price ?? 0) as int).toList()).fold(0, (a, b) => (a ?? 0) + b),
+                                                  ),
+                                                );
+                                                return false;
+                                              },
+                                              child: StatefulBuilder(builder: (context, setState) {
+                                                return BlocListener<ReceiptBloc, ReceiptBloc_States>(
+                                                  listener: (context, state) {
+                                                    if (state is ReceiptBloc_AddingReceiptsState)
+                                                      CustomLoader.show(context);
+                                                    else {
+                                                      CustomLoader.hide();
+                                                      if (state is ReceiptBloc_AddingReceiptsErrorState)
+                                                        ShowSnackBar(context, isSuccess: false, message: state.message);
 
+                                                      if (state is ReceiptBloc_AddedReceiptsSuccessfullyState) {
+                                                        ShowSnackBar(context, isSuccess: true);
+                                                        dialogHelper.dismissSingle(context);
+                                                        showReceipts(state.data.id!);
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                                                        buildWhen: (previous, current) =>
+                                                            current is SettingsBloc_LoadingTreatmentPricesState ||
+                                                            current is SettingsBloc_LoadingTreatmentPricesErrorState ||
+                                                            current is SettingsBloc_LoadedTreatmentPricesSuccessfullyState,
+                                                        builder: (context, state) {
+                                                          if (state is SettingsBloc_LoadingTreatmentPricesState)
+                                                            return LoadingWidget();
+                                                          else if (state is SettingsBloc_LoadingTreatmentPricesErrorState)
+                                                            return FormTextKeyWidget(
+                                                              text: "Error Loading Items",
+                                                              color: Colors.red,
+                                                            );
+                                                          else if (state is SettingsBloc_LoadedTreatmentPricesSuccessfullyState) {
+                                                            treatments = state.data;
+                                                            treatments = [
+                                                              ...treatments,
+                                                              TreatmentItemEntity(
+                                                                name: "Others",
+                                                                price: 0,
+                                                              )
+                                                            ];
+                                                          }
+                                                          return Wrap(
+                                                            children: treatments
+                                                                .map((e) => Padding(
+                                                                      padding: const EdgeInsets.all(8.0),
+                                                                      child: CIA_SecondaryButton(
+                                                                        width: 200,
+                                                                        icon: Icon(Icons.add),
+                                                                        label: e.name ?? "",
+                                                                        onTab: () {
+                                                                          receiptData.add(ToothReceiptEntity(
+                                                                            name: e.name,
+                                                                            price: e.price,
+                                                                          ));
+                                                                          setState(() => null);
+                                                                        },
+                                                                      ),
+                                                                    ))
+                                                                .toList(),
+                                                          );
+                                                        },
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: ListView(
+                                                          children: receiptData
+                                                              .mapIndexed((i, e) => Padding(
+                                                                    padding: const EdgeInsets.all(8.0),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        FormTextValueWidget(text: "${i + 1}. "),
+                                                                        SizedBox(width: 10),
+                                                                        e.name == "Others"
+                                                                            ? Expanded(
+                                                                                child: CIA_TextFormField(
+                                                                                  label: "Name",
+                                                                                  controller: TextEditingController(text: (e.name) ?? ""),
+                                                                                  onChange: (value) => e.name = value,
+                                                                                ),
+                                                                              )
+                                                                            : Expanded(child: FormTextKeyWidget(text: e.name ?? "")),
+                                                                        SizedBox(width: 10),
+                                                                        Expanded(
+                                                                          child: CIA_TextFormField(
+                                                                            label: "Tooth",
+                                                                            controller: TextEditingController(text: (e.tooth ?? 0).toString()),
+                                                                            isNumber: true,
+                                                                            onChange: (value) => e.tooth = int.tryParse(value) ?? 0,
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(width: 10),
+                                                                        Expanded(
+                                                                          child: CIA_TextFormField(
+                                                                            label: "Prce",
+                                                                            suffix: "EGP",
+                                                                            controller: TextEditingController(text: (e.price ?? 0).toString()),
+                                                                            isNumber: true,
+                                                                            onChange: (value) => e.price = int.tryParse(value) ?? 0,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ))
+                                                              .toList(),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }));
                                         }),
                                   ],
                                 )),
@@ -284,15 +451,13 @@ class VisitsTableWidget extends StatelessWidget {
                     patientId: patientId,
                   ),
                 ));
-              }
-              else if (state is PatientVisitsBloc_LeftSuccessState) {
+              } else if (state is PatientVisitsBloc_LeftSuccessState) {
                 PaymentWidget(
                     patientId: patientId!,
                     context: context,
                     onFailure: (message) {
                       ShowSnackBar(context, isSuccess: false, message: message);
                     })();
-
               }
               if (state is PatientVisitsBloc_LoadingVisitsState)
                 CustomLoader.show(context);
@@ -315,7 +480,7 @@ class VisitsTableWidget extends StatelessWidget {
                   dataSource: dataSource,
                   onCellClick: (index) {
                     context.goNamed(CreateOrViewPatientPage.getVisitPatientRouteName(),
-                        pathParameters: {'id':  dataSource.models.firstWhere((element) => element.secondaryId==index).id.toString()});
+                        pathParameters: {'id': dataSource.models.firstWhere((element) => element.secondaryId == index).patientId.toString()});
                   },
                 ),
               );

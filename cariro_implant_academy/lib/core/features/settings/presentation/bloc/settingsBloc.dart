@@ -2,18 +2,26 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultProstheticComplicationsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantSizesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultProstheticComplicationsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
@@ -55,9 +63,15 @@ import '../../domain/useCases/getSuppliersUseCase.dart';
 import '../../domain/useCases/getTacsUseCase.dart';
 
 class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
+  final GetDefaultSurgicalComplicationsUseCase getDefaultSurgicalComplicationsUseCase;
+  final UpdateDefaultSurgicalComplicationsUseCase updateDefaultSurgicalComplicationsUseCase;
+  final GetDefaultProstheticComplicationsUseCase getDefaultProstheticComplicationsUseCase;
+  final UpdateDefaultProstheticComplicationsUseCase updateDefaultProstheticComplicationsUseCase;
   final GetProstheticItemsUseCase getProstheticItemsUseCase;
   final GetProstheticStatusUseCase getProstheticStatusUseCase;
   final GetProstheticNextVisitUseCase getProstheticNextVisitUseCase;
+  final GetProstheticMaterialUseCase getProstheticMaterialUseCase;
+  final GetProstheticTechniqueUseCase getProstheticTechniqueUseCase;
   final GetImplantCompaniesUseCase getImplantCompaniesUseCase;
   final GetImplantLinesUseCase getImplantLinesUseCase;
   final GetImplantSizesUseCase getImplantSizesUseCase;
@@ -104,10 +118,18 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateProstheticItemsUseCase updateProstheticItemsUseCase;
   final UpdateProstheticStatusUseCase updateProstheticStatusUseCase;
   final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
+  final UpdateProstheticTechniqueUseCase updateProstheticTechniqueUseCase;
+  final UpdateProstheticMaterialUseCase updateProstheticMaterialUseCase;
 
   SettingsBloc({
+    required this.updateDefaultSurgicalComplicationsUseCase,
+    required this.getDefaultSurgicalComplicationsUseCase,
+    required this.updateDefaultProstheticComplicationsUseCase,
+    required this.getDefaultProstheticComplicationsUseCase,
     required this.getProstheticStatusUseCase,
     required this.getProstheticNextVisitUseCase,
+    required this.getProstheticMaterialUseCase,
+    required this.getProstheticTechniqueUseCase,
     required this.getProstheticItemsUseCase,
     required this.getImplantCompaniesUseCase,
     required this.getImplantLinesUseCase,
@@ -152,10 +174,52 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabItemsParentsUseCase,
     required this.updateProstheticItemsUseCase,
     required this.updateProstheticNextVisitUseCase,
+    required this.updateProstheticMaterialUseCase,
+    required this.updateProstheticTechniqueUseCase,
     required this.updateProstheticStatusUseCase,
     required this.updateLabOptionsUseCase,
     required this.getLabOptionsUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
+    on<SettingsBloc_LoadDefaultSurgicalComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_LoadingDefaultSurgicalComplicationsState());
+        final result = await getDefaultSurgicalComplicationsUseCase(NoParams());
+        result.fold(
+          (l) => emit(SettingsBloc_LoadingDefaultSurgicalComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_LoadedDefaultSurgicalComplicationsSuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<SettingsBloc_UpdateDefaultSurgicalComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_UpdatingDefaultSurgicalComplicationsState());
+        final result = await updateDefaultSurgicalComplicationsUseCase(event.params);
+        result.fold(
+          (l) => emit(SettingsBloc_UpdatingDefaultSurgicalComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_UpdatedDefaultSurgicalComplicationsSuccessfullyState()),
+        );
+      },
+    );
+    on<SettingsBloc_LoadDefaultProstheticComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_LoadingDefaultProstheticComplicationsState());
+        final result = await getDefaultProstheticComplicationsUseCase(NoParams());
+        result.fold(
+          (l) => emit(SettingsBloc_LoadingDefaultProstheticComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState(data: r)),
+        );
+      },
+    );
+    on<SettingsBloc_UpdateDefaultProstheticComplicationsEvent>(
+      (event, emit) async {
+        emit(SettingsBloc_UpdatingDefaultProstheticComplicationsState());
+        final result = await updateDefaultProstheticComplicationsUseCase(event.params);
+        result.fold(
+          (l) => emit(SettingsBloc_UpdatingDefaultProstheticComplicationsErrorState(message: l.message ?? "")),
+          (r) => emit(SettingsBloc_UpdatedDefaultProstheticComplicationsSuccessfullyState()),
+        );
+      },
+    );
     on<SettingsBloc_LoadImplantCompaniesEvent>(
       (event, emit) async {
         emit(SettingsBloc_LoadingImplantCompaniesState());
@@ -565,6 +629,22 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         (r) => emit(SettingsBloc_LoadedProstheticNextVisitSuccessfullyState(data: r)),
       );
     });
+    on<SettingsBloc_GetProstheticTechniqueEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticTechniqueState());
+      final result = await getProstheticTechniqueUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticTechniqueErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticTechniqueSuccessfullyState(data: r)),
+      );
+    });
+    on<SettingsBloc_GetProstheticMaterialEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingProstheticMaterialState());
+      final result = await getProstheticMaterialUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingProstheticMaterialErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedProstheticMaterialSuccessfullyState(data: r)),
+      );
+    });
 
     on<SettingsBloc_UpdateProstheticItemsEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingProstheticItemsState());
@@ -586,13 +666,35 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
         )),
       );
     });
+    on<SettingsBloc_UpdateProstheticMaterialEventEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticMaterialState());
+      final result = await updateProstheticMaterialUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticMaterialErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticMaterialSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
+      );
+    });
+    on<SettingsBloc_UpdateProstheticTechniqueEventEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingProstheticTechniqueState());
+      final result = await updateProstheticTechniqueUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingProstheticTechniqueErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticTechniqueSuccessfullyState(
+          type: event.params.type,
+          itemId: event.params.itemId,
+        )),
+      );
+    });
 
     on<SettingsBloc_UpdateProstheticStatusEvent>((event, emit) async {
-      emit(SettingsBloc_UpdatingProstheticNextVisitState());
+      emit(SettingsBloc_UpdatingProstheticStatusState());
       final result = await updateProstheticStatusUseCase(event.params);
       result.fold(
-        (l) => emit(SettingsBloc_UpdatingProstheticNextVisitErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_UpdatedProstheticNextVisitSuccessfullyState(
+        (l) => emit(SettingsBloc_UpdatingProstheticStatusErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedProstheticStatusSuccessfullyState(
           type: event.params.type,
           itemId: event.params.itemId,
         )),

@@ -5,6 +5,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 class ToDoListEntity extends Equatable {
   int? id;
   int? patientId;
+  BasicNameIdObjectEntity? patient;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
   String data;
@@ -16,11 +17,12 @@ class ToDoListEntity extends Equatable {
     this.id,
     this.operatorId,
     this.operator,
+    this.patient,
     this.data = "",
-    this.done =false,
+    this.done = false,
     this.createDate,
-    this.dueDate,}
-  );
+    this.dueDate,
+  });
 
   @override
   List<Object?> get props {
@@ -30,6 +32,7 @@ class ToDoListEntity extends Equatable {
       operatorId,
       operator,
       data,
+      patient,
       done,
       createDate,
       dueDate,

@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/Widgets/CIA_CheckBoxWidget.dart';
 import 'package:cariro_implant_academy/features/patient/domain/entities/todoListEntity.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/searchToDoListUseCase%20.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,17 +15,28 @@ import 'package:collection/collection.dart';
 
 class ToDoListBloc extends Cubit<ToDoListBloc_States> {
   final GetToDoListUseCase getToDoListUseCase;
+  final SearchToDoListUseCase searchToDoListUseCase;
   final UpdateToDoListItemUseCase updateToDoListItemUseCase;
   final AddToDoListItemUseCase addToDoListItemUseCase;
   ToDoListBloc({
     required this.getToDoListUseCase,
+    required this.searchToDoListUseCase,
     required this.updateToDoListItemUseCase,
     required this.addToDoListItemUseCase,
   }) : super(ToDoListBlocState_InitState());
 
-  getToList(int patientId) async {
+  getToList(int? patientId) async {
     emit(ToDoListBlocState_GettingDataState());
     final result = await getToDoListUseCase(patientId);
+    result.fold(
+      (l) => emit(ToDoListBlocState_GettingDataFailed(message: l.message ?? "")),
+      (r) => emit(ToDoListBlocState_GettingDataSuccess(data: r)),
+    );
+  }
+
+  searchToList(SearchToDoListParams params) async {
+    emit(ToDoListBlocState_GettingDataState());
+    final result = await searchToDoListUseCase(params);
     result.fold(
       (l) => emit(ToDoListBlocState_GettingDataFailed(message: l.message ?? "")),
       (r) => emit(ToDoListBlocState_GettingDataSuccess(data: r)),
@@ -61,7 +73,8 @@ class ToDoListDataGridSource extends DataGridSource {
     models = _models;
     _toDoListItems = models
         .mapIndexed<DataGridRow>((i, e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: '#', value: i + 1),
+              DataGridCell<int>(columnName: 'Id', value: e.patientId),
+              DataGridCell<String>(columnName: 'Patient', value: e.patient?.name),
               DataGridCell<Widget>(
                 columnName: 'Delete',
                 value: IconButton(

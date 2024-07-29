@@ -1,4 +1,5 @@
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,14 +15,16 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
   final GetPaymentLogsForAReceiptUseCase getPaymentLogsForAReceipt;
   final RemovePaymentUseCase removePaymentUseCase;
   final AddPaymentUseCase addPaymentUseCase;
+  final AddReceiptUseCase addReceiptUseCase;
 
   ReceiptBloc({
     required this.getReceiptsUsecase,
+    required this.addReceiptUseCase,
     required this.getReceiptByIdUseCase,
     required this.getPaymentLogsForAReceipt,
     required this.removePaymentUseCase,
     required this.addPaymentUseCase,
-}) : super(ReceiptBloc_InitiState());
+  }) : super(ReceiptBloc_InitiState());
 
   void getPatientReceipts(int patientId) async {
     emit(ReceiptBloc_LoadingReceiptsState());
@@ -32,7 +35,16 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
   }
 
-  void loadPaymentLogTableData({required int patientId, required int receiptId}) async {
+  void addReceipt(ReceiptEntity receipt) async {
+    emit(ReceiptBloc_AddingReceiptsState());
+    final result = await addReceiptUseCase(receipt);
+    result.fold(
+      (l) => emit(ReceiptBloc_AddingReceiptsErrorState(message: l.message ?? "")),
+      (r) => emit(ReceiptBloc_AddedReceiptsSuccessfullyState(data: r)),
+    );
+  }
+
+  void loadPaymentLogTableData({required int receiptId}) async {
     emit(ReceiptBloc_LoadingPaymentLogsState());
     final result = await getReceiptByIdUseCase(receiptId);
     late ReceiptEntity receiptEntity;
@@ -45,7 +57,6 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
     if (result.isRight()) {
       await getPaymentLogsForAReceipt(GetPaymentLogForAReceiptParams(
-        patientId: patientId,
         receiptId: receiptId,
       )).then((value) => value.fold(
             (l) => emit(ReceiptBloc_LoadingPaymentLogsErrorState(message: l.message ?? "")),
@@ -66,12 +77,13 @@ class ReceiptBloc extends Cubit<ReceiptBloc_States> {
     );
   }
 
-  void addPayment({required int patientId, required int receiptId, required int paidAmount}) async {
+  void addPayment({required int patientId, required int receiptId, required int paidAmount, int? paymentMethodId}) async {
     emit(ReceiptBloc_AddingPaymentState());
     final result = await addPaymentUseCase(AddPaymentParams(
       patientId: patientId,
       receiptId: receiptId,
       paidAmount: paidAmount,
+      paymentMethodId: paymentMethodId,
     ));
     result.fold(
       (l) => emit(ReceiptBloc_AddingPaymentErrorState(message: l.message ?? "")),

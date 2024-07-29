@@ -168,6 +168,7 @@ class TreatmentBloc extends Bloc<TreatmentBloc_Events, TreatmentBloc_States> {
                   treatmentItem: treatmentItems.firstWhere((element) => element.id == treatmentItemId));
               event.teethData = [...event.teethData, currentToothData];
             }
+            currentToothData.bridge = event.bridge;
             currentToothData.status = event.isSurgical;
             currentToothData.date = event.isSurgical ? DateTime.now() : null;
             currentToothData.doneByAssistant = event.isSurgical

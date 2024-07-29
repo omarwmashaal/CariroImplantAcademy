@@ -6,6 +6,7 @@ namespace CIA.Models.CIA.DTOs
     {
         public int? Id { get; set; }
         public String? SecondaryId { get; set; }
+        public EnumPatientCallHistory? CallHistoryStatus { get; set; }
         public string Name { get; set; }
         public bool Listed { get; set; }
         public EnumGender Gender { get; set; }
@@ -35,6 +36,8 @@ namespace CIA.Models.CIA.DTOs
         public int? ProfileImageId { get; set; }
         public int? IdBackImageId { get; set; }
         public int? IdFrontImageId { get; set; }
+        public List<int>? MissingTeeth { get; set; }
+        public List<DiseasesEnum>? Diseases { get; set; }
 
     }
 }

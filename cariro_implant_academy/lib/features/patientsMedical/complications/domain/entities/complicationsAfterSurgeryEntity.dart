@@ -14,9 +14,11 @@ class ComplicationsAfterSurgeryEntity extends Equatable {
   bool? pusInDonorSite;
   bool? sinusElevationFailure;
   bool? gbrFailure;
+  bool? implantFailed;
   DateTime? date;
   int? tooth;
   String? name;
+  int? defaultId;
   String? notes;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
@@ -25,6 +27,7 @@ class ComplicationsAfterSurgeryEntity extends Equatable {
     this.id,
     this.patientId,
     this.tooth,
+    this.defaultId,
     this.patient,
     this.swelling,
     this.date,
@@ -35,6 +38,7 @@ class ComplicationsAfterSurgeryEntity extends Equatable {
     this.pusInDonorSite,
     this.sinusElevationFailure,
     this.gbrFailure,
+    this.implantFailed,
     this.name,
     this.notes,
     this.operator,

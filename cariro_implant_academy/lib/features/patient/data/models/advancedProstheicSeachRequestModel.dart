@@ -8,24 +8,28 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
     super.fullArch,
     super.itemId,
     super.nextId,
+    super.materialId,
+    super.techniqueId,
     super.statusId,
     super.type,
-    super.complicationsAnd,
-    super.complicationsOr,
+    super.complicationsAfterProstheticIdsOr,
+    super.complicationsAfterProstheticIds,
     super.cementRetained,
     super.screwRetained,
   });
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = Map<String, dynamic>();
     data['ids'] = ids?.map((e) => e as int).toList();
-    data['fullArch'] = this.fullArch??false;
+    data['fullArch'] = this.fullArch ?? false;
     data['itemId'] = this.itemId;
     data['nextId'] = this.nextId;
+    data['materialId'] = this.materialId;
+    data['techniqueId'] = this.techniqueId;
     data['statusId'] = this.statusId;
-    data['cementRetained'] = this.cementRetained??false;
-    data['screwRetained'] = this.screwRetained??false;
-    data['complicationsAnd'] = this.complicationsAnd==null?null:ComplicationsAfterProsthesisModel.fromEntity(complicationsAnd!).toJson();
-    data['complicationsOr'] = this.complicationsOr==null?null:ComplicationsAfterProsthesisModel.fromEntity(complicationsOr!).toJson();
+    data['cementRetained'] = this.cementRetained ?? false;
+    data['screwRetained'] = this.screwRetained ?? false;
+    data['complicationsOr'] = this.complicationsAfterProstheticIdsOr?.map((e) => e as int).toList();
+    data['complicationsAnd'] = this.complicationsAfterProstheticIds?.map((e) => e as int).toList();
     data['type'] = this.type?.index;
     return data;
   }
@@ -36,10 +40,12 @@ class AdvancedProstheicSearchRequestModel extends AdvancedProstheticSearchReques
       itemId: entity.itemId,
       nextId: entity.nextId,
       statusId: entity.statusId,
+      techniqueId: entity.techniqueId,
+      materialId: entity.materialId,
       type: entity.type,
       ids: entity.ids,
-      complicationsAnd: entity.complicationsAnd,
-      complicationsOr: entity.complicationsOr,
+      complicationsAfterProstheticIdsOr: entity.complicationsAfterProstheticIdsOr,
+      complicationsAfterProstheticIds: entity.complicationsAfterProstheticIds,
       cementRetained: entity.cementRetained,
       screwRetained: entity.screwRetained,
     );

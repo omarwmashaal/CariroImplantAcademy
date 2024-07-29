@@ -12,16 +12,19 @@ class AddPaymentUseCase extends UseCases<NoParams, AddPaymentParams> {
 
   @override
   Future<Either<Failure, NoParams>> call(AddPaymentParams params) async {
-    return await receiptRepository.addPayment(patientId: params.patientId,receiptId: params.receiptId,paidAmount: params.paidAmount).then((value) => value.fold(
-          (l) => Left(l..message = "Get Add Payment: ${l.message ?? ""}"),
-          (r) => Right(r),
-        ));
+    return await receiptRepository
+        .addPayment(patientId: params.patientId, receiptId: params.receiptId, paidAmount: params.paidAmount, paymentMethodId: params.paymentMethodId)
+        .then((value) => value.fold(
+              (l) => Left(l..message = "Get Add Payment: ${l.message ?? ""}"),
+              (r) => Right(r),
+            ));
   }
 }
-class AddPaymentParams{
+
+class AddPaymentParams {
   final int patientId;
   final int receiptId;
   final int paidAmount;
-  AddPaymentParams({required this.patientId,required this.receiptId,required this.paidAmount});
-
+  final int? paymentMethodId;
+  AddPaymentParams({required this.patientId, required this.receiptId, required this.paidAmount, this.paymentMethodId});
 }

@@ -1,4 +1,8 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/features/coreStock/domain/usecases/consumeItemById.dart';
 import 'package:cariro_implant_academy/features/stock/data/models/stockModel.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockEntity.dart';
 import 'package:cariro_implant_academy/features/stock/domain/entities/stockLogEntity.dart';
@@ -6,6 +10,7 @@ import 'package:cariro_implant_academy/features/stock/domain/usecases/getLabStoc
 import 'package:cariro_implant_academy/features/stock/domain/usecases/getStockLogUseCase.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_Events.dart';
 import 'package:cariro_implant_academy/features/stock/presentation/bloc/stockBloc_States.dart';
+import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,11 +24,13 @@ class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
   final GetStockUseCase getStockUseCase;
   final GetLabStockUseCase getLabStockUseCase;
   final GetStockLogUseCase getStockLogUseCase;
+  final ConsumeItemByIdUseCase consumeItemByIdUseCase;
 
   StockBloc({
     required this.getStockLogUseCase,
     required this.getStockUseCase,
     required this.getLabStockUseCase,
+    required this.consumeItemByIdUseCase,
   }) : super(StockBloc_LoadingState()) {
     on<StockBloc_GetStockEvent>(
       (event, emit) async {
@@ -53,6 +60,16 @@ class StockBloc extends Bloc<StockBloc_Events, StockBloc_States> {
         );
       },
     );
+    on<StockBloc_ConsumeItemevent>(
+      (event, emit) async {
+        emit(StockBloc_ConsumingItemsState());
+        final result = await consumeItemByIdUseCase(event.params);
+        result.fold(
+          (l) => emit(StockBloc_ConsumingItemsErrorState(message: l.message ?? "")),
+          (r) => emit(StockBloc_ConsumedItemSuccssefullyState()),
+        );
+      },
+    );
   }
 }
 
@@ -60,9 +77,10 @@ class StockDataGridSource extends DataGridSource {
   List<String> columns = ["ID", "Name", "Category", "Count", "Add More"];
   BuildContext context;
   List<dynamic> models = <dynamic>[];
+  StockBloc bloc;
 
   /// Creates the income data source class with required details.
-  StockDataGridSource({required this.context}) {
+  StockDataGridSource({required this.context, required this.bloc}) {
     init();
   }
 
@@ -84,11 +102,13 @@ class StockDataGridSource extends DataGridSource {
     } else
       _stockData = models
           .map<DataGridRow>((e) => DataGridRow(cells: [
-                DataGridCell<int>(columnName: 'ID', value: e.id),
-                DataGridCell<String>(columnName: 'Name', value: e.name),
-                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-                DataGridCell<int>(columnName: 'Count', value: e.count),
-                /* DataGridCell<Widget>(
+                ...[
+                  DataGridCell<int>(columnName: 'ID', value: e.id),
+                  DataGridCell<String>(columnName: 'Name', value: e.name),
+                  DataGridCell<String>(columnName: 'Category', value: e.category!.name),
+                  DataGridCell<int>(columnName: 'Count', value: e.count),
+
+                  /* DataGridCell<Widget>(
                   columnName: 'Add More',
                   value: IconButton(
                     onPressed: () {
@@ -247,29 +267,55 @@ class StockDataGridSource extends DataGridSource {
                     },
                     icon: Icon(Icons.add),
                   )),
-              DataGridCell<Widget>(
-                  columnName: 'Consume Item',
-                  value: IconButton(
-                    onPressed: () {
-                      /*
-              int number = 0;
-              CIA_ShowPopUp(
-                onSave: () async {
-                  var res = await StockAPI.ConsumeItem(e.id!, number);
-                  ShowSnackBar(context, isSuccess: res.statusCode == 200);
-                  return res.statusCode == 200;
-                },
-                context: context,
-                child: CIA_TextFormField(
-                  label: "Number",
-                  controller: TextEditingController(),
-                  isNumber: true,
-                  onChange: (v)=>number=int.parse(v),
-                ),
-              );*/
-                    },
-                    icon: Icon(Icons.remove),
-                  )),*/
+              ,*/
+                ],
+                ...((siteController.getRole()?.contains("admin") ?? false) ||
+                        (siteController.getRole()?.contains("instructor") ?? false) ||
+                        (siteController.getRole()?.contains("assistant") ?? false)
+                    ? [
+                        DataGridCell<Widget>(
+                            columnName: 'Consume Item',
+                            value: IconButton(
+                              onPressed: () {
+                                int number = 0;
+                                CIA_ShowPopUp(
+                                  title: "Consume ${e.name}",
+                                  onSave: () async {
+                                    bloc.add(StockBloc_ConsumeItemevent(params: ConsumeItemByIdParams(count: number, id: e.id)));
+                                    return false;
+                                  },
+                                  context: context,
+                                  child: BlocConsumer(
+                                    listener: (context, state) {
+                                      if (state is StockBloc_ConsumingItemsState)
+                                        CustomLoader.show(context);
+                                      else {
+                                        CustomLoader.hide();
+                                        if (state is StockBloc_ConsumingItemsErrorState)
+                                          ShowSnackBar(context, isSuccess: false, message: state.message);
+                                        else if (state is StockBloc_ConsumedItemSuccssefullyState) {
+                                          ShowSnackBar(context, isSuccess: true);
+                                          dialogHelper.dismissSingle(context);
+                                          bloc.add(StockBloc_GetStockEvent());
+                                        }
+                                      }
+                                    },
+                                    bloc: bloc,
+                                    builder: (context, state) {
+                                      return CIA_TextFormField(
+                                        label: "Number",
+                                        controller: TextEditingController(),
+                                        isNumber: true,
+                                        onChange: (v) => number = int.parse(v),
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              icon: Icon(Icons.remove),
+                            ))
+                      ]
+                    : [])
               ]))
           .toList();
   }

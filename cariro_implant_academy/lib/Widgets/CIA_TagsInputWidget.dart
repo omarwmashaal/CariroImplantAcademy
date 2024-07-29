@@ -12,6 +12,7 @@ class CIA_TagsInputWidget extends StatefulWidget {
     Key? key,
     required this.label,
     this.initialValue,
+    this.disableDelete = false,
     this.strikeValues,
     this.onDelete,
     this.disableBorder = false,
@@ -26,6 +27,7 @@ class CIA_TagsInputWidget extends StatefulWidget {
   List<String>? strikeValues;
   bool dynamicVisibility;
   bool disableBorder;
+  bool disableDelete;
   bool isSmall;
 
   @override
@@ -54,29 +56,30 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
     bool show = widget.dynamicVisibility ? widget.initialValue!.isNotEmpty : true;
     return show
         ? Row(
-          
-          children: [
-            Expanded(
-              child: Column(
+            children: [
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FormTextKeyWidget(text: widget.label,smallFont: widget.isSmall),
+                    FormTextKeyWidget(text: widget.label, smallFont: widget.isSmall),
                     Container(
-                      decoration: widget.disableBorder?null: BoxDecoration(
-                          border: Border.fromBorderSide(
-                            BorderSide(color: Color_TextFieldBorder, width: 0.0),
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      decoration: widget.disableBorder
+                          ? null
+                          : BoxDecoration(
+                              border: Border.fromBorderSide(
+                                BorderSide(color: Color_TextFieldBorder, width: 0.0),
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Wrap(
                         children: widget.initialValue!
                             .map((e) => Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Chip(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: Chip(
                                     labelPadding: const EdgeInsets.only(left: 2.0),
                                     label: Text(
                                       e.replaceAll("strike", ""),
                                       style: TextStyle(
-                                        fontSize: widget.isSmall?10:null,
+                                          fontSize: widget.isSmall ? 10 : null,
                                           decoration: e.contains("strike") ? TextDecoration.lineThrough : null,
                                           color: e.contains("strike") ? Colors.red : Colors.black),
                                     ),
@@ -85,24 +88,22 @@ class _CIA_TagsInputWidgetState extends State<CIA_TagsInputWidget> {
                                       size: 10,
                                     ),
                                     onDeleted: () {
-                                      if (widget.initialValue != null) {
+                                      if (widget.initialValue != null && !widget.disableDelete) {
                                         widget.initialValue!.remove(e);
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       }
                                       if (widget.onDelete != null) widget.onDelete!(e);
                                     },
                                   ),
-                            ))
+                                ))
                             .toList(),
                       ),
                     ),
                   ],
                 ),
-            ),
-          ],
-        )
+              ),
+            ],
+          )
         : SizedBox(
             height: 1,
           );

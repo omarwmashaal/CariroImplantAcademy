@@ -17,6 +17,10 @@ class ProstheticStepEntity {
   BasicNameIdObjectEntity? status;
   int? nextVisitId;
   BasicNameIdObjectEntity? nextVisit;
+  int? techniqueId;
+  BasicNameIdObjectEntity? technique;
+  int? materialId;
+  BasicNameIdObjectEntity? material;
   List<int>? teeth;
   bool single;
   bool bridge;
@@ -28,6 +32,10 @@ class ProstheticStepEntity {
   ProstheticStepEntity({
     this.id,
     this.patientId,
+    this.material,
+    this.materialId,
+    this.technique,
+    this.techniqueId,
     this.patient,
     this.operatorId,
     this.operator,

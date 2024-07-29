@@ -393,6 +393,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                                         children: [
                                           Expanded(
                                             child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                              onClear: () {
+                                                widget.data.assignedTo = null;
+                                                widget.data.assignedToID = null;
+                                              },
                                               asyncUseCase: sl<LoadUsersUseCase>(),
                                               searchParams: LoadUsersEnum.assistants,
                                               label: "Assign to assistant",
@@ -643,6 +647,11 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                       children: [
                         Expanded(
                           child: CIA_DropDownSearchBasicIdName<NoParams>(
+                            onClear: () {
+                              companyID = null;
+
+                              setState(() {});
+                            },
                             label: "Implant Company",
                             asyncUseCase: sl<GetImplantCompaniesUseCase>(),
                             searchParams: NoParams(),
@@ -656,6 +665,11 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         ),
                         Expanded(
                           child: CIA_DropDownSearchBasicIdName<int>(
+                            onClear: () {
+                              lineID = null;
+
+                              setState(() {});
+                            },
                             label: "Implant Lines",
                             asyncUseCase: companyID == null ? null : sl<GetImplantLinesUseCase>(),
                             emptyString: "Select implant company first",
@@ -677,6 +691,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                           },
                           builder: (context, state) {
                             return CIA_DropDownSearchBasicIdName<int>(
+                              onClear: () {},
                               label: "Implant Size",
                               asyncUseCase: lineID == null ? null : sl<GetImplantSizesUseCase>(),
                               emptyString: "Select implant line first",
@@ -724,6 +739,10 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                         )),
                   ),
                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    onClear: () {
+                      widget.data.doneByAssistant = null;
+                      widget.data.doneByAssistantID = null;
+                    },
                     label: "Assistant",
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     searchParams: LoadUsersEnum.assistants,
@@ -735,6 +754,11 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     },
                   ),
                   CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                    onClear: () {
+                      widget.data.doneBySupervisor = null;
+                      widget.data.doneBySupervisorID = null;
+                      widget.bloc.tempSuperVisor = null;
+                    },
                     label: "Supervisor",
                     asyncUseCase: sl<LoadUsersUseCase>(),
                     searchParams: LoadUsersEnum.supervisors,
@@ -746,6 +770,12 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     },
                   ),
                   CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      widget.data.doneByCandidateBatch = null;
+                      widget.data.doneByCandidateBatchID = null;
+                      widget.bloc.tempCandidateBatch = null;
+                      setState(() {});
+                    },
                     label: "Candidate Batch",
                     asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
                     selectedItem: widget.data.doneByCandidateBatch,
@@ -757,6 +787,11 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                     },
                   ),
                   CIA_DropDownSearchBasicIdName<int>(
+                    onClear: () {
+                      widget.data.doneByCandidate = null;
+                      widget.data.doneByCandidateID = null;
+                      widget.bloc.tempCandidate = null;
+                    },
                     label: "Candidate",
                     asyncUseCase: widget.data.doneByCandidateBatchID == null ? null : sl<LoadCandidatesByBatchId>(),
                     searchParams: widget.data.doneByCandidateBatchID ?? 0,
@@ -787,7 +822,7 @@ class _ToothStatusWidgetState extends State<ToothStatusWidget> {
                             children: [
                               Row(
                                 children: [
-                                  FormTextKeyWidget(text: "Tooth: ${widget.data.tooth==0?"All":widget.data.tooth} || "),
+                                  FormTextKeyWidget(text: "Tooth: ${widget.data.tooth == 0 ? "All" : widget.data.tooth} || "),
                                   FormTextKeyWidget(text: widget.data.treatmentItem!.name!),
                                 ],
                               ),

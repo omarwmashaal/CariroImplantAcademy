@@ -9,22 +9,28 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
   int? statusId;
   BasicNameIdObjectEntity? status;
   BasicNameIdObjectEntity? nextVisit;
+  BasicNameIdObjectEntity? technique;
+  BasicNameIdObjectEntity? material;
   int? nextId;
+  int? materialId;
+  int? techniqueId;
   EnumProstheticType type;
   bool? fullArch;
   bool? screwRetained;
   bool? cementRetained;
-  ComplicationsAfterProsthesisEntity? complicationsAnd;
-  ComplicationsAfterProsthesisEntity? complicationsOr;
+  List<int>? complicationsAfterProstheticIds;
+  List<int>? complicationsAfterProstheticIdsOr;
 
   AdvancedProstheticSearchRequestEntity({
     this.ids,
     this.itemId,
     this.statusId,
     this.nextId,
+    this.materialId,
+    this.techniqueId,
     this.fullArch = false,
-    this.complicationsAnd,
-    this.complicationsOr,
+    this.complicationsAfterProstheticIds,
+    this.complicationsAfterProstheticIdsOr,
     this.screwRetained = false,
     this.cementRetained = false,
     this.type = EnumProstheticType.Diagnostic,
@@ -37,6 +43,8 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
         this.itemId,
         this.statusId,
         this.nextId,
+        this.materialId,
+        this.techniqueId,
         this.fullArch,
         screwRetained,
         cementRetained,
@@ -46,8 +54,10 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
       this.itemId == null &&
       this.statusId == null &&
       this.nextId == null &&
-      complicationsAnd == null &&
-      complicationsOr == null &&
+      this.materialId == null &&
+      this.techniqueId == null &&
+      complicationsAfterProstheticIdsOr == null &&
+      complicationsAfterProstheticIds == null &&
       screwRetained != true &&
       cementRetained != true;
 
@@ -55,8 +65,10 @@ class AdvancedProstheticSearchRequestEntity extends Equatable {
     itemId = null;
     statusId = null;
     nextId = null;
-    complicationsAnd = null;
-    complicationsOr = null;
+    materialId = null;
+    techniqueId = null;
+    complicationsAfterProstheticIdsOr = null;
+    complicationsAfterProstheticIds = null;
     fullArch = false;
     screwRetained = false;
     cementRetained = false;

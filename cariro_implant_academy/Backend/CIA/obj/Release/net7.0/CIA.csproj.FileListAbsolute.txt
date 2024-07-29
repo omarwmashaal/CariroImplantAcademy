@@ -187,3 +187,5 @@ D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_imp
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\runtimes\win-x86\native\sni.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\Exceptionless.DateTimeExtensions.dll
+D:\Projects\CIA\Frontend_\cariro_implant_academy\CariroImplantAcademy\cariro_implant_academy\Backend\CIA\bin\Release\net7.0\Portable.Licensing.dll

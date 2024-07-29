@@ -9,6 +9,10 @@ class PostSurgicalTreatmentModel extends PostSurgicalTreatmentEntity {
     super.id,
     super.treatmentDetailsModelId,
     super.doctor,
+    super.notesSuture,
+    super.notesGBR,
+    super.notesOSL,
+    super.notesSTG,
     super.requestChanges,
     super.patientId,
     super.guidedBoneRegeneration,
@@ -93,6 +97,10 @@ class PostSurgicalTreatmentModel extends PostSurgicalTreatmentEntity {
   factory PostSurgicalTreatmentModel.fromEntity(PostSurgicalTreatmentEntity entity) {
     return PostSurgicalTreatmentModel(
       id: entity.id,
+      notesSuture: entity.notesSuture,
+      notesGBR: entity.notesGBR,
+      notesOSL: entity.notesOSL,
+      notesSTG: entity.notesSTG,
       treatmentDetailsModelId: entity.treatmentDetailsModelId,
       requestChanges: entity.requestChanges,
       patientId: entity.patientId,
@@ -178,6 +186,10 @@ class PostSurgicalTreatmentModel extends PostSurgicalTreatmentEntity {
 
   PostSurgicalTreatmentModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    notesSuture = json['notesSuture'];
+    notesGBR = json['notesGBR'];
+    notesOSL = json['notesOSL'];
+    notesSTG = json['notesSTG'];
     treatmentDetailsModelId = json['treatmentDetailsModelId'];
     requestChanges = json['requestChanges'] == null
         ? null
@@ -269,6 +281,10 @@ class PostSurgicalTreatmentModel extends PostSurgicalTreatmentEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['notesSuture'] = this.notesSuture;
+    data['notesGBR'] = this.notesGBR;
+    data['notesOSL'] = this.notesOSL;
+    data['notesSTG'] = this.notesSTG;
     data['treatmentDetailsModelId'] = this.treatmentDetailsModelId;
     data['requestChanges'] =
         this.requestChanges == null ? null : (this.requestChanges!.map((e) => RequestChangeModel.fromEntity(e).toJson()).toList());

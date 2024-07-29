@@ -1,3 +1,6 @@
+import 'package:cariro_implant_academy/core/data/models/BasicNameIdObjectModel.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -9,18 +12,21 @@ import '../../../patientsMedical/complications/domain/entities/complicationsAfte
 class AdvancedTreatmentSearchEntity extends Equatable {
   List<int>? ids;
   int? id;
+  BasicNameIdObjectEntity? candidate;
+  BasicNameIdObjectEntity? candidateBatch;
   int? tooth;
   String? secondaryId;
   String? patientName;
   bool? noTreatmentPlan;
+  bool? sameTooth;
   bool? clearnaceUpper;
   bool? clearnaceLower;
   bool? done;
   List<int>? and_treatmentIds;
   List<int>? or_treatmentIds;
   bool? implantFailed;
-  ComplicationsAfterSurgeryEntity? complicationsAfterSurgery;
-  ComplicationsAfterSurgeryEntity? complicationsAfterSurgeryOr;
+  List<int>? complicationsAfterSurgeryIds;
+  List<int>? complicationsAfterSurgeryIdsOr;
   String? str_complicationsAfterSurgery;
   String? str_complicationsAfterProsthesis;
 
@@ -29,17 +35,25 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   String? treatmentValue;
   String? treatmentName;
   int? treatmentId;
+  BasicNameIdObjectEntity? implantLineId;
+  BasicNameIdObjectEntity? implantCompanyId;
+  BasicNameIdObjectEntity? implantId;
+  String? implantLine;
+  String? implant;
 
   AdvancedTreatmentSearchEntity({
     this.id,
     this.ids,
+    this.candidate,
+    this.sameTooth,
+    this.candidateBatch,
     this.secondaryId,
     this.tooth,
-    this.complicationsAfterSurgeryOr,
+    this.complicationsAfterSurgeryIdsOr,
     this.patientName,
     this.done,
     this.implantFailed,
-    this.complicationsAfterSurgery,
+    this.complicationsAfterSurgeryIds,
     this.noTreatmentPlan,
     this.clearnaceLower = false,
     this.clearnaceUpper = false,
@@ -52,6 +66,10 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.treatmentName,
     this.treatmentValue,
     this.treatmentId,
+    this.implantLineId,
+    this.implantId,
+    this.implantLine,
+    this.implant,
   }) {
     and_treatmentIds = and_treatmentIds ?? [];
     or_treatmentIds = or_treatmentIds ?? [];
@@ -61,10 +79,10 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   List<Object?> get props => [
         this.id,
         this.tooth,
-        this.complicationsAfterSurgeryOr,
+        this.complicationsAfterSurgeryIdsOr,
         this.secondaryId,
         this.implantFailed,
-        this.complicationsAfterSurgery,
+        this.complicationsAfterSurgeryIds,
         this.patientName,
         this.done,
         this.ids,
@@ -80,7 +98,14 @@ class AdvancedTreatmentSearchEntity extends Equatable {
 
   bool isNull() =>
       noTreatmentPlan == null &&
+      implantId == null &&
+      implantLineId == null &&
+      implantLineId == sameTooth &&
+      candidate == null &&
+      candidateBatch == null &&
       implantFailed == null &&
+      complicationsAfterSurgeryIds == null &&
+      complicationsAfterSurgeryIdsOr == null &&
       (and_treatmentIds?.isEmpty ?? true) &&
       (or_treatmentIds?.isEmpty ?? true) &&
       clearnaceLower != true &&

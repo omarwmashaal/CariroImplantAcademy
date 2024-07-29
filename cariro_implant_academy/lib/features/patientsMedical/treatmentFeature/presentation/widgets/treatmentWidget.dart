@@ -72,6 +72,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
   BasicNameIdObjectEntity? tempCandidate;
   BasicNameIdObjectEntity? tempSuperVisor;
   int? tempCandidateBatch;
+  bool bridge = false;
 
   save() {
     if (medicalShellBloc.allowEdit) {
@@ -176,6 +177,10 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                 buildWhen: (previous, current) => current is TreatmentBloc_SelectedStatusState,
                                 builder: (context, state) {
                                   return CIA_TeethChart(
+                                    showSingleBridgeSelection: true,
+                                    onSingleBridgeChange: (_bridge) {
+                                      bridge = _bridge;
+                                    },
                                     onChange: (selectedTeethList) {
                                       selectedTeeth = selectedTeethList;
                                       // bloc.emit(TreatmentPlanBloc_TeethSelectedState());
@@ -230,7 +235,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                             return CIA_MultiSelectChipWidget(
                                 key: GlobalKey(),
                                 onChange: (item, isSelected) {
-                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).allTeeth==true) {
+                                  if (treatmentItems.firstWhere((element) => element.id == int.parse(item)).allTeeth == true) {
                                     selectedTreatmentItemId = [int.parse(item)];
                                     selectedTeeth = [0];
                                     bloc.emit(TreatmentBloc_ShowTickState(showTick: true));
@@ -358,6 +363,7 @@ class _TreatmentWidgetState extends State<TreatmentWidget> {
                                         selectedTeeth: selectedTeeth,
                                         patientId: widget.patientId,
                                         isSurgical: widget.surgical,
+                                        bridge: bridge,
                                         patientsDoctor: treatmentPlanEntity.doctor,
                                       ));
                                     },

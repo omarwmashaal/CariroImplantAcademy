@@ -10,6 +10,7 @@ class ToDoListModel extends ToDoListEntity {
     super.operator,
     super.operatorId,
     super.patientId,
+    super.patient,
     super.id,
   });
 
@@ -20,6 +21,7 @@ class ToDoListModel extends ToDoListEntity {
         data: data['data'],
         done: data['done'],
         operator: data['operator'] == null ? null : BasicNameIdObjectModel.fromJson(data['operator']),
+        patient: data['patient'] == null ? null : BasicNameIdObjectModel.fromJson(data['patient']),
         operatorId: data['operatorId'],
         patientId: data['patientId'],
         id: data['id']);

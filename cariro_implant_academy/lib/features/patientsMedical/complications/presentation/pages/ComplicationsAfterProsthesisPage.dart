@@ -2,6 +2,9 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
+import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/domain/entities/complicationsAfterProsthesisEntity.dart';
@@ -52,13 +55,10 @@ class ComplicationsAfterProsthesisPage extends StatefulWidget {
 
 class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterProsthesisPage> {
   late ComplicationsBloc bloc;
+  List<BasicNameIdObjectEntity> defaultComps = [];
+  late SettingsBloc settingsBloc;
+
   late List<ComplicationsAfterProsthesisEntity> complicationsAfterProsthesisEntity;
-  //late Future load;
-  List<String> complicationsNames = EunumComplicationsAfterProsthesis.values
-      .map(
-        (e) => AddSpacesToSentence(e.name),
-      )
-      .toList();
 
   late MedicalInfoShellBloc medicalShellBloc;
 
@@ -80,6 +80,9 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
   void initState() {
     bloc = BlocProvider.of<ComplicationsBloc>(context);
     medicalShellBloc = BlocProvider.of<MedicalInfoShellBloc>(context);
+    settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    settingsBloc.add(SettingsBloc_LoadDefaultProstheticComplicationsEvent());
+
     bloc.add(ComplicationsBloc_GetComplicationsAfterProsthesisEvent(id: widget.patientId));
     medicalShellBloc.add(MedicalInfoShell_ChangeTitleEvent(title: "Complications After Prosthesis"));
     medicalShellBloc.saveChanges = () {
@@ -126,35 +129,48 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
                 return StatefulBuilder(builder: (context, _setState) {
                   return Column(
                     children: [
-                      Wrap(
-                        children: complicationsNames
-                            .map(
-                              (e) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CIA_SecondaryButton(
-                                  icon: const Icon(Icons.add),
-                                  label: e,
-                                  onTab: () {
-                                    complicationsAfterProsthesisEntity = [
-                                      ...complicationsAfterProsthesisEntity,
-                                      ComplicationsAfterProsthesisEntity(
-                                        patientId: widget.patientId,
-                                        date: DateTime.now(),
-                                        name: e,
-                                        operator: BasicNameIdObjectEntity(
-                                          id: siteController.getUserId(),
-                                          name: siteController.getUserName(),
-                                        ),
-                                        operatorId: siteController.getUserId(),
-                                      )
-                                    ];
-                                    _setState(() {});
-                                  },
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
+                      BlocBuilder<SettingsBloc, SettingsBloc_States>(
+                          buildWhen: (previous, current) =>
+                              current is SettingsBloc_LoadingDefaultProstheticComplicationsErrorState ||
+                              current is SettingsBloc_LoadingDefaultProstheticComplicationsState ||
+                              current is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState,
+                          builder: (context, state) {
+                            if (state is SettingsBloc_LoadingDefaultProstheticComplicationsErrorState)
+                              return Text("Error Loading Default Complications");
+                            else if (state is SettingsBloc_LoadingDefaultProstheticComplicationsState)
+                              return LoadingWidget();
+                            else if (state is SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState) defaultComps = state.data;
+                            return Wrap(
+                              children: defaultComps
+                                  .map(
+                                    (e) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: CIA_SecondaryButton(
+                                        icon: const Icon(Icons.add),
+                                        label: e?.name ?? "",
+                                        onTab: () {
+                                          complicationsAfterProsthesisEntity = [
+                                            ...complicationsAfterProsthesisEntity,
+                                            ComplicationsAfterProsthesisEntity(
+                                              patientId: widget.patientId,
+                                              date: DateTime.now(),
+                                              name: e?.name,
+                                              defaultId: e?.id,
+                                              operator: BasicNameIdObjectEntity(
+                                                id: siteController.getUserId(),
+                                                name: siteController.getUserName(),
+                                              ),
+                                              operatorId: siteController.getUserId(),
+                                            )
+                                          ];
+                                          _setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          }),
                       Expanded(
                         child: ListView(
                           children: complicationsAfterProsthesisEntity
@@ -194,6 +210,10 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
                                               height: 100,
                                               onSave: () => setState(() => null),
                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                                                onClear: () {
+                                                  e.operatorId = null;
+                                                  e.operator = null;
+                                                },
                                                 asyncUseCase: sl<LoadUsersUseCase>(),
                                                 searchParams: LoadUsersEnum.instructorsAndAssistants,
                                                 onSelect: (value) {

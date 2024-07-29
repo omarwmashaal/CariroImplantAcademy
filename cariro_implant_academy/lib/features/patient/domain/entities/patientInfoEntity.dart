@@ -10,6 +10,7 @@ class PatientInfoEntity extends Equatable {
   int? id;
   String? secondaryId;
   EnumGender? gender;
+  EnumPatientCallHistory? callHistoryStatus;
   String? phone;
   bool? listed;
   int? age;
@@ -29,14 +30,19 @@ class PatientInfoEntity extends Equatable {
   Uint8List? profileImage;
   Uint8List? idFrontImage;
   Uint8List? idBackImage;
-  String? registrationDate;
+  DateTime? registrationDate;
   String? registeredBy;
   Website website;
   bool out;
   String? outReason;
+  List<int>? missingTeeth;
+  List<DiseasesEnum>? diseases;
 
   PatientInfoEntity({
     this.name,
+    this.missingTeeth,
+    this.diseases,
+    this.callHistoryStatus,
     this.id,
     this.gender,
     this.phone,

@@ -26,6 +26,7 @@ import 'package:cariro_implant_academy/core/features/coreReceipt/data/repositori
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/repositories/receiptReposiotry.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPatientReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addPaymentUsecase.dart';
+import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/addReceiptUseCase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getAllPaymentLogsUsecase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getLastReceiptUsecase.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/usecases/getPaymentLogsForAReceiptUsecase.dart';
@@ -52,6 +53,8 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ad
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultProstheticComplicationsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getImplantCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getIncomeCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
@@ -63,13 +66,19 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getStockCategoriesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTacsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultProstheticComplicationsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/helpers/dialogHelper.dart';
@@ -85,10 +94,13 @@ import 'package:cariro_implant_academy/features/cashflow/domain/repostiories/cas
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addIncomeUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/addSettlementUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/createInstallmentPlanUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getIncomeByCategoryUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getInstallmentPlanForUserUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/getSummaryUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listExpensesUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/domain/useCases/listIncomeUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/payInstallmentUseCase.dart';
 import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/datasources/clinicTreatmentDatasource.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/data/repositories/clinicTreatmentRepoImpl.dart';
@@ -141,6 +153,7 @@ import 'package:cariro_implant_academy/features/patient/domain/usecases/patientV
 import 'package:cariro_implant_academy/features/patient/domain/usecases/removeFromMyPatientsUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/resolveComplaiUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/scheduleNewVisit.dart';
+import 'package:cariro_implant_academy/features/patient/domain/usecases/searchToDoListUseCase%20.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateComplainNotesUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updatePatientDataUseCase.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/updateToDoListItemUseCase.dart';
@@ -374,8 +387,14 @@ initInjection() async {
    */
   //bloc
   sl.registerFactory(() => SettingsBloc(
+        updateDefaultSurgicalComplicationsUseCase: sl(),
+        getDefaultSurgicalComplicationsUseCase: sl(),
+        getDefaultProstheticComplicationsUseCase: sl(),
+        updateDefaultProstheticComplicationsUseCase: sl(),
         getProstheticItemsUseCase: sl(),
         getProstheticNextVisitUseCase: sl(),
+        getProstheticMaterialUseCase: sl(),
+        getProstheticTechniqueUseCase: sl(),
         getProstheticStatusUseCase: sl(),
         getImplantCompaniesUseCase: sl(),
         getImplantLinesUseCase: sl(),
@@ -420,17 +439,27 @@ initInjection() async {
         updateLabItemsParentsUseCase: sl(),
         updateProstheticItemsUseCase: sl(),
         updateProstheticNextVisitUseCase: sl(),
+        updateProstheticTechniqueUseCase: sl(),
+        updateProstheticMaterialUseCase: sl(),
         updateProstheticStatusUseCase: sl(),
         getLabOptionsUseCase: sl(),
         updateLabOptionsUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => GetDefaultSurgicalComplicationsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetDefaultProstheticComplicationsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateDefaultSurgicalComplicationsUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateDefaultProstheticComplicationsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticNextVisitUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticTechniqueUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => UpdateProstheticMaterialUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticItemsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticStatusUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetProstheticNextVisitUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticTechniqueUseCase(settingsRepository: sl()));
+  sl.registerLazySingleton(() => GetProstheticMaterialUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetLabItemParentsUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => GetTeethClinicPricesUseCase(settingsRepository: sl()));
   sl.registerLazySingleton(() => UpdateTeethClinicPricesUseCase(settingsRepository: sl()));
@@ -520,12 +549,14 @@ initInjection() async {
   //bloc
   sl.registerFactory(() => ReceiptBloc(
         getReceiptsUsecase: sl(),
+        addReceiptUseCase: sl(),
         getReceiptByIdUseCase: sl(),
         getPaymentLogsForAReceipt: sl(),
         removePaymentUseCase: sl(),
         addPaymentUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => AddReceiptUseCase(receiptRepository: sl()));
   sl.registerLazySingleton(() => AddPaymentUseCase(receiptRepository: sl()));
   sl.registerLazySingleton(() => GetAllPaymentLogsUsecase(receiptRepository: sl()));
   sl.registerLazySingleton(() => GetLastReceiptUsecase(receiptRepository: sl()));
@@ -637,10 +668,12 @@ initInjection() async {
   // bloc
   sl.registerFactory(() => ToDoListBloc(
         getToDoListUseCase: sl(),
+        searchToDoListUseCase: sl(),
         updateToDoListItemUseCase: sl(),
         addToDoListItemUseCase: sl(),
       ));
   //usecases
+  sl.registerLazySingleton(() => SearchToDoListUseCase(sl()));
   sl.registerLazySingleton(() => AddToDoListItemUseCase(sl()));
   sl.registerLazySingleton(() => UpdateToDoListItemUseCase(sl()));
   sl.registerLazySingleton(() => GetToDoListUseCase(sl()));
@@ -910,6 +943,7 @@ initInjection() async {
         getStockLogUseCase: sl(),
         getStockUseCase: sl(),
         getLabStockUseCase: sl(),
+        consumeItemByIdUseCase: sl(),
       ));
   //usecases
   sl.registerLazySingleton(() => GetStockUseCase(stockRepository: sl()));
@@ -934,9 +968,15 @@ initInjection() async {
         addSettlementUseCase: sl(),
         addExpensesUseCase: sl(),
         addIncomeUseCase: sl(),
+        createInstallmentPlanUseCase: sl(),
+        getInstallmentPlanForUserUseCase: sl(),
+        payInstallmentUseCase: sl(),
       ));
 
   //use cases
+  sl.registerLazySingleton(() => CreateInstallmentPlanUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => GetInstallmentPlanForUserUseCase(cashFlowRepository: sl()));
+  sl.registerLazySingleton(() => PayInstallmentUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => ListIncomeUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => ListExpensesUseCase(cashFlowRepository: sl()));
   sl.registerLazySingleton(() => GetSummaryUseCase(cashFlowRepository: sl()));

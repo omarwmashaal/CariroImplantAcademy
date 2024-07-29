@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/ClinicPriceSettingsPage.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/pages/LabItemsSettingsPage.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/pages/clinicTreeatmentPage.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/pages/todolistsSearchPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterProsthesisPage.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/complications/presentation/pages/ComplicationsAfterSurgeryPage.dart';
 import 'package:pointycastle/api.dart';
@@ -148,6 +149,7 @@ class SiteController {
         else if (path == PatientsSearchPage.routePath.split("/").last ||
             path == PatientsSearchPage.routeMyPath.split("/").last ||
             path == ComplainsSearchPage.routePath.split("/").last ||
+            path == ToDoListsSearchPage.routePath.split("/").last ||
             path == PatientAdvancedSearchPage.routePathPatients.split("/").last ||
             path == PatientAdvancedSearchPage.routePathProsthetic.split("/").last ||
             path == PatientAdvancedSearchPage.routePathTreatments.split("/").last ||
@@ -177,6 +179,10 @@ class SiteController {
                   title: "Patient Visits", compareName: VisitsPage.routePath.split("/").last, namedDirectory: VisitsPage.getSearchRouteName()),
               SlidingTabModel(
                   title: "Complains", compareName: ComplainsSearchPage.routePath.split("/").last, namedDirectory: ComplainsSearchPage.getRouteName()),
+              SlidingTabModel(
+                  title: "To Do Lists",
+                  compareName: ToDoListsSearchPage.routePath.split("/").last,
+                  namedDirectory: ToDoListsSearchPage.getRouteName()),
               path == PatientAdvancedSearchPage.routeNameTreatments
                   ? SlidingTabModel(title: "Advanced Search", namedDirectory: PatientAdvancedSearchPage.routeNameTreatments)
                   : path == PatientAdvancedSearchPage.routeNameProsthetic

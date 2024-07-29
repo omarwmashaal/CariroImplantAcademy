@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:js' as js;
+
 import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/SignalR/SignalR.dart';
@@ -16,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../Constants/Colors.dart';
 import '../../../../../Constants/Controllers.dart';
@@ -63,7 +67,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
       )
     );*/
-
     authenticationBloc = context.read<AuthenticationBloc>();
     if (siteController.getSite() == null) siteController.setSite(Website.CIA);
     return MultiBlocListener(
@@ -169,7 +172,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                                   ),
                                   CIA_PrimaryButton(
                                     label: "Login",
-                                    onTab: () => dispatchLogin(context),
+                                    onTab: () async {
+                                      dispatchLogin(context);
+                                    },
                                   ),
                                   Visibility(
                                     visible: siteController.isLoggedIn(),

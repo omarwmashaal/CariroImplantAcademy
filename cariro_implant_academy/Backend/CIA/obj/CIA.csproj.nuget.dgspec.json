@@ -52,6 +52,10 @@
               "target": "Package",
               "version": "[7.2.0, )"
             },
+            "Exceptionless.DateTimeExtensions": {
+              "target": "Package",
+              "version": "[3.4.3, )"
+            },
             "Hangfire": {
               "target": "Package",
               "version": "[1.8.12, )"
@@ -145,6 +149,10 @@
               "version": "[7.0.1, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL.Design": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "Portable.Licensing": {
               "target": "Package",
               "version": "[1.1.0, )"
             },

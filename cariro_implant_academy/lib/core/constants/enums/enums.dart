@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum DiabetesEnum {
@@ -39,7 +41,6 @@ enum LabStepStatus {
   NotYet,
 }
 
-
 enum EnumLabRequestStatus { InQueue, InProgress, FinishedDesign, Finished }
 
 enum EnumLabRequestStatus2 {
@@ -72,7 +73,7 @@ enum EnumTeethClassification { UpperAnterior, LowerAnterior, UpperPosterior, Low
 
 enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
 
-enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment }
+enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment, PatientVisit }
 
 T? mapToEnum<T extends Enum>(List<T> values, dynamic? value) {
   if (value is String) return values.firstWhereOrNull((element) => (element as Enum).name.toLowerCase() == value.toLowerCase());
@@ -269,25 +270,38 @@ enum EnumDortorsPercentageEnum {
   OperatorAndMain,
 }
 
-enum EunumComplicationsAfterSurgery {
-  Swelling,
-  OpenWound,
-  Numbness,
-  OroantralCommunication,
-  PusInImplantSite,
-  PusInDonorSite,
-  SinusElevationFailure,
-  GBRFailure,
-  Infection,
-  Inflamation,
+enum EnumPatientCallHistory {
+  CalledAndNoAnswer,
+  CalledAndNoVisit,
+  NoCalls,
+  WrongNumber,
+  NotInterested,
 }
 
-enum EunumComplicationsAfterProsthesis {
-  ScrewLoosness,
-  CrownFall,
-  FracturedZirconia,
-  FracturedPrintedPMMA,
-  FoodImpaction,
-  Pain,
-  ImplantFracture,
+class EnumPatientCallHistoryModel {
+  EnumPatientCallHistory value;
+  Icon icon;
+  EnumPatientCallHistoryModel({required this.value, required this.icon});
+}
+
+List<EnumPatientCallHistoryModel> _defualtPatientCallHistryIcons = [
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.CalledAndNoAnswer, icon: Icon(Icons.call_missed_outgoing)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.CalledAndNoVisit, icon: Icon(Icons.schedule)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.NoCalls, icon: Icon(Icons.call_end_outlined)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.WrongNumber, icon: Icon(Icons.highlight_remove_sharp)),
+  EnumPatientCallHistoryModel(value: EnumPatientCallHistory.NotInterested, icon: Icon(Icons.not_interested_sharp)),
+];
+Icon getDefaulCallHistoryIcon(EnumPatientCallHistory value) {
+  return _defualtPatientCallHistryIcons.firstWhere((element) => element.value == value).icon;
+}
+
+enum EnumInstallmentInterval {
+  monthly,
+  yearly,
+}
+
+enum EnumInstallmentStatus {
+  onTime,
+  overDue,
+  finished,
 }

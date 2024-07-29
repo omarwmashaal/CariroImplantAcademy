@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Portable.Licensing;
+using Portable.Licensing.Validation;
 using System;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -39,13 +41,14 @@ namespace CIA.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly API_response _apiResponse;
+        private readonly IAuthenticator _iAuthenticator;
         private readonly String secretKey;
         private readonly IMapper _mapper;
         private readonly CIA_dbContext _ciaDbContext;
         private readonly IUserRepo _userRepo;
         private readonly EnumWebsite _site;
 
-        public AuthenticationController(IUserRepo userRepo, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<ApplicationUser> userManager, IMapper mapper, CIA_dbContext cIA_DbContext, RoleManager<IdentityRole> roleManager)
+        public AuthenticationController(IUserRepo userRepo, IHttpContextAccessor httpContextAccessor, IConfiguration configuration, UserManager<ApplicationUser> userManager, IMapper mapper, CIA_dbContext cIA_DbContext, RoleManager<IdentityRole> roleManager, IAuthenticator iAuthenticator)
         {
 
             _userManager = userManager;
@@ -60,6 +63,7 @@ namespace CIA.Controllers
             else
                 _site = (EnumWebsite)int.Parse(site);
             _userRepo = userRepo;
+            _iAuthenticator = iAuthenticator;
         }
 
 
@@ -236,6 +240,33 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
         }
 
+        
+
+        [AllowAnonymous]
+        [HttpGet("MigrateToImplantFailed")]
+        public async Task<IActionResult> MigrateToImplantFailed()
+        {
+            var patientIds = await _ciaDbContext.Patients.Select(X => X.Id).ToListAsync();
+            foreach (var id in patientIds)
+            {
+                var dentalEx = await _ciaDbContext.DentalExaminations.FirstOrDefaultAsync(x => x.PatientId == id);
+                var failedTeeth = dentalEx.DentalExaminations.Where(x => x.ImplantFailed == true).Select(x => x.Tooth).ToList();
+                var treatmentDetails = await _ciaDbContext.TreatmentDetails.Where(x => x.PatientId == id).ToListAsync();
+                foreach (var item in treatmentDetails)
+                {
+                    if (failedTeeth.Contains(item.Tooth))
+                    {
+                        item.FailedImplant = true;
+                    }
+                    else item.FailedImplant = false;
+                }
+                _ciaDbContext.TreatmentDetails.UpdateRange(treatmentDetails);
+            }
+            _ciaDbContext.SaveChanges();
+            return Ok();
+
+
+        }
         [AllowAnonymous]
         [HttpGet("MigrateToNewReceiptSystem")]
         public async Task<IActionResult> MigrateToNewReceiptSystem()
@@ -385,6 +416,46 @@ namespace CIA.Controllers
             _ciaDbContext.Receipts.UpdateRange(receipt);
             _ciaDbContext.SaveChanges();
             return Ok();
+        }
+        [AllowAnonymous]
+        [HttpGet("MigrateToNewComplicationsSystem")]
+        public async Task<IActionResult> MigrateToNewComplicationsSystem()
+        {
+            var defautlCOmSurgical = _ciaDbContext.DefaultSurgicalComplications.ToList();
+            var comsSurgical = _ciaDbContext.ComplicationsAfterSurgery.ToList();
+            foreach (var com in comsSurgical)
+            {
+                try
+                {
+                    com.DefaultSurgicalComplicationsId = defautlCOmSurgical.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("");
+                }
+            }
+            _ciaDbContext.ComplicationsAfterSurgery.UpdateRange(comsSurgical);
+            _ciaDbContext.SaveChanges();
+
+            var defautlCOmProsth = _ciaDbContext.DefaultProstheticComplications.ToList();
+            var comsProsthetci = _ciaDbContext.ComplicationsAfterProsthesis.ToList();
+            foreach (var com in comsProsthetci)
+            {
+                try
+                {
+                    com.DefaultProstheticComplicationsId = defautlCOmProsth.First(x => x.Name.ToLower().Replace(" ", "") == com.Name.ToLower().Replace(" ", "")).Id;
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("");
+                }
+            }
+            _ciaDbContext.ComplicationsAfterProsthesis.UpdateRange(comsProsthetci);
+            _ciaDbContext.SaveChanges();
+
+            return Ok(await _ciaDbContext.ComplicationsAfterProsthesis.Include(x => x.DefaultProstheticComplication).ToListAsync());
         }
 
         [AllowAnonymous]
@@ -595,12 +666,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
                 var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -632,12 +703,12 @@ namespace CIA.Controllers
                     };
                     var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
                     var nextNew = diagnosticNextVisit.FirstOrDefault(x => x.Id == toAdd.DiagnosticNextVisitItemId)?.Name;
-                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                     }
-                    else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                    else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -671,12 +742,12 @@ namespace CIA.Controllers
 
                     };
                     var statusNew = diagnosticStatus.FirstOrDefault(x => x.Id == toAdd.DiagnosticStatusItemId)?.Name;
-                    if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                    if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                     {
                         Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                     }
-                    
+
                     else
                     {
                         Console.WriteLine($"{statusOld} {statusNew} ");
@@ -711,12 +782,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -754,12 +825,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -827,12 +898,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -869,12 +940,12 @@ namespace CIA.Controllers
                 };
                 var statusNew = finalStatus.FirstOrDefault(x => x.Id == toAdd.FinalStatusItemId)?.Name;
                 var nextNew = finalNextVisit.FirstOrDefault(x => x.Id == toAdd.FinalNextVisitItemId)?.Name;
-                if (statusOld!=null && statusNew.Replace(" ", "").Replace("+","").ToLower() != statusOld.Replace("_","").Replace("+","").Replace(" ", "").ToLower())
+                if (statusOld != null && statusNew.Replace(" ", "").Replace("+", "").ToLower() != statusOld.Replace("_", "").Replace("+", "").Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Status {statusOld} {statusNew}==============================================================");
 
                 }
-                else if (nextOld!=null && nextOld.Replace(" ", "").Replace("_","").ToLower() != nextNew.Replace(" ", "").ToLower())
+                else if (nextOld != null && nextOld.Replace(" ", "").Replace("_", "").ToLower() != nextNew.Replace(" ", "").ToLower())
                 {
                     Console.WriteLine($"Next : {nextOld} {nextNew}==============================================================");
 
@@ -920,7 +991,7 @@ namespace CIA.Controllers
             var result = await _ciaDbContext.FinalSteps.ToListAsync();
             var diresult = await _ciaDbContext.DiagnosticSteps.ToListAsync();
             _ciaDbContext.FinalSteps.RemoveRange(result);
-           _ciaDbContext.DiagnosticSteps.RemoveRange(diresult);
+            _ciaDbContext.DiagnosticSteps.RemoveRange(diresult);
             _ciaDbContext.SaveChanges();
             return Ok();
         }
@@ -3331,11 +3402,24 @@ namespace CIA.Controllers
 
             return Ok();
         }
-
+        [AllowAnonymous]
         [HttpGet("Test")]
         public async Task<IActionResult> Test()
         {
             return Ok("Connected");
+        }
+        [AllowAnonymous]
+        [HttpGet("MigrateToTreatmentBridge")]
+        public async Task<IActionResult> MigrateToTreatmentBridge()
+        {
+            var details = await _ciaDbContext.TreatmentDetails.ToListAsync();
+            foreach(var d in details)
+            {
+                d.Bridge = false;
+            }
+            _ciaDbContext.TreatmentDetails.UpdateRange(details);
+            _ciaDbContext.SaveChanges();
+            return Ok();
         }
 
 
@@ -3367,7 +3451,7 @@ namespace CIA.Controllers
                 {
                     comps.Add(new ComplicationsAfterSurgeryModel()
                     {
-                        Name = Enum.GetName(typeof(EunumComplicationsAfterSurgery), rnd.Next(0, 7)),
+                        //Name = Enum.GetName(typeof(EunumComplicationsAfterSurgery), rnd.Next(0, 7)),
                         Date = DateTime.UtcNow,
                         Tooth = rnd.Next(1, 40),
                         PatientId = id,

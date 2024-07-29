@@ -7,6 +7,8 @@ namespace CIA.Models.CIA.DTOs
     {
         public int? Id { get; set; }
         public List<int>? Ids { get; set; }
+        public int? CandidateId { get; set; }
+        public int? CandidateBatchId { get; set; }
         public String? PatientName { get; set; }
         public bool? Done { get; set; } = false;
         public bool? NoTreatmentPlan { get; set; } = false;
@@ -53,10 +55,13 @@ namespace CIA.Models.CIA.DTOs
         public bool? And_closedSinusWithoutImplant { get; set; }
         public bool? ClearanceUpper { get; set; }
         public bool? ClearanceLower { get; set; }
+        public bool? SameTooth { get; set; }
 
-        public ComplicationsAfterSurgeryModel? complicationsAfterSurgery { get; set; }
-        public ComplicationsAfterSurgeryModel? complicationsAfterSurgeryOr { get; set; }
+        public List<int>? complicationsAfterSurgeryIds { get; set; }
+        public List<int>? complicationsAfterSurgeryIdsOr { get; set; }
         public bool? ImplantFailed { get; set; }
+        public int? ImplantLineId { get; set; }
+        public int? ImplantId { get; set; }
      
 
 

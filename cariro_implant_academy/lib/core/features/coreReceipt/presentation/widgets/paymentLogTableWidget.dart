@@ -1,8 +1,12 @@
 import 'package:cariro_implant_academy/Constants/Controllers.dart';
+import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/paymentLogEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/domain/entities/receiptEntity.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc.dart';
 import 'package:cariro_implant_academy/core/features/coreReceipt/presentation/blocs/receiptBloc_States.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getPaymentMethodsUseCase.dart';
+import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
@@ -22,25 +26,25 @@ import '../../../../constants/enums/enums.dart';
 
 class PaymentLogTableWidget {
   final BuildContext context;
-  final int patientId;
+  final int? patientId;
   final int receiptId;
 
   PaymentLogTableWidget({
     required this.receiptId,
     required this.context,
-    required this.patientId,
+    this.patientId = 0,
   });
 
   void call() {
     ReceiptBloc bloc = context.read<ReceiptBloc>();
     late ReceiptEntity receipt;
     PaymentLogsTableDataSource dataSource = PaymentLogsTableDataSource(bloc: bloc);
-    bloc.loadPaymentLogTableData(patientId: patientId, receiptId: receiptId);
+    bloc.loadPaymentLogTableData(receiptId: receiptId);
     CIA_ShowPopUp(
-      width: 1000,
+      width: double.maxFinite,
       context: context,
       onSave: () {
-        bloc.getPatientReceipts(patientId);
+        if (patientId != null) bloc.getPatientReceipts(patientId!);
       },
       child: BlocConsumer<ReceiptBloc, ReceiptBloc_States>(
         buildWhen: (previous, current) =>
@@ -76,15 +80,20 @@ class PaymentLogTableWidget {
                               SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Expanded(child: FormTextKeyWidget(text: "Patient ID")),
-                                  Expanded(child: FormTextValueWidget(text: (receipt.patient!.id ?? "").toString())),
+                                  Expanded(child: FormTextKeyWidget(text: receipt.patient?.id == null ? "Candidate Id" : "Patient ID")),
+                                  Expanded(
+                                      child: FormTextValueWidget(
+                                          text: (receipt.patient?.id == null ? (receipt.candidate?.id ?? "") : (receipt.patient?.id ?? ""))
+                                              .toString())),
                                 ],
                               ),
                               SizedBox(height: 10),
                               Row(
                                 children: [
-                                  Expanded(child: FormTextKeyWidget(text: "Patient Name")),
-                                  Expanded(child: FormTextValueWidget(text: receipt.patient!.name ?? "")),
+                                  Expanded(child: FormTextKeyWidget(text: receipt.patient?.name == null ? "Candidate Name" : "Patient Name")),
+                                  Expanded(
+                                      child: FormTextValueWidget(
+                                          text: receipt.patient?.name == null ? (receipt.candidate?.name ?? "") : (receipt.patient?.name ?? ""))),
                                 ],
                               ),
                               SizedBox(height: 10),
@@ -110,7 +119,7 @@ class PaymentLogTableWidget {
                                               padding: const EdgeInsets.only(bottom: 10),
                                               child: Row(
                                                 children: [
-                                                  Expanded(child: FormTextKeyWidget(text: "Tooth ${e.tooth==0?"All":e.tooth} ${e.name}")),
+                                                  Expanded(child: FormTextKeyWidget(text: "Tooth ${e.tooth == 0 ? "All" : e.tooth} ${e.name}")),
                                                   Expanded(child: FormTextValueWidget(text: (e.price ?? 0).toString())),
                                                 ],
                                               ),
@@ -154,30 +163,50 @@ class PaymentLogTableWidget {
                           ],
                         ),
                       ),
-                      CIA_PrimaryButton(
-                          label: "Add payment",
-                          onTab: () async {
-                            int newPrice = 0;
-                            CIA_ShowPopUp(
-                              height: 200,
-                              context: context,
-                              onSave: () => bloc.addPayment(
-                                patientId: patientId,
-                                receiptId: receiptId,
-                                paidAmount: newPrice,
-                              ),
-                              child: CIA_TextFormField(
-                                label: "New payment",
-                                isNumber: true,
-                                controller: TextEditingController(),
-                                onChange: (v) => newPrice = int.parse(v),
-                                validator: (value) {
-                                  if (int.parse(value) >= receipt.unpaid!) value = receipt.unpaid!.toString();
-                                  return value;
-                                },
-                              ),
-                            );
-                          })
+                      patientId == null
+                          ? Container()
+                          : CIA_PrimaryButton(
+                              label: "Add payment",
+                              onTab: () async {
+                                int newPrice = 0;
+                                BasicNameIdObjectEntity? paymentMethod;
+                                CIA_ShowPopUp(
+                                  height: 200,
+                                  context: context,
+                                  onSave: () => bloc.addPayment(
+                                    patientId: patientId!,
+                                    receiptId: receiptId,
+                                    paidAmount: newPrice,
+                                    paymentMethodId: paymentMethod?.id,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      CIA_TextFormField(
+                                        label: "New payment",
+                                        isNumber: true,
+                                        controller: TextEditingController(),
+                                        onChange: (v) => newPrice = int.parse(v),
+                                        validator: (value) {
+                                          if (int.parse(value) >= receipt.unpaid!) value = receipt.unpaid!.toString();
+                                          return value;
+                                        },
+                                      ),
+                                      SizedBox(height: 10),
+                                      CIA_DropDownSearchBasicIdName(
+                                        onClear: () {
+                                          paymentMethod = null;
+                                        },
+                                        label: "Payment Method",
+                                        asyncUseCase: sl<GetPaymentMethodsUseCase>(),
+                                        onSelect: (value) {
+                                          paymentMethod = value;
+                                        },
+                                        selectedItem: paymentMethod,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              })
                     ],
                   ),
                 ),
@@ -214,12 +243,12 @@ class PaymentLogTableWidget {
           if (state is ReceiptBloc_LoadedPaymentLogsSuccessfullyState)
             dataSource.updateData(state.paymentLogs);
           else if (state is ReceiptBloc_RemovedPaymentSuccessfullyState) {
-            bloc.loadPaymentLogTableData(patientId: patientId, receiptId: receiptId);
+            bloc.loadPaymentLogTableData(receiptId: receiptId);
             ShowSnackBar(context, isSuccess: true);
             CustomLoader.hide();
           } else if (state is ReceiptBloc_AddedPaymentSuccessfullyState) {
             //  dialogHelper.dismissSingle(context);
-            bloc.loadPaymentLogTableData(patientId: patientId, receiptId: receiptId);
+            bloc.loadPaymentLogTableData(receiptId: receiptId);
             ShowSnackBar(context, isSuccess: true);
             CustomLoader.hide();
           } else if (state is ReceiptBloc_RemovingPaymentState || state is ReceiptBloc_AddingPaymentState) CustomLoader.show(context);
@@ -244,10 +273,11 @@ class PaymentLogsTableDataSource extends DataGridSource {
         .map<DataGridRow>((e) => DataGridRow(cells: [
               DataGridCell<int>(columnName: 'ID', value: e.id),
               DataGridCell<DateTime>(columnName: 'Date', value: e.date),
-              DataGridCell<String>(columnName: 'Patient Name', value: e.patient!.name),
-              DataGridCell<int>(columnName: 'Patient Id', value: e.patientId!),
+              DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
+              DataGridCell<int>(columnName: 'Patient Id', value: e.patientId),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
               DataGridCell<int>(columnName: 'Paid', value: e.paidAmount),
+              DataGridCell<String>(columnName: 'Payment Method', value: e.paymentMethod?.name ?? "-"),
               DataGridCell<Widget>(
                   columnName: 'Remove Payment',
                   value: IconButton(

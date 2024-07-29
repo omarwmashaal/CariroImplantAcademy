@@ -73,7 +73,6 @@ class _StockSearchPageState extends State<StockSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    bloc = BlocProvider.of<StockBloc>(context);
     performSearch();
     return Column(
       children: [
@@ -230,6 +229,13 @@ class _StockSearchPageState extends State<StockSearchPage> {
               children: [
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      company = null;
+                      parent = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Type",
                     asyncUseCaseDynamic: sl<GetLabItemParentsUseCase>(),
                     selectedItem: parent,
@@ -245,6 +251,12 @@ class _StockSearchPageState extends State<StockSearchPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      company = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Company",
                     asyncUseCase: sl<GetLabItemsCompaniesUseCase>(),
                     selectedItem: company,
@@ -260,6 +272,11 @@ class _StockSearchPageState extends State<StockSearchPage> {
                 SizedBox(width: 10),
                 Expanded(
                   child: CIA_DropDownSearchBasicIdName(
+                    onClear: () {
+                      shade = null;
+                      _setState(() => null);
+                      performSearch();
+                    },
                     label: "Shade",
                     asyncUseCase: sl<GetLabItemsLinesUseCase>(),
                     selectedItem: shade,
@@ -390,7 +407,9 @@ class _StockSearchPageState extends State<StockSearchPage> {
 
   @override
   void initState() {
-    stock_dataSource = StockDataGridSource(context: context);
+    bloc = BlocProvider.of<StockBloc>(context);
+
+    stock_dataSource = StockDataGridSource(context: context, bloc: bloc);
     //todo:fix this
     //siteController.setAppBarWidget(tabs: ["Stock", "Logs"]);
   }

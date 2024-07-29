@@ -213,6 +213,15 @@ class _UserSearchPageState extends State<UserSearchPage> {
                           Container(
                             width: 400,
                             child: CIA_DropDownSearchBasicIdName(
+                              onClear: () {
+                                batchId = null;
+                                batchName = null;
+                                bloc.add(UsersBloc_SearchUsersByRoleEvent(
+                                  role: widget.type,
+                                  search: search,
+                                  batchId: batchId,
+                                ));
+                              },
                               asyncUseCase: sl<LoadCandidateBatchesUseCase>(),
                               label: "Batch",
                               onSelect: (value) {
@@ -239,8 +248,10 @@ class _UserSearchPageState extends State<UserSearchPage> {
                             builder: (context, state) {
                               String status = "";
                               if (state is UsersBloc_RefreshingCandidateDatatate) status = "Refreshing ${batchName ?? "All"} Candidates Data ...";
-                              return FormTextValueWidget(text: status,);
-                              },
+                              return FormTextValueWidget(
+                                text: status,
+                              );
+                            },
                           )
                         ],
                       ),

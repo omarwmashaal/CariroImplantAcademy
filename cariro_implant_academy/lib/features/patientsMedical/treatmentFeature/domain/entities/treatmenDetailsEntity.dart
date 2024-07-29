@@ -12,6 +12,7 @@ class TreatmentDetailsEntity extends Equatable {
   BasicNameIdObjectEntity? patient;
   String? value;
   bool? status;
+  bool? failedImplant;
   int? assignedToID;
   BasicNameIdObjectEntity? assignedTo;
   DateTime? date;
@@ -34,12 +35,15 @@ class TreatmentDetailsEntity extends Equatable {
   String? title;
   int? treatmentItemId;
   TreatmentItemEntity? treatmentItem;
+  bool? bridge;
 
   TreatmentDetailsEntity({
     this.id,
     this.patientId,
+    this.bridge,
     this.postSurgeryModelId,
     this.patient,
+    this.failedImplant,
     this.tooth,
     this.value = "",
     this.status = false,
@@ -128,8 +132,6 @@ class TreatmentDetailsEntity extends Equatable {
   //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "crown".removeAllWhitespace.toLowerCase() ||
   //       this.treatmentItem?.name?.removeAllWhitespace.toLowerCase() == "scaling".removeAllWhitespace.toLowerCase();
   // }
-
-  
 
   bool isImplant() => treatmentItem?.isImplant() ?? false;
 }

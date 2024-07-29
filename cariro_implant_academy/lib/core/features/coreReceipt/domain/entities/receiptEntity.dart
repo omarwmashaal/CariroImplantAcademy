@@ -8,12 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-
 class ReceiptEntity extends Equatable {
   int? id;
   DateTime? date;
   int? patientId;
+  int? candidateId;
   BasicNameIdObjectEntity? patient;
+  BasicNameIdObjectEntity? candidate;
   int? operatorId;
   BasicNameIdObjectEntity? operator;
   List<ToothReceiptEntity>? toothReceiptData;
@@ -27,6 +28,8 @@ class ReceiptEntity extends Equatable {
     this.date,
     this.patientId,
     this.patient,
+    this.candidate,
+    this.candidateId,
     this.operatorId,
     this.operator,
     this.toothReceiptData,
@@ -38,16 +41,16 @@ class ReceiptEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    this.id,
-    this.date,
-    this.patientId,
-    this.patient,
-    this.operatorId,
-    this.operator,
-    this.toothReceiptData,
-    this.total,
-    this.paid,
-    this.unpaid,
-    this.isPaid,
+        this.id,
+        this.date,
+        this.patientId,
+        this.patient,
+        this.operatorId,
+        this.operator,
+        this.toothReceiptData,
+        this.total,
+        this.paid,
+        this.unpaid,
+        this.isPaid,
       ];
 }

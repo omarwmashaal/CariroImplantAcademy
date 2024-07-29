@@ -28,6 +28,7 @@ namespace CIA.Models
         public String? NationalID { get; set; }
         public String? NationalIDDirectory_front { get; set; }
         public String? NationalIDDirectory_back { get; set; }
+        public EnumPatientCallHistory? CallHistoryStatus { get; set; }
         //public EnumPatientType? PatientType { get; set; } = EnumPatientType.CIA;
 
         [ForeignKey("Lab_Request")]
@@ -82,6 +83,10 @@ namespace CIA.Models
         public int? IdFrontImageId { get; set; }
         public Image? IdFrontImage { get; set; } = new Image();
         public EnumWebsite Website { get; set; } = EnumWebsite.CIA;
+        [NotMapped]
+        public List<int>? MissingTeeth { get; set; }
+        [NotMapped]
+        public List<DiseasesEnum>? Diseases { get; set; }
 
     }
 }

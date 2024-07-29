@@ -13,6 +13,7 @@ namespace CIA.Models
         Candidate,
         LabModerator,
         LabDesigner,
+        StockManager,
     }
     public enum SmokingStatus
     {
@@ -228,7 +229,7 @@ namespace CIA.Models
         LowerPosterior
     }
     public enum EnumExpenseseCategoriesType { Service, BoughtItem, BoughtMedical }
-    public enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment }
+    public enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment, PatientVisit }
     public enum EnumComplainStatus { InQueue, Untouched, Resolved }
 
     public enum EnumSummaryFilter { ThisWeek, LastMonth, ThisMonth, ThisYear }
@@ -406,6 +407,15 @@ namespace CIA.Models
         GBRFailure,
         Infection,
         Inflamation,
+        ImplantFailed,
+    }
+    public enum EnumPatientCallHistory
+    {
+        CalledAndNoAnswer,
+        CalledAndNoVisit,
+        NoCalls,
+        WrongNumber,
+        NotInterested,
     }
     public class EnumMethods
     {

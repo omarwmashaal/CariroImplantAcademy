@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
@@ -23,10 +24,11 @@ class PatientSearchParams extends Equatable {
   final bool myPatients;
   final bool? out;
   final bool? listed;
+  final EnumPatientCallHistory? callHistory;
 
-  PatientSearchParams({required this.myPatients, this.query, this.filter, this.out, this.listed});
+  PatientSearchParams({required this.myPatients, this.query, this.filter, this.out, this.listed, this.callHistory});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [this.filter, this.query, this.myPatients];
+  List<Object?> get props => [this.filter, this.query, this.myPatients, callHistory];
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/core/constants/remoteConstants.dart';
 import 'package:cariro_implant_academy/core/features/authentication/presentation/pages/authentication_page.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
@@ -131,6 +132,9 @@ class HttpClientImpl implements HttpRepo {
       var response = await _dio.put(
         "$url",
         data: formData,
+        options: dio.Options(headers: {
+          'Authorization': 'Bearer ${siteController.getToken()}',
+        }),
       );
       return StandardHttpResponse.fromDIOResponse(response);
     } catch (e) {

@@ -29,6 +29,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/LargeScreen.dart';
 import 'package:cariro_implant_academy/Widgets/SiteLayout.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/pages/createOrViewPatientPage.dart';
+import 'package:cariro_implant_academy/features/patient/presentation/pages/todolistsSearchPage.dart';
 import 'package:cariro_implant_academy/features/patient/presentation/widgets/advancedSearchPatientFiltersWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
@@ -406,6 +407,15 @@ class CIA_Router {
                         pageBuilder: (context, state) {
                           return NoTransitionPage(
                             child: ComplainsSearchPage(),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: ToDoListsSearchPage.routePath,
+                        name: ToDoListsSearchPage.getRouteName(site: Website.CIA),
+                        pageBuilder: (context, state) {
+                          return NoTransitionPage(
+                            child: ToDoListsSearchPage(),
                           );
                         },
                       ),
@@ -1089,6 +1099,15 @@ class CIA_Router {
                           );
                         },
                       ),
+                      // GoRoute(
+                      //   path: ToDoListsSearchPage.routePath,
+                      //   name: ToDoListsSearchPage.getRouteName(site: Website.Clinic),
+                      //   pageBuilder: (context, state) {
+                      //     return NoTransitionPage(
+                      //       child: ToDoListsSearchPage(),
+                      //     );
+                      //   },
+                      // ),
                       GoRoute(
                         path: PatientAdvancedSearchPage.routePathPatients,
                         pageBuilder: (context, state) {

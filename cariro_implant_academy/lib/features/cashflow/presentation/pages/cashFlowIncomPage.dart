@@ -96,6 +96,9 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName<Website>(
+                      onClear: () {
+                        catId = null;
+                      },
                       label: "Category",
                       asyncUseCase: sl<GetIncomeCategoriesUseCase>(),
                       searchParams: siteController.getSite(),
@@ -106,6 +109,9 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                     ),
                     Expanded(
                         child: CIA_DropDownSearchBasicIdName(
+                      onClear: () {
+                        paymentMethodId = null;
+                      },
                       label: "Payment Methods",
                       asyncUseCase: sl<GetPaymentMethodsUseCase>(),
                       onSelect: (value) => paymentMethodId = value.id,
@@ -160,7 +166,7 @@ class _CashFlowIncomePageState extends State<CashFlowIncomePage> {
                         PaymentLogTableWidget(
                           receiptId: selected.receiptID!,
                           context: context,
-                          patientId: selected.patientId!,
+                          patientId: selected.patientId,
                         )();
                       }
                     });

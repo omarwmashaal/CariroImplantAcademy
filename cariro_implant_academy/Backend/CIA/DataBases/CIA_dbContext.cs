@@ -50,15 +50,19 @@ namespace CIA.DataBases
 
         public DbSet<FinalProsthesisParentModel> FinalProsthesisParents { get; set; }
         public DbSet<ProstheticTreatmentDiagnosticParentModel> DiagnosticProsthesisParents { get; set; }
-        
+
         public DbSet<DiagnosticStepModel> DiagnosticSteps { get; set; }
         public DbSet<DiagnosticItemModel> DiagnosticItems { get; set; }
         public DbSet<DiagnosticStatusItemModel> DiagnosticStatusItems { get; set; }
         public DbSet<DiagnosticNextVisitItemModel> DiagnosticNextVisitItems { get; set; }
+        public DbSet<DiagnosticTechniqueItemModel> DiagnosticTechniqueItems { get; set; }
+        public DbSet<DiagnosticMaterialItemModel> DiagnosticMaterialItems { get; set; }
         public DbSet<FinalStepModel> FinalSteps { get; set; }
         public DbSet<FinalItemModel> FinalItems { get; set; }
         public DbSet<FinalStatusItemModel> FinalStatusItems { get; set; }
         public DbSet<FinalNextVisitItemModel> FinalNextVisitItems { get; set; }
+        public DbSet<FinalTechniqueItemModel> FinalTechniqueItems { get; set; }
+        public DbSet<FinalMaterialItemModel> FinalMaterialItems { get; set; }
         public DbSet<StockItem> Stock { get; set; }
         public DbSet<StockLog> StockLogs { get; set; }
         public DbSet<CashFlowModel> CashFlow { get; set; }
@@ -83,6 +87,8 @@ namespace CIA.DataBases
         public DbSet<CIA_Complains> CIA_Complains { get; set; }
         public DbSet<ComplicationsAfterProsthesisModel> ComplicationsAfterProsthesis { get; set; }
         public DbSet<ComplicationsAfterProsthesisParentModel> ComplicationsAfterProsthesisParents { get; set; }
+        public DbSet<DefaultSurgicalComplications> DefaultSurgicalComplications { get; set; }
+        public DbSet<DefaultProstheticComplications> DefaultProstheticComplications { get; set; }
         public DbSet<ComplicationsAfterSurgeryModel> ComplicationsAfterSurgery { get; set; }
         public DbSet<ComplicationsAfterSurgeryParentModel> ComplicationsAfterSurgeryParents { get; set; }
         public DbSet<Clinic_Complains> Clinic_Complains { get; set; }
@@ -107,12 +113,13 @@ namespace CIA.DataBases
         public DbSet<Scaling> Scalings { get; set; }
         public DbSet<ClinicPricesModel> ClinicPrices { get; set; }
         public DbSet<ClinicReceiptModel> ClinicReceipts { get; set; }
-        public DbSet<ClinicDoctorClinicPercentageModel> ClinicDoctorClinicPercentageModels { get; set; }       
+        public DbSet<ClinicDoctorClinicPercentageModel> ClinicDoctorClinicPercentageModels { get; set; }
         public DbSet<LabItemCompany> LabItemCompanies { get; set; }
         public DbSet<LabItemShade> LabItemShades { get; set; }
         public DbSet<LabItem> LabItems { get; set; }
         public DbSet<LabItemParent> LabItemParents { get; set; }
         public DbSet<LabOptions> LabOptions { get; set; }
+        public DbSet<InstallmentPlanModel> InstallmentPlans { get; set; }
 
 
 
@@ -143,6 +150,7 @@ namespace CIA.DataBases
                 new IdentityRole{Id = "e1a6928d-ced0-44af-9f25-b844d244ebf3", Name = "candidate",NormalizedName="CANDIDATE"},
                 new IdentityRole{Id = "c83449cd-1979-4ea0-b293-227e271fc612", Name = "labmoderator",NormalizedName="LABMODERATOR"},
                 new IdentityRole{Id= "4999dc08-005d-4e4d-a99d-3150b0e75f1d", Name = "labdesigner",NormalizedName="LABDESIGNER"},
+                new IdentityRole{Id= "fe4ad0b1-bdff-4daa-8e2b-47c10500844a", Name = "stockmanager",NormalizedName="STOCKMANAGER"},
 
             };
             modelBuilder.Entity<IdentityRole>().HasData(roles);
@@ -307,6 +315,28 @@ namespace CIA.DataBases
             };
             modelBuilder.Entity<Lab_DefaultStep>().HasData(Lab_DefaultSteps);
 
+            modelBuilder.Entity<VisitsLog>()
+                .HasOne<ApplicationUser>(x => x.EntryBy)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Receipt>()
+                .HasOne<ApplicationUser>(x => x.Candidate)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<CashFlowModel>()
+                .HasOne<ApplicationUser>(x => x.Candidate)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InstallmentPlanModel>()
+                .HasOne<ApplicationUser>(x => x.User)
+                .WithMany()
+                .HasPrincipalKey(x => x.IdInt)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ClinicDoctorClinicPercentageModel>()
                 .HasOne<ApplicationUser>(x => x.Doctor)
                 .WithMany()
@@ -442,12 +472,12 @@ namespace CIA.DataBases
               .HasPrincipalKey(x => x.IdInt)
               .OnDelete(DeleteBehavior.Cascade);
 
-             modelBuilder.Entity<TreatmentDetailsModel>()
-              .HasOne<ApplicationUser>(x => x.DoneByAssistant)
-              .WithMany()
-              .HasPrincipalKey(x => x.IdInt)
-              .OnDelete(DeleteBehavior.Cascade);
-            
+            modelBuilder.Entity<TreatmentDetailsModel>()
+             .HasOne<ApplicationUser>(x => x.DoneByAssistant)
+             .WithMany()
+             .HasPrincipalKey(x => x.IdInt)
+             .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<TreatmentDetailsModel>()
               .HasOne<ApplicationUser>(x => x.DoneBySupervisor)
               .WithMany()
@@ -466,13 +496,13 @@ namespace CIA.DataBases
               .WithMany()
               .HasPrincipalKey(x => x.Id)
               .OnDelete(DeleteBehavior.Cascade);
-            
+
             modelBuilder.Entity<LabRequestStepItem>()
               .HasOne<LabItem>(x => x.ConsumedLabItem)
               .WithMany()
               .HasPrincipalKey(x => x.Id)
               .OnDelete(DeleteBehavior.Cascade);
-              
+
             modelBuilder.Entity<DiagnosticStepModel>()
               .HasOne<ApplicationUser>(x => x.Operator)
               .WithMany()
@@ -486,7 +516,110 @@ namespace CIA.DataBases
 
 
 
+            List<DefaultSurgicalComplications> defaultSurgicalComplications = new()
+            {
+                new DefaultSurgicalComplications
+                {
+                    Id=1,
+                    Name="Swelling",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=2,
+                    Name="Open Wound",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=3,
+                    Name="Numbness",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=4,
+                    Name="Oroantral Communication",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=5,
+                    Name="Pus In Implant Site",
+                },
 
+                new DefaultSurgicalComplications
+                {
+                    Id=6,
+                    Name="Pus In Donor Site",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=7,
+                    Name="Sinus Elevation Failure",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=8,
+                    Name="GBR Failure",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=9,
+                    Name="Implant Failed",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=10,
+                    Name="Infection",
+                },
+                new DefaultSurgicalComplications
+                {
+                    Id=11,
+                    Name="Inflamation",
+                },
+
+            };
+
+            List<DefaultProstheticComplications> defaultProstheticComplications = new()
+            {
+                new DefaultProstheticComplications
+                {
+                    Id=1,
+                    Name="Screw Loosness",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=2,
+                    Name="Crown Fall",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=3,
+                    Name="Fractured Zirconia",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=4,
+                    Name="Fractured Printed PMMA",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=5,
+                    Name="Food Impaction",
+                },
+
+                new DefaultProstheticComplications
+                {
+                    Id=6,
+                    Name="Pain",
+                },
+                new DefaultProstheticComplications
+                {
+                    Id=7,
+                    Name="Implant Fracture",
+                },
+
+            };
+
+            modelBuilder.Entity<DefaultSurgicalComplications>().HasData(defaultSurgicalComplications);
+            modelBuilder.Entity<DefaultProstheticComplications>().HasData(defaultProstheticComplications);
 
 
 

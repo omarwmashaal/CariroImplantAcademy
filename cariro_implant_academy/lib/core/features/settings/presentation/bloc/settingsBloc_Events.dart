@@ -3,11 +3,15 @@ import 'package:cariro_implant_academy/core/features/settings/domain/entities/ta
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
@@ -44,7 +48,6 @@ class SettingsBloc_LoadLabItemsEvent extends SettingsBloc_Events {
 }
 
 class SettingsBloc_LoadLabOptionsEvent extends SettingsBloc_Events {
-
   final int? parentId;
   SettingsBloc_LoadLabOptionsEvent({
     this.parentId,
@@ -389,6 +392,20 @@ class SettingsBloc_GetProstheticNextVisitEvent extends SettingsBloc_Events {
   List<Object?> get props => [params];
 }
 
+class SettingsBloc_GetProstheticTechniqueEvent extends SettingsBloc_Events {
+  final GetProstheticTechniqueParams params;
+  SettingsBloc_GetProstheticTechniqueEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_GetProstheticMaterialEvent extends SettingsBloc_Events {
+  final GetProstheticMaterialParams params;
+  SettingsBloc_GetProstheticMaterialEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
 class SettingsBloc_UpdateProstheticItemsEvent extends SettingsBloc_Events {
   final UpdateProstheticItemsParams params;
   SettingsBloc_UpdateProstheticItemsEvent({
@@ -410,4 +427,42 @@ class SettingsBloc_UpdateProstheticNextEventEvent extends SettingsBloc_Events {
   SettingsBloc_UpdateProstheticNextEventEvent({required this.params});
   @override
   List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateProstheticTechniqueEventEvent extends SettingsBloc_Events {
+  final UpdateProstheticTechniqueParams params;
+  SettingsBloc_UpdateProstheticTechniqueEventEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateProstheticMaterialEventEvent extends SettingsBloc_Events {
+  final UpdateProstheticMaterialParams params;
+  SettingsBloc_UpdateProstheticMaterialEventEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_UpdateDefaultSurgicalComplicationsEvent extends SettingsBloc_Events {
+  final List<BasicNameIdObjectEntity> params;
+  SettingsBloc_UpdateDefaultSurgicalComplicationsEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_LoadDefaultSurgicalComplicationsEvent extends SettingsBloc_Events {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdateDefaultProstheticComplicationsEvent extends SettingsBloc_Events {
+  final List<BasicNameIdObjectEntity> params;
+  SettingsBloc_UpdateDefaultProstheticComplicationsEvent({required this.params});
+  @override
+  List<Object?> get props => [params];
+}
+
+class SettingsBloc_LoadDefaultProstheticComplicationsEvent extends SettingsBloc_Events {
+  @override
+  List<Object?> get props => [];
 }

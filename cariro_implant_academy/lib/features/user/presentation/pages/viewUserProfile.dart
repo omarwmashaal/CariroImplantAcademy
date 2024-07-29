@@ -7,6 +7,7 @@ import 'package:cariro_implant_academy/Constants/Controllers.dart';
 import 'package:cariro_implant_academy/Models/API_Response.dart';
 import 'package:cariro_implant_academy/Models/ApplicationUserModel.dart';
 import 'package:cariro_implant_academy/Models/CandidateDetails.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/Models/VisitsModel.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_FutureBuilder.dart';
@@ -21,6 +22,12 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/uploadImageUseCase.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/entities/installmentPlanEntity.dart';
+import 'package:cariro_implant_academy/features/cashflow/domain/useCases/createInstallmentPlanUseCase.dart';
+import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc.dart';
+import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc_Events.dart';
+import 'package:cariro_implant_academy/features/cashflow/presentation/bloc/cashFlowBloc_States.dart';
+import 'package:cariro_implant_academy/features/cashflow/presentation/widgets/installmentsWidget.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/enum.dart';
 import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/features/user/domain/usecases/getUsersSessions.dart';
@@ -33,6 +40,7 @@ import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.d
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -87,9 +95,12 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
   late UsersBloc bloc;
   late ImageBloc imageBloc;
   late UserEntity user;
+  late CashFlowBloc cashFlowBloc;
 
   @override
   void initState() {
+    cashFlowBloc = BlocProvider.of<CashFlowBloc>(context);
+
     bloc = BlocProvider.of<UsersBloc>(context);
     imageBloc = context.read<ImageBloc>();
     bloc.add(UsersBloc_GetUserInfoEvent(id: widget.userId));
@@ -138,7 +149,9 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
         ],
         child: BlocBuilder<UsersBloc, UsersBloc_States>(
           buildWhen: (previous, current) =>
-              current is UsersBloc_LoadingUserState || current is UsersBloc_LoadedSingleUserSuccessfullyState || current is UsersBloc_SwitchEditViewModeState,
+              current is UsersBloc_LoadingUserState ||
+              current is UsersBloc_LoadedSingleUserSuccessfullyState ||
+              current is UsersBloc_SwitchEditViewModeState,
           builder: (context, state) {
             if (state is UsersBloc_LoadingUserState) {
               return LoadingWidget();
@@ -260,8 +273,9 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                             ? "Passwords match"
                                                                             : "Passwords don't match",
                                                                     style: TextStyle(
-                                                                        color:
-                                                                            newPassword2 == newPassword1 && newPassword1.isNotEmpty ? Colors.green : Colors.red,
+                                                                        color: newPassword2 == newPassword1 && newPassword1.isNotEmpty
+                                                                            ? Colors.green
+                                                                            : Colors.red,
                                                                         fontSize: 15),
                                                                   ),
                                                                   Text(
@@ -285,7 +299,8 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                                     style: TextStyle(color: symbol ? Colors.green : Colors.red, fontSize: 15),
                                                                   ),
                                                                   BlocBuilder<UsersBloc, UsersBloc_States>(
-                                                                    buildWhen: (previous, current) => current is UsersBloc_ResettingPasswordErrorState,
+                                                                    buildWhen: (previous, current) =>
+                                                                        current is UsersBloc_ResettingPasswordErrorState,
                                                                     builder: (context, state) {
                                                                       String error = "";
                                                                       if (state is UsersBloc_ResettingPasswordErrorState) error = state.message;
@@ -305,135 +320,294 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 }
                                               }(),
                                               SizedBox(width: 10),
-                                              CIA_SecondaryButton(
-                                                  label: "Sessions Duration",
-                                                  onTab: () async {
-                                                    DateTime? from;
-                                                    DateTime? to;
-                                                    VisitDataSource dataSource =
-                                                        VisitDataSource(sessions: true, context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
-                                                    bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                        params: GetSessionsDurationParams(
-                                                      id: widget.userId,
-                                                      from: from,
-                                                      to: to,
-                                                    )));
-                                                    CIA_ShowPopUp(
-                                                        width: 1000,
-                                                        height: 900,
-                                                        context: context,
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Expanded(
-                                                                  child: CIA_DateTimeTextFormField(
-                                                                    label: "From",
-                                                                    controller:
-                                                                        TextEditingController(text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
-                                                                    onChange: (v) {
-                                                                      from = v;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
+                                              Visibility(
+                                                visible: siteController.getRole()?.contains("admin") ?? false,
+                                                child: CIA_SecondaryButton(
+                                                    label: "Sessions Duration",
+                                                    onTab: () async {
+                                                      DateTime? from;
+                                                      DateTime? to;
+                                                      VisitDataSource dataSource = VisitDataSource(
+                                                          sessions: true, context: context, bloc: BlocProvider.of<PatientVisitsBloc>(context));
+                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                          params: GetSessionsDurationParams(
+                                                        id: widget.userId,
+                                                        from: from,
+                                                        to: to,
+                                                      )));
+                                                      CIA_ShowPopUp(
+                                                          width: 1000,
+                                                          height: 900,
+                                                          context: context,
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: CIA_DateTimeTextFormField(
+                                                                      label: "From",
+                                                                      controller: TextEditingController(
+                                                                          text: from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)),
+                                                                      onChange: (v) {
+                                                                        from = v;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                IconButton(
-                                                                    onPressed: () {
-                                                                      from = null;
+                                                                  IconButton(
+                                                                      onPressed: () {
+                                                                        from = null;
 
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
-                                                                    icon: Icon(Icons.remove)),
-                                                                SizedBox(width: 10),
-                                                                Expanded(
-                                                                  child: CIA_DateTimeTextFormField(
-                                                                    label: "To",
-                                                                    controller:
-                                                                        TextEditingController(text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
-                                                                    onChange: (v) {
-                                                                      to = v;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                      icon: Icon(Icons.remove)),
+                                                                  SizedBox(width: 10),
+                                                                  Expanded(
+                                                                    child: CIA_DateTimeTextFormField(
+                                                                      label: "To",
+                                                                      controller: TextEditingController(
+                                                                          text: to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)),
+                                                                      onChange: (v) {
+                                                                        to = v;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                IconButton(
-                                                                    onPressed: () {
-                                                                      to = null;
-                                                                      bloc.add(UsersBloc_GetSessionsDurationEvent(
-                                                                          params: GetSessionsDurationParams(
-                                                                        id: widget.userId,
-                                                                        from: from,
-                                                                        to: to,
-                                                                      )));
-                                                                    },
-                                                                    icon: Icon(Icons.remove)),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height: 10),
-                                                            SizedBox(height: 10),
-                                                            Expanded(
-                                                              child: BlocConsumer<UsersBloc, UsersBloc_States>(
-                                                                listener: (context, state) {
-                                                                  if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
-                                                                    dataSource.updateData(newData: state.sessions);
-                                                                  }
-                                                                },
-                                                                buildWhen: (previous, current) =>
-                                                                    current is UsersBloc_LoadingSessionsState ||
-                                                                    current is UsersBloc_LoadingSessionsErrorState ||
-                                                                    current is UsersBloc_LoadedSessionsSuccessfullyState,
-                                                                builder: (context, state) {
-                                                                  if (state is UsersBloc_LoadingSessionsState) {
-                                                                    return LoadingWidget();
-                                                                  } else if (state is UsersBloc_LoadingSessionsErrorState)
-                                                                    return BigErrorPageWidget(message: state.message);
-                                                                  else if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
-                                                                    Duration duration = Duration(seconds: 0);
-
-                                                                    state.sessions.forEach((element) {
-                                                                      if (element.duration != null) {
-                                                                        var du = element.duration!.split(":");
-                                                                        duration += Duration(
-                                                                            hours: int.parse(du[0]), minutes: int.parse(du[1]), seconds: int.parse(du[2]));
-                                                                      }
-                                                                    });
-                                                                    return Column(
-                                                                      children: [
-                                                                        Container(
-                                                                            width: double.infinity,
-                                                                            child: Center(child: FormTextKeyWidget(text: "Duration: $duration"))),
-                                                                        Expanded(
-                                                                          child: TableWidget(
-                                                                            dataSource: dataSource,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  }
-                                                                  return LoadingWidget();
-                                                                },
+                                                                  IconButton(
+                                                                      onPressed: () {
+                                                                        to = null;
+                                                                        bloc.add(UsersBloc_GetSessionsDurationEvent(
+                                                                            params: GetSessionsDurationParams(
+                                                                          id: widget.userId,
+                                                                          from: from,
+                                                                          to: to,
+                                                                        )));
+                                                                      },
+                                                                      icon: Icon(Icons.remove)),
+                                                                ],
                                                               ),
-                                                            )
-                                                          ],
-                                                        ));
-                                                  })
+                                                              SizedBox(height: 10),
+                                                              SizedBox(height: 10),
+                                                              Expanded(
+                                                                child: BlocConsumer<UsersBloc, UsersBloc_States>(
+                                                                  listener: (context, state) {
+                                                                    if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
+                                                                      dataSource.updateData(newData: state.sessions);
+                                                                    }
+                                                                  },
+                                                                  buildWhen: (previous, current) =>
+                                                                      current is UsersBloc_LoadingSessionsState ||
+                                                                      current is UsersBloc_LoadingSessionsErrorState ||
+                                                                      current is UsersBloc_LoadedSessionsSuccessfullyState,
+                                                                  builder: (context, state) {
+                                                                    if (state is UsersBloc_LoadingSessionsState) {
+                                                                      return LoadingWidget();
+                                                                    } else if (state is UsersBloc_LoadingSessionsErrorState)
+                                                                      return BigErrorPageWidget(message: state.message);
+                                                                    else if (state is UsersBloc_LoadedSessionsSuccessfullyState) {
+                                                                      Duration duration = Duration(seconds: 0);
+
+                                                                      state.sessions.forEach((element) {
+                                                                        if (element.duration != null) {
+                                                                          var du = element.duration!.split(":");
+                                                                          duration += Duration(
+                                                                              hours: int.parse(du[0]),
+                                                                              minutes: int.parse(du[1]),
+                                                                              seconds: int.parse(du[2]));
+                                                                        }
+                                                                      });
+                                                                      return Column(
+                                                                        children: [
+                                                                          Container(
+                                                                              width: double.infinity,
+                                                                              child: Center(child: FormTextKeyWidget(text: "Duration: $duration"))),
+                                                                          Expanded(
+                                                                            child: TableWidget(
+                                                                              dataSource: dataSource,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                    return LoadingWidget();
+                                                                  },
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ));
+                                                    }),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Visibility(
+                                                  visible: (user.roles?.contains("candidate") ?? false) &&
+                                                      (siteController.getRole()?.contains("admin") ?? false),
+                                                  child: CIA_SecondaryButton(
+                                                    label: "Installment Plans",
+                                                    icon: Icon(Icons.attach_money_outlined),
+                                                    onTab: () {
+                                                      cashFlowBloc.add(CashFlowBloc_GetInstallmentForUserEvent(id: widget.userId));
+                                                      CIA_ShowPopUp(
+                                                        width: double.maxFinite,
+                                                        height: 600,
+                                                        context: context,
+                                                        child: BlocConsumer<CashFlowBloc, CashFlowBloc_States>(
+                                                          buildWhen: (previous, current) =>
+                                                              current is CashFlowBloC_LoadingInstallmentErrorState ||
+                                                              current is CashFlowBloC_LoadedInstallmentSuccessfullyState ||
+                                                              current is CashFlowBloC_LoadingInstallmentState,
+                                                          listener: (context, state) {
+                                                            if (state is CashFlowBloC_PayingInstallmentState ||
+                                                                state is CashFlowBloC_CreatingInstallmentState)
+                                                              CustomLoader.show(context);
+                                                            else {
+                                                              CustomLoader.hide();
+                                                              if (state is CashFlowBloC_PayingInstallmentErrorState)
+                                                                ShowSnackBar(context, isSuccess: false, message: state.message);
+                                                              else if (state is CashFlowBloC_PayedInstallmentSuccessfullyState ||
+                                                                  (state is CashFlowBloC_CreatedInstallmentSuccessfullyState &&
+                                                                      state.calculationsOnly == false)) {
+                                                                ShowSnackBar(context, isSuccess: true);
+                                                                cashFlowBloc.add(CashFlowBloc_GetInstallmentForUserEvent(id: widget.userId));
+                                                              } else if (state is CashFlowBloC_CreatedInstallmentSuccessfullyState &&
+                                                                  state.calculationsOnly == true)
+                                                                cashFlowBloc.emit(CashFlowBloC_LoadedInstallmentSuccessfullyState(
+                                                                  calculationsOnly: true,
+                                                                  data: state.data,
+                                                                ));
+                                                              else if (state is CashFlowBloC_CreatingInstallmentErrorState)
+                                                                ShowSnackBar(context, isSuccess: false, message: state.message);
+                                                            }
+                                                          },
+                                                          builder: (context, state) {
+                                                            if (state is CashFlowBloC_LoadingInstallmentErrorState)
+                                                              return BigErrorPageWidget(message: state.message);
+                                                            else if (state is CashFlowBloC_LoadingInstallmentState)
+                                                              return LoadingWidget();
+                                                            else if (state is CashFlowBloC_LoadedInstallmentSuccessfullyState) {
+                                                              var installmentPlan = state.data;
+                                                              if (installmentPlan == null || state.calculationsOnly == true) {
+                                                                installmentPlan ??= InstallmentPlanEntity(
+                                                                  total: installmentPlan?.total ?? 0,
+                                                                  numberOfPayments: installmentPlan?.numberOfPayments ?? 1,
+                                                                  startDate: installmentPlan?.startDate ?? DateTime.now(),
+                                                                  installmentInterval:
+                                                                      installmentPlan?.installmentInterval ?? EnumInstallmentInterval.monthly,
+                                                                );
+                                                                return Row(
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child: Column(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.all(8.0),
+                                                                            child: FormTextKeyWidget(text: "No Installment Plans availble!"),
+                                                                          ),
+                                                                          SizedBox(height: 10),
+                                                                          CIA_TextFormField(
+                                                                              label: "Total Amount",
+                                                                              controller:
+                                                                                  TextEditingController(text: installmentPlan.total!.toString()),
+                                                                              isNumber: true,
+                                                                              onChange: (v) => installmentPlan!.total = int.tryParse(v) ?? 0),
+                                                                          SizedBox(height: 10),
+                                                                          CIA_DateTimeTextFormField(
+                                                                              label: "Start Date",
+                                                                              controller: TextEditingController(
+                                                                                  text: installmentPlan?.startDate == null
+                                                                                      ? ""
+                                                                                      : DateFormat("dd/MM/yyyy").format(installmentPlan!.startDate!)),
+                                                                              onChange: (value) => installmentPlan!.startDate = value),
+                                                                          SizedBox(height: 10),
+                                                                          Row(
+                                                                            children: [
+                                                                              FormTextKeyWidget(text: "Interval"),
+                                                                              SizedBox(width: 10),
+                                                                              CIA_MultiSelectChipWidget(
+                                                                                singleSelect: true,
+                                                                                labels: [
+                                                                                  CIA_MultiSelectChipWidgeModel(
+                                                                                      label: "Monthly",
+                                                                                      isSelected: installmentPlan!.installmentInterval ==
+                                                                                          EnumInstallmentInterval.monthly),
+                                                                                  CIA_MultiSelectChipWidgeModel(
+                                                                                      label: "Yearly",
+                                                                                      isSelected: installmentPlan!.installmentInterval ==
+                                                                                          EnumInstallmentInterval.yearly),
+                                                                                ],
+                                                                                onChange: (item, isSelected) => installmentPlan!.installmentInterval =
+                                                                                    (item == "Monthly"
+                                                                                        ? EnumInstallmentInterval.monthly
+                                                                                        : EnumInstallmentInterval.yearly),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          SizedBox(height: 10),
+                                                                          CIA_TextFormField(
+                                                                              label: "Number Of Payments",
+                                                                              controller: TextEditingController(
+                                                                                  text: installmentPlan!.numberOfPayments.toString()),
+                                                                              isNumber: true,
+                                                                              onChange: (value) =>
+                                                                                  installmentPlan!.numberOfPayments = int.tryParse(value) ?? 1),
+                                                                          SizedBox(height: 10),
+                                                                          CIA_PrimaryButton(
+                                                                            label: "Calculate",
+                                                                            onTab: () => cashFlowBloc.add(
+                                                                              CashFlowBloc_CreateInstallmentForUserEvent(
+                                                                                params: CreateInstallmentPlanParams(
+                                                                                  total: installmentPlan!.total!,
+                                                                                  startDate: installmentPlan!.startDate!,
+                                                                                  numberOfPayments: installmentPlan!.numberOfPayments!,
+                                                                                  interval: installmentPlan!.installmentInterval!,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(width: 10),
+                                                                    Expanded(
+                                                                      flex: 2,
+                                                                      child: InstallmentsWidget(
+                                                                        cashFlowBloc: cashFlowBloc,
+                                                                        installmentPlan: installmentPlan!,
+                                                                        userId: widget.userId,
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                );
+                                                              }
+
+                                                              return InstallmentsWidget(
+                                                                cashFlowBloc: cashFlowBloc,
+                                                                installmentPlan: installmentPlan!,
+                                                                userId: widget.userId,
+                                                              );
+                                                            }
+                                                            return Container();
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
+                                                  )),
                                             ],
                                           ),
                                           SizedBox(height: 10),
@@ -468,7 +642,8 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                               Expanded(child: FormTextKeyWidget(text: "Date of birth")),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: user.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.dateOfBirth!)))
+                                                      text:
+                                                          user.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.dateOfBirth!)))
                                             ],
                                           ),
                                           edit
@@ -479,7 +654,9 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 )
                                               : Row(
                                                   children: [
-                                                    Expanded(child: FormTextKeyWidget(text: user.roles!.contains("candidate") ? "Personal Email" : "Email")),
+                                                    Expanded(
+                                                        child:
+                                                            FormTextKeyWidget(text: user.roles!.contains("candidate") ? "Personal Email" : "Email")),
                                                     Expanded(child: FormTextValueWidget(text: user.email == null ? "" : user.email))
                                                   ],
                                                 ),
@@ -509,8 +686,7 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                                 : Row(
                                                     children: [
                                                       Expanded(child: FormTextKeyWidget(text: "Facebook Link")),
-                                                      Expanded(
-                                                          child: FormTextValueWidget(text: user.facebookLink ?? ""))
+                                                      Expanded(child: FormTextValueWidget(text: user.facebookLink ?? ""))
                                                     ],
                                                   ),
                                           ),
@@ -519,7 +695,8 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                               Expanded(child: FormTextKeyWidget(text: "Date of birth")),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                      text: user.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.dateOfBirth!)))
+                                                      text:
+                                                          user.dateOfBirth == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.dateOfBirth!)))
                                             ],
                                           ),
                                           edit
@@ -586,7 +763,9 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                               )),
                                               Expanded(
                                                   child: FormTextValueWidget(
-                                                text: user?.registerationDate == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(user.registerationDate!),
+                                                text: user?.registerationDate == null
+                                                    ? ""
+                                                    : DateFormat("dd-MM-yyyy hh:mm a").format(user.registerationDate!),
                                                 secondaryInfo: true,
                                               ))
                                             ],
@@ -638,7 +817,8 @@ class _ViewUserProfilePageState extends State<ViewUserProfilePage> {
                                               );
                                             },
                                           ),
-                                          Visibility(visible: edit, child: CIA_SecondaryButton(label: "Upload Image", onTab: () => imageBloc.selectImage())),
+                                          Visibility(
+                                              visible: edit, child: CIA_SecondaryButton(label: "Upload Image", onTab: () => imageBloc.selectImage())),
                                         ],
                                       )),
                                 ],

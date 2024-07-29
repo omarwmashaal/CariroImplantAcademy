@@ -280,6 +280,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         }
 
                         return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            newVisit.doctorId = null;
+                          },
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           selectedItem: selected,
@@ -458,7 +461,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   CIA_TextFormField(
-                                    label: "Search Patients",
+                                    label: "Search Patients by name or id",
                                     controller: TextEditingController(),
                                     onChange: (value) async {
                                       patientBloc.add(SearchPatientsEvent(query: value));
@@ -522,6 +525,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         }
 
                         return CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            visit.doctorId = null;
+                          },
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           selectedItem: selected,

@@ -472,6 +472,10 @@ class _FinalProsthesis_TryInsWidgetState extends State<FinalProsthesis_TryInsWid
                         height: 100,
                         onSave: () => setState(() => null),
                         child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                          onClear: () {
+                            widget.data.operatorId = null;
+                            widget.data.operator = null;
+                          },
                           asyncUseCase: sl<LoadUsersUseCase>(),
                           searchParams: LoadUsersEnum.instructorsAndAssistants,
                           onSelect: (value) {
