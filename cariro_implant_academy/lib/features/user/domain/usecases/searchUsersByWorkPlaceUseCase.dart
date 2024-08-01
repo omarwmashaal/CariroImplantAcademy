@@ -26,7 +26,7 @@ class SearchUsersByWorkPlaceUseCase extends UseCases<List<UserEntity>, SearchUse
 }
 
 class SearchUsersByWorkPlaceParams {
-  final EnumLabRequestSources source;
+  final Website source;
   final String? search;
 
   SearchUsersByWorkPlaceParams({

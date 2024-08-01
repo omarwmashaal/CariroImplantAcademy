@@ -21,7 +21,7 @@ namespace CIA.Models.LAB
         [ForeignKey("ApplicationUser")]
         public int? DesignerId { get; set; }
         public ApplicationUser? Designer { get; set; }
-        public EnumLabRequestSources? Source { get; set; }
+        public EnumWebsite? Source { get; set; }
         [ForeignKey("ApplicationUser")]
         public int? CustomerId { get; set; }
         public ApplicationUser? Customer { get; set; }

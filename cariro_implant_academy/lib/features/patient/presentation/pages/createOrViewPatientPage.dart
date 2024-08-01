@@ -80,8 +80,10 @@ class CreateOrViewPatientPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PatientInfoEntity patient =
-        PatientInfoEntity(gender: EnumGender.Male, maritalStatus: EnumMaritalStatus.Married, website: siteController.getSite());
+    PatientInfoEntity patient = PatientInfoEntity(
+        gender: EnumGender.Male,
+        maritalStatus: EnumMaritalStatus.Married,
+        website: siteController.getSite() == Website.Lab ? Website.Private : siteController.getSite());
     final bloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
     final imageBlocProfile = sl<ImageBloc>();
     final imageBlocIdBack = sl<ImageBloc>();
@@ -294,6 +296,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                             child: BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                               buildWhen: (previous, current) => current is LoadedGetNextId,
                                               builder: (context, state) {
+                                                if (patient.website == Website.Private) return Container();
                                                 if (state is LoadedGetNextId && bloc.pageState == PageState.addNew) {
                                                   patient.secondaryId = state.message ?? "0";
                                                 }
@@ -373,13 +376,14 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                             patient.website = Website.CIA;
                                           } else if (item == "Clinic")
                                             patient.website = Website.Clinic;
-                                          else if (item == "OutSource") patient.website = Website.Lab;
+                                          else if (item == "Private") patient.website = Website.Private;
                                         }
+                                        bloc.emit(ChangePageState("", patient.listed ?? true));
                                       },
                                       labels: [
                                         CIA_MultiSelectChipWidgeModel(label: "CIA", isSelected: patient.website == Website.CIA),
                                         CIA_MultiSelectChipWidgeModel(label: "Clinic", isSelected: patient.website == Website.Clinic),
-                                        CIA_MultiSelectChipWidgeModel(label: "OutSource", isSelected: patient.website == Website.Lab),
+                                        CIA_MultiSelectChipWidgeModel(label: "Private", isSelected: patient.website == Website.Private),
                                       ],
                                     ),
                                   );
@@ -411,6 +415,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (patient.listed != true) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return CIA_TextFormField(
@@ -460,6 +465,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return CIA_TextFormField(
                                       onChange: (value) async {
@@ -500,6 +506,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return CIA_TextFormField(
                                       onChange: (value) {
@@ -523,6 +530,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState || current is ChangedDateOfBirthState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangedDateOfBirthState ||
                                       (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit))) {
                                     return CIA_DateTimeTextFormField(
@@ -555,6 +563,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return HorizontalRadioButtons(
                                       names: ["Married", "Single"],
@@ -577,6 +586,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return CIA_TextFormField(
                                       onChange: (value) {
@@ -599,6 +609,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit)) {
                                     return CIA_TextFormField(
                                       onChange: (value) {
@@ -621,6 +632,7 @@ class CreateOrViewPatientPage extends StatelessWidget {
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
                                 buildWhen: (previous, current) => current is ChangePageState || current is ChangedPatientRelative,
                                 builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
                                   if (state is ChangedPatientRelative ||
                                       (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit))) {
                                     return CIA_TextFormField(
@@ -686,174 +698,188 @@ class CreateOrViewPatientPage extends StatelessWidget {
                                 },
                               ),
                               SizedBox(height: 10),
-                              PatientFieldWidget(
-                                bloc: bloc,
-                                editOrAddWidget: Row(
-                                  children: [
-                                    Expanded(
-                                      child: CIA_TagsInputWidget(
-                                        dynamicVisibility: true,
-                                        key: GlobalKey(),
-                                        label: "Missed Teeth",
-                                        initialValue: patient.missingTeeth?.map((e) => e.toString()).toList(),
-                                        onDelete: (value) {
-                                          if (bloc.pageState != PageState.view) patient.missingTeeth?.remove(int.tryParse(value) ?? 0);
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    CIA_SecondaryButton(
-                                        label: "Add missing teeth",
-                                        onTab: () {
-                                          CIA_ShowPopUp(
-                                              onSave: () => bloc.emit(LoadedPatientInfoState(patient: patient)),
-                                              context: context,
-                                              width: double.maxFinite,
-                                              child: StatefulBuilder(
-                                                builder: (context, setState) {
-                                                  return Column(
-                                                    children: [
-                                                      CIA_TeethChart(
-                                                        showSingleBridgeSelection: false,
-                                                        onSingleBridgeChange: (bridge) => null,
-                                                        selectedTeeth: patient.missingTeeth ?? [],
-                                                        onChange: (selectedTeethList) {
-                                                          patient.missingTeeth ??= [];
-                                                          patient.missingTeeth = selectedTeethList;
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              ));
-                                        })
-                                  ],
-                                ),
-                                viewWidget: CIA_TagsInputWidget(
-                                  dynamicVisibility: true,
-                                  key: GlobalKey(),
-                                  label: "Missed Teeth",
-                                  initialValue: patient.missingTeeth?.map((e) => e.toString()).toList(),
-                                  disableDelete: true,
-                                ),
+                              BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                                buildWhen: (previous, current) => current is ChangePageState || current is ChangedPatientRelative,
+                                builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
+                                  if (state is ChangedPatientRelative ||
+                                      (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit))) {
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          child: CIA_TagsInputWidget(
+                                            dynamicVisibility: true,
+                                            key: GlobalKey(),
+                                            label: "Missed Teeth",
+                                            initialValue: patient.missingTeeth?.map((e) => e.toString()).toList(),
+                                            onDelete: (value) {
+                                              if (bloc.pageState != PageState.view) patient.missingTeeth?.remove(int.tryParse(value) ?? 0);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        CIA_SecondaryButton(
+                                            label: "Add missing teeth",
+                                            onTab: () {
+                                              CIA_ShowPopUp(
+                                                  onSave: () => bloc.emit(LoadedPatientInfoState(patient: patient)),
+                                                  context: context,
+                                                  width: double.maxFinite,
+                                                  child: StatefulBuilder(
+                                                    builder: (context, setState) {
+                                                      return Column(
+                                                        children: [
+                                                          CIA_TeethChart(
+                                                            showSingleBridgeSelection: false,
+                                                            onSingleBridgeChange: (bridge) => null,
+                                                            selectedTeeth: patient.missingTeeth ?? [],
+                                                            onChange: (selectedTeethList) {
+                                                              patient.missingTeeth ??= [];
+                                                              patient.missingTeeth = selectedTeethList;
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ));
+                                            })
+                                      ],
+                                    );
+                                  } else {
+                                    return CIA_TagsInputWidget(
+                                      dynamicVisibility: true,
+                                      key: GlobalKey(),
+                                      label: "Missed Teeth",
+                                      initialValue: patient.missingTeeth?.map((e) => e.toString()).toList(),
+                                      disableDelete: true,
+                                    );
+                                  }
+                                },
                               ),
                               SizedBox(height: 10),
-                              PatientFieldWidget(
-                                bloc: bloc,
-                                editOrAddWidget: Column(
-                                  children: [
-                                    FormTextKeyWidget(text: "Diseases"),
-                                    CIA_MultiSelectChipWidget(
-                                      onChange: (value, isSelected) {
-                                        DiseasesEnum? disease;
-                                        switch (value) {
-                                          case "Kidney Disease":
-                                            disease = DiseasesEnum.KidneyDisease;
-                                            break;
-                                          case "Liver Disease":
-                                            disease = DiseasesEnum.LiverDisease;
-                                            break;
-                                          case "Asthma":
-                                            disease = DiseasesEnum.Asthma;
-                                            break;
-                                          case "Psychological":
-                                            disease = DiseasesEnum.Psychological;
-                                            break;
-                                          case "Rhemuatic":
-                                            disease = DiseasesEnum.Rhemuatic;
-                                            break;
-                                          case "Anemia":
-                                            disease = DiseasesEnum.Anemia;
-                                            break;
-                                          case "Epilepsy":
-                                            disease = DiseasesEnum.Epilepsy;
-                                            break;
-                                          case "Heart problem":
-                                            disease = DiseasesEnum.HeartProblem;
-                                            break;
-                                          case "Thyroid":
-                                            disease = DiseasesEnum.Thyroid;
-                                            break;
-                                          case "Hepatitis":
-                                            disease = DiseasesEnum.Hepatitis;
-                                            break;
-                                          case "Venereal Disease":
-                                            disease = DiseasesEnum.VenerealDisease;
-                                            break;
-                                          case "Other":
-                                            disease = DiseasesEnum.Other;
-                                            break;
-                                        }
-                                        if (patient.diseases == null) {
-                                          patient.diseases = [];
-                                        }
-                                        if (isSelected) {
-                                          patient.diseases?.add(disease!);
-                                        } else {
-                                          patient.diseases?.remove(disease);
-                                        }
-                                      },
-                                      redFlags: true,
-                                      labels: [
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Kidney Disease",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.KidneyDisease)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Liver Disease",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.LiverDisease)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Asthma",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Asthma)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Psychological",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Psychological)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Rhemuatic",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Rhemuatic)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Anemia",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Anemia)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Epilepsy",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Epilepsy)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Heart problem",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.HeartProblem)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Thyroid",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Thyroid)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Hepatitis",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Hepatitis)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Venereal Disease",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.VenerealDisease)),
-                                        CIA_MultiSelectChipWidgeModel(
-                                            label: "Other",
-                                            selectedColor: Colors.red,
-                                            isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Other))
+                              BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
+                                buildWhen: (previous, current) => current is ChangePageState || current is ChangedPatientRelative,
+                                builder: (context, state) {
+                                  if (patient.website == Website.Private) return Container();
+                                  if (state is ChangedPatientRelative ||
+                                      (state is ChangePageState && (bloc.pageState == PageState.addNew || bloc.pageState == PageState.edit))) {
+                                    return Column(
+                                      children: [
+                                        FormTextKeyWidget(text: "Diseases"),
+                                        CIA_MultiSelectChipWidget(
+                                          onChange: (value, isSelected) {
+                                            DiseasesEnum? disease;
+                                            switch (value) {
+                                              case "Kidney Disease":
+                                                disease = DiseasesEnum.KidneyDisease;
+                                                break;
+                                              case "Liver Disease":
+                                                disease = DiseasesEnum.LiverDisease;
+                                                break;
+                                              case "Asthma":
+                                                disease = DiseasesEnum.Asthma;
+                                                break;
+                                              case "Psychological":
+                                                disease = DiseasesEnum.Psychological;
+                                                break;
+                                              case "Rhemuatic":
+                                                disease = DiseasesEnum.Rhemuatic;
+                                                break;
+                                              case "Anemia":
+                                                disease = DiseasesEnum.Anemia;
+                                                break;
+                                              case "Epilepsy":
+                                                disease = DiseasesEnum.Epilepsy;
+                                                break;
+                                              case "Heart problem":
+                                                disease = DiseasesEnum.HeartProblem;
+                                                break;
+                                              case "Thyroid":
+                                                disease = DiseasesEnum.Thyroid;
+                                                break;
+                                              case "Hepatitis":
+                                                disease = DiseasesEnum.Hepatitis;
+                                                break;
+                                              case "Venereal Disease":
+                                                disease = DiseasesEnum.VenerealDisease;
+                                                break;
+                                              case "Other":
+                                                disease = DiseasesEnum.Other;
+                                                break;
+                                            }
+                                            if (patient.diseases == null) {
+                                              patient.diseases = [];
+                                            }
+                                            if (isSelected) {
+                                              patient.diseases?.add(disease!);
+                                            } else {
+                                              patient.diseases?.remove(disease);
+                                            }
+                                          },
+                                          redFlags: true,
+                                          labels: [
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Kidney Disease",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.KidneyDisease)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Liver Disease",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.LiverDisease)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Asthma",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Asthma)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Psychological",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Psychological)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Rhemuatic",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Rhemuatic)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Anemia",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Anemia)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Epilepsy",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Epilepsy)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Heart problem",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.HeartProblem)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Thyroid",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Thyroid)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Hepatitis",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Hepatitis)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Venereal Disease",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.VenerealDisease)),
+                                            CIA_MultiSelectChipWidgeModel(
+                                                label: "Other",
+                                                selectedColor: Colors.red,
+                                                isSelected: patient.diseases != null && patient.diseases!.contains(DiseasesEnum.Other))
+                                          ],
+                                        ),
                                       ],
-                                    ),
-                                  ],
-                                ),
-                                viewWidget: CIA_TagsInputWidget(
-                                  dynamicVisibility: true,
-                                  key: GlobalKey(),
-                                  label: "Diseases",
-                                  initialValue: patient.diseases?.map((e) => e.name.toString()).toList(),
-                                  disableDelete: true,
-                                ),
+                                    );
+                                  } else {
+                                    return CIA_TagsInputWidget(
+                                      dynamicVisibility: true,
+                                      key: GlobalKey(),
+                                      label: "Diseases",
+                                      initialValue: patient.diseases?.map((e) => e.name.toString()).toList(),
+                                      disableDelete: true,
+                                    );
+                                  }
+                                },
                               ),
                               SizedBox(height: 10),
                               BlocBuilder<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(

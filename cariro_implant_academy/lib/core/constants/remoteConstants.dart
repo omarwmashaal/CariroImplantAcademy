@@ -10,9 +10,9 @@ import '../injection_contianer.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
-//const _host = "http://localhost:5000/";
+const _host = "http://localhost:5000/";
 //const _host = "http://18.233.224.72/api/";
-var _host = "http://localhost/api/";
+//var _host = "http://localhost/api/";
 //var _host = "http://10.10.10.105/api/";
 
 var t = File("host.txt").readAsStringSync();

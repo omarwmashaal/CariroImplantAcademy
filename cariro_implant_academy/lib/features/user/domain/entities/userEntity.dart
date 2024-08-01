@@ -39,7 +39,7 @@ class UserEntity extends Equatable {
   String? phoneNumber2;
   String? instagramLink;
   String? facebookLink;
-  EnumLabRequestSources? workPlaceEnum;
+  Website? workPlaceEnum;
   int? profileImageId;
   Uint8List? profileImage;
   List<Website>? accessWebsites;
@@ -80,8 +80,8 @@ class UserEntity extends Equatable {
   List<Object?> get props => [
         this.name,
         this.roles,
-    this.instagramLink,
-    this.facebookLink,
+        this.instagramLink,
+        this.facebookLink,
         this.dateOfBirth,
         this.gender,
         this.graduatedFrom,

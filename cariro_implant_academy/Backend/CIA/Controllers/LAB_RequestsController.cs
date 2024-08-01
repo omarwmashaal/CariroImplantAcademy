@@ -38,7 +38,7 @@ namespace CIA.Controllers
             DateTime? from,
             DateTime? to,
             EnumLabRequestStatus? status,
-            EnumLabRequestSources? source,
+            EnumWebsite? source,
             bool? paid,
             String? search,
             bool? myRequests
@@ -251,6 +251,8 @@ namespace CIA.Controllers
             //    steps = request.Steps;
             //    request.Steps = null;
             //}
+            var patient = await _dbContext.Patients.FirstOrDefaultAsync(x => x.Id == request.PatientId);
+            request.Source = patient?.Website;
             var user = await _iUserRepo.GetUser();
             if (request.DesignerId != null)
             {

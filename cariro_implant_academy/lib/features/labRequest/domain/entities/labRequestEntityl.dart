@@ -13,7 +13,7 @@ class LabRequestEntity extends Equatable {
   BasicNameIdObjectEntity? entryBy;
   int? assignedToId;
   BasicNameIdObjectEntity? assignedTo;
-  EnumLabRequestSources? source;
+  Website? source;
   int? customerId;
   UserEntity? customer;
   int? patientId;

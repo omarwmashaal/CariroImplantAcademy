@@ -102,7 +102,7 @@ class UserModel extends UserEntity {
     registeredById = json['registeredById'];
     registeredBy = json['registeredBy'] == null ? null : BasicNameIdObjectModel.fromJson(json['registeredBy']);
     registerationDate = DateTime.tryParse(json['registerationDate'] ?? "")?.toLocal();
-    workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum'] ?? 0];
+    workPlaceEnum = Website.values[json['workPlaceEnum'] ?? 0];
     /*try{
       id = json['id'];
     }catch(e){
@@ -149,7 +149,7 @@ class UserModel extends UserEntity {
     data['phoneNumber2'] = this.phoneNumber2;
     data['workPlace'] = this.workPlace != null ? BasicNameIdObjectModel.fromEntity(this.workPlace!).toJson() : null;
     data['workPlaceId'] = this.workPlaceId;
-    data['workPlaceEnum'] = (this.workPlaceEnum ?? EnumLabRequestSources.CIA).index;
+    data['workPlaceEnum'] = (this.workPlaceEnum ?? Website.CIA).index;
     return data;
   }
 }

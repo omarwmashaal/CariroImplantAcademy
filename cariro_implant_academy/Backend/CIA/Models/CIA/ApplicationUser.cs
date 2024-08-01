@@ -38,7 +38,7 @@ namespace CIA.Models.CIA
         [ForeignKey("Lab_CustomerWorkPlace")]
         public int? WorkplaceId { get; set; }
         public Lab_CustomerWorkPlace? WorkPlace { get; set; }
-        public EnumLabRequestSources? WorkPlaceEnum { get; set; }
+        public EnumWebsite? WorkPlaceEnum { get; set; }
         [ForeignKey("CandidatesBatchesModel")]
         public int? BatchId { get; set; }
         public CandidatesBatchesModel? Batch { get; set; }

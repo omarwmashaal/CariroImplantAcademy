@@ -25,7 +25,7 @@ class GetAllRequestsParams {
   DateTime? to;
   String? search;
   EnumLabRequestStatus? status;
-  EnumLabRequestSources? source;
+  Website? source;
   bool? paid;
   bool myRequests;
 

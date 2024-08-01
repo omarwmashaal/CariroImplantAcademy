@@ -26,15 +26,11 @@ namespace CIA.Models
     {
         CIA,
         Lab,
-        Clinic
+        Clinic,
+        Private,
     }
     public enum EnumLabRequestStatus { InQueue, InProgress, FinishedDesign, Finished }
-    public enum EnumLabRequestSources
-    {
-        CIA,
-        Clinic,
-        OutSource
-    }
+   
     public enum EnumLabRequestStepStatus
     {
         Done,

@@ -15,7 +15,7 @@ namespace CIA.Models.LAB.DTO
         public UserDTO? EntryBy { get; set; }
         public int? AssignedToId { get; set; }
         public UserDTO? AssignedTo { get; set; }
-        public EnumLabRequestSources? Source { get; set; }
+        public EnumWebsite? Source { get; set; }
         public int? CustomerId { get; set; }
         public UserDTO? Customer { get; set; }
         public int PatientId { get; set; }
@@ -63,7 +63,7 @@ namespace CIA.Models.LAB.DTO
     {
         public int Id { get; set; }
         public DateTime? Date { get; set; }
-        public EnumLabRequestSources? Source { get; set; }
+        public EnumWebsite? Source { get; set; }
         public int? CustomerId { get; set; }
         public int? DesignerId { get; set; }
         public UserDTO? Customer { get; set; }

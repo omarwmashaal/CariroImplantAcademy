@@ -33,7 +33,7 @@ enum PregnancyEnum { None, Pregnant, Lactating }
 
 enum SmokingStatus { NoneSmoker, LightSmoker, MediumSmoker, HeavySmoker }
 
-enum Website { CIA, Lab, Clinic }
+enum Website { CIA, Lab, Clinic, Private }
 
 enum LabStepStatus {
   Done,
@@ -48,8 +48,6 @@ enum EnumLabRequestStatus2 {
   Continue,
   Remake,
 }
-
-enum EnumLabRequestSources { CIA, Clinic, OutSource }
 
 enum EnumOralHygieneRating {
   BadHygiene,

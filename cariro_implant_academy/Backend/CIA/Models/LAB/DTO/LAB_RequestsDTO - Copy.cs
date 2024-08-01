@@ -20,7 +20,7 @@ namespace CIA.Models.LAB.DTO
         public DateOnly? DeliveryDate { get; set; }
         public int? EntryById { get; set; }
         public int? AssignedToId { get; set; }
-        public EnumLabRequestSources? Source { get; set; }
+        public EnumWebsite? Source { get; set; }
         public int? CustomerId { get; set; }
         public EnumLabRequestStatus? Status { get; set; }
         public bool? Paid { get; set; }

@@ -12,7 +12,7 @@ class LAB_RequestsAPI {
     String? to,
     String? search,
     EnumLabRequestStatus? status,
-    EnumLabRequestSources? source,
+    Website? source,
     bool? paid,
     bool myRequests = false,
   }) async {
@@ -29,7 +29,7 @@ class LAB_RequestsAPI {
     if (source != null) query = query == "" ? query + "source=${source.index}" : query + "&source=${source.index}";
     if (myRequests != null) query = query == "" ? query + "myRequests=${myRequests}" : query + "&myRequests=${myRequests}";
 
-     API_Response response = await HTTPRequest.Get("LAB_Requests/GetAllRequests?$query");
+    API_Response response = await HTTPRequest.Get("LAB_Requests/GetAllRequests?$query");
 
     if (response.statusCode! > 199 && response.statusCode! < 300) {
       //response.result = ((response.result ?? []) as List<dynamic>).map((e) => LabRequestEntity.fromJson(e as Map<String, dynamic>)).toList();
@@ -56,7 +56,7 @@ class LAB_RequestsAPI {
 
   static Future<API_Response> AddRequest(LabRequestEntity model) async {
     model.source = model.customer!.workPlaceEnum;
-    var response ;// await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());
+    var response; // await HTTPRequest.Post("LAB_Requests/AddRequest", model.toJson());
     return response;
   }
 
@@ -81,7 +81,8 @@ class LAB_RequestsAPI {
 
     return response;
   }
- static Future<API_Response> AssignToTechnician(int id, int technicianId) async {
+
+  static Future<API_Response> AssignToTechnician(int id, int technicianId) async {
     var response = await HTTPRequest.Post("LAB_Requests/AssignToTechnician?id=$id&technicianId=$technicianId", null);
     return response;
   }
@@ -105,10 +106,11 @@ class LAB_RequestsAPI {
   }
 
   static Future<API_Response> AddOrUpdateRequestReceipt(int id, dynamic steps) async {
-    var response ;//= await HTTPRequest.Post("LAB_Requests/AddOrUpdateRequestReceipt?id=$id", steps.map((e) => e.toJson()).toList());
+    var response; //= await HTTPRequest.Post("LAB_Requests/AddOrUpdateRequestReceipt?id=$id", steps.map((e) => e.toJson()).toList());
 
     return response;
   }
+
   static Future<API_Response> PayForRequest(int id) async {
     var response = await HTTPRequest.Post("LAB_Requests/PayForRequest?id=$id", null);
 

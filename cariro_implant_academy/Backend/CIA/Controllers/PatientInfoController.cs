@@ -59,7 +59,6 @@ namespace CIA.Controllers
         {
 
             var user = await _userRepo.GetUser();
-            patientFromRequest.Website = _site;
             var patientFromDatabase = _mapper.Map<Patient>(patientFromRequest);
             patientFromDatabase.RegisteredById = user.IdInt;
             patientFromDatabase.RegisteredBy = user;
@@ -94,6 +93,12 @@ namespace CIA.Controllers
             catch (Exception e)
             {
 
+                await _cia_DbContext.SaveChangesAsync();
+            }
+            if (patientFromDatabase.SecondaryId == null)
+            {
+                patientFromDatabase.SecondaryId = patientFromDatabase?.Id.ToString();
+                _cia_DbContext.Patients.Update(patientFromDatabase);
                 await _cia_DbContext.SaveChangesAsync();
             }
 
@@ -479,7 +484,7 @@ namespace CIA.Controllers
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -537,7 +542,7 @@ namespace CIA.Controllers
                     ).ToList();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -557,8 +562,8 @@ namespace CIA.Controllers
                 .Select(x => new
                 {
                     x.Id,
-                    patientName = x.Patient==null?null:x.Patient.Name,
-                    patientId =(int?) (x.Patient == null ? null : x.Patient.Id),
+                    patientName = x.Patient == null ? null : x.Patient.Name,
+                    patientId = (int?)(x.Patient == null ? null : x.Patient.Id),
                     status = x.Status == null ? null : x.Status.ToString(),
                     x.ReservationTime,
                     x.RealVisitTime,
@@ -1300,13 +1305,13 @@ namespace CIA.Controllers
         [HttpGet("GetPaymentLogsForAReceipt")]
         public async Task<IActionResult> GetPaymentLogsForAReceipt(int receiptId)
         {
-            var logs = await _cia_DbContext.PaymentLogs.Include(x=>x.PaymentMethod).Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
+            var logs = await _cia_DbContext.PaymentLogs.Include(x => x.PaymentMethod).Include(x => x.Patient).Include(x => x.Operator).OrderByDescending(x => x.Date).Where(x => x.ReceiptId == receiptId && x.Website == _site).ToListAsync();
             _aPI_Response.Result = logs;
             return Ok(_aPI_Response);
         }
 
         [HttpPost("AddPayment")]
-        public async Task<IActionResult> AddPayment(int id, int receiptId, int paidAmount,int? paymentMethodId)
+        public async Task<IActionResult> AddPayment(int id, int receiptId, int paidAmount, int? paymentMethodId)
         {
             var cat = await _cia_DbContext.IncomeCategories.Where(x => x.Website == EnumWebsite.CIA).FirstOrDefaultAsync(x => x.Name == "Patients");
             if (cat == null)
@@ -1773,7 +1778,7 @@ namespace CIA.Controllers
                 Implant = x.Implant?.Name,
                 ImplantLine = x.Implant?.ImplantLine?.Name
             }).ToList();
-            
+
             if (model.ClearanceLower == true || model.ClearanceUpper == true)
                 treatmentPlans = await _cia_DbContext.TreatmentPlans.Where(x => finalResult.Select(x => x.Id).Contains((int)x.PatientId)).ToListAsync();
 
@@ -1836,13 +1841,13 @@ namespace CIA.Controllers
                 }
             }
 
-            if(model.SameTooth==true && !model.And_TreatmentIds.IsNullOrEmpty())
+            if (model.SameTooth == true && !model.And_TreatmentIds.IsNullOrEmpty())
             {
                 finalResult = finalResult
                     .GroupBy(x => new { x.Id, x.Tooth })
                     .Where(g => model.And_TreatmentIds.All(id => g.Any(t => t.TreatmentId == id)))
                     .SelectMany(x => x)
-                    .ToList();               
+                    .ToList();
 
             }
 
@@ -1958,9 +1963,9 @@ namespace CIA.Controllers
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalStatusItemId == model.StatusId);
                 if (model.NextId != null)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalNextVisitItemId == model.NextId);
-               if (model.MaterialId != null)
+                if (model.MaterialId != null)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalMaterialItemId == model.MaterialId);
-               if (model.TechniqueId != null)
+                if (model.TechniqueId != null)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().FinalTechniqueItemId == model.TechniqueId);
                 if (model.ScrewRetained == true)
                     tempfinalStepsQuery = tempfinalStepsQuery.Where(x => x.OrderBy(x => x.Date).Last().ScrewRetained == true);

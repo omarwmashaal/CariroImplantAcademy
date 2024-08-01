@@ -36,7 +36,7 @@ class Lab_CustomerAPI {
     return response;
   }
 
-  static Future<API_Response> SearchPatientsByType({required String search, required EnumLabRequestSources type}) async {
+  static Future<API_Response> SearchPatientsByType({required String search, required Website type}) async {
     var response = API_Response();
     response = await HTTPRequest.Get("Lab_Customers/SearchPatientsByType?search=$search&type=${type.index}");
 

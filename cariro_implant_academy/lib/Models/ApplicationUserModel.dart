@@ -38,7 +38,7 @@ class ApplicationUserModel {
   int? workPlaceId;
   DropDownDTO? workPlace;
   String? phoneNumber2;
-  EnumLabRequestSources? workPlaceEnum;
+  Website? workPlaceEnum;
   int? profileImageId;
 
   ApplicationUserModel({
@@ -90,7 +90,7 @@ class ApplicationUserModel {
     registeredById = json['registeredById'];
     registeredBy = json['registeredBy'] == null ? DropDownDTO() : DropDownDTO.fromJson(json['registeredBy']);
     registerationDate = CIA_DateConverters.fromBackendToDateTime(json['registerationDate']);
-    workPlaceEnum = EnumLabRequestSources.values[json['workPlaceEnum'] ?? 0];
+    workPlaceEnum = Website.values[json['workPlaceEnum'] ?? 0];
     /*try{
       id = json['id'];
     }catch(e){
@@ -132,7 +132,7 @@ class ApplicationUserModel {
     data['phoneNumber2'] = this.phoneNumber2;
     data['workPlace'] = this.workPlace != null ? this.workPlace!.toJson() : null;
     data['workPlaceId'] = this.workPlaceId;
-    data['workPlaceEnum'] = (this.workPlaceEnum ?? EnumLabRequestSources.CIA).index;
+    data['workPlaceEnum'] = (this.workPlaceEnum ?? Website.CIA).index;
     return data;
   }
 }
