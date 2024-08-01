@@ -587,6 +587,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             dataSource.updateData(state.patients
                                                                 .map((e) => _dummyClass(
                                                                       id: e.id,
+                                                                      secondaryId: int.tryParse(e.secondaryId ?? ""),
                                                                       name: e.name,
                                                                       phoneNumber: e.phone,
                                                                     ))
@@ -597,7 +598,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                           return TableWidget(
                                                             dataSource: dataSource,
                                                             onCellClick: (index) {
-                                                              var p = dataSource.models.firstWhere((element) => element.id == index);
+                                                              var p = dataSource.models.firstWhere((element) => element.secondaryId == index);
                                                               labRequest.patient!.name = p.name;
                                                               labRequest.patient!.id = p.id;
                                                               labRequest.patientId = p.id;
@@ -888,18 +889,12 @@ enum _SearchDataType { Patients, Doctors, Technicians }
 
 class _dummyClass {
   int? id;
+  int? secondaryId;
   String? name;
   String? phoneNumber;
   Website? website;
 
-  _dummyClass({this.id, this.name, this.phoneNumber, this.website});
-
-  _dummyClass.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    id = json['id'];
-    phoneNumber = json['phone'] ?? json['phoneNumber'];
-    website = json['website'] == null ? null : Website.values[json['website']];
-  }
+  _dummyClass({this.id, this.name, this.phoneNumber, this.website, this.secondaryId});
 }
 
 class _PatientDoctorsSearchDataSource extends DataGridSource {
@@ -916,7 +911,7 @@ class _PatientDoctorsSearchDataSource extends DataGridSource {
   init() {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<int>(columnName: 'Id', value: e.secondaryId ?? e.id),
               DataGridCell<String>(columnName: 'Name', value: e.name),
               DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber ?? ""),
             ]))
