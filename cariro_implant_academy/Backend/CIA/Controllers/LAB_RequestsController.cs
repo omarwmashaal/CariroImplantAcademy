@@ -515,13 +515,14 @@ namespace CIA.Controllers
             _dbContext.Lab_Requests.Update(request);
             _dbContext.Receipts.Update(receipt);
             var user = await _iUserRepo.GetUser();
-            var cat = await _dbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == "Lab Request" && x.Website == EnumWebsite.Lab);
+            var categoryRequest = request.Source + " Lab Request";
+            var cat = await _dbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == categoryRequest && x.Website == EnumWebsite.Lab);
             if (cat == null)
             {
                 cat = new IncomeCategoriesModel()
                 {
                     Website = EnumWebsite.Lab,
-                    Name = "Lab Request"
+                    Name = categoryRequest
                 };
                 await _dbContext.IncomeCategories.AddAsync(cat);
                 await _dbContext.SaveChangesAsync();

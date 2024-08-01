@@ -764,7 +764,7 @@ class _LabItemsSettingsWidget extends StatelessWidget {
               FormTextKeyWidget(text: "Lab Items"),
               SizedBox(height: 10),
               FormTextKeyWidget(
-                text: "Prices will be deducted as Cashflow expenses when adding new items ONLY!",
+                text: "Cost Of Buying The block \n Prices will be deducted as Cashflow expenses when adding new items ONLY!",
                 color: Colors.red,
               ),
               SizedBox(height: 10),
