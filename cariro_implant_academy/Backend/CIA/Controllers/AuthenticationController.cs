@@ -12,6 +12,7 @@ using CIA.Models.TreatmentModels;
 using CIA.Repositories;
 using CIA.Repositories.Interfaces;
 using Hardware.Info;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -3407,6 +3408,48 @@ namespace CIA.Controllers
         public async Task<IActionResult> Test()
         {
             return Ok("Connected");
+
+        }
+        [AllowAnonymous]
+        [HttpGet("MigrateToCashFlowLabCategory")]
+        public async Task<IActionResult> MigrateToCashFlowLabCategory()
+        {
+            var incomes = await _ciaDbContext.Income.Where(x => x.Website == EnumWebsite.Lab).ToListAsync();
+
+            var categoryCIA ="CIA Lab Request";
+            var categoryClinic ="Clinic Lab Request";
+            var categoryPrivate="Private Lab Request";
+
+            await _ciaDbContext.IncomeCategories.AddAsync(new IncomeCategoriesModel()
+            {
+                Website = EnumWebsite.Lab,
+                Name = categoryCIA
+            }); 
+            await _ciaDbContext.IncomeCategories.AddAsync(new IncomeCategoriesModel()
+            {
+                Website = EnumWebsite.Lab,
+                Name = categoryClinic
+            }); 
+            await _ciaDbContext.IncomeCategories.AddAsync(new IncomeCategoriesModel()
+            {
+                Website = EnumWebsite.Lab,
+                Name = categoryPrivate
+            });
+            await _ciaDbContext.SaveChangesAsync();
+
+            foreach(var income in incomes)
+            {
+                var request = await _ciaDbContext.Lab_Requests.FirstAsync(x => x.Id == income.LabRequestId);
+                var categoryRequest = request.Source + " Lab Request";
+                var cat = await _ciaDbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == categoryRequest && x.Website == EnumWebsite.Lab);
+                income.CategoryId = cat.Id;
+                income.Category = cat;
+                _ciaDbContext.Update(income);
+            }
+            _ciaDbContext.SaveChanges();
+
+
+            return Ok();
         }
         [AllowAnonymous]
         [HttpGet("MigrateToTreatmentBridge")]
