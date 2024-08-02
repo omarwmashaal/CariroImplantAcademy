@@ -208,7 +208,7 @@ class _ComplicationsAfterProsthesisPageState extends State<ComplicationsAfterPro
                                             onTap: () => CIA_ShowPopUp(
                                               context: context,
                                               height: 100,
-                                              onSave: () => setState(() => null),
+                                              onSave: () => _setState(() => null),
                                               child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
                                                 onClear: () {
                                                   e.operatorId = null;
