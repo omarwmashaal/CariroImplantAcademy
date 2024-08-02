@@ -225,7 +225,7 @@ class CashFlowDataGridSource extends DataGridSource {
                   DataGridCell<DateTime>(columnName: 'Date', value: e.date),
                   DataGridCell<String>(columnName: 'Category', value: e.category?.name ?? ""),
                   DataGridCell<String>(columnName: 'Name', value: e.patient?.name ?? e.candidate?.name ?? ""),
-                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy?.name),
                   DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
                   DataGridCell<String>(columnName: 'Payment Method', value: e.paymentMethod?.name ?? "-"),
                 ]))
@@ -235,9 +235,9 @@ class CashFlowDataGridSource extends DataGridSource {
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.id),
                   DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!)),
-                  DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
-                  DataGridCell<String>(columnName: 'Patient', value: e.patient!.name),
+                  DataGridCell<String>(columnName: 'Category', value: e.category?.name),
+                  DataGridCell<String>(columnName: 'Created by', value: e.createdBy?.name),
+                  DataGridCell<String>(columnName: 'Patient', value: e.patient?.name),
                   DataGridCell<int>(columnName: 'Receipt Id', value: e.receiptID),
                   DataGridCell<int>(columnName: 'Payment Log Id', value: e.paymentLogId),
                   DataGridCell<int>(columnName: 'Amount', value: e.price ?? 0),
@@ -260,12 +260,12 @@ class CashFlowDataGridSource extends DataGridSource {
                 DataGridCell<int>(columnName: 'ID', value: e.id),
                 DataGridCell<String>(columnName: 'Item', value: e.name),
                 DataGridCell<DateTime>(columnName: 'Date', value: e.date),
-                DataGridCell<String>(columnName: 'Category', value: e.category!.name),
-                DataGridCell<String>(columnName: 'Supplier', value: e.supplier!.name),
-                DataGridCell<String>(columnName: 'Created by', value: e.createdBy!.name),
+                DataGridCell<String>(columnName: 'Category', value: e.category?.name),
+                DataGridCell<String>(columnName: 'Supplier', value: e.supplier?.name),
+                DataGridCell<String>(columnName: 'Created by', value: e.createdBy?.name),
                 DataGridCell<int>(columnName: 'Price', value: e.price ?? 0),
                 DataGridCell<int>(columnName: 'Count', value: e.count ?? 0),
-                DataGridCell<String>(columnName: 'Method', value: e.paymentMethod!.name),
+                DataGridCell<String>(columnName: 'Method', value: e.paymentMethod?.name),
                 DataGridCell<String>(columnName: 'Notes', value: e.notes ?? ""),
               ]))
           .toList();
