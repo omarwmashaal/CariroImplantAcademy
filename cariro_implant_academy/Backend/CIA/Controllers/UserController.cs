@@ -429,7 +429,7 @@ namespace CIA.Controllers
         }
 
         [HttpGet("SearchUsersByWorkplace")]
-        public async Task<IActionResult> SearchUsersByWorkplace(String? search, EnumLabRequestSources source)
+        public async Task<IActionResult> SearchUsersByWorkplace(String? search, EnumWebsite source)
         {
             if (search == null)
 

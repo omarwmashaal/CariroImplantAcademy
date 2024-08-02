@@ -122,12 +122,12 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
         listeners: [
           BlocListener<CreateOrViewPatientBloc, CreateOrViewPatientBloc_State>(
             listener: (context, state) {
-              if (state is CreatedPatientState) {
-                bloc.emit(LabRequestsBloc_ChangedPatientState(
-                    patient: BasicNameIdObjectEntity(
-                  name: state.patient.name,
-                  id: state.patient.id,
-                )));
+              if (state is CreatedPatientState && state.patient?.id != null) {
+                labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
+                labRequest.patientId = state.patient!.id;
+                labRequest.source = state.patient.website;
+                //  EnumLabRequestSources.values.firstWhereOrNull((element) => element.name == state.patient.website.name);
+                bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
               }
             },
           ),
@@ -157,6 +157,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
               if (state is LoadedPatientInfoState) {
                 labRequest.patient = BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id);
                 labRequest.patientId = state.patient!.id;
+                labRequest.source = state.patient.website;
                 bloc.emit(LabRequestsBloc_ChangedPatientState(patient: BasicNameIdObjectEntity(name: state.patient!.name, id: state.patient!.id)));
               }
             },
@@ -204,7 +205,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                           ? null
                                           : () {
                                               {
-                                                EnumLabRequestSources selectedSource = EnumLabRequestSources.CIA;
+                                                Website selectedSource = Website.CIA;
                                                 String search = "";
                                                 _PatientDoctorsSearchDataSource dataSource =
                                                     _PatientDoctorsSearchDataSource(type: _SearchDataType.Doctors);
@@ -230,7 +231,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                               context: context,
                                                               title: "Add new customer",
                                                               onSave: () {
-                                                                newCustomer.workPlaceEnum = EnumLabRequestSources.OutSource;
+                                                                newCustomer.workPlaceEnum = Website.Private;
                                                                 bloc.add(LabRequestsBloc_CreateLabCustomerEvent(customer: newCustomer));
                                                                 return false;
                                                               },
@@ -330,21 +331,20 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                           singleSelect: true,
                                                           onChange: (item, isSelected) {
                                                             if (item == "CIA Doctors")
-                                                              selectedSource = EnumLabRequestSources.CIA;
+                                                              selectedSource = Website.CIA;
                                                             else if (item == "Clinic Doctors")
-                                                              selectedSource = EnumLabRequestSources.Clinic;
-                                                            else if (item == "Outsource Doctors") selectedSource = EnumLabRequestSources.OutSource;
+                                                              selectedSource = Website.Clinic;
+                                                            else if (item == "Outsource Doctors") selectedSource = Website.Private;
                                                             usersBloc.add(UsersBloc_SearchUsersByWorkPlaceEvent(
                                                                 params: SearchUsersByWorkPlaceParams(search: search, source: selectedSource)));
                                                           },
                                                           labels: [
                                                             CIA_MultiSelectChipWidgeModel(
-                                                                label: "CIA Doctors", isSelected: selectedSource == EnumLabRequestSources.CIA),
+                                                                label: "CIA Doctors", isSelected: selectedSource == Website.CIA),
                                                             CIA_MultiSelectChipWidgeModel(
-                                                                label: "Clinic Doctors", isSelected: selectedSource == EnumLabRequestSources.Clinic),
+                                                                label: "Clinic Doctors", isSelected: selectedSource == Website.Clinic),
                                                             CIA_MultiSelectChipWidgeModel(
-                                                                label: "Outsource Doctors",
-                                                                isSelected: selectedSource == EnumLabRequestSources.OutSource),
+                                                                label: "Outsource Doctors", isSelected: selectedSource == Website.Private),
                                                           ],
                                                         ),
                                                         SizedBox(height: 10),
@@ -479,8 +479,9 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                             children: [
                               Expanded(
                                 child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                  buildWhen: (previous, current) => current is LabRequestsBloc_ChangedPatientState && current.patient?.name != null,
                                   builder: (context, state) {
-                                    if (state is LabRequestsBloc_ChangedPatientState) {
+                                    if (state is LabRequestsBloc_ChangedPatientState && state.patient?.id != null) {
                                       labRequest.patient = state.patient;
                                       labRequest.patientId = state.patient.id;
                                     }
@@ -524,6 +525,8 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                                   labRequest.patient!.name = patient?.name;
                                                                   labRequest.patient!.id = patient?.id;
                                                                   labRequest.patientId = patient?.id;
+                                                                  labRequest.source = patient?.website;
+                                                                  // Website.values.firstWhereOrNull((element) => element.name == patient?.website.name);
                                                                   bloc.emit(
                                                                     LabRequestsBloc_ChangedPatientState(
                                                                       patient: BasicNameIdObjectEntity(
@@ -548,7 +551,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             selectedSource = Website.CIA;
                                                           else if (item == "Clinic Patients")
                                                             selectedSource = Website.Clinic;
-                                                          else if (item == "Outsource Patients") selectedSource = Website.Lab;
+                                                          else if (item == "Outsource Patients") selectedSource = Website.Private;
                                                           bloc.add(LabRequestsBloc_SearchLabPatientsByTypeEvent(
                                                               params: SearchLabPatientsByTypeParams(
                                                             search: search,
@@ -584,6 +587,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                             dataSource.updateData(state.patients
                                                                 .map((e) => _dummyClass(
                                                                       id: e.id,
+                                                                      secondaryId: int.tryParse(e.secondaryId ?? ""),
                                                                       name: e.name,
                                                                       phoneNumber: e.phone,
                                                                     ))
@@ -594,10 +598,11 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                           return TableWidget(
                                                             dataSource: dataSource,
                                                             onCellClick: (index) {
-                                                              var p = dataSource.models.firstWhere((element) => element.id == index);
+                                                              var p = dataSource.models.firstWhere((element) => element.secondaryId == index);
                                                               labRequest.patient!.name = p.name;
                                                               labRequest.patient!.id = p.id;
                                                               labRequest.patientId = p.id;
+                                                              labRequest.source = p.website;
                                                               bloc.emit(LabRequestsBloc_ChangedPatientState(
                                                                   patient: BasicNameIdObjectEntity(
                                                                 name: p.name,
@@ -638,7 +643,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                               Expanded(
                                 child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
                                   builder: (context, state) {
-                                    if (state is LabRequestsBloc_ChangedPatientState) {
+                                    if (state is LabRequestsBloc_ChangedPatientState && state.patient?.id != null) {
                                       labRequest.patient = state.patient;
                                       labRequest.patientId = state.patient.id;
                                     }
@@ -720,19 +725,10 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                               SizedBox(height: 10),
                               Expanded(
                                 child: BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
-                                  buildWhen: (previous, current) => current is LabRequestsBloc_ChangedCustomerState,
+                                  buildWhen: (previous, current) => current is LabRequestsBloc_ChangedPatientState,
                                   builder: (context, state) {
-                                    if (state is LabRequestsBloc_ChangedCustomerState) {
-                                      labRequest.customer = state.customer;
-                                    }
                                     return FormTextKeyWidget(
-                                      text: () {
-                                        if (labRequest.customer != null && labRequest.customer!.workPlaceEnum != null)
-                                          return EnumLabRequestSources.values[labRequest.customer!.workPlaceEnum!.index!].toString().split(".").last +
-                                              " Customer";
-                                        else
-                                          return "";
-                                      }(),
+                                      text: labRequest.source?.name ?? "",
                                       secondaryInfo: true,
                                     );
                                   },
@@ -893,16 +889,12 @@ enum _SearchDataType { Patients, Doctors, Technicians }
 
 class _dummyClass {
   int? id;
+  int? secondaryId;
   String? name;
   String? phoneNumber;
+  Website? website;
 
-  _dummyClass({this.id, this.name, this.phoneNumber});
-
-  _dummyClass.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    id = json['id'];
-    phoneNumber = json['phone'] ?? json['phoneNumber'];
-  }
+  _dummyClass({this.id, this.name, this.phoneNumber, this.website, this.secondaryId});
 }
 
 class _PatientDoctorsSearchDataSource extends DataGridSource {
@@ -919,7 +911,7 @@ class _PatientDoctorsSearchDataSource extends DataGridSource {
   init() {
     _data = models
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'ID', value: e.id),
+              DataGridCell<int>(columnName: 'Id', value: e.secondaryId ?? e.id),
               DataGridCell<String>(columnName: 'Name', value: e.name),
               DataGridCell<String>(columnName: 'Phone', value: e.phoneNumber ?? ""),
             ]))

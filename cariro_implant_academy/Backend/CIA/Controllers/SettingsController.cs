@@ -227,7 +227,7 @@ namespace CIA.Controllers
                 return BadRequest(_aPI_Response);
             }
 
-            foreach (var item in labItems)
+                foreach (var item in labItems)
             {
                 item.setName();
             }

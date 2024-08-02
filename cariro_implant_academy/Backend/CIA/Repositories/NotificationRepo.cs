@@ -407,7 +407,9 @@ namespace CIA.Repositories
                 .Include(x => x.Designer)
                 .FirstOrDefaultAsync(x => x.Id == requestId);
             var users = await _userManager.GetUsersInRoleAsync("labmoderator");
+            if(request.Designer!=null)
             users.Add(request.Designer);
+            
             foreach (var user in users)
             {
                 var notification = new NotificationModel()

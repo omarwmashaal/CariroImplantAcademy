@@ -124,7 +124,7 @@ class LabRequestsBloc_ChangedPatientState extends LabRequestsBloc_States {
   LabRequestsBloc_ChangedPatientState({required this.patient});
 
   @override
-  List<Object?> get props => [patient];
+  List<Object?> get props => [patient, identityHashCode(this)];
 }
 
 class LabRequestsBloc_SearchingPatientsState extends LabRequestsBloc_States {

@@ -89,7 +89,7 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source) async {
+  Future<Either<Failure, List<UserEntity>>> searchUsersByWorkPlace(String? search, Website source) async {
     try {
       final result = await userDatasource.searchUsersByWorkPlace(search, source);
       return Right(result);

@@ -125,6 +125,7 @@ class PatientInfoModel extends PatientInfoEntity {
       outReason: map['outReason'] as String?,
       out: map['out'] ?? false,
       age: () {
+        if (map['dateOfBirth'] == null) return null;
         var age = (AgeCalculator.age(DateTime.parse(map['dateOfBirth'])).years) as int;
         if (age < 0) return null;
         return age;
@@ -149,7 +150,7 @@ class PatientInfoModel extends PatientInfoEntity {
       profileImageId: map['profileImageId'] as int?,
       idFrontImageId: map['idFrontImageId'] as int?,
       idBackImageId: map['idBackImageId'] as int?,
-      registrationDate: DateTime.tryParse(map['registerationDate']??"")?.toLocal(),
+      registrationDate: DateTime.tryParse(map['registerationDate'] ?? "")?.toLocal(),
       registeredBy: map['registeredBy'] as String?,
       // profileImage: map['profileImage'] == null ? null : Uint8List.fromList((map['profileImage'] as List<dynamic>).map((e) => e as int).toList()),
       // idBackImage: map['idBackImage'] == null ? null : Uint8List.fromList((map['idBackImage'] as List<dynamic>).map((e) => e as int).toList()),

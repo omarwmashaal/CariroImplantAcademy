@@ -18,7 +18,7 @@ namespace CIA.Models.DTOs
         public List<EnumWebsite>? AccessWebsites { get; set; }
 
         [Required]
-        public EnumLabRequestSources WorkPlaceEnum { get; set; }
+        public EnumWebsite WorkPlaceEnum { get; set; }
         public int? BatchId { get; set; }
         public CandidatesBatchesModel? Batch { get; set; }
         public String? InstagramLink { get; set; }

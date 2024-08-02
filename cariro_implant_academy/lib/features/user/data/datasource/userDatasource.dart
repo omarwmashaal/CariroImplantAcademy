@@ -15,8 +15,8 @@ import '../../domain/entities/userEntity.dart';
 abstract class UserDatasource {
   Future<UserModel> getUserData({required int id});
 
-  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch,Website? accessWebsites});
-  Future<List<UserModel>> searchUsersByWorkPlace( String? search, EnumLabRequestSources source);
+  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch, Website? accessWebsites});
+  Future<List<UserModel>> searchUsersByWorkPlace(String? search, Website source);
 
   Future<NoParams> updateUserInfo(int id, UserEntity userData);
   Future<List<CandidateDetailsModel>> getCandidateDetails(int id, DateTime? from, DateTime? to);
@@ -52,7 +52,7 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch,Website? accessWebsites}) async {
+  Future<List<UserModel>> searchUsersByRole({required String role, String? search, int? batch, Website? accessWebsites}) async {
     late StandardHttpResponse response;
     try {
       search = search == "" ? null : search;
@@ -60,7 +60,8 @@ class UserDatasourceImpl extends UserDatasource {
       query += "${query == "" ? "" : "${role == null ? "" : "&"}"}${role == null ? "" : "role=$role"}";
       query += "${query == "" ? "" : "${search == null ? "" : "&"}"}${search == null ? "" : "search=$search"}";
       query += "${query == "" ? "" : "${batch == null ? "" : "&"}"}${batch == null ? "" : "batch=$batch"}";
-      query += "${query == "" ? "" : "${accessWebsites == null ? "" : "&"}"}${accessWebsites == null ? "" : "accessWebsites=${accessWebsites!.index}"}";
+      query +=
+          "${query == "" ? "" : "${accessWebsites == null ? "" : "&"}"}${accessWebsites == null ? "" : "accessWebsites=${accessWebsites!.index}"}";
       response = await httpRepo.get(host: "$serverHost/$userController/SearchUsersByRole?$query");
     } catch (e) {
       throw mapException(e);
@@ -137,7 +138,7 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<List<UserModel>> searchUsersByWorkPlace(String? search, EnumLabRequestSources source)  async {
+  Future<List<UserModel>> searchUsersByWorkPlace(String? search, Website source) async {
     late StandardHttpResponse response;
     try {
       search = search == "" ? null : search;
@@ -159,7 +160,9 @@ class UserDatasourceImpl extends UserDatasource {
   Future<List<CandidateDetailsModel>> getCandidateDetails(int id, DateTime? from, DateTime? to) async {
     late StandardHttpResponse response;
     try {
-     response = await httpRepo.get(host: "$serverHost/$userController/GetCandidateDetails?id=$id${from==null?"":"&from=${DateFormat("MM-dd-yyyy").format(from)}"}${to==null?"":"&to=${DateFormat("MM-dd-yyyy").format(to)}"}");
+      response = await httpRepo.get(
+          host:
+              "$serverHost/$userController/GetCandidateDetails?id=$id${from == null ? "" : "&from=${DateFormat("MM-dd-yyyy").format(from)}"}${to == null ? "" : "&to=${DateFormat("MM-dd-yyyy").format(to)}"}");
     } catch (e) {
       throw mapException(e);
     }
@@ -172,7 +175,7 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<NoParams> removeUser(int id)async {
+  Future<NoParams> removeUser(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.delete(host: "$serverHost/$userController/RemoveUser?id=$id");
@@ -180,14 +183,14 @@ class UserDatasourceImpl extends UserDatasource {
       throw mapException(e);
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
-   return NoParams();
+    return NoParams();
   }
 
   @override
   Future<NoParams> refreshCandidatesData(int? batchId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.post(host: "$serverHost/$userController/RefreshAllCandidatesData?${batchId==null?"":"batchId=$batchId"}");
+      response = await httpRepo.post(host: "$serverHost/$userController/RefreshAllCandidatesData?${batchId == null ? "" : "batchId=$batchId"}");
     } catch (e) {
       throw mapException(e);
     }

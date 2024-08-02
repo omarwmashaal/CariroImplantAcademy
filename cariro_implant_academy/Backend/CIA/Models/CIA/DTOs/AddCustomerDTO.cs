@@ -11,6 +11,6 @@ namespace CIA.Models.CIA.DTOs
         public int? WorkplaceId{get; set;}
         public Lab_CustomerWorkPlace? WorkPlace{get; set;}
         [Required]
-        public EnumLabRequestSources WorkPlaceEnum { get; set; }
+        public EnumWebsite WorkPlaceEnum { get; set; }
     }
 }

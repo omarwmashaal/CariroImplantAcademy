@@ -86,7 +86,7 @@ class LabRequestModel extends LabRequestEntity {
     designer = json['designer'] == null ? null : BasicNameIdObjectModel.fromJson(json['designer'] ?? Map<String, dynamic>());
     assignedToId = json['assignedToId'];
     assignedTo = json['assignedTo'] == null ? null : BasicNameIdObjectModel.fromJson(json['assignedTo'] ?? Map<String, dynamic>());
-    source = EnumLabRequestSources.values[json['source'] ?? 0];
+    source = Website.values[json['source'] ?? 0];
     customerId = json['customerId'];
     customer = UserModel.fromJson(json['customer'] ?? Map<String, dynamic>());
     patientId = json['patientId'];
@@ -129,14 +129,14 @@ class LabRequestModel extends LabRequestEntity {
     data['deliveryDate'] = this.deliveryDate == null
         ? null
         : DateFormat("yyyy-MM-dd").format(this.deliveryDate!); // CIA_DateConverters.fromDateOnlyToBackend(this.deliveryDate);
-     data['entryById'] = this.entryById;
+    data['entryById'] = this.entryById;
     // data['entryBy'] = this.entryBy != null ? this.entryBy!.toJson() : null;
     // if (this.steps != null && this.steps != []) {
     // this.assignedToId = steps![0].technicianId;
     //}
     data['assignedToId'] = this.assignedToId;
     //data['assignedTo'] = this.assignedTo != null ? this.assignedTo!.toJson() : null;
-    data['source'] = (this.source ?? EnumLabRequestSources.CIA).index;
+    data['source'] = (this.source ?? Website.CIA).index;
     data['customerId'] = this.customerId;
     //data['customer'] = this.customer != null ? this.customer!.toJson() : null;
     data['patientId'] = this.patientId;

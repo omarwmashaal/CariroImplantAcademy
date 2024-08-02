@@ -50,7 +50,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
 
   EnumLabRequestStatus? statusEnum;
 
-  EnumLabRequestSources? sourceEnum;
+  Website? sourceEnum;
 
   bool? paid;
 
@@ -88,7 +88,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               width: 10,
             ),
             Text(
-              "Requests in Queue ",
+              "Requests in Progress ",
               style: TextStyle(fontFamily: Inter_Bold, fontSize: 20),
             ),
             BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
@@ -96,7 +96,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
               builder: (context, state) {
                 int number = 0;
                 if (state is LabRequestsBloc_LoadedMultiRequestsSuccessfullyState)
-                  number = state.requests.where((element) => element.status == EnumLabRequestStatus.InQueue).length;
+                  number = state.requests.where((element) => element.status == EnumLabRequestStatus.InProgress).length;
                 return Text(
                   number.toString(),
                   style: TextStyle(fontFamily: Inter_Bold, fontSize: 30, color: Colors.red),
@@ -132,11 +132,11 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                         },
                         onSelect: (v) {
                           if (v.name == "CIA")
-                            sourceEnum = EnumLabRequestSources.CIA;
+                            sourceEnum = Website.CIA;
                           else if (v.name == "Clinic")
-                            sourceEnum = EnumLabRequestSources.Clinic;
-                          else if (v.name == "Outsource")
-                            sourceEnum = EnumLabRequestSources.OutSource;
+                            sourceEnum = Website.Clinic;
+                          else if (v.name == "Private")
+                            sourceEnum = Website.Private;
                           else if (v.name == "None") sourceEnum = null;
                           reload();
                         },
@@ -146,7 +146,7 @@ class _LabRequestsSearchPageState extends State<LabRequestsSearchPage> {
                           BasicNameIdObjectEntity(name: "None"),
                           BasicNameIdObjectEntity(name: "CIA"),
                           BasicNameIdObjectEntity(name: "Clinic"),
-                          BasicNameIdObjectEntity(name: "Outsource"),
+                          BasicNameIdObjectEntity(name: "Private"),
                         ],
                       ),
                     ),
