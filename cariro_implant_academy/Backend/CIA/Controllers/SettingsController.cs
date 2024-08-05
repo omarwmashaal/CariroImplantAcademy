@@ -4,6 +4,7 @@ using CIA.Models;
 using CIA.Models.CIA;
 using CIA.Models.CIA.DTOs;
 using CIA.Models.CIA.TreatmentModels;
+using CIA.Models.LAB;
 using CIA.Models.TreatmentModels;
 using CIA.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -187,12 +188,37 @@ namespace CIA.Controllers
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabOptions")]
-        public async Task<IActionResult> GetLabOptions(int? parentId)
+        public async Task<IActionResult> GetLabOptions(int? parentId, int? userId)
         {
+            List<LabOptions> options = new List<LabOptions>();
             if (parentId == null || parentId == 0)
-                _aPI_Response.Result = await _cia_DbContext.LabOptions.OrderBy(x => x.Id).Include(x => x.LabItemParent).ToListAsync();
+                options = await _cia_DbContext.LabOptions.AsNoTracking().OrderBy(x => x.Id).Include(x => x.LabItemParent).ToListAsync();
             else
-                _aPI_Response.Result = await _cia_DbContext.LabOptions.Where(x => x.LabItemParentId == parentId).Include(x => x.LabItemParent).OrderBy(x => x.Id).ToListAsync();
+                options = await _cia_DbContext.LabOptions.AsNoTracking().Where(x => x.LabItemParentId == parentId).Include(x => x.LabItemParent).OrderBy(x => x.Id).ToListAsync();
+
+            if (userId != null)
+            {
+                var priceList = await _cia_DbContext.LabDoctorPriceList.Where(x => x.DoctorId == (int)userId).ToListAsync();
+                foreach (LabOptions option in options)
+                {
+                    int? newPrice = priceList.FirstOrDefault(x => x.LabOptionId == option.Id)?.Price;
+                    if (newPrice == null)
+                    {
+                        await _cia_DbContext.LabDoctorPriceList.AddAsync(new LabDoctorPriceListModel
+                        {
+                            DoctorId = (int)userId,
+                            LabOptionId = (int)option.Id,
+                            Price = option.Price,
+                        });
+                        _cia_DbContext.SaveChanges();
+                        newPrice = option.Price;
+                    }
+                    option.Price = (int)newPrice;
+                }
+
+            }
+
+            _aPI_Response.Result = options;
             return Ok(_aPI_Response);
         }
         [HttpGet("GetLabItemCompanies")]
@@ -227,7 +253,7 @@ namespace CIA.Controllers
                 return BadRequest(_aPI_Response);
             }
 
-                foreach (var item in labItems)
+            foreach (var item in labItems)
             {
                 item.setName();
             }
@@ -817,6 +843,19 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok(_aPI_Response);
         }
+        [HttpPut("UpdateLabOptionsDoctorPriceList")]
+        public async Task<IActionResult> UpdateLabOptionsDoctorPriceList(List<LabDoctorPriceListModel> data)
+        {
+            var drIds = data.Select(X => X.DoctorId).Distinct().ToList();
+            var priceList = await _cia_DbContext.LabDoctorPriceList.Where(x => drIds.Contains(x.DoctorId)).ToListAsync();
+            foreach (var price in priceList)
+            {
+                price.Price = data.First(x => x.LabOptionId == price.LabOptionId).Price;
+            }
+            _cia_DbContext.LabDoctorPriceList.UpdateRange(priceList);
+            _cia_DbContext.SaveChanges();
+            return Ok();
+        }
         [HttpPut("UpdateLabItems")]
         public async Task<IActionResult> UpdateLabItems(List<LabItem> data)
         {
@@ -863,7 +902,7 @@ namespace CIA.Controllers
             _cia_DbContext.LabItems.UpdateRange(data);
             _cia_DbContext.SaveChanges();
 
-            
+
             return Ok(_aPI_Response);
         }
 
@@ -992,7 +1031,7 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok();
         }
-        
+
         [HttpPost("UpdateProstheticMaterial")]
         public async Task<IActionResult> UpdateProstheticMaterial(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
         {
@@ -1019,7 +1058,7 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok();
         }
-        
+
         [HttpPost("UpdateProstheticTechnique")]
         public async Task<IActionResult> UpdateProstheticTechnique(int itemId, EnumProstheticType type, [FromBody] List<DropDowns> data)
         {
@@ -1046,13 +1085,13 @@ namespace CIA.Controllers
             _cia_DbContext.SaveChanges();
             return Ok();
         }
-        
-        
+
+
         [HttpGet("GetSurgicalComplications")]
         public async Task<IActionResult> GetSurgicalComplications()
         {
             _aPI_Response.Result = await _cia_DbContext.DefaultSurgicalComplications.ToListAsync();
-            
+
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateSurgicalComplications")]
@@ -1060,14 +1099,14 @@ namespace CIA.Controllers
         {
             _cia_DbContext.DefaultSurgicalComplications.UpdateRange(model);
             _cia_DbContext.SaveChanges();
-            
+
             return Ok();
         }
         [HttpGet("GetProstheticComplications")]
         public async Task<IActionResult> GetProstheticComplications()
         {
             _aPI_Response.Result = await _cia_DbContext.DefaultProstheticComplications.ToListAsync();
-            
+
             return Ok(_aPI_Response);
         }
         [HttpPut("UpdateProstheticComplications")]
@@ -1075,7 +1114,7 @@ namespace CIA.Controllers
         {
             _cia_DbContext.DefaultProstheticComplications.UpdateRange(model);
             _cia_DbContext.SaveChanges();
-            
+
             return Ok();
         }
 

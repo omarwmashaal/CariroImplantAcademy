@@ -21,12 +21,12 @@ class LabStepItemModel extends LabStepItemEntity {
     consumedLabItem = data['consumedLabItem'] == null ? null : LabItemModel.fromJson(data['consumedLabItem']);
     consumedLabItemId = data['consumedLabItemId'];
     id = data['id'];
-    labPrice = data['labPrice'] ?? 0;
     labRequestId = data['labRequestId'];
     patientId = data['patientId'];
     tooth = data['tooth'];
     description = data['description'];
-    labOption = data['labOption']==null?null:LabOptionModel.fromJson(data['labOption']);
+    labOption = data['labOption'] == null ? null : LabOptionModel.fromJson(data['labOption']);
+    labPrice = data['labPrice'] ?? labOption?.price ?? 0;
     labOptionId = data['labOptionId'];
   }
   LabStepItemModel.fromEntity(LabStepItemEntity entity) {

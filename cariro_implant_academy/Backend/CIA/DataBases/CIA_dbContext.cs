@@ -96,6 +96,7 @@ namespace CIA.DataBases
         public DbSet<ImplantCompany> ImplantCompanies { get; set; }
         public DbSet<ImplantLine> ImplantLines { get; set; }
         public DbSet<RoomModel> Rooms { get; set; }
+        public DbSet<LabDoctorPriceListModel> LabDoctorPriceList { get; set; }
         public DbSet<Lab_File> Lab_Files { get; set; }
         public DbSet<Lab_Request> Lab_Requests { get; set; }
         public DbSet<Lab_RequestStep> Lab_RequestSteps { get; set; }

@@ -1,5 +1,7 @@
 import 'package:cariro_implant_academy/core/Http/httpRepo.dart';
 import 'package:cariro_implant_academy/core/features/settings/data/models/clinicPricesModel.dart';
+import 'package:cariro_implant_academy/core/features/settings/data/models/labPricesForDoctorModel.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/models/labItemCompanyModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/models/labItemShadeModel.dart';
 import 'package:cariro_implant_academy/features/labRequest/data/models/labOptionModel.dart';
@@ -65,6 +67,7 @@ abstract class SettingsDatasource {
   Future<NoParams> changeImplantCompanyName(BasicNameIdObjectEntity value);
   Future<NoParams> updateDefaultSurgicalComplications(List<BasicNameIdObjectEntity> value);
   Future<NoParams> updateDefaultProstheticComplications(List<BasicNameIdObjectEntity> value);
+  Future<NoParams> updateLabOptionsDoctorPriceList(List<LabPriceForDoctorEntity> data);
 
   Future<NoParams> changeImplantLineName(BasicNameIdObjectEntity value);
 
@@ -102,7 +105,7 @@ abstract class SettingsDatasource {
   Future<List<LabItemCompanyModel>> getLabItemCompanies(int id);
   Future<List<LabItemShadeModel>> getLabItemLines(int? parentId, int? companyId);
   Future<List<LabItemModel>> getLabItems(int? parentId, int? companyId, int? shadeId);
-  Future<List<LabOptionModel>> getLabOptions(int? parentId);
+  Future<List<LabOptionModel>> getLabOptions(int? parentId, int? doctorId);
   Future<NoParams> updateLabItems(List<LabItemEntity> data);
   Future<NoParams> updateLabItemsShades(List<LabItemShadeEntity> data);
   Future<NoParams> updateLabItemsCompanies(List<LabItemCompanyEntity> data);
@@ -877,10 +880,13 @@ class SettingsDatasourceImpl implements SettingsDatasource {
   }
 
   @override
-  Future<List<LabOptionModel>> getLabOptions(int? parentId) async {
+  Future<List<LabOptionModel>> getLabOptions(int? parentId, int? doctorId) async {
     late StandardHttpResponse response;
+    String query = "";
+    query += parentId == null ? "" : (query == "" ? "" : "&") + "parentId=$parentId";
+    query += doctorId == null ? "" : (query == "" ? "" : "&") + "userId=$doctorId";
     try {
-      response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabOptions?${parentId == null ? "" : "parentId=$parentId"}");
+      response = await httpRepo.get(host: "$serverHost/$settingsController/GetLabOptions?$query");
     } catch (e) {
       throw mapException(e);
     }
@@ -965,6 +971,21 @@ class SettingsDatasourceImpl implements SettingsDatasource {
       response = await httpRepo.put(
         host: "$serverHost/$settingsController/UpdateProstheticComplications",
         body: value.map((e) => BasicNameIdObjectModel.fromEntity(e).toJson()).toList(),
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
+  }
+
+  @override
+  Future<NoParams> updateLabOptionsDoctorPriceList(List<LabPriceForDoctorEntity> data) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.put(
+        host: "$serverHost/$settingsController/UpdateLabOptionsDoctorPriceList",
+        body: data.map((e) => LabPriceForDoctorModel.fromEntity(e).toJson()).toList(),
       );
     } catch (e) {
       throw mapException(e);

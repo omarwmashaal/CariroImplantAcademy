@@ -2,6 +2,7 @@ import 'package:cariro_implant_academy/Widgets/CIA_DropDown.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_SecondaryButton.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
@@ -102,7 +103,12 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
     usersBloc = BlocProvider.of<UsersBloc>(context);
     settingsBloc = BlocProvider.of<SettingsBloc>(context);
     patientBloc = BlocProvider.of<CreateOrViewPatientBloc>(context);
-    settingsBloc.add(SettingsBloc_LoadLabOptionsEvent());
+    settingsBloc.add(SettingsBloc_LoadLabOptionsEvent(
+      params: GetLabOptionsParams(
+        doctorId: null,
+        parentId: null,
+      ),
+    ));
     if (widget.isDoctor) {
       labRequest.customer = UserEntity(
         name: siteController.getUserName(),

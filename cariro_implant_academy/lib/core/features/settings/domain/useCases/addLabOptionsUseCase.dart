@@ -13,7 +13,7 @@ class UpdateLabOptionsUseCase extends UseCases<NoParams, List<LabOptionEntity>> 
 
   @override
   Future<Either<Failure, NoParams>> call(List<LabOptionEntity> params) async {
-    params.removeWhere((element) =>( element.name?.isEmpty ?? true) || element.labItemParentId==null);
+    params.removeWhere((element) => (element.name?.isEmpty ?? true) || element.labItemParentId == null);
     return await settingsRepository.updateLabOptions(params).then((value) => value.fold(
           (l) => Left(l..message = "Update Lab Options:"),
           (r) => Right(r),

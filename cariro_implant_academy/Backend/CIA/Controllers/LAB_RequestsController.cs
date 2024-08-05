@@ -10,6 +10,7 @@ using CIA.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CIA.Controllers
@@ -170,10 +171,41 @@ namespace CIA.Controllers
 
 
             request.LabRequestStepItems = await _dbContext.LabRequestStepItems
-                .Include(x => x.LabOption).ThenInclude(x=>x.LabItemParent)
+                .Include(x => x.LabOption).ThenInclude(x => x.LabItemParent)
                 .Include(x => x.ConsumedLabItem)
                 .Where(x => x.LabRequestId == id).ToListAsync();
 
+
+            if (request.CustomerId != null)
+            {
+
+                var priceList = await _dbContext.LabDoctorPriceList.Where(x => x.DoctorId == (int)request.CustomerId).ToListAsync();
+                var options = request.LabRequestStepItems.Select(x => x.LabOption).ToList();
+                foreach (LabOptions? option in options)
+                {
+                    if (request.Free == true)
+                    {
+                        option.Price = 0;
+                        continue;
+                    }
+
+                    if (option == null)
+                        continue;
+                    int? newPrice = priceList.FirstOrDefault(x => x.LabOptionId == option.Id)?.Price;
+                    if (newPrice == null)
+                    {
+                        await _dbContext.LabDoctorPriceList.AddAsync(new LabDoctorPriceListModel
+                        {
+                            DoctorId = (int)request.CustomerId,
+                            LabOptionId = (int)option.Id,
+                            Price = option.Price,
+                        });
+                        _dbContext.SaveChanges();
+                        newPrice = option.Price;
+                    }
+                    option.Price = (int)newPrice;
+                }
+            }
             _apiResponse.Result = request;
 
 
@@ -182,13 +214,37 @@ namespace CIA.Controllers
         [HttpGet("GetRequestStepItems")]
         public async Task<IActionResult> GetRequestStepItems(int id)
         {
-
+            // int? customerId = _dbContext.Lab_Requests.Select(x => new { x.CustomerId, x.Id }).First(x => x.Id == id).CustomerId;
             var requestSteps = await _dbContext.LabRequestStepItems.
                 Where(x => x.LabRequestId == id).
                 Include(x => x.ConsumedLabItem).
                 Include(x => x.LabOption).ThenInclude(x => x.LabItemParent)
                 .ToListAsync();
 
+            //if (customerId != null)
+            //{
+
+            //    var priceList = await _dbContext.LabDoctorPriceList.Where(x => x.DoctorId == (int)customerId).ToListAsync();
+            //    var options = requestSteps.Select(x => x.LabOption).ToList();
+            //    foreach (LabOptions? option in options)
+            //    {
+            //        if (option == null)
+            //            continue;
+            //        int? newPrice = priceList.FirstOrDefault(x => x.LabOptionId == option.Id)?.Price;
+            //        if (newPrice == null)
+            //        {
+            //            await _dbContext.LabDoctorPriceList.AddAsync(new LabDoctorPriceListModel
+            //            {
+            //                DoctorId = (int)customerId,
+            //                LabOptionId = (int)option.Id,
+            //                Price = option.Price,
+            //            });
+            //            _dbContext.SaveChanges();
+            //            newPrice = option.Price;
+            //        }
+            //        option.Price = (int)newPrice;
+            //    }
+            //}
 
             foreach (var labRequestStep in requestSteps)
             {
@@ -253,6 +309,9 @@ namespace CIA.Controllers
             //}
             var patient = await _dbContext.Patients.FirstOrDefaultAsync(x => x.Id == request.PatientId);
             request.Source = patient?.Website;
+            request.LabRequestStepItems?.ForEach(x => {
+                x.LabPrice = null;
+            });
             var user = await _iUserRepo.GetUser();
             if (request.DesignerId != null)
             {
@@ -713,7 +772,7 @@ namespace CIA.Controllers
 
             var allParentItems = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId).ToListAsync();
             var count = allParentItems.Sum(x => x.Count);
-            if(count<parent.Threshold)
+            if (count < parent.Threshold)
             {
                 await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id);
             }

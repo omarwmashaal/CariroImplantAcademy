@@ -737,11 +737,13 @@ class SettingsBloc_LoadingLabOptionsErrorState extends SettingsBlocErrorState {
 class SettingsBloc_LoadedLabOptionsSuccessfullyState extends SettingsBlocSuccessState {
   final List<LabOptionEntity> data;
   final int? parentId;
+  final int? doctorId;
   final int? companyId;
   final int? shadeId;
   SettingsBloc_LoadedLabOptionsSuccessfullyState({
     required this.data,
     this.parentId,
+    this.doctorId,
     this.companyId,
     this.shadeId,
   });

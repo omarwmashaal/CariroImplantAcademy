@@ -6,8 +6,13 @@ import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
@@ -50,6 +55,9 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
   List<LabItemParentEntity> labItemParetns = [];
   LabItemParentEntity? selectedLabItemParent;
   late TabController tabController;
+  int? doctorId;
+  BasicNameIdObjectEntity? doctor;
+  List<LabPriceForDoctorEntity> priceList = [];
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
@@ -69,7 +77,10 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
             if (value == 0) {
               bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
             } else {
-              bloc.add(SettingsBloc_LoadLabOptionsEvent());
+              bloc.add(SettingsBloc_LoadLabOptionsEvent(
+                  params: GetLabOptionsParams(
+                doctorId: doctorId,
+              )));
             }
           },
           labelColor: Colors.black,
@@ -309,7 +320,13 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                       ShowSnackBar(context, isSuccess: false, message: state.message);
                     else if (state is SettingsBloc_UpdatedLabOptionsSuccessfullyState) {
                       ShowSnackBar(context, isSuccess: true);
-                      bloc.add(SettingsBloc_LoadLabOptionsEvent());
+                      bloc.add(
+                        SettingsBloc_LoadLabOptionsEvent(
+                          params: GetLabOptionsParams(
+                            doctorId: doctorId,
+                          ),
+                        ),
+                      );
                     }
                   }
                 },
@@ -324,6 +341,15 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                   else if (state is SettingsBloc_LoadingLabOptionsErrorState)
                     return BigErrorPageWidget(message: state.message);
                   else if (state is SettingsBloc_LoadedLabOptionsSuccessfullyState) {
+                    if (doctorId != null) {
+                      priceList = state.data
+                          .map((e) => LabPriceForDoctorEntity(
+                                doctorId: doctorId,
+                                optionId: e.id!,
+                                price: e.price ?? 0,
+                              ))
+                          .toList();
+                    }
                     options = state.data;
                     if (options.isEmpty)
                       options = [
@@ -339,6 +365,43 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                       SizedBox(height: 10),
                       Text(
                           "These options that will be visible in any request. The options will be linked in:\n 1- DropDown lists for choosing the corresponding companies, shades, blocks \n 2- Consuming the corresponding blocks. \n 3- Linkning the right price for each step in the request."),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CIA_DropDownSearchBasicIdName<LoadUsersEnum>(
+                              onClear: () {
+                                doctorId = null;
+                                doctor = null;
+                                priceList = [];
+                                bloc.add(SettingsBloc_LoadLabOptionsEvent(
+                                    params: GetLabOptionsParams(
+                                  doctorId: doctorId,
+                                )));
+                              },
+                              asyncUseCase: sl<LoadUsersUseCase>(),
+                              searchParams: LoadUsersEnum.allDoctors,
+                              label: "Select Doctor",
+                              onSelect: (value) {
+                                doctor = value;
+                                doctorId = value.id;
+                                bloc.add(SettingsBloc_LoadLabOptionsEvent(
+                                    params: GetLabOptionsParams(
+                                  doctorId: doctorId,
+                                )));
+                              },
+                              selectedItem: doctorId == null ? BasicNameIdObjectEntity(name: "Default Prices") : doctor,
+                            ),
+                          ),
+                          Visibility(
+                            visible: doctorId == null,
+                            child: FormTextValueWidget(
+                              text: "Save Before Selecting Doctor",
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      ),
                       SizedBox(height: 10),
                       Expanded(
                         child: ListView(
@@ -381,18 +444,23 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                           ),
                                         ),
                                         SizedBox(width: 10),
-                                        IconButton(
-                                          onPressed: () {
-                                            options = [
-                                              ...options,
-                                              LabOptionEntity(
-                                                price: 0,
+                                        doctorId == null
+                                            ? IconButton(
+                                                onPressed: () {
+                                                  options = [
+                                                    ...options,
+                                                    LabOptionEntity(
+                                                      price: 0,
+                                                    )
+                                                  ];
+                                                  bloc.emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: options));
+                                                },
+                                                icon: Icon(Icons.add),
                                               )
-                                            ];
-                                            bloc.emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: options));
-                                          },
-                                          icon: Icon(Icons.add),
-                                        ),
+                                            : FormTextValueWidget(
+                                                text: "You can only add items in the default view! Clear Doctor Selection First",
+                                                color: Colors.red,
+                                              ),
                                       ],
                                     ),
                                   ))
@@ -403,7 +471,11 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                       CIA_PrimaryButton(
                           label: "Save",
                           onTab: () {
-                            bloc.add(SettingsBloc_UpdateLabOptionsEvent(options: options));
+                            bloc.add(SettingsBloc_UpdateLabOptionsEvent(
+                              options: options,
+                              doctorId: doctorId,
+                              priceList: priceList,
+                            ));
                           })
                     ],
                   );

@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemShadesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemsUseCase.dart';
@@ -18,6 +19,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultProstheticComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabOptionsPriceListUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
@@ -30,7 +32,9 @@ import 'package:cariro_implant_academy/core/useCases/useCases.dart';
 import 'package:cariro_implant_academy/features/patient/domain/usecases/getRoomsUsecase.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmentItemEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/usecase/getTreatmentItemUseCase.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../../domain/useCases/addExpensesCategoriesUseCase.dart';
 import '../../domain/useCases/addImplantCompaniesUseCase.dart';
@@ -120,6 +124,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateProstheticNextVisitUseCase updateProstheticNextVisitUseCase;
   final UpdateProstheticTechniqueUseCase updateProstheticTechniqueUseCase;
   final UpdateProstheticMaterialUseCase updateProstheticMaterialUseCase;
+  final UpdateLabOptionsPriceListUseCase updateLabOptionsPriceListUseCase;
 
   SettingsBloc({
     required this.updateDefaultSurgicalComplicationsUseCase,
@@ -179,6 +184,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateProstheticStatusUseCase,
     required this.updateLabOptionsUseCase,
     required this.getLabOptionsUseCase,
+    required this.updateLabOptionsPriceListUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadDefaultSurgicalComplicationsEvent>(
       (event, emit) async {
@@ -555,10 +561,10 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_LoadLabOptionsEvent>((event, emit) async {
       emit(SettingsBloc_LoadingLabOptionsState());
-      final result = await getLabOptionsUseCase(event.parentId);
+      final result = await getLabOptionsUseCase(event.params);
       result.fold(
         (l) => emit(SettingsBloc_LoadingLabOptionsErrorState(message: l.message ?? "")),
-        (r) => emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: r, parentId: event.parentId)),
+        (r) => emit(SettingsBloc_LoadedLabOptionsSuccessfullyState(data: r, parentId: event.params.parentId, doctorId: event.params.doctorId)),
       );
     });
 
@@ -588,7 +594,15 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     });
     on<SettingsBloc_UpdateLabOptionsEvent>((event, emit) async {
       emit(SettingsBloc_UpdatingLabOptionsState());
-      final result = await updateLabOptionsUseCase(event.options);
+      late Either<Failure, NoParams> result;
+      if (event.doctorId == null)
+        result = await updateLabOptionsUseCase(event.options);
+      else {
+        for (var o in event.options) {
+          event.priceList?.firstWhereOrNull((element) => element.optionId == o.id && element.doctorId == event.doctorId)?.price = o?.price ?? 0;
+        }
+        result = await updateLabOptionsPriceListUseCase(event.priceList);
+      }
       result.fold(
         (l) => emit(SettingsBloc_UpdatingLabOptionsErrorState(message: l.message ?? "")),
         (r) => emit(SettingsBloc_UpdatedLabOptionsSuccessfullyState()),

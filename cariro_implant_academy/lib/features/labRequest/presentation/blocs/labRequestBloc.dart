@@ -126,15 +126,15 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
       (event, emit) async {
         emit(LabRequestsBloc_LoadingRequestsState());
         final result = await getLabRequestUseCase(event.id);
-        final stepsResult = await getLabItemStepsFroRequestUseCase(event.id);
-        if (stepsResult.isLeft() || result.isLeft()) {
-          emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: "error"));
-          return;
-        }
+        //final stepsResult = await getLabItemStepsFroRequestUseCase(event.id);
+        // if (stepsResult.isLeft() || result.isLeft()) {
+        //   emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: "error"));
+        //   return;
+        // }
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: l.message ?? "")),
           (r) {
-            stepsResult.fold((l) => null, (steps) => r.labRequestStepItems = steps);
+            // stepsResult.fold((l) => null, (steps) => r.labRequestStepItems = steps);
             emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r));
           },
         );

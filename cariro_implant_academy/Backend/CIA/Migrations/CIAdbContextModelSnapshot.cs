@@ -21873,6 +21873,28 @@ namespace CIA.Migrations
                     b.ToTable("InstallmentPlans");
                 });
 
+            modelBuilder.Entity("CIA.Models.LAB.LabDoctorPriceListModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LabOptionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LabDoctorPriceList");
+                });
+
             modelBuilder.Entity("CIA.Models.LAB.LabRequestStepItem", b =>
                 {
                     b.Property<int?>("Id")
