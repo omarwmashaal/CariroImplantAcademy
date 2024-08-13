@@ -38,7 +38,6 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
 
   @override
   Widget build(BuildContext context) {
-  
     recalculateTotal();
     return Column(
       children: [
@@ -53,8 +52,7 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
                             children: [
                               Expanded(
                                   child: FormTextKeyWidget(
-                                      text:
-                                          "Tooth: ${e.tooth == 0 ? "All" : e.tooth} || ${e.labOption?.name} || ${e.consumedLabItem?.name}")),
+                                      text: "Tooth: ${e.tooth == 0 ? "All" : e.tooth} || ${e.labOption?.name} || ${e.consumedLabItem?.name}")),
                               Expanded(child: FormTextValueWidget(text: "EGP ${e.labPrice}")),
                             ],
                           ),
@@ -105,13 +103,20 @@ class _LabRequestItemReceiptWidgetState extends State<LabRequestItemReceiptWidge
               ),
         Row(
           children: [
+            FormTextKeyWidget(
+              text: "Paid: EGP ${widget.request.paidAmount ?? 0}",
+              secondaryInfo: true,
+            ),
+            SizedBox(width: 10),
+            FormTextKeyWidget(
+              text: "Remaining: EGP ${(widget.request.cost ?? 0) - (widget.request.paidAmount ?? 0)}",
+              secondaryInfo: true,
+            ),
             Expanded(child: SizedBox()),
             Obx(() => FormTextKeyWidget(text: "Total: EGP ${overAllTotal.value}")),
           ],
         )
       ],
     );
- 
- 
   }
 }

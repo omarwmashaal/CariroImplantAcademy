@@ -222,7 +222,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     on<LabRequestsBloc_PayRequestEvent>(
       (event, emit) async {
         emit(LabRequestsBloc_PayingRequestState());
-        final result = await payRequestUseCase(event.id);
+        final result = await payRequestUseCase(PayRequestParams(requestId: event.id, amount: event.amount));
         result.fold(
           (l) => emit(LabRequestsBloc_PayingRequestErrorState(message: l.message ?? "")),
           (r) => emit(LabRequestsBloc_PaidRequestSuccessfullyState()),

@@ -155,7 +155,7 @@ namespace CIA.Controllers
                 _dbContext.SaveChanges();
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _apiResponse.ErrorMessage = ex.Message;
                 return BadRequest(_apiResponse);
@@ -336,7 +336,7 @@ namespace CIA.Controllers
             }
             request.EntryBy = user;
             request.EntryById = (int)user.IdInt;
-            request.Date = request.Date?? DateTime.UtcNow;
+            request.Date = request.Date ?? DateTime.UtcNow;
             request.Customer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.CustomerId);
             request.Designer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.DesignerId);
             if (request.AssignedToId != null)
@@ -579,20 +579,25 @@ namespace CIA.Controllers
         }
 
         [HttpPost("PayForRequest")]
-        public async Task<IActionResult> PayForRequest(int id)
+        public async Task<IActionResult> PayForRequest(int id, int amount)
         {
             var request = await _dbContext.Lab_Requests.FirstOrDefaultAsync(x => x.Id == id);
             var receipt = await _dbContext.Receipts.FirstOrDefaultAsync(x => x.RequestId == id && x.Website == EnumWebsite.Lab);
-            receipt.Paid = receipt.Total;
-            receipt.Unpaid = 0;
-            request.Paid = true;
-            request.PaidAmount = receipt.Total;
+            receipt.Paid += amount;
+            receipt.Unpaid = receipt.Total - receipt.Paid;
+            request.PaidAmount += amount;
+            if (request.PaidAmount == request.Cost)
+                request.Paid = true;
+
+            
 
             _dbContext.Lab_Requests.Update(request);
             _dbContext.Receipts.Update(receipt);
             var user = await _iUserRepo.GetUser();
             var categoryRequest = request.Source + " Lab Request";
             var cat = await _dbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == categoryRequest && x.Website == EnumWebsite.Lab);
+
+            
             if (cat == null)
             {
                 cat = new IncomeCategoriesModel()
@@ -612,7 +617,7 @@ namespace CIA.Controllers
                 CategoryId = cat.Id,
                 Date = DateTime.UtcNow,
                 ReceiptID = receipt.Id,
-                Price = receipt.Total,
+                Price = amount,
                 CreatedBy = user,
                 CreatedById = user.IdInt,
                 LabRequestId = request.Id,
@@ -620,6 +625,16 @@ namespace CIA.Controllers
                 PatientId = request.PatientId,
 
 
+            });
+            _dbContext.PaymentLogs.Add(new PaymentLog
+            {
+                Operator = user,
+                OperatorId = (int)user.IdInt,
+                Date = DateTime.UtcNow,
+                PaidAmount = amount,
+                ReceiptId = (int)receipt.Id,
+                Receipt = receipt,
+                Website = EnumWebsite.Lab,
             });
             _dbContext.SaveChanges();
             return Ok();

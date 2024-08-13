@@ -403,33 +403,51 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                             : CIA_SecondaryButton(
                                                 label: "Pay",
                                                 onTab: () {
+                                                  int amountToPay = (request.cost ?? 0) - (request.paidAmount ?? 0);
                                                   CIA_ShowPopUp(
                                                       width: 700,
                                                       height: 500,
                                                       context: context,
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        children: [
-                                                          TitleWidget(title: "Reciept"),
-                                                          Expanded(
-                                                            child: LabRequestItemReceiptWidget(
-                                                              request: request,
-                                                              viewOnly: true,
+                                                      child: StatefulBuilder(builder: (context, __setState) {
+                                                        return Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            TitleWidget(title: "Reciept"),
+                                                            Expanded(
+                                                              child: LabRequestItemReceiptWidget(
+                                                                request: request,
+                                                                viewOnly: true,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          CIA_PrimaryButton(
-                                                              label: "Pay",
-                                                              onTab: () {
-                                                                CIA_ShowPopUpYesNo(
-                                                                  context: context,
-                                                                  title: "Pay Request for ${request.cost}?",
-                                                                  onSave: () async {
-                                                                    bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!));
-                                                                  },
-                                                                );
-                                                              }),
-                                                        ],
-                                                      ));
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: CIA_TextFormField(
+                                                                label: "Amount to pay",
+                                                                controller: TextEditingController(text: amountToPay.toString()),
+                                                                onChange: (value) {
+                                                                  if ((request.paidAmount ?? 0) + (int.tryParse(value) ?? 0) <= (request.cost ?? 0)) {
+                                                                    amountToPay = (int.tryParse(value) ?? 0);
+                                                                  } else {
+                                                                    __setState(() => null);
+                                                                  }
+                                                                },
+                                                                isNumber: true,
+                                                              ),
+                                                            ),
+                                                            CIA_PrimaryButton(
+                                                                label: "Pay",
+                                                                onTab: () {
+                                                                  CIA_ShowPopUpYesNo(
+                                                                    context: context,
+                                                                    title: "Pay Request for ${amountToPay}?",
+                                                                    onSave: () async {
+                                                                      bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!, amount: amountToPay));
+                                                                    },
+                                                                  );
+                                                                }),
+                                                          ],
+                                                        );
+                                                      }));
                                                 },
                                               ),
                                       )

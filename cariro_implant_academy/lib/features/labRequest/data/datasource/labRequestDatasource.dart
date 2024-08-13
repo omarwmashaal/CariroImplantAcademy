@@ -46,7 +46,7 @@ abstract class LabRequestDatasource {
 
   // Future<NoParams> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
-  Future<NoParams> payForRequest(int id);
+  Future<NoParams> payForRequest(int id, int amount);
   Future<LabItemModel> getLabItemDetails(int id);
   Future<ReceiptModel?> getRequestReceipt(int id);
 
@@ -237,11 +237,11 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<NoParams> payForRequest(int id) async {
+  Future<NoParams> payForRequest(int id, int amount) async {
     late StandardHttpResponse response;
 
     try {
-      response = await httpRepo.post(host: "$serverHost/$labRequestsController/PayForRequest?id=$id");
+      response = await httpRepo.post(host: "$serverHost/$labRequestsController/PayForRequest?id=$id&amount=$amount");
     } catch (e) {
       throw mapException(e);
     }

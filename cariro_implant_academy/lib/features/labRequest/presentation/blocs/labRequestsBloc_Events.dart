@@ -90,5 +90,6 @@ class LabRequestsBloc_GetLabRequestReceiptEvent extends LabRequestsBloc_Events {
 
 class LabRequestsBloc_PayRequestEvent extends LabRequestsBloc_Events {
   final int id;
-  LabRequestsBloc_PayRequestEvent({required this.id});
+  final int amount;
+  LabRequestsBloc_PayRequestEvent({required this.id, required this.amount});
 }
