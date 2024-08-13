@@ -770,11 +770,17 @@ namespace CIA.Controllers
             _dbContext.LabItems.Update(item);
             _dbContext.SaveChanges();
 
-            var allParentItems = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId).ToListAsync();
-            var count = allParentItems.Sum(x => x.Count);
-            if (count < parent.Threshold)
+            List<LabItem> allParentItemsWithSameSize = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId && x.Size.Replace(" ", "") == item.Size.Replace(" ", "")).ToListAsync();
+            int count = allParentItemsWithSameSize.Sum(x => x.Count??0);
+
+
+            var threshold = await _dbContext.LabSizesThresholds.Where(x => x.ParentId == item.LabItemParentId && x.Size.Replace(" ", "") == item.Size.Replace(" ", "")).FirstOrDefaultAsync();
+            if (threshold != null)
             {
-                await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id);
+                if (count < threshold.Threshold)
+                {
+                    await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id,item.Size??"");
+                }
             }
 
             return Ok();

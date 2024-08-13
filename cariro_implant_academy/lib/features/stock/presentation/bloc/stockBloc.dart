@@ -94,9 +94,13 @@ class StockDataGridSource extends DataGridSource {
                 DataGridCell<String>(columnName: 'Shade', value: e.shadeName ?? "-"),
                 DataGridCell<String>(columnName: 'Code', value: e.code ?? "-"),
                 DataGridCell<String>(columnName: 'Category', value: e.category?.name ?? "-"),
-                DataGridCell<String>(columnName: 'Consumed', value: e.consumed == true ? "Yes" : "No"),
-                DataGridCell<int>(columnName: 'Count', value: e.count),
-                DataGridCell<int>(columnName: 'Consume Count', value: e.consumeCount),
+                DataGridCell<int>(columnName: 'Consumed Units', value: e.consumeCount),
+                DataGridCell<Widget>(
+                    columnName: 'Consumed',
+                    value: Icon(
+                      Icons.circle,
+                      color: e.consumed == true ? Colors.red : Colors.green,
+                    )),
               ]))
           .toList();
     } else

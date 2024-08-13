@@ -1118,6 +1118,26 @@ namespace CIA.Controllers
             return Ok();
         }
 
+        [HttpPut("UpdateLabThresholds")]
+        public async Task<IActionResult> UpdateLabThresholds(int parentId, List<LabSizesThreshold> model)
+        {
+            var thresholdsFromDataBase = await _cia_DbContext.LabSizesThresholds.Where(x => x.ParentId == parentId).ToListAsync();
+
+            var missings = thresholdsFromDataBase.Except(model);
+
+            _cia_DbContext.LabSizesThresholds.RemoveRange(missings);
+            _cia_DbContext.LabSizesThresholds.UpdateRange(model);
+            _cia_DbContext.SaveChanges();
+            return Ok();
+        }
+        [HttpGet("GetLabThresholds")]
+        public async Task<IActionResult> GetLabThresholds(int parentId)
+        {
+            _aPI_Response.Result = await _cia_DbContext.LabSizesThresholds.Where(x => x.ParentId == parentId).ToListAsync();
+            
+            return Ok(_aPI_Response);
+        }
+
 
     }
 

@@ -6,14 +6,12 @@ class LabItemParentEntity extends BasicNameIdObjectEntity {
   bool? hasSize;
   bool? hasCode;
   bool? isStock;
-  int? threshold;
   LabItemParentEntity({
     this.hasCode = true,
     this.hasCompanies = true,
     this.hasShades = true,
     this.hasSize = true,
     this.isStock = true,
-    this.threshold = 0,
     super.id,
     super.name,
   });

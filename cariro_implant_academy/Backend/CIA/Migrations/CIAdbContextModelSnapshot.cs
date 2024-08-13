@@ -362,9 +362,6 @@ namespace CIA.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int>("Threshold")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.ToTable("LabItemParents");
@@ -419,6 +416,29 @@ namespace CIA.Migrations
                     b.HasIndex("LabItemParentId");
 
                     b.ToTable("LabOptions");
+                });
+
+            modelBuilder.Entity("CIA.Models.CIA.LabSizesThreshold", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Threshold")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LabSizesThresholds");
                 });
 
             modelBuilder.Entity("CIA.Models.CIA.MembraneCompany", b =>
@@ -21875,11 +21895,11 @@ namespace CIA.Migrations
 
             modelBuilder.Entity("CIA.Models.LAB.LabDoctorPriceListModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int?>("Id"));
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("integer");
@@ -23940,6 +23960,9 @@ namespace CIA.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int?>("LabItemShadeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Threshold")
                         .HasColumnType("integer");
 
                     b.HasIndex("ImplantLineId");

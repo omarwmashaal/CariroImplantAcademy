@@ -120,6 +120,7 @@ namespace CIA.DataBases
         public DbSet<LabItem> LabItems { get; set; }
         public DbSet<LabItemParent> LabItemParents { get; set; }
         public DbSet<LabOptions> LabOptions { get; set; }
+        public DbSet<LabSizesThreshold> LabSizesThresholds { get; set; }
         public DbSet<InstallmentPlanModel> InstallmentPlans { get; set; }
 
 

@@ -553,10 +553,10 @@ namespace CIA.Repositories
 
         }
 
-        public async Task LabItemsLessThanThreshold(int parentId)
+        public async Task LabItemsLessThanThreshold(int parentId,string size)
         {
             var parent = await _dbContext.LabItemParents.AsNoTracking().FirstAsync(x => x.Id == parentId);
-            var items = await _dbContext.LabItems.Where(x => x.LabItemParentId == parentId).ToListAsync();
+            var items = await _dbContext.LabItems.Where(x => x.LabItemParentId == parentId && x.Size.Replace(" ", "") == size.Replace(" ", "")).ToListAsync();
             var sum = items.Sum(x => x.Count);
             List<ApplicationUser> users = new();
             users.AddRange(await _userManager.GetUsersInRoleAsync("labmoderator"));
@@ -570,8 +570,8 @@ namespace CIA.Repositories
 
                 var notification = new NotificationModel()
                 {
-                    Content = $"Only {sum} {parent.Name} left in stock!",
-                    Title = $"Lab {parent.Name} Low Stock!",
+                    Content = $"Only {sum} {parent.Name} of size {size} left in stock!",
+                    Title = $"Lab {parent.Name} {size} Low Stock!",
                     Date = DateTime.UtcNow,
                     InfoId = null,
                     Type = null,

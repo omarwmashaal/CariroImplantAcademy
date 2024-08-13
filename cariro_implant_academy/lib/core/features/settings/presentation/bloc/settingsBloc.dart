@@ -9,6 +9,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabThresholdSettingsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticTechniqueUseCase.dart';
@@ -20,6 +21,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/up
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateDefaultSurgicalComplicationsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabOptionsPriceListUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabThresholdSettingsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticMaterialUseCase.dart';
@@ -114,6 +116,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final GetLabItemsLinesUseCase getLabItemsLinesUseCase;
   final GetLabItemsUseCase getLabItemsUseCase;
   final GetLabOptionsUseCase getLabOptionsUseCase;
+  final GetLabThresholdSettingsUseCase getLabThresholdSettingsUseCase;
   final UpdateLabItemsCompaniesUseCase updateLabItemsCompaniesUseCase;
   final UpdateLabItemsShadesUseCase updateLabItemsShadesUseCase;
   final UpdateLabItemsUseCase updateLabItemsUseCase;
@@ -125,6 +128,7 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
   final UpdateProstheticTechniqueUseCase updateProstheticTechniqueUseCase;
   final UpdateProstheticMaterialUseCase updateProstheticMaterialUseCase;
   final UpdateLabOptionsPriceListUseCase updateLabOptionsPriceListUseCase;
+  final UpdateLabThresholdSettingsUseCase updateLabThresholdSettingsUseCase;
 
   SettingsBloc({
     required this.updateDefaultSurgicalComplicationsUseCase,
@@ -185,6 +189,8 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
     required this.updateLabOptionsUseCase,
     required this.getLabOptionsUseCase,
     required this.updateLabOptionsPriceListUseCase,
+    required this.getLabThresholdSettingsUseCase,
+    required this.updateLabThresholdSettingsUseCase,
   }) : super(SettingsBloc_LoadingImplantCompaniesState()) {
     on<SettingsBloc_LoadDefaultSurgicalComplicationsEvent>(
       (event, emit) async {
@@ -712,6 +718,22 @@ class SettingsBloc extends Bloc<SettingsBloc_Events, SettingsBloc_States> {
           type: event.params.type,
           itemId: event.params.itemId,
         )),
+      );
+    });
+    on<SettingsBloc_UpdateLabThresholdsEvent>((event, emit) async {
+      emit(SettingsBloc_UpdatingLabThresholdSettingsState());
+      final result = await updateLabThresholdSettingsUseCase(event.params);
+      result.fold(
+        (l) => emit(SettingsBloc_UpdatingLabThresholdSettingsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_UpdatedLabThresholdSettingsSuccessfullyState()),
+      );
+    });
+    on<SettingsBloc_LoadLabThresholdsEvent>((event, emit) async {
+      emit(SettingsBloc_LoadingLabThresholdSettingsState());
+      final result = await getLabThresholdSettingsUseCase(event.parentId);
+      result.fold(
+        (l) => emit(SettingsBloc_LoadingLabThresholdSettingsErrorState(message: l.message ?? "")),
+        (r) => emit(SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState(data: r)),
       );
     });
   }

@@ -3,6 +3,7 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
@@ -69,6 +70,7 @@ abstract class SettingsRepository {
   Future<Either<Failure, List<LabItemShadeEntity>>> getLabItemLines(int? parentId, int? companyId);
   Future<Either<Failure, List<LabItemEntity>>> getLabItems(int? parentId, int? companyId, int? shadeId);
   Future<Either<Failure, List<LabOptionEntity>>> getLabOptions(int? parentId, int? doctorId);
+  Future<Either<Failure, List<LabSizesThresholdEntity>>> getLabThresholds(int parentId);
   Future<Either<Failure, NoParams>> updateLabItems(List<LabItemEntity> data);
   Future<Either<Failure, NoParams>> updateLabItemsShades(List<LabItemShadeEntity> data);
   Future<Either<Failure, NoParams>> updateLabItemsCompanies(List<LabItemCompanyEntity> data);
@@ -80,4 +82,5 @@ abstract class SettingsRepository {
   Future<Either<Failure, NoParams>> updateProstheticTechnique(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticMaterial(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
   Future<Either<Failure, NoParams>> updateProstheticStatus(EnumProstheticType type, int itemId, List<BasicNameIdObjectEntity> data);
+  Future<Either<Failure, NoParams>> updateLabThresholds(int parentId, List<LabSizesThresholdEntity> data);
 }

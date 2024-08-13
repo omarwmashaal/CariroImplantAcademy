@@ -1,5 +1,6 @@
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addLabItemCompaniesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addSuppliersUseCase.dart';
@@ -10,6 +11,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getProstheticStatusUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getSuppliersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getTeethClinicPrice.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabThresholdSettingsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticItemsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticNextVisitUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateProstheticTechniqueUseCase.dart';
@@ -56,6 +58,15 @@ class SettingsBloc_LoadLabOptionsEvent extends SettingsBloc_Events {
   });
   @override
   List<Object?> get props => [params];
+}
+
+class SettingsBloc_LoadLabThresholdsEvent extends SettingsBloc_Events {
+  final int parentId;
+  SettingsBloc_LoadLabThresholdsEvent({
+    required this.parentId,
+  });
+  @override
+  List<Object?> get props => [parentId];
 }
 
 class SettingsBloc_LoadLabItemsCompaniesEvent extends SettingsBloc_Events {
@@ -196,6 +207,15 @@ class SettingsBloc_ChangeImplantLineNameEvent extends SettingsBloc_Events {
 
   @override
   List<Object?> get props => [value];
+}
+
+class SettingsBloc_UpdateLabThresholdsEvent extends SettingsBloc_Events {
+  final UpdateLabThresholdSettingsParams params;
+
+  SettingsBloc_UpdateLabThresholdsEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
 }
 
 class SettingsBloc_UpdateImplantsEvent extends SettingsBloc_Events {

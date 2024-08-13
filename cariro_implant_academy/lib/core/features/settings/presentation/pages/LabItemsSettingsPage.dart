@@ -10,9 +10,11 @@ import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEnt
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/addImplantsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabItemParentsUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/useCases/getLabOptionsUseCase.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/useCases/updateLabThresholdSettingsUseCase.dart';
 import 'package:cariro_implant_academy/core/injection_contianer.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/features/clinicTreatments/presentation/bloc/clinicTreatmentBloc.dart';
@@ -149,25 +151,27 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                               label: "${e.name}",
                               iconWidget: IconButton(
                                   onPressed: () {
+                                    List<LabSizesThresholdEntity> thresholds = [];
+                                    var _bloc = sl<SettingsBloc>();
+                                    _bloc.add(SettingsBloc_LoadLabThresholdsEvent(parentId: selectedLabItemParent!.id!));
                                     CIA_ShowPopUp(
+                                      height: 500,
                                       onSave: () {
                                         bloc.add(SettingsBloc_UpdateLabItemParentEvent(labItemParents: labItemParetns));
+                                        _bloc.add(SettingsBloc_UpdateLabThresholdsEvent(
+                                            params: UpdateLabThresholdSettingsParams(
+                                          data: thresholds,
+                                          parentId: selectedLabItemParent!.id!,
+                                        )));
                                       },
                                       context: context,
                                       title: "Edit: Can't chnage companies, shades, codes and sizes options after creation!",
-                                      child: Column(
+                                      child: ListView(
                                         children: [
                                           CIA_TextFormField(
                                             label: "Name",
                                             controller: TextEditingController(text: e.name?.toString() ?? ""),
                                             onChange: (value) => e.name = value,
-                                          ),
-                                          SizedBox(height: 10),
-                                          CIA_TextFormField(
-                                            label: "Threshold",
-                                            isNumber: true,
-                                            controller: TextEditingController(text: e.threshold?.toString() ?? "10"),
-                                            onChange: (value) => e.threshold = int.tryParse(value) ?? 10,
                                           ),
                                           SizedBox(height: 10),
                                           CIA_CheckBoxWidget(
@@ -176,16 +180,114 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Shades",
-                                            value: e.hasCompanies ?? false,
+                                            value: e.hasShades ?? false,
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Sizes",
-                                            value: e.hasCompanies ?? false,
+                                            value: e.hasSize ?? false,
+                                            onChange: (value) => e.hasSize = value,
                                           ),
                                           CIA_CheckBoxWidget(
                                             text: "Has Codes",
-                                            value: e.hasCompanies ?? false,
+                                            value: e.hasCode ?? false,
                                           ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: FormTextKeyWidget(text: "Threshold Settings"),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: FormTextValueWidget(
+                                                      text: "Empty And Duplicate Sizes will be removed!",
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  thresholds = [
+                                                    ...thresholds,
+                                                    LabSizesThresholdEntity(
+                                                      parentId: selectedLabItemParent!.id!,
+                                                      threshold: 0,
+                                                    ),
+                                                  ];
+                                                  _bloc.emit(SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState(data: thresholds));
+                                                },
+                                                icon: Icon(Icons.add),
+                                              ),
+                                            ],
+                                          ),
+                                          BlocConsumer<SettingsBloc, SettingsBloc_States>(
+                                            bloc: _bloc,
+                                            listener: (context, _state) {
+                                              if (_state is SettingsBloc_UpdatingLabThresholdSettingsState)
+                                                CustomLoader.show(context);
+                                              else {
+                                                CustomLoader.hide();
+                                                if (_state is SettingsBloc_UpdatingLabThresholdSettingsErrorState)
+                                                  ShowSnackBar(context, isSuccess: false, message: _state.message);
+                                                else if (_state is SettingsBloc_UpdatedLabThresholdSettingsSuccessfullyState) {
+                                                  ShowSnackBar(context, isSuccess: true);
+                                                  _bloc.add(SettingsBloc_LoadLabThresholdsEvent(parentId: selectedLabItemParent!.id!));
+                                                }
+                                              }
+                                            },
+                                            builder: (context, _state) {
+                                              if (_state is SettingsBloc_LoadingLabThresholdSettingsState)
+                                                return LoadingWidget();
+                                              else if (_state is SettingsBloc_LoadingLabThresholdSettingsErrorState)
+                                                return BigErrorPageWidget(message: _state.message);
+                                              else if (_state is SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState) {
+                                                thresholds = _state.data;
+                                              }
+                                              return Expanded(
+                                                child: Column(
+                                                  children: thresholds
+                                                      .mapIndexed((i, e) => Row(children: [
+                                                            FormTextValueWidget(text: "${i + 1}. "),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: CIA_TextFormField(
+                                                                  label: "Size",
+                                                                  controller: TextEditingController(text: e.size ?? ""),
+                                                                  onChange: (value) => e.size = value,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: CIA_TextFormField(
+                                                                  label: "Threshold",
+                                                                  isNumber: true,
+                                                                  controller: TextEditingController(text: e.threshold?.toString() ?? "0"),
+                                                                  onChange: (value) => e.threshold = int.tryParse(value) ?? 0,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                thresholds.remove(e);
+                                                                _bloc
+                                                                    .emit(SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState(data: thresholds));
+                                                              },
+                                                              icon: Icon(Icons.delete),
+                                                              color: Colors.red,
+                                                            ),
+                                                          ]))
+                                                      .toList(),
+                                                ),
+                                              );
+                                            },
+                                          )
                                         ],
                                       ),
                                     );
@@ -244,13 +346,6 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                               label: "Name",
                                               controller: TextEditingController(text: newLabItemParent.name?.toString() ?? ""),
                                               onChange: (value) => newLabItemParent.name = value,
-                                            ),
-                                            SizedBox(height: 10),
-                                            CIA_TextFormField(
-                                              label: "Threshold",
-                                              isNumber: true,
-                                              controller: TextEditingController(text: newLabItemParent.threshold?.toString() ?? "10"),
-                                              onChange: (value) => newLabItemParent.threshold = int.tryParse(value) ?? 10,
                                             ),
                                             SizedBox(height: 10),
                                             CIA_CheckBoxWidget(
