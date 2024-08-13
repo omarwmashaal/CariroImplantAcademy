@@ -38,7 +38,7 @@ class LabRequestItemConsumeWidget extends StatefulWidget {
 class _LabRequestItemConsumeWidgetState extends State<LabRequestItemConsumeWidget> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         FormTextKeyWidget(text: "Consume Item Details"),
         SizedBox(height: 10),

@@ -13,6 +13,16 @@ class LoadingRepoImpl implements LoadingRepo {
   @override
   Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadUsers({required LoadUsersEnum userType}) async {
     try {
+      if (userType == LoadUsersEnum.allDoctors) {
+        List<BasicNameIdObjectEntity> users = [];
+        for (var type in LoadUsersEnum.values) {
+          try {
+            users.addAll(await loadingDatasource.loadUsers(userType: type));
+          } catch (e) {}
+        }
+        users = users.toSet().toList();
+        return right(users);
+      }
       final result = await loadingDatasource.loadUsers(userType: userType);
       return Right(result);
     } on Exception catch (e) {
@@ -41,7 +51,7 @@ class LoadingRepoImpl implements LoadingRepo {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadCandidatesBatches()  async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadCandidatesBatches() async {
     try {
       final result = await loadingDatasource.loadCandidatesBatches();
       return Right(result);
@@ -51,7 +61,7 @@ class LoadingRepoImpl implements LoadingRepo {
   }
 
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadWorkPlaces()  async {
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> loadWorkPlaces() async {
     try {
       final result = await loadingDatasource.loadWorkPlaces();
       return Right(result);

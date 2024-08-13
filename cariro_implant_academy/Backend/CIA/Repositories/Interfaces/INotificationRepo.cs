@@ -18,6 +18,6 @@ namespace CIA.Repositories.Interfaces
         public  Task AddChangeRequest(RequestChangeModel request);
         public  Task HighHBA1C(int patientId,double hba1c);
         public  Task ToDoList(int patientId,int operatorId);
-        public  Task LabItemsLessThanThreshold(int parentId);
+        public  Task LabItemsLessThanThreshold(int parentId,String size);
     }
 }

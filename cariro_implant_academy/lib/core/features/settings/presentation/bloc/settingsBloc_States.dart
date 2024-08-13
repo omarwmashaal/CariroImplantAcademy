@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemCompanyEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
@@ -423,6 +424,23 @@ class SettingsBloc_UpdatedImplantsSuccessfullyState extends SettingsBlocSuccessS
   List<Object?> get props => [];
 }
 
+class SettingsBloc_UpdatingLabThresholdSettingsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_UpdatingLabThresholdSettingsErrorState extends SettingsBlocErrorState {
+  SettingsBloc_UpdatingLabThresholdSettingsErrorState({required super.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class SettingsBloc_UpdatedLabThresholdSettingsSuccessfullyState extends SettingsBlocSuccessState {
+  @override
+  List<Object?> get props => [];
+}
+
 class SettingsBloc_AddingImplantLinesState extends SettingsBloc_States {
   @override
   List<Object?> get props => [];
@@ -737,11 +755,13 @@ class SettingsBloc_LoadingLabOptionsErrorState extends SettingsBlocErrorState {
 class SettingsBloc_LoadedLabOptionsSuccessfullyState extends SettingsBlocSuccessState {
   final List<LabOptionEntity> data;
   final int? parentId;
+  final int? doctorId;
   final int? companyId;
   final int? shadeId;
   SettingsBloc_LoadedLabOptionsSuccessfullyState({
     required this.data,
     this.parentId,
+    this.doctorId,
     this.companyId,
     this.shadeId,
   });
@@ -1154,6 +1174,25 @@ class SettingsBloc_LoadingDefaultProstheticComplicationsErrorState extends Setti
 class SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState extends SettingsBloc_States {
   final List<BasicNameIdObjectEntity> data;
   SettingsBloc_LoadedDefaultProstheticComplicationsSuccessfullyState({required this.data});
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SettingsBloc_LoadingLabThresholdSettingsState extends SettingsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadingLabThresholdSettingsErrorState extends SettingsBloc_States {
+  final String message;
+  SettingsBloc_LoadingLabThresholdSettingsErrorState({required this.message});
+  @override
+  List<Object?> get props => [];
+}
+
+class SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState extends SettingsBloc_States {
+  final List<LabSizesThresholdEntity> data;
+  SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState({required this.data});
   @override
   List<Object?> get props => [identityHashCode(this)];
 }

@@ -7,7 +7,6 @@ class LabItemParentModel extends LabItemParentEntity {
     super.hasShades = true,
     super.hasSize = true,
     super.isStock = true,
-    super.threshold = 0,
     super.id,
     super.name,
   });
@@ -19,7 +18,6 @@ class LabItemParentModel extends LabItemParentEntity {
       hasShades: map['hasShades'],
       hasSize: map['hasSize'],
       isStock: map['isStock'],
-      threshold: map['threshold'],
       id: map['id'],
       name: map['name'],
     );
@@ -31,7 +29,6 @@ class LabItemParentModel extends LabItemParentEntity {
       hasShades: entity.hasShades,
       hasSize: entity.hasSize,
       isStock: entity.isStock,
-      threshold: entity.threshold,
       id: entity.id,
       name: entity.name,
     );
@@ -44,7 +41,6 @@ class LabItemParentModel extends LabItemParentEntity {
     data['hasShades'] = hasShades;
     data['hasSize'] = hasSize;
     data['isStock'] = isStock;
-    data['threshold'] = threshold;
     data['id'] = id;
     data['name'] = name;
     return data;

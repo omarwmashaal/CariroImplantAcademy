@@ -10,7 +10,7 @@ class LoadUsersUseCase extends LoadingUseCases<LoadUsersEnum> {
   final LoadingRepo loadingRepo;
   LoadUsersUseCase({required this.loadingRepo});
   @override
-  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(LoadUsersEnum params) async{
+  Future<Either<Failure, List<BasicNameIdObjectEntity>>> call(LoadUsersEnum params) async {
     return await loadingRepo.loadUsers(userType: params);
   }
 }
@@ -24,6 +24,5 @@ enum LoadUsersEnum {
   candidates,
   technicians,
   labDesigner,
+  allDoctors,
 }
-
-

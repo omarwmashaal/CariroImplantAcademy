@@ -2,6 +2,8 @@ import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/error/failure.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/implantEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
+import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneCompanyEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/membraneEnity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/tacEntity.dart';
@@ -528,9 +530,9 @@ class SettingsRepoImpl implements SettingsRepository {
   }
 
   @override
-  Future<Either<Failure, List<LabOptionEntity>>> getLabOptions(int? parentId) async {
+  Future<Either<Failure, List<LabOptionEntity>>> getLabOptions(int? parentId, int? doctorId) async {
     try {
-      final result = await settingsDatasource.getLabOptions(parentId);
+      final result = await settingsDatasource.getLabOptions(parentId, doctorId);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
@@ -581,6 +583,36 @@ class SettingsRepoImpl implements SettingsRepository {
   Future<Either<Failure, NoParams>> updateDefaultProstheticComplications(List<BasicNameIdObjectEntity> value) async {
     try {
       final result = await settingsDatasource.updateDefaultProstheticComplications(value);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabOptionsDoctorPriceList(List<LabPriceForDoctorEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabOptionsDoctorPriceList(data);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LabSizesThresholdEntity>>> getLabThresholds(int parentId) async {
+    try {
+      final result = await settingsDatasource.getLabThresholds(parentId);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(Failure.exceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, NoParams>> updateLabThresholds(int parentId, List<LabSizesThresholdEntity> data) async {
+    try {
+      final result = await settingsDatasource.updateLabThresholds(parentId, data);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

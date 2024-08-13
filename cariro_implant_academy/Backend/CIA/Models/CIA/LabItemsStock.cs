@@ -15,7 +15,6 @@ namespace CIA.Models.CIA
         public bool HasSize { get; set; }
         public bool HasCode { get; set; }
         public bool IsStock { get; set; }
-        public int Threshold { get; set; } = 0;
     }
       
 
@@ -51,7 +50,7 @@ namespace CIA.Models.CIA
     }
     public class LabItem : StockItem
     {
-        
+
         public void setName()
         {
             this.Name = "";
@@ -92,5 +91,15 @@ namespace CIA.Models.CIA
         public LabItemParent? LabItemParent { get; set; }
         
 
+    }
+
+    public class LabSizesThreshold
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? Id { get; set; }
+        public int ParentId { get; set; }
+        public string? Size { get; set; }
+        public int Threshold { get; set; }
     }
 }
