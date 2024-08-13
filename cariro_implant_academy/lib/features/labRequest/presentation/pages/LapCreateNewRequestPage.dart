@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/core/features/settings/domain/useCases/ge
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_Events.dart';
 import 'package:cariro_implant_academy/core/features/settings/presentation/bloc/settingsBloc_States.dart';
+import 'package:cariro_implant_academy/core/presentation/widgets/CIA_GestureWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemParentEntity.dart';
@@ -82,19 +83,20 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
   late UsersBloc usersBloc;
   late CreateOrViewPatientBloc patientBloc;
   LabRequestEntity labRequest = LabRequestEntity(
-      // steps: [
-      //   LabStepEntity(
-      //     step: BasicNameIdObjectEntity(
-      //       name: "Scan",
-      //     ),
-      //   ),
-      //   LabStepEntity(
-      //     step: BasicNameIdObjectEntity(
-      //       name: "Design",
-      //     ),
-      //   ),
-      // ],
-      );
+    date: DateTime.now(),
+    // steps: [
+    //   LabStepEntity(
+    //     step: BasicNameIdObjectEntity(
+    //       name: "Scan",
+    //     ),
+    //   ),
+    //   LabStepEntity(
+    //     step: BasicNameIdObjectEntity(
+    //       name: "Design",
+    //     ),
+    //   ),
+    // ],
+  );
   List<int> teeth = [];
   List<LabOptionEntity> labOptionsFromSettings = [];
   @override
@@ -831,9 +833,22 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              FormTextValueWidget(
-                                text: DateFormat("dd-MM-yyyy hh:mm a").format(DateTime.now()).toString(),
-                                secondaryInfo: true,
+                              CIA_GestureWidget(
+                                onTap: () {
+                                  CIA_PopupDialog_DateOnlyPicker(
+                                    context,
+                                    "Change Date",
+                                    (p0) => setState(() {
+                                      try {
+                                        labRequest.date = DateTime(p0.year, p0.month, p0.day, labRequest.date!.hour, labRequest.date!.minute);
+                                      } catch (e) {}
+                                    }),
+                                  );
+                                },
+                                child: FormTextValueWidget(
+                                  text: labRequest.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(labRequest.date!),
+                                  secondaryInfo: true,
+                                ),
                               ),
                             ],
                           ),

@@ -336,7 +336,7 @@ namespace CIA.Controllers
             }
             request.EntryBy = user;
             request.EntryById = (int)user.IdInt;
-            request.Date = DateTime.UtcNow;
+            request.Date = request.Date?? DateTime.UtcNow;
             request.Customer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.CustomerId);
             request.Designer = await _dbContext.Users.FirstOrDefaultAsync(x => x.IdInt == request.DesignerId);
             if (request.AssignedToId != null)
