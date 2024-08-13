@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/assig
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/consumeLabItemUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createLabRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/createNewLabCustomerUseCase.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/deleteRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/finishTaskUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepByNameUseCase.dart';
@@ -42,6 +43,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
   final GetDefaultStepByNameUseCase getDefaultStepByNameUseCase;
   final GetPatientLabRequestsUseCase getPatientLabRequestsUseCase;
   final GetLabRequestUseCase getLabRequestUseCase;
+  final DeleteLabRequestUseCase deleteLabRequestUseCase;
   final GetLabItemStepsFroRequestUseCase getLabItemStepsFroRequestUseCase;
   final FinishTaskUseCase finishTaskUseCase;
   final MarkRequestAsDoneUseCase markRequestAsDoneUseCase;
@@ -69,6 +71,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
     required this.getLabItemDetailsUseCase,
     required this.getRequestReceiptUseCase,
     required this.payRequestUseCase,
+    required this.deleteLabRequestUseCase,
   }) : super(LabRequestsBloc_InitState()) {
     on<LabRequestsBloc_GetTodaysRequestsEvent>(
       (event, emit) async {
@@ -126,17 +129,22 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
       (event, emit) async {
         emit(LabRequestsBloc_LoadingRequestsState());
         final result = await getLabRequestUseCase(event.id);
-        //final stepsResult = await getLabItemStepsFroRequestUseCase(event.id);
-        // if (stepsResult.isLeft() || result.isLeft()) {
-        //   emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: "error"));
-        //   return;
-        // }
         result.fold(
           (l) => emit(LabRequestsBloc_LoadingSingleRequestErrorState(message: l.message ?? "")),
           (r) {
             // stepsResult.fold((l) => null, (steps) => r.labRequestStepItems = steps);
             emit(LabRequestsBloc_LoadedSingleRequestsSuccessfullyState(request: r));
           },
+        );
+      },
+    );
+    on<LabRequestsBloc_DeleteRequestEvent>(
+      (event, emit) async {
+        emit(LabRequestsBloc_DeletingRequestState());
+        final result = await deleteLabRequestUseCase(event.id);
+        result.fold(
+          (l) => emit(LabRequestsBloc_DeletingRequestErrorState(message: l.message ?? "")),
+          (r) => emit(LabRequestsBloc_DeletedRequestsSuccessfullyState()),
         );
       },
     );
@@ -210,6 +218,7 @@ class LabRequestsBloc extends Bloc<LabRequestsBloc_Events, LabRequestsBloc_State
         );
       },
     );
+
     on<LabRequestsBloc_PayRequestEvent>(
       (event, emit) async {
         emit(LabRequestsBloc_PayingRequestState());

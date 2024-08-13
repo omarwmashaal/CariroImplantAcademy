@@ -11,7 +11,6 @@ import '../entities/labItemEntity.dart';
 import '../usecases/getAllRequestsUseCase.dart';
 
 abstract class LabRequestRepository {
-
   Future<Either<Failure, List<LabRequestEntity>>> getAllLabRequests(GetAllRequestsParams params);
   Future<Either<Failure, List<LabStepItemEntity>>> getLabItemStepsFroRequest(int id);
 
@@ -19,6 +18,7 @@ abstract class LabRequestRepository {
   Future<Either<Failure, List<LabItemParentEntity>>> getLabItemsFromSettings();
 
   Future<Either<Failure, LabRequestEntity>> getLabRequest(int id);
+  Future<Either<Failure, NoParams>> deleteLabRequest(int id);
   Future<Either<Failure, NoParams>> checkLabRequests(int id);
 
   Future<Either<Failure, NoParams>> addRequest(LabRequestEntity model);
@@ -30,16 +30,16 @@ abstract class LabRequestRepository {
 
   Future<Either<Failure, NoParams>> addToMyTasks(int id);
 
-  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId,int? designerId);
+  Future<Either<Failure, NoParams>> assignTaskToTechnician(int id, int technicianId, int? designerId);
 
   Future<Either<Failure, NoParams>> finishTask(int id, int? nextTaskId, int? assignToId, String? notes);
 
   Future<Either<Failure, NoParams>> markRequestAsDone(int id, String? notes);
 
- // Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
+  // Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
   Future<Either<Failure, NoParams>> payForRequest(int id);
   Future<Either<Failure, LabItemEntity>> getLabItemDetails(int id);
   Future<Either<Failure, ReceiptEntity?>> getRequestReceipt(int id);
-  Future<Either<Failure, NoParams>> consumeLabItem(int id,int? number,bool consumeWholeBlock);
+  Future<Either<Failure, NoParams>> consumeLabItem(int id, int? number, bool consumeWholeBlock);
 }

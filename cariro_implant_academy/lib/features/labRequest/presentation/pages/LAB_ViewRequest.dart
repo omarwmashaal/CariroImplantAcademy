@@ -6,6 +6,7 @@ import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/la
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewTask.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/widgets/labRequestItemReceiptWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
@@ -70,6 +71,11 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           nextTaskId = null;
           ShowSnackBar(context, isSuccess: true);
           dialogHelper.dismissSingle(context);
+        } else if (state is LabRequestsBloc_DeletingRequestErrorState) {
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        } else if (state is LabRequestsBloc_DeletedRequestsSuccessfullyState) {
+          ShowSnackBar(context, isSuccess: true);
+          context.goNamed(LabRequestsSearchPage.routeAllName);
         } else if (state is LabRequestsBloc_FinishingTaskErrorState)
           ShowSnackBar(context, isSuccess: false, message: state.message);
         else if (state is LabRequestsBloc_PayingRequestErrorState) {
@@ -79,7 +85,9 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
           dialogHelper.dismissAll(context);
           bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
         }
-        if (state is LabRequestsBloc_FinishingTaskState || state is LabRequestsBloc_PayingRequestState)
+        if (state is LabRequestsBloc_FinishingTaskState ||
+            state is LabRequestsBloc_PayingRequestState ||
+            state is LabRequestsBloc_DeletingRequestState)
           CustomLoader.show(context);
         else
           CustomLoader.hide();
@@ -155,6 +163,21 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                         FormTextValueWidget(text: (request.free ?? false) ? "Free" : "Not Free"),
                       ],
                     ),
+                    Expanded(child: SizedBox()),
+                    CIA_PrimaryButton(
+                      label: "Delete Request",
+                      onTab: () {
+                        CIA_ShowPopUpYesNo(
+                            context: context,
+                            title: "Deleting request might not work if items used or receipt created!",
+                            onSave: () {
+                              bloc.add(LabRequestsBloc_DeleteRequestEvent(id: widget.id));
+                            });
+                      },
+                      color: Colors.red,
+                      isLong: true,
+                      icon: Icon(Icons.delete),
+                    )
                   ],
                 ),
               ),

@@ -374,3 +374,22 @@ class LabRequestsBloc_PayingRequestErrorState extends LabRequestsBloc_States {
   @override
   List<Object?> get props => [message];
 }
+
+class LabRequestsBloc_DeletingRequestState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_DeletedRequestsSuccessfullyState extends LabRequestsBloc_States {
+  @override
+  List<Object?> get props => [];
+}
+
+class LabRequestsBloc_DeletingRequestErrorState extends LabRequestsBloc_States {
+  final String message;
+
+  LabRequestsBloc_DeletingRequestErrorState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

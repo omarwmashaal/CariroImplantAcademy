@@ -21,10 +21,10 @@ abstract class LabRequestDatasource {
   Future<List<LabStepItemModel>> getLabItemStepsFroRequest(int id);
 
   Future<List<LabRequestModel>> getPatientLabRequests(int id);
-  Future< List<LabItemParentModel>> getLabItemsFromSettings();
-
+  Future<List<LabItemParentModel>> getLabItemsFromSettings();
 
   Future<LabRequestModel> getLabRequest(int id);
+  Future<NoParams> deleteLabRequest(int id);
 
   Future<NoParams> checkLabRequests(int id);
 
@@ -38,13 +38,13 @@ abstract class LabRequestDatasource {
 
   Future<NoParams> addToMyTasks(int id);
 
-  Future<NoParams> assignTaskToTechnician(int id, int technicianId,int? designerId);
+  Future<NoParams> assignTaskToTechnician(int id, int technicianId, int? designerId);
 
   Future<NoParams> finishTask(int id, int? nextTaskId, int? assignToId, String? notes);
 
   Future<NoParams> markRequestAsDone(int id, String? notes);
 
- // Future<NoParams> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
+  // Future<NoParams> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
   Future<NoParams> payForRequest(int id);
   Future<LabItemModel> getLabItemDetails(int id);
@@ -101,10 +101,12 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<NoParams> assignTaskToTechnician(int id, int technicianId,int? designerId) async {
+  Future<NoParams> assignTaskToTechnician(int id, int technicianId, int? designerId) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.post(host: "$serverHost/$labRequestsController/AssignToTechnician?id=$id&technicianId=$technicianId${designerId==null?"":"&designerId=$designerId"}");
+      response = await httpRepo.post(
+          host:
+              "$serverHost/$labRequestsController/AssignToTechnician?id=$id&technicianId=$technicianId${designerId == null ? "" : "&designerId=$designerId"}");
     } catch (e) {
       throw mapException(e);
     }
@@ -235,7 +237,7 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<NoParams> payForRequest(int id)async {
+  Future<NoParams> payForRequest(int id) async {
     late StandardHttpResponse response;
 
     try {
@@ -280,7 +282,8 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.post(
-          host: "$serverHost/$labRequestsController/ConsumeLabItem?id=$id&consumeWholeBlock=$consumeWholeBlock${number == null ? "" : "&number=$number"}");
+          host:
+              "$serverHost/$labRequestsController/ConsumeLabItem?id=$id&consumeWholeBlock=$consumeWholeBlock${number == null ? "" : "&number=$number"}");
     } catch (e) {
       throw mapException(e);
     }
@@ -289,7 +292,7 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
   }
 
   @override
-  Future<LabItemModel> getLabItemDetails(int id)async {
+  Future<LabItemModel> getLabItemDetails(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$labRequestsController/GetLabItemDetails?id=$id");
@@ -314,15 +317,15 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     }
     if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
     try {
-      if(response.body==null) return null;
+      if (response.body == null) return null;
       return ReceiptModel.fromJson(response.body as Map<String, dynamic>);
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
-  
+
   @override
-  Future<List<LabStepItemModel>> getLabItemStepsFroRequest(int id)async {
+  Future<List<LabStepItemModel>> getLabItemStepsFroRequest(int id) async {
     late StandardHttpResponse response;
     try {
       response = await httpRepo.get(host: "$serverHost/$labRequestsController/GetRequestStepItems?id=$id");
@@ -336,7 +339,7 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
       throw DataConversionException(message: "Couldn't convert data");
     }
   }
-  
+
   @override
   Future<List<LabItemParentModel>> getLabItemsFromSettings() async {
     late StandardHttpResponse response;
@@ -351,5 +354,19 @@ class LabRequestsDatasourceImpl implements LabRequestDatasource {
     } catch (e) {
       throw DataConversionException(message: "Couldn't convert data");
     }
+  }
+
+  @override
+  Future<NoParams> deleteLabRequest(int id) async {
+    late StandardHttpResponse response;
+    try {
+      response = await httpRepo.delete(
+        host: "$serverHost/$labRequestsController/DeleteRequest?id=$id",
+      );
+    } catch (e) {
+      throw mapException(e);
+    }
+    if (response.statusCode != 200) throw getHttpException(statusCode: response.statusCode, message: response.errorMessage);
+    return NoParams();
   }
 }

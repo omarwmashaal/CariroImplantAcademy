@@ -134,7 +134,7 @@ namespace CIA.Controllers
 
                 _apiResponse.Result = _dbContext.Patients.Where(x => x.Website == type).ToList();
             else
-                _apiResponse.Result = _dbContext.Patients.Where(x => x.Website == type && x.Name.ToLower().Contains(search.ToLower()) || x.Phone.ToLower().Contains(search.ToLower())|| x.SecondaryId.ToLower().Contains(search.ToLower())).ToList();
+                _apiResponse.Result = _dbContext.Patients.Where(x => x.Website == type && x.Name.ToLower().Contains(search.ToLower()) ||  x.SecondaryId.ToLower().Contains(search.ToLower())).ToList();
 
             return Ok(_apiResponse);
 

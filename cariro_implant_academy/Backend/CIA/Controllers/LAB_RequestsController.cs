@@ -145,6 +145,22 @@ namespace CIA.Controllers
         }
 
 
+        [HttpDelete("DeleteRequest")]
+        public async Task<IActionResult> DeleteRequest(int id)
+        {
+            try
+            {
+                var request = await _dbContext.Lab_Requests.FirstOrDefaultAsync(x => x.Id == id);
+                _dbContext.Lab_Requests.Remove(request);
+                _dbContext.SaveChanges();
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                _apiResponse.ErrorMessage = ex.Message;
+                return BadRequest(_apiResponse);
+            }
+        }
         [HttpGet("GetRequest")]
         public async Task<IActionResult> GetRequest(int id)
         {
@@ -309,7 +325,8 @@ namespace CIA.Controllers
             //}
             var patient = await _dbContext.Patients.FirstOrDefaultAsync(x => x.Id == request.PatientId);
             request.Source = patient?.Website;
-            request.LabRequestStepItems?.ForEach(x => {
+            request.LabRequestStepItems?.ForEach(x =>
+            {
                 x.LabPrice = null;
             });
             var user = await _iUserRepo.GetUser();
@@ -771,7 +788,7 @@ namespace CIA.Controllers
             _dbContext.SaveChanges();
 
             List<LabItem> allParentItemsWithSameSize = await _dbContext.LabItems.Where(x => x.LabItemParentId == item.LabItemParentId && x.Size.Replace(" ", "") == item.Size.Replace(" ", "")).ToListAsync();
-            int count = allParentItemsWithSameSize.Sum(x => x.Count??0);
+            int count = allParentItemsWithSameSize.Sum(x => x.Count ?? 0);
 
 
             var threshold = await _dbContext.LabSizesThresholds.Where(x => x.ParentId == item.LabItemParentId && x.Size.Replace(" ", "") == item.Size.Replace(" ", "")).FirstOrDefaultAsync();
@@ -779,7 +796,7 @@ namespace CIA.Controllers
             {
                 if (count < threshold.Threshold)
                 {
-                    await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id,item.Size??"");
+                    await _notificationRepo.LabItemsLessThanThreshold((int)parent.Id, item.Size ?? "");
                 }
             }
 

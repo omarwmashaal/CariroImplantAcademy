@@ -8,6 +8,7 @@ import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDe
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/markRequestAsDoneUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
 import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LAB_ViewRequest.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/pages/LabRequestsSearchPage.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,6 +71,7 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
     return BlocConsumer<LabRequestsBloc, LabRequestsBloc_States>(
       listener: (context, state) {
         if (state is LabRequestsBloc_MarkingRequestAsDoneState ||
+            state is LabRequestsBloc_DeletingRequestState ||
             state is LabRequestsBloc_UpdatingRequestReceiptState ||
             state is LabRequestsBloc_UpdatingLabRequestState ||
             state is LabRequestsBloc_AssigningTaskToATechnicianState ||
@@ -106,6 +108,11 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
           ShowSnackBar(context, isSuccess: true);
           bloc.add(LabRequestsBloc_GetRequestEvent(id: widget.id));
           dialogHelper.dismissAll(context);
+        } else if (state is LabRequestsBloc_DeletingRequestErrorState) {
+          ShowSnackBar(context, isSuccess: false, message: state.message);
+        } else if (state is LabRequestsBloc_DeletedRequestsSuccessfullyState) {
+          ShowSnackBar(context, isSuccess: true);
+          context.goNamed(LabRequestsSearchPage.routeAllName);
         } else if (state is LabRequestsBloc_UpdatingLabRequestErrorState) ShowSnackBar(context, isSuccess: false, message: state.message ?? "");
       },
       buildWhen: (previous, current) =>
@@ -159,6 +166,21 @@ class _LAB_ViewTaskPageState extends State<LAB_ViewTaskPage> {
                       FormTextValueWidget(text: (request.free ?? false) ? "Free" : "Not Free"),
                     ],
                   ),
+                  Expanded(child: SizedBox()),
+                  CIA_PrimaryButton(
+                    label: "Delete Request",
+                    onTab: () {
+                      CIA_ShowPopUpYesNo(
+                          context: context,
+                          title: "Deleting request might not work if items used or receipt created!",
+                          onSave: () {
+                            bloc.add(LabRequestsBloc_DeleteRequestEvent(id: widget.id));
+                          });
+                    },
+                    color: Colors.red,
+                    isLong: true,
+                    icon: Icon(Icons.delete),
+                  )
                 ],
               ),
               Expanded(

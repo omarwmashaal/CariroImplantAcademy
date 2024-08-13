@@ -575,7 +575,7 @@ class _LabCreateNewRequestPageState extends State<LabCreateNewRequestPage> {
                                                       ),
                                                       SizedBox(height: 10),
                                                       CIA_TextFormField(
-                                                        label: "Search",
+                                                        label: "Search Patients by Name Or Id",
                                                         controller: TextEditingController(text: search),
                                                         onChange: (v) => bloc.add(LabRequestsBloc_SearchLabPatientsByTypeEvent(
                                                             params: SearchLabPatientsByTypeParams(

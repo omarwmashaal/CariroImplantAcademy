@@ -118,6 +118,7 @@ import 'package:cariro_implant_academy/features/labRequest/data/datasource/labRe
 import 'package:cariro_implant_academy/features/labRequest/data/repositories/labRequestsRepository.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labCustomersRepository.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/repositories/labRequestsRepository.dart';
+import 'package:cariro_implant_academy/features/labRequest/domain/usecases/deleteRequestUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getAllRequestsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getDefaultStepsUseCase.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/usecases/getLabItemStepsFroRequestUseCase.dart';
@@ -1028,6 +1029,7 @@ initInjection() async {
 
   //blocs
   sl.registerLazySingleton(() => LabRequestsBloc(
+        deleteLabRequestUseCase: sl(),
         getAllLabRequestsUseCase: sl(),
         createNewLabCustomerUseCase: sl(),
         searchLabPatientsByTypeUseCase: sl(),
@@ -1046,6 +1048,7 @@ initInjection() async {
         getLabItemStepsFroRequestUseCase: sl(),
       ));
   //useCases
+  sl.registerLazySingleton(() => DeleteLabRequestUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetAllLabRequestsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => GetDefaultStepsUseCase(labRequestRepository: sl()));
   sl.registerLazySingleton(() => CreateLabRequestUseCase(labRequestRepository: sl()));
