@@ -150,13 +150,36 @@ namespace CIA.Controllers
         {
             try
             {
-                var request = await _dbContext.Lab_Requests.FirstOrDefaultAsync(x => x.Id == id);
-                _dbContext.Lab_Requests.Remove(request);
-                _dbContext.SaveChanges();
+                try
+                {
+                    var request = await _dbContext.Lab_Requests.FirstOrDefaultAsync(x => x.Id == id);
+                    _dbContext.Lab_Requests.Remove(request);
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    var receipt = await _dbContext.Receipts.Where(x => x.RequestId == id).FirstOrDefaultAsync();
+                    if (receipt != null)
+                    {
+                        var paymentLogs = await _dbContext.PaymentLogs.Where(x => x.ReceiptId == receipt!.Id).ToListAsync();
+                        if (!paymentLogs.IsNullOrEmpty())
+                        {
+                            _dbContext.PaymentLogs.RemoveRange(paymentLogs);
+                        }
+                        var incomes = await _dbContext.Income.Where(x => (x.PaymentLogId != null && paymentLogs.Select(y => y.Id).ToList().Contains((int)x.PaymentLogId))|| x.ReceiptID==receipt.Id).ToListAsync();
+                        _dbContext.Income.RemoveRange(incomes);
+                        _dbContext.Receipts.Remove(receipt);
+                        _dbContext.SaveChanges();
+
+                    }
+
+
+                }
                 return Ok();
             }
             catch (Exception ex)
             {
+
                 _apiResponse.ErrorMessage = ex.Message;
                 return BadRequest(_apiResponse);
             }
@@ -589,7 +612,7 @@ namespace CIA.Controllers
             if (request.PaidAmount == request.Cost)
                 request.Paid = true;
 
-            
+
 
             _dbContext.Lab_Requests.Update(request);
             _dbContext.Receipts.Update(receipt);
@@ -597,7 +620,7 @@ namespace CIA.Controllers
             var categoryRequest = request.Source + " Lab Request";
             var cat = await _dbContext.IncomeCategories.FirstOrDefaultAsync(x => x.Name == categoryRequest && x.Website == EnumWebsite.Lab);
 
-            
+
             if (cat == null)
             {
                 cat = new IncomeCategoriesModel()
