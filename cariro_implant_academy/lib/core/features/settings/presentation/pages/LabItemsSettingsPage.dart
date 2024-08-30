@@ -5,9 +5,12 @@ import 'package:cariro_implant_academy/Widgets/CIA_PopUp.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_PrimaryButton.dart';
 import 'package:cariro_implant_academy/Widgets/CIA_TextFormField.dart';
 import 'package:cariro_implant_academy/Widgets/FormTextWidget.dart';
+import 'package:cariro_implant_academy/Widgets/MultiSelectChipWidget.dart';
 import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
+import 'package:cariro_implant_academy/core/constants/enums/enums.dart';
 import 'package:cariro_implant_academy/core/domain/entities/BasicNameIdObjectEntity.dart';
 import 'package:cariro_implant_academy/core/domain/useCases/loadUsersUseCase.dart';
+import 'package:cariro_implant_academy/core/domain/useCases/loadWorPlacesUseCase.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/clinicPriceEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/labPricesForDoctorEntity.dart';
 import 'package:cariro_implant_academy/core/features/settings/domain/entities/labSizesThresholdEntity.dart';
@@ -22,6 +25,10 @@ import 'package:cariro_implant_academy/features/labRequest/domain/entities/labIt
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labItemShadeEntity.dart';
 import 'package:cariro_implant_academy/features/labRequest/domain/entities/labOptionEntity.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestBloc.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_Events.dart';
+import 'package:cariro_implant_academy/features/labRequest/presentation/blocs/labRequestsBloc_States.dart';
+import 'package:cariro_implant_academy/features/user/domain/entities/userEntity.dart';
 import 'package:cariro_implant_academy/presentation/widgets/bigErrorPageWidget.dart';
 import 'package:cariro_implant_academy/presentation/widgets/customeLoader.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,6 +59,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
   int currentIndex = 0;
   int currentItemId = 0;
   late SettingsBloc bloc;
+  late LabRequestsBloc labRequestBloc;
   late ClinicTreatmentBloc clinicTreatmentBloc;
   List<ClinicPriceEntity> percentages = [];
   List<LabItemParentEntity> labItemParetns = [];
@@ -65,6 +73,7 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
     tabController = TabController(length: 2, vsync: this);
 
     bloc = BlocProvider.of<SettingsBloc>(context);
+    labRequestBloc = BlocProvider.of<LabRequestsBloc>(context);
     clinicTreatmentBloc = BlocProvider.of<ClinicTreatmentBloc>(context);
     bloc.add(SettingsBloc_LoadLabItemsParentsEvent());
     super.initState();
@@ -487,6 +496,105 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                               },
                               selectedItem: doctorId == null ? BasicNameIdObjectEntity(name: "Default Prices") : doctor,
                             ),
+                          ),
+                          CIA_PrimaryButton(
+                            label: "Add New Customer",
+                            onTab: () {
+                              UserEntity newCustomer = UserEntity();
+                              bool newWorkPlace = false;
+                              CIA_ShowPopUp(
+                                context: context,
+                                title: "Add new customer",
+                                onSave: () {
+                                  newCustomer.workPlaceEnum = Website.Private;
+                                  labRequestBloc.add(LabRequestsBloc_CreateLabCustomerEvent(customer: newCustomer));
+                                  return false;
+                                },
+                                child: StatefulBuilder(builder: (context, setState) {
+                                  return Column(
+                                    children: [
+                                      CIA_TextFormField(
+                                        label: "Name",
+                                        controller: TextEditingController(text: newCustomer.name ?? ""),
+                                        onChange: (v) => newCustomer.name = v,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      CIA_TextFormField(
+                                        label: "Phone Number 1",
+                                        isNumber: true,
+                                        controller: TextEditingController(text: newCustomer.phoneNumber ?? ""),
+                                        onChange: (v) => newCustomer.phoneNumber = v,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      CIA_TextFormField(
+                                        label: "Phone Number 2",
+                                        isNumber: true,
+                                        controller: TextEditingController(text: newCustomer.phoneNumber2 ?? ""),
+                                        onChange: (v) => newCustomer.phoneNumber2 = v,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: CIA_MultiSelectChipWidget(
+                                                onChange: (item, isSelected) {
+                                                  newWorkPlace = isSelected;
+                                                  setState(() {});
+                                                },
+                                                labels: [CIA_MultiSelectChipWidgeModel(label: "New Work Place", isSelected: newWorkPlace)]),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: newWorkPlace
+                                                ? CIA_TextFormField(
+                                                    label: "New Work Place Name",
+                                                    controller: TextEditingController(
+                                                        text: newCustomer.workPlace == null ? "" : newCustomer.workPlace!.name ?? ""),
+                                                    onChange: (v) {
+                                                      newCustomer.workPlace = BasicNameIdObjectEntity(name: v);
+                                                      newCustomer.workPlaceId = null;
+                                                    },
+                                                  )
+                                                : CIA_DropDownSearchBasicIdName(
+                                                    onClear: () {
+                                                      newCustomer.workPlace = null;
+                                                      newCustomer.workPlaceId = null;
+                                                    },
+                                                    asyncUseCase: sl<LoadWorkPlacesCase>(),
+                                                    onSelect: (value) {
+                                                      newCustomer.workPlace = value;
+                                                      newCustomer.workPlaceId = value.id;
+                                                    },
+                                                  ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      BlocBuilder<LabRequestsBloc, LabRequestsBloc_States>(
+                                        builder: (context, state) {
+                                          String error = "";
+                                          if (state is LabRequestsBloc_CreatingCustomerErrorState)
+                                            error = state.message;
+                                          else if (state is LabRequestsBloc_CreatedCustomerSuccessfullyState) dialogHelper.dismissSingle(context);
+                                          return Text(
+                                            error,
+                                            style: TextStyle(color: Colors.red),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                }),
+                              );
+                            },
                           ),
                           Visibility(
                             visible: doctorId == null,

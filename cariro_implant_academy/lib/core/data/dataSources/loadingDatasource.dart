@@ -45,6 +45,9 @@ class LoadingDataSourceImpl implements LoadingDatasource {
       case LoadUsersEnum.labDesigner:
         searchHost = "LoadLabDesingers";
         break;
+      case LoadUsersEnum.allDoctors:
+        searchHost = "GetAllDoctors";
+        break;
       default:
         searchHost = "";
     }

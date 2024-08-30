@@ -51,20 +51,22 @@ namespace CIA.Controllers
             user.RegisteredById = u.IdInt;
 
 
-            if (user.WorkplaceId != null)
-            {
-                var workPlace = _dbContext.Lab_CustomerWorkPlaces.FirstOrDefault(x => x.Id == user.WorkplaceId);
-                if (workPlace != null)
-                {
-                    var c = await _dbContext.Users.Include(x => x.WorkPlace).FirstOrDefaultAsync(x => x.Name == user.Name && x.WorkplaceId == user.WorkplaceId);
-                    if (c != null)
-                    {
-                        _apiResponse.ErrorMessage = "Customer with same name and same work place already exists";
-                        return BadRequest(_apiResponse);
-                    }
+            //if (user.WorkplaceId != null)
+            //{
+            //    var workPlace = _dbContext.Lab_CustomerWorkPlaces.AsNoTracking().FirstOrDefault(x => x.Id == user.WorkplaceId);
+            //    if (workPlace != null)
+            //    {
+            //        var c = await _dbContext.Users.Include(x => x.WorkPlace).FirstOrDefaultAsync(x => x.Name == user.Name && x.WorkplaceId == user.WorkplaceId);
+            //        if (c != null)
+            //        {
+            //            _apiResponse.ErrorMessage = "Customer with same name and same work place already exists";
+            //            return BadRequest(_apiResponse);
+            //        }
 
-                }
-            }
+            //    }
+            //}
+            if (user.WorkplaceId != null)
+                user.WorkPlace = null;
             if (user.WorkPlace != null && user.WorkplaceId == null)
             {
                 var workPlace = _dbContext.Lab_CustomerWorkPlaces.FirstOrDefault(x => x.Name == user.WorkPlace.Name);

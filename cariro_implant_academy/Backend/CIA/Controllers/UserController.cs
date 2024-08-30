@@ -159,7 +159,21 @@ namespace CIA.Controllers
             return Ok(_apiResponse);
         }
 
+        [HttpGet("GetAllDoctors")]
+        public async Task<ActionResult> GetAllDoctors()
+        {
+            var candidates = (await _userManager.GetUsersInRoleAsync("candidate")).ToList();
+            var secretaies = (await _userManager.GetUsersInRoleAsync("secretary")).ToList();
 
+            candidates.AddRange(secretaies);
+
+            var users = await _ciaDbContext.Users.ToListAsync();
+            _apiResponse .Result = users.Except(candidates).ToList();
+            return Ok(_apiResponse);
+
+
+
+        }
 
         [HttpGet("LoadInstructors")]
         public async Task<ActionResult> LoadInstructors()
