@@ -247,10 +247,10 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                               else if (_state is SettingsBloc_LoadedLabThresholdSettingsSuccessfullyState) {
                                                 thresholds = _state.data;
                                               }
-                                              return Expanded(
-                                                child: Column(
-                                                  children: thresholds
-                                                      .mapIndexed((i, e) => Row(children: [
+                                              return Column(
+                                                children: thresholds
+                                                    .mapIndexed((i, e) => SizedBox(
+                                                          child: Row(children: [
                                                             FormTextValueWidget(text: "${i + 1}. "),
                                                             Expanded(
                                                               child: Padding(
@@ -282,9 +282,9 @@ class _LabItemSettingsPageState extends State<LabItemSettingsPage> with TickerPr
                                                               icon: Icon(Icons.delete),
                                                               color: Colors.red,
                                                             ),
-                                                          ]))
-                                                      .toList(),
-                                                ),
+                                                          ]),
+                                                        ))
+                                                    .toList(),
                                               );
                                             },
                                           )
