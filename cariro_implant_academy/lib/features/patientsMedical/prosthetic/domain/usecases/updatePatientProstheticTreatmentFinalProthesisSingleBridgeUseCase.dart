@@ -15,11 +15,11 @@ class UpdatePatientProstheticTreatmentFinalProthesisSingleBridgeUseCase extends 
 
   @override
   Future<Either<Failure, NoParams>> call(UpdateProsthParams data) async {
-    data.steps!.removeWhere((element) => element.statusId == null && element.nextVisitId == null);
-
-    return await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisSingleBridge(data.patientId,data.steps).then((value) => value.fold(
-          (l) => Left(l..message = "Update Single Bridge: ${l.message ?? ""}"),
-          (r) => Right(r),
-        ));
+    return await prostheticRepository
+        .updatePatientProstheticTreatmentFinalProthesisSingleBridge(data.patientId, data.steps)
+        .then((value) => value.fold(
+              (l) => Left(l..message = "Update Single Bridge: ${l.message ?? ""}"),
+              (r) => Right(r),
+            ));
   }
 }

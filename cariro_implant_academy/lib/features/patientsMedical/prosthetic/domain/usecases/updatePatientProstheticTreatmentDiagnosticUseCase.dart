@@ -13,9 +13,7 @@ class UpdatePatientProstheticTreatmentDiagnosticUseCase extends UseCases<NoParam
 
   @override
   Future<Either<Failure, NoParams>> call(UpdateProsthParams data) async {
-    data!.steps.removeWhere((element) => element.statusId == null && element.nextVisitId == null);
-
-    return await prostheticRepository.updatePatientProstheticTreatmentDiagnostic(data.patientId,data.steps).then((value) => value.fold(
+    return await prostheticRepository.updatePatientProstheticTreatmentDiagnostic(data.patientId, data.steps).then((value) => value.fold(
           (l) => Left(l..message = "Update Diagnostic: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
@@ -29,5 +27,4 @@ class UpdateProsthParams {
     required this.patientId,
     required this.steps,
   });
-  
 }

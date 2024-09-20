@@ -8,16 +8,14 @@ import 'package:dartz/dartz.dart';
 
 import '../entities/prostheticFinalEntity.dart';
 
-class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseCases<NoParams,UpdateProsthParams> {
+class UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase extends UseCases<NoParams, UpdateProsthParams> {
   final ProstheticRepository prostheticRepository;
 
   UpdatePatientProstheticTreatmentFinalProthesisFullArchUseCase({required this.prostheticRepository});
 
   @override
   Future<Either<Failure, NoParams>> call(UpdateProsthParams data) async {
-    data!.steps.removeWhere((element) => element.statusId == null && element.nextVisitId == null);
-
-    return await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisFullArch(data.patientId,data.steps).then((value) => value.fold(
+    return await prostheticRepository.updatePatientProstheticTreatmentFinalProthesisFullArch(data.patientId, data.steps).then((value) => value.fold(
           (l) => Left(l..message = "Update Full Arch: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
