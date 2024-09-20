@@ -1002,7 +1002,18 @@ namespace CIA.Controllers
         [HttpPost("AddRangeToMyPatients")]
         public async Task<IActionResult> AddRangeToMyPatients(int from, int to)
         {
-            var patients = await _cia_DbContext.Patients.Where(x=>int.TryParse(x.SecondaryId,out var f)).Where(x => int.Parse(x.SecondaryId) >= from && int.Parse(x.SecondaryId) <= to).ToListAsync();
+            var patientIds = await _cia_DbContext.Patients
+                            .Select(x => x.SecondaryId)
+                            .ToListAsync();
+
+            var validIds = patientIds
+                .Select(id => int.TryParse(id, out var f) ? f : (int?)null)
+                .Where(x=>x.HasValue && x>=from && x<=to)
+                .Select(x=>x.ToString())
+                .ToList();
+            
+
+            var patients = await _cia_DbContext.Patients.Where(x=> validIds.Contains(x.SecondaryId)).ToListAsync();
             var user = await _userRepo.GetUser();
             foreach (var patient in patients)
             {
