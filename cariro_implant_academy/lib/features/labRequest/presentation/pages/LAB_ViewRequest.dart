@@ -404,6 +404,7 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                 label: "Pay",
                                                 onTab: () {
                                                   int amountToPay = (request.cost ?? 0) - (request.paidAmount ?? 0);
+                                                  DateTime paymentDate = DateTime.now();
                                                   CIA_ShowPopUp(
                                                       width: 700,
                                                       height: 500,
@@ -434,6 +435,18 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                                 isNumber: true,
                                                               ),
                                                             ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: CIA_DateTimeTextFormField(
+                                                                label: "Payment Date",
+                                                                controller: TextEditingController(text: DateFormat("dd/MM/yyyy").format(paymentDate)),
+                                                                onChange: (value) {
+                                                                  paymentDate = value;
+                                                                  __setState(() => null);
+                                                                },
+                                                                isNumber: true,
+                                                              ),
+                                                            ),
                                                             CIA_PrimaryButton(
                                                                 label: "Pay",
                                                                 onTab: () {
@@ -441,7 +454,8 @@ class _LAB_ViewRequestPageState extends State<LAB_ViewRequestPage> {
                                                                     context: context,
                                                                     title: "Pay Request for ${amountToPay}?",
                                                                     onSave: () async {
-                                                                      bloc.add(LabRequestsBloc_PayRequestEvent(id: request.id!, amount: amountToPay));
+                                                                      bloc.add(LabRequestsBloc_PayRequestEvent(
+                                                                          id: request.id!, amount: amountToPay, paymentDate: paymentDate));
                                                                     },
                                                                   );
                                                                 }),

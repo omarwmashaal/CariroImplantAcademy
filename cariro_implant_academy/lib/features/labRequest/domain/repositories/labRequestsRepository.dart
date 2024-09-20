@@ -38,7 +38,7 @@ abstract class LabRequestRepository {
 
   // Future<Either<Failure, NoParams>> addOrUpdateRequestReceipt(int id, List<LabStepEntity> steps);
 
-  Future<Either<Failure, NoParams>> payForRequest(int id, int amount);
+  Future<Either<Failure, NoParams>> payForRequest(int id, int amount, DateTime paymentDate);
   Future<Either<Failure, LabItemEntity>> getLabItemDetails(int id);
   Future<Either<Failure, ReceiptEntity?>> getRequestReceipt(int id);
   Future<Either<Failure, NoParams>> consumeLabItem(int id, int? number, bool consumeWholeBlock);

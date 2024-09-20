@@ -187,7 +187,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
             iconWidget: Container()),
         SidebarXItem(
-            label: "Treatment Prices",
+            label: "Treatment Settings",
             onTap: () {
               bloc.add(SettingsBloc_LoadTreatmentPricesEvent());
 
@@ -1367,7 +1367,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Expanded(
                                             child: CIA_TextFormField(
                                               label: "Name",
-                                              isNumber: true,
                                               controller: TextEditingController(text: e.name?.toString() ?? ""),
                                               onChange: (value) {
                                                 e.name = value;

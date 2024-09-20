@@ -274,7 +274,7 @@ class PaymentLogsTableDataSource extends DataGridSource {
               DataGridCell<int>(columnName: 'ID', value: e.id),
               DataGridCell<DateTime>(columnName: 'Date', value: e.date),
               DataGridCell<String>(columnName: 'Patient Name', value: e.patient?.name),
-              DataGridCell<int>(columnName: 'Patient Id', value: e.patientId),
+              //DataGridCell<int>(columnName: 'Patient Id', value: e.patientId),
               DataGridCell<String>(columnName: 'Operator', value: e.operator!.name),
               DataGridCell<int>(columnName: 'Paid', value: e.paidAmount),
               DataGridCell<String>(columnName: 'Payment Method', value: e.paymentMethod?.name ?? "-"),

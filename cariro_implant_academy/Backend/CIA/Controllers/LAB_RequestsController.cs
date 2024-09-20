@@ -602,7 +602,7 @@ namespace CIA.Controllers
         }
 
         [HttpPost("PayForRequest")]
-        public async Task<IActionResult> PayForRequest(int id, int amount)
+        public async Task<IActionResult> PayForRequest(int id, int amount, DateTime paymentDate)
         {
             var request = await _dbContext.Lab_Requests.FirstOrDefaultAsync(x => x.Id == id);
             var receipt = await _dbContext.Receipts.FirstOrDefaultAsync(x => x.RequestId == id && x.Website == EnumWebsite.Lab);
@@ -638,7 +638,7 @@ namespace CIA.Controllers
                 Website = EnumWebsite.Lab,
                 Category = cat,
                 CategoryId = cat.Id,
-                Date = DateTime.UtcNow,
+                Date = paymentDate,
                 ReceiptID = receipt.Id,
                 Price = amount,
                 CreatedBy = user,
@@ -653,11 +653,12 @@ namespace CIA.Controllers
             {
                 Operator = user,
                 OperatorId = (int)user.IdInt,
-                Date = DateTime.UtcNow,
+                Date = paymentDate,
                 PaidAmount = amount,
                 ReceiptId = (int)receipt.Id,
                 Receipt = receipt,
                 Website = EnumWebsite.Lab,
+                PatientId = request.PatientId,
             });
             _dbContext.SaveChanges();
             return Ok();

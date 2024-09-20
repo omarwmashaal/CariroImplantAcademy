@@ -234,7 +234,7 @@ class CashFlowDataGridSource extends DataGridSource {
         _cashFlowData = models
             .map<DataGridRow>((e) => DataGridRow(cells: [
                   DataGridCell<int>(columnName: 'ID', value: e.id),
-                  DataGridCell<String>(columnName: 'Date', value: e.date == null ? "" : DateFormat("dd-MM-yyyy hh:mm a").format(e.date!)),
+                  DataGridCell<DateTime>(columnName: 'Date', value: e.date),
                   DataGridCell<String>(columnName: 'Category', value: e.category?.name),
                   DataGridCell<String>(columnName: 'Created by', value: e.createdBy?.name),
                   DataGridCell<String>(columnName: 'Patient', value: e.patient?.name),

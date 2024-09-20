@@ -140,9 +140,9 @@ class LabRequestRepoImpl implements LabRequestRepository {
   }
 
   @override
-  Future<Either<Failure, NoParams>> payForRequest(int id, int amount) async {
+  Future<Either<Failure, NoParams>> payForRequest(int id, int amount, DateTime paymentDate) async {
     try {
-      final result = await labRequestDatasource.payForRequest(id, amount);
+      final result = await labRequestDatasource.payForRequest(id, amount, paymentDate);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));

@@ -12,7 +12,7 @@ class PayRequestUseCase extends UseCases<NoParams, PayRequestParams> {
 
   @override
   Future<Either<Failure, NoParams>> call(PayRequestParams params) async {
-    return await labRequestRepository.payForRequest(params.requestId, params.amount).then((value) => value.fold(
+    return await labRequestRepository.payForRequest(params.requestId, params.amount, params.paymentDate).then((value) => value.fold(
           (l) => Left(l..message = "Pay Request: ${l.message ?? ""}"),
           (r) => Right(r),
         ));
@@ -22,8 +22,10 @@ class PayRequestUseCase extends UseCases<NoParams, PayRequestParams> {
 class PayRequestParams {
   final int requestId;
   final int amount;
+  final DateTime paymentDate;
   PayRequestParams({
     required this.requestId,
     required this.amount,
+    required this.paymentDate,
   });
 }
