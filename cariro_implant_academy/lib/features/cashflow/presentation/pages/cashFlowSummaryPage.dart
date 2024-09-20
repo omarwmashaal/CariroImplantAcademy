@@ -1,3 +1,5 @@
+import 'package:calendar_view/calendar_view.dart';
+import 'package:cariro_implant_academy/Widgets/SnackBar.dart';
 import 'package:cariro_implant_academy/Widgets/Title.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/LoadingWidget.dart';
 import 'package:cariro_implant_academy/core/presentation/widgets/tableWidget.dart';
@@ -40,6 +42,7 @@ class CashFlowSummaryPage extends StatefulWidget {
         return "CashFlowSummaryCIA";
     }
   }
+
   @override
   State<CashFlowSummaryPage> createState() => _CashFlowSummaryPageState();
 }
@@ -51,11 +54,16 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
   EnumSummaryFilter filter = EnumSummaryFilter.ThisMonth;
   int incomeTotal = 0;
   int expensesTotal = 0;
+  late DateTime from;
+  late DateTime to;
+  var now = DateTime.now();
 
   @override
   void initState() {
     bloc = BlocProvider.of<CashFlowBloc>(context);
-    bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
+    from = DateTime(now.year, now.month, 1, 0, 0, 0);
+    to = now;
+    getCashFlowSummary();
     super.initState();
   }
 
@@ -68,7 +76,9 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
           widget.iS_dataSource.updateData(state.data.income ?? []);
         } else if (state is CashFlowBloC_ProcessingCashFlowSuccessfullyState) {
           dialogHelper.dismissSingle(context);
-          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
+          getCashFlowSummary();
+        } else if (state is CashFlowBloC_LoadingCashFlowErrorState) {
+          ShowSnackBar(context, isSuccess: false, message: state.message);
         }
         if (state is CashFlowBloC_ProcessingCashFlowState)
           CustomLoader.show(context);
@@ -82,17 +92,6 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              filter == EnumSummaryFilter.ThisWeek
-                  ? CIA_PrimaryButton(label: "This Week", isLong: true, onTab: () {})
-                  : CIA_SecondaryButton(
-                      label: "This Week",
-                      onTab: () {
-                        setState(() {
-                          filter = EnumSummaryFilter.ThisWeek;
-                          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
-                        });
-                      }),
-              SizedBox(width: 10),
               filter == EnumSummaryFilter.ThisMonth
                   ? CIA_PrimaryButton(label: "This Month", isLong: true, onTab: () {})
                   : CIA_SecondaryButton(
@@ -100,7 +99,7 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
                       onTab: () {
                         setState(() {
                           filter = EnumSummaryFilter.ThisMonth;
-                          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
+                          getCashFlowSummary();
                         });
                       }),
               SizedBox(width: 10),
@@ -111,7 +110,7 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
                       onTab: () {
                         setState(() {
                           filter = EnumSummaryFilter.LastMonth;
-                          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
+                          getCashFlowSummary();
                         });
                       }),
               SizedBox(width: 10),
@@ -122,28 +121,50 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
                       onTab: () {
                         setState(() {
                           filter = EnumSummaryFilter.ThisYear;
-                          bloc.add(CashFlowBloc_GetSummaryEvent(filter: filter));
+                          getCashFlowSummary();
                         });
                       }),
+              SizedBox(width: 10),
+              filter == EnumSummaryFilter.Custom
+                  ? CIA_PrimaryButton(label: "Custom", isLong: true, onTab: () {})
+                  : CIA_SecondaryButton(label: "Custom", onTab: () => null),
             ],
           ),
           SizedBox(height: 10),
           BlocBuilder<CashFlowBloc, CashFlowBloc_States>(
             buildWhen: (previous, current) => current is CashFlowBloC_LoadedCashFlowSummarySuccessfullyState,
             builder: (context, state) {
-              DateTime? from;
-              DateTime? to;
-              if (state is CashFlowBloC_LoadedCashFlowSummarySuccessfullyState) {
-                from = state.data.from;
-                to = state.data.to;
-              }
               return Row(
                 children: [
-                  FormTextValueWidget(text: "from: ${from == null ? "" : DateFormat("dd-MM-yyyy").format(from!)}"),
+                  SizedBox(
+                    width: 200,
+                    child: CIA_DateTimeTextFormField(
+                      label: "From",
+                      controller: TextEditingController(text: DateFormat("dd/MM/yyyy").format(from)),
+                      onChange: (value) {
+                        from = value;
+                        filter = EnumSummaryFilter.Custom;
+                        setState(() {});
+                        getCashFlowSummary();
+                      },
+                    ),
+                  ),
                   SizedBox(
                     width: 10,
                   ),
-                  FormTextValueWidget(text: "to: ${to == null ? "" : DateFormat("dd-MM-yyyy").format(to!)}"),
+                  SizedBox(
+                    width: 200,
+                    child: CIA_DateTimeTextFormField(
+                      label: "To",
+                      controller: TextEditingController(text: DateFormat("dd/MM/yyyy").format(to)),
+                      onChange: (value) {
+                        to = value;
+                        filter = EnumSummaryFilter.Custom;
+                        setState(() {});
+                        getCashFlowSummary();
+                      },
+                    ),
+                  ),
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               );
@@ -361,5 +382,34 @@ class _CashFlowSummaryPageState extends State<CashFlowSummaryPage> {
                 ),
               ],
             ),*/
+  }
+
+  getCashFlowSummary() {
+    switch (filter) {
+      case EnumSummaryFilter.ThisMonth:
+        {
+          from = DateTime(now.year, now.month, 1, 0, 0, 0);
+          to = now;
+          break;
+        }
+      case EnumSummaryFilter.LastMonth:
+        {
+          from = DateTime(now.year, now.month - 1, 1, 0, 0, 0);
+          to = DateTime(now.year, now.month, 0, 0, 0, 0);
+          break;
+        }
+      case EnumSummaryFilter.ThisYear:
+        {
+          from = DateTime(now.year, 1, 1, 0, 0, 0);
+          to = now;
+          break;
+        }
+      default:
+        {
+          if (from.isAfter(to)) bloc.emit(CashFlowBloC_LoadingCashFlowErrorState(message: "From Date can't be after to Date"));
+        }
+    }
+
+    bloc.add(CashFlowBloc_GetSummaryEvent(from: from, to: to));
   }
 }

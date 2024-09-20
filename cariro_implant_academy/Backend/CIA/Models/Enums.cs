@@ -228,7 +228,13 @@ namespace CIA.Models
     public enum EnumNotificationType { Patient, TreatmentPlan, Complains, LabRequest, SurgicalTreatment, PatientVisit }
     public enum EnumComplainStatus { InQueue, Untouched, Resolved }
 
-    public enum EnumSummaryFilter { ThisWeek, LastMonth, ThisMonth, ThisYear }
+    public enum EnumSummaryFilter
+    {
+        LastMonth,
+        ThisMonth,
+        ThisYear,
+        Custom,
+    }
 
     public enum EnumClinicRestorationStatus { NotSelected, Done, Temp }
     public enum EnumClinicRestorationType { NotSelected, Composite, ReinforcedGlassIonomer, Temp, IndirectRestoration }

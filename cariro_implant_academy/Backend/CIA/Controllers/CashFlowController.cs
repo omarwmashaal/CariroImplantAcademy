@@ -636,71 +636,18 @@ namespace CIA.Controllers
         }
 
         [HttpGet("GetSummary")]
-        public async Task<IActionResult> GetSummary(EnumSummaryFilter filter)
+        public async Task<IActionResult> GetSummary(DateTime from, DateTime to)
         {
             List<IncomeModel> income;
             List<ExpensesModel> expenses;
-            DateTime from = DateTime.UtcNow;
-            DateTime to = DateTime.UtcNow;
+         
             IQueryable<IncomeModel> incomeQuery = _cia_DbContext.Income.Include(x => x.PaymentMethod).Include(x => x.CreatedBy).Include(x => x.Category).Where(x => x.Website == _site);
             IQueryable<ExpensesModel> expensesQuery = _cia_DbContext.Expenses.Include(x => x.PaymentMethod).Include(x => x.CreatedBy).Include(x => x.Category).Where(x => x.Website == _site);
-            switch (filter)
-            {
-                case EnumSummaryFilter.ThisWeek:
-                    {
-                        if (from.DayOfWeek == DayOfWeek.Saturday)
-                        {
-                            income = await incomeQuery.Where(x => x.Date.Value.Date == from.Date).ToListAsync();
-                            expenses = await expensesQuery.Where(x => x.Date.Value.Date == from.Date).ToListAsync();
 
-                        }
-                        else
-                        {
-                            int i = 1;
-                            for (i = 1; i < 7; i++)
-                            {
-                                if (from.AddDays(-i).DayOfWeek == DayOfWeek.Saturday)
-                                    break;
-                            }
-                            from = from.AddDays(-i - 1);
-                            income = await incomeQuery.Where(x => x.Date.Value.Date > from.Date).ToListAsync();
-                            expenses = await expensesQuery.Where(x => x.Date.Value.Date > from.Date).ToListAsync();
+            income = await incomeQuery.Where(x => x.Date.Value.Date > from.Date && x.Date.Value.Date <= to.Date).ToListAsync();
+            expenses = await expensesQuery.Where(x => x.Date.Value.Date > from.Date && x.Date.Value.Date <= to.Date).ToListAsync();
 
-                        }
-                        break;
-                    }
-                case EnumSummaryFilter.ThisMonth:
-                    {
-                        from = from.AddDays(-from.Day + 1);
-                        income = await incomeQuery.Where(x => x.Date.Value.Date >= from.Date).ToListAsync();
-                        expenses = await expensesQuery.Where(x => x.Date.Value.Date >= from.Date).ToListAsync();
-
-                        break;
-                    }
-                case EnumSummaryFilter.ThisYear:
-                    {
-                        from = from.AddDays(-from.Day + 1);
-                        from = from.AddMonths(-from.Month + 1);
-                        income = await incomeQuery.Where(x => x.Date.Value.Date >= from.Date).ToListAsync();
-                        expenses = await expensesQuery.Where(x => x.Date.Value.Date >= from.Date).ToListAsync();
-                        break;
-                    }
-                case EnumSummaryFilter.LastMonth:
-                    {
-                        from = from.AddDays(-from.Day + 1);
-                        from = from.AddMonths(-1);
-                        to = from.AddMonths(1);
-
-                        income = await incomeQuery.Where(x => x.Date.Value.Date >= from.Date && x.Date <= to.Date).ToListAsync();
-                        expenses = await expensesQuery.Where(x => x.Date.Value.Date > from.Date && x.Date < to.Date).ToListAsync();
-                        break;
-                    }
-                default:
-                    {
-                        _apiResponse.ErrorMessage = "Please choose time range";
-                        return BadRequest(_apiResponse);
-                    }
-            }
+       
             var incomeCats = income.Select(x => x.Category).Distinct().ToList();
             var expCats = expenses.Select(x => x.Category).Distinct().ToList();
 

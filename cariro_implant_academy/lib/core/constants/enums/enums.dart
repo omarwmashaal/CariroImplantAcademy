@@ -110,10 +110,10 @@ enum EnumImageType { PatientProfile, IdBack, IdFront, UserProfile, Pros }
 enum EnumComplainStatus { InQueue, Untouched, Resolved }
 
 enum EnumSummaryFilter {
-  ThisWeek,
   LastMonth,
   ThisMonth,
   ThisYear,
+  Custom,
 }
 
 enum RequestChangeEnum {

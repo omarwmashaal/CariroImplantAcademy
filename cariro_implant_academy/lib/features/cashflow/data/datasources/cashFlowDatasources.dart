@@ -17,7 +17,7 @@ abstract class CashFlowDatasource {
 
   Future<List<CashFlowModel>> listExpenses({String? from, String? to, int? catId, int? paymentMethodId});
 
-  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter);
+  Future<CashFlowSummaryModel> getSummary(DateTime from, DateTime to);
 
   Future<CashFlowSummaryModel> getIncomeByCategory(int categoryID, String filter);
 
@@ -132,10 +132,11 @@ class CashFlowDataSourceImpl implements CashFlowDatasource {
   }
 
   @override
-  Future<CashFlowSummaryModel> getSummary(EnumSummaryFilter filter) async {
+  Future<CashFlowSummaryModel> getSummary(DateTime from, DateTime to) async {
     late StandardHttpResponse response;
     try {
-      response = await httpRepo.get(host: "$serverHost/$cashFlowController/getSummary?filter=${filter.index}");
+      response = await httpRepo.get(
+          host: "$serverHost/$cashFlowController/getSummary?from=${from.toUtc().toIso8601String()}&to=${to.toUtc().toIso8601String()}");
     } catch (e) {
       throw mapException(e);
     }

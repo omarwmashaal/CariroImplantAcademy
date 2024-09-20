@@ -112,7 +112,7 @@ class CashFlowBloc extends Bloc<CashFlowBloc_Events, CashFlowBloc_States> {
     on<CashFlowBloc_GetSummaryEvent>(
       (event, emit) async {
         emit(CashFlowBloC_LoadingCashFlowState());
-        final result = await getSummaryUseCase(event.filter);
+        final result = await getSummaryUseCase(GetCashFlowSummaryParams(from: event.from, to: event.to));
         result.fold(
           (l) => emit(CashFlowBloC_LoadingCashFlowErrorState(message: l.message ?? "")),
           (r) => emit(CashFlowBloC_LoadedCashFlowSummarySuccessfullyState(data: r)),

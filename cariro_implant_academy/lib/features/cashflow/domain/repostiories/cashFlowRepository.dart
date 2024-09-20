@@ -14,7 +14,7 @@ abstract class CashFlowRepository {
 
   Future<Either<Failure, List<CashFlowEntity>>> listExpenses({String? from, String? to, int? catId, int? paymentMethodId});
 
-  Future<Either<Failure, CashFlowSummaryEntity>> getSummary(EnumSummaryFilter filter);
+  Future<Either<Failure, CashFlowSummaryEntity>> getSummary(DateTime from, DateTime to);
 
   Future<Either<Failure, CashFlowSummaryEntity>> getIncomeByCategory(int categoryID, String filter);
 

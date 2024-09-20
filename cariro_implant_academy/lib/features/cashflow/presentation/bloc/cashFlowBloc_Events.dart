@@ -28,12 +28,13 @@ class CashFlowBloc_ListExpensesEvent extends CashFlowBloc_Events {
 }
 
 class CashFlowBloc_GetSummaryEvent extends CashFlowBloc_Events {
-  final EnumSummaryFilter filter;
+  final DateTime from;
+  final DateTime to;
 
-  CashFlowBloc_GetSummaryEvent({required this.filter});
+  CashFlowBloc_GetSummaryEvent({required this.from, required this.to});
 
   @override
-  List<Object?> get props => [filter];
+  List<Object?> get props => [from, to];
 }
 
 class CashFlowBloc_GetIncomeByCategoryEvent extends CashFlowBloc_Events {

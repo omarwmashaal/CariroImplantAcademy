@@ -78,9 +78,9 @@ class CashFlowRepoImpl implements CashFlowRepository {
   }
 
   @override
-  Future<Either<Failure, CashFlowSummaryEntity>> getSummary(EnumSummaryFilter filter) async {
+  Future<Either<Failure, CashFlowSummaryEntity>> getSummary(DateTime from, DateTime to) async {
     try {
-      final result = await cashFlowDatasource.getSummary(filter);
+      final result = await cashFlowDatasource.getSummary(from, to);
       return Right(result);
     } on Exception catch (e) {
       return Left(Failure.exceptionToFailure(e));
