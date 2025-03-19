@@ -328,6 +328,10 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
       filters.add("Implant Failed");
     }
 
+    if (searchTreatmentsDTO.hasImplant == true) {
+      filters.add("Has Implant");
+    }
+
     for (var queryItem in searchTreatmentsDTO.and_treatmentIds ?? []) {
       filters.add(treatmentItems.firstWhere((element) => element.id == queryItem).name ?? "");
     }
@@ -534,6 +538,9 @@ class AdvancedSearchFiltersSummaryWidget extends StatelessWidget {
 
     if (filter == "Implant Failed") {
       searchTreatmentsDTO.implantFailed = null;
+    }
+    if (filter == "Has Implant") {
+      searchTreatmentsDTO.hasImplant = null;
     }
     var fromTreatmentItems = treatmentItems.firstWhereOrNull((element) => element.name == filter);
     if (fromTreatmentItems != null) {

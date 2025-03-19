@@ -142,6 +142,30 @@ class _AdvancedSearchTreatmentFilterWidgetState extends State<AdvancedSearchTrea
               ),
             ),
             AdvancedSearchFilterChildWidget(
+              title: "Has Implant",
+              child: Row(
+                children: [
+                  CIA_CheckBoxWidget(
+                      text: "All",
+                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.hasImplant = null),
+                      value: widget.searchTreatmentsDTO.hasImplant == null),
+                  SizedBox(width: 10),
+                  CIA_CheckBoxWidget(
+                      text: "Yes",
+                      onChange: (value) => setState(() {
+                            widget.searchTreatmentsDTO.hasImplant = true;
+                            widget.searchTreatmentsDTO.done = true;
+                          }),
+                      value: widget.searchTreatmentsDTO.hasImplant == true),
+                  SizedBox(width: 10),
+                  CIA_CheckBoxWidget(
+                      text: "No",
+                      onChange: (value) => setState(() => widget.searchTreatmentsDTO.hasImplant = false),
+                      value: widget.searchTreatmentsDTO.hasImplant == false)
+                ],
+              ),
+            ),
+            AdvancedSearchFilterChildWidget(
               title: "Implant Failed",
               child: Row(
                 children: [

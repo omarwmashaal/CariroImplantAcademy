@@ -1,3 +1,4 @@
+import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/data/models/treatmentDetailsModel.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/domain/entities/treatmenDetailsEntity.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/bloc/treatmentBloc.dart';
 import 'package:cariro_implant_academy/features/patientsMedical/treatmentFeature/presentation/widgets/toothStatusWidget.dart';
@@ -63,21 +64,29 @@ class ToothWidget extends StatelessWidget {
     var currentToothData = teethData.where((element) => element.tooth == toothID).toList();
     if (currentToothData.isNotEmpty) {
       for (var data in currentToothData) {
-        if (!(data.treatmentItem!.showInSurgical) && isSurgical) continue;
+        try {
+          if (!(data.treatmentItem!.showInSurgical) && isSurgical) continue;
+        } catch (e) {
+          print("Debug: if condition ${TreatmentDetailsModel.fromEntity(data).toJson()}");
+        }
         returnValue.add(SizedBox(height: viewOnlyMode ? 1 : 10));
-        returnValue.add(ToothStatusWidget(
-          bloc: bloc,
-          isSurgical: isSurgical,
-          viewOnlyMode: viewOnlyMode,
-          acceptChanges: (request) => acceptChanges(request),
-          patientId: patientId,
-          data: data,
-          onDelete: () {
-            teethData.remove(data);
-            onChange();
-          },
-        ));
 
+        try {
+          returnValue.add(ToothStatusWidget(
+            bloc: bloc,
+            isSurgical: isSurgical,
+            viewOnlyMode: viewOnlyMode,
+            acceptChanges: (request) => acceptChanges(request),
+            patientId: patientId,
+            data: data,
+            onDelete: () {
+              teethData.remove(data);
+              onChange();
+            },
+          ));
+        } catch (e) {
+          print("Debug: Return Value ${TreatmentDetailsModel.fromEntity(data).toJson()}");
+        }
         title = <Widget>[
           Visibility(
             visible: isSurgical || !viewOnlyMode || (viewOnlyMode && data.planPrice != 0),

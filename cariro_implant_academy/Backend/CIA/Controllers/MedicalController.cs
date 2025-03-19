@@ -155,7 +155,11 @@ namespace CIA.Controllers
                 ToListAsync();
 
 
-
+            if (treatmentDetails.Any(x => x.TreatmentItemId == null))
+                return BadRequest(new API_response
+                {
+                    ErrorMessage = "Null TreatmentItem Id"
+                });
 
             var donePlansWithouPostSurgery = treatmentDetails.Where(x => x.Status == true && x.PostSurgeryModelId == null).ToList();
 

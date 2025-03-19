@@ -28,12 +28,11 @@ class SignalR {
   SignalR({required this.bloc}) {
     _runConfig();
   }
-  connect()=>_runConfig();
+  connect() => _runConfig();
 
-  disconnect(){
+  disconnect() {
     _hubConnection?.stop();
   }
-
 
 // Creates the connection by using the HubConnectionBuilder.
 
@@ -41,19 +40,19 @@ class SignalR {
 
   _runConfig() async {
     // Configer the logging
-    Logger.root.level = Level.ALL;
+    //Logger.root.level = Level.ALL;
     // Writes the log messages to the console
-    Logger.root.onRecord.listen(
-      (LogRecord rec) {
-        //print('${rec.level.name}: ${rec.time}: ${rec.message}');
-        //  siteController.logs.add('${rec.level.name}: ${rec.time}: ${rec.message}');
-      },
-    );
+    // Logger.root.onRecord.listen(
+    //   (LogRecord rec) {
+    //     //print('${rec.level.name}: ${rec.time}: ${rec.message}');
+    //     //  siteController.logs.add('${rec.level.name}: ${rec.time}: ${rec.message}');
+    //   },
+    // );
 
 // If you want only to log out the message for the higer level hub protocol:
-    final hubProtLogger = Logger("SignalR - hub");
+    //final hubProtLogger = Logger("SignalR - hub");
 // If youn want to also to log out transport messages:
-    final transportProtLogger = Logger("SignalR - transport");
+    // final transportProtLogger = Logger("SignalR - transport");
     final connectionOptions = HttpConnectionOptions;
     var headers = MessageHeaders();
 
@@ -64,12 +63,12 @@ class SignalR {
           .withUrl(
             signalRHost,
             options: HttpConnectionOptions(
-              logger: transportProtLogger,
+              //logger: transportProtLogger,
               //   headers: headers,
               accessTokenFactory: () async => siteController.getToken() ?? "",
             ),
           )
-          .configureLogging(hubProtLogger)
+          //.configureLogging(hubProtLogger)
           .build();
     _hubConnection!.onclose(
       ({error}) {},
@@ -79,7 +78,6 @@ class SignalR {
     });
 
     _hubConnection!.on("NewNotification", (arguments) {
-
       bloc.add(AppBarGetNotificationsEvent());
       // await NotificationsAPI.GetNotifications();
     });

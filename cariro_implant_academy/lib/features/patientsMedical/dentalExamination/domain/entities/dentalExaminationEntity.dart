@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class DentalExaminationEntity extends Equatable{
+class DentalExaminationEntity extends Equatable {
   int? tooth;
   bool? carious;
   bool? filled;
@@ -18,25 +18,25 @@ class DentalExaminationEntity extends Equatable{
   @override
   // TODO: implement props
   List<Object?> get props => [
-    tooth,
-    carious,
-    filled,
-    missed,
-    notSure,
-    mobilityI,
-    mobilityII,
-    mobilityIII,
-    hopelessTeeth,
-    implantPlaced,
-    implantFailed,
-    previousState,
-    interarchSpaceLT,
-    interarchSpaceRT
-  ];
+        tooth,
+        carious,
+        filled,
+        missed,
+        notSure,
+        mobilityI,
+        mobilityII,
+        mobilityIII,
+        hopelessTeeth,
+        implantPlaced,
+        implantFailed,
+        previousState,
+        interarchSpaceLT,
+        interarchSpaceRT
+      ];
 
   DentalExaminationEntity({
     this.tooth,
-    this.carious=false,
+    this.carious = false,
     this.filled = false,
     this.missed = false,
     this.notSure = false,
@@ -51,7 +51,7 @@ class DentalExaminationEntity extends Equatable{
     this.interarchSpaceLT,
   });
 
-  updateToothStatus(String value)  {
+  updateToothStatus(String value) {
     switch (value) {
       case "Carious":
         {
@@ -165,6 +165,4 @@ class DentalExaminationEntity extends Equatable{
         }
     }
   }
-
-
 }

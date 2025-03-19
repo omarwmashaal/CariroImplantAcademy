@@ -1712,7 +1712,7 @@ namespace CIA.Controllers
                     }
                 }
 
-                if (model.ImplantLineId != null || model.ImplantId != null)
+                if (model.ImplantLineId != null || model.ImplantId != null || model.HasImplant==true)
                 {
                     query = query.Include(x => x.Implant).ThenInclude(x => x.ImplantLine);
                 }
@@ -1774,7 +1774,17 @@ namespace CIA.Controllers
                 //}
             }
 
-
+            if(model.HasImplant!=null)
+            {
+                if(model.HasImplant==true)
+                {
+                    treatments.RemoveAll(x => x.ImplantID ==null);
+                }
+                else
+                {
+                    treatments.RemoveAll(x => x.ImplantID != null);
+                }
+            }
             var finalResult = treatments.Select(x => new AdvancedSearchTreatmentResponseModel
             {
                 Id = x.PatientId,

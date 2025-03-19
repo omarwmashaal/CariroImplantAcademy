@@ -25,12 +25,14 @@ class AdvancedTreatmentSearchEntity extends Equatable {
   List<int>? and_treatmentIds;
   List<int>? or_treatmentIds;
   bool? implantFailed;
+  bool? hasImplant;
   List<int>? complicationsAfterSurgeryIds;
   List<int>? complicationsAfterSurgeryIdsOr;
   String? str_complicationsAfterSurgery;
   String? str_complicationsAfterProsthesis;
 
   String? str_implantFailed;
+  String? str_hasImplant;
   EnumTeethClassification? teethClassification;
   String? treatmentValue;
   String? treatmentName;
@@ -53,6 +55,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.patientName,
     this.done,
     this.implantFailed,
+    this.hasImplant,
     this.complicationsAfterSurgeryIds,
     this.noTreatmentPlan,
     this.clearnaceLower = false,
@@ -60,6 +63,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
     this.str_complicationsAfterSurgery,
     this.str_complicationsAfterProsthesis,
     this.str_implantFailed,
+    this.str_hasImplant,
     this.and_treatmentIds,
     this.or_treatmentIds,
     this.teethClassification,
@@ -82,6 +86,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
         this.complicationsAfterSurgeryIdsOr,
         this.secondaryId,
         this.implantFailed,
+        this.hasImplant,
         this.complicationsAfterSurgeryIds,
         this.patientName,
         this.done,
@@ -89,6 +94,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
         this.noTreatmentPlan,
         this.teethClassification,
         this.str_implantFailed,
+        this.str_hasImplant,
         this.str_complicationsAfterSurgery,
         this.str_complicationsAfterProsthesis,
         this.treatmentName,
@@ -104,6 +110,7 @@ class AdvancedTreatmentSearchEntity extends Equatable {
       candidate == null &&
       candidateBatch == null &&
       implantFailed == null &&
+      hasImplant == null &&
       complicationsAfterSurgeryIds == null &&
       complicationsAfterSurgeryIdsOr == null &&
       (and_treatmentIds?.isEmpty ?? true) &&

@@ -18,6 +18,8 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     super.done,
     super.str_implantFailed,
     super.implantFailed,
+    super.hasImplant,
+    super.str_hasImplant,
     super.complicationsAfterSurgeryIds,
     super.complicationsAfterSurgeryIdsOr,
     super.noTreatmentPlan,
@@ -49,6 +51,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
       done: entity.done,
       noTreatmentPlan: entity.noTreatmentPlan,
       implantFailed: entity.implantFailed,
+      hasImplant: entity.hasImplant,
       complicationsAfterSurgeryIds: entity.complicationsAfterSurgeryIds,
       teethClassification: entity.teethClassification,
       and_treatmentIds: entity.and_treatmentIds,
@@ -69,6 +72,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     secondaryId = json['secondaryId'];
     patientName = json['patientName'];
     implantFailed = json['implantFailed'];
+    hasImplant = json['hasImplant'];
     done = json['done'];
     noTreatmentPlan = json['noTreatmentPlan'];
     treatmentValue = json['treatmentValue'];
@@ -99,6 +103,7 @@ class AdvancedTreatmentSearchModel extends AdvancedTreatmentSearchEntity {
     data['teethClassification'] = this.teethClassification == null ? null : this.teethClassification!.index;
 
     data['implantFailed'] = this.implantFailed;
+    data['hasImplant'] = this.hasImplant;
     data['complicationsAfterSurgeryIds'] = this.complicationsAfterSurgeryIds?.map((e) => e as int).toList();
     data['complicationsAfterSurgeryIdsOr'] = this.complicationsAfterSurgeryIdsOr?.map((e) => e as int).toList();
 
